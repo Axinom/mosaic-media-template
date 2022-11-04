@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.0",
-    "@axinom/mosaic-ui": "0.22.0",
+    "@axinom/mosaic-ui": "0.23.0-rc.11",
     "apollo-upload-client": "^14.1.3",
     "clsx": "^1.2.1",
     "env-cmd": "^10.1.0",
@@ -42,7 +42,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@axinom/mosaic-portal": "0.8.1",
+    "@axinom/mosaic-portal": "0.9.0-rc.9",
     "@dbeining/react-atom": "^4.1.21",
     "@graphql-codegen/cli": "^2.13.4",
     "@graphql-codegen/typescript": "^2.7.3",
