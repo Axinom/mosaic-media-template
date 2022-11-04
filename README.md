@@ -48,7 +48,7 @@ For a better development experience i.e. being able to run `docker` commands
 without `sudo`, please see
 [Docker post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/).
 
-## Prepare and connect the ott-template solution
+## Prepare and connect the media-template solution
 
 1. Run `yarn` to install all package dependencies for the workspace.
 2. Run `yarn apply-templates` to create local copies of all `*.template` files
@@ -120,7 +120,7 @@ and is also possible to be changed later still.
 
 After hitting 'Proceed', the environment will be created and the 'Environment
 Connection' screen will show up. You can use this screen to retrieve all the
-information you need for connecting the ott-template solution to the created
+information you need for connecting the media-template solution to the created
 environment.
 
 ![](./readme/environment-connection.png)
