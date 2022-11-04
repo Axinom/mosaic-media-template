@@ -1,0 +1,15 @@
+{
+  "name": "Test Ingest",
+  "items": [
+    {
+      "type": "MOVIE",
+      "external_id": "avatar67A23",
+      "data": { "title": "Avatar" }
+    },
+    {
+      "type": "MOVIE",
+      "external_id": "avatar67A23",
+      "data": { "title": "Avatar" }
+    }
+  ]
+}

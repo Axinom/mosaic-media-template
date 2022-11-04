@@ -1,0 +1,103 @@
+query TvShow($id: Int!) {
+  tvshow(id: $id) {
+    title
+    originalTitle
+    synopsis
+    description
+    externalId
+    tvshowsTags {
+      nodes {
+        name
+      }
+    }
+    tvshowsTvshowGenres {
+      nodes {
+        tvshowGenres {
+          title
+        }
+      }
+    }
+    tvshowsCasts {
+      nodes {
+        name
+      }
+    }
+    studio
+    tvshowsProductionCountries {
+      nodes {
+        name
+      }
+    }
+    released
+    id
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+    seasons {
+      totalCount
+    }
+    tvshowsImages {
+      nodes {
+        imageType
+        imageId
+      }
+    }
+    publishStatus
+    publishedDate
+    publishedUser
+    tvshowsTrailers {
+      totalCount
+    }
+  }
+
+  tvshowGenres {
+    nodes {
+      title
+      id
+    }
+  }
+}
+
+mutation DeleteTvShow($input: DeleteTvshowInput!) {
+  deleteTvshow(input: $input) {
+    clientMutationId
+  }
+}
+
+mutation PublishTvShow($id: Int!) {
+  publishTvshow(tvshowId: $id) {
+    id
+  }
+}
+
+mutation UnpublishTvShow($id: Int!) {
+  unpublishTvshow(tvshowId: $id) {
+    id
+  }
+}
+
+query TvShowTitle($id: Int!) {
+  tvshow(id: $id) {
+    id
+    title
+  }
+}
+
+query SearchTvShowTags($searchKey: String!, $limit: Int!) {
+  getTvshowsTagsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}
+
+query SearchTvShowCast($searchKey: String!, $limit: Int!) {
+  getTvshowsCastsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}
+
+query SearchTvShowProductionCountries($searchKey: String!, $limit: Int!) {
+  getTvshowsProductionCountriesValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}

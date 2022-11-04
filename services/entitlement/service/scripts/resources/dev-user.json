@@ -1,0 +1,10 @@
+[
+  {
+    "serviceId": "ax-user-service",
+    "permissions": [
+      "DEV_END_USER_ACCESS_TOKENS_GENERATE",
+      "APPLICATIONS_VIEW",
+      "APPLICATIONS_EDIT"
+    ]
+  }
+]

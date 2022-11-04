@@ -1,0 +1,28 @@
+query SeasonsLicenses(
+  $filter: SeasonsLicenseFilter
+  $orderBy: [SeasonsLicensesOrderBy!]
+  $after: Cursor
+) {
+  seasonsLicenses(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      seasonsLicensesCountries {
+        nodes {
+          code
+        }
+      }
+      licenseEnd
+      licenseStart
+    }
+  }
+}

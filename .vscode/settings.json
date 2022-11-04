@@ -1,0 +1,48 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.organizeImports": false
+  },
+  "jestrunner.jestCommand": "yarn util:load-vars jest",
+  "files.associations": {
+    ".env.*": "dotenv",
+    "**/pipelines/**/*.{yaml,yml}": "azure-pipelines, yaml"
+  },
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "cSpell.words": [
+    "Axinom",
+    "Axinom's",
+    "codegen",
+    "Dockerized",
+    "Downloadability",
+    "geolocation",
+    "Inflector",
+    "loglevel",
+    "pilet",
+    "pilets",
+    "Piral",
+    "Piral's",
+    "postgraphile",
+    "prefetch",
+    "RABBITMQ",
+    "unassignment",
+    "uncommit",
+    "unpublish",
+    "Unpublishes",
+    "unpublishing",
+    "upsert",
+    "urljoin",
+    "vhosts",
+    "zapatos"
+  ],
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSaveMode": "file"
+  },
+  "[yaml]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSaveMode": "file"
+  }
+}

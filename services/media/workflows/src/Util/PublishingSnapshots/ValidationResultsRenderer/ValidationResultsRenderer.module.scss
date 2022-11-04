@@ -1,0 +1,12 @@
+.container {
+  display: grid;
+  grid: 1fr / 24px 1fr;
+  align-items: center;
+  gap: 5px;
+
+  p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}

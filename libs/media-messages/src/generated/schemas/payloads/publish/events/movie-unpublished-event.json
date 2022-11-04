@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "movie_unpublished_event",
+  "description": "Movie unpublished event.",
+  "properties": {
+    "content_id": {
+      "description": "Content ID of a movie. Must match the pattern`^(movie)-([a-zA-Z0-9_-]+)$.`",
+      "type": "string",
+      "pattern": "^(movie)-([a-zA-Z0-9_-]+)$"
+    }
+  },
+  "required": [
+    "content_id"
+  ],
+  "additionalProperties": false
+}

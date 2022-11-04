@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "season_published_event",
+  "description": "Definition of the TV show season publish format.",
+  "properties": {
+    "content_id": {
+      "$ref": "./common.json#/definitions/season_id"
+    },
+    "tvshow_id": {
+      "$ref": "./common.json#/definitions/tvshow_id"
+    },
+    "index": {
+      "description": "Season number",
+      "type": "integer",
+      "minimum": 1
+    },
+    "synopsis": {
+      "description": "Short description of the main plot elements.",
+      "$ref": "../common.json#/definitions/non_empty_string"
+    },
+    "description": {
+      "description": "Extended synopsis.",
+      "type": "string"
+    },
+    "studio": {
+      "description": "Name of the producing studio.",
+      "type": "string"
+    },
+    "released": {
+      "description": "Date of first release.",
+      "$ref": "./common.json#/definitions/release_date"
+    },
+    "cast": {
+      "description": "Cast of the season.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "production_countries": {
+      "$ref": "./common.json#/definitions/production_countries"
+    },
+    "tags": {
+      "$ref": "./common.json#/definitions/tags"
+    },
+    "images": {
+      "$ref": "./common.json#/definitions/images"
+    },
+    "licenses": {
+      "$ref": "./common.json#/definitions/licenses"
+    },
+    "genre_ids": {
+      "description": "Sorted array of genre IDs assigned to a season.",
+      "type": "array",
+      "items": {
+        "$ref": "./common.json#/definitions/tvshow_genre_id"
+      }
+    },
+    "videos": {
+      "$ref": "./common.json#/definitions/trailers"
+    }
+  },
+  "required": [
+    "content_id",
+    "index",
+    "licenses",
+    "genre_ids",
+    "images",
+    "videos"
+  ],
+  "additionalProperties": false
+}

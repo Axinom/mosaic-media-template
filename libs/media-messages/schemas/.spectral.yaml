@@ -1,0 +1,53 @@
+rules:
+  top-level-description-required:
+    description: All top-level schemas must have a description.
+    given: $
+    severity: error
+    then:
+      field: description
+      function: truthy
+  top-level-title-required:
+    description: All top-level schemas must have a title.
+    given: '$'
+    severity: error
+    then:
+      field: title
+      function: truthy
+  property-description-required:
+    description: All properties must have descriptions.
+    given: '$..properties[*]'
+    severity: error
+    then:
+      field: description
+      function: truthy
+  definition-description-required:
+    description: All definitions must have descriptions.
+    given: '$.definition[*]'
+    severity: error
+    then:
+      field: description
+      function: truthy
+  property-snake-case:
+    description: Property names must be in snake_case.
+    type: style
+    given: '$..properties.*~'
+    severity: error
+    then:
+      function: casing
+      functionOptions:
+        type: snake
+  definition-snake-case:
+    description: Definition names must be in snake_case.
+    type: style
+    given: '$.definitions.*~'
+    severity: error
+    then:
+      function: casing
+      functionOptions:
+        type: snake
+  no-all-of:
+    description: Use of allOf is discouraged (for now).
+    given: '$..allOf'
+    severity: warn
+    then:
+      function: falsy

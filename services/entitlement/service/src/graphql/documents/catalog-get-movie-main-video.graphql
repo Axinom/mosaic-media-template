@@ -1,0 +1,15 @@
+query GetMovieMainVideo($id: String!, $countryCode: String) {
+  movie(id: $id, countryCode: $countryCode) {
+    videos(filter: { type: { equalTo: "MAIN" } }) {
+      nodes {
+        id
+        isProtected
+        videoStreams {
+          nodes {
+            drmKeyId
+          }
+        }
+      }
+    }
+  }
+}

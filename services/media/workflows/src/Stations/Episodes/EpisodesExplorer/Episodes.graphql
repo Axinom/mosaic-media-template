@@ -1,0 +1,23 @@
+mutation BulkDeleteEpisodes($filter: EpisodeFilter) {
+  deleteEpisodes(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkPublishEpisodes($filter: EpisodeFilter) {
+  publishEpisodes(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkUnpublishEpisodes($filter: EpisodeFilter) {
+  unpublishEpisodes(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkCreateEpisodeSnapshots($filter: EpisodeFilter) {
+  createEpisodeSnapshots(filter: $filter) {
+    affectedIds
+  }
+}

@@ -1,0 +1,16 @@
+.statusContainer {
+  display: grid;
+  grid-template-columns: min-content min-content min-content;
+  align-items: center;
+  column-gap: 20px;
+  height: 50px;
+
+  .statusItem {
+    display: grid;
+    align-items: center;
+    grid-template-columns: min-content min-content min-content;
+    column-gap: 5px;
+    white-space: nowrap;
+  }
+}
+

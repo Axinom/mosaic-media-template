@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type":"object",
+  "title": "check_finish_ingest_item_command",
+  "description": "Check finish ingest item command schema.",
+  "additionalProperties": false,
+  "required": ["ingest_item_step_id", "ingest_item_id"],
+  "properties": {
+    "ingest_item_step_id": {
+      "$ref": "../../common.json#/definitions/non_empty_string",
+      "description": "A unique identifier that is used to track ingest messages for a single document to keep ingest document status up-to-date."
+    },
+    "ingest_item_id": {
+      "type": "integer",
+      "description": "Id of an ingest item stored in the database."
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Message that describes why a message for a specific ingest_item_step_id has failed."
+    }
+  }
+}

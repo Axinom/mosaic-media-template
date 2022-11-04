@@ -1,0 +1,7 @@
+mutation IngestDocumentUpload($file: Upload!) {
+  startIngest(input: {file: $file}) {
+    ingestDocument {
+      id
+    }
+  }
+}

@@ -1,0 +1,10 @@
+# Git Files
+**/.git/
+
+# Node binaries and complied code
+**/node_modules/
+**/dist/
+**/build/
+
+# Env files
+**/.env

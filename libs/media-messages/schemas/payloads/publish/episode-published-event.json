@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "episode_published_event",
+  "description": "Definition of the TV show episode publish format.",
+  "properties": {
+    "content_id": {
+      "$ref": "./common.json#/definitions/episode_id"
+    },
+    "season_id": {
+      "$ref": "./common.json#/definitions/season_id"
+    },
+    "index": {
+      "description": "Episode number",
+      "type": "integer",
+      "minimum": 1
+    },
+    "title": {
+      "description": "Title of the episode.",
+      "$ref": "../common.json#/definitions/non_empty_string"
+    },
+    "original_title": {
+      "description": "Original title of the episode.",
+      "type": "string"
+    },
+    "synopsis": {
+      "description": "Short description of the main plot elements.",
+      "$ref": "../common.json#/definitions/non_empty_string"
+    },
+    "description": {
+      "description": "Extended synopsis.",
+      "type": "string"
+    },
+    "studio": {
+      "description": "Name of the producing studio.",
+      "type": "string"
+    },
+    "released": {
+      "description": "Date of first release.",
+      "$ref": "./common.json#/definitions/release_date"
+    },
+    "cast": {
+      "description": "Cast of the episode.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "production_countries": {
+      "$ref": "./common.json#/definitions/production_countries"
+    },
+    "tags": {
+      "$ref": "./common.json#/definitions/tags"
+    },
+    "images": {
+      "$ref": "./common.json#/definitions/images"
+    },
+    "licenses": {
+      "$ref": "./common.json#/definitions/licenses"
+    },
+    "genre_ids": {
+      "description": "Sorted array of genre IDs assigned to an episode.",
+      "type": "array",
+      "items": {
+        "$ref": "./common.json#/definitions/tvshow_genre_id"
+      }
+    },
+    "videos": {
+      "$ref": "./common.json#/definitions/videos"
+    }
+  },
+  "required": [
+    "content_id",
+    "index",
+    "title",
+    "licenses",
+    "genre_ids",
+    "images",
+    "videos"
+  ],
+  "additionalProperties": false
+}

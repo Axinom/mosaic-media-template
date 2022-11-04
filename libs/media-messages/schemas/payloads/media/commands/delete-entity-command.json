@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type":"object",
+  "title": "delete_entity_command",
+  "description": "Delete a single entity command schema.",
+  "$ref": "../../common/commands/bulk-entity-command.json"
+}

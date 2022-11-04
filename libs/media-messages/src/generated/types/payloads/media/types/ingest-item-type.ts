@@ -1,0 +1,1 @@
+export type IngestItemType = "MOVIE" | "TVSHOW" | "SEASON" | "EPISODE";

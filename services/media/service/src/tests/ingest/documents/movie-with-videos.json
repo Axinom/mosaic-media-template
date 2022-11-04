@@ -1,0 +1,39 @@
+{
+  "name": "Test Ingest",
+  "items": [
+    {
+      "type": "MOVIE",
+      "external_id": "avatar67A23",
+      "data": {
+        "title": "Avatar",
+        "description": "Avatar is a 2009 American epic science fiction film...",
+        "original_title": "James Cameron's Avatar",
+        "released": "2009-12-10",
+        "studio": "20th Century Fox",
+        "synopsis": "In 2154, humans have depleted Earth's natural resources...",
+        "tags": ["3D", "SciFi", "Highlight"],
+        "genres": ["Sci-Fi", "Animation"],
+        "cast": ["Sam Worthington", "Zoe Saldana", "Sigourney Weaver"],
+        "production_countries": ["EST", "DEU", "COL", "USA", "ESP"],
+        "licenses": [
+          {
+            "start": "2020-08-01T00:00:00.000+00:00",
+            "end": "2020-08-30T23:59:59.999+00:00",
+            "countries": ["AT", "AW", "FI"]
+          }
+        ],
+        "main_video": {
+          "source": " test-videos/videos/avatar",
+          "profile": "DEFAULT"
+        },
+        "trailers": [
+          { "source": "test-videos/trailers/avatar_1 " },
+          {
+            "source": " test-videos/trailers/avatar_2",
+            "profile": "DEFAULT"
+          }
+        ]
+      }
+    }
+  ]
+}

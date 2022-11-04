@@ -1,0 +1,37 @@
+query TvShowGenres {
+  tvshowGenres(orderBy: UPDATED_DATE_DESC) {
+    nodes {
+      sortOrder
+      title
+      id      
+      updatedDate
+      updatedUser
+    }
+    totalCount
+  }
+
+  snapshots(
+    filter: {
+      entityType: { equalTo: TVSHOW_GENRE }
+      snapshotState: { equalTo: PUBLISHED }
+    }
+  ) {
+    nodes {
+      updatedUser
+      publishedDate
+      snapshotState
+    }
+  }
+}
+
+mutation PublishTvShowGenres {
+  publishTvshowGenres {
+    id
+  }
+}
+
+mutation UnpublishTvShowGenres {
+  unpublishTvshowGenres {
+    id
+  }
+}

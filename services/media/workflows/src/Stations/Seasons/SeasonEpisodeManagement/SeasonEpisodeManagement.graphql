@@ -1,0 +1,12 @@
+query SeasonEpisodes($id: Int!) {
+  season(id: $id) {
+    episodes {
+      nodes {
+        id
+        index
+        externalId
+        title
+      }
+    }
+  }
+}

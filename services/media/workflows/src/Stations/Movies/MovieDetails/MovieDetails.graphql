@@ -1,0 +1,101 @@
+query Movie($id: Int!) {
+  movie(id: $id) {
+    title
+    originalTitle
+    synopsis
+    description
+    externalId
+    moviesTags {
+      nodes {
+        name
+      }
+    }
+    moviesMovieGenres {
+      nodes {
+        movieGenres {
+          title
+        }
+      }
+    }
+    moviesCasts {
+      nodes {
+        name
+      }
+    }
+    released
+    moviesProductionCountries {
+      nodes {
+        name
+      }
+    }
+    studio
+    mainVideoId
+    moviesTrailers {
+      totalCount
+    }
+    moviesImages {
+      nodes {
+        imageType
+        imageId
+      }
+    }
+    id
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+    publishStatus
+    publishedDate
+    publishedUser
+  }
+
+  movieGenres {
+    nodes {
+      title
+      id
+    }
+  }
+}
+
+mutation DeleteMovie($input: DeleteMovieInput!) {
+  deleteMovie(input: $input) {
+    clientMutationId
+  }
+}
+
+mutation PublishMovie($id: Int!) {
+  publishMovie(movieId: $id) {
+    id
+  }
+}
+
+mutation UnpublishMovie($id: Int!) {
+  unpublishMovie(movieId: $id) {
+    id
+  }
+}
+
+query MovieTitle($id: Int!) {
+  movie(id: $id) {
+    id
+    title
+  }
+}
+
+query SearchMovieTags($searchKey: String!, $limit: Int!) {
+  getMoviesTagsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}
+
+query SearchMovieCast($searchKey: String!, $limit: Int!) {
+  getMoviesCastsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}
+
+query SearchMovieProductionCountries($searchKey: String!, $limit: Int!) {
+  getMoviesProductionCountriesValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}

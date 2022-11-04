@@ -1,0 +1,47 @@
+query IngestDocument($id: Int!) {
+  ingestDocument(id: $id) {
+    id
+    title
+    errorCount
+    itemsCount
+    successCount
+    inProgressCount
+    updatedDate
+    createdDate
+    status
+    ingestItems {
+      nodes {
+        id
+        status
+        externalId
+        type
+        existsStatus
+        errors
+        item
+        displayTitle
+        ingestItemSteps {
+          nodes {
+            id
+            status
+            subType
+            type
+            responseMessage
+          }
+        }
+      }
+    }
+    document
+  }
+}
+
+mutation UpdateIngestDocument($input: UpdateIngestDocumentInput!) {
+  updateIngestDocument(input: $input) {
+    clientMutationId
+  }
+}
+
+query IngestDocumentTitle($id: Int!) {
+  ingestDocument(id: $id) {
+    title
+  }
+}

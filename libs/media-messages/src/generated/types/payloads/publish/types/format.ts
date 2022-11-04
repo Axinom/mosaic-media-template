@@ -1,0 +1,1 @@
+export type Format = "DASH" | "HLS" | "DASH_HLS" | "CMAF" | "DASH_ON_DEMAND";

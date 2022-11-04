@@ -1,0 +1,23 @@
+mutation BulkDeleteTvShows($filter: TvshowFilter) {
+  deleteTvshows(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkPublishTvShows($filter: TvshowFilter) {
+  publishTvshows(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkUnpublishTvShows($filter: TvshowFilter) {
+  unpublishTvshows(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkCreateTvShowSnapshots($filter: TvshowFilter) {
+  createTvshowSnapshots(filter: $filter) {
+    affectedIds
+  }
+}

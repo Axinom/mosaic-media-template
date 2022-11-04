@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "start_ingest_item_command",
+  "description": "Start ingest item command schema.",
+  "additionalProperties": false,
+  "required": [
+    "ingest_item_id",
+    "entity_id",
+    "item"
+  ],
+  "properties": {
+    "ingest_item_id": {
+      "type": "integer",
+      "description": "Id of an ingest item stored in the database."
+    },
+    "entity_id": {
+      "type": "integer",
+      "description": "Id of a media item stored in the database that is associated with specific ingest item."
+    },
+    "item": {
+      "type": "object",
+      "title": "item",
+      "description": "Contents of a specific ingest item.",
+      "required": [
+        "type",
+        "external_id",
+        "data"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "ingest_item_type",
+          "enum": [
+            "MOVIE",
+            "TVSHOW",
+            "SEASON",
+            "EPISODE"
+          ],
+          "description": "Type that specifies type of media item to be created or updated using this ingest item data."
+        },
+        "external_id": {
+          "description": "Type that specifies type of media item to be created or updated using this ingest item data.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^$|.*\\S.*"
+        },
+        "data": {
+          "type": "object",
+          "title": "ingest_item_data",
+          "additionalProperties": true,
+          "description": "Metadata of a specific ingest item."
+        }
+      }
+    }
+  }
+}
