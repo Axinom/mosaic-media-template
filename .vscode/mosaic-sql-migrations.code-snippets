@@ -1,0 +1,1040 @@
+{
+  "Define Subscription Triggers (Ax Define)": {
+    "prefix": "ax-define-subscription-triggers",
+    "body": [
+      "SELECT ax_define.define_subscription_triggers('id', '${1:table_name}', '${3:app_public}', '${1:table_name}', '${2:SingularTableNameInPascalCase}');",
+      "-- TODO: To enable subscriptions:",
+      "-- - Use `setupHttpServerWithWebsockets` with `setupManagementGQLSubscriptionAuthentication` as 3rd parameter to enable authentication.",
+      "-- - Create the plugin via SubscriptionsPluginFactory('${1:table_name}', '${2:SingularTableNameInPascalCase}', '${4|UUID,Int|}')",
+      "-- - Use `enableSubscriptions` and `.addHookPluginFactory(subscriptionAuthorizationHookFactory)` and on the `PostgraphileOptionsBuilder`.",
+      "-- - Enhance your HTTP server with websocket support with `enhanceHttpServerWithSubscriptions`."
+    ],
+    "description": [
+      "Defines PostgreSQL triggers for the specified table to enable GraphQL subscriptions functionality.\n",
+      "3rd parameter of SubscriptionsPluginFactory must be either 'Int' or `UUID' depending on the type of 'id' column."
+    ],
+    "scope": "sql"
+  },
+  "Drop Timestamps Trigger (Ax Define)": {
+    "prefix": "ax-drop-timestamps-trigger",
+    "body": [
+      "SELECT ax_define.drop_timestamps_trigger('${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Drops previously defined timestamp trigger which automatically populated 'created_date' and 'updated_date' columns."
+    ],
+    "scope": "sql"
+  },
+  "Define Timestamps Trigger (Ax Define)": {
+    "prefix": "ax-define-timestamps-trigger",
+    "body": [
+      "SELECT ax_define.define_timestamps_trigger('${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Defines timestamp trigger which automatically populates 'created_date' and 'updated_date' columns.",
+      "It is recommended to use 'ax_define.define_audit_date_fields_on_table' to define both columns and triggers in one go.",
+      "Use this one if you really need to define triggers separately.\n",
+      "N.B! The trigger function is not compatible with JSON columns. Use JSONB instead."
+    ],
+    "scope": "sql"
+  },
+  "Drop Users Trigger (Ax Define)": {
+    "prefix": "ax-drop-users-trigger",
+    "body": [
+      "SELECT ax_define.drop_users_trigger('${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Drops previously defined users trigger which automatically populated 'created_user' and 'updated_user' columns."
+    ],
+    "scope": "sql"
+  },
+  "Define Users Trigger (Ax Define)": {
+    "prefix": "ax-define-users-trigger",
+    "body": [
+      "SELECT ax_define.define_users_trigger('${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Defines users trigger which automatically populates 'created_user' and 'updated_user' columns.",
+      "It is recommended to use 'ax_define.define_audit_user_fields_on_table' to define both columns and triggers in one go.",
+      "Use this one if you really need to define triggers separately.\n",
+      "N.B! The trigger function is not compatible with JSON columns. Use JSONB instead."
+    ],
+    "scope": "sql"
+  },
+  "Drop Tenant Environment Trigger (Ax Define)": {
+    "prefix": "ax-drop-tenant-environment-trigger",
+    "body": [
+      "SELECT ax_define.drop_tenant_environment_trigger('${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Drops previously defined tenant/environment trigger which automatically populated 'tenant_id' and 'environment_id' columns."
+    ],
+    "scope": "sql"
+  },
+  "Define Tenant Environment Trigger (Ax Define)": {
+    "prefix": "ax-define-tenant-environment-trigger",
+    "body": [
+      "SELECT ax_define.define_tenant_environment_trigger('${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Defines tenant/environment trigger which automatically populates 'tenant_id' and 'environment_id' columns."
+    ],
+    "scope": "sql"
+  },
+  "Drop User Id Trigger (Ax Define)": {
+    "prefix": "ax-drop-user-id-trigger",
+    "body": [
+      "SELECT ax_define.drop_user_id_trigger('${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Drops previously defined user id trigger which automatically populated 'user_id' column."
+    ],
+    "scope": "sql"
+  },
+  "Define User Id Trigger (Ax Define)": {
+    "prefix": "ax-define-user-id-trigger",
+    "body": [
+      "SELECT ax_define.define_user_id_trigger('${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Defines user id trigger which automatically populates 'user_id' column."
+    ],
+    "scope": "sql"
+  },
+  "Drop Index (Ax Define)": {
+    "prefix": "ax-drop-index",
+    "body": [
+      "SELECT ax_define.drop_index('${1:column_name}', '${2:table_name}');"
+    ],
+    "description": [
+      "Drops previously defined index. Applies to both regular and unique indexes.\n",
+      "Third (optional) parameter: the unique name for this index. If the value is NULL then the name will be generated from the table & field name."
+    ],
+    "scope": "sql"
+  },
+  "Define Index (Ax Define)": {
+    "prefix": "ax-define-index",
+    "body": [
+      "SELECT ax_define.define_index('${1:column_name}', '${2:table_name}', '${3:app_public}');"
+    ],
+    "description": [
+      "Defines a regular index on a column.\n",
+      "Fourth (optional) parameter: a unique name for this index. If the value is NULL then a name will be generated from the table & field name."
+    ],
+    "scope": "sql"
+  },
+  "Drop Multiple Field Index (Ax Define)": {
+    "prefix": "ax-drop-multiple-field-index",
+    "body": [
+      "SELECT ax_define.drop_multiple_field_index('{\"${1:column_name_one}\", \"${2:column_name_two}\"}','${3:table_name}');"
+    ],
+    "description": [
+      "Drops previously defined multi-field index.\n",
+      "Third (optional) parameter: the unique name for this index. If the value is NULL then the name will be generated from the table & field names."
+    ],
+    "scope": "sql"
+  },
+  "Define Multiple Field Index (Ax Define)": {
+    "prefix": "ax-define-multiple-field-index",
+    "body": [
+      "SELECT ax_define.define_multiple_field_index('{\"${1:column_name_one}\", \"${2:column_name_two}\"}', '${3:table_name}', '${4:app_public}');"
+    ],
+    "description": [
+      "Defines a regular index on multiple columns.\n",
+      "Fourth (optional) parameter: a unique name for this index. If the value is NULL then a name will be generated from the table & field names."
+    ],
+    "scope": "sql"
+  },
+  "Drop Indexes With Id (Ax Define)": {
+    "prefix": "ax-drop-indexes-with-id",
+    "body": [
+      "SELECT ax_define.drop_indexes_with_id('${1:column_name}', '${2:table_name}');"
+    ],
+    "description": [
+      "Drops previously defined ASC/DESC indexes based on id and one other column.\n",
+      "Third & fourth (optional) parameters: unique names for the indexes. If either value is NULL then the name will be generated from the table & field name."
+    ],
+    "scope": "sql"
+  },
+  "Define Indexes With Id (Ax Define)": {
+    "prefix": "ax-define-indexes-with-id",
+    "body": [
+      "SELECT ax_define.define_indexes_with_id('${1:column_name}', '${2:table_name}', '${3:app_public}');"
+    ],
+    "description": [
+      "Defines ASC/DESC indexes based on id and one other column.",
+      "Use these indexes if there is a plan to perform sorting by this column.\n",
+      "Fourth & fifth (optional) parameters: unique names for the indexes. If either value is NULL then a name will be generated from the table & field name."
+    ],
+    "scope": "sql"
+  },
+  "Define Unique Index (Ax Define)": {
+    "prefix": "ax-define-unique-index",
+    "body": [
+      "SELECT ax_define.define_unique_index('${1:column_name}', '${2:table_name}', '${3:app_public}');"
+    ],
+    "description": [
+      "Defines a UNIQUE index on a column.",
+      "You can drop a unique index by using the normal 'ax_define.drop_index' function.\n",
+      "Fourth (optional) parameter: a unique name for the index. If the value is NULL then a name will be generated from the table & field name."
+    ],
+    "scope": "sql"
+  },
+  "Drop Unique Constraint (Ax Define)": {
+    "prefix": "ax-drop-unique-constraint",
+    "body": [
+      "SELECT ax_define.drop_unique_constraint('${1:column_name}', '${2:table_name}', '${3:app_public}');"
+    ],
+    "description": [
+      "Drops a UNIQUE constraint based on a column.\n",
+      "Fourth (optional) parameter: the unique name for the contraint. If the value is NULL then the name will be generated from the table & field name."
+    ],
+    "scope": "sql"
+  },
+  "Define Unique Constraint (Ax Define)": {
+    "prefix": "ax-define-unique-constraint",
+    "body": [
+      "SELECT ax_define.define_unique_constraint('${1:column_name}', '${2:table_name}', '${3:app_public}');"
+    ],
+    "description": [
+      "Defines a UNIQUE constraint on a column.\n",
+      "Fourth (optional) parameter: a unique name for the contraint. If the value is NULL then a name will be generated from the table & field name."
+    ],
+    "scope": "sql"
+  },
+  "Define Deferred Unique Constraint (Ax Define)": {
+    "prefix": "ax-define-deferred-unique-constraint",
+    "body": [
+      "SELECT ax_define.define_deferred_unique_constraint('${1:column_name}', '${2:table_name}', '${3:app_public}');"
+    ],
+    "description": [
+      "Defines a deferred UNIQUE constraint on a column.\n",
+      "Uniqueness is only checked when the transaction is committed.",
+      "If you want to drop it - use 'ax_define.drop_unique_constraint'.\n",
+      "Fourth (optional) parameter: a unique name for the contraint. If the value is NULL then a name will be generated from the table & field name."
+    ],
+    "scope": "sql"
+  },
+  "Drop Like Index (Ax Define)": {
+    "prefix": "ax-drop-like-index",
+    "body": [
+      "SELECT ax_define.drop_like_index('${1:column_name}', '${2:table_name}');"
+    ],
+    "description": [
+      "Drops a gin_trgm_ops index (for LIKE/ILIKE searches) based on a column.\n",
+      "Third (optional) parameter: the unique name for the index. If the value is NULL then the name will be generated from the table & field name."
+    ],
+    "scope": "sql"
+  },
+  "Define Like Index (Ax Define)": {
+    "prefix": "ax-define-like-index",
+    "body": [
+      "SELECT ax_define.define_like_index('${1:column_name}', '${2:table_name}', '${3:app_public}');"
+    ],
+    "description": [
+      "Defines a gin_trgm_ops index (for LIKE/ILIKE searches) on a column.",
+      "Read more here: https://niallburkley.com/blog/index-columns-for-like-in-postgres/\n",
+      "Fourth (optional) parameter: a unique name for the index. If the value is NULL then a name will be generated from the table & field name."
+    ],
+    "scope": "sql"
+  },
+  "Define Authentication (Ax Define)": {
+    "prefix": "ax-define-authentication",
+    "body": [
+      "SELECT ax_define.define_authentication('${1/(.*)/${1:/upcase}/}_VIEW,${1/(.*)/${1:/upcase}/}_EDIT,ADMIN', '${1/(.*)/${1:/upcase}/}_EDIT,ADMIN', '${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Defines authentication for a table via row level security based on permissions.\n",
+      "First parameter: comma-separated list of permission names to grant read permissions.",
+      "Second parameter: comma-separated list of permission names to grant write permissions.",
+      " - If the second parameter is an empty string, only read permissions are granted.",
+      "Third parameter: the name of the table to protect.",
+      "Fourth parameter: the database schema name of the table to protect.",
+      "Fifth (optional) parameter: an additional RLS check to add to the policies."
+    ],
+    "scope": "sql"
+  },
+  "Define Readonly Authentication (Ax Define)": {
+    "prefix": "ax-define-readonly-authentication",
+    "body": [
+      "SELECT ax_define.define_readonly_authentication('${1/(.*)/${1:/upcase}/}_VIEW,${1/(.*)/${1:/upcase}/}_EDIT,ADMIN', '${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Defines read-only authentication for a table via row level security based on permissions.\n",
+      "First parameter: comma-separated list of permission names to grant read permissions.",
+      "Second parameter: the name of the table to protect.",
+      "Third parameter: the database schema name of the table to protect."
+    ],
+    "scope": "sql"
+  },
+  "Live Suggestions Endpoint (Ax Define)": {
+    "prefix": "ax-live-suggestions-endpoint",
+    "body": [
+      "SELECT ax_define.live_suggestions_endpoint('${1:text_column_name}','${2:table_name}', '${3:app_public}');"
+    ],
+    "description": [
+      "Creates custom GraphQL query endpoint to request values of a single column from the table.\n",
+      "Endpoint selects a single text column, performs a DISTINCT, and orders by ASC."
+    ],
+    "scope": "sql"
+  },
+  "Define Audit User Fields On Table (Ax Define)": {
+    "prefix": "ax-define-audit-user-fields-on-table",
+    "body": [
+      "SELECT ax_define.define_audit_user_fields_on_table('${1:table_name}', '${2:app_public}', ':DEFAULT_USERNAME');"
+    ],
+    "description": [
+      "Defines 'created_user' and 'updated_user' columns for specified table.",
+      "Also defines triggers that populate these columns on row create/update.\n",
+      "The third parameter is a placeholder for the default username value.",
+      "Please make sure that this placeholder is defined in the 'graphile-migrate' settings object,",
+      "in the placeholders property with the same name e.g. ':DEFAULT_USERNAME'.\n",
+      "N.B! The trigger functions are not compatible with JSON columns. Use JSONB instead."
+    ],
+    "scope": "sql"
+  },
+  "Define Audit Date Fields On Table (Ax Define)": {
+    "prefix": "ax-define-audit-date-fields-on-table",
+    "body": [
+      "SELECT ax_define.define_audit_date_fields_on_table('${1:table_name}', '${3:app_public}');"
+    ],
+    "description": [
+      "Defines 'created_date' and 'updated_date' columns for the specified table.",
+      "Also defines triggers that populate these columns on row create/update."
+    ],
+    "scope": "sql"
+  },
+  "Column Exists (Ax Define)": {
+    "prefix": "ax-column-exists",
+    "body": [
+      "SELECT ax_define.column_exists('${1:column_name}', '${2:table_name}', '${3:app_public}');"
+    ],
+    "description": [
+      "Checks if the column exists in a specific table and schema."
+    ],
+    "scope": "sql"
+  },
+  "Create Enum Table (Ax Define)": {
+    "prefix": "ax-create-enum-table",
+    "body": [
+      "SELECT ax_define.create_enum_table(",
+      "  '${1:enum_table_name}',",
+      "  '${2:app_public}',",
+      "  ':${6:DATABASE_LOGIN}',",
+      "  '{\"${3:DEFAULT_VALUE}\",\"${4:OTHER_VALUE}\",\"${5:ANOTHER_VALUE}\"}',",
+      "  '{\"${3/(?:([A-Z])([A-Z]+))*(_)?([A-Z]+)/${1:/capitalize}${2:/downcase}${3:+ }${4:/downcase}/g}\",\"${4/(?:([A-Z])([A-Z]+))*(_)?([A-Z]+)/${1:/capitalize}${2:/downcase}${3:+ }${4:/downcase}/g}\",\"${5/(?:([A-Z])([A-Z]+))*(_)?([A-Z]+)/${1:/capitalize}${2:/downcase}${3:+ }${4:/downcase}/g}\"}');"
+    ],
+    "description": [
+      "Creates the enum table and initializes it with the possible enum values.\n",
+      "To support the enum table approach, Postgraphile requires the login role to have a SELECT grant on the enum table.\n",
+      "This is one of the functions that is needed to create an enum table and bind it to a column.",
+      "Use 'ax-add-enum-and-column' for a full code example."
+    ],
+    "scope": "sql"
+  },
+  "Set Enum As Column Type (Ax Define)": {
+    "prefix": "ax-set-enum-as-column-type",
+    "body": [
+      "SELECT ax_define.set_enum_as_column_type('${3:column_name}', '${4:entity_table_name}', '${5:app_public}', '${1:enum_table_name}', '${2:app_public}', '${6:DEFAULT_VALUE}');"
+    ],
+    "description": [
+      "Adds a foreign key to the enum table for a specific column that can reside in a different schema.",
+      "If the column does not exist - it is created with type text.\n",
+      "The sixth parameter is optional. Do not define if the column already exists or if the new column should not have a default value.",
+      "The seventh parameter is optional and decides if the column should be required or optional.",
+      "The default value is 'NOT NULL'. Use 'NULL' if the new column should be optional.",
+      "The eighth parameter is optional: a unique name for the generated constraint. If the value is NULL then a name will be generated from the table & column name."
+    ],
+    "scope": "sql"
+  },
+  "Set Enum Domain (Ax Define)": {
+    "prefix": "ax-set-enum-domain",
+    "body": [
+      "SELECT ax_define.set_enum_domain('${3:column_name}', '${4:entity_table_name}', '${5:app_public}', '${1:enum_table_name}_enum', '${2:app_public}');"
+    ],
+    "description": [
+      "Create a domain for an enum table based property.",
+      "Enables strong typing when working with 'zapatos' npm package by defining custom types for enums.",
+      "Read more about custom types here: https://jawj.github.io/zapatos/#custom-types-and-domains"
+    ],
+    "scope": "sql"
+  },
+  "Create Messaging Counter Table (Ax Define)": {
+    "prefix": "ax-create-messaging-counter-table",
+    "body": [
+      "SELECT ax_define.create_messaging_counter_table();"
+    ],
+    "description": [
+      "Creates a table that will count how often a message was already processed via Mosaic-based messaging e.g. multiple retries due to server crashes."
+    ],
+    "scope": "sql"
+  },
+  "Define User Id On Table (Ax Define)": {
+    "prefix": "ax-define-user-id-on-table",
+    "body": [
+      "SELECT ax_define.define_user_id_on_table('${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Defines 'user_id' column for the specified table.",
+      "Also defines a trigger that populates this column on row create/update."
+    ],
+    "scope": "sql"
+  },
+  "Define End User Authentication (Ax Define)": {
+    "prefix": "ax-define-end-user-authentication",
+    "body": [
+      "SELECT ax_define.define_end_user_authentication('${1:table_name}', '${2:app_public}');"
+    ],
+    "description": [
+      "Defines RLS policy for user_id column in a given table",
+      "This is a RESTRICTIVE policy."
+    ],
+    "scope": "sql"
+  },
+  "Drop Timestamp Propagation (Ax Define)": {
+    "prefix": "ax-drop-timestamp-propagation",
+    "body": [
+      "SELECT ax_define.drop_timestamp_propagation('${1:fk_column}', '${2:table_name}', '${3:app_public}', '${4:id}', '${5:parent_table}', '${6:app_public}');"
+    ],
+    "description": [
+      "Removes a function and trigger created by 'ax_define.define_timestamp_propagation' in an idempotent way.\n",
+      "The call signature mirrors 'ax_define.define_timestamp_propagation' and should be applied with the same arguments.\n",
+      "Seventh (optional) parameter: the unique name for the generated function. If the value is NULL then the name will be generated from the table names."
+    ],
+    "scope": "sql"
+  },
+  "Define Timestamp Propagation (Ax Define)": {
+    "prefix": "ax-define-timestamp-propagation",
+    "body": [
+      "SELECT ax_define.define_timestamp_propagation('${1:fk_column}', '${2:table_name}', '${3:app_public}', '${4:id}', '${5:parent_table}', '${6:app_public}');"
+    ],
+    "description": [
+      "Defines a function and trigger to propagate 'updated_date' changes to related entities.\n",
+      "Propagation can trigger 'UPDATED' triggers on the target entity including chained timestamp propagation.\n",
+      "First parameter: a column name from the \"table_name\" table that the trigger should be associated with.",
+      "Fourth parameter: a column name from the \"parent_table\" that 'updated_date' should be propagated to.",
+      "Seventh (optional) parameter: a unique name for the generated function. If the value is NULL then a name will be generated from the table names.\n",
+      "NB!. This function uses SECURITY DEFINER permission. It will always be executed as DB_OWNER."
+    ],
+    "scope": "sql"
+  },
+  "Raise Error (Ax Utils)": {
+    "prefix": "ax-raise-error",
+    "body": [
+      "PERFORM ax_utils.raise_error('${1:Enter your error message here.}', '${2:UNDEF}');"
+    ],
+    "description": [
+      "Raises an error with specified message, code, and optional placeholder parameter(s) for the message.",
+      "Code must be an exactly 5-character value (letters or numbers), as per PostgreSQL convention.",
+      "If you want to use custom code values, consult PostgreSQL documentation for a list of existing error codes to prevent collisions:",
+      "https://www.postgresql.org/docs/13/errcodes-appendix.html\n",
+      "'PERFORM' is used because usually, you would want to throw an error inside of the function or condition block.",
+      "If you just want to throw an error in the migration file (e.g. to test this snippet) - replace 'PERFORM' with 'SELECT'.\n",
+      "Examples:",
+      "ax_utils.raise_error('Sample error message without parameters', 'NPERR');",
+      "ax_utils.raise_error('Sample error %s with one parameters', 'OPERR', 'message');",
+      "ax_utils.raise_error('Sample error %s with %s parameters', 'TPERR', 'message', 'two');"
+    ],
+    "scope": "sql"
+  },
+  "Validate Identifier Length (Ax Utils)": {
+    "prefix": "ax-validate-identifier-length",
+    "body": [
+      "PERFORM ax_utils.validate_identifier_length('${1:identifier}');"
+    ],
+    "description": [
+      "Raises an exception if the provided identifer exceeds the PostgreSQL max length (63 bytes).",
+      "This can be useful to prevent name truncation, identifier collisions and silently dropped constraints.",
+      "If called from a function, the calling function will be referenced in the error message.",
+      "An optional second 'hint' parameter can be provided which will be appended to the error message."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Max Length (Ax Utils)": {
+    "prefix": "ax-constraint-max-length",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_max_length;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_max_length",
+      "   CHECK(ax_utils.constraint_max_length(${2:column_name}, ${3:100}, 'The ${2/[_]/ /g} must be %2\\$s characters long or less.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the length of the property value is greater than the specified max length.",
+      "The message parameter is optional. The default message includes the value which was too long but does not include the property name.",
+      "By default, the used error code is 'MXLEN' but can be overridden using the 4th parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Min Length (Ax Utils)": {
+    "prefix": "ax-constraint-min-length",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_min_length;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_min_length",
+      "   CHECK(ax_utils.constraint_min_length(${2:column_name}, ${3:1}, 'The ${2/[_]/ /g} must be %2\\$s characters long or more.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the length of the property value is less than the specified min length.",
+      "The message parameter is optional. The default message includes the value which was too short but does not include the property name.",
+      "By default, the used error code is 'MNLEN' but can be overridden using the 4th parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Max Value (Ax Utils)": {
+    "prefix": "ax-constraint-max-value",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_max_value;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_max_value",
+      "   CHECK(ax_utils.constraint_max_value(${2:column_name}, ${3:100}, 'The value of the ${2/[_]/ /g} is %1\\$s, but must be at most %2\\$s.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the numeric value is larger than the specified value.",
+      "The message parameter is optional. The default message includes the value which was too big but does not include the property name.",
+      "By default, the used error code is 'MXVAL' but can be overridden using the 4th parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Min Value (Ax Utils)": {
+    "prefix": "ax-constraint-min-value",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_min_value;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_min_value",
+      "   CHECK(ax_utils.constraint_min_value(${2:column_name}, ${3:0}, 'The value of the ${2/[_]/ /g} is %1\\$s, but must be at least %2\\$s.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the numeric value is smaller than the specified value.",
+      "The message parameter is optional. The default message includes the value which was too small but does not include the property name.",
+      "By default, the used error code is 'MNVAL' but can be overridden using the 4th parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Not Empty (Ax Utils)": {
+    "prefix": "ax-constraint-not-empty",
+    "body": [
+      "ALTER TABLE ${3:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_not_empty;",
+      "ALTER TABLE ${3:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_not_empty",
+      "   CHECK(ax_utils.constraint_not_empty(${2:column_name}, 'The ${2/[_]/ /g} must not be empty.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the value is null, empty string, or whitespace string.",
+      "The message parameter is optional. The default message does not include the property name.",
+      "By default, the used error code is 'EMPTY' but can be overridden using the 3rd parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Is Trimmed (Ax Utils)": {
+    "prefix": "ax-constraint-is-trimmed",
+    "body": [
+      "ALTER TABLE ${3:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_is_trimmed;",
+      "ALTER TABLE ${3:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_is_trimmed",
+      "   CHECK(ax_utils.constraint_is_trimmed(${2:column_name}, 'The ${2/[_]/ /g} must not start or end with whitespace characters.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the value starts or ends with whitespace value.",
+      "The message parameter is optional. The default message does not include the property name.",
+      "By default, the used error code is 'NTRIM' but can be overridden using the 3rd parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Is Base64 (Ax Utils)": {
+    "prefix": "ax-constraint-is-base64",
+    "body": [
+      "ALTER TABLE ${3:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_is_base64;",
+      "ALTER TABLE ${3:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_is_base64",
+      "   CHECK(ax_utils.constraint_is_base64(${2:column_name}, 'The ${2/[_]/ /g} must be a Base64 encoded value.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the value is not Base64 encoded.",
+      "The message parameter is optional. The default message does not include the property name.",
+      "By default, the used error code is 'BAS64' but can be overridden using the 3rd parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Starts With (Ax Utils)": {
+    "prefix": "ax-constraint-starts-with",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_starts_with;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_starts_with",
+      "   CHECK(ax_utils.constraint_starts_with(${2:column_name}, '${3:prefix}', 'The ${2/[_]/ /g} must start with \"%2\\$s\".'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the value does not start with specified characters.",
+      "The message parameter is optional. The default message does not include the property name.",
+      "By default, the used error code is 'STRWT' but can be overridden using the 4th parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Has Allowed Value (Ax Utils)": {
+    "prefix": "ax-constraint-has-allowed-value",
+    "body": [
+      "ALTER TABLE ${5:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_has_allowed_value;",
+      "ALTER TABLE ${5:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_has_allowed_value",
+      "   CHECK(ax_utils.constraint_has_allowed_value(${2:column_name},",
+      "                                               ARRAY['${3:ALLOWED_VALUE_ONE}','${4:ALLOWED_VALUE_TWO}'],",
+      "                                               'The ${2/[_]/ /g} value \"%s\" is not in the list of allowed values (\"%s\").'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the value is not one of the allowed values.",
+      "The message parameter is optional. The default message does not include the property name.",
+      "By default, the used error code is 'ALWDV' but can be overridden using the 4th parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Not Default Uuid (Ax Utils)": {
+    "prefix": "ax-constraint-not-default-uuid",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_not_default_uuid;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_not_default_uuid",
+      "   CHECK(ax_utils.constraint_not_default_uuid(input_value => ${2:column_name}, error_message => 'A valid UUID must be provied - the ${2/[_]/ /g} value \"%s\" is not valid.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the filled UUID value is empty or a default value.",
+      "The message parameter is optional. The default message does not include the property name.",
+      "By default, the used error code is 'UUID0' but can be overridden using the 4th parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Is Url (Ax Utils)": {
+    "prefix": "ax-constraint-is-url",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_is_url;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_is_url",
+      "   CHECK(ax_utils.constraint_is_url(${2:column_name}, 'The ${2/[_]/ /g} must be a valid URL.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the value is not a valid URL.",
+      "Empty value is considered a valid value in this case.",
+      "The message parameter is optional. The default message does not include the property name.",
+      "By default, the used error code is 'NVURL' but can be overridden using the 3rd parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Not Empty Array (Ax Utils)": {
+    "prefix": "ax-constraint-not-empty-array",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_not_empty_array;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_not_empty_array",
+      "   CHECK(ax_utils.constraint_not_empty_array(${2:column_name}, 'The ${2/[_]/ /g} must not be an empty array or contain empty/whitespace elements.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the value is an empty array or an array containing empty or whitespace elements.",
+      "The message parameter is optional. The default message does not include the property name.",
+      "By default, the used error code is 'EMPTY' but can be overridden using the 3rd parameter."
+    ],
+    "scope": "sql"
+  },
+  "Validation Not Empty (Ax Utils)": {
+    "prefix": "ax-validation-not-empty",
+    "body": [
+      "ax_utils.validation_not_empty(${1:column_or_variable})"
+    ],
+    "description": [
+      "Returns true if the value is not null, not an empty string, and not a whitespace string. Returns true otherwise."
+    ],
+    "scope": "sql"
+  },
+  "Validation Is Trimmed (Ax Utils)": {
+    "prefix": "ax-validation-is-trimmed",
+    "body": [
+      "ax_utils.validation_is_trimmed(${1:column_or_variable})"
+    ],
+    "description": [
+      "Returns false if the value starts or ends with a whitespace character. Returns true otherwise."
+    ],
+    "scope": "sql"
+  },
+  "Validation Is Base64 (Ax Utils)": {
+    "prefix": "ax-validation-is-base64",
+    "body": [
+      "ax_utils.validation_is_base64(${1:column_or_variable})"
+    ],
+    "description": [
+      "Returns true if the value is a base64 encoded string. Returns false otherwise."
+    ],
+    "scope": "sql"
+  },
+  "Validation Is Url (Ax Utils)": {
+    "prefix": "ax-validation-is-url",
+    "body": [
+      "ax_utils.validation_is_url(${1:column_or_variable})"
+    ],
+    "description": [
+      "Returns true if the value is a valid URL. Returns false otherwise, including in cases when value is an empty string."
+    ],
+    "scope": "sql"
+  },
+  "Validation Is Optional Url (Ax Utils)": {
+    "prefix": "ax-validation-is-optional-url",
+    "body": [
+      "ax_utils.validation_is_optional_url(${1:column_or_variable})"
+    ],
+    "description": [
+      "Returns true if the value is a valid URL or an empty string. Returns false otherwise."
+    ],
+    "scope": "sql"
+  },
+  "Validation Starts With (Ax Utils)": {
+    "prefix": "ax-validation-starts-with",
+    "body": [
+      "ax_utils.validation_starts_with(${1:column_or_variable}, '${3:prefix}')"
+    ],
+    "description": [
+      "Returns true if the value starts with the specified prefix value. Returns false otherwise."
+    ],
+    "scope": "sql"
+  },
+  "Validation Not Empty Array (Ax Utils)": {
+    "prefix": "ax-validation-not-empty-array",
+    "body": [
+      "ax_utils.validation_not_empty_array(${1:column_or_variable})"
+    ],
+    "description": [
+      "Returns false if the value is an empty array or an array containing empty elements. Returns true otherwise."
+    ],
+    "scope": "sql"
+  },
+  "Validation Valid Url Array (Ax Utils)": {
+    "prefix": "ax-validation-valid-url-array",
+    "body": [
+      "ax_utils.validation_valid_url_array(${1:column_or_variable})"
+    ],
+    "description": [
+      "Returns false if at least one element of an array is not a valid URL or an empty string. Returns true otherwise."
+    ],
+    "scope": "sql"
+  },
+  "User Has Setting (Ax Utils)": {
+    "prefix": "ax-user-has-setting",
+    "body": [
+      "ax_utils.user_has_setting(${1:'ENTITIES_VIEW,ADMIN'}, '${2:mosaic.auth.permissions}')"
+    ],
+    "description": [
+      "Checks if a user has one of the given settings in a local variable."
+    ],
+    "scope": "sql"
+  },
+  "User Has Permission (Ax Utils)": {
+    "prefix": "ax-user-has-permission",
+    "body": [
+      "ax_utils.user_has_permission(${1:'ENTITIES_VIEW,ADMIN'})"
+    ],
+    "description": [
+      "Checks if a user has at least one of the given permissions.",
+      "For example, user_has_permission('ENTITIES_VIEW,ADMIN') would return true if he has either the permission 'ENTITIES_VIEW' and/or 'ADMIN'.",
+      "If the user has no required permission, it throws an error with the 'PERMI' error code value.",
+      "You will use this function most often in policies like:\n",
+      "CREATE POLICY my_table_authorization ON app_public.my_table FOR SELECT USING (ax_utils.user_has_permission('ENTITIES_VIEW,ADMIN'));"
+    ],
+    "scope": "sql"
+  },
+  "User Has Tag (Ax Utils)": {
+    "prefix": "ax-user-has-tag",
+    "body": [
+      "ax_utils.user_has_tag(${1:'tag1,tag2'})"
+    ],
+    "description": [
+      "Checks if a user has one of the specified tags.\n",
+      "Returns true if the user has at least one of the tags from provided comma-separated string. Returns false otherwise."
+    ],
+    "scope": "sql"
+  },
+  "User Has Permission And Tag (Ax Utils)": {
+    "prefix": "ax-user-has-permission-and-tag",
+    "body": [
+      "ax_utils.user_has_permission_and_tag(${1:'ENTITIES_VIEW,ADMIN'}, ${2:column_value})"
+    ],
+    "description": [
+      "Checks if a user has a specific permission.",
+      "If he has such permission, he also needs a tag that is part of a specific database column.\n",
+      "For example, user_has_permission_and_tag('COUNTRIES_VIEW,ADMIN', country) would allow a user with permission 'COUNTRIES_VIEW' or 'ADMIN' to use a row when ",
+      "the column 'country' contains a value that is part of the users 'mosaic.auth.tags' - e.g. \"us\"/\"uk\"."
+    ],
+    "scope": "sql"
+  },
+  "Current Tenant Id (Ax Utils)": {
+    "prefix": "ax-current-tenant-id",
+    "body": [
+      "ax_utils.current_tenant_id()"
+    ],
+    "description": [
+      "Gets the tenant ID from the context of the current user.",
+      "This is needed for multitenancy systems."
+    ],
+    "scope": "sql"
+  },
+  "Current Environment Id (Ax Utils)": {
+    "prefix": "ax-current-environment-id",
+    "body": [
+      "ax_utils.current_environment_id()"
+    ],
+    "description": [
+      "Gets the environment ID from the context of the current user.",
+      "This is needed for multitenancy systems."
+    ],
+    "scope": "sql"
+  },
+  "Current User Id (Ax Utils)": {
+    "prefix": "ax-current-user-id",
+    "body": [
+      "ax_utils.current_user_id()"
+    ],
+    "description": [
+      "Gets the User ID from the context of the current user.",
+      "This is needed when end-user RLS is needed."
+    ],
+    "scope": "sql"
+  },
+  "Add Optional Column (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-add-optional-column",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD COLUMN IF NOT EXISTS ${2:column_name} ${3|TEXT,INT,BOOLEAN,DATE,TIMESTAMPTZ,UUID|};",
+      "",
+      "GRANT INSERT (${2:column_name}) ON ${4:app_public}.${1:table_name} TO \":${5:DATABASE_GQL_ROLE}\";",
+      "GRANT UPDATE (${2:column_name}) ON ${4:app_public}.${1:table_name} TO \":${5:DATABASE_GQL_ROLE}\";"
+    ],
+    "description": [
+      "Adds an optional (NULL) column if it does not exist.",
+      "The column is exposed in GraphQL API for insert and update operations."
+    ]
+  },
+  "Add Required Column (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-add-required-column",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD COLUMN IF NOT EXISTS ${2:column_name} ${3|TEXT,INT,BOOLEAN,DATE,TIMESTAMPTZ|} NULL;",
+      "UPDATE ${4:app_public}.${1:table_name} SET ${2:column_name} = ${6:existing_column_or_some_value_in_quotes} WHERE ${2:column_name} IS NULL;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ALTER COLUMN ${2:column_name} SET NOT NULL;",
+      "GRANT INSERT (${2:column_name}) ON ${4:app_public}.${1:table_name} TO \":${5:DATABASE_GQL_ROLE}\";",
+      "GRANT UPDATE (${2:column_name}) ON ${4:app_public}.${1:table_name} TO \":${5:DATABASE_GQL_ROLE}\";"
+    ],
+    "description": [
+      "Adds a required (NOT NULL) column if it does not exist.\n",
+      "The column is exposed in GraphQL API for insert and update operations.",
+      "The column is added as nullable at first, then default values must be populated, and after that column is set to be not nullable."
+    ]
+  },
+  "Delete Column (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-drop-column",
+    "body": [
+      "ALTER TABLE ${3:app_public}.${1:table_name} DROP COLUMN IF EXISTS ${2:column_name};"
+    ],
+    "description": "Drops a column from a specific table if it exists."
+  },
+  "Rename Column (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-rename-column",
+    "body": [
+      "DO \\$\\$ BEGIN",
+      "  IF ax_define.column_exists('${2:column_name}', '${1:table_name}', '${4:app_public}') THEN",
+      "    ALTER TABLE ${4:app_public}.${1:table_name} RENAME COLUMN ${2:column_name} TO ${3:new_column_name};",
+      "  END IF;",
+      "END \\$\\$;"
+    ],
+    "description": "Renames a column if it exists."
+  },
+  "Change Column Type (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-change-column-type",
+    "body": [
+      "DO \\$do\\$ BEGIN",
+      "  IF EXISTS (SELECT column_name FROM information_schema.columns",
+      "    WHERE table_schema = '${5:app_public}' AND table_name = '${1:table_name}' AND column_name = '${2:column_name}' AND data_type = '${4|text,integer,boolean,date,timestamp with time zone|}')",
+      "  THEN",
+      "    ALTER TABLE ${5:app_public}.${1:table_name} ALTER COLUMN ${2:column_name} TYPE ${3|TEXT,INT,BOOLEAN,DATE,TIMESTAMPTZ|} USING ${2:column_name}::${3|TEXT,INT,BOOLEAN,DATE,TIMESTAMPTZ|};",
+      "  END IF;",
+      "END \\$do\\$;"
+    ],
+    "description": "Changes columns type. The expression after `USING` is used to cast/transform existing values."
+  },
+  "Set Column NOT NULL (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-set-column-not-null",
+    "body": [
+      "UPDATE ${4:app_public}.${1:table_name} SET ${2:column_name} = '${3:default value}' WHERE ${2:column_name} IS NULL;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ALTER COLUMN ${2:column_name} SET DEFAULT '${3:default value}';",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ALTER COLUMN ${2:column_name} SET NOT NULL;"
+    ],
+    "description": [
+      "Sets a default value for a non-unique column and makes it required.\n",
+      "Custom code might be required to populate values before setting a column to be required."
+    ]
+  },
+  "Drop Constraint (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-drop-constraint",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_${3|max_length,min_length,max_value,min_value,not_empty,is_trimmed,is_base64,starts_with,has_allowed_value,not_default_uuid,is_url,not_empty_array|};"
+    ],
+    "description": "Drops a constraint if it exists."
+  },
+  "Add Custom Domain (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-add-custom-domain",
+    "body": [
+      "ALTER TABLE ${5:app_public}.${1:table_name} ALTER COLUMN ${2:column_name} TYPE ${4|jsonb,text|};",
+      "DROP DOMAIN IF EXISTS ${5:app_public}.${2:column_name}_${3:object};",
+      "CREATE DOMAIN ${5:app_public}.${2:column_name}_${3:object} AS ${4|jsonb,text|};",
+      "ALTER TABLE ${5:app_public}.${1:table_name} ALTER COLUMN ${2:column_name} TYPE ${5:app_public}.${2:column_name}_${3:object};",
+      "",
+      "-- $0TODO: Adjust auto-generated type in `generated/zapatos/custom/${2/([a-z]+)*(?:_)?([a-z]+)*/${1:/pascalcase}${2:/pascalcase}/g}${3/([a-z]+)*(?:_)?([a-z]+)*/${1:/pascalcase}${2:/pascalcase}/g}.d.ts`, e.g `export type ${2/([a-z]+)*(?:_)?([a-z]+)*/${1:/pascalcase}${2:/pascalcase}/g}${3/([a-z]+)*(?:_)?([a-z]+)*/${1:/pascalcase}${2:/pascalcase}/g} = { title: string };`"
+    ],
+    "description": [
+      "Adds a custom domain when there is a need to represent a default type by a custom type.",
+      "Helpful for cases when there is a need to add stronger typing to jsonb or text columns."
+    ]
+  },
+  "Add Custom Trigger (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-add-custom-trigger",
+    "body": [
+      "CREATE OR REPLACE FUNCTION ${6:app_hidden}.tg__${1:table_name}_${2:task_name}() RETURNS trigger AS $$",
+      "BEGIN",
+      "  NEW.${8:column_name} = (${0:/*Write your update logic here, e.g. CASE-END expression: https://www.postgresql.org/docs/current/functions-conditional.html */});",
+      "  RETURN NEW;",
+      "END;",
+      "$$ LANGUAGE plpgsql VOLATILE;",
+      "",
+      "DROP trigger IF EXISTS _${3:500}_${2:task_name} on ${7:app_public}.${1:table_name};",
+      "CREATE trigger _${3:500}_${2:task_name}",
+      "${4|BEFORE,AFTER,INSTEAD OF|} ${5|UPDATE,INSERT,INSERT OR UPDATE,DELETE|} ON ${7:app_public}.${1:table_name}",
+      "for each ROW",
+      "EXECUTE PROCEDURE ${6:app_hidden}.tg__${1:table_name}_${2:task_name}();"
+    ],
+    "description": [
+      "Adds a custom trigger function and a trigger that uses said function.",
+      "The number in the name of the trigger indicates the order it will take among other triggers.",
+      "A lower number means faster execution, e.g. trigger which starts with _100 will start before _300."
+    ]
+  },
+  "Add Table (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-add-table",
+    "body": [
+      "DROP TABLE IF EXISTS ${3:app_public}.${1:table_name} CASCADE;",
+      "CREATE TABLE ${3:app_public}.${1:table_name} (",
+      "  id INT NOT NULL PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,",
+      "  title TEXT NOT NULL,",
+      "  unique_column TEXT NOT NULL,",
+      "  boolean_column BOOLEAN NOT NULL DEFAULT FALSE,",
+      "  optional_text_column TEXT,",
+      "  optional_int_column INT,",
+      "  optional_datetime_column TIMESTAMPTZ,",
+      "  optional_date_column DATE,",
+      "",
+      "  CONSTRAINT title_max_length CHECK(ax_utils.constraint_max_length(title, 100, 'The title can only be %2\\$s characters long.')),",
+      "  CONSTRAINT title_not_empty CHECK(ax_utils.constraint_not_empty(title, 'The title cannot be empty.'))",
+      ");",
+      "SELECT ax_define.define_audit_date_fields_on_table('${1:table_name}', '${3:app_public}');",
+      "SELECT ax_define.define_audit_user_fields_on_table('${1:table_name}', '${3:app_public}', ':DEFAULT_USERNAME');",
+      "",
+      "SELECT ax_define.define_authentication('${1/(.*)/${1:/upcase}/}_VIEW,${1/(.*)/${1:/upcase}/}_EDIT,ADMIN', '${1/(.*)/${1:/upcase}/}_EDIT,ADMIN', '${1:table_name}', '${3:app_public}');",
+      "",
+      "SELECT ax_define.define_unique_constraint('unique_column', '${1:table_name}', '${3:app_public}');",
+      "",
+      "GRANT SELECT, DELETE ON ${3:app_public}.${1:table_name} TO \":${5:DATABASE_GQL_ROLE}\";",
+      "GRANT INSERT (",
+      "  title,",
+      "  unique_column",
+      ") ON ${3:app_public}.${1:table_name} TO \":${5:DATABASE_GQL_ROLE}\";",
+      "GRANT UPDATE (",
+      "  title,",
+      "  boolean_column,",
+      "  optional_text_column,",
+      "  optional_int_column,",
+      "  optional_datetime_column,",
+      "  optional_date_column",
+      ") ON ${3:app_public}.${1:table_name} TO \":${5:DATABASE_GQL_ROLE}\";",
+      "",
+      "SELECT ax_define.define_subscription_triggers('id', '${1:table_name}', '${3:app_public}', '${1:table_name}', '${6:SingularTableNameInPascalCase}');",
+      "SELECT ax_define.define_indexes_with_id('title', '${1:table_name}', '${3:app_public}');",
+      "SELECT ax_define.define_indexes_with_id('unique_column', '${1:table_name}', '${3:app_public}');",
+      "SELECT ax_define.define_indexes_with_id('optional_text_column', '${1:table_name}', '${3:app_public}');",
+      "SELECT ax_define.define_indexes_with_id('optional_datetime_column', '${1:table_name}', '${3:app_public}');",
+      "SELECT ax_define.define_like_index('title', '${1:table_name}', '${3:app_public}');",
+      "SELECT ax_define.define_index('boolean_column', '${1:table_name}', '${3:app_public}');",
+      "",
+      "-- $0TODO: After a new table is added and service is running, new GraphQL queries/mutations will become available based on GRANT statements.",
+      "--       Newly added operations must be assigned to permissions in the PermissionDefinition to become accessible.",
+      "-- TODO: Adjust SubscriptionsPlugin by adding a subscription GraphQL endpoint, e.g. `SubscriptionsPluginFactory('${1:table_name}', '${6:SingularTableNameInPascalCase}', '${7|Int,UUID|}')`"
+    ],
+    "description": "Creates a table with enabled authentication. Includes examples of audit properties, indexes, subscriptions trigger, grants, and constraints."
+  },
+  "Add Relation Table (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-add-relation-table",
+    "body": [
+      "DROP TABLE IF EXISTS ${8:app_public}.${1:table_name} CASCADE;",
+      "CREATE TABLE ${8:app_public}.${1:table_name} (",
+      "  ${2:fk_column} INT NOT NULL REFERENCES ${8:app_public}.${3:parent_table}(${4:id}) ON DELETE CASCADE,",
+      "  ${5:name} text NOT NULL,",
+      "",
+      "  PRIMARY KEY(${2:fk_column}, ${5:name}),",
+      "  CONSTRAINT ${5:name}_not_empty CHECK(ax_utils.constraint_not_empty(${5:name}, 'The ${5/[_]/ /g} cannot be empty.'))",
+      ");",
+      "",
+      "SELECT ax_define.define_authentication('${6:ENTITIES}_VIEW,${6:ENTITIES}_EDIT,ADMIN', '${6:ENTITIES}_EDIT,ADMIN', '${1:table_name}', '${8:app_public}');",
+      "",
+      "GRANT SELECT, INSERT, DELETE ON ${8:app_public}.${1:table_name} TO \":DATABASE_GQL_ROLE\";",
+      "GRANT UPDATE (${5:name}) ON ${8:app_public}.${1:table_name} TO \":DATABASE_GQL_ROLE\";",
+      "SELECT ax_define.define_subscription_triggers('${2:fk_column}', '${1:table_name}', '${8:app_public}', '${3:parent_table}', '${7:RelationTableEntitySingular}');",
+      "SELECT ax_define.define_index('${2:fk_column}', '${1:table_name}', '${8:app_public}');",
+      "SELECT ax_define.define_like_index('${5:name}', '${1:table_name}', '${8:app_public}');",
+      "SELECT ax_define.live_suggestions_endpoint('${5:name}', '${1:table_name}', '${8:app_public}');",
+      "",
+      "-- $0TODO: After a new table is added and service is running, new GraphQL queries/mutations will become available based on GRANT statements.",
+      "--       Newly added operations must be assigned to permissions in the PermissionDefinition to become accessible."
+    ],
+    "description": "Creates a relation table with enabled authentication and composite primary key."
+  },
+  "Drop Table (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-drop-table",
+    "body": [
+      "DROP TABLE IF EXISTS ${8:app_public}.${1:table_name} CASCADE;"
+    ],
+    "description": "Drops a table."
+  },
+  "Add Enum and Column (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-add-enum-and-column",
+    "body": [
+      "SELECT ax_define.create_enum_table(",
+      "  '${1:enum_table_name}',",
+      "  '${2:app_public}',",
+      "  ':${9:DATABASE_LOGIN}',",
+      "  '{\"${6:DEFAULT_VALUE}\",\"${7:OTHER_VALUE}\",\"${8:ANOTHER_VALUE}\"}',",
+      "  '{\"${6/(?:([A-Z])([A-Z]+))*(_)?([A-Z]+)*/${1:/capitalize}${2:/downcase}${3:+ }${4:/downcase}/g}\",\"${7/(?:([A-Z])([A-Z]+))*(_)?([A-Z]+)*/${1:/capitalize}${2:/downcase}${3:+ }${4:/downcase}/g}\",\"${8/(?:([A-Z])([A-Z]+))*(_)?([A-Z]+)*/${1:/capitalize}${2:/downcase}${3:+ }${4:/downcase}/g}\"}');",
+      "",
+      "SELECT ax_define.set_enum_as_column_type('${3:column_name}', '${4:entity_table_name}', '${5:app_public}', '${1:enum_table_name}', '${2:app_public}', '${6:DEFAULT_VALUE}');",
+      "SELECT ax_define.set_enum_domain('${3:column_name}', '${4:entity_table_name}', '${5:app_public}', '${1:enum_table_name}_enum', '${2:app_public}');",
+      "GRANT INSERT (${3:column_name}) ON ${5:app_public}.${4:entity_table_name} TO \":${10:DATABASE_GQL_ROLE}\";",
+      "GRANT UPDATE (${3:column_name}) ON ${5:app_public}.${4:entity_table_name} TO \":${10:DATABASE_GQL_ROLE}\";",
+      "",
+      "-- $0TODO: Adjust auto-generated ENUM type in `generated/zapatos/custom/${1/([a-z]+)*(?:_)?([a-z]+)*/${1:/pascalcase}${2:/pascalcase}/g}Enum.d.ts`, e.g `export type ${1/([a-z]+)*(?:_)?([a-z]+)*/${1:/pascalcase}${2:/pascalcase}/g}Enum = '${6:DEFAULT_VALUE}'|'${7:OTHER_VALUE}'|'${8:ANOTHER_VALUE}';`"
+    ],
+    "description": "Creates an enum table, adds a column to the table with the default value set, and adds a custom domain for the enum."
+  },
+  "Add Enum Value (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-add-enum-value",
+    "body": [
+      "INSERT INTO ${2:app_public}.${1:enum_table_name} (value, description)",
+      "VALUES ('${3:NEW_VALUE}', '${3/(?:([A-Z])([A-Z]+))*(_)?([A-Z]+)*/${1:/capitalize}${2:/downcase}${3:+ }${4:/downcase}/g}')",
+      "ON CONFLICT (value) DO NOTHING;"
+    ],
+    "description": "Adds a new value to an enum table."
+  },
+  "Drop Enum Value (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-drop-enum-value",
+    "body": [
+      "UPDATE ${5:app_public}.${4:entity_table_name} SET ${6:colum_name} = '${7:DEFAULT_VALUE}' WHERE ${6:colum_name} = '${3:ENUM_VALUE_TO_DROP}';",
+      "DELETE FROM ${2:app_public}.${1:enum_table_name} WHERE value = '${3:ENUM_VALUE_TO_DROP}';"
+    ],
+    "description": [
+      "Drops a value from the enum table.\n",
+      "Make sure the dropped value is not used in other tables.\n",
+      "This snippet has a simplified migration sample that might require adjustments."
+    ]
+  }
+}

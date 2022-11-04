@@ -1,0 +1,104 @@
+query Season($id: Int!) {
+  season(id: $id) {
+    index
+    synopsis
+    description
+    externalId
+    seasonsTags {
+      nodes {
+        name
+      }
+    }
+    seasonsTvshowGenres {
+      nodes {
+        tvshowGenres {
+          title
+        }
+      }
+    }
+    seasonsCasts {
+      nodes {
+        name
+      }
+    }
+    studio
+    seasonsProductionCountries {
+      nodes {
+        name
+      }
+    }
+    released
+    id
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+    episodes {
+      totalCount
+    }
+    seasonsTrailers {
+      totalCount
+    }
+    seasonsImages {
+      nodes {
+        imageType
+        imageId
+      }
+    }
+    publishStatus
+    publishedDate
+    publishedUser
+  }
+
+  tvshowGenres {
+    nodes {
+      title
+      id
+    }
+  }
+}
+
+mutation DeleteSeason($input: DeleteSeasonInput!) {
+  deleteSeason(input: $input) {
+    clientMutationId
+  }
+}
+
+
+mutation PublishSeason($id: Int!) {
+  publishSeason(seasonId: $id) {
+    id
+  }
+}
+
+mutation UnpublishSeason($id: Int!) {
+  unpublishSeason(seasonId: $id) {
+    id
+  }
+}
+
+
+query SeasonTitle($id: Int!) {
+  season(id: $id) {
+    id
+    index
+  }
+}
+
+query SearchSeasonTags($searchKey: String!, $limit: Int!) {
+  getSeasonsTagsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}
+
+query SearchSeasonCast($searchKey: String!, $limit: Int!) {
+  getSeasonsCastsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}
+
+query SearchSeasonProductionCountries($searchKey: String!, $limit: Int!) {
+  getSeasonsProductionCountriesValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}

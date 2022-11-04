@@ -1,0 +1,8 @@
+**/node_modules/**
+services/**/dist/**
+libs/**/dist/**
+coverage
+**/coverage/**
+services/*/migrations/**
+generated
+yarn.lock

@@ -1,0 +1,14 @@
+query GetActiveSubscription($now: Datetime!) {
+  subscriptions(
+    filter: {
+      lifecycleStatus: { in: [ACTIVE, CANCELLED, ON_HOLD] }
+      periodEndDate: { greaterThan: $now }
+    }
+    orderBy: LIFECYCLE_STATUS_ASC
+    first: 1
+  ) {
+    nodes {
+      subscriptionPlanId
+    }
+  }
+}

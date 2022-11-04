@@ -1,0 +1,32 @@
+# Used only for DEVELOPMENT
+
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:11.12-alpine
+    environment:
+      POSTGRES_USER: '${POSTGRESQL_ROOT}'
+      POSTGRES_PASSWORD: '${POSTGRESQL_ROOT_PASSWORD}'
+    volumes:
+      - 'postgres_data:/var/lib/postgresql/data:rw'
+    ports:
+      - '${POSTGRESQL_PORT}:5432'
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev@local.com
+      PGADMIN_DEFAULT_PASSWORD: pgAdmin
+    volumes:
+      - 'pgadmin_data:/var/lib/pgadmin:rw'
+    ports:
+      - '${PGADMIN_PORT}:80'
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  pgadmin_data:

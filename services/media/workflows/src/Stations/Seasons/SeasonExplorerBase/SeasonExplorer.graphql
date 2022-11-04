@@ -1,0 +1,64 @@
+fragment SeasonExplorerProperties on Season {
+  id
+  publishStatus
+  index
+  externalId
+  seasonsImages(condition: { imageType: COVER }) {
+    nodes {
+      imageId
+    }
+  }
+  seasonsTvshowGenres {
+    nodes {
+      tvshowGenres {
+        title
+      }
+    }
+  }
+  createdDate
+  updatedDate
+  seasonsTags {
+    nodes {
+      name
+    }
+  }
+  seasonsCasts {
+    nodes {
+      name
+    }
+  }
+  released
+  seasonsProductionCountries {
+    nodes {
+      name
+    }
+  }
+  studio
+  publishedDate
+}
+
+query Seasons($filter: SeasonFilter, $orderBy: [SeasonsOrderBy!], $after: Cursor) {
+  filtered: seasons(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...SeasonExplorerProperties
+    }
+  }
+  nonFiltered: seasons {
+    totalCount
+  }
+}
+
+subscription SeasonsMutated {
+  seasonMutated {
+    id
+    event
+    season {
+      ...SeasonExplorerProperties
+    }
+  }
+}

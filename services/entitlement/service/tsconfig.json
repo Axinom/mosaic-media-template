@@ -1,0 +1,23 @@
+// This config is used by vscode to provide proper IDE support for all typescript files in project, including tests and scripts. Inherited by tsconfig.build.json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true, // Needed to be able to import 'postgraphile-plugin-connection-filter'
+    "allowSyntheticDefaultImports": true, // Needed to be able to import 'ajv' together with esModuleInterop
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "target": "es2017",
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "preserveWatchOutput": true
+  },
+  "exclude": ["node_modules", "dist"]
+}

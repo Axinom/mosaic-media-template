@@ -1,0 +1,10 @@
+query MovieImages($id: Int!) {
+  movie(id: $id) {
+    moviesImages {
+      nodes {
+        imageId
+        imageType
+      }
+    }
+  }
+}

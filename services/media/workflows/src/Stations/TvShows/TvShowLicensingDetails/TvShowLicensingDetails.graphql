@@ -1,0 +1,24 @@
+query TvshowsLicense($id: Int!) {
+  tvshowsLicense(id: $id) {
+    tvshowsLicensesCountries {
+      nodes {
+        code
+      }
+    }
+    licenseEnd
+    licenseStart
+    tvshowId
+  }
+}
+
+mutation UpdateTvshowsLicense($input: UpdateTvshowsLicenseInput!) {
+  updateTvshowsLicense(input: $input) {
+    clientMutationId
+  }
+}
+
+mutation DeleteTvshowsLicense($input: DeleteTvshowsLicenseInput!) {
+  deleteTvshowsLicense(input: $input) {
+    clientMutationId
+  }
+}

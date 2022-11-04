@@ -1,0 +1,10 @@
+query CollectionImages($id: Int!) {
+  collection(id: $id) {
+    collectionsImages {
+      nodes {
+        imageId
+        imageType
+      }
+    }
+  }
+}

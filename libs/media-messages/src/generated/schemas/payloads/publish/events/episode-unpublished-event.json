@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "episode_unpublished_event",
+  "description": "Episode unpublished event.",
+  "properties": {
+    "content_id": {
+      "description": "Content ID of a TV show episode. Must match the pattern `^(episode)-([a-zA-Z0-9_-]+)$`.",
+      "type": "string",
+      "pattern": "^(episode)-([a-zA-Z0-9_-]+)$"
+    }
+  },
+  "required": [
+    "content_id"
+  ],
+  "additionalProperties": false
+}
