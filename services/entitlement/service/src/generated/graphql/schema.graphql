@@ -63,6 +63,40 @@ enum ErrorCodesEnum {
   """
   ERROR_WRAPPER
 
+  """
+  The webhook message was generated too long ago (%s seconds) and should not be accepted anymore for security reasons.
+  """
+  OUTDATED_WEBHOOK_REQUEST
+
+  """
+  The webhook request has failed because the provided webhook secret is empty.
+  """
+  EMPTY_WEBHOOK_SECRET
+
+  """
+  The webhook request signature does not match the one calculated from the webhook body and the corresponding webhook secret.
+  """
+  INVALID_WEBHOOK_SIGNATURE
+
+  """Generation of a webhook request has failed."""
+  WEBHOOK_REQUEST_GENERATION_FAILED
+
+  """Generation of a webhook signature has failed."""
+  WEBHOOK_SIGNATURE_GENERATION_FAILED
+
+  """Validation of webhook payload has failed."""
+  WEBHOOK_PAYLOAD_VALIDATION_FAILED
+
+  """
+  An attempt to generate a webhook response has failed. If payload is empty, at least one error must be provided.
+  """
+  EMPTY_WEBHOOK_RESPONSE
+
+  """
+  An attempt to generate a webhook response has failed. If payload is provided, errors cannot be provided. Use 'warnings' instead.
+  """
+  INVALID_WEBHOOK_RESPONSE
+
   """Access Token is not provided"""
   ACCESS_TOKEN_REQUIRED
 
@@ -193,4 +227,14 @@ enum ErrorCodesEnum {
   The user either does not have an active subscription, or subscription does not allow the playback of specific video.
   """
   SUBSCRIPTION_VALIDATION_ERROR
+
+  """
+  The user must have VIDEOS_STREAMING permission to request the video playback information.
+  """
+  NO_STREAMING_PERMISSION
+
+  """
+  Unable to parse the webhook request body. Please make sure that webhook request is sent with the header 'content-type':'application/json'.
+  """
+  UNABLE_TO_PARSE_WEBHOOK_BODY
 }

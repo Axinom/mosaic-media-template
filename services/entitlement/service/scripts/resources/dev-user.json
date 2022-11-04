@@ -6,5 +6,9 @@
       "APPLICATIONS_VIEW",
       "APPLICATIONS_EDIT"
     ]
+  },
+  {
+    "serviceId": "ax-encoding-service",
+    "permissions": ["SETTINGS_EDIT"]
   }
 ]

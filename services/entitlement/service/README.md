@@ -34,6 +34,9 @@ during service runtime. Please have a look at their EULA
   - Sign up for a free GeoLite2 account at
     https://dev.maxmind.com/geoip/geolite2-free-geolocation-data, generate a
     license key and set it as value for GEOLITE2_LICENSE_KEY
+  - (Optionally) run `yarn setup:webhooks` to generate webhook secrets and set
+    related values in `.env` file. This will enable `/entitlement` and
+    `/manifest` webhook endpoints to be able to authenticate requests.
 - Run `yarn dev` to start (only) this service. Otherwise run `yarn dev:services`
   on the root to start all backend services.
 - For more info on working with database migrations see

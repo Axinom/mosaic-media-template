@@ -30,7 +30,11 @@ import {
 } from '@axinom/mosaic-service-common';
 import express from 'express';
 import { applyMigrations, getFullConfig } from './common';
-import { syncClaimDefinitions } from './domains';
+import {
+  setupEntitlementWebhookEndpoint,
+  setupManifestWebhookEndpoint,
+  syncClaimDefinitions,
+} from './domains';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
 import { getMessagingMiddleware } from './messaging';
 import { registerMessaging } from './messaging/register-messaging';
@@ -95,6 +99,8 @@ async function bootstrap(): Promise<void> {
     authEndpoint: config.userServiceAuthBaseUrl,
   };
   setupEndUserAuthentication(app, ['/graphql'], authConfig);
+  setupEntitlementWebhookEndpoint(app, config);
+  setupManifestWebhookEndpoint(app, config);
 
   await setupPostGraphile(app, config, authConfig);
 

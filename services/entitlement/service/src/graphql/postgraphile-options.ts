@@ -14,6 +14,7 @@ import {
   Logger,
   MosaicErrors,
   PostgraphileOptionsBuilder,
+  WebhookErrors,
 } from '@axinom/mosaic-service-common';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import { Request, Response } from 'express';
@@ -57,6 +58,7 @@ export const buildPostgraphileOptions = (
       AxGuardPlugin,
       AddErrorCodesEnumPluginFactory([
         MosaicErrors,
+        WebhookErrors,
         IdGuardErrors,
         CommonErrors,
       ]),
