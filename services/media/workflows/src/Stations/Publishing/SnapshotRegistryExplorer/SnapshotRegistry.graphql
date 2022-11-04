@@ -1,0 +1,73 @@
+fragment SnapshotExplorerProperties on Snapshot {
+  id
+  entityId
+  entityType
+  entityTitle
+  jobId
+  createdDate
+  createdUser
+  snapshotValidationResults {
+    nodes {
+      id
+      context
+      message
+      severity
+    }
+  }
+  snapshotState
+  updatedDate
+  updatedUser
+  validationStatus
+  publishedDate
+  unpublishedDate
+}
+
+query Snapshots($filter: SnapshotFilter, $orderBy: [SnapshotsOrderBy!], $after: Cursor) {
+  filtered: snapshots(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...SnapshotExplorerProperties
+    }
+  }
+  nonFiltered: snapshots {
+    totalCount
+  }
+}
+
+subscription SnapshotsMutated {
+  snapshotMutated {
+    id
+    event
+    snapshot {
+      ...SnapshotExplorerProperties
+    }
+  }
+}
+
+mutation BulkDeleteSnapshots($filter: SnapshotFilter) {
+  deleteSnapshots(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkPublishSnapshots($filter: SnapshotFilter) {
+  publishSnapshots(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkUnpublishSnapshots($filter: SnapshotFilter) {
+  unpublishSnapshots(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkRecreateSnapshots($filter: SnapshotFilter) {
+  recreateSnapshots(filter: $filter) {
+    affectedIds
+  }
+}

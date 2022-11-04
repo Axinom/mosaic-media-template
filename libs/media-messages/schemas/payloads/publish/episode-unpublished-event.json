@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "episode_unpublished_event",
+  "description": "Episode unpublished event.",
+  "properties": {
+    "content_id": {
+      "$ref": "common.json#/definitions/episode_id"
+    }
+  },
+  "required": [
+    "content_id"
+  ],
+  "additionalProperties": false
+}

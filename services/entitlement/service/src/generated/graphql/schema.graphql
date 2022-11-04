@@ -1,0 +1,196 @@
+"""The root query type which gives access points into the data universe."""
+type Query {
+  """
+  Exposes the root query type nested one level down. This is helpful for Relay 1
+  which can only query top level fields if they are in a particular form.
+  """
+  query: Query!
+  entitlement(input: EntitlementInput): EntitlementPayload
+}
+
+type EntitlementPayload {
+  entitlementMessageJwt: String
+  claims: [String!]!
+}
+
+input EntitlementInput {
+  entityId: String!
+  allowPersistence: Boolean
+}
+
+"""
+Exposes all error codes and messages for errors that a service requests can throw. In some cases, messages that are actually thrown can be different, since they can include more details or a single code can used for different errors of the same type.
+"""
+enum ErrorCodesEnum {
+  """
+  An unhandled and unexpected error has occurred. Please contact the service support.
+  """
+  INTERNAL_SERVER_ERROR
+
+  """
+  An unhandled database-related has occurred. Please contact the service support.
+  """
+  UNHANDLED_DATABASE_ERROR
+
+  """An unhandled error has occurred. Please contact the service support."""
+  UNHANDLED_ERROR
+
+  """
+  An expected and handled database constraint error has occurred. The actual message will have more information.
+  """
+  DATABASE_VALIDATION_FAILED
+
+  """
+  An authorization database error has occurred. The user might not have enough permissions.
+  """
+  DATABASE_PERMISSIONS_CHECK_FAILED
+
+  """
+  A GraphQL validation error has occurred. Please make sure that the GraphQL request is made with correct syntax or parameters.
+  """
+  GRAPHQL_VALIDATION_FAILED
+
+  """
+  An application startup error has occurred. The actual message will have more information.
+  """
+  STARTUP_ERROR
+
+  """The assertion check for the identifier %s failed."""
+  ASSERTION_FAILED
+
+  """
+  This is a wrapper error for the original unhandled error of unsupported type.
+  """
+  ERROR_WRAPPER
+
+  """Access Token is not provided"""
+  ACCESS_TOKEN_REQUIRED
+
+  """Access Token is invalid"""
+  ACCESS_TOKEN_INVALID
+
+  """Access Token has expired."""
+  ACCESS_TOKEN_EXPIRED
+
+  """User is not authorized to access the operation."""
+  USER_NOT_AUTHORIZED
+
+  """
+  Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous.
+  """
+  SIGNING_KEY_NOT_FOUND
+
+  """
+  Error occurred while trying to fetch signing keys from the JWKS endpoint for the Tenant/Environment/Application.
+  """
+  JWKS_ERROR
+
+  """Access token verification failed"""
+  ACCESS_TOKEN_VERIFICATION_FAILED
+
+  """The Identity service is not accessible. Please contact Axinom support."""
+  IDENTITY_SERVICE_NOT_ACCESSIBLE
+
+  """The User service is not accessible. Please contact Axinom support."""
+  USER_SERVICE_NOT_ACCESSIBLE
+
+  """Auth config is invalid."""
+  AUTH_CONFIG_INVALID
+
+  """Passed JWT is not a Mosaic End-User Token. Cannot be verified."""
+  JWT_IS_NOT_MOSAIC_TOKEN
+
+  """The token is not an Authenticated End-User"""
+  NOT_AUTHENTICATED_END_USER
+
+  """The token is not an End-User Application"""
+  NOT_END_USER_APPLICATION
+
+  """The object is not a GenericAuthenticatedSubject"""
+  NOT_GENERIC_AUTHENTICATED_SUBJECT
+
+  """The object is not a AuthenticatedManagementSubject"""
+  NOT_AUTHENTICATED_MANAGEMENT_SUBJECT
+
+  """The object is not a AuthenticatedRequest"""
+  NOT_AUTHENTICATED_REQUEST
+
+  """The object is not a ManagementAuthenticationContext"""
+  NOT_MANAGEMENT_AUTHENTICATION_CONTEXT
+
+  """The object is not an EndUserAuthenticationContext"""
+  NOT_END_USER_AUTHENTICATION_CONTEXT
+
+  """Malformed access token received"""
+  MALFORMED_TOKEN
+
+  """
+  Error(s) occurred while trying to retrieve the %s with ID '%s' from the catalog service. Please contact the service support.
+  """
+  CATALOG_ERRORS
+
+  """
+  Error(s) occurred while trying to retrieve active subscription from the billing service. Please contact the service support.
+  """
+  BILLING_ERRORS
+
+  """The %s does not have a MAIN video. Please contact the service support."""
+  NO_MAIN_VIDEO
+
+  """The %s does not have a license."""
+  LICENSE_NOT_FOUND
+
+  """
+  We were unable to connect to the catalog service. Please contact the service support or try again later.
+  """
+  CATALOG_CONNECTION_FAILED
+
+  """
+  We were unable to connect to the billing service. Please contact the service support or try again later.
+  """
+  BILLING_CONNECTION_FAILED
+
+  """
+  The %s has multiple MAIN videos, which should not be possible. Please contact the service support.
+  """
+  MULTIPLE_MAIN_VIDEOS
+
+  """Unable to playback video."""
+  UNABLE_TO_PLAYBACK_VIDEO
+
+  """The %s does not have a valid license in your current country (%s)"""
+  LICENSE_IS_NOT_VALID
+
+  """
+  Unable to create or update claims set, because it contains invalid claims.
+  """
+  INVALID_CLAIMS_IN_CLAIM_SET
+
+  """
+  Unable to unpublish the claim set, because it is used by %s published subscription plan(s).
+  """
+  CLAIM_SET_UNPUBLISH_ERROR
+
+  """The provided entity ID is empty."""
+  EMPTY_ENTITY_ID
+
+  """
+  The provided entity ID '%s' is invalid. It must start with 'movie-' or 'episode-' followed by a number.
+  """
+  INVALID_ENTITY_ID
+
+  """
+  The %s cannot be retrieved. Please make sure that the %s is successfully published.
+  """
+  ENTITY_NOT_FOUND
+
+  """
+  The requested video for the %s is not protected. An entitlement message to receive a DRM license is therefore not required.
+  """
+  VIDEO_NOT_PROTECTED
+
+  """
+  The user either does not have an active subscription, or subscription does not allow the playback of specific video.
+  """
+  SUBSCRIPTION_VALIDATION_ERROR
+}

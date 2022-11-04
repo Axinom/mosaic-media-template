@@ -1,0 +1,48 @@
+/.yarn/*
+!/.yarn/releases
+!/.yarn/plugins
+!/.yarn/sdks
+
+# Swap the comments on the following lines if you don't wish to use zero-installs
+# Documentation here: https://yarnpkg.com/features/zero-installs
+!/.yarn/cache
+#/.pnp.*
+
+node_modules
+
+# build
+dist
+.cache
+release-package
+
+# Jest
+coverage
+
+# JUnit Report
+junit.xml
+
+# Development
+.env
+.env.*
+!.env.*.template
+!.env.template
+
+# Output of 'npm pack'
+*.tgz
+!/hotfix-libs/*.tgz
+
+# Logfiles
+*.log
+
+# Terraform plugins
+pipelines/**/.terraform/
+**/.terraform
+.terraform
+
+# ignore modules, as they used from other repo
+pipelines/terraform/modules
+
+.idea
+
+# Files generated using util:ingest-gen script
+ingest-gen

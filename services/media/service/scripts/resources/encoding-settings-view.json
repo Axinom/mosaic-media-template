@@ -1,0 +1,6 @@
+[
+  {
+    "serviceId": "ax-encoding-service",
+    "permissions": ["SETTINGS_VIEW"]
+  }
+]

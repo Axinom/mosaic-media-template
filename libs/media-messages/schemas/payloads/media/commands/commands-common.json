@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Common definitions for media service related messages.",
+  "title": "media_commands_common",
+
+  "definitions": {
+    "publish_options": {
+      "type": "object",
+      "title": "publish_options",
+      "description": "Snapshot publish options.",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "title": "publish_action_type",
+          "description": "Publish action type.",
+          "enum": [
+            "PUBLISH_NOW",
+            "NO_PUBLISH",
+            "SCHEDULE"
+          ],
+          "default": [
+            "NO_PUBLISH"
+          ]
+        },
+        "schedule_time": {
+          "type": "string",
+          "description": "When to publish in case of scheduled publication.",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

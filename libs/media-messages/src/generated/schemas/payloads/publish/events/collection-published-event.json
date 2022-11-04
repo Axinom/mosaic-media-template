@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "collection_published_event",
+  "description": "Definition of the collection publish format.",
+  "properties": {
+    "content_id": {
+      "description": "Content ID of a collection. Must match the pattern `^(collection)-([a-zA-Z0-9_-]+)$`.",
+      "type": "string",
+      "pattern": "^(collection)-([a-zA-Z0-9_-]+)$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*",
+      "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+    },
+    "synopsis": {
+      "description": "Short description.",
+      "type": "string"
+    },
+    "description": {
+      "description": "Longer description.",
+      "type": "string"
+    },
+    "tags": {
+      "description": "Array of tags associated with the content.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "images": {
+      "description": "Array of images associated with the content.",
+      "type": "array",
+      "items": {
+        "description": "Asset image metadata.",
+        "type": "object",
+        "title": "image",
+        "properties": {
+          "type": {
+            "description": "Type of the image.",
+            "type": "string",
+            "title": "image_type",
+            "enum": [
+              "COVER",
+              "TEASER"
+            ]
+          },
+          "path": {
+            "description": "URI to the image file.",
+            "type": "string",
+            "pattern": "/[^/]+(.*)"
+          },
+          "width": {
+            "description": "Width of the image in pixels.",
+            "type": "integer"
+          },
+          "height": {
+            "description": "Height of the image in pixels.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "type",
+          "path",
+          "width",
+          "height"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "related_items": {
+      "description": "Array of content related items metadata.",
+      "type": "array",
+      "items": {
+        "description": "Related item metadata.",
+        "type": "object",
+        "title": "related_item",
+        "properties": {
+          "movie_id": {
+            "description": "Content ID of a movie. Must match the pattern`^(movie)-([a-zA-Z0-9_-]+)$.`",
+            "type": "string",
+            "pattern": "^(movie)-([a-zA-Z0-9_-]+)$"
+          },
+          "tvshow_id": {
+            "description": "Content ID of a TV show. Must match the pattern `^(tvshow)-([a-zA-Z0-9_-]+)$`.",
+            "type": "string",
+            "pattern": "^(tvshow)-([a-zA-Z0-9_-]+)$"
+          },
+          "season_id": {
+            "description": "Content ID of a TV show season. Must match the pattern `^(season)-([a-zA-Z0-9_-]+)$`.",
+            "type": "string",
+            "pattern": "^(season)-([a-zA-Z0-9_-]+)$"
+          },
+          "episode_id": {
+            "description": "Content ID of a TV show episode. Must match the pattern `^(episode)-([a-zA-Z0-9_-]+)$`.",
+            "type": "string",
+            "pattern": "^(episode)-([a-zA-Z0-9_-]+)$"
+          },
+          "order_no": {
+            "description": "Ordering number for the genre.",
+            "type": "integer"
+          },
+          "relation_type": {
+            "description": "Textual representation of relation type.",
+            "type": "string",
+            "title": "relation_type",
+            "enum": [
+              "MOVIE",
+              "TVSHOW",
+              "SEASON",
+              "EPISODE"
+            ]
+          }
+        },
+        "required": [
+          "order_no",
+          "relation_type"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "content_id",
+    "title",
+    "related_items"
+  ],
+  "additionalProperties": false
+}

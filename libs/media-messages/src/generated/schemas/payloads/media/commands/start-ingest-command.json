@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "start_ingest_command",
+  "description": "Start ingest command schema.",
+  "additionalProperties": false,
+  "required": [
+    "doc_id"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "integer",
+      "description": "Id of an ingest document stored in the database."
+    }
+  }
+}

@@ -1,0 +1,65 @@
+fragment TVShowExplorerProperties on Tvshow {
+  id
+  publishStatus
+  title
+  externalId
+  tvshowsImages(condition: { imageType: COVER }) {
+    nodes {
+      imageId
+    }
+  }
+  tvshowsTvshowGenres {
+    nodes {
+      tvshowGenres {
+        title
+      }
+    }
+  }
+  createdDate
+  updatedDate
+  originalTitle
+  tvshowsTags {
+    nodes {
+      name
+    }
+  }
+  tvshowsCasts {
+    nodes {
+      name
+    }
+  }
+  released
+  tvshowsProductionCountries {
+    nodes {
+      name
+    }
+  }
+  studio
+  publishedDate
+}
+
+query TVShows($filter: TvshowFilter, $orderBy: [TvshowsOrderBy!], $after: Cursor) {
+  filtered: tvshows(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...TVShowExplorerProperties
+    }
+  }
+  nonFiltered: tvshows {
+    totalCount
+  }
+}
+
+subscription TVShowsMutated {
+  tvshowMutated {
+    id
+    event
+    tvshow {
+      ...TVShowExplorerProperties
+    }
+  }
+}

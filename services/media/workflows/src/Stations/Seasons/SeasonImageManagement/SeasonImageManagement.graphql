@@ -1,0 +1,10 @@
+query SeasonImages($id: Int!) {
+  season(id: $id) {
+    seasonsImages {
+      nodes {
+        imageId
+        imageType
+      }
+    }
+  }
+}

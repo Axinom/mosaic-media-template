@@ -1,0 +1,7 @@
+mutation CreateSeasonsLicense($input: CreateSeasonsLicenseInput!) {
+  createSeasonsLicense(input: $input) {
+    seasonsLicense {
+      id
+    }
+  }
+}

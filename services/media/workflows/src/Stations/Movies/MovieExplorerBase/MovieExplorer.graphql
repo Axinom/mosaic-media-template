@@ -1,0 +1,65 @@
+fragment MovieExplorerProperties on Movie {
+  id
+  title
+  originalTitle
+  externalId
+  moviesImages(condition: { imageType: COVER }) {
+    nodes {
+      imageId
+    }
+  }
+  moviesTags {
+    nodes {
+      name
+    }
+  }
+  moviesMovieGenres {
+    nodes {
+      movieGenres {
+        title
+      }
+    }
+  }
+  moviesCasts {
+    nodes {
+      name
+    }
+  }
+  released
+  moviesProductionCountries {
+    nodes {
+      name
+    }
+  }
+  studio
+  publishedDate
+  createdDate
+  updatedDate
+  publishStatus
+}
+
+query Movies($filter: MovieFilter, $orderBy: [MoviesOrderBy!], $after: Cursor) {
+  filtered: movies(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...MovieExplorerProperties
+    }
+  }
+  nonFiltered: movies {
+    totalCount
+  }
+}
+
+subscription MoviesMutated {
+  movieMutated {
+    id
+    event
+    movie {
+      ...MovieExplorerProperties
+    }
+  }
+}

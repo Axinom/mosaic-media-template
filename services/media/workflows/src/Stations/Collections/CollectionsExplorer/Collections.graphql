@@ -1,0 +1,78 @@
+fragment CollectionExplorerProperties on Collection {
+  id
+  title
+  externalId
+  collectionsTags {
+    nodes {
+      name
+    }
+  }
+  publishedDate
+  createdDate
+  updatedDate
+  publishStatus
+  collectionsImages {
+    nodes {
+      imageId
+    }
+  }
+}
+
+query Collections(
+  $filter: CollectionFilter
+  $orderBy: [CollectionsOrderBy!]
+  $after: Cursor
+) {
+  filtered: collections(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...CollectionExplorerProperties
+    }
+  }
+  nonFiltered: collections {
+    totalCount
+  }
+}
+
+subscription CollectionsMutated {
+  collectionMutated {
+    id
+    event
+    collection {
+      ...CollectionExplorerProperties
+    }
+  }
+}
+
+mutation BulkDeleteCollections($filter: CollectionFilter) {
+  deleteCollections(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkPublishCollections($filter: CollectionFilter) {
+  publishCollections(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkUnpublishCollections($filter: CollectionFilter) {
+  unpublishCollections(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkCreateCollectionSnapshots($filter: CollectionFilter) {
+  createCollectionSnapshots(filter: $filter) {
+    affectedIds
+  }
+}

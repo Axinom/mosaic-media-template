@@ -1,0 +1,24 @@
+query EpisodesLicense($id: Int!) {
+  episodesLicense(id: $id) {
+    episodeId
+    episodesLicensesCountries {
+      nodes {
+        code
+      }
+    }
+    licenseEnd
+    licenseStart
+  }
+}
+
+mutation UpdateEpisodesLicense($input: UpdateEpisodesLicenseInput!) {
+  updateEpisodesLicense(input: $input) {
+    clientMutationId
+  }
+}
+
+mutation DeleteEpisodesLicense($input: DeleteEpisodesLicenseInput!) {
+  deleteEpisodesLicense(input: $input) {
+    clientMutationId
+  }
+}

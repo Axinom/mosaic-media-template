@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "delete_entity_command",
+  "description": "Delete a single entity command schema.",
+  "additionalProperties": false,
+  "required": [
+    "table_name",
+    "primary_key_name",
+    "entity_id"
+  ],
+  "properties": {
+    "table_name": {
+      "description": "The name of the database table to use.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*"
+    },
+    "primary_key_name": {
+      "description": "The name of the primary key column for the database table to use.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*"
+    },
+    "entity_id": {
+      "type": "integer",
+      "description": "Id of the selected entity."
+    },
+    "entity_type": {
+      "type": "string",
+      "description": "The name of the entity type."
+    },
+    "input": {
+      "type": "object",
+      "title": "bulk_entity_input",
+      "description": "Additional input data."
+    }
+  }
+}

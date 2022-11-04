@@ -1,0 +1,1 @@
+export type VideoUsageType = "MAIN" | "TRAILER";

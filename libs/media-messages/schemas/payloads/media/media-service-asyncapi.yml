@@ -1,0 +1,123 @@
+asyncapi: 2.0.0
+info:
+  title: Media Service
+  version: '1.0.0'
+  description: |
+    Media service
+# AsyncAPI extension, used to define service id. If not defined, as service id will be used info.title in lower-kebab-case
+x-service-id: media-service
+
+channels:
+  # commands
+  'entity.delete':
+    bindings:
+      amqp:
+        queue:
+          name: entity:delete
+    publish:
+      message:
+        $ref: '#/components/messages/delete-entity-command'
+  'entity.publish_entity':
+    bindings:
+      amqp:
+        queue:
+          name: entity:publish_entity
+    publish:
+      message:
+        $ref: '#/components/messages/publish-entity-command'
+  'entity.unpublish_entity':
+    bindings:
+      amqp:
+        queue:
+          name: entity:unpublish_entity
+    publish:
+      message:
+        $ref: '#/components/messages/unpublish-entity-command'
+  'ingest.start':
+    bindings:
+      amqp:
+        queue:
+          name: ingest:start
+    publish:
+      message:
+        $ref: '#/components/messages/start-ingest-command'
+  'ingest.start_item':
+    bindings:
+      amqp:
+        queue:
+          name: ingest:start_item
+    publish:
+      message:
+        $ref: '#/components/messages/start-ingest-item-command'
+  'ingest.update_metadata':
+    bindings:
+      amqp:
+        queue:
+          name: ingest:update_metadata
+    publish:
+      message:
+        $ref: '#/components/messages/update-metadata-command'
+  'ingest.check_finish_item':
+    bindings:
+      amqp:
+        queue:
+          name: ingest:check_finish_item
+    publish:
+      message:
+        $ref: '#/components/messages/check-finish-ingest-item-command'
+  'ingest.check_finish_document':
+    bindings:
+      amqp:
+        queue:
+          name: ingest:check_finish_document
+    publish:
+      message:
+        $ref: '#/components/messages/check-finish-ingest-document-command'
+
+  # events
+  'entity.deleted':
+    bindings:
+      amqp:
+        queue:
+          name: entity:deleted
+    subscribe:
+      message:
+        $ref: '#/components/messages/entity-deleted-event'
+components:
+  messages:
+    check-finish-ingest-item-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/check-finish-ingest-item-command.json'
+    check-finish-ingest-document-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/check-finish-ingest-document-command.json'
+    delete-entity-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/delete-entity-command.json'
+    publish-entity-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/publish-entity-command.json'
+    start-ingest-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/start-ingest-command.json'
+    start-ingest-item-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/start-ingest-item-command.json'
+    unpublish-entity-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/unpublish-entity-command.json'
+    update-metadata-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/update-metadata-command.json'
+    entity-deleted-event:
+      contentType: application/json
+      payload:
+        $ref: 'event/entity-deleted-event.json'
