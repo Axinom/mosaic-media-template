@@ -1,7 +1,8 @@
 name: Catalog Service - docker build and push
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ "release/R58" ]
 jobs:
   build:
     runs-on: ubuntu-latest
