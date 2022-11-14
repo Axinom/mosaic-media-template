@@ -1,7 +1,8 @@
 name: Entitlement Service - docker build and push
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ "release/R58" ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,7 +29,7 @@ jobs:
           dockerHost: ${{ secrets.DOCKER_HOST_NAME }}
           tag:  ${{ env.NOW }}.${{ github.run_attempt }}
         with:
-          push: true
+          push: false
           context: .
           build-args: |
             "PACKAGE_ROOT=${{ env.packageRoot }}"
