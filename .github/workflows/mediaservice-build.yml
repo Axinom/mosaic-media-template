@@ -35,4 +35,4 @@ jobs:
             "PACKAGE_ROOT=${{ env.packageRoot }}"
             "PACKAGE_BUILD_COMMAND=${{ env.packageBuildCommand }}"
           file: ${{ env.dockerfilePath }}
-          tags: ${{ env.dockerHost }}}/${{ env.imageRepository }}:${{ env.tag }}
+          tags: ${{ env.dockerHost }}/${{ env.imageRepository }}:${{ env.tag }}
