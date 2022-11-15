@@ -1,5 +1,5 @@
 name: Catalog Service - docker build and push
-
+run-name: Build ${{ github.run_number }}
 on:
   push:
     branches: [ "release/R58" ]
