@@ -13,7 +13,7 @@ jobs:
       - name: Echo current date
         run: echo $NOW
       - name: Log build number
-        run: echo "${{ env.NOW }}.${{ github.run_number }}" >> $GITHUB_STATE
+        run: echo "{date}=${{ env.NOW }}.${{ github.run_number }}" >> $GITHUB_STATE
       - name: Login to AX Container Registry
         uses: docker/login-action@v2
         with:
