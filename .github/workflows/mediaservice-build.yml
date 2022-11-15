@@ -1,8 +1,7 @@
 name: Media Service - docker build and push
 
 on:
-  push:
-    branches: [ "release/R58" ]
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest

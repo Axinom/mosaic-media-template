@@ -1,8 +1,7 @@
 name: Media Service Workflow - build
 
 on:
-  push:
-    branches: [ "release/R58" ]
+  workflow_dispatch:
 
 jobs:
   build:

@@ -1,4 +1,5 @@
 name: Catalog Service - docker build and push
+run_name: Catalogservice build
 on:
   push:
     branches: [ "release/R58" ]
@@ -12,7 +13,7 @@ jobs:
       - name: Echo current date
         run: echo $NOW
       - name: Log build number
-        run: echo "${{ env.NOW }}.${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+        run: echo "${{ env.NOW }}.${{ github.run_number }}" >> $GITHUB_STATE
       - name: Login to AX Container Registry
         uses: docker/login-action@v2
         with:
