@@ -1,5 +1,5 @@
 name: Catalog Service - docker build and push
-run_name: Catalogservice build
+
 on:
   push:
     branches: [ "release/R58" ]
