@@ -1,5 +1,4 @@
 name: Catalog Service - docker build and push
-run-name: Build ${{ github.run_number }}
 on:
   push:
     branches: [ "release/R58" ]
@@ -38,3 +37,4 @@ jobs:
             "PACKAGE_BUILD_COMMAND=${{ env.packageBuildCommand }}"
           file: ${{ env.dockerfilePath }}
           tags: ${{ env.dockerHost }}/${{ env.imageRepository }}:${{ env.tag }}
+run-name: Build ${{ env.tag }}
