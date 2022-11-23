@@ -35,18 +35,17 @@ const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   licenseStart: Yup.date().typeError('required'),
   licenseEnd: Yup.date()
     .typeError('required')
-    .test('checkEndDate', '', function (value) {
-      const { path, parent, createError } = this;
-      if (value) {
-        if (parent.licenseStart.getTime() >= value.getTime()) {
-          return createError({
-            path,
-            message: 'License end date cannot be before start date',
-          });
+    .test(
+      'checkEndDate',
+      'License end date cannot be before start date',
+      function (value) {
+        const { parent } = this;
+        if (value) {
+          return parent.licenseStart.getTime() < value.getTime();
         }
-      }
-      return true;
-    }),
+        return true;
+      },
+    ),
 });
 
 export const MovieLicensingDetails: React.FC = () => {
