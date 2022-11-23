@@ -32,15 +32,20 @@ type FormData = MutationUpdateMoviesLicenseArgs['input']['patch'] & {
 };
 
 const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
-  licenseStart: Yup.date(),
-  licenseEnd: Yup.date().when('licenseStart', {
-    is: (start) => start != null,
-    then: (end) =>
-      end.min(
-        Yup.ref('licenseStart'),
-        'License end date cannot be before start date',
-      ),
-  }),
+  licenseStart: Yup.date().typeError('required'),
+  licenseEnd: Yup.date()
+    .typeError('required')
+    .test(
+      'checkEndDate',
+      'License end date cannot be before start date',
+      function (value) {
+        const { parent } = this;
+        if (value) {
+          return parent.licenseStart.getTime() < value.getTime();
+        }
+        return true;
+      },
+    ),
 });
 
 export const MovieLicensingDetails: React.FC = () => {
@@ -74,9 +79,8 @@ export const MovieLicensingDetails: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const countryAssignmentMutations = generateArrayMutations({
         current: formData.countries,
