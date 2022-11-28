@@ -88,6 +88,7 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
               ),
               claims,
               config,
+              config.isDev ? 'DEV' : 'DEFAULT',
             );
             return { entitlementMessageJwt, claims };
           } catch (error) {

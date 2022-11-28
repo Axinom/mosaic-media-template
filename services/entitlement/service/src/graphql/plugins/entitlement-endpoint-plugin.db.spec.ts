@@ -27,6 +27,7 @@ import {
   ITestContext,
   TestRequestContext,
 } from '../../tests/test-utils';
+import { getPolicy } from './entitlement-endpoint/entitlement-message-generation';
 
 // mock the sdk to return values to be tested, emulating catalog response
 let catalogCall: any = () => undefined;
@@ -111,6 +112,7 @@ describe('EntitlementEndpointPlugin', () => {
       },
     };
 
+    const policy = getPolicy('DEFAULT');
     expectedJwtPayload = (persistence: boolean) => ({
       version: 1,
       com_key_id: ctx.config.drmLicenseCommunicationKeyId,
@@ -135,10 +137,7 @@ describe('EntitlementEndpointPlugin', () => {
         content_key_usage_policies: [
           {
             name: 'Policy A',
-            playready: {
-              min_device_security_level: 2000,
-              play_enablers: ['786627D8-C2A6-44BE-8F88-08AE255B01A7'],
-            },
+            ...policy,
           },
         ],
       },
