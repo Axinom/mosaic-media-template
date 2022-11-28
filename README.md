@@ -1,4 +1,4 @@
-# Mosaic OTT Template Solution
+# Mosaic Media Template Solution
 
 ## About the Package
 
