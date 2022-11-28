@@ -63,6 +63,15 @@ export const getConfigDefinitions = (
 
     manifestWebhookSecret: () => env.get('MANIFEST_WEBHOOK_SECRET').asString(),
 
+    widevineLicenseServiceUrl: () =>
+      env.get('WIDEVINE_LICENSE_SERVICE_URL').asUrlString(),
+    playreadyLicenseServiceUrl: () =>
+      env.get('PLAYREADY_LICENSE_SERVICE_URL').asUrlString(),
+    fairplayLicenseServiceUrl: () =>
+      env.get('FAIRPLAY_LICENSE_SERVICE_URL').asUrlString(),
+    fairplayStreamingCertificateUrl: () =>
+      env.get('FAIRPLAY_STREAMING_CERTIFICATE_URL').asUrlString(),
+
     /**
      * Optional User Service GraphQL Endpoint, used to get user auth token
      * during development

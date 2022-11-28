@@ -70,7 +70,14 @@ export const setupEntitlementWebhookEndpoint = (
         const jwt = generateEntitlementMessageJwt(keyIds, [], config, 'STRICT');
         const response =
           generateWebhookResponse<EntitlementWebhookResponsePayload>({
-            payload: { entitlement_message_jwt: jwt },
+            payload: {
+              entitlement_message_jwt: jwt,
+              widevine_license_service_url: config.widevineLicenseServiceUrl,
+              playready_license_service_url: config.playreadyLicenseServiceUrl,
+              fairplay_license_service_url: config.fairplayLicenseServiceUrl,
+              fairplay_streaming_certificate_url:
+                config.fairplayStreamingCertificateUrl,
+            },
           });
         res.status(200).send(response);
       } catch (error) {
