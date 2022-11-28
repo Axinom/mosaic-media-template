@@ -1,0 +1,37 @@
+name: Media Service - docker build and push
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y%m%d')" >> $GITHUB_ENV
+      - name: Echo current date
+        run: echo $NOW
+      - name: Login to AX Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.DOCKER_HOST_NAME }}
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        env:
+          packageRoot: services/media/service
+          packageBuildCommand: build:media-service:prod
+          imageRepository: 'navycms/media-service'
+          containerRegistry: 'NavyCMS Docker registry'
+          dockerfilePath: './Dockerfile'
+          dockerHost: ${{ secrets.DOCKER_HOST_NAME }}
+          tag: ${{ env.NOW }}.${{ github.run_attempt }}
+        with:
+          push: true
+          context: .
+          build-args: |
+            "PACKAGE_ROOT=${{ env.packageRoot }}"
+            "PACKAGE_BUILD_COMMAND=${{ env.packageBuildCommand }}"
+          file: ${{ env.dockerfilePath }}
+          tags: ${{ env.dockerHost }}/${{ env.imageRepository }}:${{ env.tag }}
