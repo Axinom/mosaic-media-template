@@ -1,8 +1,11 @@
 name: Media Service Workflow - release to TEST
 
+#on:
+  #workflow_dispatch:
 on:
-  workflow_dispatch:
-
+  push:
+    branches:
+      - 'se/**'
 jobs:
   build:
     runs-on: ubuntu-latest
