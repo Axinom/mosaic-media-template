@@ -1,0 +1,15 @@
+name: Media Service Workflow - release to TEST
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v3
+        with:
+          name: media-service-workflow
+      - name: Display structure of downloaded files
+        run: ls -R
