@@ -25,7 +25,7 @@ export interface VideoStream {
    */
   file?: string | null;
   /**
-   * IV
+   * The initialization vector that was used to encrypt this media file.
    */
   iv?: string | null;
   /**

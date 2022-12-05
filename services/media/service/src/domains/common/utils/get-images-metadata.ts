@@ -13,6 +13,18 @@ interface ImageApiResults {
   validation: SnapshotValidationResult[];
   result: PublishImage[];
 }
+
+const getMappedError = mosaicErrorMappingFactory(
+  (error: Error & { response?: { errors?: unknown[] } }) => {
+    return {
+      ...CommonErrors.PublishImagesMetadataRequestError,
+      details: {
+        errors: error.response?.errors,
+      },
+    };
+  },
+);
+
 export const getImagesMetadata = async (
   imageServiceBaseUrl: string,
   authToken: string,
@@ -35,7 +47,7 @@ export const getImagesMetadata = async (
         ...CommonErrors.PublishImagesMetadataRequestError,
         logInfo: {
           reason:
-            'Request to the image service succeeded, but no images were returned and explicit error was not thrown.',
+            'The request to the Image Service succeeded, but no images were returned and an explicit error was not thrown.',
         },
       });
     }
@@ -77,19 +89,9 @@ export const getImagesMetadata = async (
 
     return { result: publishData, validation };
   } catch (error) {
-    const mapper = mosaicErrorMappingFactory(
-      (error: Error & { response?: { errors?: unknown[] } }) => {
-        return {
-          ...CommonErrors.PublishImagesMetadataRequestError,
-          details: {
-            errors: error.response?.errors,
-          },
-        };
-      },
-    );
     // Throwing an actual error instead of returning a validation error because
     // this usually gets called in context of a message handler and there is a
     // chance to recover using the message retry strategy.
-    throw mapper(error);
+    throw getMappedError(error);
   }
 };

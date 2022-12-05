@@ -18,6 +18,17 @@ interface VideoApiResults {
   result: PublishVideo[];
 }
 
+const getMappedError = mosaicErrorMappingFactory(
+  (error: Error & { response?: { errors?: unknown[] } }) => {
+    return {
+      ...CommonErrors.PublishVideosMetadataRequestError,
+      details: {
+        errors: error.response?.errors,
+      },
+    };
+  },
+);
+
 const processVideo = (
   videoId: string,
   gqlVideos: GqlVideo[],
@@ -142,7 +153,7 @@ export const getVideosMetadata = async (
         ...CommonErrors.PublishVideosMetadataRequestError,
         logInfo: {
           reason:
-            'Request to the encoding service succeeded, but no videos were returned and explicit error was not throw.',
+            'The request to the Encoding Service succeeded, but no videos were returned and an explicit error was not thrown.',
         },
       });
     }
@@ -174,19 +185,9 @@ export const getVideosMetadata = async (
 
     return { result: publishData, validation };
   } catch (error) {
-    const mapper = mosaicErrorMappingFactory(
-      (error: Error & { response?: { errors?: unknown[] } }) => {
-        return {
-          ...CommonErrors.PublishVideosMetadataRequestError,
-          details: {
-            errors: error.response?.errors,
-          },
-        };
-      },
-    );
     // Throwing an actual error instead of returning a validation error because
     // this usually gets called in context of a message handler and there is a
     // chance to recover using the message retry strategy.
-    throw mapper(error);
+    throw getMappedError(error);
   }
 };

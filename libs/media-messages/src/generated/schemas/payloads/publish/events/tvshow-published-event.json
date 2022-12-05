@@ -264,7 +264,7 @@
                     "string",
                     "null"
                   ],
-                  "description": "IV"
+                  "description": "The initialization vector that was used to encrypt this media file."
                 },
                 "bitrate_in_kbps": {
                   "type": [
