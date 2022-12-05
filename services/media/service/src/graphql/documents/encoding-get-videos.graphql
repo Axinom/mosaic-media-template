@@ -1,0 +1,44 @@
+query GetVideos($filter: VideoFilter) {
+  videos(filter: $filter) {
+    nodes {
+      id
+      title
+      lengthInSeconds
+      audioLanguages
+      captionLanguages
+      subtitleLanguages
+      dashManifestPath
+      hlsManifestPath
+      isProtected
+      outputFormat
+      previewStatus
+      encodingState
+      videosTags {
+        nodes {
+          name
+        }
+      }
+      videoStreams {
+        nodes {
+          keyId
+          label
+          format
+          file
+          iv
+          languageCode
+          bitrateInKbps
+          type
+          fileTemplate
+          codecs
+          frameRate
+          height
+          width
+          displayAspectRatio
+          pixelAspectRatio
+          samplingRate
+          languageName
+        }
+      }
+    }
+  }
+}

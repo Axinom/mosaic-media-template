@@ -2,16 +2,29 @@ import {
   MosaicError,
   mosaicErrorMappingFactory,
 } from '@axinom/mosaic-service-common';
-import axios from 'axios';
+import { GraphQLClient } from 'graphql-request';
 import urljoin from 'url-join';
 import { CommonErrors } from '../../../common';
+import { getSdk } from '../../../generated/graphql/image';
 import { SnapshotValidationResult } from '../../../publishing';
-import { GqlImage, ImageJSONSelectable, PublishImage } from '../models';
+import { ImageJSONSelectable, PublishImage } from '../models';
 
 interface ImageApiResults {
   validation: SnapshotValidationResult[];
   result: PublishImage[];
 }
+
+const getMappedError = mosaicErrorMappingFactory(
+  (error: Error & { response?: { errors?: unknown[] } }) => {
+    return {
+      ...CommonErrors.PublishImagesMetadataRequestError,
+      details: {
+        errors: error.response?.errors,
+      },
+    };
+  },
+);
+
 export const getImagesMetadata = async (
   imageServiceBaseUrl: string,
   authToken: string,
@@ -22,43 +35,28 @@ export const getImagesMetadata = async (
   }
 
   try {
-    const result = await axios.post(
-      urljoin(imageServiceBaseUrl, 'graphql'),
-      {
-        query: `
-          query GeImagesMetadata($filter: ImageFilter) {
-            images(filter: $filter) {
-              nodes { 
-                id     
-                height
-                width
-                imageTypeKey
-                transformationPath
-              }
-            }
-          }
-        `,
-        variables: {
-          filter: { id: { in: images.map((t) => t.image_id) } },
-        },
-      },
-      { headers: { Authorization: `Bearer ${authToken}` } },
+    const client = new GraphQLClient(urljoin(imageServiceBaseUrl, 'graphql'));
+    const { GetImages } = getSdk(client);
+    const { data } = await GetImages(
+      { filter: { id: { in: images.map((t) => t.image_id) } } },
+      { Authorization: `Bearer ${authToken}` },
     );
 
-    if (result.data.errors?.length > 0) {
+    if (!data.images?.nodes) {
       throw new MosaicError({
         ...CommonErrors.PublishImagesMetadataRequestError,
-        details: {
-          errors: result.data.errors,
+        logInfo: {
+          reason:
+            'The request to the Image Service succeeded, but no images were returned and an explicit error was not thrown.',
         },
       });
     }
 
     const validation: SnapshotValidationResult[] = [];
-    const publishData = [];
+    const publishData: PublishImage[] = [];
     for (const imageAssignment of images) {
-      const gqlImage: GqlImage = result.data.data.images.nodes.find(
-        (i: GqlImage) => i.id === imageAssignment.image_id,
+      const gqlImage = data.images.nodes.find(
+        (i) => i.id === imageAssignment.image_id,
       );
       if (!gqlImage) {
         validation.push({
@@ -91,16 +89,9 @@ export const getImagesMetadata = async (
 
     return { result: publishData, validation };
   } catch (error) {
-    const mapper = mosaicErrorMappingFactory(
-      (error: Error & { response?: { data?: { errors?: unknown[] } } }) => {
-        return {
-          ...CommonErrors.PublishImagesMetadataRequestError,
-          details: {
-            errors: error.response?.data?.errors,
-          },
-        };
-      },
-    );
-    throw mapper(error);
+    // Throwing an actual error instead of returning a validation error because
+    // this usually gets called in context of a message handler and there is a
+    // chance to recover using the message retry strategy.
+    throw getMappedError(error);
   }
 };

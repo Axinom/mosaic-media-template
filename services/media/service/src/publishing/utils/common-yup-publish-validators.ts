@@ -90,11 +90,20 @@ export const atLeastOneString = yup.array(yup.string()).min(1, oneItemError);
 /**
  * yup validation rule to check that array of objects has at least one object with type `COVER`
  */
-export const requiredCover = yup.array(yup.object()).test({
-  name: 'required_cover',
-  message: 'Cover image is not assigned.',
-  test: (images) => !!images && images.some((image) => image.type === 'COVER'),
-});
+export const requiredCover = yup
+  .array(
+    yup.object({
+      width: yup.number().positive(isPositiveNumber).required(isRequired),
+      height: yup.number().positive(isPositiveNumber).required(isRequired),
+      type: yup.string(),
+    }),
+  )
+  .test({
+    name: 'required_cover',
+    message: 'Cover image is not assigned.',
+    test: (images) =>
+      !!images && images.some((image) => image.type === 'COVER'),
+  });
 
 /**
  * yup validation rule to check that all videos to be published are valid.
@@ -105,15 +114,18 @@ export const videosValidation = (...supportedTypes: string[]): any => {
   const commonVideosValidation = yup.array(
     yup
       .object({
-        duration: yup.number().positive(isPositiveNumber).required(isRequired),
+        length_in_seconds: yup
+          .number()
+          .positive(isPositiveNumber)
+          .required(isRequired),
         audio_languages: yup
           .array(yup.string())
           .required(isRequired)
           .min(1, nonEmptyProperty),
         subtitle_languages: yup.array(yup.string()).required(isRequired).min(0),
         caption_languages: yup.array(yup.string()).required(isRequired).min(0),
-        dash_manifest: yup.string().url(isUrl),
-        hls_manifest: yup.string().url(isUrl),
+        dash_manifest: yup.string().nullable().url(isUrl),
+        hls_manifest: yup.string().nullable().url(isUrl),
         type: yup.string(),
       })
       .test({

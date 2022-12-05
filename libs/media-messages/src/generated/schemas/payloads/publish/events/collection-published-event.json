@@ -54,18 +54,22 @@
           },
           "width": {
             "description": "Width of the image in pixels.",
-            "type": "integer"
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "height": {
             "description": "Height of the image in pixels.",
-            "type": "integer"
+            "type": [
+              "integer",
+              "null"
+            ]
           }
         },
         "required": [
           "type",
-          "path",
-          "width",
-          "height"
+          "path"
         ],
         "additionalProperties": false
       }
