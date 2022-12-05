@@ -91,8 +91,8 @@ const getCatalogResponseVideo = (
     !videos[0].videoStreams ||
     videos[0].videoStreams.nodes.length === 0 || // A protected video will always have a video_streams record
     videos[0].videoStreams.nodes
-      .map((videoStream) => videoStream.drmKeyId)
-      .filter((drmKeyId) => !isNullOrWhitespace(drmKeyId)).length === 0
+      .map((videoStream) => videoStream.keyId)
+      .filter((keyId) => !isNullOrWhitespace(keyId)).length === 0
   ) {
     throw new MosaicError({
       ...CommonErrors.VideoNotProtected,

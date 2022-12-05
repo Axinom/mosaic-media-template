@@ -12,7 +12,11 @@ import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
 import { catalogLogMapper, CommonErrors, Config } from '../common';
 import { AllMoviePlugins } from '../domains/movies/plugins/all-movie-plugins';
 import { AllTvshowPlugins } from '../domains/tvshows/plugins/all-tvshow-plugins';
-import { OmitFromQueryRootPlugin, SmartTagsPlugin } from './plugins';
+import {
+  OmitFromQueryRootPlugin,
+  PgSmallNumericToFloatPlugin,
+  SmartTagsPlugin,
+} from './plugins';
 
 export function buildPostgraphileOptions(
   config: Config,
@@ -28,11 +32,9 @@ export function buildPostgraphileOptions(
     })
     .setHeader('Access-Control-Max-Age', 86400)
     .setPgSettings(async () => ({ role: config.dbGqlRole }))
-    .setProperties({
-      ignoreIndexes: false,
-    })
     .addPlugins(
       PgSimplifyInflectorPlugin,
+      PgSmallNumericToFloatPlugin,
       ConnectionFilterPlugin,
       SmartTagsPlugin,
       OmitFromQueryRootPlugin,

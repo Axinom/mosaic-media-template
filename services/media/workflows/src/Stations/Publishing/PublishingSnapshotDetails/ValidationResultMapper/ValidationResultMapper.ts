@@ -33,7 +33,8 @@ export const mapValidationData = (
           id: 0,
           context: 'All',
           severity: SnapshotValidationResultSeverity.Error,
-          message: 'Unhandled error occurred while processing the snapshot',
+          message:
+            'An unhandled error has occurred while processing the snapshot. Please contact the service support.',
         },
       ]
     : [
