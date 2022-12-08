@@ -54,60 +54,36 @@ export const CollectionEntityManagement: React.FC = () => {
           current: formData.entities,
           original: initialData.data?.entities,
           generateCreateMutation: (item) => {
-            switch (item.entityType) {
-              case EntityType.Movie:
-                return generateUpdateGQLFragment<MutationCreateCollectionRelationArgs>(
-                  'createCollectionRelation',
-                  {
-                    input: {
-                      collectionRelation: {
-                        collectionId,
-                        sortOrder: item.sortOrder,
-                        movieId: item.entityId,
-                      },
-                    },
+            const entityTypeId = (() => {
+              switch (item.entityType) {
+                case EntityType.Movie:
+                  return 'movieId';
+                case EntityType.Tvshow:
+                  return 'tvshowId';
+                case EntityType.Season:
+                  return 'seasonId';
+                case EntityType.Episode:
+                  return 'episodeId';
+                default: {
+                  throw new Error(
+                    `Unsupported entityType found when calling generateCreateMutation.`,
+                  );
+                }
+              }
+            })();
+
+            return generateUpdateGQLFragment<MutationCreateCollectionRelationArgs>(
+              'createCollectionRelation',
+              {
+                input: {
+                  collectionRelation: {
+                    collectionId,
+                    sortOrder: item.sortOrder,
+                    [entityTypeId]: item.entityId,
                   },
-                );
-              case EntityType.Tvshow:
-                return generateUpdateGQLFragment<MutationCreateCollectionRelationArgs>(
-                  'createCollectionRelation',
-                  {
-                    input: {
-                      collectionRelation: {
-                        collectionId,
-                        sortOrder: item.sortOrder,
-                        tvshowId: item.entityId,
-                      },
-                    },
-                  },
-                );
-              case EntityType.Season:
-                return generateUpdateGQLFragment<MutationCreateCollectionRelationArgs>(
-                  'createCollectionRelation',
-                  {
-                    input: {
-                      collectionRelation: {
-                        collectionId,
-                        sortOrder: item.sortOrder,
-                        seasonId: item.entityId,
-                      },
-                    },
-                  },
-                );
-              case EntityType.Episode:
-                return generateUpdateGQLFragment<MutationCreateCollectionRelationArgs>(
-                  'createCollectionRelation',
-                  {
-                    input: {
-                      collectionRelation: {
-                        collectionId,
-                        sortOrder: item.sortOrder,
-                        episodeId: item.entityId,
-                      },
-                    },
-                  },
-                );
-            }
+                },
+              },
+            );
           },
           generateDeleteMutation: (item) =>
             generateUpdateGQLFragment<MutationDeleteCollectionRelationArgs>(
@@ -127,7 +103,7 @@ export const CollectionEntityManagement: React.FC = () => {
           key: 'id',
         });
 
-      const GqlMutationDocument = gql`mutation UpdateSeasonEpisodes {
+      const GqlMutationDocument = gql`mutation UpdateCollectionEntityAssignments {
         ${collectionEntityAssignmentMutations}
       }`;
 
