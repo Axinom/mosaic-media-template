@@ -24,7 +24,6 @@ junit.xml
 # Development
 .env
 .env.*
-!.env.*.template
 !.env.template
 
 # Output of 'npm pack'
