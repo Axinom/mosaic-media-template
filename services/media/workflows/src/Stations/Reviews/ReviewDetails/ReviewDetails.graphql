@@ -1,0 +1,33 @@
+query Review($id: Int!) {
+  review(id: $id) {
+    title
+    rating
+    description
+    id
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+  }
+}
+
+mutation UpdateReview($input: UpdateReviewInput!) {
+  updateReview(input: $input) {
+    review {
+      id
+      title
+    }
+  }
+}
+
+mutation DeleteReview($input: DeleteReviewInput!) {
+  deleteReview(input: $input) {
+    clientMutationId
+  }
+}
+
+query ReviewTitle($id: Int!) {
+  review(id: $id) {
+    title
+  }
+}

@@ -8,9 +8,7 @@ import {
 } from '../../../generated/graphql';
 import { MovieDetailsFormData } from './MovieDetails.types';
 
-export function useMovieDetailsActions(
-  id: number,
-): {
+export function useMovieDetailsActions(id: number): {
   readonly actions: FormActionData<MovieDetailsFormData>[];
 } {
   const history = useHistory();

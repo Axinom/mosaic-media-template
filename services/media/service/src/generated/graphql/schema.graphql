@@ -896,6 +896,40 @@ type Query {
     filter: MoviesTrailerFilter
   ): MoviesTrailersConnection
 
+  """Reads and enables pagination through a set of `Review`."""
+  reviews(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Review`."""
+    orderBy: [ReviewsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReviewCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReviewFilter
+  ): ReviewsConnection
+
   """Reads and enables pagination through a set of `Season`."""
   seasons(
     """Only read the first `n` values of the set."""
@@ -1609,6 +1643,7 @@ type Query {
   moviesProductionCountry(movieId: Int!, name: String!): MoviesProductionCountry
   moviesTag(movieId: Int!, name: String!): MoviesTag
   moviesTrailer(movieId: Int!, videoId: UUID!): MoviesTrailer
+  review(id: Int!): Review
   season(id: Int!): Season
   seasonByExternalId(externalId: String!): Season
   seasonsCast(seasonId: Int!, name: String!): SeasonsCast
@@ -12924,6 +12959,141 @@ input MovieCondition {
 }
 
 """
+A connection to a list of `Review` values.
+@permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN
+"""
+type ReviewsConnection {
+  """A list of `Review` objects."""
+  nodes: [Review!]!
+
+  """
+  A list of edges which contains the `Review` and cursor to aid in pagination.
+  """
+  edges: [ReviewsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Review` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN"""
+type Review {
+  id: Int!
+  title: String!
+  description: String!
+  rating: Int
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+}
+
+"""A `Review` edge in the connection."""
+type ReviewsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Review` at the end of the edge."""
+  node: Review!
+}
+
+"""Methods to use when ordering `Review`."""
+enum ReviewsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  RATING_ASC
+  RATING_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ReviewCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """
+  Checks for equality with the object’s `title` field.
+  @maxLength(100)
+  @notEmpty()
+  """
+  title: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `rating` field."""
+  rating: Int
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+}
+
+"""
+A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’
+"""
+input ReviewFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `description` field."""
+  description: StringFilter
+
+  """Filter by the object’s `rating` field."""
+  rating: IntFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [ReviewFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ReviewFilter!]
+
+  """Negates the expression."""
+  not: ReviewFilter
+}
+
+"""
 A connection to a list of `Snapshot` values.
 @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
 """
@@ -13890,6 +14060,14 @@ type Mutation {
     input: CreateMoviesTrailerInput!
   ): CreateMoviesTrailerPayload
 
+  """Creates a single `Review`."""
+  createReview(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateReviewInput!
+  ): CreateReviewPayload
+
   """Creates a single `Season`."""
   createSeason(
     """
@@ -14233,6 +14411,14 @@ type Mutation {
     """
     input: UpdateMoviesTagInput!
   ): UpdateMoviesTagPayload
+
+  """Updates a single `Review` using a unique key and a patch."""
+  updateReview(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReviewInput!
+  ): UpdateReviewPayload
 
   """Updates a single `Season` using a unique key and a patch."""
   updateSeason(
@@ -14585,6 +14771,14 @@ type Mutation {
     """
     input: DeleteMoviesTrailerInput!
   ): DeleteMoviesTrailerPayload
+
+  """Deletes a single `Review` using a unique key."""
+  deleteReview(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReviewInput!
+  ): DeleteReviewPayload
 
   """Deletes a single `Season` using a unique key."""
   deleteSeason(
@@ -16152,6 +16346,54 @@ input CreateMoviesTrailerInput {
 input MoviesTrailerInput {
   movieId: Int!
   videoId: UUID!
+}
+
+"""The output of our create `Review` mutation."""
+type CreateReviewPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Review` that was created by this mutation."""
+  review: Review
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Review`. May be used by Relay 1."""
+  reviewEdge(
+    """The method to use when ordering `Review`."""
+    orderBy: [ReviewsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReviewsEdge
+}
+
+"""
+All input for the create `Review` mutation.
+@permissions: REVIEWS_EDIT,ADMIN
+"""
+input CreateReviewInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Review` to be created by this mutation."""
+  review: ReviewInput!
+}
+
+"""An input for mutations affecting `Review`"""
+input ReviewInput {
+  """
+  @maxLength(100)
+  @notEmpty()
+  """
+  title: String!
+  description: String!
 }
 
 """The output of our create `Season` mutation."""
@@ -18270,6 +18512,60 @@ input MoviesTagPatch {
   name: String
 }
 
+"""The output of our update `Review` mutation."""
+type UpdateReviewPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Review` that was updated by this mutation."""
+  review: Review
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Review`. May be used by Relay 1."""
+  reviewEdge(
+    """The method to use when ordering `Review`."""
+    orderBy: [ReviewsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReviewsEdge
+}
+
+"""
+All input for the `updateReview` mutation.
+@permissions: REVIEWS_EDIT,ADMIN
+"""
+input UpdateReviewInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Review` being updated.
+  """
+  patch: ReviewPatch!
+  id: Int!
+}
+
+"""
+Represents an update to a `Review`. Fields that are set will be updated.
+"""
+input ReviewPatch {
+  """
+  @maxLength(100)
+  @notEmpty()
+  """
+  title: String
+  description: String
+  rating: Int
+}
+
 """The output of our update `Season` mutation."""
 type UpdateSeasonPayload {
   """
@@ -20145,6 +20441,43 @@ input DeleteMoviesTrailerInput {
   clientMutationId: String
   movieId: Int!
   videoId: UUID!
+}
+
+"""The output of our delete `Review` mutation."""
+type DeleteReviewPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Review` that was deleted by this mutation."""
+  review: Review
+  deletedReviewNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Review`. May be used by Relay 1."""
+  reviewEdge(
+    """The method to use when ordering `Review`."""
+    orderBy: [ReviewsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReviewsEdge
+}
+
+"""
+All input for the `deleteReview` mutation.
+@permissions: REVIEWS_EDIT,ADMIN
+"""
+input DeleteReviewInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
 }
 
 """The output of our delete `Season` mutation."""

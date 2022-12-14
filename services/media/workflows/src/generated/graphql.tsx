@@ -1686,6 +1686,42 @@ export type CreateMoviesTrailerPayloadMoviesTrailerEdgeArgs = {
 };
 
 /**
+ * All input for the create `Review` mutation.
+ * @permissions: REVIEWS_EDIT,ADMIN
+ */
+export type CreateReviewInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Review` to be created by this mutation. */
+  review: ReviewInput;
+};
+
+/** The output of our create `Review` mutation. */
+export type CreateReviewPayload = {
+  __typename?: 'CreateReviewPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Review` that was created by this mutation. */
+  review?: Maybe<Review>;
+  /** An edge for our `Review`. May be used by Relay 1. */
+  reviewEdge?: Maybe<ReviewsEdge>;
+};
+
+
+/** The output of our create `Review` mutation. */
+export type CreateReviewPayloadReviewEdgeArgs = {
+  orderBy?: InputMaybe<Array<ReviewsOrderBy>>;
+};
+
+/**
  * All input for the create `Season` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
  */
@@ -3399,6 +3435,42 @@ export type DeleteMoviesTrailerPayload = {
 /** The output of our delete `MoviesTrailer` mutation. */
 export type DeleteMoviesTrailerPayloadMoviesTrailerEdgeArgs = {
   orderBy?: InputMaybe<Array<MoviesTrailersOrderBy>>;
+};
+
+/**
+ * All input for the `deleteReview` mutation.
+ * @permissions: REVIEWS_EDIT,ADMIN
+ */
+export type DeleteReviewInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `Review` mutation. */
+export type DeleteReviewPayload = {
+  __typename?: 'DeleteReviewPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedReviewNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Review` that was deleted by this mutation. */
+  review?: Maybe<Review>;
+  /** An edge for our `Review`. May be used by Relay 1. */
+  reviewEdge?: Maybe<ReviewsEdge>;
+};
+
+
+/** The output of our delete `Review` mutation. */
+export type DeleteReviewPayloadReviewEdgeArgs = {
+  orderBy?: InputMaybe<Array<ReviewsOrderBy>>;
 };
 
 /**
@@ -5592,6 +5664,88 @@ export enum EpisodesTvshowGenresOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   TvshowGenresIdAsc = 'TVSHOW_GENRES_ID_ASC',
   TvshowGenresIdDesc = 'TVSHOW_GENRES_ID_DESC'
+}
+
+/** Exposes all error codes and messages for errors that a service requests can throw. In some cases, messages that are actually thrown can be different, since they can include more details or a single code can used for different errors of the same type. */
+export enum ErrorCodesEnum {
+  /** Access Token has expired. */
+  AccessTokenExpired = 'ACCESS_TOKEN_EXPIRED',
+  /** Access Token is invalid */
+  AccessTokenInvalid = 'ACCESS_TOKEN_INVALID',
+  /** Access Token is not provided */
+  AccessTokenRequired = 'ACCESS_TOKEN_REQUIRED',
+  /** Access token verification failed */
+  AccessTokenVerificationFailed = 'ACCESS_TOKEN_VERIFICATION_FAILED',
+  /** The assertion check for the identifier %s failed. */
+  AssertionFailed = 'ASSERTION_FAILED',
+  /** Auth config is invalid. */
+  AuthConfigInvalid = 'AUTH_CONFIG_INVALID',
+  /** Attempt to create a media snapshot has failed. */
+  CreateSnapshotError = 'CREATE_SNAPSHOT_ERROR',
+  /** An authorization database error has occurred. The user might not have enough permissions. */
+  DatabasePermissionsCheckFailed = 'DATABASE_PERMISSIONS_CHECK_FAILED',
+  /** An expected and handled database constraint error has occurred. The actual message will have more information. */
+  DatabaseValidationFailed = 'DATABASE_VALIDATION_FAILED',
+  /** This is a wrapper error for the original unhandled error of unsupported type. */
+  ErrorWrapper = 'ERROR_WRAPPER',
+  /** A GraphQL validation error has occurred. Please make sure that the GraphQL request is made with correct syntax or parameters. */
+  GraphqlValidationFailed = 'GRAPHQL_VALIDATION_FAILED',
+  /** The Identity service is not accessible. Please contact Axinom support. */
+  IdentityServiceNotAccessible = 'IDENTITY_SERVICE_NOT_ACCESSIBLE',
+  /** An error has occurred during the ingest process. The actual message will have more information. */
+  IngestError = 'INGEST_ERROR',
+  /** Ingest Document validation has failed. */
+  IngestValidationError = 'INGEST_VALIDATION_ERROR',
+  /** An unhandled and unexpected error has occurred. Please contact the service support. */
+  InternalServerError = 'INTERNAL_SERVER_ERROR',
+  /** Error occurred while trying to fetch signing keys from the JWKS endpoint for the Tenant/Environment/Application. */
+  JwksError = 'JWKS_ERROR',
+  /** Passed JWT is not a Mosaic End-User Token. Cannot be verified. */
+  JwtIsNotMosaicToken = 'JWT_IS_NOT_MOSAIC_TOKEN',
+  /** Malformed access token received */
+  MalformedToken = 'MALFORMED_TOKEN',
+  /** %s with ID '%s' was not found. */
+  MediaNotFound = 'MEDIA_NOT_FOUND',
+  /** The token is not an Authenticated End-User */
+  NotAuthenticatedEndUser = 'NOT_AUTHENTICATED_END_USER',
+  /** The object is not a AuthenticatedManagementSubject */
+  NotAuthenticatedManagementSubject = 'NOT_AUTHENTICATED_MANAGEMENT_SUBJECT',
+  /** The object is not a AuthenticatedRequest */
+  NotAuthenticatedRequest = 'NOT_AUTHENTICATED_REQUEST',
+  /** The token is not an End-User Application */
+  NotEndUserApplication = 'NOT_END_USER_APPLICATION',
+  /** The object is not an EndUserAuthenticationContext */
+  NotEndUserAuthenticationContext = 'NOT_END_USER_AUTHENTICATION_CONTEXT',
+  /** The subject was provided, but it does not have enough permissions to perform the operation. */
+  NotEnoughPermissions = 'NOT_ENOUGH_PERMISSIONS',
+  /** The object is not a GenericAuthenticatedSubject */
+  NotGenericAuthenticatedSubject = 'NOT_GENERIC_AUTHENTICATED_SUBJECT',
+  /** The object is not a ManagementAuthenticationContext */
+  NotManagementAuthenticationContext = 'NOT_MANAGEMENT_AUTHENTICATION_CONTEXT',
+  /** Attempt to publish media has failed. */
+  PublishError = 'PUBLISH_ERROR',
+  /** Unable to retrieve images metadata. */
+  PublishImagesMetadataRequestError = 'PUBLISH_IMAGES_METADATA_REQUEST_ERROR',
+  /** Unable to retrieve videos metadata. */
+  PublishVideosMetadataRequestError = 'PUBLISH_VIDEOS_METADATA_REQUEST_ERROR',
+  /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
+  SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
+  /** The snapshot with ID '%s' was not found. */
+  SnapshotNotFound = 'SNAPSHOT_NOT_FOUND',
+  /** An application startup error has occurred. The actual message will have more information. */
+  StartupError = 'STARTUP_ERROR',
+  /** An unhandled database-related has occurred. Please contact the service support. */
+  UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
+  /** An unhandled error has occurred. Please contact the service support. */
+  UnhandledError = 'UNHANDLED_ERROR',
+  /** Attempt to unpublish media has failed. */
+  UnpublishError = 'UNPUBLISH_ERROR',
+  /** Unable to generate display title for ingest item. Ingest media type '%s' is not supported. */
+  UnsupportedIngestMediaType = 'UNSUPPORTED_INGEST_MEDIA_TYPE',
+  /** User is not authorized to access the operation. */
+  UserNotAuthorized = 'USER_NOT_AUTHORIZED',
+  /** The User service is not accessible. Please contact Axinom support. */
+  UserServiceNotAccessible = 'USER_SERVICE_NOT_ACCESSIBLE'
 }
 
 /** A `String` edge in the connection. */
@@ -8564,6 +8718,8 @@ export type Mutation = {
   createMoviesTag?: Maybe<CreateMoviesTagPayload>;
   /** Creates a single `MoviesTrailer`. */
   createMoviesTrailer?: Maybe<CreateMoviesTrailerPayload>;
+  /** Creates a single `Review`. */
+  createReview?: Maybe<CreateReviewPayload>;
   /** Creates a single `Season`. */
   createSeason?: Maybe<CreateSeasonPayload>;
   /** Creates a new Season snapshot. */
@@ -8669,6 +8825,8 @@ export type Mutation = {
   deleteMoviesTag?: Maybe<DeleteMoviesTagPayload>;
   /** Deletes a single `MoviesTrailer` using a unique key. */
   deleteMoviesTrailer?: Maybe<DeleteMoviesTrailerPayload>;
+  /** Deletes a single `Review` using a unique key. */
+  deleteReview?: Maybe<DeleteReviewPayload>;
   /** Deletes a single `Season` using a unique key. */
   deleteSeason?: Maybe<DeleteSeasonPayload>;
   /** Deletes a single `Season` using a unique key. */
@@ -8812,6 +8970,8 @@ export type Mutation = {
   updateMoviesProductionCountry?: Maybe<UpdateMoviesProductionCountryPayload>;
   /** Updates a single `MoviesTag` using a unique key and a patch. */
   updateMoviesTag?: Maybe<UpdateMoviesTagPayload>;
+  /** Updates a single `Review` using a unique key and a patch. */
+  updateReview?: Maybe<UpdateReviewPayload>;
   /** Updates a single `Season` using a unique key and a patch. */
   updateSeason?: Maybe<UpdateSeasonPayload>;
   /** Updates a single `Season` using a unique key and a patch. */
@@ -9020,6 +9180,12 @@ export type MutationCreateMoviesTagArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateMoviesTrailerArgs = {
   input: CreateMoviesTrailerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateReviewArgs = {
+  input: CreateReviewInput;
 };
 
 
@@ -9356,6 +9522,12 @@ export type MutationDeleteMoviesTagArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteMoviesTrailerArgs = {
   input: DeleteMoviesTrailerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteReviewArgs = {
+  input: DeleteReviewInput;
 };
 
 
@@ -9840,6 +10012,12 @@ export type MutationUpdateMoviesTagArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateReviewArgs = {
+  input: UpdateReviewInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateSeasonArgs = {
   input: UpdateSeasonInput;
 };
@@ -10098,6 +10276,9 @@ export type Query = {
    * which can only query top level fields if they are in a particular form.
    */
   query: Query;
+  review?: Maybe<Review>;
+  /** Reads and enables pagination through a set of `Review`. */
+  reviews?: Maybe<ReviewsConnection>;
   season?: Maybe<Season>;
   seasonByExternalId?: Maybe<Season>;
   /** Reads and enables pagination through a set of `Season`. */
@@ -10812,6 +10993,25 @@ export type QueryMoviesTrailersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReviewArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ReviewCondition>;
+  filter?: InputMaybe<ReviewFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ReviewsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QuerySeasonArgs = {
   id: Scalars['Int'];
 };
@@ -11201,6 +11401,138 @@ export type QueryTvshowsTvshowGenresArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<TvshowsTvshowGenresOrderBy>>;
 };
+
+/** @permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN */
+export type Review = {
+  __typename?: 'Review';
+  createdDate: Scalars['Datetime'];
+  createdUser: Scalars['String'];
+  description: Scalars['String'];
+  id: Scalars['Int'];
+  rating?: Maybe<Scalars['Int']>;
+  title: Scalars['String'];
+  updatedDate: Scalars['Datetime'];
+  updatedUser: Scalars['String'];
+};
+
+/** A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ReviewCondition = {
+  /** Checks for equality with the object’s `createdDate` field. */
+  createdDate?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `createdUser` field. */
+  createdUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: InputMaybe<Scalars['Int']>;
+  /**
+   * Checks for equality with the object’s `title` field.
+   * @maxLength(100)
+   * @notEmpty()
+   */
+  title?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<Scalars['String']>;
+};
+
+/** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ReviewFilter>>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<ReviewFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ReviewFilter>>;
+  /** Filter by the object’s `rating` field. */
+  rating?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/** An input for mutations affecting `Review` */
+export type ReviewInput = {
+  description: Scalars['String'];
+  /**
+   * @maxLength(100)
+   * @notEmpty()
+   */
+  title: Scalars['String'];
+};
+
+/** Represents an update to a `Review`. Fields that are set will be updated. */
+export type ReviewPatch = {
+  description?: InputMaybe<Scalars['String']>;
+  rating?: InputMaybe<Scalars['Int']>;
+  /**
+   * @maxLength(100)
+   * @notEmpty()
+   */
+  title?: InputMaybe<Scalars['String']>;
+};
+
+/**
+ * A connection to a list of `Review` values.
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN
+ */
+export type ReviewsConnection = {
+  __typename?: 'ReviewsConnection';
+  /** A list of edges which contains the `Review` and cursor to aid in pagination. */
+  edges: Array<ReviewsEdge>;
+  /** A list of `Review` objects. */
+  nodes: Array<Review>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Review` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Review` edge in the connection. */
+export type ReviewsEdge = {
+  __typename?: 'ReviewsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Review` at the end of the edge. */
+  node: Review;
+};
+
+/** Methods to use when ordering `Review`. */
+export enum ReviewsOrderBy {
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RatingAsc = 'RATING_ASC',
+  RatingDesc = 'RATING_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type Season = {
@@ -15752,6 +16084,43 @@ export type UpdateMoviesTagPayloadMoviesTagEdgeArgs = {
 };
 
 /**
+ * All input for the `updateReview` mutation.
+ * @permissions: REVIEWS_EDIT,ADMIN
+ */
+export type UpdateReviewInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['Int'];
+  /** An object where the defined keys will be set on the `Review` being updated. */
+  patch: ReviewPatch;
+};
+
+/** The output of our update `Review` mutation. */
+export type UpdateReviewPayload = {
+  __typename?: 'UpdateReviewPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Review` that was updated by this mutation. */
+  review?: Maybe<Review>;
+  /** An edge for our `Review`. May be used by Relay 1. */
+  reviewEdge?: Maybe<ReviewsEdge>;
+};
+
+
+/** The output of our update `Review` mutation. */
+export type UpdateReviewPayloadReviewEdgeArgs = {
+  orderBy?: InputMaybe<Array<ReviewsOrderBy>>;
+};
+
+/**
  * All input for the `updateSeasonByExternalId` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
  */
@@ -16995,6 +17364,50 @@ export type BulkRecreateSnapshotsMutationVariables = Exact<{
 
 
 export type BulkRecreateSnapshotsMutation = { __typename?: 'Mutation', recreateSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
+
+export type CreateReviewMutationVariables = Exact<{
+  input: CreateReviewInput;
+}>;
+
+
+export type CreateReviewMutation = { __typename?: 'Mutation', createReview?: { __typename?: 'CreateReviewPayload', review?: { __typename?: 'Review', id: number } | null } | null };
+
+export type ReviewQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type ReviewQuery = { __typename?: 'Query', review?: { __typename?: 'Review', title: string, rating?: number | null, description: string, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string } | null };
+
+export type UpdateReviewMutationVariables = Exact<{
+  input: UpdateReviewInput;
+}>;
+
+
+export type UpdateReviewMutation = { __typename?: 'Mutation', updateReview?: { __typename?: 'UpdateReviewPayload', review?: { __typename?: 'Review', id: number, title: string } | null } | null };
+
+export type DeleteReviewMutationVariables = Exact<{
+  input: DeleteReviewInput;
+}>;
+
+
+export type DeleteReviewMutation = { __typename?: 'Mutation', deleteReview?: { __typename?: 'DeleteReviewPayload', clientMutationId?: string | null } | null };
+
+export type ReviewTitleQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type ReviewTitleQuery = { __typename?: 'Query', review?: { __typename?: 'Review', title: string } | null };
+
+export type ReviewsQueryVariables = Exact<{
+  filter?: InputMaybe<ReviewFilter>;
+  orderBy?: InputMaybe<Array<ReviewsOrderBy> | ReviewsOrderBy>;
+  after?: InputMaybe<Scalars['Cursor']>;
+}>;
+
+
+export type ReviewsQuery = { __typename?: 'Query', filtered?: { __typename?: 'ReviewsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Review', id: number, title: string, rating?: number | null, createdDate: any, updatedDate: any }> } | null, nonFiltered?: { __typename?: 'ReviewsConnection', totalCount: number } | null };
 
 export type CreateSeasonMutationVariables = Exact<{
   input: CreateSeasonInput;
@@ -20961,6 +21374,238 @@ export function useBulkRecreateSnapshotsMutation(baseOptions?: Apollo.MutationHo
 export type BulkRecreateSnapshotsMutationHookResult = ReturnType<typeof useBulkRecreateSnapshotsMutation>;
 export type BulkRecreateSnapshotsMutationResult = Apollo.MutationResult<BulkRecreateSnapshotsMutation>;
 export type BulkRecreateSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkRecreateSnapshotsMutation, BulkRecreateSnapshotsMutationVariables>;
+export const CreateReviewDocument = gql`
+    mutation CreateReview($input: CreateReviewInput!) {
+  createReview(input: $input) {
+    review {
+      id
+    }
+  }
+}
+    `;
+export type CreateReviewMutationFn = Apollo.MutationFunction<CreateReviewMutation, CreateReviewMutationVariables>;
+
+/**
+ * __useCreateReviewMutation__
+ *
+ * To run a mutation, you first call `useCreateReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createReviewMutation, { data, loading, error }] = useCreateReviewMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateReviewMutation(baseOptions?: Apollo.MutationHookOptions<CreateReviewMutation, CreateReviewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateReviewMutation, CreateReviewMutationVariables>(CreateReviewDocument, options);
+      }
+export type CreateReviewMutationHookResult = ReturnType<typeof useCreateReviewMutation>;
+export type CreateReviewMutationResult = Apollo.MutationResult<CreateReviewMutation>;
+export type CreateReviewMutationOptions = Apollo.BaseMutationOptions<CreateReviewMutation, CreateReviewMutationVariables>;
+export const ReviewDocument = gql`
+    query Review($id: Int!) {
+  review(id: $id) {
+    title
+    rating
+    description
+    id
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+  }
+}
+    `;
+
+/**
+ * __useReviewQuery__
+ *
+ * To run a query within a React component, call `useReviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReviewQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useReviewQuery(baseOptions: Apollo.QueryHookOptions<ReviewQuery, ReviewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReviewQuery, ReviewQueryVariables>(ReviewDocument, options);
+      }
+export function useReviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReviewQuery, ReviewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReviewQuery, ReviewQueryVariables>(ReviewDocument, options);
+        }
+export type ReviewQueryHookResult = ReturnType<typeof useReviewQuery>;
+export type ReviewLazyQueryHookResult = ReturnType<typeof useReviewLazyQuery>;
+export type ReviewQueryResult = Apollo.QueryResult<ReviewQuery, ReviewQueryVariables>;
+export const UpdateReviewDocument = gql`
+    mutation UpdateReview($input: UpdateReviewInput!) {
+  updateReview(input: $input) {
+    review {
+      id
+      title
+    }
+  }
+}
+    `;
+export type UpdateReviewMutationFn = Apollo.MutationFunction<UpdateReviewMutation, UpdateReviewMutationVariables>;
+
+/**
+ * __useUpdateReviewMutation__
+ *
+ * To run a mutation, you first call `useUpdateReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateReviewMutation, { data, loading, error }] = useUpdateReviewMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateReviewMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewMutation, UpdateReviewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateReviewMutation, UpdateReviewMutationVariables>(UpdateReviewDocument, options);
+      }
+export type UpdateReviewMutationHookResult = ReturnType<typeof useUpdateReviewMutation>;
+export type UpdateReviewMutationResult = Apollo.MutationResult<UpdateReviewMutation>;
+export type UpdateReviewMutationOptions = Apollo.BaseMutationOptions<UpdateReviewMutation, UpdateReviewMutationVariables>;
+export const DeleteReviewDocument = gql`
+    mutation DeleteReview($input: DeleteReviewInput!) {
+  deleteReview(input: $input) {
+    clientMutationId
+  }
+}
+    `;
+export type DeleteReviewMutationFn = Apollo.MutationFunction<DeleteReviewMutation, DeleteReviewMutationVariables>;
+
+/**
+ * __useDeleteReviewMutation__
+ *
+ * To run a mutation, you first call `useDeleteReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteReviewMutation, { data, loading, error }] = useDeleteReviewMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteReviewMutation(baseOptions?: Apollo.MutationHookOptions<DeleteReviewMutation, DeleteReviewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteReviewMutation, DeleteReviewMutationVariables>(DeleteReviewDocument, options);
+      }
+export type DeleteReviewMutationHookResult = ReturnType<typeof useDeleteReviewMutation>;
+export type DeleteReviewMutationResult = Apollo.MutationResult<DeleteReviewMutation>;
+export type DeleteReviewMutationOptions = Apollo.BaseMutationOptions<DeleteReviewMutation, DeleteReviewMutationVariables>;
+export const ReviewTitleDocument = gql`
+    query ReviewTitle($id: Int!) {
+  review(id: $id) {
+    title
+  }
+}
+    `;
+
+/**
+ * __useReviewTitleQuery__
+ *
+ * To run a query within a React component, call `useReviewTitleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReviewTitleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReviewTitleQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useReviewTitleQuery(baseOptions: Apollo.QueryHookOptions<ReviewTitleQuery, ReviewTitleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReviewTitleQuery, ReviewTitleQueryVariables>(ReviewTitleDocument, options);
+      }
+export function useReviewTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReviewTitleQuery, ReviewTitleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReviewTitleQuery, ReviewTitleQueryVariables>(ReviewTitleDocument, options);
+        }
+export type ReviewTitleQueryHookResult = ReturnType<typeof useReviewTitleQuery>;
+export type ReviewTitleLazyQueryHookResult = ReturnType<typeof useReviewTitleLazyQuery>;
+export type ReviewTitleQueryResult = Apollo.QueryResult<ReviewTitleQuery, ReviewTitleQueryVariables>;
+export const ReviewsDocument = gql`
+    query Reviews($filter: ReviewFilter, $orderBy: [ReviewsOrderBy!], $after: Cursor) {
+  filtered: reviews(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      title
+      rating
+      createdDate
+      updatedDate
+    }
+  }
+  nonFiltered: reviews {
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useReviewsQuery__
+ *
+ * To run a query within a React component, call `useReviewsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReviewsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReviewsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      orderBy: // value for 'orderBy'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useReviewsQuery(baseOptions?: Apollo.QueryHookOptions<ReviewsQuery, ReviewsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReviewsQuery, ReviewsQueryVariables>(ReviewsDocument, options);
+      }
+export function useReviewsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReviewsQuery, ReviewsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReviewsQuery, ReviewsQueryVariables>(ReviewsDocument, options);
+        }
+export type ReviewsQueryHookResult = ReturnType<typeof useReviewsQuery>;
+export type ReviewsLazyQueryHookResult = ReturnType<typeof useReviewsLazyQuery>;
+export type ReviewsQueryResult = Apollo.QueryResult<ReviewsQuery, ReviewsQueryVariables>;
 export const CreateSeasonDocument = gql`
     mutation CreateSeason($input: CreateSeasonInput!) {
   createSeason(input: $input) {

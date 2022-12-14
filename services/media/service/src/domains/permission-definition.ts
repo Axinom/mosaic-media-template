@@ -37,6 +37,11 @@ import {
   TvShowsReadOperations,
 } from './tvshows';
 
+import {
+  ReviewsMutateOperations,
+  ReviewsReadOperations,
+} from './reviews/operation-groups';
+
 /**
  * **IMPORTANT**
  *
@@ -76,6 +81,8 @@ const permissions = [
       ...MoviesDevOperations,
       ...TvshowsDevOperations,
       ...CollectionDevOperations,
+      ...ReviewsReadOperations,
+      ...ReviewsMutateOperations,
     ],
   },
   {
@@ -155,6 +162,16 @@ const permissions = [
     key: 'INGESTS_EDIT',
     title: 'Ingests: Edit',
     gqlOperations: [...IngestReadOperations, ...IngestMutateOperations],
+  },
+  {
+    key: 'REVIEWS_VIEW',
+    title: 'Reviews: View',
+    gqlOperations: [...ReviewsReadOperations],
+  },
+  {
+    key: 'REVIEWS_EDIT',
+    title: 'Reviews: Edit',
+    gqlOperations: [...ReviewsReadOperations, ...ReviewsMutateOperations],
   },
 ] as const;
 
