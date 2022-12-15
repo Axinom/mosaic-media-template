@@ -7,4 +7,5 @@ export * from './related-item';
 export * from './relation-type';
 export * from './video';
 export * from './video-stream';
+export * from './video-stream-type';
 export * from './video-usage-type';

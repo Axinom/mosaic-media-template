@@ -2,17 +2,32 @@ import {
   MosaicError,
   mosaicErrorMappingFactory,
 } from '@axinom/mosaic-service-common';
-import axios from 'axios';
+import { GraphQLClient } from 'graphql-request';
 import { capitalize } from 'inflection';
+import { VideoStream } from 'media-messages';
 import urljoin from 'url-join';
 import { CommonErrors } from '../../../common';
+import { getSdk, GetVideosQuery } from '../../../generated/graphql/encoding';
 import { SnapshotValidationResult } from '../../../publishing';
-import { GqlVideo, PublishVideo, TrailerJSONSelectable } from '../models';
+import { PublishVideo, TrailerJSONSelectable } from '../models';
+
+export type GqlVideo = NonNullable<GetVideosQuery['videos']>['nodes'][0];
 
 interface VideoApiResults {
   validation: SnapshotValidationResult[];
   result: PublishVideo[];
 }
+
+const getMappedError = mosaicErrorMappingFactory(
+  (error: Error & { response?: { errors?: unknown[] } }) => {
+    return {
+      ...CommonErrors.PublishVideosMetadataRequestError,
+      details: {
+        errors: error.response?.errors,
+      },
+    };
+  },
+);
 
 const processVideo = (
   videoId: string,
@@ -34,15 +49,25 @@ const processVideo = (
   }
 
   const tags = gqlVideo.videosTags.nodes.map((tag) => tag.name);
-  const videoStreams = gqlVideo.videoStreams.nodes.map((videoStream) => {
+  const videoStreams: VideoStream[] = gqlVideo.videoStreams.nodes.map((s) => {
     return {
-      drm_key_id: videoStream.keyId ?? undefined,
-      iv: videoStream.iv ?? undefined,
-      format: videoStream.format ?? undefined,
-      initial_file: videoStream.initialFile ?? undefined,
-      label: videoStream.label ?? undefined,
-      language_code: videoStream.languageCode ?? undefined,
-      bandwidth_in_bps: videoStream.bandwidthInBps ?? undefined,
+      key_id: s.keyId,
+      iv: s.iv,
+      format: s.format,
+      file: s.file,
+      label: s.label,
+      language_code: s.languageCode,
+      bitrate_in_kbps: s.bitrateInKbps,
+      type: s.type,
+      file_template: s.fileTemplate,
+      codecs: s.codecs,
+      frame_rate: s.frameRate,
+      height: s.height,
+      width: s.width,
+      display_aspect_ratio: s.displayAspectRatio,
+      pixel_aspect_ratio: s.pixelAspectRatio,
+      sampling_rate: s.samplingRate,
+      language_name: s.languageName,
     };
   });
 
@@ -88,13 +113,13 @@ const processVideo = (
     title: gqlVideo.title,
     is_protected: gqlVideo.isProtected,
     output_format: gqlVideo.outputFormat,
-    duration: gqlVideo.durationInSeconds ?? undefined,
-    audio_languages: gqlVideo.audioLanguages ?? undefined,
-    subtitle_languages: gqlVideo.subtitleLanguages ?? undefined,
-    caption_languages: gqlVideo.captionLanguages ?? undefined,
-    hls_manifest: gqlVideo.hlsManifestPath ?? undefined,
-    dash_manifest: gqlVideo.dashManifestPath ?? undefined,
-    video_streams: videoStreams.length > 0 ? videoStreams : undefined,
+    length_in_seconds: gqlVideo.lengthInSeconds,
+    hls_manifest: gqlVideo.hlsManifestPath,
+    dash_manifest: gqlVideo.dashManifestPath,
+    audio_languages: gqlVideo.audioLanguages.filter(Boolean) as string[],
+    subtitle_languages: gqlVideo.subtitleLanguages.filter(Boolean) as string[],
+    caption_languages: gqlVideo.captionLanguages.filter(Boolean) as string[],
+    video_streams: videoStreams,
   });
 };
 
@@ -114,57 +139,21 @@ export const getVideosMetadata = async (
   }
 
   try {
-    const result = await axios.post(
+    const client = new GraphQLClient(
       urljoin(encodingServiceBaseUrl, 'graphql'),
-      {
-        query: `
-          query GetVideosMetadata($filter: VideoFilter) {
-            videos(filter: $filter) {
-              nodes {
-                id
-                title
-                durationInSeconds
-                audioLanguages
-                captionLanguages
-                subtitleLanguages
-                dashManifestPath
-                hlsManifestPath
-                isProtected
-                outputFormat
-                previewStatus
-                encodingState
-                videosTags {
-                  nodes {
-                    name
-                  }
-                }
-                videoStreams {
-                  nodes {
-                    keyId
-                    label
-                    format
-                    initialFile
-                    iv                    
-                    languageCode
-                    bandwidthInBps
-                  }
-                }
-              }
-            }
-          }
-        `,
-        variables: {
-          filter: { id: { in: videoIds } },
-        },
-      },
-      { headers: { Authorization: `Bearer ${authToken}` } },
+    );
+    const { GetVideos } = getSdk(client);
+    const { data } = await GetVideos(
+      { filter: { id: { in: videoIds } } },
+      { Authorization: `Bearer ${authToken}` },
     );
 
-    if (result.data.errors?.length > 0) {
+    if (!data.videos?.nodes) {
       throw new MosaicError({
         ...CommonErrors.PublishVideosMetadataRequestError,
-        details: {
-          errors: result.data.errors,
+        logInfo: {
+          reason:
+            'The request to the Encoding Service succeeded, but no videos were returned and an explicit error was not thrown.',
         },
       });
     }
@@ -175,7 +164,7 @@ export const getVideosMetadata = async (
     if (mainVideoId) {
       processVideo(
         mainVideoId,
-        result.data.data.videos.nodes,
+        data.videos.nodes,
         'MAIN',
         'TRAILER',
         validation,
@@ -186,7 +175,7 @@ export const getVideosMetadata = async (
     for (const trailerAssignment of trailers) {
       processVideo(
         trailerAssignment.video_id,
-        result.data.data.videos.nodes,
+        data.videos.nodes,
         'TRAILER',
         'MAIN',
         validation,
@@ -196,16 +185,9 @@ export const getVideosMetadata = async (
 
     return { result: publishData, validation };
   } catch (error) {
-    const mapper = mosaicErrorMappingFactory(
-      (error: Error & { response?: { data?: { errors?: unknown[] } } }) => {
-        return {
-          ...CommonErrors.PublishVideosMetadataRequestError,
-          details: {
-            errors: error.response?.data?.errors,
-          },
-        };
-      },
-    );
-    throw mapper(error);
+    // Throwing an actual error instead of returning a validation error because
+    // this usually gets called in context of a message handler and there is a
+    // chance to recover using the message retry strategy.
+    throw getMappedError(error);
   }
 };

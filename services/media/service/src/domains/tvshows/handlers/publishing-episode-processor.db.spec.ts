@@ -363,7 +363,17 @@ describe('publishingEpisodeProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'duration' of the first video is required.`,
+          message: `Property 'width' of the first image is required.`,
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message: `Property 'height' of the first image is required.`,
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message: `Property 'length_in_seconds' of the first video is required.`,
           severity: 'ERROR',
         },
         {
@@ -418,16 +428,6 @@ describe('publishingEpisodeProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'width' of the first image is required.`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
-          message: `Property 'height' of the first image is required.`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
           message: `Property 'title' of the first video is required.`,
           severity: 'ERROR',
         },
@@ -462,7 +462,7 @@ describe('publishingEpisodeProcessor', () => {
                 is_protected: false,
                 title: '',
                 output_format: '',
-                duration: 0,
+                length_in_seconds: 0,
                 audio_languages: [],
                 subtitle_languages: [],
                 caption_languages: [],
@@ -480,7 +480,19 @@ describe('publishingEpisodeProcessor', () => {
       expect(result).toEqual([
         {
           context: 'METADATA',
-          message: `Property 'duration' of the first video must be a positive number.`,
+          message:
+            "Property 'width' of the first image must be a positive number.",
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'height' of the first image must be a positive number.",
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message: `Property 'length_in_seconds' of the first video must be a positive number.`,
           severity: 'ERROR',
         },
         {
@@ -582,8 +594,8 @@ describe('publishingEpisodeProcessor', () => {
             images: [
               {
                 type: 'COVER',
-                width: 0, // Trusting image service on width and height values
-                height: 0,
+                width: 100,
+                height: 100,
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
               },
             ],
@@ -593,7 +605,7 @@ describe('publishingEpisodeProcessor', () => {
                 is_protected: false,
                 title: 'a',
                 output_format: 'DASH',
-                duration: 1,
+                length_in_seconds: 1,
                 audio_languages: ['en'], // Trusting encoding service
                 subtitle_languages: [],
                 caption_languages: [],
@@ -696,10 +708,11 @@ describe('publishingEpisodeProcessor', () => {
                 title: 'avatar',
                 is_protected: false,
                 output_format: 'DASH',
-                duration: 5,
+                length_in_seconds: 5,
                 audio_languages: ['en', 'de'],
                 subtitle_languages: ['en', 'de'],
                 caption_languages: ['en', 'de'],
+                hls_manifest: null,
                 dash_manifest:
                   'https://videoimagedev.blob.core.windows.net/encoded-videos/QtmGgafYUYmrmxw5apkD66/dash/manifest.mpd',
               },
@@ -708,10 +721,11 @@ describe('publishingEpisodeProcessor', () => {
                 title: 'avatar_1',
                 is_protected: false,
                 output_format: 'HLS',
-                duration: 5,
+                length_in_seconds: 5,
                 audio_languages: ['en', 'de'],
                 subtitle_languages: ['en', 'de'],
                 caption_languages: ['en', 'de'],
+                dash_manifest: null,
                 hls_manifest:
                   'https://videoimagedev.blob.core.windows.net/encoded-videos/SewobHEyxbg3A1y6aWPHve/dash/manifest.mpd',
               },
@@ -720,7 +734,7 @@ describe('publishingEpisodeProcessor', () => {
                 title: 'avatar_2',
                 is_protected: false,
                 output_format: 'CMAF',
-                duration: 5,
+                length_in_seconds: 5,
                 audio_languages: ['en', 'de'],
                 subtitle_languages: ['en', 'de'],
                 caption_languages: ['en', 'de'],

@@ -648,8 +648,6 @@ export type EpisodeVideo = {
   captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** URI to a DASH manifest. */
   dashManifest?: Maybe<Scalars['String']>;
-  /** Duration of the stream in seconds. */
-  duration?: Maybe<Scalars['Int']>;
   /** Reads a single `Episode` that is related to this `EpisodeVideo`. */
   episode?: Maybe<Episode>;
   episodeId?: Maybe<Scalars['String']>;
@@ -658,6 +656,8 @@ export type EpisodeVideo = {
   id: Scalars['Int'];
   /** Indicates whether a stream is protected with DRM. */
   isProtected?: Maybe<Scalars['Boolean']>;
+  /** Length of the stream in seconds. */
+  lengthInSeconds?: Maybe<Scalars['Float']>;
   /** Output format of the stream. */
   outputFormat?: Maybe<Scalars['String']>;
   /** Array of subtitle languages available in the stream. */
@@ -715,24 +715,44 @@ export type EpisodeVideoFilter = {
 /** Video stream DRM metadata */
 export type EpisodeVideoStream = {
   __typename?: 'EpisodeVideoStream';
-  /** The bandwidth of the streams */
-  bandwidthInBps?: Maybe<Scalars['Int']>;
-  /** DRM Key ID */
-  drmKeyId?: Maybe<Scalars['String']>;
+  /** Bitrate in kilobits per second */
+  bitrateInKbps?: Maybe<Scalars['Int']>;
+  /** Codecs */
+  codecs?: Maybe<Scalars['String']>;
+  /** Display aspect ratio for video streams */
+  displayAspectRatio?: Maybe<Scalars['String']>;
+  /** File path to the initialization segment */
+  file?: Maybe<Scalars['String']>;
+  /** File Template */
+  fileTemplate?: Maybe<Scalars['String']>;
   /** Packaging format of the stream */
   format?: Maybe<Scalars['String']>;
+  /** Frame rate of the video stream */
+  frameRate?: Maybe<Scalars['Float']>;
+  /** Height of the video stream */
+  height?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
-  /** Name of the initial file */
-  initialFile?: Maybe<Scalars['String']>;
   /** Initialization Vector of the stream */
   iv?: Maybe<Scalars['String']>;
+  /** DRM Key ID */
+  keyId?: Maybe<Scalars['String']>;
   /** Label indicating the type of stream (audio/video) */
   label?: Maybe<Scalars['String']>;
   /** The language code for audio streams */
   languageCode?: Maybe<Scalars['String']>;
+  /** Language name for audio, subtitle, or caption streams */
+  languageName?: Maybe<Scalars['String']>;
+  /** Pixel aspect ratio for video streams */
+  pixelAspectRatio?: Maybe<Scalars['String']>;
+  /** Sampling rate for audio streams */
+  samplingRate?: Maybe<Scalars['Int']>;
+  /** Stream type */
+  type?: Maybe<VideoStreamType>;
   /** Reads a single `EpisodeVideo` that is related to this `EpisodeVideoStream`. */
   video?: Maybe<EpisodeVideo>;
   videoId?: Maybe<Scalars['Int']>;
+  /** Width of the video stream */
+  width?: Maybe<Scalars['Int']>;
 };
 
 /**
@@ -742,6 +762,8 @@ export type EpisodeVideoStream = {
 export type EpisodeVideoStreamCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<VideoStreamType>;
   /** Checks for equality with the object’s `videoId` field. */
   videoId?: InputMaybe<Scalars['Int']>;
 };
@@ -756,6 +778,8 @@ export type EpisodeVideoStreamFilter = {
   not?: InputMaybe<EpisodeVideoStreamFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<EpisodeVideoStreamFilter>>;
+  /** Filter by the object’s `type` field. */
+  type?: InputMaybe<VideoStreamTypeFilter>;
   /** Filter by the object’s `videoId` field. */
   videoId?: InputMaybe<IntFilter>;
 };
@@ -789,6 +813,8 @@ export enum EpisodeVideoStreamsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
   VideoIdAsc = 'VIDEO_ID_ASC',
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
@@ -877,7 +903,7 @@ export enum ErrorCodesEnum {
   InternalServerError = 'INTERNAL_SERVER_ERROR',
   /** The %s does not have a valid license in your current country (%s) */
   LicenseIsNotValid = 'LICENSE_IS_NOT_VALID',
-  /** %s does not have a license. */
+  /** The %s does not have a license. */
   LicenseNotFound = 'LICENSE_NOT_FOUND',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
@@ -1322,13 +1348,13 @@ export type MovieVideo = {
   captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** URI to a DASH manifest. */
   dashManifest?: Maybe<Scalars['String']>;
-  /** Duration of the stream in seconds. */
-  duration?: Maybe<Scalars['Int']>;
   /** URI to an HLS manifest. */
   hlsManifest?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   /** Indicates whether a stream is protected with DRM. */
   isProtected?: Maybe<Scalars['Boolean']>;
+  /** Length of the stream in seconds. */
+  lengthInSeconds?: Maybe<Scalars['Float']>;
   /** Reads a single `Movie` that is related to this `MovieVideo`. */
   movie?: Maybe<Movie>;
   movieId?: Maybe<Scalars['String']>;
@@ -1389,24 +1415,44 @@ export type MovieVideoFilter = {
 /** Video stream DRM metadata */
 export type MovieVideoStream = {
   __typename?: 'MovieVideoStream';
-  /** The bandwidth of the streams */
-  bandwidthInBps?: Maybe<Scalars['Int']>;
-  /** DRM Key ID */
-  drmKeyId?: Maybe<Scalars['String']>;
+  /** Bitrate in kilobits per second */
+  bitrateInKbps?: Maybe<Scalars['Int']>;
+  /** Codecs */
+  codecs?: Maybe<Scalars['String']>;
+  /** Display aspect ratio for video streams */
+  displayAspectRatio?: Maybe<Scalars['String']>;
+  /** File path to the initialization segment */
+  file?: Maybe<Scalars['String']>;
+  /** File Template */
+  fileTemplate?: Maybe<Scalars['String']>;
   /** Packaging format of the stream */
   format?: Maybe<Scalars['String']>;
+  /** Frame rate of the video stream */
+  frameRate?: Maybe<Scalars['Float']>;
+  /** Height of the video stream */
+  height?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
-  /** Name of the initial file */
-  initialFile?: Maybe<Scalars['String']>;
   /** Initialization Vector of the stream */
   iv?: Maybe<Scalars['String']>;
+  /** DRM Key ID */
+  keyId?: Maybe<Scalars['String']>;
   /** Label indicating the type of stream (audio/video) */
   label?: Maybe<Scalars['String']>;
   /** The language code for audio streams */
   languageCode?: Maybe<Scalars['String']>;
+  /** Language name for audio, subtitle, or caption streams */
+  languageName?: Maybe<Scalars['String']>;
+  /** Pixel aspect ratio for video streams */
+  pixelAspectRatio?: Maybe<Scalars['String']>;
+  /** Sampling rate for audio streams */
+  samplingRate?: Maybe<Scalars['Int']>;
+  /** Stream type */
+  type?: Maybe<VideoStreamType>;
   /** Reads a single `MovieVideo` that is related to this `MovieVideoStream`. */
   video?: Maybe<MovieVideo>;
   videoId?: Maybe<Scalars['Int']>;
+  /** Width of the video stream */
+  width?: Maybe<Scalars['Int']>;
 };
 
 /**
@@ -1416,6 +1462,8 @@ export type MovieVideoStream = {
 export type MovieVideoStreamCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<VideoStreamType>;
   /** Checks for equality with the object’s `videoId` field. */
   videoId?: InputMaybe<Scalars['Int']>;
 };
@@ -1430,6 +1478,8 @@ export type MovieVideoStreamFilter = {
   not?: InputMaybe<MovieVideoStreamFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<MovieVideoStreamFilter>>;
+  /** Filter by the object’s `type` field. */
+  type?: InputMaybe<VideoStreamTypeFilter>;
   /** Filter by the object’s `videoId` field. */
   videoId?: InputMaybe<IntFilter>;
 };
@@ -1463,6 +1513,8 @@ export enum MovieVideoStreamsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
   VideoIdAsc = 'VIDEO_ID_ASC',
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
@@ -2073,13 +2125,13 @@ export type SeasonVideo = {
   captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** URI to a DASH manifest. */
   dashManifest?: Maybe<Scalars['String']>;
-  /** Duration of the stream in seconds. */
-  duration?: Maybe<Scalars['Int']>;
   /** URI to an HLS manifest. */
   hlsManifest?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   /** Indicates whether a stream is protected with DRM. */
   isProtected?: Maybe<Scalars['Boolean']>;
+  /** Length of the stream in seconds. */
+  lengthInSeconds?: Maybe<Scalars['Float']>;
   /** Output format of the stream. */
   outputFormat?: Maybe<Scalars['String']>;
   /** Reads a single `Season` that is related to this `SeasonVideo`. */
@@ -2136,24 +2188,44 @@ export type SeasonVideoFilter = {
 /** Video stream DRM metadata */
 export type SeasonVideoStream = {
   __typename?: 'SeasonVideoStream';
-  /** The bandwidth of the streams */
-  bandwidthInBps?: Maybe<Scalars['Int']>;
-  /** DRM Key ID */
-  drmKeyId?: Maybe<Scalars['String']>;
+  /** Bitrate in kilobits per second */
+  bitrateInKbps?: Maybe<Scalars['Int']>;
+  /** Codecs */
+  codecs?: Maybe<Scalars['String']>;
+  /** Display aspect ratio for video streams */
+  displayAspectRatio?: Maybe<Scalars['String']>;
+  /** File path to the initialization segment */
+  file?: Maybe<Scalars['String']>;
+  /** File Template */
+  fileTemplate?: Maybe<Scalars['String']>;
   /** Packaging format of the stream */
   format?: Maybe<Scalars['String']>;
+  /** Frame rate of the video stream */
+  frameRate?: Maybe<Scalars['Float']>;
+  /** Height of the video stream */
+  height?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
-  /** Name of the initial file */
-  initialFile?: Maybe<Scalars['String']>;
   /** Initialization Vector of the stream */
   iv?: Maybe<Scalars['String']>;
+  /** DRM Key ID */
+  keyId?: Maybe<Scalars['String']>;
   /** Label indicating the type of stream (audio/video) */
   label?: Maybe<Scalars['String']>;
   /** The language code for audio streams */
   languageCode?: Maybe<Scalars['String']>;
+  /** Language name for audio, subtitle, or caption streams */
+  languageName?: Maybe<Scalars['String']>;
+  /** Pixel aspect ratio for video streams */
+  pixelAspectRatio?: Maybe<Scalars['String']>;
+  /** Sampling rate for audio streams */
+  samplingRate?: Maybe<Scalars['Int']>;
+  /** Stream type */
+  type?: Maybe<VideoStreamType>;
   /** Reads a single `SeasonVideo` that is related to this `SeasonVideoStream`. */
   video?: Maybe<SeasonVideo>;
   videoId?: Maybe<Scalars['Int']>;
+  /** Width of the video stream */
+  width?: Maybe<Scalars['Int']>;
 };
 
 /**
@@ -2163,6 +2235,8 @@ export type SeasonVideoStream = {
 export type SeasonVideoStreamCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<VideoStreamType>;
   /** Checks for equality with the object’s `videoId` field. */
   videoId?: InputMaybe<Scalars['Int']>;
 };
@@ -2177,6 +2251,8 @@ export type SeasonVideoStreamFilter = {
   not?: InputMaybe<SeasonVideoStreamFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<SeasonVideoStreamFilter>>;
+  /** Filter by the object’s `type` field. */
+  type?: InputMaybe<VideoStreamTypeFilter>;
   /** Filter by the object’s `videoId` field. */
   videoId?: InputMaybe<IntFilter>;
 };
@@ -2210,6 +2286,8 @@ export enum SeasonVideoStreamsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
   VideoIdAsc = 'VIDEO_ID_ASC',
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
@@ -2782,13 +2860,13 @@ export type TvshowVideo = {
   captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** URI to a DASH manifest. */
   dashManifest?: Maybe<Scalars['String']>;
-  /** Duration of the stream in seconds. */
-  duration?: Maybe<Scalars['Int']>;
   /** URI to an HLS manifest. */
   hlsManifest?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   /** Indicates whether a stream is protected with DRM. */
   isProtected?: Maybe<Scalars['Boolean']>;
+  /** Length of the stream in seconds. */
+  lengthInSeconds?: Maybe<Scalars['Float']>;
   /** Output format of the stream. */
   outputFormat?: Maybe<Scalars['String']>;
   /** Array of subtitle languages available in the stream. */
@@ -2845,24 +2923,44 @@ export type TvshowVideoFilter = {
 /** Video stream DRM metadata */
 export type TvshowVideoStream = {
   __typename?: 'TvshowVideoStream';
-  /** The bandwidth of the streams */
-  bandwidthInBps?: Maybe<Scalars['Int']>;
-  /** DRM Key ID */
-  drmKeyId?: Maybe<Scalars['String']>;
+  /** Bitrate in kilobits per second */
+  bitrateInKbps?: Maybe<Scalars['Int']>;
+  /** Codecs */
+  codecs?: Maybe<Scalars['String']>;
+  /** Display aspect ratio for video streams */
+  displayAspectRatio?: Maybe<Scalars['String']>;
+  /** File path to the initialization segment */
+  file?: Maybe<Scalars['String']>;
+  /** File Template */
+  fileTemplate?: Maybe<Scalars['String']>;
   /** Packaging format of the stream */
   format?: Maybe<Scalars['String']>;
+  /** Frame rate of the video stream */
+  frameRate?: Maybe<Scalars['Float']>;
+  /** Height of the video stream */
+  height?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
-  /** Name of the initial file */
-  initialFile?: Maybe<Scalars['String']>;
   /** Initialization Vector of the stream */
   iv?: Maybe<Scalars['String']>;
+  /** DRM Key ID */
+  keyId?: Maybe<Scalars['String']>;
   /** Label indicating the type of stream (audio/video) */
   label?: Maybe<Scalars['String']>;
   /** The language code for audio streams */
   languageCode?: Maybe<Scalars['String']>;
+  /** Language name for audio, subtitle, or caption streams */
+  languageName?: Maybe<Scalars['String']>;
+  /** Pixel aspect ratio for video streams */
+  pixelAspectRatio?: Maybe<Scalars['String']>;
+  /** Sampling rate for audio streams */
+  samplingRate?: Maybe<Scalars['Int']>;
+  /** Stream type */
+  type?: Maybe<VideoStreamType>;
   /** Reads a single `TvshowVideo` that is related to this `TvshowVideoStream`. */
   video?: Maybe<TvshowVideo>;
   videoId?: Maybe<Scalars['Int']>;
+  /** Width of the video stream */
+  width?: Maybe<Scalars['Int']>;
 };
 
 /**
@@ -2872,6 +2970,8 @@ export type TvshowVideoStream = {
 export type TvshowVideoStreamCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<VideoStreamType>;
   /** Checks for equality with the object’s `videoId` field. */
   videoId?: InputMaybe<Scalars['Int']>;
 };
@@ -2886,6 +2986,8 @@ export type TvshowVideoStreamFilter = {
   not?: InputMaybe<TvshowVideoStreamFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<TvshowVideoStreamFilter>>;
+  /** Filter by the object’s `type` field. */
+  type?: InputMaybe<VideoStreamTypeFilter>;
   /** Filter by the object’s `videoId` field. */
   videoId?: InputMaybe<IntFilter>;
 };
@@ -2919,6 +3021,8 @@ export enum TvshowVideoStreamsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
   VideoIdAsc = 'VIDEO_ID_ASC',
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
@@ -2987,13 +3091,50 @@ export enum TvshowsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export enum VideoStreamType {
+  /** Audio */
+  Audio = 'AUDIO',
+  /** Closed caption */
+  ClosedCaption = 'CLOSED_CAPTION',
+  /** Subtitle */
+  Subtitle = 'SUBTITLE',
+  /** Video */
+  Video = 'VIDEO'
+}
+
+/** A filter to be used against VideoStreamType fields. All fields are combined with a logical ‘and.’ */
+export type VideoStreamTypeFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<VideoStreamType>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<VideoStreamType>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<VideoStreamType>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<VideoStreamType>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<VideoStreamType>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<VideoStreamType>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<VideoStreamType>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<VideoStreamType>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<VideoStreamType>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<VideoStreamType>>;
+};
+
 export type GetEpisodeMainVideoQueryVariables = Exact<{
   id: Scalars['String'];
   countryCode?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetEpisodeMainVideoQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', videos: { __typename?: 'EpisodeVideosConnection', nodes: Array<{ __typename?: 'EpisodeVideo', id: number, isProtected?: boolean | null, videoStreams: { __typename?: 'EpisodeVideoStreamsConnection', nodes: Array<{ __typename?: 'EpisodeVideoStream', drmKeyId?: string | null }> } }> } } | null };
+export type GetEpisodeMainVideoQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', videos: { __typename?: 'EpisodeVideosConnection', nodes: Array<{ __typename?: 'EpisodeVideo', id: number, isProtected?: boolean | null, videoStreams: { __typename?: 'EpisodeVideoStreamsConnection', nodes: Array<{ __typename?: 'EpisodeVideoStream', keyId?: string | null }> } }> } } | null };
 
 export type GetMovieMainVideoQueryVariables = Exact<{
   id: Scalars['String'];
@@ -3001,7 +3142,7 @@ export type GetMovieMainVideoQueryVariables = Exact<{
 }>;
 
 
-export type GetMovieMainVideoQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', videos: { __typename?: 'MovieVideosConnection', nodes: Array<{ __typename?: 'MovieVideo', id: number, isProtected?: boolean | null, videoStreams: { __typename?: 'MovieVideoStreamsConnection', nodes: Array<{ __typename?: 'MovieVideoStream', drmKeyId?: string | null }> } }> } } | null };
+export type GetMovieMainVideoQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', videos: { __typename?: 'MovieVideosConnection', nodes: Array<{ __typename?: 'MovieVideo', id: number, isProtected?: boolean | null, videoStreams: { __typename?: 'MovieVideoStreamsConnection', nodes: Array<{ __typename?: 'MovieVideoStream', keyId?: string | null }> } }> } } | null };
 
 
 export const GetEpisodeMainVideoDocument = gql`
@@ -3013,7 +3154,7 @@ export const GetEpisodeMainVideoDocument = gql`
         isProtected
         videoStreams {
           nodes {
-            drmKeyId
+            keyId
           }
         }
       }
@@ -3030,7 +3171,7 @@ export const GetMovieMainVideoDocument = gql`
         isProtected
         videoStreams {
           nodes {
-            drmKeyId
+            keyId
           }
         }
       }

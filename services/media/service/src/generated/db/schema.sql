@@ -2726,6 +2726,22 @@ $$;
 
 
 --
+-- Name: constraint_is_identifier_key(text, text, text); Type: FUNCTION; Schema: ax_utils; Owner: -
+--
+
+CREATE FUNCTION ax_utils.constraint_is_identifier_key(input_value text, error_message text DEFAULT 'The property must only contain letters, numbers, underscores, and dashes.'::text, error_code text DEFAULT 'IDKEY'::text) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if ax_utils.validation_is_identifier_key(input_value) then
+    return true;
+  end if;
+  perform ax_utils.raise_error(error_message, error_code);
+end;
+$$;
+
+
+--
 -- Name: constraint_is_trimmed(text, text, text); Type: FUNCTION; Schema: ax_utils; Owner: -
 --
 
@@ -2753,6 +2769,22 @@ BEGIN
     RETURN true;
   END IF;
   perform ax_utils.raise_error(error_message, error_code);
+END;
+$$;
+
+
+--
+-- Name: constraint_matches_pattern(text, text, text, text); Type: FUNCTION; Schema: ax_utils; Owner: -
+--
+
+CREATE FUNCTION ax_utils.constraint_matches_pattern(input_value text, pattern text, error_message text DEFAULT 'The value "%s" does not match the pattern "%s".'::text, error_code text DEFAULT 'PATRN'::text) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  IF input_value !~* pattern THEN
+      perform ax_utils.raise_error(error_message, error_code, input_value, pattern);
+  END IF;
+  RETURN true;
 END;
 $$;
 
@@ -3258,6 +3290,22 @@ $_$;
 
 
 --
+-- Name: validation_is_identifier_key(text); Type: FUNCTION; Schema: ax_utils; Owner: -
+--
+
+CREATE FUNCTION ax_utils.validation_is_identifier_key(input_value text) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $_$
+begin
+  if input_value !~* '^([A-Za-z0-9_\-])*$' then
+  	return false;
+  end if;
+  return true;
+end;
+$_$;
+
+
+--
 -- Name: validation_is_optional_url(text); Type: FUNCTION; Schema: ax_utils; Owner: -
 --
 
@@ -3269,7 +3317,7 @@ begin
     return true;
   end if;
 
-  if input_value !~* 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,255}\.[a-z]{2,9}\y([-a-zA-Z0-9@:%_\+.~#?&//=]*)$' then
+  if input_value !~* 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,255}(\.[a-z]{2,9})?\y([-a-zA-Z0-9@:%_\+.~#?&//=]*)$' then
   	return false;
   end if;
   return true;
@@ -3301,7 +3349,7 @@ CREATE FUNCTION ax_utils.validation_is_url(input_value text) RETURNS boolean
     LANGUAGE plpgsql
     AS $_$
 begin
-  if input_value !~* 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,255}\.[a-z]{2,9}\y([-a-zA-Z0-9@:%_\+.~#?&//=]*)$' then
+  if input_value !~* 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,255}(\.[a-z]{2,9})?\y([-a-zA-Z0-9@:%_\+.~#?&//=]*)$' then
   	return false;
   end if;
   return true;
@@ -11352,6 +11400,14 @@ GRANT ALL ON FUNCTION ax_utils.constraint_is_base64(input_value text, error_mess
 
 
 --
+-- Name: FUNCTION constraint_is_identifier_key(input_value text, error_message text, error_code text); Type: ACL; Schema: ax_utils; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_utils.constraint_is_identifier_key(input_value text, error_message text, error_code text) FROM PUBLIC;
+GRANT ALL ON FUNCTION ax_utils.constraint_is_identifier_key(input_value text, error_message text, error_code text) TO media_service_gql_role;
+
+
+--
 -- Name: FUNCTION constraint_is_trimmed(input_value text, error_message text, error_code text); Type: ACL; Schema: ax_utils; Owner: -
 --
 
@@ -11365,6 +11421,14 @@ GRANT ALL ON FUNCTION ax_utils.constraint_is_trimmed(input_value text, error_mes
 
 REVOKE ALL ON FUNCTION ax_utils.constraint_is_url(input_value text, error_message text, error_code text) FROM PUBLIC;
 GRANT ALL ON FUNCTION ax_utils.constraint_is_url(input_value text, error_message text, error_code text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION constraint_matches_pattern(input_value text, pattern text, error_message text, error_code text); Type: ACL; Schema: ax_utils; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_utils.constraint_matches_pattern(input_value text, pattern text, error_message text, error_code text) FROM PUBLIC;
+GRANT ALL ON FUNCTION ax_utils.constraint_matches_pattern(input_value text, pattern text, error_message text, error_code text) TO media_service_gql_role;
 
 
 --
@@ -11557,6 +11621,14 @@ GRANT ALL ON FUNCTION ax_utils.validate_identifier_length(identifier text, hint 
 
 REVOKE ALL ON FUNCTION ax_utils.validation_is_base64(input_value text) FROM PUBLIC;
 GRANT ALL ON FUNCTION ax_utils.validation_is_base64(input_value text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION validation_is_identifier_key(input_value text); Type: ACL; Schema: ax_utils; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_utils.validation_is_identifier_key(input_value text) FROM PUBLIC;
+GRANT ALL ON FUNCTION ax_utils.validation_is_identifier_key(input_value text) TO media_service_gql_role;
 
 
 --

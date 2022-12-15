@@ -275,6 +275,16 @@ describe('publishingCollectionProcessor', () => {
       expect(result).toEqual([
         {
           context: 'METADATA',
+          message: `Property 'width' of the first image is required.`,
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message: `Property 'height' of the first image is required.`,
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
           message: `At least one related item must be assigned.`,
           severity: 'ERROR',
         },
@@ -291,16 +301,6 @@ describe('publishingCollectionProcessor', () => {
         {
           context: 'METADATA',
           message: `Property 'path' of the first image is required.`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
-          message: `Property 'width' of the first image is required.`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
-          message: `Property 'height' of the first image is required.`,
           severity: 'ERROR',
         },
       ]);
@@ -324,6 +324,18 @@ describe('publishingCollectionProcessor', () => {
 
       // Assert
       expect(result).toEqual([
+        {
+          context: 'METADATA',
+          message:
+            "Property 'width' of the first image must be a positive number.",
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'height' of the first image must be a positive number.",
+          severity: 'ERROR',
+        },
         {
           context: 'METADATA',
           message: `The first related item must have a relation id defined.`,
@@ -392,8 +404,8 @@ describe('publishingCollectionProcessor', () => {
             images: [
               {
                 type: 'COVER',
-                width: 0, // Trusting image service on width and height values
-                height: 0,
+                width: 100,
+                height: 100,
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
               },
             ],

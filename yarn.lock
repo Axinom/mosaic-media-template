@@ -158,16 +158,16 @@
   resolved "https://registry.yarnpkg.com/@asyncapi/specs/-/specs-2.14.0.tgz#a4535fedde931181f20d41356ed1906d0fb73d48"
   integrity sha512-hHsYF6XsYNIKb1P2rXaooF4H+uKKQ4b/Ljxrk3rZ3riEDiSxMshMEfb1fUlw9Yj4V4OmJhjXwkNvw8W59AXv1A==
 
-"@axinom/mosaic-cli@0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-cli/-/mosaic-cli-0.14.0.tgz#4ff968dc03676628e879011a87aa1679b54df215"
-  integrity sha512-VoEapjJLpA31/UFllAKcOIzR5dXC/qNiLLzBzskKM38UaYjA1L23/YME64ygUdDS+ArDFiks/xUsnxZNqU4Tng==
+"@axinom/mosaic-cli@0.14.1-rc.14":
+  version "0.14.1-rc.14"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-cli/-/mosaic-cli-0.14.1-rc.14.tgz#d3806be991219ee17d9d88f30bcfff4192f9194d"
+  integrity sha512-seq/NYBDNPfUwa5lNGIfYvxSY7jMfLtTXIXdonkSCjWB9h6M7tNCR2HJ7qSymikKtrI6h977/wN3vl0HiZjEXA==
   dependencies:
     "@asyncapi/diff" "^0.4.0"
     "@asyncapi/modelina" "^0.43.0"
     "@asyncapi/parser" "^1.15.0"
-    "@axinom/mosaic-id-link-be" "^0.9.1"
-    "@axinom/mosaic-service-common" "^0.25.0"
+    "@axinom/mosaic-id-link-be" "^0.9.2-rc.14"
+    "@axinom/mosaic-service-common" "^0.26.0-rc.5"
     "@graphql-inspector/core" "^3.1.2"
     "@stoplight/spectral" "^5.9.1"
     chalk "^4.1.0"
@@ -287,7 +287,7 @@
     cross-fetch "^3.0.4"
     graphql "^15.4.0"
     graphql-tag "^2.11.0"
-
+    
 "@axinom/mosaic-id-link-be@^0.9.1":
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-link-be/-/mosaic-id-link-be-0.9.1.tgz#a12f70adbf9f1f2c4acf87b258a6dea7ea71da78"
@@ -1597,7 +1597,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.12.13"
 
-"@babel/plugin-transform-react-jsx-development@^7.12.12":
+"@babel/plugin-transform-react-jsxelopment@^7.12.12":
   version "7.12.17"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-jsx-development/-/plugin-transform-react-jsx-development-7.12.17.tgz#f510c0fa7cd7234153539f9a362ced41a5ca1447"
   integrity sha1-9RDA+nzXI0FTU5+aNiztQaXKFEc=

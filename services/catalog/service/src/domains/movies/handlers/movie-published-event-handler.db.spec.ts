@@ -1,5 +1,6 @@
 import { MessageInfo } from '@axinom/mosaic-message-bus';
 import { stub } from 'jest-auto-stub';
+import 'jest-extended';
 import { MoviePublishedEvent } from 'media-messages';
 import { insert, select, selectOne } from 'zapatos/db';
 import { movie } from 'zapatos/schema';
@@ -78,10 +79,14 @@ describe('MoviePublishEventHandler', () => {
       }).run(ctx.ownerPool);
       expect(videos).toMatchObject(expectedVideos);
 
-      const movieVideoStreams = await select('movie_video_streams', {
-        movie_video_id: videos[0].id,
-      }).run(ctx.ownerPool);
-      expect(movieVideoStreams).toMatchObject(message.videos[0].video_streams!);
+      const movieVideoStreams = (
+        await select('movie_video_streams', {
+          movie_video_id: videos[0].id,
+        }).run(ctx.ownerPool)
+      ).map(({ id, movie_video_id, ...stream }) => stream);
+      expect(movieVideoStreams).toIncludeSameMembers(
+        message.videos[0].video_streams!,
+      );
 
       const licenses = await select('movie_licenses', {
         movie_id: message.content_id,
