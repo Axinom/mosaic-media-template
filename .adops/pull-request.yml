@@ -1,0 +1,97 @@
+trigger: none
+pr:
+  - main
+  - dev
+pool:
+  vmImage: 'ubuntu-latest'
+  demands: project_navy
+
+variables:
+  YARN_CACHE_FOLDER: /home/vsts/.yarn/berry/cache
+  NODE_OPTIONS: --max-old-space-size=8192
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '14.x'
+    displayName: 'Install Node.js'
+
+  - task: Cache@2
+    inputs:
+      key: 'yarn | "$(Agent.OS)" | yarn.lock'
+      restoreKeys: |
+        yarn | "$(Agent.OS)"
+        yarn
+      path: $(YARN_CACHE_FOLDER)
+    displayName: Cache Yarn packages
+
+  - script: yarn install --immutable
+    displayName: Install dependencies
+
+  - script: yarn build
+    displayName: Build
+
+  - script: yarn apply-templates
+    displayName: Apply template files
+
+  - script: |
+      sed -i 's/^\(TENANT_ID=\)$/\100000000-0000-0000-0000-000000000000/' .env
+      sed -i 's/^\(ENVIRONMENT_ID=\)$/\100000000-0000-0000-0000-000000000000/' .env
+      sed -i 's/^\(RABBITMQ_VHOST=\)$/\1fake/' .env
+      sed -i 's/^\(RABBITMQ_USER=\)$/\1fake/' .env
+      sed -i 's/^\(RABBITMQ_PASSWORD=\)$/\1fake/' .env
+      sed -i 's/^\(DEV_SERVICE_ACCOUNT_CLIENT_ID=\)$/\1fake/' .env
+      sed -i 's/^\(DEV_SERVICE_ACCOUNT_CLIENT_SECRET=\)$/\1fake/' .env
+    displayName: Add fake values to .env to keep config loader happy
+
+  - script: cat .env
+    displayName: Show .env
+
+  - task: Docker@0
+    inputs:
+      action: 'Run an image'
+      imageName: 'postgres:11.12-alpine'
+      containerName: 'test-postgres'
+      ports: '5432:5432'
+      volumes: '$(Agent.TempDirectory):/var/lib/postgresql/data'
+      envVars: |
+        PGDATA=/var/lib/postgresql/data/pgdata
+        POSTGRES_USER=postgres
+        POSTGRES_PASSWORD=postgres
+      restartPolicy: 'no'
+    displayName: Spin up temporary Postgres DB
+
+  - script: yarn test:reset:dbs
+    displayName: Reset test DBs
+
+  - script: yarn test:ci
+    displayName: Run tests
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/junit.xml'
+      testRunTitle: 'Navy Unit Tests'
+    condition: always()
+    displayName: 'Publish test results'
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '**/coverage/cobertura-coverage.xml'
+    condition: always()
+    displayName: 'Publish coverage reports'
+
+  - task: Docker@0
+    inputs:
+      action: 'Run a Docker command'
+      customCommand: 'stop test-postgres'
+    condition: always()
+    displayName: 'Stop temp Postgres container'
+
+  - task: Docker@0
+    inputs:
+      action: 'Run a Docker command'
+      customCommand: 'container rm test-postgres'
+    condition: always()
+    displayName: 'Delete temp Postgres container'

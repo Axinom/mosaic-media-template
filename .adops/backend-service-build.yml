@@ -1,0 +1,42 @@
+trigger: none
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+  demands: project_navy
+
+variables:
+  dockerfilePath: '.adops/docker/Dockerfile.backend'
+  tag: '$(Build.BuildNumber)'
+  # Yarn Cache Folder
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+
+stages:
+  - stage: Build
+    displayName: Build and push stage
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: 'ubuntu-latest'
+          demands: project_navy
+        steps:
+          - task: Docker@2
+            displayName: Build Docker Image
+            inputs:
+              containerRegistry: $(containerRegistry)
+              repository: $(imageRepository)
+              command: 'build'
+              Dockerfile: $(dockerfilePath)
+              buildContext: '.'
+              tags: '$(tag)'
+              arguments:
+                '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg
+                PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
+          - task: Docker@2
+            displayName: Push Docker Image to Axinom Container Registry
+            inputs:
+              containerRegistry: $(containerRegistry)
+              repository: $(imageRepository)
+              command: 'push'
+              tags: '$(tag)'
