@@ -10,6 +10,7 @@ Released under the MIT licence: see LICENCE file
 declare module 'zapatos/schema' {
 
   import type * as db from 'zapatos/db';
+  import type * as c from 'zapatos/custom';
 
   // got a type error on schemaVersionCanary below? update by running `npx zapatos`
   export interface schemaVersionCanary extends db.SchemaVersionCanary { version: 101 }
@@ -1682,11 +1683,11 @@ declare module 'zapatos/schema' {
       */
       label: string | null;
       /**
-      * **episode_video_streams.drm_key_id**
+      * **episode_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id: string | null;
+      key_id: string | null;
       /**
       * **episode_video_streams.format**
       * - `text` in database
@@ -1700,11 +1701,11 @@ declare module 'zapatos/schema' {
       */
       iv: string | null;
       /**
-      * **episode_video_streams.initial_file**
+      * **episode_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file: string | null;
+      file: string | null;
       /**
       * **episode_video_streams.language_code**
       * - `text` in database
@@ -1712,11 +1713,71 @@ declare module 'zapatos/schema' {
       */
       language_code: string | null;
       /**
-      * **episode_video_streams.bandwidth_in_bps**
+      * **episode_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps: number | null;
+      bitrate_in_kbps: number | null;
+      /**
+      * **episode_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type: c.VideoStreamTypeEnum | null;
+      /**
+      * **episode_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template: string | null;
+      /**
+      * **episode_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs: string | null;
+      /**
+      * **episode_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate: number | null;
+      /**
+      * **episode_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+      /**
+      * **episode_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **episode_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio: string | null;
+      /**
+      * **episode_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio: string | null;
+      /**
+      * **episode_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate: number | null;
+      /**
+      * **episode_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -1738,11 +1799,11 @@ declare module 'zapatos/schema' {
       */
       label: string | null;
       /**
-      * **episode_video_streams.drm_key_id**
+      * **episode_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id: string | null;
+      key_id: string | null;
       /**
       * **episode_video_streams.format**
       * - `text` in database
@@ -1756,11 +1817,11 @@ declare module 'zapatos/schema' {
       */
       iv: string | null;
       /**
-      * **episode_video_streams.initial_file**
+      * **episode_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file: string | null;
+      file: string | null;
       /**
       * **episode_video_streams.language_code**
       * - `text` in database
@@ -1768,11 +1829,71 @@ declare module 'zapatos/schema' {
       */
       language_code: string | null;
       /**
-      * **episode_video_streams.bandwidth_in_bps**
+      * **episode_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps: number | null;
+      bitrate_in_kbps: number | null;
+      /**
+      * **episode_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type: c.VideoStreamTypeEnum | null;
+      /**
+      * **episode_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template: string | null;
+      /**
+      * **episode_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs: string | null;
+      /**
+      * **episode_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate: number | null;
+      /**
+      * **episode_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+      /**
+      * **episode_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **episode_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio: string | null;
+      /**
+      * **episode_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio: string | null;
+      /**
+      * **episode_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate: number | null;
+      /**
+      * **episode_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name: string | null;
     }
     export interface Whereable {
       /**
@@ -1794,11 +1915,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **episode_video_streams.drm_key_id**
+      * **episode_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      key_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **episode_video_streams.format**
       * - `text` in database
@@ -1812,11 +1933,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **episode_video_streams.initial_file**
+      * **episode_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      file?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **episode_video_streams.language_code**
       * - `text` in database
@@ -1824,11 +1945,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **episode_video_streams.bandwidth_in_bps**
+      * **episode_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      bitrate_in_kbps?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1850,11 +2031,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **episode_video_streams.drm_key_id**
+      * **episode_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **episode_video_streams.format**
       * - `text` in database
@@ -1868,11 +2049,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **episode_video_streams.initial_file**
+      * **episode_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **episode_video_streams.language_code**
       * - `text` in database
@@ -1880,11 +2061,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **episode_video_streams.bandwidth_in_bps**
+      * **episode_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      bitrate_in_kbps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1906,11 +2147,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **episode_video_streams.drm_key_id**
+      * **episode_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **episode_video_streams.format**
       * - `text` in database
@@ -1924,11 +2165,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **episode_video_streams.initial_file**
+      * **episode_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **episode_video_streams.language_code**
       * - `text` in database
@@ -1936,11 +2177,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **episode_video_streams.bandwidth_in_bps**
+      * **episode_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      bitrate_in_kbps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'episode_video_streams_pkey';
     export type Column = keyof Selectable;
@@ -1977,11 +2278,11 @@ declare module 'zapatos/schema' {
       */
       title: string | null;
       /**
-      * **episode_videos.duration**
-      * - `int4` in database
+      * **episode_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration: number | null;
+      length_in_seconds: number | null;
       /**
       * **episode_videos.audio_languages**
       * - `_text` in database
@@ -2051,11 +2352,11 @@ declare module 'zapatos/schema' {
       */
       title: string | null;
       /**
-      * **episode_videos.duration**
-      * - `int4` in database
+      * **episode_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration: number | null;
+      length_in_seconds: number | null;
       /**
       * **episode_videos.audio_languages**
       * - `_text` in database
@@ -2125,11 +2426,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **episode_videos.duration**
-      * - `int4` in database
+      * **episode_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **episode_videos.audio_languages**
       * - `_text` in database
@@ -2199,11 +2500,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **episode_videos.duration**
-      * - `int4` in database
+      * **episode_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
       * **episode_videos.audio_languages**
       * - `_text` in database
@@ -2273,11 +2574,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **episode_videos.duration**
-      * - `int4` in database
+      * **episode_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **episode_videos.audio_languages**
       * - `_text` in database
@@ -3285,11 +3586,11 @@ declare module 'zapatos/schema' {
       */
       label: string | null;
       /**
-      * **movie_video_streams.drm_key_id**
+      * **movie_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id: string | null;
+      key_id: string | null;
       /**
       * **movie_video_streams.format**
       * - `text` in database
@@ -3303,11 +3604,11 @@ declare module 'zapatos/schema' {
       */
       iv: string | null;
       /**
-      * **movie_video_streams.initial_file**
+      * **movie_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file: string | null;
+      file: string | null;
       /**
       * **movie_video_streams.language_code**
       * - `text` in database
@@ -3315,11 +3616,71 @@ declare module 'zapatos/schema' {
       */
       language_code: string | null;
       /**
-      * **movie_video_streams.bandwidth_in_bps**
+      * **movie_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps: number | null;
+      bitrate_in_kbps: number | null;
+      /**
+      * **movie_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type: c.VideoStreamTypeEnum | null;
+      /**
+      * **movie_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template: string | null;
+      /**
+      * **movie_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs: string | null;
+      /**
+      * **movie_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate: number | null;
+      /**
+      * **movie_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+      /**
+      * **movie_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **movie_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio: string | null;
+      /**
+      * **movie_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio: string | null;
+      /**
+      * **movie_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate: number | null;
+      /**
+      * **movie_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -3341,11 +3702,11 @@ declare module 'zapatos/schema' {
       */
       label: string | null;
       /**
-      * **movie_video_streams.drm_key_id**
+      * **movie_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id: string | null;
+      key_id: string | null;
       /**
       * **movie_video_streams.format**
       * - `text` in database
@@ -3359,11 +3720,11 @@ declare module 'zapatos/schema' {
       */
       iv: string | null;
       /**
-      * **movie_video_streams.initial_file**
+      * **movie_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file: string | null;
+      file: string | null;
       /**
       * **movie_video_streams.language_code**
       * - `text` in database
@@ -3371,11 +3732,71 @@ declare module 'zapatos/schema' {
       */
       language_code: string | null;
       /**
-      * **movie_video_streams.bandwidth_in_bps**
+      * **movie_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps: number | null;
+      bitrate_in_kbps: number | null;
+      /**
+      * **movie_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type: c.VideoStreamTypeEnum | null;
+      /**
+      * **movie_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template: string | null;
+      /**
+      * **movie_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs: string | null;
+      /**
+      * **movie_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate: number | null;
+      /**
+      * **movie_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+      /**
+      * **movie_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **movie_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio: string | null;
+      /**
+      * **movie_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio: string | null;
+      /**
+      * **movie_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate: number | null;
+      /**
+      * **movie_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name: string | null;
     }
     export interface Whereable {
       /**
@@ -3397,11 +3818,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **movie_video_streams.drm_key_id**
+      * **movie_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      key_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **movie_video_streams.format**
       * - `text` in database
@@ -3415,11 +3836,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **movie_video_streams.initial_file**
+      * **movie_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      file?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **movie_video_streams.language_code**
       * - `text` in database
@@ -3427,11 +3848,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **movie_video_streams.bandwidth_in_bps**
+      * **movie_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      bitrate_in_kbps?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -3453,11 +3934,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **movie_video_streams.drm_key_id**
+      * **movie_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **movie_video_streams.format**
       * - `text` in database
@@ -3471,11 +3952,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **movie_video_streams.initial_file**
+      * **movie_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **movie_video_streams.language_code**
       * - `text` in database
@@ -3483,11 +3964,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **movie_video_streams.bandwidth_in_bps**
+      * **movie_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      bitrate_in_kbps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -3509,11 +4050,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **movie_video_streams.drm_key_id**
+      * **movie_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **movie_video_streams.format**
       * - `text` in database
@@ -3527,11 +4068,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **movie_video_streams.initial_file**
+      * **movie_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **movie_video_streams.language_code**
       * - `text` in database
@@ -3539,11 +4080,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **movie_video_streams.bandwidth_in_bps**
+      * **movie_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      bitrate_in_kbps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movie_video_streams_pkey';
     export type Column = keyof Selectable;
@@ -3580,11 +4181,11 @@ declare module 'zapatos/schema' {
       */
       title: string | null;
       /**
-      * **movie_videos.duration**
-      * - `int4` in database
+      * **movie_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration: number | null;
+      length_in_seconds: number | null;
       /**
       * **movie_videos.audio_languages**
       * - `_text` in database
@@ -3654,11 +4255,11 @@ declare module 'zapatos/schema' {
       */
       title: string | null;
       /**
-      * **movie_videos.duration**
-      * - `int4` in database
+      * **movie_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration: number | null;
+      length_in_seconds: number | null;
       /**
       * **movie_videos.audio_languages**
       * - `_text` in database
@@ -3728,11 +4329,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **movie_videos.duration**
-      * - `int4` in database
+      * **movie_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **movie_videos.audio_languages**
       * - `_text` in database
@@ -3802,11 +4403,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **movie_videos.duration**
-      * - `int4` in database
+      * **movie_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
       * **movie_videos.audio_languages**
       * - `_text` in database
@@ -3876,11 +4477,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **movie_videos.duration**
-      * - `int4` in database
+      * **movie_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **movie_videos.audio_languages**
       * - `_text` in database
@@ -4779,11 +5380,11 @@ declare module 'zapatos/schema' {
       */
       label: string | null;
       /**
-      * **season_video_streams.drm_key_id**
+      * **season_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id: string | null;
+      key_id: string | null;
       /**
       * **season_video_streams.format**
       * - `text` in database
@@ -4797,11 +5398,11 @@ declare module 'zapatos/schema' {
       */
       iv: string | null;
       /**
-      * **season_video_streams.initial_file**
+      * **season_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file: string | null;
+      file: string | null;
       /**
       * **season_video_streams.language_code**
       * - `text` in database
@@ -4809,11 +5410,71 @@ declare module 'zapatos/schema' {
       */
       language_code: string | null;
       /**
-      * **season_video_streams.bandwidth_in_bps**
+      * **season_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps: number | null;
+      bitrate_in_kbps: number | null;
+      /**
+      * **season_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type: c.VideoStreamTypeEnum | null;
+      /**
+      * **season_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template: string | null;
+      /**
+      * **season_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs: string | null;
+      /**
+      * **season_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate: number | null;
+      /**
+      * **season_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+      /**
+      * **season_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **season_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio: string | null;
+      /**
+      * **season_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio: string | null;
+      /**
+      * **season_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate: number | null;
+      /**
+      * **season_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -4835,11 +5496,11 @@ declare module 'zapatos/schema' {
       */
       label: string | null;
       /**
-      * **season_video_streams.drm_key_id**
+      * **season_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id: string | null;
+      key_id: string | null;
       /**
       * **season_video_streams.format**
       * - `text` in database
@@ -4853,11 +5514,11 @@ declare module 'zapatos/schema' {
       */
       iv: string | null;
       /**
-      * **season_video_streams.initial_file**
+      * **season_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file: string | null;
+      file: string | null;
       /**
       * **season_video_streams.language_code**
       * - `text` in database
@@ -4865,11 +5526,71 @@ declare module 'zapatos/schema' {
       */
       language_code: string | null;
       /**
-      * **season_video_streams.bandwidth_in_bps**
+      * **season_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps: number | null;
+      bitrate_in_kbps: number | null;
+      /**
+      * **season_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type: c.VideoStreamTypeEnum | null;
+      /**
+      * **season_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template: string | null;
+      /**
+      * **season_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs: string | null;
+      /**
+      * **season_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate: number | null;
+      /**
+      * **season_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+      /**
+      * **season_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **season_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio: string | null;
+      /**
+      * **season_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio: string | null;
+      /**
+      * **season_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate: number | null;
+      /**
+      * **season_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name: string | null;
     }
     export interface Whereable {
       /**
@@ -4891,11 +5612,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **season_video_streams.drm_key_id**
+      * **season_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      key_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **season_video_streams.format**
       * - `text` in database
@@ -4909,11 +5630,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **season_video_streams.initial_file**
+      * **season_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      file?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **season_video_streams.language_code**
       * - `text` in database
@@ -4921,11 +5642,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **season_video_streams.bandwidth_in_bps**
+      * **season_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      bitrate_in_kbps?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -4947,11 +5728,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **season_video_streams.drm_key_id**
+      * **season_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **season_video_streams.format**
       * - `text` in database
@@ -4965,11 +5746,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **season_video_streams.initial_file**
+      * **season_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **season_video_streams.language_code**
       * - `text` in database
@@ -4977,11 +5758,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **season_video_streams.bandwidth_in_bps**
+      * **season_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      bitrate_in_kbps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -5003,11 +5844,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **season_video_streams.drm_key_id**
+      * **season_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **season_video_streams.format**
       * - `text` in database
@@ -5021,11 +5862,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **season_video_streams.initial_file**
+      * **season_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **season_video_streams.language_code**
       * - `text` in database
@@ -5033,11 +5874,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **season_video_streams.bandwidth_in_bps**
+      * **season_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      bitrate_in_kbps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'season_video_streams_pkey';
     export type Column = keyof Selectable;
@@ -5074,11 +5975,11 @@ declare module 'zapatos/schema' {
       */
       title: string | null;
       /**
-      * **season_videos.duration**
-      * - `int4` in database
+      * **season_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration: number | null;
+      length_in_seconds: number | null;
       /**
       * **season_videos.audio_languages**
       * - `_text` in database
@@ -5148,11 +6049,11 @@ declare module 'zapatos/schema' {
       */
       title: string | null;
       /**
-      * **season_videos.duration**
-      * - `int4` in database
+      * **season_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration: number | null;
+      length_in_seconds: number | null;
       /**
       * **season_videos.audio_languages**
       * - `_text` in database
@@ -5222,11 +6123,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **season_videos.duration**
-      * - `int4` in database
+      * **season_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **season_videos.audio_languages**
       * - `_text` in database
@@ -5296,11 +6197,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **season_videos.duration**
-      * - `int4` in database
+      * **season_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
       * **season_videos.audio_languages**
       * - `_text` in database
@@ -5370,11 +6271,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **season_videos.duration**
-      * - `int4` in database
+      * **season_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **season_videos.audio_languages**
       * - `_text` in database
@@ -6382,11 +7283,11 @@ declare module 'zapatos/schema' {
       */
       label: string | null;
       /**
-      * **tvshow_video_streams.drm_key_id**
+      * **tvshow_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id: string | null;
+      key_id: string | null;
       /**
       * **tvshow_video_streams.format**
       * - `text` in database
@@ -6400,11 +7301,11 @@ declare module 'zapatos/schema' {
       */
       iv: string | null;
       /**
-      * **tvshow_video_streams.initial_file**
+      * **tvshow_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file: string | null;
+      file: string | null;
       /**
       * **tvshow_video_streams.language_code**
       * - `text` in database
@@ -6412,11 +7313,71 @@ declare module 'zapatos/schema' {
       */
       language_code: string | null;
       /**
-      * **tvshow_video_streams.bandwidth_in_bps**
+      * **tvshow_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps: number | null;
+      bitrate_in_kbps: number | null;
+      /**
+      * **tvshow_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type: c.VideoStreamTypeEnum | null;
+      /**
+      * **tvshow_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template: string | null;
+      /**
+      * **tvshow_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs: string | null;
+      /**
+      * **tvshow_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate: number | null;
+      /**
+      * **tvshow_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+      /**
+      * **tvshow_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **tvshow_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio: string | null;
+      /**
+      * **tvshow_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio: string | null;
+      /**
+      * **tvshow_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate: number | null;
+      /**
+      * **tvshow_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -6438,11 +7399,11 @@ declare module 'zapatos/schema' {
       */
       label: string | null;
       /**
-      * **tvshow_video_streams.drm_key_id**
+      * **tvshow_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id: string | null;
+      key_id: string | null;
       /**
       * **tvshow_video_streams.format**
       * - `text` in database
@@ -6456,11 +7417,11 @@ declare module 'zapatos/schema' {
       */
       iv: string | null;
       /**
-      * **tvshow_video_streams.initial_file**
+      * **tvshow_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file: string | null;
+      file: string | null;
       /**
       * **tvshow_video_streams.language_code**
       * - `text` in database
@@ -6468,11 +7429,71 @@ declare module 'zapatos/schema' {
       */
       language_code: string | null;
       /**
-      * **tvshow_video_streams.bandwidth_in_bps**
+      * **tvshow_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps: number | null;
+      bitrate_in_kbps: number | null;
+      /**
+      * **tvshow_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type: c.VideoStreamTypeEnum | null;
+      /**
+      * **tvshow_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template: string | null;
+      /**
+      * **tvshow_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs: string | null;
+      /**
+      * **tvshow_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate: number | null;
+      /**
+      * **tvshow_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+      /**
+      * **tvshow_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **tvshow_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio: string | null;
+      /**
+      * **tvshow_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio: string | null;
+      /**
+      * **tvshow_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate: number | null;
+      /**
+      * **tvshow_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name: string | null;
     }
     export interface Whereable {
       /**
@@ -6494,11 +7515,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **tvshow_video_streams.drm_key_id**
+      * **tvshow_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      key_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tvshow_video_streams.format**
       * - `text` in database
@@ -6512,11 +7533,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **tvshow_video_streams.initial_file**
+      * **tvshow_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      file?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tvshow_video_streams.language_code**
       * - `text` in database
@@ -6524,11 +7545,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **tvshow_video_streams.bandwidth_in_bps**
+      * **tvshow_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      bitrate_in_kbps?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -6550,11 +7631,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **tvshow_video_streams.drm_key_id**
+      * **tvshow_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **tvshow_video_streams.format**
       * - `text` in database
@@ -6568,11 +7649,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **tvshow_video_streams.initial_file**
+      * **tvshow_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **tvshow_video_streams.language_code**
       * - `text` in database
@@ -6580,11 +7661,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **tvshow_video_streams.bandwidth_in_bps**
+      * **tvshow_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      bitrate_in_kbps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -6606,11 +7747,11 @@ declare module 'zapatos/schema' {
       */
       label?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **tvshow_video_streams.drm_key_id**
+      * **tvshow_video_streams.key_id**
       * - `text` in database
       * - Nullable, no default
       */
-      drm_key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **tvshow_video_streams.format**
       * - `text` in database
@@ -6624,11 +7765,11 @@ declare module 'zapatos/schema' {
       */
       iv?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **tvshow_video_streams.initial_file**
+      * **tvshow_video_streams.file**
       * - `text` in database
       * - Nullable, no default
       */
-      initial_file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **tvshow_video_streams.language_code**
       * - `text` in database
@@ -6636,11 +7777,71 @@ declare module 'zapatos/schema' {
       */
       language_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **tvshow_video_streams.bandwidth_in_bps**
+      * **tvshow_video_streams.bitrate_in_kbps**
       * - `int4` in database
       * - Nullable, no default
       */
-      bandwidth_in_bps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      bitrate_in_kbps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, no default
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshow_video_streams_pkey';
     export type Column = keyof Selectable;
@@ -6677,11 +7878,11 @@ declare module 'zapatos/schema' {
       */
       title: string | null;
       /**
-      * **tvshow_videos.duration**
-      * - `int4` in database
+      * **tvshow_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration: number | null;
+      length_in_seconds: number | null;
       /**
       * **tvshow_videos.audio_languages**
       * - `_text` in database
@@ -6751,11 +7952,11 @@ declare module 'zapatos/schema' {
       */
       title: string | null;
       /**
-      * **tvshow_videos.duration**
-      * - `int4` in database
+      * **tvshow_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration: number | null;
+      length_in_seconds: number | null;
       /**
       * **tvshow_videos.audio_languages**
       * - `_text` in database
@@ -6825,11 +8026,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **tvshow_videos.duration**
-      * - `int4` in database
+      * **tvshow_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tvshow_videos.audio_languages**
       * - `_text` in database
@@ -6899,11 +8100,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **tvshow_videos.duration**
-      * - `int4` in database
+      * **tvshow_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
       * **tvshow_videos.audio_languages**
       * - `_text` in database
@@ -6973,11 +8174,11 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **tvshow_videos.duration**
-      * - `int4` in database
+      * **tvshow_videos.length_in_seconds**
+      * - `numeric` in database
       * - Nullable, no default
       */
-      duration?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **tvshow_videos.audio_languages**
       * - `_text` in database
@@ -7028,6 +8229,85 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
+  export namespace video_stream_type {
+    export type Table = 'video_stream_type';
+    export interface Selectable {
+      /**
+      * **video_stream_type.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value: string;
+      /**
+      * **video_stream_type.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **video_stream_type.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value: string;
+      /**
+      * **video_stream_type.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **video_stream_type.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **video_stream_type.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **video_stream_type.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **video_stream_type.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **video_stream_type.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **video_stream_type.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'video_stream_type_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
 
   /* === schema: ax_utils === */
 
@@ -7048,15 +8328,15 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = collection.Table | collection_images.Table | collection_items_relation.Table | episode.Table | episode_genres_relation.Table | episode_images.Table | episode_licenses.Table | episode_video_streams.Table | episode_videos.Table | messaging_counter.Table | movie.Table | movie_genre.Table | movie_genres_relation.Table | movie_images.Table | movie_licenses.Table | movie_video_streams.Table | movie_videos.Table | season.Table | season_genres_relation.Table | season_images.Table | season_licenses.Table | season_video_streams.Table | season_videos.Table | tvshow.Table | tvshow_genre.Table | tvshow_genres_relation.Table | tvshow_images.Table | tvshow_licenses.Table | tvshow_video_streams.Table | tvshow_videos.Table;
-  export type Selectable = collection.Selectable | collection_images.Selectable | collection_items_relation.Selectable | episode.Selectable | episode_genres_relation.Selectable | episode_images.Selectable | episode_licenses.Selectable | episode_video_streams.Selectable | episode_videos.Selectable | messaging_counter.Selectable | movie.Selectable | movie_genre.Selectable | movie_genres_relation.Selectable | movie_images.Selectable | movie_licenses.Selectable | movie_video_streams.Selectable | movie_videos.Selectable | season.Selectable | season_genres_relation.Selectable | season_images.Selectable | season_licenses.Selectable | season_video_streams.Selectable | season_videos.Selectable | tvshow.Selectable | tvshow_genre.Selectable | tvshow_genres_relation.Selectable | tvshow_images.Selectable | tvshow_licenses.Selectable | tvshow_video_streams.Selectable | tvshow_videos.Selectable;
-  export type JSONSelectable = collection.JSONSelectable | collection_images.JSONSelectable | collection_items_relation.JSONSelectable | episode.JSONSelectable | episode_genres_relation.JSONSelectable | episode_images.JSONSelectable | episode_licenses.JSONSelectable | episode_video_streams.JSONSelectable | episode_videos.JSONSelectable | messaging_counter.JSONSelectable | movie.JSONSelectable | movie_genre.JSONSelectable | movie_genres_relation.JSONSelectable | movie_images.JSONSelectable | movie_licenses.JSONSelectable | movie_video_streams.JSONSelectable | movie_videos.JSONSelectable | season.JSONSelectable | season_genres_relation.JSONSelectable | season_images.JSONSelectable | season_licenses.JSONSelectable | season_video_streams.JSONSelectable | season_videos.JSONSelectable | tvshow.JSONSelectable | tvshow_genre.JSONSelectable | tvshow_genres_relation.JSONSelectable | tvshow_images.JSONSelectable | tvshow_licenses.JSONSelectable | tvshow_video_streams.JSONSelectable | tvshow_videos.JSONSelectable;
-  export type Whereable = collection.Whereable | collection_images.Whereable | collection_items_relation.Whereable | episode.Whereable | episode_genres_relation.Whereable | episode_images.Whereable | episode_licenses.Whereable | episode_video_streams.Whereable | episode_videos.Whereable | messaging_counter.Whereable | movie.Whereable | movie_genre.Whereable | movie_genres_relation.Whereable | movie_images.Whereable | movie_licenses.Whereable | movie_video_streams.Whereable | movie_videos.Whereable | season.Whereable | season_genres_relation.Whereable | season_images.Whereable | season_licenses.Whereable | season_video_streams.Whereable | season_videos.Whereable | tvshow.Whereable | tvshow_genre.Whereable | tvshow_genres_relation.Whereable | tvshow_images.Whereable | tvshow_licenses.Whereable | tvshow_video_streams.Whereable | tvshow_videos.Whereable;
-  export type Insertable = collection.Insertable | collection_images.Insertable | collection_items_relation.Insertable | episode.Insertable | episode_genres_relation.Insertable | episode_images.Insertable | episode_licenses.Insertable | episode_video_streams.Insertable | episode_videos.Insertable | messaging_counter.Insertable | movie.Insertable | movie_genre.Insertable | movie_genres_relation.Insertable | movie_images.Insertable | movie_licenses.Insertable | movie_video_streams.Insertable | movie_videos.Insertable | season.Insertable | season_genres_relation.Insertable | season_images.Insertable | season_licenses.Insertable | season_video_streams.Insertable | season_videos.Insertable | tvshow.Insertable | tvshow_genre.Insertable | tvshow_genres_relation.Insertable | tvshow_images.Insertable | tvshow_licenses.Insertable | tvshow_video_streams.Insertable | tvshow_videos.Insertable;
-  export type Updatable = collection.Updatable | collection_images.Updatable | collection_items_relation.Updatable | episode.Updatable | episode_genres_relation.Updatable | episode_images.Updatable | episode_licenses.Updatable | episode_video_streams.Updatable | episode_videos.Updatable | messaging_counter.Updatable | movie.Updatable | movie_genre.Updatable | movie_genres_relation.Updatable | movie_images.Updatable | movie_licenses.Updatable | movie_video_streams.Updatable | movie_videos.Updatable | season.Updatable | season_genres_relation.Updatable | season_images.Updatable | season_licenses.Updatable | season_video_streams.Updatable | season_videos.Updatable | tvshow.Updatable | tvshow_genre.Updatable | tvshow_genres_relation.Updatable | tvshow_images.Updatable | tvshow_licenses.Updatable | tvshow_video_streams.Updatable | tvshow_videos.Updatable;
-  export type UniqueIndex = collection.UniqueIndex | collection_images.UniqueIndex | collection_items_relation.UniqueIndex | episode.UniqueIndex | episode_genres_relation.UniqueIndex | episode_images.UniqueIndex | episode_licenses.UniqueIndex | episode_video_streams.UniqueIndex | episode_videos.UniqueIndex | messaging_counter.UniqueIndex | movie.UniqueIndex | movie_genre.UniqueIndex | movie_genres_relation.UniqueIndex | movie_images.UniqueIndex | movie_licenses.UniqueIndex | movie_video_streams.UniqueIndex | movie_videos.UniqueIndex | season.UniqueIndex | season_genres_relation.UniqueIndex | season_images.UniqueIndex | season_licenses.UniqueIndex | season_video_streams.UniqueIndex | season_videos.UniqueIndex | tvshow.UniqueIndex | tvshow_genre.UniqueIndex | tvshow_genres_relation.UniqueIndex | tvshow_images.UniqueIndex | tvshow_licenses.UniqueIndex | tvshow_video_streams.UniqueIndex | tvshow_videos.UniqueIndex;
-  export type Column = collection.Column | collection_images.Column | collection_items_relation.Column | episode.Column | episode_genres_relation.Column | episode_images.Column | episode_licenses.Column | episode_video_streams.Column | episode_videos.Column | messaging_counter.Column | movie.Column | movie_genre.Column | movie_genres_relation.Column | movie_images.Column | movie_licenses.Column | movie_video_streams.Column | movie_videos.Column | season.Column | season_genres_relation.Column | season_images.Column | season_licenses.Column | season_video_streams.Column | season_videos.Column | tvshow.Column | tvshow_genre.Column | tvshow_genres_relation.Column | tvshow_images.Column | tvshow_licenses.Column | tvshow_video_streams.Column | tvshow_videos.Column;
-  export type AllTables = [collection.Table, collection_images.Table, collection_items_relation.Table, episode.Table, episode_genres_relation.Table, episode_images.Table, episode_licenses.Table, episode_video_streams.Table, episode_videos.Table, messaging_counter.Table, movie.Table, movie_genre.Table, movie_genres_relation.Table, movie_images.Table, movie_licenses.Table, movie_video_streams.Table, movie_videos.Table, season.Table, season_genres_relation.Table, season_images.Table, season_licenses.Table, season_video_streams.Table, season_videos.Table, tvshow.Table, tvshow_genre.Table, tvshow_genres_relation.Table, tvshow_images.Table, tvshow_licenses.Table, tvshow_video_streams.Table, tvshow_videos.Table];
+  export type Table = collection.Table | collection_images.Table | collection_items_relation.Table | episode.Table | episode_genres_relation.Table | episode_images.Table | episode_licenses.Table | episode_video_streams.Table | episode_videos.Table | messaging_counter.Table | movie.Table | movie_genre.Table | movie_genres_relation.Table | movie_images.Table | movie_licenses.Table | movie_video_streams.Table | movie_videos.Table | season.Table | season_genres_relation.Table | season_images.Table | season_licenses.Table | season_video_streams.Table | season_videos.Table | tvshow.Table | tvshow_genre.Table | tvshow_genres_relation.Table | tvshow_images.Table | tvshow_licenses.Table | tvshow_video_streams.Table | tvshow_videos.Table | video_stream_type.Table;
+  export type Selectable = collection.Selectable | collection_images.Selectable | collection_items_relation.Selectable | episode.Selectable | episode_genres_relation.Selectable | episode_images.Selectable | episode_licenses.Selectable | episode_video_streams.Selectable | episode_videos.Selectable | messaging_counter.Selectable | movie.Selectable | movie_genre.Selectable | movie_genres_relation.Selectable | movie_images.Selectable | movie_licenses.Selectable | movie_video_streams.Selectable | movie_videos.Selectable | season.Selectable | season_genres_relation.Selectable | season_images.Selectable | season_licenses.Selectable | season_video_streams.Selectable | season_videos.Selectable | tvshow.Selectable | tvshow_genre.Selectable | tvshow_genres_relation.Selectable | tvshow_images.Selectable | tvshow_licenses.Selectable | tvshow_video_streams.Selectable | tvshow_videos.Selectable | video_stream_type.Selectable;
+  export type JSONSelectable = collection.JSONSelectable | collection_images.JSONSelectable | collection_items_relation.JSONSelectable | episode.JSONSelectable | episode_genres_relation.JSONSelectable | episode_images.JSONSelectable | episode_licenses.JSONSelectable | episode_video_streams.JSONSelectable | episode_videos.JSONSelectable | messaging_counter.JSONSelectable | movie.JSONSelectable | movie_genre.JSONSelectable | movie_genres_relation.JSONSelectable | movie_images.JSONSelectable | movie_licenses.JSONSelectable | movie_video_streams.JSONSelectable | movie_videos.JSONSelectable | season.JSONSelectable | season_genres_relation.JSONSelectable | season_images.JSONSelectable | season_licenses.JSONSelectable | season_video_streams.JSONSelectable | season_videos.JSONSelectable | tvshow.JSONSelectable | tvshow_genre.JSONSelectable | tvshow_genres_relation.JSONSelectable | tvshow_images.JSONSelectable | tvshow_licenses.JSONSelectable | tvshow_video_streams.JSONSelectable | tvshow_videos.JSONSelectable | video_stream_type.JSONSelectable;
+  export type Whereable = collection.Whereable | collection_images.Whereable | collection_items_relation.Whereable | episode.Whereable | episode_genres_relation.Whereable | episode_images.Whereable | episode_licenses.Whereable | episode_video_streams.Whereable | episode_videos.Whereable | messaging_counter.Whereable | movie.Whereable | movie_genre.Whereable | movie_genres_relation.Whereable | movie_images.Whereable | movie_licenses.Whereable | movie_video_streams.Whereable | movie_videos.Whereable | season.Whereable | season_genres_relation.Whereable | season_images.Whereable | season_licenses.Whereable | season_video_streams.Whereable | season_videos.Whereable | tvshow.Whereable | tvshow_genre.Whereable | tvshow_genres_relation.Whereable | tvshow_images.Whereable | tvshow_licenses.Whereable | tvshow_video_streams.Whereable | tvshow_videos.Whereable | video_stream_type.Whereable;
+  export type Insertable = collection.Insertable | collection_images.Insertable | collection_items_relation.Insertable | episode.Insertable | episode_genres_relation.Insertable | episode_images.Insertable | episode_licenses.Insertable | episode_video_streams.Insertable | episode_videos.Insertable | messaging_counter.Insertable | movie.Insertable | movie_genre.Insertable | movie_genres_relation.Insertable | movie_images.Insertable | movie_licenses.Insertable | movie_video_streams.Insertable | movie_videos.Insertable | season.Insertable | season_genres_relation.Insertable | season_images.Insertable | season_licenses.Insertable | season_video_streams.Insertable | season_videos.Insertable | tvshow.Insertable | tvshow_genre.Insertable | tvshow_genres_relation.Insertable | tvshow_images.Insertable | tvshow_licenses.Insertable | tvshow_video_streams.Insertable | tvshow_videos.Insertable | video_stream_type.Insertable;
+  export type Updatable = collection.Updatable | collection_images.Updatable | collection_items_relation.Updatable | episode.Updatable | episode_genres_relation.Updatable | episode_images.Updatable | episode_licenses.Updatable | episode_video_streams.Updatable | episode_videos.Updatable | messaging_counter.Updatable | movie.Updatable | movie_genre.Updatable | movie_genres_relation.Updatable | movie_images.Updatable | movie_licenses.Updatable | movie_video_streams.Updatable | movie_videos.Updatable | season.Updatable | season_genres_relation.Updatable | season_images.Updatable | season_licenses.Updatable | season_video_streams.Updatable | season_videos.Updatable | tvshow.Updatable | tvshow_genre.Updatable | tvshow_genres_relation.Updatable | tvshow_images.Updatable | tvshow_licenses.Updatable | tvshow_video_streams.Updatable | tvshow_videos.Updatable | video_stream_type.Updatable;
+  export type UniqueIndex = collection.UniqueIndex | collection_images.UniqueIndex | collection_items_relation.UniqueIndex | episode.UniqueIndex | episode_genres_relation.UniqueIndex | episode_images.UniqueIndex | episode_licenses.UniqueIndex | episode_video_streams.UniqueIndex | episode_videos.UniqueIndex | messaging_counter.UniqueIndex | movie.UniqueIndex | movie_genre.UniqueIndex | movie_genres_relation.UniqueIndex | movie_images.UniqueIndex | movie_licenses.UniqueIndex | movie_video_streams.UniqueIndex | movie_videos.UniqueIndex | season.UniqueIndex | season_genres_relation.UniqueIndex | season_images.UniqueIndex | season_licenses.UniqueIndex | season_video_streams.UniqueIndex | season_videos.UniqueIndex | tvshow.UniqueIndex | tvshow_genre.UniqueIndex | tvshow_genres_relation.UniqueIndex | tvshow_images.UniqueIndex | tvshow_licenses.UniqueIndex | tvshow_video_streams.UniqueIndex | tvshow_videos.UniqueIndex | video_stream_type.UniqueIndex;
+  export type Column = collection.Column | collection_images.Column | collection_items_relation.Column | episode.Column | episode_genres_relation.Column | episode_images.Column | episode_licenses.Column | episode_video_streams.Column | episode_videos.Column | messaging_counter.Column | movie.Column | movie_genre.Column | movie_genres_relation.Column | movie_images.Column | movie_licenses.Column | movie_video_streams.Column | movie_videos.Column | season.Column | season_genres_relation.Column | season_images.Column | season_licenses.Column | season_video_streams.Column | season_videos.Column | tvshow.Column | tvshow_genre.Column | tvshow_genres_relation.Column | tvshow_images.Column | tvshow_licenses.Column | tvshow_video_streams.Column | tvshow_videos.Column | video_stream_type.Column;
+  export type AllTables = [collection.Table, collection_images.Table, collection_items_relation.Table, episode.Table, episode_genres_relation.Table, episode_images.Table, episode_licenses.Table, episode_video_streams.Table, episode_videos.Table, messaging_counter.Table, movie.Table, movie_genre.Table, movie_genres_relation.Table, movie_images.Table, movie_licenses.Table, movie_video_streams.Table, movie_videos.Table, season.Table, season_genres_relation.Table, season_images.Table, season_licenses.Table, season_video_streams.Table, season_videos.Table, tvshow.Table, tvshow_genre.Table, tvshow_genres_relation.Table, tvshow_images.Table, tvshow_licenses.Table, tvshow_video_streams.Table, tvshow_videos.Table, video_stream_type.Table];
   export type AllMaterializedViews = [];
 
 
@@ -7091,6 +8371,7 @@ declare module 'zapatos/schema' {
     tvshow_licenses: tvshow_licenses.Selectable;
     tvshow_video_streams: tvshow_video_streams.Selectable;
     tvshow_videos: tvshow_videos.Selectable;
+    video_stream_type: video_stream_type.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
@@ -7124,6 +8405,7 @@ declare module 'zapatos/schema' {
     tvshow_licenses: tvshow_licenses.JSONSelectable;
     tvshow_video_streams: tvshow_video_streams.JSONSelectable;
     tvshow_videos: tvshow_videos.JSONSelectable;
+    video_stream_type: video_stream_type.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
@@ -7157,6 +8439,7 @@ declare module 'zapatos/schema' {
     tvshow_licenses: tvshow_licenses.Whereable;
     tvshow_video_streams: tvshow_video_streams.Whereable;
     tvshow_videos: tvshow_videos.Whereable;
+    video_stream_type: video_stream_type.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
@@ -7190,6 +8473,7 @@ declare module 'zapatos/schema' {
     tvshow_licenses: tvshow_licenses.Insertable;
     tvshow_video_streams: tvshow_video_streams.Insertable;
     tvshow_videos: tvshow_videos.Insertable;
+    video_stream_type: video_stream_type.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
@@ -7223,6 +8507,7 @@ declare module 'zapatos/schema' {
     tvshow_licenses: tvshow_licenses.Updatable;
     tvshow_video_streams: tvshow_video_streams.Updatable;
     tvshow_videos: tvshow_videos.Updatable;
+    video_stream_type: video_stream_type.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
@@ -7256,6 +8541,7 @@ declare module 'zapatos/schema' {
     tvshow_licenses: tvshow_licenses.UniqueIndex;
     tvshow_video_streams: tvshow_video_streams.UniqueIndex;
     tvshow_videos: tvshow_videos.UniqueIndex;
+    video_stream_type: video_stream_type.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
@@ -7289,6 +8575,7 @@ declare module 'zapatos/schema' {
     tvshow_licenses: tvshow_licenses.Column;
     tvshow_video_streams: tvshow_video_streams.Column;
     tvshow_videos: tvshow_videos.Column;
+    video_stream_type: video_stream_type.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
@@ -7322,6 +8609,7 @@ declare module 'zapatos/schema' {
     tvshow_licenses: tvshow_licenses.SQL;
     tvshow_video_streams: tvshow_video_streams.SQL;
     tvshow_videos: tvshow_videos.SQL;
+    video_stream_type: video_stream_type.SQL;
   }[T];
 
 }

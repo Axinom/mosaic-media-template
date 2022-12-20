@@ -14,9 +14,9 @@ export interface Image {
   /**
    * Width of the image in pixels.
    */
-  width: number;
+  width?: number | null;
   /**
    * Height of the image in pixels.
    */
-  height: number;
+  height?: number | null;
 }
