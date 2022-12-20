@@ -13,11 +13,11 @@ import {
 import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
 import { faker } from '@faker-js/faker';
 import axios from 'axios';
-import { createCanvas } from 'canvas';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import gql from 'graphql-tag';
 import { print } from 'graphql/language/printer';
 import { IngestDocument, IngestItem, LicenseData } from 'media-messages';
+import sharp from 'sharp';
 import urljoin from 'url-join';
 import yargs from 'yargs';
 import {
@@ -508,12 +508,12 @@ const generateVideoFilesAndMetadata = async (
 };
 
 /**
- * Generates an image of relatively random size, random background color and static text of random color in a random position.
+ * Generates an image of relatively random size, random background color and static text of random color.
  */
-const getRandomImageBuffer = (
+const getRandomImageBuffer = async (
   index: number,
   ingestScopeName: string,
-): Buffer => {
+): Promise<Buffer> => {
   const randomHex = (): string =>
     `#${Math.floor(Math.random() * 0xffffff)
       .toString(16)
@@ -521,16 +521,21 @@ const getRandomImageBuffer = (
   const possibleImageDimensions = [320, 480, 640, 600, 800, 1024, 1280];
   const width = faker.helpers.arrayElement(possibleImageDimensions);
   const height = faker.helpers.arrayElement(possibleImageDimensions);
-  const canvas = createCanvas(width, height);
-  const context = canvas.getContext('2d');
-  context.fillStyle = randomHex();
-  context.fillRect(0, 0, width, height);
-  context.font = 'bold 16pt Times New Roman';
-  context.fillStyle = randomHex();
-  const x = 10 + faker.datatype.number(width - 300);
-  const y = 20 + faker.datatype.number(height - 30);
-  context.fillText(`${ingestScopeName} ${index}`, x, y);
-  return canvas.toBuffer('image/png');
+  const size = Math.min(width, height) / 6;
+  const text = `<tspan x="50%" dy="1em">${ingestScopeName} ${index}</tspan>`;
+
+  const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"
+    viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMinYMin">
+    <rect x="0" y="0" width="${width}" height="${height}" fill="${randomHex()}" />
+    <text y="0" text-anchor="middle" alignment-baseline="central" 
+      lengthAdjust="spacingAndGlyphs" dominant-baseline="central" 
+      font-size="${size}px" fill="${randomHex()}">
+      ${text}
+    </text>
+  </svg>`;
+
+  return sharp(Buffer.from(svg)).png().toBuffer();
 };
 
 /**
@@ -549,7 +554,7 @@ const generateAndUploadImage = async (
     .toString()
     .padStart(8, '0')}.png`;
   const blob = containerClient.getBlockBlobClient(imagePath);
-  const buffer = getRandomImageBuffer(index, ingestScopeName);
+  const buffer = await getRandomImageBuffer(index, ingestScopeName);
   try {
     await blob.uploadData(buffer, { conditions: { ifNoneMatch: '*' } });
     console.log(getTimestamp(), `Image uploaded: ${imagePath}`);

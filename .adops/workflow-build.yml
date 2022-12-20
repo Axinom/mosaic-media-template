@@ -1,0 +1,46 @@
+trigger: none
+pr: none
+
+variables:
+  tag: '$(Build.BuildNumber)'
+  # Yarn Cache Folder
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+  - stage: Build
+    displayName: Build and push stage
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: 'ubuntu-latest'
+          demands: project_navy
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '14.x'
+            displayName: 'Install Node.js'
+          - task: Cache@2
+            inputs:
+              key: 'yarn | "$(Agent.OS)" | yarn.lock'
+              restoreKeys: |
+                yarn | "$(Agent.OS)"
+                yarn
+              path: $(YARN_CACHE_FOLDER)
+            displayName: Cache Yarn packages
+          - script: |
+              npm run $(packageBuildCommand)
+            displayName: 'Build pilet'
+          - task: CopyFiles@2
+            inputs:
+              Contents: '*.tgz'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+            displayName: Copy pilet package artifact staging directory
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'drop'
+              publishLocation: 'Container'
+            displayName: Publishing build artifact

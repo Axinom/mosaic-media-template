@@ -1,11 +1,15 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import 'jest-extended';
-import { GqlImage } from '../models';
+import { CommonErrors } from '../../../common';
+import * as image from '../../../generated/graphql/image';
+import { GetImagesQuery } from '../../../generated/graphql/image';
 import { getImagesMetadata } from './get-images-metadata';
 
+type GqlImage = NonNullable<GetImagesQuery['images']>['nodes'][0];
+
 let result: any = () => undefined;
-jest.mock('axios', () => ({
-  post: () => result(),
+jest.spyOn(image, 'getSdk').mockImplementation(() => ({
+  GetImages: () => result(),
 }));
 
 describe('getImagesMetadata', () => {
@@ -14,7 +18,7 @@ describe('getImagesMetadata', () => {
   const endpoint = 'does-not-matter-as-request-is-mocked';
   const authToken = 'does-not-matter-as-request-is-mocked';
   const createApiObject = (nodes: GqlImage[]) => {
-    return { data: { data: { images: { nodes } } } };
+    return { data: { images: { nodes } } };
   };
 
   afterAll(async () => {
@@ -292,7 +296,7 @@ describe('getImagesMetadata', () => {
     );
 
     // Assert
-    expect(error.message).toBe('Unable to retrieve images metadata.');
+    expect(error).toMatchObject(CommonErrors.PublishImagesMetadataRequestError);
     expect(error.stack).toContain(errorMessage);
     expect(error.details).toEqual({ errors: undefined });
   });
@@ -308,7 +312,7 @@ describe('getImagesMetadata', () => {
     ];
     result = () => {
       const error = new Error('Bad Request');
-      (error as any).response = { data: { errors } };
+      (error as any).response = { data: { images: null }, errors };
       throw error;
     };
 
@@ -320,32 +324,27 @@ describe('getImagesMetadata', () => {
     );
 
     // Assert
-    expect(error.message).toBe('Unable to retrieve images metadata.');
+    expect(error).toMatchObject(CommonErrors.PublishImagesMetadataRequestError);
     expect(error.details.errors).toMatchObject(errors);
   });
 
-  it('Error not thrown, but errors array returned with null images -> error with details is re-thrown to support message retries', async () => {
+  // This case is probably impossible with the current implementation, but
+  // typing of returned API response suggests there is a possibility
+  it('Error not thrown, but no images returned -> error is thrown', async () => {
     // Arrange
-    const errors = [
-      {
-        timestamp: '2021-05-25T06:23:00.923Z',
-        message: 'Access token verification failed',
-        code: 'ACCESS_TOKEN_VERIFICATION_FAILED',
-      },
-    ];
     result = () => {
-      return { data: { data: { images: null }, errors } };
+      return { data: { images: null } };
     };
 
     // Act
     const error = await rejectionOf(
       getImagesMetadata(endpoint, authToken, [
-        { image_id: '1', movie_id: 1, image_type: 'COVER' },
+        { image_id: '1', season_id: 1, image_type: 'COVER' },
       ]),
     );
 
     // Assert
-    expect(error.message).toBe('Unable to retrieve images metadata.');
-    expect(error.details.errors).toMatchObject(errors);
+    expect(error).toMatchObject(CommonErrors.PublishImagesMetadataRequestError);
+    expect(error.details).toBeFalsy();
   });
 });

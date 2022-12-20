@@ -14,9 +14,9 @@ export interface Video {
    */
   title: string;
   /**
-   * Duration of the stream in seconds.
+   * Video length in seconds
    */
-  duration?: number;
+  length_in_seconds?: number | null;
   /**
    * Array of audio languages available in the stream.
    */
@@ -32,11 +32,11 @@ export interface Video {
   /**
    * URI to a DASH manifest.
    */
-  dash_manifest?: string;
+  dash_manifest?: string | null;
   /**
    * URI to an HLS manifest.
    */
-  hls_manifest?: string;
+  hls_manifest?: string | null;
   /**
    * Video Streams
    */

@@ -75,25 +75,25 @@ describe('EntitlementEndpointPlugin', () => {
     /([A-Za-z0-9]{36,})\.([A-Za-z0-9]{100,})\.([A-Za-z0-9-_]{40,})/gi;
   let defaultRequestContext: TestRequestContext;
   const subscriptionPlanId = 'fadf7cc2-f84c-42ac-8de1-7884b08873b2';
-  const drmKeyId1 = '68945fc1-2337-4685-8dac-31cb808dc747';
-  const drmKeyId2 = '856358bf-f44b-4f26-a18e-d427ef50acc2';
+  const keyId1 = '68945fc1-2337-4685-8dac-31cb808dc747';
+  const keyId2 = '856358bf-f44b-4f26-a18e-d427ef50acc2';
   const videoStreams = {
     nodes: [
       {
-        drmKeyId: drmKeyId1,
-        initialFile: 'audio-de_init.mp4',
+        keyId: keyId1,
+        file: 'dash/audio-de.mp4',
         format: 'DASH_ON_DEMAND',
         label: 'audio',
-        bandwidthInBps: null,
+        bitrateInKbps: null,
         iv: 'E32805950106648E',
         languageCode: 'de',
       },
       {
-        drmKeyId: drmKeyId2,
-        initialFile: 'video-H264-240-300k_init.mp4',
+        keyId: keyId2,
+        file: 'dash/video-H264-240-300k.mp4',
         format: 'DASH_ON_DEMAND',
         label: 'SD',
-        bandwidthInBps: 300000,
+        bitrateInKbps: 300,
         iv: 'E32805950106648E',
         languageCode: null,
       },
@@ -125,11 +125,11 @@ describe('EntitlementEndpointPlugin', () => {
         content_keys_source: {
           inline: [
             {
-              id: drmKeyId1,
+              id: keyId1,
               usage_policy: 'Policy A',
             },
             {
-              id: drmKeyId2,
+              id: keyId2,
               usage_policy: 'Policy A',
             },
           ],
@@ -507,10 +507,10 @@ describe('EntitlementEndpointPlugin', () => {
         videoStreams: {
           nodes: [
             {
-              initialFile: 'audio-de_init.mp4',
+              file: 'dash/audio-de.mp4',
               format: 'DASH_ON_DEMAND',
               label: 'audio',
-              bandwidthInBps: null,
+              bitrateInKbps: null,
               iv: 'E32805950106648E',
               languageCode: 'de',
             },
@@ -523,7 +523,7 @@ describe('EntitlementEndpointPlugin', () => {
           nodes: [
             {
               ...videoStreams.nodes[0],
-              drmKeyId: undefined,
+              keyId: undefined,
             },
           ],
         },
@@ -534,7 +534,7 @@ describe('EntitlementEndpointPlugin', () => {
           nodes: [
             {
               ...videoStreams.nodes[0],
-              drmKeyId: null,
+              keyId: null,
             },
           ],
         },
@@ -944,11 +944,11 @@ describe('EntitlementEndpointPlugin', () => {
                     nodes: [
                       ...videoStreams.nodes,
                       {
-                        drmKeyId: drmKeyId1,
-                        initialFile: 'audio-en_init.mp4',
+                        keyId: keyId1,
+                        file: 'dash/audio-en.mp4',
                         format: 'DASH_ON_DEMAND',
                         label: 'audio',
-                        bandwidthInBps: null,
+                        bitrateInKbps: null,
                         iv: 'E32805950106648E',
                         languageCode: 'en',
                       },
