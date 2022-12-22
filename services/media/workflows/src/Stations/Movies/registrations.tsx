@@ -1,7 +1,10 @@
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions, ExtensionsContext } from '../../externals';
-import { settingsGroupName } from '../../index';
+import {
+  mediaManagementParentName as parentName,
+  settingsGroupName,
+} from '../../index';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
 import { MovieCreate } from './MovieCreate/MovieCreate';
 import { MovieDetails } from './MovieDetails/MovieDetails';
@@ -122,12 +125,25 @@ export function register(app: PiletApi, extensions: Extensions): void {
     },
   );
 
-  app.registerTile({
-    kind: 'settings',
-    groupName: settingsGroupName,
+  const movieSettingsNav = {
     path: '/settings/media/moviegenres',
     label: 'Movie Genres',
     icon: <MediaIcons icon={MediaIconName.MovieGenres} />,
+  };
+
+  app.registerTile(
+    {
+      ...movieSettingsNav,
+      kind: 'settings',
+      groupName: settingsGroupName,
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...movieSettingsNav,
+    parentName: parentName,
+    categoryName: 'Settings',
   });
 
   app.registerPage('/settings/media/moviegenres', MovieGenres, {
