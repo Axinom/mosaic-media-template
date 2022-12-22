@@ -11,6 +11,7 @@ import { register as registerMovies } from './Stations/Movies/registrations';
 import { register as registerSnapshotRegistry } from './Stations/Publishing/registrations';
 import { register as registerSeasons } from './Stations/Seasons/registrations';
 import { register as registerTvShows } from './Stations/TvShows/registrations';
+import { transformNavigationItems } from './transformNavigation/transformNavigation';
 
 export const settingsGroupName = 'Media Management';
 
@@ -28,6 +29,8 @@ export function setup(app: PiletApi): void {
   const extensions = bindExtensions(app);
 
   app.setHomeTileSorter(sortTiles);
+
+  app.setNavigationItemsTransformer(transformNavigationItems);
 
   // Registering all items (Pages, Tiles, Extensions,...) this pilet provides
   registerMovies(app, extensions);
