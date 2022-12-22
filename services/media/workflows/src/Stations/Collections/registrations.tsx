@@ -14,13 +14,24 @@ import { CollectionSnapshotDetailsCrumb } from './CollectionSnapshotDetails/Coll
 import { CollectionSnapshots } from './CollectionSnapshots/CollectionSnapshots';
 
 export function register(app: PiletApi, extensions: Extensions): void {
-  app.registerTile({
-    kind: 'home',
+  const collectionsNav = {
     name: 'collections',
     path: '/collections',
     label: 'Collections',
     icon: <MediaIcons icon={MediaIconName.Collections} />,
-    type: 'small',
+  };
+  app.registerTile(
+    {
+      ...collectionsNav,
+      kind: 'home',
+      type: 'small',
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...collectionsNav,
+    categoryName: 'Curation',
   });
 
   app.registerPage('/collections', Collections, {

@@ -21,12 +21,24 @@ import { MovieSnapshots } from './MovieSnapshots/MovieSnapshots';
 import { MovieVideoManagement } from './MovieVideoManagement/MovieVideoManagement';
 
 export function register(app: PiletApi, extensions: Extensions): void {
-  app.registerTile({
-    kind: 'home',
+  const moviesNav = {
     path: '/movies',
     label: 'Movies',
     icon: <MediaIcons icon={MediaIconName.Movie} />,
-    type: 'large',
+  };
+
+  app.registerTile(
+    {
+      ...moviesNav,
+      kind: 'home',
+      type: 'large',
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...moviesNav,
+    categoryName: 'Content',
   });
 
   app.registerPage('/movies', Movies, {

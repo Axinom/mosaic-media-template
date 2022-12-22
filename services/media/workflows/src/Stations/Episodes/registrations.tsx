@@ -16,12 +16,24 @@ import { EpisodeSnapshots } from './EpisodeSnapshots/EpisodeSnapshots';
 import { EpisodeVideoManagement } from './EpisodeVideoManagement/EpisodeVideoManagement';
 
 export function register(app: PiletApi, extensions: Extensions): void {
-  app.registerTile({
-    kind: 'home',
+  const episodesNav = {
     path: '/episodes',
     label: 'Episodes',
     icon: <MediaIcons icon={MediaIconName.Episodes} />,
-    type: 'large',
+  };
+
+  app.registerTile(
+    {
+      ...episodesNav,
+      kind: 'home',
+      type: 'large',
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...episodesNav,
+    categoryName: 'Content',
   });
 
   app.registerPage('/episodes', Episodes, {

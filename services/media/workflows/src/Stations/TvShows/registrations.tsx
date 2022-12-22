@@ -22,12 +22,24 @@ import { TvShowSnapshots } from './TvShowSnapshots/TvShowSnapshots';
 import { TvShowVideoManagement } from './TvShowVideoManagement/TvShowVideoManagement';
 
 export function register(app: PiletApi, extensions: Extensions): void {
-  app.registerTile({
-    kind: 'home',
+  const tvshowNav = {
     path: '/tvshows',
     label: 'TV Shows',
     icon: <MediaIcons icon={MediaIconName.TV} />,
-    type: 'large',
+  };
+
+  app.registerTile(
+    {
+      ...tvshowNav,
+      kind: 'home',
+      type: 'large',
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...tvshowNav,
+    categoryName: 'Content',
   });
 
   app.registerPage('/tvshows', TvShows, {
