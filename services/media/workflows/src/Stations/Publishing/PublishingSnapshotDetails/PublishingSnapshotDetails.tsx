@@ -1,7 +1,6 @@
 import { Breadcrumb } from '@axinom/mosaic-portal';
 import {
   ActionType,
-  DynamicDataListControl,
   FormActionData,
   formatDateTime,
   formatTitleCase,
@@ -9,6 +8,7 @@ import {
   GenericField,
   IconName,
   InfoPanel,
+  List,
   MessageBar,
   Paragraph,
   ProgressBar,
@@ -112,34 +112,32 @@ const Form: React.FC = () => {
   }
 
   return (
-    <DynamicDataListControl<ValidationData>
-      name="snapshotValidationResults"
-      label="Validation Details"
-      value={mapValidationData(
-        values.snapshot?.snapshotValidationResults.nodes ?? [],
-        values.snapshot?.snapshotState ?? SnapshotState.Error,
-      )}
-      allowReordering={false}
-      allowAddAndRemove={false}
-      columns={[
-        {
-          propertyName: 'context',
-          label: 'Category',
-          size: '1fr',
-          render: (value) => {
-            return formatTitleCase(value as string);
+    <GenericField label={'Validation Details'} name="snapshotValidationResults">
+      <List<ValidationData>
+        columns={[
+          {
+            propertyName: 'context',
+            label: 'Category',
+            size: '2fr',
+            render: (value) => {
+              return formatTitleCase(value as string);
+            },
           },
-        },
-        {
-          propertyName: 'severity',
-          label: 'Validation Result',
-          size: '1.5fr',
-          render: SeverityRenderer,
-        },
-        { propertyName: 'message', label: 'Message', size: '5fr' },
-      ]}
-      stickyHeader={false}
-    />
+          {
+            propertyName: 'severity',
+            label: 'Validation Result',
+            size: '2.5fr',
+            render: SeverityRenderer,
+          },
+          { propertyName: 'message', label: 'Message', size: '5fr' },
+        ]}
+        data={mapValidationData(
+          values.snapshot?.snapshotValidationResults.nodes ?? [],
+          values.snapshot?.snapshotState ?? SnapshotState.Error,
+        )}
+        showActionButton={false}
+      />
+    </GenericField>
   );
 };
 
