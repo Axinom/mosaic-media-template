@@ -1,7 +1,10 @@
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions, ExtensionsContext } from '../../externals';
-import { settingsGroupName } from '../../index';
+import {
+  mediaManagementParentName as parentName,
+  settingsGroupName,
+} from '../../index';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
 import { TvShowCreate } from './TvShowCreate/TvShowCreate';
 import { TvShowDetails } from './TvShowDetails/TvShowDetails';
@@ -22,12 +25,24 @@ import { TvShowSnapshots } from './TvShowSnapshots/TvShowSnapshots';
 import { TvShowVideoManagement } from './TvShowVideoManagement/TvShowVideoManagement';
 
 export function register(app: PiletApi, extensions: Extensions): void {
-  app.registerTile({
-    kind: 'home',
+  const tvshowNav = {
     path: '/tvshows',
     label: 'TV Shows',
     icon: <MediaIcons icon={MediaIconName.TV} />,
-    type: 'large',
+  };
+
+  app.registerTile(
+    {
+      ...tvshowNav,
+      kind: 'home',
+      type: 'large',
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...tvshowNav,
+    categoryName: 'Content',
   });
 
   app.registerPage('/tvshows', TvShows, {
@@ -117,12 +132,25 @@ export function register(app: PiletApi, extensions: Extensions): void {
     permissions: { 'media-service': ['ADMIN', 'TVSHOWS_EDIT', 'TVSHOWS_VIEW'] },
   });
 
-  app.registerTile({
-    kind: 'settings',
-    groupName: settingsGroupName,
+  const tvshowSettingsNav = {
     path: '/settings/media/tvshowgenres',
     label: 'TV Show Genres',
     icon: <MediaIcons icon={MediaIconName.TvShowGenres} />,
+  };
+
+  app.registerTile(
+    {
+      ...tvshowSettingsNav,
+      kind: 'settings',
+      groupName: settingsGroupName,
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...tvshowSettingsNav,
+    parentName: parentName,
+    categoryName: 'Settings',
   });
 
   app.registerPage('/settings/media/tvshowgenres', TvShowGenres, {

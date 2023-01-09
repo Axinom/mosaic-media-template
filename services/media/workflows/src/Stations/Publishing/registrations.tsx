@@ -6,12 +6,24 @@ import { MediaIcons } from '../../MediaIcons/MediaIcons';
 import { SnapshotRegistry } from './SnapshotRegistryExplorer/SnapshotRegistry';
 
 export function register(app: PiletApi, _extensions: Extensions): void {
-  app.registerTile({
-    kind: 'home',
+  const snapshotsNav = {
     path: '/snapshots',
     label: 'Snapshot Registry',
     icon: <MediaIcons icon={MediaIconName.Snapshots} />,
-    type: 'small',
+  };
+
+  app.registerTile(
+    {
+      ...snapshotsNav,
+      kind: 'home',
+      type: 'small',
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...snapshotsNav,
+    categoryName: 'Processing',
   });
 
   app.registerPage('/snapshots', SnapshotRegistry, {

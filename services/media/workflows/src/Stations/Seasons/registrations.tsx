@@ -17,12 +17,24 @@ import { SeasonSnapshots } from './SeasonSnapshots/SeasonSnapshots';
 import { SeasonVideoManagement } from './SeasonVideoManagement/SeasonVideoManagement';
 
 export function register(app: PiletApi, extensions: Extensions): void {
-  app.registerTile({
-    kind: 'home',
+  const seasonsNav = {
     path: '/seasons',
     label: 'Seasons',
     icon: <MediaIcons icon={MediaIconName.Seasons} />,
-    type: 'large',
+  };
+
+  app.registerTile(
+    {
+      ...seasonsNav,
+      kind: 'home',
+      type: 'large',
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...seasonsNav,
+    categoryName: 'Content',
   });
 
   app.registerPage('/seasons', Seasons, {
