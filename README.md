@@ -191,6 +191,9 @@ like:
 --fields.{key} {value}
 ```
 
+You can find these keys and values usually in the `.env.template` file of the
+workflow.
+
 ## Development notes
 
 - `zapatos` models will be generated after `yarn db:commit` but you can trigger
