@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "prepare_channel_live_stream_command",
+  "description": "Prepare live stream for the Channel.",
+  "additionalProperties": false,
+  "required": [
+    "channel_id",
+    "smil",
+    "json"
+  ],
+  "properties": {
+    "channel_id": {
+      "description": "Unique identifier of the channel.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*"
+    },
+    "smil": {
+      "type": "string",
+      "description": "SMIL document's XML content serialized as JSON string."
+    },
+    "json": {
+      "type": "string",
+      "description": "JSON representation of the channel."
+    }
+  }
+}
