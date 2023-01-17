@@ -69,7 +69,7 @@ enum ErrorCodesEnum {
   OUTDATED_WEBHOOK_REQUEST
 
   """
-  The webhook request has failed because the provided webhook secret is empty.
+  The webhook request validation has failed because the provided webhook secret is empty.
   """
   EMPTY_WEBHOOK_SECRET
 
