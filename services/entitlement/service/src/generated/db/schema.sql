@@ -246,17 +246,17 @@ BEGIN
 
   if (readPermissions <> '' and modifyPermissions <> '') then
     EXECUTE 'CREATE POLICY ' || tableName || '_authorization ON ' || schemaName || '.' || tableName || ' FOR ALL
-      USING (ax_utils.user_has_permission(''' || readPermissions || ''') AND ' || additionalRls || ')
-      WITH CHECK (ax_utils.user_has_permission(''' || modifyPermissions || ''') AND ' || additionalRls || ');';
+      USING ((SELECT ax_utils.user_has_permission(''' || readPermissions || ''')) AND ' || additionalRls || ')
+      WITH CHECK ((SELECT ax_utils.user_has_permission(''' || modifyPermissions || ''')) AND ' || additionalRls || ');';
     EXECUTE 'DROP POLICY IF EXISTS ' || tableName || '_authorization_delete ON ' || schemaName || '.' || tableName || ';';
     EXECUTE 'CREATE POLICY ' || tableName || '_authorization_delete ON ' || schemaName || '.' || tableName || ' AS restrictive FOR DELETE
-    USING (ax_utils.user_has_permission(''' || modifyPermissions || '''));';
+    USING ((SELECT ax_utils.user_has_permission(''' || modifyPermissions || ''')));';
   elsif (readPermissions <> '') then
     EXECUTE 'CREATE POLICY ' || tableName || '_authorization ON ' || schemaName || '.' || tableName || ' FOR SELECT
-      USING (ax_utils.user_has_permission(''' || readPermissions || ''') AND ' || additionalRls || ');';
+      USING ((SELECT ax_utils.user_has_permission(''' || readPermissions || ''')) AND ' || additionalRls || ');';
   elsif (additionalRls <> '') then
     EXECUTE 'CREATE POLICY ' || tableName || '_authorization ON ' || schemaName || '.' || tableName || ' FOR ALL
-      USING (' || tenant_rls_string || ');';
+      USING (' || additionalRls || ');';
   else
     perform ax_utils.raise_error('Invalid parameters provided to "define_authentication". At least the "readPermissions" or "additionalRls" must be provided.', 'SETUP');
   end if;
@@ -289,7 +289,7 @@ CREATE FUNCTION ax_define.define_end_user_authentication(tablename text, scheman
     LANGUAGE plpgsql
     AS $$
 DECLARE
-  end_user_rls_string TEXT := '((user_id = ax_utils.current_user_id() OR ax_utils.current_user_id() = uuid_nil()))';
+  end_user_rls_string TEXT := '((user_id = (SELECT ax_utils.current_user_id()) OR (SELECT ax_utils.current_user_id()) = uuid_nil()))';
 BEGIN
   EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ENABLE ROW LEVEL SECURITY;';
   EXECUTE 'DROP POLICY IF EXISTS ' || tableName || '_end_user_authorization ON ' || schemaName || '.' || tableName || ';';
