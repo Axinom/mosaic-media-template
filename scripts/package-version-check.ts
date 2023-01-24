@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import * as fs from 'fs';
@@ -27,7 +28,6 @@ async function checkPackageVersion(): Promise<void> {
       .toString()
       .trim();
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(error);
   }
 
@@ -47,7 +47,6 @@ async function checkPackageVersion(): Promise<void> {
         dependencies[packageName] || devDependencies[packageName];
 
       if (localVersion && semver.gt(latestVersion, localVersion)) {
-        // eslint-disable-next-line no-console
         console.log(
           message,
           latestVersion,
