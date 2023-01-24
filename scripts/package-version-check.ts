@@ -42,18 +42,16 @@ async function checkPackageVersion(): Promise<void> {
     const dependencies = packageJson.dependencies || {};
     const devDependencies = packageJson.devDependencies || {};
 
-    if (dependencies[packageName] || devDependencies[packageName]) {
-      const localVersion =
-        dependencies[packageName] || devDependencies[packageName];
+    const localVersion =
+      dependencies[packageName] || devDependencies[packageName];
 
-      if (localVersion && semver.gt(latestVersion, localVersion)) {
-        console.log(
-          message,
-          latestVersion,
-          localVersion,
-          packageJsonPath.replace('/package.json', ''),
-        );
-      }
+    if (localVersion && semver.gt(latestVersion, localVersion)) {
+      console.log(
+        message,
+        latestVersion,
+        localVersion,
+        packageJsonPath.replace('/package.json', ''),
+      );
     }
   }
 }
