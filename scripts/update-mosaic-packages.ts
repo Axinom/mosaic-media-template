@@ -30,6 +30,8 @@ function runYarnCommand(args: string[], wsPath?: string): string {
 function getYarnWorkspaces(): YarnWorkspaces {
   const stdout = runYarnCommand(['workspaces', 'info']);
   const ws = JSON.parse(stdout) as YarnWorkspaces;
+  // adding the workspace root package
+  ws.root = { location: '.' };
   return ws;
 }
 
