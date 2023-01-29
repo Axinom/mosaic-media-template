@@ -7,6 +7,8 @@ variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
+  # Workflow package path
+  workflowPkgPath: './services/media/workflows'
 
 stages:
   - stage: Build
@@ -30,6 +32,18 @@ stages:
                 yarn
               path: $(YARN_CACHE_FOLDER)
             displayName: Cache Yarn packages
+          - script: |
+              ORIGINAL_PKG_VER=`npx -q json -f "$(workflowPkgPath)/package.json" version`
+              NEW_PKG_VER="${ORIGINAL_PKG_VER}-$(tag)"
+
+              echo "Current package.json version is: [${ORIGINAL_PKG_VER}]"
+              echo "Updating package.json version to: [${NEW_PKG_VER}]"
+
+              npx -q json -I -f "$(workflowPkgPath)/package.json" -e "this.version = '${NEW_PKG_VER}'"
+
+              echo "Updated package.json version is: [`npx -q json -f \"$(workflowPkgPath)/package.json\" version`]"
+            displayName:
+              'Updating package.json version to reflect the build number'
           - script: |
               npm run $(packageBuildCommand)
             displayName: 'Build pilet'
