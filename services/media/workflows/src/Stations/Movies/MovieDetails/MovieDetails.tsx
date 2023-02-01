@@ -54,9 +54,7 @@ import classes from './MovieDetails.module.scss';
 import { MovieDetailsFormData } from './MovieDetails.types';
 
 const movieDetailSchema = object<ObjectSchemaDefinition<MovieDetailsFormData>>({
-  title: string()
-    .required('Title is a required field')
-    .max(100),
+  title: string().required('Title is a required field').max(100),
 });
 
 export const MovieDetails: React.FC = () => {
@@ -100,9 +98,8 @@ export const MovieDetails: React.FC = () => {
       formData: MovieDetailsFormData,
       initialData: DetailsProps<MovieDetailsFormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const tagAssignmentMutations = generateArrayMutations({
         current: formData.tags,
@@ -127,16 +124,17 @@ export const MovieDetails: React.FC = () => {
           const movieGenresId = allGenres[name].id;
 
           if (movieGenresId) {
-            return generateUpdateGQLFragment<
-              MutationCreateMoviesMovieGenreArgs
-            >('createMoviesMovieGenre', {
-              input: {
-                moviesMovieGenre: {
-                  movieId,
-                  movieGenresId,
+            return generateUpdateGQLFragment<MutationCreateMoviesMovieGenreArgs>(
+              'createMoviesMovieGenre',
+              {
+                input: {
+                  moviesMovieGenre: {
+                    movieId,
+                    movieGenresId,
+                  },
                 },
               },
-            });
+            );
           } else {
             return '';
           }
@@ -144,11 +142,12 @@ export const MovieDetails: React.FC = () => {
         generateDeleteMutation: (name) => {
           const movieGenresId = allGenres[name].id;
           if (movieGenresId) {
-            return generateUpdateGQLFragment<
-              MutationDeleteMoviesMovieGenreArgs
-            >('deleteMoviesMovieGenre', {
-              input: { movieId, movieGenresId },
-            });
+            return generateUpdateGQLFragment<MutationDeleteMoviesMovieGenreArgs>(
+              'deleteMoviesMovieGenre',
+              {
+                input: { movieId, movieGenresId },
+              },
+            );
           } else {
             return '';
           }

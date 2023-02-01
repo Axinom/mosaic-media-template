@@ -41,7 +41,7 @@ const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
       function (value) {
         const { parent } = this;
         if (value) {
-          return parent.licenseStart.getTime() < value.getTime();
+          return parent.licenseStart.getMinutes() < value.getMinutes();
         }
         return true;
       },

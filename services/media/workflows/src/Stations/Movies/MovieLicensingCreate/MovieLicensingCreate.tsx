@@ -23,15 +23,20 @@ type SubmitResponse = CreateMoviesLicenseMutation['createMoviesLicense'];
 
 const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   movieId: Yup.number().required(),
-  licenseStart: Yup.date(),
-  licenseEnd: Yup.date().when('licenseStart', {
-    is: (start) => start != null,
-    then: (end) =>
-      end.min(
-        Yup.ref('licenseStart'),
-        'License end date cannot be before start date',
-      ),
-  }),
+  licenseStart: Yup.date().typeError('required'),
+  licenseEnd: Yup.date()
+    .typeError('required')
+    .test(
+      'checkEndDate',
+      'License end date cannot be before start date',
+      function (value) {
+        const { parent } = this;
+        if (value) {
+          return parent.licenseStart.getMinutes() < value.getMinutes();
+        }
+        return true;
+      },
+    ),
 });
 
 export const MovieLicensingCreate: React.FC = () => {
