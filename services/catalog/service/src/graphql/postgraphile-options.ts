@@ -21,8 +21,8 @@ import {
 export function buildPostgraphileOptions(
   config: Config,
 ): PostGraphileOptions<Request, Response> {
-  return new PostgraphileOptionsBuilder(config.isDev, config.graphqlGuiEnabled)
-    .setDefaultSettings()
+  return new PostgraphileOptionsBuilder()
+    .setDefaultSettings(config.isDev, config.graphqlGuiEnabled)
     .setErrorsHandler((errors) => {
       return graphqlErrorsHandler(
         errors,

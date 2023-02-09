@@ -134,6 +134,9 @@ enum ErrorCodesEnum {
   """Passed JWT is not a Mosaic End-User Token. Cannot be verified."""
   JWT_IS_NOT_MOSAIC_TOKEN
 
+  """Authenticated Management Subject not found."""
+  AUTHENTICATED_MANAGEMENT_SUBJECT_NOT_FOUND
+
   """The token is not an Authenticated End-User"""
   NOT_AUTHENTICATED_END_USER
 
@@ -157,6 +160,9 @@ enum ErrorCodesEnum {
 
   """Malformed access token received"""
   MALFORMED_TOKEN
+
+  """Authenticated End User not found."""
+  AUTHENTICATED_END_USER_NOT_FOUND
 
   """
   Error(s) occurred while trying to retrieve the %s with ID '%s' from the catalog service. Please contact the service support.
