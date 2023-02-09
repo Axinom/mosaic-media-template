@@ -6,7 +6,7 @@ query GetEpisodeMainVideo($id: String!, $countryCode: String) {
         isProtected
         videoStreams {
           nodes {
-            drmKeyId
+            keyId
           }
         }
       }

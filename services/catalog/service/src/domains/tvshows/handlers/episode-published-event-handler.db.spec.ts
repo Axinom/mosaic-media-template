@@ -1,5 +1,6 @@
 import { MessageInfo } from '@axinom/mosaic-message-bus';
 import { stub } from 'jest-auto-stub';
+import 'jest-extended';
 import { EpisodePublishedEvent } from 'media-messages';
 import { insert, select, selectOne } from 'zapatos/db';
 import { episode } from 'zapatos/schema';
@@ -80,10 +81,12 @@ describe('EpisodePublishEventHandler', () => {
       }).run(ctx.ownerPool);
       expect(videos).toMatchObject(expectedVideos);
 
-      const episodeVideoStreams = await select('episode_video_streams', {
-        episode_video_id: videos[0].id,
-      }).run(ctx.ownerPool);
-      expect(episodeVideoStreams).toMatchObject(
+      const episodeVideoStreams = (
+        await select('episode_video_streams', {
+          episode_video_id: videos[0].id,
+        }).run(ctx.ownerPool)
+      ).map(({ id, episode_video_id, ...stream }) => stream);
+      expect(episodeVideoStreams).toIncludeSameMembers(
         message.videos[0].video_streams!,
       );
 

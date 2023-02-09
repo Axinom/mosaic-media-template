@@ -12,10 +12,10 @@ License. Check the LICENSE file for more details.
 
 ## Introduction
 
-This mono-repo contains the customizable parts of an Axinom Mosaic solution. The
-code included in that repository is supposed to be customized by projects. The
-Mosaic libraries and services used by that solution will be provided, updated
-and maintained by Axinom.
+This repository contains the customizable parts of an Axinom Mosaic solution.
+The code included in that repository can be either used as is or customized to
+your specific requirements. The Mosaic libraries and services used by that
+solution will be provided, updated and maintained by Axinom.
 
 ## Prerequisites
 
@@ -50,6 +50,11 @@ without `sudo`, please see
 
 ## Prepare and connect the media-template solution
 
+> :warning: This section is describing the steps on how to setup the solution
+> for development purpose.  
+> If you're interested in how to prepare the services for production use please
+> continue reading [here](#Package-the-services-for-production-use).
+
 1. Run `yarn` to install all package dependencies for the workspace.
 2. Run `yarn apply-templates` to create local copies of all `*.template` files
    in the solution.
@@ -69,13 +74,17 @@ without `sudo`, please see
    You will get these values from the 'Environment Connection' station on the
    Environment Administration Portal. For a description on how to create a new
    environment and getting the required connection values, please follow the
-   steps described in the section
-   '[Prepare the developer environment and get connection values](#prepareEnv)'
-   below.
+   steps described
+   [here](#Prepare-the-developer-environment-and-get-connection-values).
 
 6. Run `yarn setup` to initialize all the services in the solution.
 
 ## Run the solution
+
+> :warning: This section is describing the steps on how to run the solution for
+> development purpose.  
+> If you're interested in how to prepare the services for production use please
+> continue reading [here](#Package-the-services-for-production-use).
 
 Start the following commands in parallel (in separate terminals):
 
@@ -89,14 +98,14 @@ Start the following commands in parallel (in separate terminals):
    different workflow options (Movies, Videos, Images, TV shows, Seasons,
    Episodes).
 
-## Run tests (optional)
+## Run tests
 
 Note that these steps take several minutes to complete.
 
 1. Run `yarn test:reset:dbs` to initialize the testing databases.
 2. Run `yarn test` to run the unit tests of the solution.
 
-## <a name="prepareEnv"></a> Prepare the developer environment and get connection values
+## Prepare the developer environment and get connection values
 
 Before running the solution you need to create a Mosaic development environment.
 In order to do this, go over to https://admin.service.eu.axinom.com and login
@@ -124,6 +133,66 @@ information you need for connecting the media-template solution to the created
 environment.
 
 ![](./readme/environment-connection.png)
+
+## <a name="productionPackage"></a>Package the services for production use
+
+The steps described above define how to setup and run the services on a local
+development machine. In order to run the services on a server the following
+procedure should be used.
+
+### Generate a production build and docker image of the backend service
+
+The solution comes with a ready-to-use `Dockerfile` at its root. It requires two
+`ARG`s getting passed in:
+
+- `PACKAGE_ROOT` - needs to be set to the relative path of the service that
+  should be build. This is usually `services/{serviceName}/service` (e.g.
+  `services/media/service`)
+- `PACKAGE_BUILD_COMMAND` - needs to be set to the npm command that should be
+  used to build the service. THis command needs to be defined on the root
+  `package.json`. It is usually `build:{serviceName}-service:prod` (e.g.
+  `build:media-service:prod`)
+
+The process will then use the service's `build` script to create a production
+build of the service and the `start` script to spin up the server, once the
+Docker container starts up.
+
+When running the Docker image, please make sure that you provide the expected
+environment variables to the container, as on a production build it will not use
+the `.env` files.
+
+### Generate the workflows package
+
+To generate a production build of a workflow package run the following command:
+
+```sh
+yarn build:{serviceName}-workflows:prod
+```
+
+This script will create a `.tgz` file on the repository root containing the
+packaged workflows.
+
+To deploy the workflows into an environment run a command like:
+
+```sh
+npx piral-cli@latest publish-pilet --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/{tenantId}/{environmentId}" --api-key "{serviceAccountCredentials}" {packageFile}
+```
+
+Please note, that you need to provide the 'Base64 Encoded Credentials' of a
+service account that has the `Pilets: Publish` permissions as `api-key`. This
+value will be shown to you alongside with the other secrets when creating a
+service account or when generating new secrets for an existing account.
+
+Also make sure that you define all values the pilet expects to receive inside
+the `app.meta.custom` by providing them as additional parameters on this command
+like:
+
+```sh
+--fields.{key} {value}
+```
+
+You can find these keys and values usually in the `.env.template` file of the
+workflow.
 
 ## Development notes
 

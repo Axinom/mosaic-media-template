@@ -94,18 +94,22 @@
           },
           "width": {
             "description": "Width of the image in pixels.",
-            "type": "integer"
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "height": {
             "description": "Height of the image in pixels.",
-            "type": "integer"
+            "type": [
+              "integer",
+              "null"
+            ]
           }
         },
         "required": [
           "type",
-          "path",
-          "width",
-          "height"
+          "path"
         ],
         "additionalProperties": false
       }
@@ -174,9 +178,12 @@
             "pattern": "^$|.*\\S.*",
             "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
           },
-          "duration": {
-            "description": "Duration of the stream in seconds.",
-            "type": "integer"
+          "length_in_seconds": {
+            "description": "Video length in seconds",
+            "type": [
+              "number",
+              "null"
+            ]
           },
           "audio_languages": {
             "description": "Array of audio languages available in the stream.",
@@ -201,11 +208,17 @@
           },
           "dash_manifest": {
             "description": "URI to a DASH manifest.",
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "hls_manifest": {
             "description": "URI to an HLS manifest.",
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "video_streams": {
             "description": "Video Streams",
@@ -216,12 +229,15 @@
               "title": "video_stream",
               "additionalProperties": false,
               "properties": {
-                "drm_key_id": {
-                  "description": "DRM Key ID",
-                  "type": "string"
+                "key_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Key ID"
                 },
                 "label": {
-                  "description": "Label indicating the type of stream",
+                  "description": "Stream label for grouping streams by the same quality level: audio, sd, hd, uhd1, uhd2.",
                   "type": "string"
                 },
                 "format": {
@@ -236,21 +252,107 @@
                     "DASH_ON_DEMAND"
                   ]
                 },
-                "initial_file": {
-                  "description": "Name of the initial file",
-                  "type": "string"
+                "type": {
+                  "type": "string",
+                  "title": "video_stream_type",
+                  "enum": [
+                    "VIDEO",
+                    "AUDIO",
+                    "SUBTITLE",
+                    "CLOSED_CAPTION"
+                  ],
+                  "description": "Stream type"
+                },
+                "file": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "File path to the initialization segment"
                 },
                 "iv": {
-                  "description": "IV",
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The initialization vector that was used to encrypt this media file."
+                },
+                "bitrate_in_kbps": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "Bitrate in kilobits per second"
+                },
+                "file_template": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "File Template"
+                },
+                "codecs": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Codecs"
+                },
+                "frame_rate": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "Frame rate of the video stream"
+                },
+                "height": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "description": "Height of the video stream"
+                },
+                "width": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "description": "Width of the video stream"
+                },
+                "display_aspect_ratio": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Display aspect ratio for video streams"
+                },
+                "pixel_aspect_ratio": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Pixel aspect ratio for video streams"
+                },
+                "sampling_rate": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "description": "Sampling rate for audio streams"
                 },
                 "language_code": {
-                  "description": "If an audio file, the language code of the audio",
-                  "type": "string"
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Language code for for audio, subtitle, or caption streams"
                 },
-                "bandwidth_in_bps": {
-                  "description": "Bandwidth of the video/audio",
-                  "type": "integer"
+                "language_name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Language name for audio, subtitle, or caption streams"
                 }
               }
             }

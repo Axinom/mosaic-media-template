@@ -11,12 +11,23 @@ import { IngestDocuments } from './IngestDocumentsExplorer/IngestDocuments';
 import { IngestDocumentUpload } from './IngestDocumentUpload/IngestDocumentUpload';
 
 export function register(app: PiletApi, extensions: Extensions): void {
-  app.registerTile({
-    kind: 'home',
+  const ingestNav = {
     path: '/ingest',
     label: 'Ingest',
     icon: <MediaIcons icon={MediaIconName.Ingest} />,
-    type: 'small',
+  };
+  app.registerTile(
+    {
+      ...ingestNav,
+      kind: 'home',
+      type: 'small',
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...ingestNav,
+    categoryName: 'Processing',
   });
 
   app.registerPage('/ingest', IngestDocuments, {

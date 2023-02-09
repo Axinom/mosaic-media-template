@@ -1,7 +1,9 @@
 import { PiletApi } from '@axinom/mosaic-portal';
+import React from 'react';
 import { initializeApolloClient } from './apolloClient/apolloClient';
 import { bindExtensions } from './externals/piralExtensions';
 import './global.scss';
+import { MediaIconName, MediaIcons } from './MediaIcons';
 import { initializeConfig, piletConfig } from './piletConfig';
 import { sortTiles } from './sortTiles/sortTiles';
 import { register as registerCollections } from './Stations/Collections/registrations';
@@ -11,8 +13,10 @@ import { register as registerMovies } from './Stations/Movies/registrations';
 import { register as registerSnapshotRegistry } from './Stations/Publishing/registrations';
 import { register as registerSeasons } from './Stations/Seasons/registrations';
 import { register as registerTvShows } from './Stations/TvShows/registrations';
+import { transformNavigationItems } from './transformNavigation/transformNavigation';
 
 export const settingsGroupName = 'Media Management';
+export const mediaManagementParentName = 'media-management';
 
 export function setup(app: PiletApi): void {
   initializeConfig(app.meta.custom);
@@ -28,6 +32,15 @@ export function setup(app: PiletApi): void {
   const extensions = bindExtensions(app);
 
   app.setHomeTileSorter(sortTiles);
+
+  app.setNavigationItemsTransformer(transformNavigationItems);
+
+  app.registerNavigationItem({
+    icon: <MediaIcons icon={MediaIconName.Movie} />,
+    label: settingsGroupName,
+    name: mediaManagementParentName,
+    categoryName: 'Settings',
+  });
 
   // Registering all items (Pages, Tiles, Extensions,...) this pilet provides
   registerMovies(app, extensions);

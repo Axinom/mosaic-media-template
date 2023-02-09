@@ -1,14 +1,15 @@
 import { Format } from './format';
+import { VideoStreamType } from './video-stream-type';
 /**
  * Video stream metadata
  */
 export interface VideoStream {
   /**
-   * DRM Key ID
+   * Key ID
    */
-  drm_key_id?: string;
+  key_id?: string | null;
   /**
-   * Label indicating the type of stream
+   * Stream label for grouping streams by the same quality level: audio, sd, hd, uhd1, uhd2.
    */
   label?: string;
   /**
@@ -16,19 +17,59 @@ export interface VideoStream {
    */
   format?: Format;
   /**
-   * Name of the initial file
+   * Stream type
    */
-  initial_file?: string;
+  type?: VideoStreamType;
   /**
-   * IV
+   * File path to the initialization segment
    */
-  iv?: string;
+  file?: string | null;
   /**
-   * If an audio file, the language code of the audio
+   * The initialization vector that was used to encrypt this media file.
    */
-  language_code?: string;
+  iv?: string | null;
   /**
-   * Bandwidth of the video/audio
+   * Bitrate in kilobits per second
    */
-  bandwidth_in_bps?: number;
+  bitrate_in_kbps?: number | null;
+  /**
+   * File Template
+   */
+  file_template?: string | null;
+  /**
+   * Codecs
+   */
+  codecs?: string | null;
+  /**
+   * Frame rate of the video stream
+   */
+  frame_rate?: number | null;
+  /**
+   * Height of the video stream
+   */
+  height?: number | null;
+  /**
+   * Width of the video stream
+   */
+  width?: number | null;
+  /**
+   * Display aspect ratio for video streams
+   */
+  display_aspect_ratio?: string | null;
+  /**
+   * Pixel aspect ratio for video streams
+   */
+  pixel_aspect_ratio?: string | null;
+  /**
+   * Sampling rate for audio streams
+   */
+  sampling_rate?: number | null;
+  /**
+   * Language code for for audio, subtitle, or caption streams
+   */
+  language_code?: string | null;
+  /**
+   * Language name for audio, subtitle, or caption streams
+   */
+  language_name?: string | null;
 }

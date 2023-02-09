@@ -667,6 +667,8 @@ type CollectionItemsRelation {
   seasonId: String
   episodeId: String
   orderNo: Int!
+
+  """Type of the relation."""
   relationType: String
 
   """
@@ -1076,8 +1078,8 @@ type MovieVideo {
   """Title of the video stream"""
   title: String
 
-  """Duration of the stream in seconds."""
-  duration: Int
+  """Length of the stream in seconds."""
+  lengthInSeconds: Float
 
   """Array of audio languages available in the stream."""
   audioLanguages: [String]
@@ -1166,7 +1168,7 @@ type MovieVideoStream {
   label: String
 
   """DRM Key ID"""
-  drmKeyId: String
+  keyId: String
 
   """Packaging format of the stream"""
   format: String
@@ -1174,19 +1176,63 @@ type MovieVideoStream {
   """Initialization Vector of the stream"""
   iv: String
 
-  """Name of the initial file"""
-  initialFile: String
+  """File path to the initialization segment"""
+  file: String
 
   """The language code for audio streams"""
   languageCode: String
 
-  """The bandwidth of the streams"""
-  bandwidthInBps: Int
+  """Bitrate in kilobits per second"""
+  bitrateInKbps: Int
+
+  """Stream type"""
+  type: VideoStreamType
+
+  """File Template"""
+  fileTemplate: String
+
+  """Codecs"""
+  codecs: String
+
+  """Frame rate of the video stream"""
+  frameRate: Float
+
+  """Height of the video stream"""
+  height: Int
+
+  """Width of the video stream"""
+  width: Int
+
+  """Display aspect ratio for video streams"""
+  displayAspectRatio: String
+
+  """Pixel aspect ratio for video streams"""
+  pixelAspectRatio: String
+
+  """Sampling rate for audio streams"""
+  samplingRate: Int
+
+  """Language name for audio, subtitle, or caption streams"""
+  languageName: String
 
   """
   Reads a single `MovieVideo` that is related to this `MovieVideoStream`.
   """
   video: MovieVideo
+}
+
+enum VideoStreamType {
+  """Video"""
+  VIDEO
+
+  """Audio"""
+  AUDIO
+
+  """Subtitle"""
+  SUBTITLE
+
+  """Closed caption"""
+  CLOSED_CAPTION
 }
 
 """A `MovieVideoStream` edge in the connection."""
@@ -1205,6 +1251,8 @@ enum MovieVideoStreamsOrderBy {
   ID_DESC
   VIDEO_ID_ASC
   VIDEO_ID_DESC
+  TYPE_ASC
+  TYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -1219,6 +1267,9 @@ input MovieVideoStreamCondition {
 
   """Checks for equality with the object’s `videoId` field."""
   videoId: Int
+
+  """Checks for equality with the object’s `type` field."""
+  type: VideoStreamType
 }
 
 """
@@ -1231,6 +1282,9 @@ input MovieVideoStreamFilter {
   """Filter by the object’s `videoId` field."""
   videoId: IntFilter
 
+  """Filter by the object’s `type` field."""
+  type: VideoStreamTypeFilter
+
   """Checks for all expressions in this list."""
   and: [MovieVideoStreamFilter!]
 
@@ -1239,6 +1293,48 @@ input MovieVideoStreamFilter {
 
   """Negates the expression."""
   not: MovieVideoStreamFilter
+}
+
+"""
+A filter to be used against VideoStreamType fields. All fields are combined with a logical ‘and.’
+"""
+input VideoStreamTypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: VideoStreamType
+
+  """Not equal to the specified value."""
+  notEqualTo: VideoStreamType
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: VideoStreamType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: VideoStreamType
+
+  """Included in the specified list."""
+  in: [VideoStreamType!]
+
+  """Not included in the specified list."""
+  notIn: [VideoStreamType!]
+
+  """Less than the specified value."""
+  lessThan: VideoStreamType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: VideoStreamType
+
+  """Greater than the specified value."""
+  greaterThan: VideoStreamType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: VideoStreamType
 }
 
 """A `MovieVideo` edge in the connection."""
@@ -1823,8 +1919,8 @@ type TvshowVideo {
   """Title of the video stream"""
   title: String
 
-  """Duration of the stream in seconds."""
-  duration: Int
+  """Length of the stream in seconds."""
+  lengthInSeconds: Float
 
   """Array of audio languages available in the stream."""
   audioLanguages: [String]
@@ -1913,7 +2009,7 @@ type TvshowVideoStream {
   label: String
 
   """DRM Key ID"""
-  drmKeyId: String
+  keyId: String
 
   """Packaging format of the stream"""
   format: String
@@ -1921,14 +2017,44 @@ type TvshowVideoStream {
   """Initialization Vector of the stream"""
   iv: String
 
-  """Name of the initial file"""
-  initialFile: String
+  """File path to the initialization segment"""
+  file: String
 
   """The language code for audio streams"""
   languageCode: String
 
-  """The bandwidth of the streams"""
-  bandwidthInBps: Int
+  """Bitrate in kilobits per second"""
+  bitrateInKbps: Int
+
+  """Stream type"""
+  type: VideoStreamType
+
+  """File Template"""
+  fileTemplate: String
+
+  """Codecs"""
+  codecs: String
+
+  """Frame rate of the video stream"""
+  frameRate: Float
+
+  """Height of the video stream"""
+  height: Int
+
+  """Width of the video stream"""
+  width: Int
+
+  """Display aspect ratio for video streams"""
+  displayAspectRatio: String
+
+  """Pixel aspect ratio for video streams"""
+  pixelAspectRatio: String
+
+  """Sampling rate for audio streams"""
+  samplingRate: Int
+
+  """Language name for audio, subtitle, or caption streams"""
+  languageName: String
 
   """
   Reads a single `TvshowVideo` that is related to this `TvshowVideoStream`.
@@ -1952,6 +2078,8 @@ enum TvshowVideoStreamsOrderBy {
   ID_DESC
   VIDEO_ID_ASC
   VIDEO_ID_DESC
+  TYPE_ASC
+  TYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -1966,6 +2094,9 @@ input TvshowVideoStreamCondition {
 
   """Checks for equality with the object’s `videoId` field."""
   videoId: Int
+
+  """Checks for equality with the object’s `type` field."""
+  type: VideoStreamType
 }
 
 """
@@ -1977,6 +2108,9 @@ input TvshowVideoStreamFilter {
 
   """Filter by the object’s `videoId` field."""
   videoId: IntFilter
+
+  """Filter by the object’s `type` field."""
+  type: VideoStreamTypeFilter
 
   """Checks for all expressions in this list."""
   and: [TvshowVideoStreamFilter!]
@@ -2582,8 +2716,8 @@ type SeasonVideo {
   """Title of the video stream"""
   title: String
 
-  """Duration of the stream in seconds."""
-  duration: Int
+  """Length of the stream in seconds."""
+  lengthInSeconds: Float
 
   """Array of audio languages available in the stream."""
   audioLanguages: [String]
@@ -2672,7 +2806,7 @@ type SeasonVideoStream {
   label: String
 
   """DRM Key ID"""
-  drmKeyId: String
+  keyId: String
 
   """Packaging format of the stream"""
   format: String
@@ -2680,14 +2814,44 @@ type SeasonVideoStream {
   """Initialization Vector of the stream"""
   iv: String
 
-  """Name of the initial file"""
-  initialFile: String
+  """File path to the initialization segment"""
+  file: String
 
   """The language code for audio streams"""
   languageCode: String
 
-  """The bandwidth of the streams"""
-  bandwidthInBps: Int
+  """Bitrate in kilobits per second"""
+  bitrateInKbps: Int
+
+  """Stream type"""
+  type: VideoStreamType
+
+  """File Template"""
+  fileTemplate: String
+
+  """Codecs"""
+  codecs: String
+
+  """Frame rate of the video stream"""
+  frameRate: Float
+
+  """Height of the video stream"""
+  height: Int
+
+  """Width of the video stream"""
+  width: Int
+
+  """Display aspect ratio for video streams"""
+  displayAspectRatio: String
+
+  """Pixel aspect ratio for video streams"""
+  pixelAspectRatio: String
+
+  """Sampling rate for audio streams"""
+  samplingRate: Int
+
+  """Language name for audio, subtitle, or caption streams"""
+  languageName: String
 
   """
   Reads a single `SeasonVideo` that is related to this `SeasonVideoStream`.
@@ -2711,6 +2875,8 @@ enum SeasonVideoStreamsOrderBy {
   ID_DESC
   VIDEO_ID_ASC
   VIDEO_ID_DESC
+  TYPE_ASC
+  TYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -2725,6 +2891,9 @@ input SeasonVideoStreamCondition {
 
   """Checks for equality with the object’s `videoId` field."""
   videoId: Int
+
+  """Checks for equality with the object’s `type` field."""
+  type: VideoStreamType
 }
 
 """
@@ -2736,6 +2905,9 @@ input SeasonVideoStreamFilter {
 
   """Filter by the object’s `videoId` field."""
   videoId: IntFilter
+
+  """Filter by the object’s `type` field."""
+  type: VideoStreamTypeFilter
 
   """Checks for all expressions in this list."""
   and: [SeasonVideoStreamFilter!]
@@ -2951,6 +3123,8 @@ type Episode {
 
   """Array of tags associated with the content."""
   tags: [String]
+
+  """Array of production countries"""
   productionCountries: [String]
 
   """Reads a single `Season` that is related to this `Episode`."""
@@ -3300,8 +3474,8 @@ type EpisodeVideo {
   """Title of the video stream"""
   title: String
 
-  """Duration of the stream in seconds."""
-  duration: Int
+  """Length of the stream in seconds."""
+  lengthInSeconds: Float
 
   """Array of audio languages available in the stream."""
   audioLanguages: [String]
@@ -3390,7 +3564,7 @@ type EpisodeVideoStream {
   label: String
 
   """DRM Key ID"""
-  drmKeyId: String
+  keyId: String
 
   """Packaging format of the stream"""
   format: String
@@ -3398,14 +3572,44 @@ type EpisodeVideoStream {
   """Initialization Vector of the stream"""
   iv: String
 
-  """Name of the initial file"""
-  initialFile: String
+  """File path to the initialization segment"""
+  file: String
 
   """The language code for audio streams"""
   languageCode: String
 
-  """The bandwidth of the streams"""
-  bandwidthInBps: Int
+  """Bitrate in kilobits per second"""
+  bitrateInKbps: Int
+
+  """Stream type"""
+  type: VideoStreamType
+
+  """File Template"""
+  fileTemplate: String
+
+  """Codecs"""
+  codecs: String
+
+  """Frame rate of the video stream"""
+  frameRate: Float
+
+  """Height of the video stream"""
+  height: Int
+
+  """Width of the video stream"""
+  width: Int
+
+  """Display aspect ratio for video streams"""
+  displayAspectRatio: String
+
+  """Pixel aspect ratio for video streams"""
+  pixelAspectRatio: String
+
+  """Sampling rate for audio streams"""
+  samplingRate: Int
+
+  """Language name for audio, subtitle, or caption streams"""
+  languageName: String
 
   """
   Reads a single `EpisodeVideo` that is related to this `EpisodeVideoStream`.
@@ -3429,6 +3633,8 @@ enum EpisodeVideoStreamsOrderBy {
   ID_DESC
   VIDEO_ID_ASC
   VIDEO_ID_DESC
+  TYPE_ASC
+  TYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -3443,6 +3649,9 @@ input EpisodeVideoStreamCondition {
 
   """Checks for equality with the object’s `videoId` field."""
   videoId: Int
+
+  """Checks for equality with the object’s `type` field."""
+  type: VideoStreamType
 }
 
 """
@@ -3454,6 +3663,9 @@ input EpisodeVideoStreamFilter {
 
   """Filter by the object’s `videoId` field."""
   videoId: IntFilter
+
+  """Filter by the object’s `type` field."""
+  type: VideoStreamTypeFilter
 
   """Checks for all expressions in this list."""
   and: [EpisodeVideoStreamFilter!]
