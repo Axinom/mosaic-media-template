@@ -50,8 +50,8 @@ export const buildPostgraphileOptions = (
     config,
     context: EnforceStrictPermissionsPlugin.name,
   });
-  return new PostgraphileOptionsBuilder(config.isDev, config.graphqlGuiEnabled)
-    .setDefaultSettings()
+  return new PostgraphileOptionsBuilder()
+    .setDefaultSettings(config.isDev, config.graphqlGuiEnabled)
     .setHeader('Access-Control-Max-Age', 86400)
     .setErrorsHandler((errors) => {
       return graphqlErrorsHandler(
@@ -81,7 +81,8 @@ export const buildPostgraphileOptions = (
       AllPublishingPlugins,
       AllModulesPlugins,
     )
-    .addDevPlugins(
+    .addConditionalPlugins(
+      config.isDev,
       AllModulesDevPlugins,
       OperationsEnumGeneratorPluginFactory({
         outRoot: './src/generated/graphql/operations',
