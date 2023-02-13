@@ -7,7 +7,7 @@ import {
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
 import { Config } from '../common';
-import { AzureStorage, VirtualChannelApi } from '../domains';
+import { AzureStorage, KeyServiceApi, VirtualChannelApi } from '../domains';
 import {
   ChannelPublishedHandler,
   ChannelUnpublishedHandler,
@@ -22,6 +22,7 @@ export const registerMessaging = (
   config: Config,
   storage: AzureStorage,
   virtualChannelApi: VirtualChannelApi,
+  keyServiceApi: KeyServiceApi,
 ): RascalConfigBuilder[] => {
   return [
     // Receive published and unpublished  events
@@ -29,7 +30,8 @@ export const registerMessaging = (
       ChannelServiceMultiTenantMessagingSettings.ChannelPublished,
       config,
     ).subscribeForEvent(
-      (broker: Broker) => new ChannelPublishedHandler(config, broker),
+      (broker: Broker) =>
+        new ChannelPublishedHandler(config, broker, keyServiceApi, storage),
     ),
     new RascalConfigBuilder(
       ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished,
@@ -41,7 +43,8 @@ export const registerMessaging = (
       ChannelServiceMultiTenantMessagingSettings.PlaylistPublished,
       config,
     ).subscribeForEvent(
-      (broker: Broker) => new PlaylistPublishedHandler(config, broker, storage),
+      (broker: Broker) =>
+        new PlaylistPublishedHandler(config, broker, storage, keyServiceApi),
     ),
     new RascalConfigBuilder(
       ChannelServiceMultiTenantMessagingSettings.PlaylistUnpublished,
@@ -53,6 +56,7 @@ export const registerMessaging = (
           storage,
           broker,
           virtualChannelApi,
+          keyServiceApi,
         ),
     ),
 

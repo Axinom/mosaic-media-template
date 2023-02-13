@@ -13,10 +13,16 @@ import {
 import { Config } from '../../common';
 import {
   AzureStorage,
-  convertObjectToXml,
+  generateCpixSettings,
+  KeyServiceApi,
   PlaylistSmilGenerator,
 } from '../../domains';
-import { generateChannelStorageName } from '../../domains/live-stream/utils';
+import {
+  generateChannelFilePath,
+  isFutureDate,
+  metadataFileName,
+} from '../../domains/live-stream/utils';
+import { convertObjectToXml } from '../../domains/utils';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
 export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<PlaylistPublishedEvent> {
@@ -25,6 +31,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
     config: Config,
     private broker: Broker,
     private storage: AzureStorage,
+    private keyServiceApi: KeyServiceApi,
   ) {
     super(
       ChannelServiceMultiTenantMessagingSettings.PlaylistPublished.messageType,
@@ -40,7 +47,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
     message: MessageInfo,
   ): Promise<void> {
     const channelJson = await this.storage.getFileContent(
-      generateChannelStorageName(payload.channel_id),
+      generateChannelFilePath(payload.channel_id, metadataFileName),
     );
     const channelPublishedEvent: ChannelPublishedEvent =
       JSON.parse(channelJson);
@@ -48,7 +55,44 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
       channelPublishedEvent?.placeholder_video;
 
     if (placeholderVideo) {
-      const generator = new PlaylistSmilGenerator(placeholderVideo);
+      const videos =
+        payload.programs?.reduce((result, entry) => {
+          let scheduleResult: DetailedVideo[] = [];
+          if (entry.program_cue_points) {
+            scheduleResult = entry.program_cue_points
+              .flatMap((cp) => cp.schedules)
+              .reduce((result, schedule) => {
+                if (schedule?.video) {
+                  return [...result, schedule.video];
+                }
+                return result;
+              }, new Array<DetailedVideo>());
+          }
+          return [...result, entry.video, ...scheduleResult];
+        }, new Array<DetailedVideo>()) ?? [];
+
+      const settingAccessStartDate = isFutureDate(payload.start_date_time)
+        ? new Date(payload.start_date_time)
+        : new Date();
+      const settingAccessDuration = Math.abs(
+        (new Date(payload.end_date_time).getTime() -
+          new Date(payload.start_date_time).getTime()) /
+          1000,
+      );
+      const drmSettings = await generateCpixSettings(
+        [placeholderVideo, ...videos],
+        this.storage,
+        this.keyServiceApi,
+        settingAccessStartDate,
+        settingAccessDuration,
+        channelPublishedEvent.id,
+        payload.id,
+      );
+
+      const generator = new PlaylistSmilGenerator(
+        drmSettings,
+        placeholderVideo,
+      );
       const smilDocument = generator.generate(payload);
       await this.broker.publish<PrepareTransitionLiveStreamCommand>(
         VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream
@@ -63,7 +107,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
           auth_token: message.envelope.auth_token,
         },
       );
-
+    } else {
       this.logger.error(
         `Placeholder video for channel ${payload.channel_id} was not found. Playlist transition will not be created.`,
       );

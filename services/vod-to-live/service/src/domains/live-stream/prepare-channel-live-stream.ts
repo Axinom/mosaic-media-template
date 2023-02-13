@@ -6,7 +6,7 @@ import {
 } from 'media-messages';
 import { AzureStorage } from '../azure';
 import { VirtualChannelApi } from '../virtual-channel';
-import { generateChannelStorageName } from './utils';
+import { generateChannelFilePath, metadataFileName } from './utils';
 
 const logger = new Logger({ context: 'prepare-channel-live-stream' });
 
@@ -50,7 +50,7 @@ export const prepareChannelLiveStream = async (
     }
 
     const saveResult = await storage.createFile(
-      generateChannelStorageName(channelId),
+      generateChannelFilePath(channelId, metadataFileName),
       json,
     );
     logger.debug({

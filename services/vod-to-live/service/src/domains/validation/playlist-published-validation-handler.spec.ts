@@ -6,6 +6,7 @@ import {
 import { WebhookRequestMessage } from '@axinom/mosaic-service-common';
 import { v4 as uuid } from 'uuid';
 import { ValidationErrors } from '../../common';
+import { createTestVideo } from '../../tests';
 import { PlaylistPublishedValidationWebhookHandler } from './playlist-published-validation-handler';
 
 describe('PlaylistPublishedValidationWebhookHandler', () => {
@@ -88,42 +89,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                 video_duration_in_seconds: 86400,
                 entity_id: uuid(),
                 entity_type: 'MOVIE',
-                video: {
-                  id: uuid(),
-                  title: 'TEST MOVIE',
-                  source_location: 'test',
-                  is_archived: false,
-                  videos_tags: [],
-                  video_encoding: {
-                    audio_languages: ['en'],
-                    caption_languages: [],
-                    dash_manifest_path:
-                      'https://test.blob.core.windows.net/video-output/0-0/cmaf/manifest.mpd',
-                    encoding_state: 'READY',
-                    is_protected: false,
-                    output_format: 'CMAF',
-                    preview_status: 'NOT_PREVIEWED',
-                    subtitle_languages: [],
-                    video_streams: [
-                      {
-                        codecs: 'H264',
-                        file: 'cmaf/video-H264-720-2100k-video-avc1.mp4',
-                        format: 'CMAF',
-                        label: 'HD',
-                        type: 'VIDEO',
-                      },
-                      {
-                        codecs: 'AAC',
-                        file: 'cmaf/audio-en-audio-en-mp4a.mp4',
-                        format: 'CMAF',
-                        label: 'audio',
-                        language_code: 'en',
-                        language_name: 'English',
-                        type: 'AUDIO',
-                      },
-                    ],
-                  },
-                },
+                video: createTestVideo(false),
               },
             ],
           },
@@ -167,42 +133,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                 video_duration_in_seconds: 86400,
                 entity_id: uuid(),
                 entity_type: 'MOVIE',
-                video: {
-                  id: uuid(),
-                  title: 'TEST MOVIE',
-                  source_location: 'test',
-                  is_archived: false,
-                  videos_tags: [],
-                  video_encoding: {
-                    audio_languages: ['en'],
-                    caption_languages: [],
-                    dash_manifest_path:
-                      'https://test.blob.core.windows.net/video-output/0-0/cmaf/manifest.mpd',
-                    encoding_state: 'READY',
-                    is_protected: false,
-                    output_format: 'CMAF',
-                    preview_status: 'NOT_PREVIEWED',
-                    subtitle_languages: [],
-                    video_streams: [
-                      {
-                        codecs: 'H264',
-                        file: 'cmaf/video-H264-720-2100k-video-avc1.mp4',
-                        format: 'CMAF',
-                        label: 'HD',
-                        type: 'VIDEO',
-                      },
-                      {
-                        codecs: 'AAC',
-                        file: 'cmaf/audio-en-audio-en-mp4a.mp4',
-                        format: 'CMAF',
-                        label: 'audio',
-                        language_code: 'en',
-                        language_name: 'English',
-                        type: 'AUDIO',
-                      },
-                    ],
-                  },
-                },
+                video: createTestVideo(false),
               },
             ],
           },
@@ -226,7 +157,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       },
     );
 
-    it('if playlist has videos that are protected -> errors are reported', () => {
+    it('if playlist has videos that are DRM protected, but stream keys are missing -> errors are reported', () => {
       // Arrange
       const scheduleVideoId = uuid();
       const programVideoId = uuid();
@@ -352,12 +283,12 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       expect(validationResult.errors).toHaveLength(2);
       expect(validationResult.errors).toMatchObject([
         {
-          message: `Video ${programVideoId} is DRM protected.`,
-          code: 'VIDEO_IS_PROTECTED',
+          message: `Video ${programVideoId} is missing DRM Keys.`,
+          code: 'MISSING_DRM_KEYS',
         },
         {
-          message: `Video ${scheduleVideoId} is DRM protected.`,
-          code: 'VIDEO_IS_PROTECTED',
+          message: `Video ${scheduleVideoId} is missing DRM Keys.`,
+          code: 'MISSING_DRM_KEYS',
         },
       ]);
     });
@@ -637,130 +568,63 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       ]);
     });
 
-    it('if playlist is valid -> no errors and warnings', () => {
-      // Arrange
-      const scheduleVideoId = uuid();
-      const programVideoId = uuid();
-      const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
-        payload: {
-          ...createPlaylistEvent(),
-          programs: [
-            {
-              id: uuid(),
-              title: 'Program 1',
-              sort_index: 0,
-              video_duration_in_seconds: 86400,
-              entity_id: uuid(),
-              entity_type: 'MOVIE',
-              program_cue_points: [
-                {
-                  id: uuid(),
-                  type: 'PRE',
-                  schedules: [
-                    {
-                      id: uuid(),
-                      type: 'VIDEO',
-                      sort_index: 0,
-                      duration_in_seconds: 10,
-                      video: {
-                        id: scheduleVideoId,
-                        title: 'TEST MOVIE',
-                        source_location: 'test',
-                        is_archived: false,
-                        videos_tags: [],
-                        video_encoding: {
-                          audio_languages: ['en'],
-                          caption_languages: [],
-                          dash_manifest_path:
-                            'https://test.blob.core.windows.net/video-output/0-0/cmaf/manifest.mpd',
-                          encoding_state: 'READY',
-                          is_protected: false,
-                          output_format: 'CMAF',
-                          preview_status: 'NOT_PREVIEWED',
-                          subtitle_languages: [],
-                          video_streams: [
-                            {
-                              codecs: 'H264',
-                              file: 'cmaf/video-H264-720-2100k-video-avc1.mp4',
-                              format: 'CMAF',
-                              label: 'HD',
-                              type: 'VIDEO',
-                            },
-                            {
-                              codecs: 'AAC',
-                              file: 'cmaf/audio-en-audio-en-mp4a.mp4',
-                              format: 'CMAF',
-                              label: 'audio',
-                              language_code: 'en',
-                              language_name: 'English',
-                              type: 'AUDIO',
-                            },
-                          ],
-                        },
+    it.each([true, false])(
+      'if playlist is valid -> no errors and warnings',
+      (isDrmProtected: boolean) => {
+        // Arrange
+        const scheduleVideoId = uuid();
+        const programVideoId = uuid();
+        const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
+          payload: {
+            ...createPlaylistEvent(),
+            programs: [
+              {
+                id: uuid(),
+                title: 'Program 1',
+                sort_index: 0,
+                video_duration_in_seconds: 86400,
+                entity_id: uuid(),
+                entity_type: 'MOVIE',
+                program_cue_points: [
+                  {
+                    id: uuid(),
+                    type: 'PRE',
+                    schedules: [
+                      {
+                        id: uuid(),
+                        type: 'VIDEO',
+                        sort_index: 0,
+                        duration_in_seconds: 10,
+                        video: createTestVideo(isDrmProtected, scheduleVideoId),
                       },
-                    },
-                    {
-                      id: uuid(),
-                      type: 'AD_POD',
-                      sort_index: 0,
-                      duration_in_seconds: 10,
-                    },
-                  ],
-                },
-              ],
-              video: {
-                id: programVideoId,
-                title: 'TEST MOVIE',
-                source_location: 'test',
-                is_archived: false,
-                videos_tags: [],
-                video_encoding: {
-                  audio_languages: ['en'],
-                  caption_languages: [],
-                  dash_manifest_path:
-                    'https://test.blob.core.windows.net/video-output/0-0/cmaf/manifest.mpd',
-                  encoding_state: 'READY',
-                  is_protected: false,
-                  output_format: 'CMAF',
-                  preview_status: 'NOT_PREVIEWED',
-                  subtitle_languages: [],
-                  video_streams: [
-                    {
-                      codecs: 'H264',
-                      file: 'cmaf/video-H264-720-2100k-video-avc1.mp4',
-                      format: 'CMAF',
-                      label: 'HD',
-                      type: 'VIDEO',
-                    },
-                    {
-                      codecs: 'AAC',
-                      file: 'cmaf/audio-en-audio-en-mp4a.mp4',
-                      format: 'CMAF',
-                      label: 'audio',
-                      language_code: 'en',
-                      language_name: 'English',
-                      type: 'AUDIO',
-                    },
-                  ],
-                },
+                      {
+                        id: uuid(),
+                        type: 'AD_POD',
+                        sort_index: 0,
+                        duration_in_seconds: 10,
+                      },
+                    ],
+                  },
+                ],
+                video: createTestVideo(isDrmProtected, programVideoId),
               },
-            },
-          ],
-        },
-        message_type:
-          ChannelServiceMultiTenantMessagingSettings.PlaylistPublished
-            .messageType,
-        message_id: uuid(),
-        message_version: '1.0',
-        timestamp: new Date().toISOString(),
-      };
-      // Act
-      const validationResult = handler.handle(message);
+            ],
+          },
+          message_type:
+            ChannelServiceMultiTenantMessagingSettings.PlaylistPublished
+              .messageType,
+          message_id: uuid(),
+          message_version: '1.0',
+          timestamp: new Date().toISOString(),
+        };
+        // Act
+        const validationResult = handler.handle(message);
 
-      // Assert
-      expect(validationResult.payload).toMatchObject(message.payload);
-      expect(validationResult.warnings).toHaveLength(0);
-      expect(validationResult.errors).toHaveLength(0);
-    });
+        // Assert
+        expect(validationResult.payload).toMatchObject(message.payload);
+        expect(validationResult.warnings).toHaveLength(0);
+        expect(validationResult.errors).toHaveLength(0);
+      },
+    );
   });
 });

@@ -1,6 +1,6 @@
 import { getMappedError, Logger } from '@axinom/mosaic-service-common';
 import { VirtualChannelApi } from '../virtual-channel';
-import { Transition } from './utils';
+import { isFutureDate, Transition } from './utils';
 
 const logger = new Logger({ context: 'prepare-transition-live-stream' });
 
@@ -85,23 +85,15 @@ const createTransition = async (
 };
 
 /**
- * Checks if provided string date-time is in the future.
- * @param date - string containing date time.
- * @returns - true if the provided date is in future.
- */
-const isFutureDate = (date: string): boolean => {
-  const today = new Date();
-  const futureDate = new Date(date);
-  return futureDate > today;
-};
-/**
- * Creates a ISO date time for the transition start
+ * Creates a ISO date time for the transition start.
+ * If playlist start date is in future - the start date is used.
+ * Otherwise, transition date time is calculated by formula Now + 5 minutes.
  * @param playlistStartDateTime - start date time for the playlist.
  */
 const determineTransitionDateTime = (playlistStartDateTime: string): string => {
   if (isFutureDate(playlistStartDateTime)) {
     return new Date(playlistStartDateTime).toISOString();
   } else {
-    return new Date(new Date().getTime() + 2 * 60000).toISOString();
+    return new Date(new Date().getTime() + 5 * 60000).toISOString();
   }
 };
