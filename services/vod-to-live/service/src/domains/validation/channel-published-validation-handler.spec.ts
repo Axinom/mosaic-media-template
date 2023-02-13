@@ -6,6 +6,7 @@ import {
 import { WebhookRequestMessage } from '@axinom/mosaic-service-common';
 import { v4 as uuid } from 'uuid';
 import { ValidationErrors } from '../../common';
+import { createTestVideo } from '../../tests';
 import { ChannelPublishedValidationWebhookHandler } from './channel-published-validation-handler';
 
 describe('ChannelPublishedValidationWebhookHandler', () => {
@@ -66,7 +67,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
       ]);
     });
 
-    it('if channel placeholder video is protected -> error is reported', () => {
+    it('if channel placeholder video is DRM protected, but stream keys are missing -> error is reported', () => {
       // Arrange
       const message: WebhookRequestMessage<ChannelPublishedEvent> = {
         payload: {
@@ -126,8 +127,8 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
         {
           message: `Video ${
             message.payload.placeholder_video!.id
-          } is DRM protected.`,
-          code: 'VIDEO_IS_PROTECTED',
+          } is missing DRM Keys.`,
+          code: 'MISSING_DRM_KEYS',
         },
       ]);
     });
@@ -267,62 +268,30 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
       ]);
     });
 
-    it('if channel placeholder video is correct -> no errors and warnings', () => {
-      // Arrange
-      const message: WebhookRequestMessage<ChannelPublishedEvent> = {
-        payload: {
-          ...createChannelEvent(),
-          placeholder_video: {
-            id: uuid(),
-            title: 'Channel Spinning LOGO',
-            source_location: 'test',
-            is_archived: false,
-            videos_tags: [],
-            video_encoding: {
-              audio_languages: ['en'],
-              caption_languages: [],
-              dash_manifest_path:
-                'https://test.blob.core.windows.net/video-output/0-0/cmaf/manifest.mpd',
-              encoding_state: 'READY',
-              is_protected: false,
-              output_format: 'CMAF',
-              preview_status: 'NOT_PREVIEWED',
-              subtitle_languages: [],
-              video_streams: [
-                {
-                  codecs: 'H264',
-                  file: 'cmaf/video-H264-720-2100k-video-avc1.mp4',
-                  format: 'CMAF',
-                  label: 'HD',
-                  type: 'VIDEO',
-                },
-                {
-                  codecs: 'AAC',
-                  file: 'cmaf/audio-en-audio-en-mp4a.mp4',
-                  format: 'CMAF',
-                  label: 'audio',
-                  language_code: 'en',
-                  language_name: 'English',
-                  type: 'AUDIO',
-                },
-              ],
-            },
+    it.each([true, false])(
+      'if channel placeholder has a valid video with DRM protection set to %s -> no errors and warnings',
+      (isDrmProtected: boolean) => {
+        // Arrange
+        const message: WebhookRequestMessage<ChannelPublishedEvent> = {
+          payload: {
+            ...createChannelEvent(),
+            placeholder_video: createTestVideo(isDrmProtected),
           },
-        },
-        message_type:
-          ChannelServiceMultiTenantMessagingSettings.ChannelPublished
-            .messageType,
-        message_id: uuid(),
-        message_version: '1.0',
-        timestamp: new Date().toISOString(),
-      };
-      // Act
-      const validationResult = handler.handle(message);
+          message_type:
+            ChannelServiceMultiTenantMessagingSettings.ChannelPublished
+              .messageType,
+          message_id: uuid(),
+          message_version: '1.0',
+          timestamp: new Date().toISOString(),
+        };
+        // Act
+        const validationResult = handler.handle(message);
 
-      // Assert
-      expect(validationResult.warnings).toHaveLength(0);
-      expect(validationResult.errors).toHaveLength(0);
-      expect(validationResult.payload).toMatchObject(message.payload);
-    });
+        // Assert
+        expect(validationResult.warnings).toHaveLength(0);
+        expect(validationResult.errors).toHaveLength(0);
+        expect(validationResult.payload).toMatchObject(message.payload);
+      },
+    );
   });
 });

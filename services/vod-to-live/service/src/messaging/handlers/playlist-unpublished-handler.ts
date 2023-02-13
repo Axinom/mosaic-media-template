@@ -7,6 +7,7 @@ import { Config } from '../../common';
 import {
   AzureStorage,
   deleteTransitionLiveStream,
+  KeyServiceApi,
   VirtualChannelApi,
 } from '../../domains';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
@@ -17,6 +18,7 @@ export class PlaylistUnpublishedHandler extends AuthenticatedMessageHandler<Play
     private storage: AzureStorage,
     private broker: Broker,
     private virtualChannelApi: VirtualChannelApi,
+    private keyServiceApi: KeyServiceApi,
   ) {
     super(
       ChannelServiceMultiTenantMessagingSettings.PlaylistUnpublished
@@ -33,6 +35,7 @@ export class PlaylistUnpublishedHandler extends AuthenticatedMessageHandler<Play
       payload.id,
       this.virtualChannelApi,
       this.storage,
+      this.keyServiceApi,
       this.broker,
       messageInfo?.envelope?.auth_token ?? '',
     );

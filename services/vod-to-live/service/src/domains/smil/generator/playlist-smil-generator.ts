@@ -5,6 +5,7 @@ import {
   ProgramCuePoint,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
+import { CpixSettings } from '../../cpix';
 import {
   createHeaderMetadata,
   createParallel,
@@ -58,7 +59,10 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
   private logger: Logger = new Logger({ context: 'PlaylistSmilGenerator' });
   private placeholderVideoParallel: ParallelReference | undefined;
   private placeholderVideoDuration: number | undefined | null;
-  constructor(channelPlaceholderVideo?: DetailedVideo | undefined) {
+  constructor(
+    private drmSettings: CpixSettings,
+    channelPlaceholderVideo?: DetailedVideo | undefined,
+  ) {
     super();
     if (channelPlaceholderVideo) {
       this.placeholderVideoDuration =
@@ -81,7 +85,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
   private populateHeader(
     originalEvent: PlaylistPublishedEvent,
   ): HeaderMetadata[] {
-    return [
+    const headers = [
       createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
       createHeaderMetadata(
         HeaderMetadataNames.Vod2LiveStartTime,
@@ -94,6 +98,31 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
         originalEvent.id,
       ),
     ];
+    if (this.drmSettings.decryptionCpixFile) {
+      headers.push(
+        createHeaderMetadata(
+          HeaderMetadataNames.DecryptCpix,
+          this.drmSettings.decryptionCpixFile,
+        ),
+      );
+    }
+    if (this.drmSettings.encryptionDashCpixFile) {
+      headers.push(
+        createHeaderMetadata(
+          HeaderMetadataNames.MpdCpix,
+          this.drmSettings.encryptionDashCpixFile,
+        ),
+      );
+    }
+    if (this.drmSettings.encryptionHlsCpixFile) {
+      headers.push(
+        createHeaderMetadata(
+          HeaderMetadataNames.HlsCpix,
+          this.drmSettings.encryptionHlsCpixFile,
+        ),
+      );
+    }
+    return headers;
   }
 
   /**

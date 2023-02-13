@@ -11,10 +11,12 @@ export const validateVideo = (video: DetailedVideo): ValidationResult => {
     warnings: [],
   };
   if (video.video_encoding.is_protected) {
-    validationResult.errors.push({
-      message: `Video ${video.id} is DRM protected.`,
-      code: 'VIDEO_IS_PROTECTED',
-    });
+    if (video.video_encoding.video_streams.find((s) => !s.key_id)) {
+      validationResult.errors.push({
+        message: `Video ${video.id} is missing DRM Keys.`,
+        code: 'MISSING_DRM_KEYS',
+      });
+    }
   }
 
   if (video.video_encoding.output_format !== 'CMAF') {

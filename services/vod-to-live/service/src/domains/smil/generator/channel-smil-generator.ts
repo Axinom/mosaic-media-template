@@ -1,5 +1,6 @@
 import { ChannelPublishedEvent } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
+import { CpixSettings } from '../../cpix';
 import {
   createHeaderMetadata,
   createParallel,
@@ -17,6 +18,9 @@ import { videoToSmilParallelReferences } from './utils';
  * Should be instantiated for each new document generation.
  */
 export class ChannelSmilGenerator extends SmilGenerator<ChannelPublishedEvent> {
+  constructor(private drmSettings: CpixSettings) {
+    super();
+  }
   generate(originalEvent: ChannelPublishedEvent): SMILEnvelope {
     const parallels: Parallel[] = [];
     if (originalEvent.placeholder_video) {
@@ -36,7 +40,7 @@ export class ChannelSmilGenerator extends SmilGenerator<ChannelPublishedEvent> {
   private populateHeader(
     originalEvent: ChannelPublishedEvent,
   ): HeaderMetadata[] {
-    return [
+    const headers = [
       //mandatory properties
       createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
       createHeaderMetadata(
@@ -49,5 +53,31 @@ export class ChannelSmilGenerator extends SmilGenerator<ChannelPublishedEvent> {
         originalEvent.id,
       ),
     ];
+
+    if (this.drmSettings.decryptionCpixFile) {
+      headers.push(
+        createHeaderMetadata(
+          HeaderMetadataNames.DecryptCpix,
+          this.drmSettings.decryptionCpixFile,
+        ),
+      );
+    }
+    if (this.drmSettings.encryptionDashCpixFile) {
+      headers.push(
+        createHeaderMetadata(
+          HeaderMetadataNames.MpdCpix,
+          this.drmSettings.encryptionDashCpixFile,
+        ),
+      );
+    }
+    if (this.drmSettings.encryptionHlsCpixFile) {
+      headers.push(
+        createHeaderMetadata(
+          HeaderMetadataNames.HlsCpix,
+          this.drmSettings.encryptionHlsCpixFile,
+        ),
+      );
+    }
+    return headers;
   }
 }

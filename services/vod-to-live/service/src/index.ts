@@ -21,10 +21,12 @@ import express from 'express';
 import { getFullConfig } from './common';
 import {
   AzureStorage,
+  KeyServiceApi,
   setupPrePublishingValidationWebhook,
   VirtualChannelApi,
 } from './domains';
 import { registerMessaging } from './messaging/register-messaging';
+import { createProtectionCpix } from './setup';
 
 const logger = new Logger({ context: 'bootstrap' });
 
@@ -50,10 +52,24 @@ async function bootstrap(): Promise<void> {
     config.virtualChannelApiBaseUrl,
   );
 
+  const keyServiceApi = new KeyServiceApi(
+    config.keyServiceApiBaseUrl,
+    config.keyServiceTenantId,
+    config.keyServiceManagementKey,
+  );
+
+  await createProtectionCpix(config, keyServiceApi, storage, logger);
+
   const broker = await setupMessagingBroker({
     app,
     config,
-    builders: registerMessaging(app, config, storage, virtualChannelApi),
+    builders: registerMessaging(
+      app,
+      config,
+      storage,
+      virtualChannelApi,
+      keyServiceApi,
+    ),
     logger,
     shutdownActions,
     onMessageMiddleware: [envelopeLoggingMiddleware(logger)],

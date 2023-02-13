@@ -12,7 +12,8 @@
   "cSpell.words": [
     "Axinom",
     "Axinom's",
-    "CMAF", 
+    "CMAF",
+    "cpix",
     "codegen",
     "Dockerized",
     "Downloadability",
@@ -29,6 +30,7 @@
     "prefetch",
     "RABBITMQ",
     "smil",
+    "speke",
     "unassignment",
     "uncommit",
     "unpublish",

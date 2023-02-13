@@ -5,7 +5,11 @@ import {
   normalizeRelativePath,
   skipMaskTag,
 } from '@axinom/mosaic-service-common';
-import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
+import {
+  BlobSASPermissions,
+  BlobServiceClient,
+  ContainerClient,
+} from '@azure/storage-blob';
 import { AzureBlobErrors } from './azure-blob-errors';
 
 const getAzureStorageMappedError = mosaicErrorMappingFactory(
@@ -81,6 +85,28 @@ export class AzureStorage {
     }
   };
 
+  public deleteFolder = async (
+    relativeDirectoryPath: string,
+  ): Promise<{ filePath: string; wasDeleted: boolean }[]> => {
+    const results: { filePath: string; wasDeleted: boolean }[] = [];
+    try {
+      const normalizedPath = normalizeRelativePath(relativeDirectoryPath);
+      const containerClient = await this.getContainerClient(this.containerName);
+      const blobs = containerClient.listBlobsFlat({ prefix: normalizedPath });
+      for await (const blob of blobs) {
+        const blobClient = containerClient.getBlobClient(blob.name);
+        const deleteBlockBlobResponse = await blobClient.deleteIfExists();
+        results.push({
+          filePath: blob.name,
+          wasDeleted: deleteBlockBlobResponse.succeeded,
+        });
+      }
+      return results;
+    } catch (error) {
+      throw getAzureStorageMappedError(error);
+    }
+  };
+
   public getFileContent = async (relativeFilePath: string): Promise<string> => {
     try {
       const normalizedPath = normalizeRelativePath(relativeFilePath);
@@ -126,6 +152,25 @@ export class AzureStorage {
         Buffer.byteLength(fileContent),
       );
       return result._response.status >= 200 && result._response.status < 300;
+    } catch (error) {
+      throw getAzureStorageMappedError(error);
+    }
+  };
+
+  public getFileSasUrl = async (
+    relativeFilePath: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<string> => {
+    try {
+      const normalizedPath = normalizeRelativePath(relativeFilePath);
+      const containerClient = await this.getContainerClient(this.containerName);
+      const blobClient = containerClient.getBlobClient(normalizedPath);
+      return blobClient.generateSasUrl({
+        permissions: BlobSASPermissions.from({ read: true }),
+        startsOn: startDate,
+        expiresOn: endDate,
+      });
     } catch (error) {
       throw getAzureStorageMappedError(error);
     }

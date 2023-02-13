@@ -6,9 +6,12 @@ import {
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
 import { AzureStorage } from '../azure';
-import { ChannelSmilGenerator, convertObjectToXml } from '../smil';
+import { generateCpixSettings } from '../cpix';
+import { KeyServiceApi } from '../key-service';
+import { ChannelSmilGenerator } from '../smil';
+import { convertObjectToXml } from '../utils';
 import { VirtualChannelApi } from '../virtual-channel';
-import { generateChannelStorageName } from './utils';
+import { generateChannelFilePath, metadataFileName } from './utils';
 
 const logger = new Logger({ context: 'delete-transition-live-stream' });
 export const deleteTransitionLiveStream = async (
@@ -16,6 +19,7 @@ export const deleteTransitionLiveStream = async (
   playlistId: string,
   virtualChannelApi: VirtualChannelApi,
   storage: AzureStorage,
+  keyServiceApi: KeyServiceApi,
   broker: Broker,
   authToken: string,
 ): Promise<void> => {
@@ -39,12 +43,22 @@ export const deleteTransitionLiveStream = async (
         },
       });
     }
+    const storageFileDeletion = await storage.deleteFolder(
+      `${channelId}/${playlistId}`,
+    );
+    logger.debug({
+      message: 'Playlist deletion from Azure Storage result:',
+      details: {
+        channelId,
+        deletedFiles: storageFileDeletion,
+      },
+    });
 
     //if there is no playlist transitions left in virtual channel - new transition with channel video is created
     //making sure, that virtual channel will have content playing and that the latest placeholder video is played
     if (!(await virtualChannelApi.channelHasPlaylistTransitions(channelId))) {
       const channelLatestJson = await storage.getFileContent(
-        generateChannelStorageName(channelId),
+        generateChannelFilePath(channelId, metadataFileName),
       );
       const event: ChannelPublishedEvent = JSON.parse(channelLatestJson);
       if (!event) {
@@ -53,7 +67,15 @@ export const deleteTransitionLiveStream = async (
         );
         return;
       }
-      const generator = new ChannelSmilGenerator();
+      const drmSettings = await generateCpixSettings(
+        event.placeholder_video ? [event.placeholder_video] : [],
+        storage,
+        keyServiceApi,
+        new Date(),
+        event.placeholder_video?.video_encoding?.length_in_seconds ?? 0,
+        event.id,
+      );
+      const generator = new ChannelSmilGenerator(drmSettings);
       const smil = generator.generate(event);
       await broker.publish<PrepareTransitionLiveStreamCommand>(
         VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream

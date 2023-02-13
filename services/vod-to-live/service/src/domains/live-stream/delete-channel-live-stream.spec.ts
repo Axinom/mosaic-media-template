@@ -4,7 +4,6 @@ import { v4 as uuid } from 'uuid';
 import { AzureStorage } from '../azure';
 import { VirtualChannelApi } from '../virtual-channel';
 import { deleteChannelLiveStream } from './delete-channel-live-stream';
-import { generateChannelStorageName } from './utils';
 jest.mock('axios', () => ({
   delete: jest.fn(() => {
     return Promise.resolve({
@@ -14,18 +13,20 @@ jest.mock('axios', () => ({
 }));
 
 describe('deleteChannelLiveStream', () => {
-  let deletedFiles: string[] = [];
+  let deletedFolders: string[] = [];
   const mockedStorage = stub<AzureStorage>({
-    deleteFile: async (relativeFilePath: string): Promise<boolean> => {
-      deletedFiles.push(relativeFilePath);
-      return true;
+    deleteFolder: async (
+      relativeFilePath: string,
+    ): Promise<{ filePath: string; wasDeleted: boolean }[]> => {
+      deletedFolders.push(relativeFilePath);
+      return [];
     },
   });
 
   const virtualChannelApi = new VirtualChannelApi('');
 
   beforeEach(() => {
-    deletedFiles = [];
+    deletedFolders = [];
     jest.clearAllMocks();
   });
   it('channel data is removed from API and Azure Storage', async () => {
@@ -35,8 +36,8 @@ describe('deleteChannelLiveStream', () => {
     // Act
     await deleteChannelLiveStream(channelId, virtualChannelApi, mockedStorage);
     // Assert
-    expect(deletedFiles).toHaveLength(1);
-    expect(deletedFiles).toMatchObject([generateChannelStorageName(channelId)]);
+    expect(deletedFolders).toHaveLength(1);
+    expect(deletedFolders).toMatchObject([channelId]);
     expect(mockedAxios.delete).toHaveBeenCalledTimes(1);
   });
 });

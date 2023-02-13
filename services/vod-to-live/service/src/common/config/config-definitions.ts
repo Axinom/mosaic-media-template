@@ -47,6 +47,16 @@ export const getConfigDefinitions = (
     azureBlobContainerName: () =>
       env.get('AZURE_BLOB_CONTAINER_NAME').required().asString(),
 
+    //Key Service Management API
+    keyServiceApiBaseUrl: () =>
+      env.get('KEY_SERVICE_API_BASE_URL').required().asUrlString(),
+    keyServiceTenantId: () =>
+      env.get('KEY_SERVICE_TENANT_ID').required().asString(),
+    keyServiceManagementKey: () =>
+      env.get('KEY_SERVICE_MANAGEMENT_KEY').required().asString(),
+    drmProtectionKeyId: () =>
+      env.get('DRM_PROTECTION_KEY_ID').required().required().asString(),
+
     /**
      * Optional Service Account Client ID, used to get ID service token that is
      * required to get User auth token during development
