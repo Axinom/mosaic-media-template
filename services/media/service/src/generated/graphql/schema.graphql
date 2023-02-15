@@ -13668,6 +13668,16 @@ enum ErrorCodesEnum {
   """Authenticated End User not found."""
   AUTHENTICATED_END_USER_NOT_FOUND
 
+  """
+  Websocket not found in ExtendedGraphQLContext. This is a development time issue. A reference to the websocket must be included in Postgraphile build options.
+  """
+  WEBSOCKET_NOT_FOUND
+
+  """
+  A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue.
+  """
+  AUTHORIZATION_OPTIONS_MISCONFIGURED
+
   """Ingest Document validation has failed."""
   INGEST_VALIDATION_ERROR
 

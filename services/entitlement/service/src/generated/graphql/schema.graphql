@@ -165,6 +165,16 @@ enum ErrorCodesEnum {
   AUTHENTICATED_END_USER_NOT_FOUND
 
   """
+  Websocket not found in ExtendedGraphQLContext. This is a development time issue. A reference to the websocket must be included in Postgraphile build options.
+  """
+  WEBSOCKET_NOT_FOUND
+
+  """
+  A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue.
+  """
+  AUTHORIZATION_OPTIONS_MISCONFIGURED
+
+  """
   Error(s) occurred while trying to retrieve the %s with ID '%s' from the catalog service. Please contact the service support.
   """
   CATALOG_ERRORS

@@ -5,13 +5,13 @@ import {
   EnforceStrictPermissionsPlugin,
   getManagementAuthenticationContext,
   IdGuardErrors,
-  subscriptionAuthorizationHookFactory,
 } from '@axinom/mosaic-id-guard';
 import { Broker } from '@axinom/mosaic-message-bus';
 import {
   AddErrorCodesEnumPluginFactory,
   AnnotateTypesWithPermissionsPlugin,
   defaultWriteLogMapper,
+  getWebsocketFromRequest,
   graphqlErrorsHandler,
   Logger,
   MosaicErrors,
@@ -70,7 +70,6 @@ export const buildPostgraphileOptions = (
     .enableSubscriptions({
       plugin: AllSubscriptionsPlugins,
       websocketMiddlewares,
-      hookFactory: subscriptionAuthorizationHookFactory,
     })
     .addPlugins(
       PgSimplifyInflectorPlugin,
@@ -110,6 +109,7 @@ export const buildPostgraphileOptions = (
     .setAdditionalGraphQLContextFromRequest(async (req) => {
       const { subject, authErrorInfo } =
         await getManagementAuthenticationContext(req, authConfig);
+      const websocket = getWebsocketFromRequest(req);
       const extendedRequest = req as Request & { token: string };
       const result: ExtendedGraphQLContext = {
         config,
@@ -119,6 +119,7 @@ export const buildPostgraphileOptions = (
         jwtToken: extendedRequest?.token,
         authErrorInfo,
         mutationAtomicityContext: getMutationAtomicityContext(req, true),
+        websocket,
       };
       return result;
     })
