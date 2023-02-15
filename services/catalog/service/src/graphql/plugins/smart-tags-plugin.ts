@@ -1334,6 +1334,196 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
       },
+      channel: {
+        description: 'Definition of the channel publish format.',
+        attribute: {
+          title: {
+            description: 'Title of the channel.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Description of the channel.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omit: 'create,update,delete',
+        },
+      },
+      channel_images: {
+        description: 'Asset image metadata.',
+        attribute: {
+          type: {
+            description: 'Type of the image.',
+            ...disableFilterAndOrder,
+          },
+          path: {
+            description: 'URI to the image file.',
+            ...disableFilterAndOrder,
+          },
+          width: {
+            description: 'Width of the image in pixels.',
+            ...disableFilterAndOrder,
+          },
+          height: {
+            description: 'Height of the image in pixels.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          channel_images_channel_id_fkey: {
+            tags: {
+              foreignFieldName: 'images',
+            },
+          },
+        },
+      },
+      channel_videos: {
+        description: 'Video stream metadata.',
+        attribute: {
+          title: {
+            description: 'Title of the video stream',
+            ...disableFilterAndOrder,
+          },
+          length_in_seconds: {
+            description: 'Length of the stream in seconds.',
+            ...disableFilterAndOrder,
+          },
+          audio_languages: {
+            description: 'Array of audio languages available in the stream.',
+            ...disableFilterAndOrder,
+          },
+          subtitle_languages: {
+            description: 'Array of subtitle languages available in the stream.',
+            ...disableFilterAndOrder,
+          },
+          caption_languages: {
+            description: 'Array of caption languages available in the stream.',
+            ...disableFilterAndOrder,
+          },
+          dash_manifest: {
+            description: 'URI to a DASH manifest.',
+            ...disableFilterAndOrder,
+          },
+          hls_manifest: {
+            description: 'URI to an HLS manifest.',
+            ...disableFilterAndOrder,
+          },
+          is_protected: {
+            description: 'Indicates whether a stream is protected with DRM.',
+            ...disableFilterAndOrder,
+          },
+          output_format: {
+            description: 'Output format of the stream.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          channel_videos_channel_id_fkey: {
+            tags: {
+              foreignFieldName: 'videos',
+            },
+          },
+        },
+      },
+      channel_video_streams: {
+        description: 'Video stream DRM metadata',
+        attribute: {
+          key_id: {
+            description: 'DRM Key ID',
+            ...disableFilterAndOrder,
+          },
+          iv: {
+            description: 'Initialization Vector of the stream',
+            ...disableFilterAndOrder,
+          },
+          format: {
+            description: 'Packaging format of the stream',
+            ...disableFilterAndOrder,
+          },
+          file: {
+            description: 'File path to the initialization segment',
+            ...disableFilterAndOrder,
+          },
+          channel_video_id: {
+            tags: {
+              name: 'videoId',
+            },
+          },
+          label: {
+            description: 'Label indicating the type of stream (audio/video)',
+            ...disableFilterAndOrder,
+          },
+          language_code: {
+            description: 'The language code for audio streams',
+            ...disableFilterAndOrder,
+          },
+          bitrate_in_kbps: {
+            description: 'Bitrate in kilobits per second',
+            ...disableFilterAndOrder,
+          },
+          type: {
+            description: 'Stream type',
+          },
+          file_template: {
+            description: 'File Template',
+            ...disableFilterAndOrder,
+          },
+          codecs: {
+            description: 'Codecs',
+            ...disableFilterAndOrder,
+          },
+          frame_rate: {
+            description: 'Frame rate of the video stream',
+            ...disableFilterAndOrder,
+          },
+          height: {
+            description: 'Height of the video stream',
+            ...disableFilterAndOrder,
+          },
+          width: {
+            description: 'Width of the video stream',
+            ...disableFilterAndOrder,
+          },
+          display_aspect_ratio: {
+            description: 'Display aspect ratio for video streams',
+            ...disableFilterAndOrder,
+          },
+          pixel_aspect_ratio: {
+            description: 'Pixel aspect ratio for video streams',
+            ...disableFilterAndOrder,
+          },
+          sampling_rate: {
+            description: 'Sampling rate for audio streams',
+            ...disableFilterAndOrder,
+          },
+          language_name: {
+            description:
+              'Language name for audio, subtitle, or caption streams',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          channel_video_streams_channel_video_id_fkey: {
+            tags: {
+              foreignFieldName: 'videoStreams',
+              fieldName: 'video',
+            },
+          },
+        },
+      },
     },
   },
 });

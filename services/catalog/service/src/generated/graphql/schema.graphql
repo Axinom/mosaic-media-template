@@ -6,6 +6,40 @@ type Query {
   """
   query: Query!
 
+  """Reads and enables pagination through a set of `Channel`."""
+  channels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Channel`."""
+    orderBy: [ChannelsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ChannelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ChannelFilter
+  ): ChannelsConnection
+
   """Reads and enables pagination through a set of `Collection`."""
   collections(
     """Only read the first `n` values of the set."""
@@ -243,6 +277,7 @@ type Query {
     """
     filter: TvshowGenreFilter
   ): TvshowGenresConnection
+  channel(id: String!): Channel
   collection(id: String!): Collection
   episode(id: String!, countryCode: String): Episode
   movie(id: String!, countryCode: String): Movie
@@ -252,40 +287,34 @@ type Query {
   tvshowGenre(id: String!): TvshowGenre
 }
 
-"""A connection to a list of `Collection` values."""
-type CollectionsConnection {
-  """A list of `Collection` objects."""
-  nodes: [Collection!]!
+"""A connection to a list of `Channel` values."""
+type ChannelsConnection {
+  """A list of `Channel` objects."""
+  nodes: [Channel!]!
 
   """
-  A list of edges which contains the `Collection` and cursor to aid in pagination.
+  A list of edges which contains the `Channel` and cursor to aid in pagination.
   """
-  edges: [CollectionsEdge!]!
+  edges: [ChannelsEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """The count of *all* `Collection` you could get from the connection."""
+  """The count of *all* `Channel` you could get from the connection."""
   totalCount: Int!
 }
 
-"""Definition of the collection publish format."""
-type Collection {
+"""Definition of the channel publish format."""
+type Channel {
   id: String!
 
-  """Title of the collection."""
+  """Title of the channel."""
   title: String
 
-  """Short description."""
-  synopsis: String
-
-  """Longer description."""
+  """Description of the channel."""
   description: String
 
-  """Array of tags associated with the content."""
-  tags: [String]
-
-  """Reads and enables pagination through a set of `CollectionImage`."""
+  """Reads and enables pagination through a set of `ChannelImage`."""
   images(
     """Only read the first `n` values of the set."""
     first: Int
@@ -305,24 +334,22 @@ type Collection {
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
-    """The method to use when ordering `CollectionImage`."""
-    orderBy: [CollectionImagesOrderBy!] = [PRIMARY_KEY_ASC]
+    """The method to use when ordering `ChannelImage`."""
+    orderBy: [ChannelImagesOrderBy!] = [PRIMARY_KEY_ASC]
 
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: CollectionImageCondition
+    condition: ChannelImageCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: CollectionImageFilter
-  ): CollectionImagesConnection!
+    filter: ChannelImageFilter
+  ): ChannelImagesConnection!
 
-  """
-  Reads and enables pagination through a set of `CollectionItemsRelation`.
-  """
-  items(
+  """Reads and enables pagination through a set of `ChannelVideo`."""
+  videos(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -341,44 +368,42 @@ type Collection {
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
-    """The method to use when ordering `CollectionItemsRelation`."""
-    orderBy: [CollectionItemsRelationsOrderBy!] = [PRIMARY_KEY_ASC]
+    """The method to use when ordering `ChannelVideo`."""
+    orderBy: [ChannelVideosOrderBy!] = [PRIMARY_KEY_ASC]
 
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: CollectionItemsRelationCondition
+    condition: ChannelVideoCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: CollectionItemsRelationFilter
-  ): CollectionItemsRelationsConnection!
+    filter: ChannelVideoFilter
+  ): ChannelVideosConnection!
 }
 
-"""A connection to a list of `CollectionImage` values."""
-type CollectionImagesConnection {
-  """A list of `CollectionImage` objects."""
-  nodes: [CollectionImage!]!
+"""A connection to a list of `ChannelImage` values."""
+type ChannelImagesConnection {
+  """A list of `ChannelImage` objects."""
+  nodes: [ChannelImage!]!
 
   """
-  A list of edges which contains the `CollectionImage` and cursor to aid in pagination.
+  A list of edges which contains the `ChannelImage` and cursor to aid in pagination.
   """
-  edges: [CollectionImagesEdge!]!
+  edges: [ChannelImagesEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """
-  The count of *all* `CollectionImage` you could get from the connection.
-  """
+  """The count of *all* `ChannelImage` you could get from the connection."""
   totalCount: Int!
 }
 
 """Asset image metadata."""
-type CollectionImage {
+type ChannelImage {
   id: Int!
-  collectionId: String
+  channelId: String
 
   """Type of the image."""
   type: String
@@ -392,17 +417,17 @@ type CollectionImage {
   """Height of the image in pixels."""
   height: Int
 
-  """Reads a single `Collection` that is related to this `CollectionImage`."""
-  collection: Collection
+  """Reads a single `Channel` that is related to this `ChannelImage`."""
+  channel: Channel
 }
 
-"""A `CollectionImage` edge in the connection."""
-type CollectionImagesEdge {
+"""A `ChannelImage` edge in the connection."""
+type ChannelImagesEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
-  """The `CollectionImage` at the end of the edge."""
-  node: CollectionImage!
+  """The `ChannelImage` at the end of the edge."""
+  node: ChannelImage!
 }
 
 """A location in a connection that can be used for resuming pagination."""
@@ -423,47 +448,47 @@ type PageInfo {
   endCursor: Cursor
 }
 
-"""Methods to use when ordering `CollectionImage`."""
-enum CollectionImagesOrderBy {
+"""Methods to use when ordering `ChannelImage`."""
+enum ChannelImagesOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
-  COLLECTION_ID_ASC
-  COLLECTION_ID_DESC
+  CHANNEL_ID_ASC
+  CHANNEL_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
 
 """
-A condition to be used against `CollectionImage` object types. All fields are
+A condition to be used against `ChannelImage` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
-input CollectionImageCondition {
+input ChannelImageCondition {
   """Checks for equality with the object’s `id` field."""
   id: Int
 
-  """Checks for equality with the object’s `collectionId` field."""
-  collectionId: String
+  """Checks for equality with the object’s `channelId` field."""
+  channelId: String
 }
 
 """
-A filter to be used against `CollectionImage` object types. All fields are combined with a logical ‘and.’
+A filter to be used against `ChannelImage` object types. All fields are combined with a logical ‘and.’
 """
-input CollectionImageFilter {
+input ChannelImageFilter {
   """Filter by the object’s `id` field."""
   id: IntFilter
 
-  """Filter by the object’s `collectionId` field."""
-  collectionId: StringFilter
+  """Filter by the object’s `channelId` field."""
+  channelId: StringFilter
 
   """Checks for all expressions in this list."""
-  and: [CollectionImageFilter!]
+  and: [ChannelImageFilter!]
 
   """Checks for any expressions in this list."""
-  or: [CollectionImageFilter!]
+  or: [ChannelImageFilter!]
 
   """Negates the expression."""
-  not: CollectionImageFilter
+  not: ChannelImageFilter
 }
 
 """
@@ -638,6 +663,590 @@ input StringFilter {
 
   """Greater than or equal to the specified value (case-insensitive)."""
   greaterThanOrEqualToInsensitive: String
+}
+
+"""A connection to a list of `ChannelVideo` values."""
+type ChannelVideosConnection {
+  """A list of `ChannelVideo` objects."""
+  nodes: [ChannelVideo!]!
+
+  """
+  A list of edges which contains the `ChannelVideo` and cursor to aid in pagination.
+  """
+  edges: [ChannelVideosEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ChannelVideo` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""Video stream metadata."""
+type ChannelVideo {
+  id: Int!
+  channelId: String
+  type: String
+
+  """Title of the video stream"""
+  title: String
+
+  """Length of the stream in seconds."""
+  lengthInSeconds: Float
+
+  """Array of audio languages available in the stream."""
+  audioLanguages: [String]
+
+  """Array of subtitle languages available in the stream."""
+  subtitleLanguages: [String]
+
+  """Array of caption languages available in the stream."""
+  captionLanguages: [String]
+
+  """URI to a DASH manifest."""
+  dashManifest: String
+
+  """URI to an HLS manifest."""
+  hlsManifest: String
+
+  """Indicates whether a stream is protected with DRM."""
+  isProtected: Boolean
+
+  """Output format of the stream."""
+  outputFormat: String
+
+  """Reads a single `Channel` that is related to this `ChannelVideo`."""
+  channel: Channel
+
+  """Reads and enables pagination through a set of `ChannelVideoStream`."""
+  videoStreams(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ChannelVideoStream`."""
+    orderBy: [ChannelVideoStreamsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ChannelVideoStreamCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ChannelVideoStreamFilter
+  ): ChannelVideoStreamsConnection!
+}
+
+"""A connection to a list of `ChannelVideoStream` values."""
+type ChannelVideoStreamsConnection {
+  """A list of `ChannelVideoStream` objects."""
+  nodes: [ChannelVideoStream!]!
+
+  """
+  A list of edges which contains the `ChannelVideoStream` and cursor to aid in pagination.
+  """
+  edges: [ChannelVideoStreamsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `ChannelVideoStream` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""Video stream DRM metadata"""
+type ChannelVideoStream {
+  id: Int!
+  videoId: Int
+
+  """Label indicating the type of stream (audio/video)"""
+  label: String
+
+  """DRM Key ID"""
+  keyId: String
+
+  """Packaging format of the stream"""
+  format: String
+
+  """Initialization Vector of the stream"""
+  iv: String
+
+  """File path to the initialization segment"""
+  file: String
+
+  """The language code for audio streams"""
+  languageCode: String
+
+  """Bitrate in kilobits per second"""
+  bitrateInKbps: Int
+
+  """File Template"""
+  fileTemplate: String
+
+  """Codecs"""
+  codecs: String
+
+  """Frame rate of the video stream"""
+  frameRate: Float
+
+  """Height of the video stream"""
+  height: Int
+
+  """Width of the video stream"""
+  width: Int
+
+  """Display aspect ratio for video streams"""
+  displayAspectRatio: String
+
+  """Pixel aspect ratio for video streams"""
+  pixelAspectRatio: String
+
+  """Sampling rate for audio streams"""
+  samplingRate: Int
+
+  """Language name for audio, subtitle, or caption streams"""
+  languageName: String
+
+  """Stream type"""
+  type: VideoStreamType
+
+  """
+  Reads a single `ChannelVideo` that is related to this `ChannelVideoStream`.
+  """
+  video: ChannelVideo
+}
+
+enum VideoStreamType {
+  """Video"""
+  VIDEO
+
+  """Audio"""
+  AUDIO
+
+  """Subtitle"""
+  SUBTITLE
+
+  """Closed caption"""
+  CLOSED_CAPTION
+}
+
+"""A `ChannelVideoStream` edge in the connection."""
+type ChannelVideoStreamsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ChannelVideoStream` at the end of the edge."""
+  node: ChannelVideoStream!
+}
+
+"""Methods to use when ordering `ChannelVideoStream`."""
+enum ChannelVideoStreamsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  VIDEO_ID_ASC
+  VIDEO_ID_DESC
+  TYPE_ASC
+  TYPE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `ChannelVideoStream` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ChannelVideoStreamCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `videoId` field."""
+  videoId: Int
+
+  """Checks for equality with the object’s `type` field."""
+  type: VideoStreamType
+}
+
+"""
+A filter to be used against `ChannelVideoStream` object types. All fields are combined with a logical ‘and.’
+"""
+input ChannelVideoStreamFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `videoId` field."""
+  videoId: IntFilter
+
+  """Filter by the object’s `type` field."""
+  type: VideoStreamTypeFilter
+
+  """Checks for all expressions in this list."""
+  and: [ChannelVideoStreamFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ChannelVideoStreamFilter!]
+
+  """Negates the expression."""
+  not: ChannelVideoStreamFilter
+}
+
+"""
+A filter to be used against VideoStreamType fields. All fields are combined with a logical ‘and.’
+"""
+input VideoStreamTypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: VideoStreamType
+
+  """Not equal to the specified value."""
+  notEqualTo: VideoStreamType
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: VideoStreamType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: VideoStreamType
+
+  """Included in the specified list."""
+  in: [VideoStreamType!]
+
+  """Not included in the specified list."""
+  notIn: [VideoStreamType!]
+
+  """Less than the specified value."""
+  lessThan: VideoStreamType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: VideoStreamType
+
+  """Greater than the specified value."""
+  greaterThan: VideoStreamType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: VideoStreamType
+}
+
+"""A `ChannelVideo` edge in the connection."""
+type ChannelVideosEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ChannelVideo` at the end of the edge."""
+  node: ChannelVideo!
+}
+
+"""Methods to use when ordering `ChannelVideo`."""
+enum ChannelVideosOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  CHANNEL_ID_ASC
+  CHANNEL_ID_DESC
+  TYPE_ASC
+  TYPE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `ChannelVideo` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ChannelVideoCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `channelId` field."""
+  channelId: String
+
+  """Checks for equality with the object’s `type` field."""
+  type: String
+}
+
+"""
+A filter to be used against `ChannelVideo` object types. All fields are combined with a logical ‘and.’
+"""
+input ChannelVideoFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `channelId` field."""
+  channelId: StringFilter
+
+  """Filter by the object’s `type` field."""
+  type: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [ChannelVideoFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ChannelVideoFilter!]
+
+  """Negates the expression."""
+  not: ChannelVideoFilter
+}
+
+"""A `Channel` edge in the connection."""
+type ChannelsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Channel` at the end of the edge."""
+  node: Channel!
+}
+
+"""Methods to use when ordering `Channel`."""
+enum ChannelsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Channel` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ChannelCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: String
+}
+
+"""
+A filter to be used against `Channel` object types. All fields are combined with a logical ‘and.’
+"""
+input ChannelFilter {
+  """Filter by the object’s `id` field."""
+  id: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [ChannelFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ChannelFilter!]
+
+  """Negates the expression."""
+  not: ChannelFilter
+}
+
+"""A connection to a list of `Collection` values."""
+type CollectionsConnection {
+  """A list of `Collection` objects."""
+  nodes: [Collection!]!
+
+  """
+  A list of edges which contains the `Collection` and cursor to aid in pagination.
+  """
+  edges: [CollectionsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Collection` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""Definition of the collection publish format."""
+type Collection {
+  id: String!
+
+  """Title of the collection."""
+  title: String
+
+  """Short description."""
+  synopsis: String
+
+  """Longer description."""
+  description: String
+
+  """Array of tags associated with the content."""
+  tags: [String]
+
+  """Reads and enables pagination through a set of `CollectionImage`."""
+  images(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CollectionImage`."""
+    orderBy: [CollectionImagesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CollectionImageCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CollectionImageFilter
+  ): CollectionImagesConnection!
+
+  """
+  Reads and enables pagination through a set of `CollectionItemsRelation`.
+  """
+  items(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CollectionItemsRelation`."""
+    orderBy: [CollectionItemsRelationsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CollectionItemsRelationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CollectionItemsRelationFilter
+  ): CollectionItemsRelationsConnection!
+}
+
+"""A connection to a list of `CollectionImage` values."""
+type CollectionImagesConnection {
+  """A list of `CollectionImage` objects."""
+  nodes: [CollectionImage!]!
+
+  """
+  A list of edges which contains the `CollectionImage` and cursor to aid in pagination.
+  """
+  edges: [CollectionImagesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CollectionImage` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""Asset image metadata."""
+type CollectionImage {
+  id: Int!
+  collectionId: String
+
+  """Type of the image."""
+  type: String
+
+  """URI to the image file."""
+  path: String
+
+  """Width of the image in pixels."""
+  width: Int
+
+  """Height of the image in pixels."""
+  height: Int
+
+  """Reads a single `Collection` that is related to this `CollectionImage`."""
+  collection: Collection
+}
+
+"""A `CollectionImage` edge in the connection."""
+type CollectionImagesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CollectionImage` at the end of the edge."""
+  node: CollectionImage!
+}
+
+"""Methods to use when ordering `CollectionImage`."""
+enum CollectionImagesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  COLLECTION_ID_ASC
+  COLLECTION_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `CollectionImage` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CollectionImageCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `collectionId` field."""
+  collectionId: String
+}
+
+"""
+A filter to be used against `CollectionImage` object types. All fields are combined with a logical ‘and.’
+"""
+input CollectionImageFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `collectionId` field."""
+  collectionId: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [CollectionImageFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CollectionImageFilter!]
+
+  """Negates the expression."""
+  not: CollectionImageFilter
 }
 
 """A connection to a list of `CollectionItemsRelation` values."""
@@ -1253,20 +1862,6 @@ type MovieVideoStream {
   Reads a single `MovieVideo` that is related to this `MovieVideoStream`.
   """
   video: MovieVideo
-}
-
-enum VideoStreamType {
-  """Video"""
-  VIDEO
-
-  """Audio"""
-  AUDIO
-
-  """Subtitle"""
-  SUBTITLE
-
-  """Closed caption"""
-  CLOSED_CAPTION
 }
 
 """A `MovieVideoStream` edge in the connection."""
