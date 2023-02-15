@@ -57,6 +57,7 @@ const runGqlQuery = async function (
   const req = mockRequest({
     body: { query: queryString },
     authContext: {},
+    socket: {},
     ...requestContext,
   });
   const res = mockResponse();
