@@ -148,6 +148,1282 @@ declare module 'zapatos/schema' {
 
   /* --- tables --- */
 
+  export namespace channel {
+    export type Table = 'channel';
+    export interface Selectable {
+      /**
+      * **channel.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **channel.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
+      /**
+      * **channel.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **channel.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **channel.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
+      /**
+      * **channel.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **channel.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **channel.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **channel.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **channel.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **channel.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'channel_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  export namespace channel_images {
+    export type Table = 'channel_images';
+    export interface Selectable {
+      /**
+      * **channel_images.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **channel_images.channel_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      channel_id: string | null;
+      /**
+      * **channel_images.type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      type: string | null;
+      /**
+      * **channel_images.path**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      path: string | null;
+      /**
+      * **channel_images.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **channel_images.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **channel_images.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **channel_images.channel_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      channel_id: string | null;
+      /**
+      * **channel_images.type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      type: string | null;
+      /**
+      * **channel_images.path**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      path: string | null;
+      /**
+      * **channel_images.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **channel_images.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+    }
+    export interface Whereable {
+      /**
+      * **channel_images.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_images.channel_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      channel_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_images.type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_images.path**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      path?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_images.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_images.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **channel_images.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_images.channel_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      channel_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_images.type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_images.path**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      path?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_images.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_images.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **channel_images.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_images.channel_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      channel_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_images.type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_images.path**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      path?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_images.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_images.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'channel_images_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  export namespace channel_video_streams {
+    export type Table = 'channel_video_streams';
+    export interface Selectable {
+      /**
+      * **channel_video_streams.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **channel_video_streams.channel_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      channel_video_id: number | null;
+      /**
+      * **channel_video_streams.label**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      label: string | null;
+      /**
+      * **channel_video_streams.key_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      key_id: string | null;
+      /**
+      * **channel_video_streams.format**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      format: string | null;
+      /**
+      * **channel_video_streams.iv**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      iv: string | null;
+      /**
+      * **channel_video_streams.file**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file: string | null;
+      /**
+      * **channel_video_streams.language_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_code: string | null;
+      /**
+      * **channel_video_streams.bitrate_in_kbps**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      bitrate_in_kbps: number | null;
+      /**
+      * **channel_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template: string | null;
+      /**
+      * **channel_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs: string | null;
+      /**
+      * **channel_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate: number | null;
+      /**
+      * **channel_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+      /**
+      * **channel_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **channel_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio: string | null;
+      /**
+      * **channel_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio: string | null;
+      /**
+      * **channel_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate: number | null;
+      /**
+      * **channel_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name: string | null;
+      /**
+      * **channel_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, default: `'VIDEO'::text`
+      */
+      type: c.VideoStreamTypeEnum | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **channel_video_streams.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **channel_video_streams.channel_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      channel_video_id: number | null;
+      /**
+      * **channel_video_streams.label**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      label: string | null;
+      /**
+      * **channel_video_streams.key_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      key_id: string | null;
+      /**
+      * **channel_video_streams.format**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      format: string | null;
+      /**
+      * **channel_video_streams.iv**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      iv: string | null;
+      /**
+      * **channel_video_streams.file**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file: string | null;
+      /**
+      * **channel_video_streams.language_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_code: string | null;
+      /**
+      * **channel_video_streams.bitrate_in_kbps**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      bitrate_in_kbps: number | null;
+      /**
+      * **channel_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template: string | null;
+      /**
+      * **channel_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs: string | null;
+      /**
+      * **channel_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate: number | null;
+      /**
+      * **channel_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height: number | null;
+      /**
+      * **channel_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width: number | null;
+      /**
+      * **channel_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio: string | null;
+      /**
+      * **channel_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio: string | null;
+      /**
+      * **channel_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate: number | null;
+      /**
+      * **channel_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name: string | null;
+      /**
+      * **channel_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, default: `'VIDEO'::text`
+      */
+      type: c.VideoStreamTypeEnum | null;
+    }
+    export interface Whereable {
+      /**
+      * **channel_video_streams.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.channel_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      channel_video_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.label**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      label?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.key_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      key_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.format**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      format?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.iv**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      iv?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.file**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.language_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.bitrate_in_kbps**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      bitrate_in_kbps?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, default: `'VIDEO'::text`
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **channel_video_streams.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.channel_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      channel_video_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.label**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      label?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.key_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.format**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      format?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.iv**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      iv?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.file**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.language_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.bitrate_in_kbps**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      bitrate_in_kbps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, default: `'VIDEO'::text`
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **channel_video_streams.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.channel_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      channel_video_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.label**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      label?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.key_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.format**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      format?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.iv**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      iv?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.file**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.language_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.bitrate_in_kbps**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      bitrate_in_kbps?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.file_template**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      file_template?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.codecs**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      codecs?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.frame_rate**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      frame_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.height**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      height?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.width**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      width?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.display_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      display_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.pixel_aspect_ratio**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pixel_aspect_ratio?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.sampling_rate**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      sampling_rate?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.language_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_video_streams.type**
+      * - `video_stream_type_enum` (base type: `text`) in database
+      * - Nullable, default: `'VIDEO'::text`
+      */
+      type?: c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.VideoStreamTypeEnum | db.Parameter<c.VideoStreamTypeEnum> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'channel_video_streams_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  export namespace channel_videos {
+    export type Table = 'channel_videos';
+    export interface Selectable {
+      /**
+      * **channel_videos.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **channel_videos.channel_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      channel_id: string | null;
+      /**
+      * **channel_videos.type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      type: string | null;
+      /**
+      * **channel_videos.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
+      /**
+      * **channel_videos.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **channel_videos.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages: string[] | null;
+      /**
+      * **channel_videos.subtitle_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      subtitle_languages: string[] | null;
+      /**
+      * **channel_videos.caption_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      caption_languages: string[] | null;
+      /**
+      * **channel_videos.dash_manifest**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dash_manifest: string | null;
+      /**
+      * **channel_videos.hls_manifest**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      hls_manifest: string | null;
+      /**
+      * **channel_videos.is_protected**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_protected: boolean | null;
+      /**
+      * **channel_videos.output_format**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      output_format: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **channel_videos.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **channel_videos.channel_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      channel_id: string | null;
+      /**
+      * **channel_videos.type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      type: string | null;
+      /**
+      * **channel_videos.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
+      /**
+      * **channel_videos.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **channel_videos.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages: string[] | null;
+      /**
+      * **channel_videos.subtitle_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      subtitle_languages: string[] | null;
+      /**
+      * **channel_videos.caption_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      caption_languages: string[] | null;
+      /**
+      * **channel_videos.dash_manifest**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dash_manifest: string | null;
+      /**
+      * **channel_videos.hls_manifest**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      hls_manifest: string | null;
+      /**
+      * **channel_videos.is_protected**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_protected: boolean | null;
+      /**
+      * **channel_videos.output_format**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      output_format: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **channel_videos.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.channel_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      channel_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.subtitle_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      subtitle_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.caption_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      caption_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.dash_manifest**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dash_manifest?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.hls_manifest**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      hls_manifest?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.is_protected**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_protected?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **channel_videos.output_format**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      output_format?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **channel_videos.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.channel_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      channel_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.subtitle_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.caption_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.dash_manifest**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dash_manifest?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.hls_manifest**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      hls_manifest?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.is_protected**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_protected?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **channel_videos.output_format**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      output_format?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **channel_videos.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.channel_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      channel_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.subtitle_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.caption_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.dash_manifest**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dash_manifest?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.hls_manifest**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      hls_manifest?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.is_protected**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_protected?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **channel_videos.output_format**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      output_format?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'channel_videos_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
   export namespace collection {
     export type Table = 'collection';
     export interface Selectable {
@@ -8328,19 +9604,23 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = collection.Table | collection_images.Table | collection_items_relation.Table | episode.Table | episode_genres_relation.Table | episode_images.Table | episode_licenses.Table | episode_video_streams.Table | episode_videos.Table | messaging_counter.Table | movie.Table | movie_genre.Table | movie_genres_relation.Table | movie_images.Table | movie_licenses.Table | movie_video_streams.Table | movie_videos.Table | season.Table | season_genres_relation.Table | season_images.Table | season_licenses.Table | season_video_streams.Table | season_videos.Table | tvshow.Table | tvshow_genre.Table | tvshow_genres_relation.Table | tvshow_images.Table | tvshow_licenses.Table | tvshow_video_streams.Table | tvshow_videos.Table | video_stream_type.Table;
-  export type Selectable = collection.Selectable | collection_images.Selectable | collection_items_relation.Selectable | episode.Selectable | episode_genres_relation.Selectable | episode_images.Selectable | episode_licenses.Selectable | episode_video_streams.Selectable | episode_videos.Selectable | messaging_counter.Selectable | movie.Selectable | movie_genre.Selectable | movie_genres_relation.Selectable | movie_images.Selectable | movie_licenses.Selectable | movie_video_streams.Selectable | movie_videos.Selectable | season.Selectable | season_genres_relation.Selectable | season_images.Selectable | season_licenses.Selectable | season_video_streams.Selectable | season_videos.Selectable | tvshow.Selectable | tvshow_genre.Selectable | tvshow_genres_relation.Selectable | tvshow_images.Selectable | tvshow_licenses.Selectable | tvshow_video_streams.Selectable | tvshow_videos.Selectable | video_stream_type.Selectable;
-  export type JSONSelectable = collection.JSONSelectable | collection_images.JSONSelectable | collection_items_relation.JSONSelectable | episode.JSONSelectable | episode_genres_relation.JSONSelectable | episode_images.JSONSelectable | episode_licenses.JSONSelectable | episode_video_streams.JSONSelectable | episode_videos.JSONSelectable | messaging_counter.JSONSelectable | movie.JSONSelectable | movie_genre.JSONSelectable | movie_genres_relation.JSONSelectable | movie_images.JSONSelectable | movie_licenses.JSONSelectable | movie_video_streams.JSONSelectable | movie_videos.JSONSelectable | season.JSONSelectable | season_genres_relation.JSONSelectable | season_images.JSONSelectable | season_licenses.JSONSelectable | season_video_streams.JSONSelectable | season_videos.JSONSelectable | tvshow.JSONSelectable | tvshow_genre.JSONSelectable | tvshow_genres_relation.JSONSelectable | tvshow_images.JSONSelectable | tvshow_licenses.JSONSelectable | tvshow_video_streams.JSONSelectable | tvshow_videos.JSONSelectable | video_stream_type.JSONSelectable;
-  export type Whereable = collection.Whereable | collection_images.Whereable | collection_items_relation.Whereable | episode.Whereable | episode_genres_relation.Whereable | episode_images.Whereable | episode_licenses.Whereable | episode_video_streams.Whereable | episode_videos.Whereable | messaging_counter.Whereable | movie.Whereable | movie_genre.Whereable | movie_genres_relation.Whereable | movie_images.Whereable | movie_licenses.Whereable | movie_video_streams.Whereable | movie_videos.Whereable | season.Whereable | season_genres_relation.Whereable | season_images.Whereable | season_licenses.Whereable | season_video_streams.Whereable | season_videos.Whereable | tvshow.Whereable | tvshow_genre.Whereable | tvshow_genres_relation.Whereable | tvshow_images.Whereable | tvshow_licenses.Whereable | tvshow_video_streams.Whereable | tvshow_videos.Whereable | video_stream_type.Whereable;
-  export type Insertable = collection.Insertable | collection_images.Insertable | collection_items_relation.Insertable | episode.Insertable | episode_genres_relation.Insertable | episode_images.Insertable | episode_licenses.Insertable | episode_video_streams.Insertable | episode_videos.Insertable | messaging_counter.Insertable | movie.Insertable | movie_genre.Insertable | movie_genres_relation.Insertable | movie_images.Insertable | movie_licenses.Insertable | movie_video_streams.Insertable | movie_videos.Insertable | season.Insertable | season_genres_relation.Insertable | season_images.Insertable | season_licenses.Insertable | season_video_streams.Insertable | season_videos.Insertable | tvshow.Insertable | tvshow_genre.Insertable | tvshow_genres_relation.Insertable | tvshow_images.Insertable | tvshow_licenses.Insertable | tvshow_video_streams.Insertable | tvshow_videos.Insertable | video_stream_type.Insertable;
-  export type Updatable = collection.Updatable | collection_images.Updatable | collection_items_relation.Updatable | episode.Updatable | episode_genres_relation.Updatable | episode_images.Updatable | episode_licenses.Updatable | episode_video_streams.Updatable | episode_videos.Updatable | messaging_counter.Updatable | movie.Updatable | movie_genre.Updatable | movie_genres_relation.Updatable | movie_images.Updatable | movie_licenses.Updatable | movie_video_streams.Updatable | movie_videos.Updatable | season.Updatable | season_genres_relation.Updatable | season_images.Updatable | season_licenses.Updatable | season_video_streams.Updatable | season_videos.Updatable | tvshow.Updatable | tvshow_genre.Updatable | tvshow_genres_relation.Updatable | tvshow_images.Updatable | tvshow_licenses.Updatable | tvshow_video_streams.Updatable | tvshow_videos.Updatable | video_stream_type.Updatable;
-  export type UniqueIndex = collection.UniqueIndex | collection_images.UniqueIndex | collection_items_relation.UniqueIndex | episode.UniqueIndex | episode_genres_relation.UniqueIndex | episode_images.UniqueIndex | episode_licenses.UniqueIndex | episode_video_streams.UniqueIndex | episode_videos.UniqueIndex | messaging_counter.UniqueIndex | movie.UniqueIndex | movie_genre.UniqueIndex | movie_genres_relation.UniqueIndex | movie_images.UniqueIndex | movie_licenses.UniqueIndex | movie_video_streams.UniqueIndex | movie_videos.UniqueIndex | season.UniqueIndex | season_genres_relation.UniqueIndex | season_images.UniqueIndex | season_licenses.UniqueIndex | season_video_streams.UniqueIndex | season_videos.UniqueIndex | tvshow.UniqueIndex | tvshow_genre.UniqueIndex | tvshow_genres_relation.UniqueIndex | tvshow_images.UniqueIndex | tvshow_licenses.UniqueIndex | tvshow_video_streams.UniqueIndex | tvshow_videos.UniqueIndex | video_stream_type.UniqueIndex;
-  export type Column = collection.Column | collection_images.Column | collection_items_relation.Column | episode.Column | episode_genres_relation.Column | episode_images.Column | episode_licenses.Column | episode_video_streams.Column | episode_videos.Column | messaging_counter.Column | movie.Column | movie_genre.Column | movie_genres_relation.Column | movie_images.Column | movie_licenses.Column | movie_video_streams.Column | movie_videos.Column | season.Column | season_genres_relation.Column | season_images.Column | season_licenses.Column | season_video_streams.Column | season_videos.Column | tvshow.Column | tvshow_genre.Column | tvshow_genres_relation.Column | tvshow_images.Column | tvshow_licenses.Column | tvshow_video_streams.Column | tvshow_videos.Column | video_stream_type.Column;
-  export type AllTables = [collection.Table, collection_images.Table, collection_items_relation.Table, episode.Table, episode_genres_relation.Table, episode_images.Table, episode_licenses.Table, episode_video_streams.Table, episode_videos.Table, messaging_counter.Table, movie.Table, movie_genre.Table, movie_genres_relation.Table, movie_images.Table, movie_licenses.Table, movie_video_streams.Table, movie_videos.Table, season.Table, season_genres_relation.Table, season_images.Table, season_licenses.Table, season_video_streams.Table, season_videos.Table, tvshow.Table, tvshow_genre.Table, tvshow_genres_relation.Table, tvshow_images.Table, tvshow_licenses.Table, tvshow_video_streams.Table, tvshow_videos.Table, video_stream_type.Table];
+  export type Table = channel.Table | channel_images.Table | channel_video_streams.Table | channel_videos.Table | collection.Table | collection_images.Table | collection_items_relation.Table | episode.Table | episode_genres_relation.Table | episode_images.Table | episode_licenses.Table | episode_video_streams.Table | episode_videos.Table | messaging_counter.Table | movie.Table | movie_genre.Table | movie_genres_relation.Table | movie_images.Table | movie_licenses.Table | movie_video_streams.Table | movie_videos.Table | season.Table | season_genres_relation.Table | season_images.Table | season_licenses.Table | season_video_streams.Table | season_videos.Table | tvshow.Table | tvshow_genre.Table | tvshow_genres_relation.Table | tvshow_images.Table | tvshow_licenses.Table | tvshow_video_streams.Table | tvshow_videos.Table | video_stream_type.Table;
+  export type Selectable = channel.Selectable | channel_images.Selectable | channel_video_streams.Selectable | channel_videos.Selectable | collection.Selectable | collection_images.Selectable | collection_items_relation.Selectable | episode.Selectable | episode_genres_relation.Selectable | episode_images.Selectable | episode_licenses.Selectable | episode_video_streams.Selectable | episode_videos.Selectable | messaging_counter.Selectable | movie.Selectable | movie_genre.Selectable | movie_genres_relation.Selectable | movie_images.Selectable | movie_licenses.Selectable | movie_video_streams.Selectable | movie_videos.Selectable | season.Selectable | season_genres_relation.Selectable | season_images.Selectable | season_licenses.Selectable | season_video_streams.Selectable | season_videos.Selectable | tvshow.Selectable | tvshow_genre.Selectable | tvshow_genres_relation.Selectable | tvshow_images.Selectable | tvshow_licenses.Selectable | tvshow_video_streams.Selectable | tvshow_videos.Selectable | video_stream_type.Selectable;
+  export type JSONSelectable = channel.JSONSelectable | channel_images.JSONSelectable | channel_video_streams.JSONSelectable | channel_videos.JSONSelectable | collection.JSONSelectable | collection_images.JSONSelectable | collection_items_relation.JSONSelectable | episode.JSONSelectable | episode_genres_relation.JSONSelectable | episode_images.JSONSelectable | episode_licenses.JSONSelectable | episode_video_streams.JSONSelectable | episode_videos.JSONSelectable | messaging_counter.JSONSelectable | movie.JSONSelectable | movie_genre.JSONSelectable | movie_genres_relation.JSONSelectable | movie_images.JSONSelectable | movie_licenses.JSONSelectable | movie_video_streams.JSONSelectable | movie_videos.JSONSelectable | season.JSONSelectable | season_genres_relation.JSONSelectable | season_images.JSONSelectable | season_licenses.JSONSelectable | season_video_streams.JSONSelectable | season_videos.JSONSelectable | tvshow.JSONSelectable | tvshow_genre.JSONSelectable | tvshow_genres_relation.JSONSelectable | tvshow_images.JSONSelectable | tvshow_licenses.JSONSelectable | tvshow_video_streams.JSONSelectable | tvshow_videos.JSONSelectable | video_stream_type.JSONSelectable;
+  export type Whereable = channel.Whereable | channel_images.Whereable | channel_video_streams.Whereable | channel_videos.Whereable | collection.Whereable | collection_images.Whereable | collection_items_relation.Whereable | episode.Whereable | episode_genres_relation.Whereable | episode_images.Whereable | episode_licenses.Whereable | episode_video_streams.Whereable | episode_videos.Whereable | messaging_counter.Whereable | movie.Whereable | movie_genre.Whereable | movie_genres_relation.Whereable | movie_images.Whereable | movie_licenses.Whereable | movie_video_streams.Whereable | movie_videos.Whereable | season.Whereable | season_genres_relation.Whereable | season_images.Whereable | season_licenses.Whereable | season_video_streams.Whereable | season_videos.Whereable | tvshow.Whereable | tvshow_genre.Whereable | tvshow_genres_relation.Whereable | tvshow_images.Whereable | tvshow_licenses.Whereable | tvshow_video_streams.Whereable | tvshow_videos.Whereable | video_stream_type.Whereable;
+  export type Insertable = channel.Insertable | channel_images.Insertable | channel_video_streams.Insertable | channel_videos.Insertable | collection.Insertable | collection_images.Insertable | collection_items_relation.Insertable | episode.Insertable | episode_genres_relation.Insertable | episode_images.Insertable | episode_licenses.Insertable | episode_video_streams.Insertable | episode_videos.Insertable | messaging_counter.Insertable | movie.Insertable | movie_genre.Insertable | movie_genres_relation.Insertable | movie_images.Insertable | movie_licenses.Insertable | movie_video_streams.Insertable | movie_videos.Insertable | season.Insertable | season_genres_relation.Insertable | season_images.Insertable | season_licenses.Insertable | season_video_streams.Insertable | season_videos.Insertable | tvshow.Insertable | tvshow_genre.Insertable | tvshow_genres_relation.Insertable | tvshow_images.Insertable | tvshow_licenses.Insertable | tvshow_video_streams.Insertable | tvshow_videos.Insertable | video_stream_type.Insertable;
+  export type Updatable = channel.Updatable | channel_images.Updatable | channel_video_streams.Updatable | channel_videos.Updatable | collection.Updatable | collection_images.Updatable | collection_items_relation.Updatable | episode.Updatable | episode_genres_relation.Updatable | episode_images.Updatable | episode_licenses.Updatable | episode_video_streams.Updatable | episode_videos.Updatable | messaging_counter.Updatable | movie.Updatable | movie_genre.Updatable | movie_genres_relation.Updatable | movie_images.Updatable | movie_licenses.Updatable | movie_video_streams.Updatable | movie_videos.Updatable | season.Updatable | season_genres_relation.Updatable | season_images.Updatable | season_licenses.Updatable | season_video_streams.Updatable | season_videos.Updatable | tvshow.Updatable | tvshow_genre.Updatable | tvshow_genres_relation.Updatable | tvshow_images.Updatable | tvshow_licenses.Updatable | tvshow_video_streams.Updatable | tvshow_videos.Updatable | video_stream_type.Updatable;
+  export type UniqueIndex = channel.UniqueIndex | channel_images.UniqueIndex | channel_video_streams.UniqueIndex | channel_videos.UniqueIndex | collection.UniqueIndex | collection_images.UniqueIndex | collection_items_relation.UniqueIndex | episode.UniqueIndex | episode_genres_relation.UniqueIndex | episode_images.UniqueIndex | episode_licenses.UniqueIndex | episode_video_streams.UniqueIndex | episode_videos.UniqueIndex | messaging_counter.UniqueIndex | movie.UniqueIndex | movie_genre.UniqueIndex | movie_genres_relation.UniqueIndex | movie_images.UniqueIndex | movie_licenses.UniqueIndex | movie_video_streams.UniqueIndex | movie_videos.UniqueIndex | season.UniqueIndex | season_genres_relation.UniqueIndex | season_images.UniqueIndex | season_licenses.UniqueIndex | season_video_streams.UniqueIndex | season_videos.UniqueIndex | tvshow.UniqueIndex | tvshow_genre.UniqueIndex | tvshow_genres_relation.UniqueIndex | tvshow_images.UniqueIndex | tvshow_licenses.UniqueIndex | tvshow_video_streams.UniqueIndex | tvshow_videos.UniqueIndex | video_stream_type.UniqueIndex;
+  export type Column = channel.Column | channel_images.Column | channel_video_streams.Column | channel_videos.Column | collection.Column | collection_images.Column | collection_items_relation.Column | episode.Column | episode_genres_relation.Column | episode_images.Column | episode_licenses.Column | episode_video_streams.Column | episode_videos.Column | messaging_counter.Column | movie.Column | movie_genre.Column | movie_genres_relation.Column | movie_images.Column | movie_licenses.Column | movie_video_streams.Column | movie_videos.Column | season.Column | season_genres_relation.Column | season_images.Column | season_licenses.Column | season_video_streams.Column | season_videos.Column | tvshow.Column | tvshow_genre.Column | tvshow_genres_relation.Column | tvshow_images.Column | tvshow_licenses.Column | tvshow_video_streams.Column | tvshow_videos.Column | video_stream_type.Column;
+  export type AllTables = [channel.Table, channel_images.Table, channel_video_streams.Table, channel_videos.Table, collection.Table, collection_images.Table, collection_items_relation.Table, episode.Table, episode_genres_relation.Table, episode_images.Table, episode_licenses.Table, episode_video_streams.Table, episode_videos.Table, messaging_counter.Table, movie.Table, movie_genre.Table, movie_genres_relation.Table, movie_images.Table, movie_licenses.Table, movie_video_streams.Table, movie_videos.Table, season.Table, season_genres_relation.Table, season_images.Table, season_licenses.Table, season_video_streams.Table, season_videos.Table, tvshow.Table, tvshow_genre.Table, tvshow_genres_relation.Table, tvshow_images.Table, tvshow_licenses.Table, tvshow_video_streams.Table, tvshow_videos.Table, video_stream_type.Table];
   export type AllMaterializedViews = [];
 
 
   export type SelectableForTable<T extends Table> = {
+    channel: channel.Selectable;
+    channel_images: channel_images.Selectable;
+    channel_video_streams: channel_video_streams.Selectable;
+    channel_videos: channel_videos.Selectable;
     collection: collection.Selectable;
     collection_images: collection_images.Selectable;
     collection_items_relation: collection_items_relation.Selectable;
@@ -8375,6 +9655,10 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
+    channel: channel.JSONSelectable;
+    channel_images: channel_images.JSONSelectable;
+    channel_video_streams: channel_video_streams.JSONSelectable;
+    channel_videos: channel_videos.JSONSelectable;
     collection: collection.JSONSelectable;
     collection_images: collection_images.JSONSelectable;
     collection_items_relation: collection_items_relation.JSONSelectable;
@@ -8409,6 +9693,10 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type WhereableForTable<T extends Table> = {
+    channel: channel.Whereable;
+    channel_images: channel_images.Whereable;
+    channel_video_streams: channel_video_streams.Whereable;
+    channel_videos: channel_videos.Whereable;
     collection: collection.Whereable;
     collection_images: collection_images.Whereable;
     collection_items_relation: collection_items_relation.Whereable;
@@ -8443,6 +9731,10 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type InsertableForTable<T extends Table> = {
+    channel: channel.Insertable;
+    channel_images: channel_images.Insertable;
+    channel_video_streams: channel_video_streams.Insertable;
+    channel_videos: channel_videos.Insertable;
     collection: collection.Insertable;
     collection_images: collection_images.Insertable;
     collection_items_relation: collection_items_relation.Insertable;
@@ -8477,6 +9769,10 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
+    channel: channel.Updatable;
+    channel_images: channel_images.Updatable;
+    channel_video_streams: channel_video_streams.Updatable;
+    channel_videos: channel_videos.Updatable;
     collection: collection.Updatable;
     collection_images: collection_images.Updatable;
     collection_items_relation: collection_items_relation.Updatable;
@@ -8511,6 +9807,10 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
+    channel: channel.UniqueIndex;
+    channel_images: channel_images.UniqueIndex;
+    channel_video_streams: channel_video_streams.UniqueIndex;
+    channel_videos: channel_videos.UniqueIndex;
     collection: collection.UniqueIndex;
     collection_images: collection_images.UniqueIndex;
     collection_items_relation: collection_items_relation.UniqueIndex;
@@ -8545,6 +9845,10 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type ColumnForTable<T extends Table> = {
+    channel: channel.Column;
+    channel_images: channel_images.Column;
+    channel_video_streams: channel_video_streams.Column;
+    channel_videos: channel_videos.Column;
     collection: collection.Column;
     collection_images: collection_images.Column;
     collection_items_relation: collection_items_relation.Column;
@@ -8579,6 +9883,10 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type SQLForTable<T extends Table> = {
+    channel: channel.SQL;
+    channel_images: channel_images.SQL;
+    channel_video_streams: channel_video_streams.SQL;
+    channel_videos: channel_videos.SQL;
     collection: collection.SQL;
     collection_images: collection_images.SQL;
     collection_items_relation: collection_items_relation.SQL;
