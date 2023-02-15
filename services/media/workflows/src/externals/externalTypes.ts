@@ -1,4 +1,4 @@
-import { Scalars } from '../generated/graphql';
+import { Maybe, Scalars } from '../generated/graphql';
 
 export type VideoID = Scalars['UUID'];
 export type ImageID = Scalars['UUID'];
@@ -56,4 +56,36 @@ export interface ImageSelectExplorerProps {
   onSelected: (value: ImageID[]) => void;
   /** Callback called when the user cancels the selection */
   onCancel?: () => void;
+}
+
+export interface ProgramEntity {
+  title: Scalars['String'];
+  videoId: Scalars['UUID'];
+  entityId: Scalars['String'];
+  entityType: Scalars['String'];
+  imageId?: Maybe<Scalars['UUID']>;
+}
+
+export interface FastProviderData {
+  type: string;
+  label: string;
+  selectionComponent: React.FC<{
+    onClose: () => void;
+    onSelected: (items: Omit<ProgramEntity, 'entityType'>[]) => void;
+  }>;
+  detailsResolver?: (params: {
+    entityId: string;
+    entityType: string;
+  }) => string;
+}
+
+export type FastProviderType = 'fast-provider';
+
+declare module '@axinom/mosaic-portal' {
+  interface ProviderRegistration {
+    (type: FastProviderType, data: FastProviderData): void;
+  }
+  interface GetProviders {
+    (type: FastProviderType): FastProviderData[];
+  }
 }
