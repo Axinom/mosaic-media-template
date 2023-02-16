@@ -1,4 +1,5 @@
-import { insert, select, selectOne } from 'zapatos/db';
+import { v4 as uuid } from 'uuid';
+import { insert, selectOne } from 'zapatos/db';
 import { channel } from 'zapatos/schema';
 import {
   createChannelPublishedEvent,
@@ -28,7 +29,7 @@ describe('ChannelPublishEventHandler', () => {
   describe('onMessage', () => {
     test('A new channel is published', async () => {
       // Arrange
-      const message = createChannelPublishedEvent('channel-1');
+      const message = createChannelPublishedEvent(uuid());
 
       // Act
       await handler.onMessage(message);
@@ -39,8 +40,11 @@ describe('ChannelPublishEventHandler', () => {
       }).run(ctx.ownerPool);
       expect(channel).toEqual<channel.JSONSelectable>({
         id: message.id,
-        title: message.title ?? null,
+        title: message.title,
         description: message.description ?? null,
+        dash_stream_url: null,
+        hls_stream_url: null,
+        key_id: null,
       });
 
       const image = await selectOne(
@@ -52,31 +56,6 @@ describe('ChannelPublishEventHandler', () => {
       ).run(ctx.ownerPool);
       const { id: imageId, ...messageImage } = message.images![0];
       expect(image).toMatchObject(messageImage);
-
-      const video = await selectOne('channel_videos', {
-        channel_id: message.id,
-      }).run(ctx.ownerPool);
-      const {
-        video_encoding: { video_streams },
-      } = message.placeholder_video!;
-      expect(video).toMatchObject({
-        audio_languages: ['en'],
-        caption_languages: [],
-        is_protected: false,
-        length_in_seconds: 62,
-        output_format: 'CMAF',
-        subtitle_languages: [],
-        title: 'Mosaic Placeholder Video (with logo)',
-      });
-
-      const videoStreams = await select(
-        'channel_video_streams',
-        {
-          channel_video_id: video!.id,
-        },
-        { order: { by: 'label', direction: 'ASC' } },
-      ).run(ctx.ownerPool);
-      expect(videoStreams).toMatchObject(video_streams);
     });
 
     test('An existing channel is republished', async () => {
