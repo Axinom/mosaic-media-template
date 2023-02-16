@@ -1,6 +1,7 @@
 import { MessageInfo } from '@axinom/mosaic-message-bus';
 import { ChannelUnpublishedEvent } from '@axinom/mosaic-messages';
 import { stub } from 'jest-auto-stub';
+import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
 import { ChannelUnpublishedEventHandler } from './channel-unpublished-event-handler';
@@ -26,8 +27,9 @@ describe('ChannelPublishEventHandler', () => {
   describe('onMessage', () => {
     test('An existing channel is unpublished', async () => {
       // Arrange
+      const channelId = uuid();
       const insertedChannel = await insert('channel', {
-        id: 'channel-1',
+        id: channelId,
         title: 'Some title',
         description: 'testing',
       }).run(ctx.ownerPool);
@@ -38,16 +40,9 @@ describe('ChannelPublishEventHandler', () => {
         width: 10,
         type: 'LOGO',
       }).run(ctx.ownerPool);
-      await insert('channel_videos', {
-        channel_id: insertedChannel.id,
-        title: 'New Video',
-        length_in_seconds: 60,
-        is_protected: true,
-        output_format: 'CMAF',
-      }).run(ctx.ownerPool);
 
       const message: ChannelUnpublishedEvent = {
-        id: 'channel-1',
+        id: channelId,
       };
       const messageInfo = stub<MessageInfo<ChannelUnpublishedEvent>>({
         envelope: {
@@ -70,11 +65,6 @@ describe('ChannelPublishEventHandler', () => {
       }).run(ctx.ownerPool);
 
       expect(channelImage).toBeUndefined();
-      const channelVideo = await selectOne('channel_videos', {
-        channel_id: message.id,
-      }).run(ctx.ownerPool);
-
-      expect(channelVideo).toBeUndefined();
     });
   });
 });
