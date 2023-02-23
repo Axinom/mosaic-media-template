@@ -35,6 +35,7 @@ export class ChannelPublishedHandler extends AuthenticatedMessageHandler<Channel
   ): Promise<void> {
     const drmSettings = await generateCpixSettings(
       payload.placeholder_video ? [payload.placeholder_video] : [],
+      false,
       this.azureStorage,
       this.keyServiceApi,
       new Date(),

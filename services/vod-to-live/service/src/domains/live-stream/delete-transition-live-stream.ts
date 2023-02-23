@@ -69,6 +69,7 @@ export const deleteTransitionLiveStream = async (
       }
       const drmSettings = await generateCpixSettings(
         event.placeholder_video ? [event.placeholder_video] : [],
+        false,
         storage,
         keyServiceApi,
         new Date(),
