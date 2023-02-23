@@ -17,9 +17,11 @@ import {
 } from '../models';
 import { getDrmKeys } from './utils';
 
+//todo: cover with unit tests
 /**
  * Generates a CpixSetting, containing paths to CPIX files required for videos decryption and Live Stream protection.
  * @param videos - list of videos included in the playlist.
+ * @param enableEncryption - boolean flag, that adds to the settings encryption documents.
  * @param storage - reference to Azure Storage class instance.
  * @param keyServiceApi - reference to Key Service API class instance.
  * @param settingAccessStartDateTime - start date-time of when the protection CPIX should be available.
@@ -30,6 +32,7 @@ import { getDrmKeys } from './utils';
  */
 export const generateCpixSettings = async (
   videos: DetailedVideo[],
+  enableEncryption: boolean,
   storage: AzureStorage,
   keyServiceApi: KeyServiceApi,
   settingAccessStartDateTime: Date,
@@ -78,16 +81,21 @@ export const generateCpixSettings = async (
   }
 
   // Generate CPIX for DASh and HLS protection
-  const encryptionDashCpixFile = await storage.getFileSasUrl(
-    protectionDashCpixFileName,
-    settingAccessStartDateTime, // protection token start to be accessible from the transition start date-time
-    protectionSasEndDate,
-  );
-  const encryptionHlsCpixFile = await storage.getFileSasUrl(
-    protectionHlsCpixFileName,
-    settingAccessStartDateTime, // protection token start to be accessible from the transition start date-time
-    protectionSasEndDate,
-  );
+  let encryptionDashCpixFile = undefined;
+  let encryptionHlsCpixFile = undefined;
+
+  if (enableEncryption) {
+    encryptionDashCpixFile = await storage.getFileSasUrl(
+      protectionDashCpixFileName,
+      settingAccessStartDateTime, // protection token start to be accessible from the transition start date-time
+      protectionSasEndDate,
+    );
+    encryptionHlsCpixFile = await storage.getFileSasUrl(
+      protectionHlsCpixFileName,
+      settingAccessStartDateTime, // protection token start to be accessible from the transition start date-time
+      protectionSasEndDate,
+    );
+  }
   return {
     decryptionCpixFile,
     encryptionDashCpixFile,

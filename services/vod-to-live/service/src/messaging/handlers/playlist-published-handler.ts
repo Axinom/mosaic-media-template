@@ -81,6 +81,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
       );
       const drmSettings = await generateCpixSettings(
         [placeholderVideo, ...videos],
+        true,
         this.storage,
         this.keyServiceApi,
         settingAccessStartDate,
