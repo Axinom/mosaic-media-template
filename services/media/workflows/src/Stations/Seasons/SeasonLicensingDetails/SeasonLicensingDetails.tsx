@@ -26,6 +26,10 @@ import {
   useSeasonsLicenseQuery,
 } from '../../../generated/graphql';
 import { CountryNames } from '../../../Util/CountryNames/CountryNames';
+import {
+  getLicenseEndSchema,
+  getLicenseStartSchema,
+} from '../../../Util/LicenseDateSchema/LicenseDateSchema';
 
 type FormData = MutationUpdateSeasonsLicenseArgs['input']['patch'] & {
   countries?: IsoAlphaTwoCountryCodes[];
@@ -33,15 +37,8 @@ type FormData = MutationUpdateSeasonsLicenseArgs['input']['patch'] & {
 
 const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   seasonId: Yup.number().required(),
-  licenseStart: Yup.date(),
-  licenseEnd: Yup.date().when('licenseStart', {
-    is: (start) => start != null,
-    then: (end) =>
-      end.min(
-        Yup.ref('licenseStart'),
-        'License end date cannot be before start date',
-      ),
-  }),
+  licenseStart: getLicenseStartSchema(),
+  licenseEnd: getLicenseEndSchema(),
 });
 
 export const SeasonLicensingDetails: React.FC = () => {
@@ -75,9 +72,8 @@ export const SeasonLicensingDetails: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const countryAssignmentMutations = generateArrayMutations({
         current: formData.countries,

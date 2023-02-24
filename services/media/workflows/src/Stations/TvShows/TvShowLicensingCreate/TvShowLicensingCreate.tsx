@@ -9,29 +9,26 @@ import { Field } from 'formik';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { date, number, object, ref } from 'yup';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
   CreateTvshowsLicenseMutation,
   MutationCreateTvshowsLicenseArgs,
   useCreateTvshowsLicenseMutation,
 } from '../../../generated/graphql';
+import {
+  getLicenseEndSchema,
+  getLicenseStartSchema,
+} from '../../../Util/LicenseDateSchema/LicenseDateSchema';
 
 type FormData = MutationCreateTvshowsLicenseArgs['input']['tvshowsLicense'];
 
 type SubmitResponse = CreateTvshowsLicenseMutation['createTvshowsLicense'];
 
-const licenseSchema = object<ObjectSchemaDefinition<FormData>>({
-  tvshowId: number(),
-  licenseStart: date(),
-  licenseEnd: date().when('licenseStart', {
-    is: (start) => start != null,
-    then: (end) =>
-      end.min(
-        ref('licenseStart'),
-        'License end date cannot be before start date',
-      ),
-  }),
+const licenseSchema = Yup.object<ObjectSchemaDefinition<FormData>>({
+  tvshowId: Yup.number(),
+  licenseStart: getLicenseStartSchema(),
+  licenseEnd: getLicenseEndSchema(),
 });
 
 export const TvShowLicensingCreate: React.FC = () => {

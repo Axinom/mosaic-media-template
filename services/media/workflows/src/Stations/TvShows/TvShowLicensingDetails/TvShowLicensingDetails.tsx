@@ -14,7 +14,7 @@ import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { date, object, ref } from 'yup';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
   IsoAlphaTwoCountryCodes,
@@ -26,21 +26,18 @@ import {
   useTvshowsLicenseQuery,
 } from '../../../generated/graphql';
 import { CountryNames } from '../../../Util/CountryNames/CountryNames';
+import {
+  getLicenseEndSchema,
+  getLicenseStartSchema,
+} from '../../../Util/LicenseDateSchema/LicenseDateSchema';
 
 type FormData = MutationUpdateTvshowsLicenseArgs['input']['patch'] & {
   countries?: IsoAlphaTwoCountryCodes[];
 };
 
-const licenseSchema = object<ObjectSchemaDefinition<FormData>>({
-  licenseStart: date(),
-  licenseEnd: date().when('licenseStart', {
-    is: (start) => start != null,
-    then: (end) =>
-      end.min(
-        ref('licenseStart'),
-        'License end date cannot be before start date',
-      ),
-  }),
+const licenseSchema = Yup.object<ObjectSchemaDefinition<FormData>>({
+  licenseStart: getLicenseStartSchema(),
+  licenseEnd: getLicenseEndSchema(),
 });
 
 export const TvShowLicensingDetails: React.FC = () => {
@@ -74,9 +71,8 @@ export const TvShowLicensingDetails: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const countryAssignmentMutations = generateArrayMutations({
         current: formData.countries,
