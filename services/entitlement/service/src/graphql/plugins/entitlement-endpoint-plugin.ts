@@ -83,7 +83,7 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
               ownerPool,
             );
             const entitlementMessageJwt = generateEntitlementMessageJwt(
-              video.videoStreams.nodes?.map((videoStream) => videoStream.keyId),
+              video.videoStreams?.nodes?.map((stream) => stream.keyId),
               claims,
               config,
               config.isDev ? 'DEV' : 'DEFAULT',
