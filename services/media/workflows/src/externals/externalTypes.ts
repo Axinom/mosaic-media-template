@@ -58,11 +58,11 @@ export interface ImageSelectExplorerProps {
   onCancel?: () => void;
 }
 
+// #region Channel Service (workflows) external types - TODO: Import from service workflows
 export interface ProgramEntity {
   title: Scalars['String'];
   videoId: Scalars['UUID'];
   entityId: Scalars['String'];
-  entityType: Scalars['String'];
   imageId?: Maybe<Scalars['UUID']>;
 }
 
@@ -89,3 +89,4 @@ declare module '@axinom/mosaic-portal' {
     (type: FastProviderType): FastProviderData[];
   }
 }
+// #endregion

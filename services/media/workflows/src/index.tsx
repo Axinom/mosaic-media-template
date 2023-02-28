@@ -5,7 +5,7 @@ import { bindExtensions } from './externals/piralExtensions';
 import './global.scss';
 import { MediaIconName, MediaIcons } from './MediaIcons';
 import { initializeConfig, piletConfig } from './piletConfig';
-import { register as registerProviders } from './providers/registrations';
+import { register as registerFASTProviders } from './providers/registrations';
 import { sortTiles } from './sortTiles/sortTiles';
 import { register as registerCollections } from './Stations/Collections/registrations';
 import { register as registerEpisodes } from './Stations/Episodes/registrations';
@@ -51,5 +51,5 @@ export function setup(app: PiletApi): void {
   registerIngest(app, extensions);
   registerSnapshotRegistry(app, extensions);
   registerCollections(app, extensions);
-  registerProviders(app);
+  registerFASTProviders(app);
 }
