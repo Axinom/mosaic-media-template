@@ -28,7 +28,7 @@ export function register(app: PiletApi): void {
         }}
       />
     ),
-    detailsResolver: ({ entityId }) => `${window.origin}/movies/${entityId}`,
+    detailsResolver: ({ entityId }) => `/movies/${entityId}`,
   });
 
   app.addProvider('fast-provider', {
@@ -55,6 +55,6 @@ export function register(app: PiletApi): void {
         }}
       />
     ),
-    detailsResolver: ({ entityId }) => `${window.origin}/episodes/${entityId}`,
+    detailsResolver: ({ entityId }) => `/episodes/${entityId}`,
   });
 }
