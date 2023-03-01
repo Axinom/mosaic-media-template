@@ -71,7 +71,7 @@ export interface FastProviderData {
   label: string;
   selectionComponent: React.FC<{
     onClose: () => void;
-    onSelected: (items: Omit<ProgramEntity, 'entityType'>[]) => void;
+    onSelected: (items: ProgramEntity[]) => void;
   }>;
   detailsResolver?: (params: {
     entityId: string;
