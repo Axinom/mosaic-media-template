@@ -30,7 +30,7 @@ export const prepareChannelLiveStream = async (
           {
             channel_id: channelId,
             playlist_id: channelId,
-            playlist_start_date_time: new Date().toISOString(),
+            transition_start_date_time: new Date().toISOString(),
             smil: smil,
           },
           {

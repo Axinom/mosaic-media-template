@@ -11,9 +11,9 @@ export interface PrepareTransitionLiveStreamCommand {
    */
   playlist_id: string;
   /**
-   * Start date and time of the playlist.
+   * Start date and time of the transition.
    */
-  playlist_start_date_time: string;
+  transition_start_date_time: string;
   /**
    * SMIL document's XML content serialized as JSON string.
    */

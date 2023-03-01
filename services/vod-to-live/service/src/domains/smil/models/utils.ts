@@ -1,3 +1,4 @@
+import { SECOND_IN_MILLISECONDS } from '../../../common';
 import {
   Event,
   EventStream,
@@ -31,7 +32,7 @@ export const transformSecondsToWallClock = (
   if (!seconds) {
     return undefined;
   }
-  const date = new Date(seconds * 1000);
+  const date = new Date(seconds * SECOND_IN_MILLISECONDS);
   return `wallclock(${date.toISOString()})`;
 };
 

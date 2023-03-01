@@ -1,4 +1,5 @@
 import { create } from 'xmlbuilder2';
+import { SECOND_IN_MILLISECONDS } from '../common';
 
 /**
  * Converts any object to string XML representation.
@@ -19,4 +20,16 @@ export const convertObjectToXml = (
     prettyPrint: true,
     spaceBeforeSlash: true,
   });
+};
+
+export const getPlaylistDurationInSeconds = (
+  playlistStartDate: string,
+  playlistEndDate: string,
+): number => {
+  return (
+    Math.floor(
+      new Date(playlistEndDate).getTime() -
+        new Date(playlistStartDate).getTime(),
+    ) / SECOND_IN_MILLISECONDS
+  );
 };

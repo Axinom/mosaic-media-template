@@ -20,15 +20,14 @@ const logger = new Logger({
   context: 'Pre-Publishing-Validation-Webhook-Handler',
 });
 
-const handlers: ValidationWebhookHandler<PrePublishingPayload>[] = [
-  new ChannelPublishedValidationWebhookHandler(),
-  new PlaylistPublishedValidationWebhookHandler(),
-];
-
 export const setupPrePublishingValidationWebhook = (
   app: Express,
   config: Config,
 ): void => {
+  const handlers: ValidationWebhookHandler<PrePublishingPayload>[] = [
+    new ChannelPublishedValidationWebhookHandler(),
+    new PlaylistPublishedValidationWebhookHandler(config),
+  ];
   app.post(
     '/pre-publishing',
     verifyWebhookRequestMiddleware({

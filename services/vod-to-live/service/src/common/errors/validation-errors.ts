@@ -10,12 +10,21 @@ export const ValidationErrors = {
     code: 'PLAYLIST_MISSING_PROGRAMS',
   },
   PlaylistExceeds24Hours: {
-    message: 'Playlist exceeds 24 hours',
+    message: 'Playlist duration exceeds 24 hours.',
     code: 'PLAYLIST_EXCEEDS_24_HOURS',
   },
   PlaylistExceeds25Hours: {
-    message: 'Playlist exceeds 25 hours',
+    message: 'Playlist duration exceeds 25 hours.',
     code: 'PLAYLIST_EXCEEDS_25_HOURS',
+  },
+  PlaylistProlongation: {
+    message:
+      'Playlist duration is under 24 hours. Playlist will be prolonged with placeholder video to hit 24 hours duration.',
+    code: 'PLAYLIST_PROLONGATION',
+  },
+  PlaylistIsTooOld: {
+    message: 'Playlist start date is older than 24 hours.',
+    code: 'PLAYLIST_START_DATE_TOO_OLD',
   },
   // General validation messages
   ValidationFailed: {

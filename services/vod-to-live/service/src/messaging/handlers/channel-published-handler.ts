@@ -7,7 +7,7 @@ import {
   PrepareChannelLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
-import { Config } from '../../common';
+import { Config, DAY_IN_SECONDS } from '../../common';
 import {
   AzureStorage,
   ChannelSmilGenerator,
@@ -34,15 +34,17 @@ export class ChannelPublishedHandler extends AuthenticatedMessageHandler<Channel
     message: MessageInfo,
   ): Promise<void> {
     const drmSettings = await generateCpixSettings(
-      payload.placeholder_video ? [payload.placeholder_video] : [],
-      false,
+      payload.id,
+      null,
+      {
+        videos: payload.placeholder_video ? [payload.placeholder_video] : [],
+        startDate: new Date(),
+        durationInSeconds: DAY_IN_SECONDS,
+      },
+      null,
       this.azureStorage,
       this.keyServiceApi,
-      new Date(),
-      payload.placeholder_video?.video_encoding?.length_in_seconds ?? 0,
-      payload.id,
     );
-
     const generator = new ChannelSmilGenerator(drmSettings);
     const smilEnvelope = generator.generate(payload);
     await this.broker.publish<PrepareChannelLiveStreamCommand>(

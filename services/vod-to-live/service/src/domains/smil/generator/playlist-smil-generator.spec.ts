@@ -2,11 +2,18 @@
 import {
   CuePointSchedule,
   CuePointScheduleType,
+  DetailedVideo,
   PlaylistPublishedEvent,
   Program,
   ProgramCuePoint,
 } from '@axinom/mosaic-messages';
+import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
+import {
+  Config,
+  DAY_IN_SECONDS,
+  SECOND_IN_MILLISECONDS,
+} from '../../../common';
 import { createTestVideo } from '../../../tests';
 import {
   createHeaderMetadata,
@@ -18,6 +25,12 @@ import { PlaylistSmilGenerator } from './playlist-smil-generator';
 import { videoToSmilParallelReferences } from './utils';
 
 describe('PlaylistSmilGenerator', () => {
+  const mockConfig = stub<Config>({
+    prolongPlaylistTo24Hours: false,
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   const createCuePointWithSchedules = (
     type: 'PRE' | 'MID' | 'POST',
     timeInSeconds?: number | null | undefined,
@@ -48,6 +61,7 @@ describe('PlaylistSmilGenerator', () => {
       video,
     };
   };
+
   const createPlaylistWithPrograms = (
     startDateTime: Date,
     isDrmProtected: boolean,
@@ -60,8 +74,8 @@ describe('PlaylistSmilGenerator', () => {
         title: `Program-${i}`,
         entity_id: uuid(),
         entity_type: 'MOVIE',
-        video_duration_in_seconds: (i + 1) * 3600,
-        video: createTestVideo(isDrmProtected, `${i}`, (i + 1) * 3600),
+        video_duration_in_seconds: 28800,
+        video: createTestVideo(isDrmProtected, `${i}`, 28800),
       });
     }
     const totalDurationInSeconds = programs.reduce((accumulator, pr) => {
@@ -72,7 +86,8 @@ describe('PlaylistSmilGenerator', () => {
       channel_id: uuid(),
       start_date_time: startDateTime.toISOString(),
       end_date_time: new Date(
-        startDateTime.getTime() + 1000 * totalDurationInSeconds,
+        startDateTime.getTime() +
+          SECOND_IN_MILLISECONDS * totalDurationInSeconds,
       ).toISOString(),
       programs,
     };
@@ -112,7 +127,7 @@ describe('PlaylistSmilGenerator', () => {
       channel_id: uuid(),
       start_date_time: startDateTime.toISOString(),
       end_date_time: new Date(
-        startDateTime.getTime() + 1000 * 85,
+        startDateTime.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
       ).toISOString(),
       programs: [
         {
@@ -156,6 +171,7 @@ describe('PlaylistSmilGenerator', () => {
           encryptionDashCpixFile: cpix,
           encryptionHlsCpixFile: cpix,
         },
+        mockConfig,
         PLACEHOLDER_VIDEO,
       );
 
@@ -217,6 +233,7 @@ describe('PlaylistSmilGenerator', () => {
           encryptionDashCpixFile: cpix,
           encryptionHlsCpixFile: cpix,
         },
+        mockConfig,
         PLACEHOLDER_VIDEO,
       );
 
@@ -323,6 +340,7 @@ describe('PlaylistSmilGenerator', () => {
           encryptionDashCpixFile: cpix,
           encryptionHlsCpixFile: cpix,
         },
+        mockConfig,
         PLACEHOLDER_VIDEO,
       );
 
@@ -432,6 +450,7 @@ describe('PlaylistSmilGenerator', () => {
           encryptionDashCpixFile: cpix,
           encryptionHlsCpixFile: cpix,
         },
+        mockConfig,
         PLACEHOLDER_VIDEO,
       );
 
@@ -503,6 +522,7 @@ describe('PlaylistSmilGenerator', () => {
           encryptionDashCpixFile: cpix,
           encryptionHlsCpixFile: cpix,
         },
+        mockConfig,
         PLACEHOLDER_VIDEO,
       );
 
@@ -577,6 +597,7 @@ describe('PlaylistSmilGenerator', () => {
           encryptionDashCpixFile: cpix,
           encryptionHlsCpixFile: cpix,
         },
+        mockConfig,
         PLACEHOLDER_VIDEO,
       );
       // Act
@@ -757,6 +778,7 @@ describe('PlaylistSmilGenerator', () => {
           encryptionDashCpixFile: cpix,
           encryptionHlsCpixFile: cpix,
         },
+        mockConfig,
         PLACEHOLDER_VIDEO,
       );
       // Act
@@ -836,27 +858,62 @@ describe('PlaylistSmilGenerator', () => {
     },
   );
 
-  it.each([true, false])(
-    'created SMIL object for playlist with program and ad pre-rolls without replacing the ads with placeholder video',
-    (isDrmProtected: boolean) => {
+  it.each([null, undefined])(
+    'error is thrown if placeholder video is not defined',
+    (video) => {
+      // Arrange;
+      //Act & Assert
+      expect(() => {
+        new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: undefined,
+            encryptionDashCpixFile: undefined,
+            encryptionHlsCpixFile: undefined,
+          },
+          mockConfig,
+          video as DetailedVideo | undefined,
+        );
+      }).toThrow();
+    },
+  );
+
+  it.each`
+    placeholderVideoDurationInSeconds | expectedNumberOfParallels | isDrmProtected
+    ${60}                             | ${1440}                   | ${true}
+    ${3600}                           | ${24}                     | ${true}
+    ${60}                             | ${1440}                   | ${false}
+    ${3600}                           | ${24}                     | ${false}
+  `(
+    'playlist with zero duration is prolonged to fit 24H mark',
+    ({
+      placeholderVideoDurationInSeconds,
+      expectedNumberOfParallels,
+      isDrmProtected,
+    }) => {
       // Arrange
       const cpix = isDrmProtected
         ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
         : null;
-      const testPlaylist = createPlaylistWithProgramsAndSchedules(
-        'PRE',
-        'AD_POD',
-        isDrmProtected,
+      const startDateTime = new Date();
+      const testPlaylist: PlaylistPublishedEvent = {
+        id: uuid(),
+        channel_id: uuid(),
+        start_date_time: startDateTime.toISOString(),
+        end_date_time: startDateTime.toISOString(),
+      };
+      const generator = new PlaylistSmilGenerator(
+        {
+          decryptionCpixFile: cpix,
+          encryptionDashCpixFile: cpix,
+          encryptionHlsCpixFile: cpix,
+        },
+        stub<Config>({
+          prolongPlaylistTo24Hours: true,
+        }),
+        createTestVideo(true, uuid(), placeholderVideoDurationInSeconds),
       );
-      const generator = new PlaylistSmilGenerator({
-        decryptionCpixFile: cpix,
-        encryptionDashCpixFile: cpix,
-        encryptionHlsCpixFile: cpix,
-      });
-
       // Act
       const resultSmil = generator.generate(testPlaylist);
-
       // Assert
       const headerMetadata = resultSmil.smil.head.meta;
       const expectedHeaderLength = isDrmProtected ? 8 : 5;
@@ -883,60 +940,91 @@ describe('PlaylistSmilGenerator', () => {
       }
       expect(headerMetadata).toHaveLength(expectedHeaderLength);
       expect(headerMetadata).toMatchObject(expectedHeaders);
-      const parallels = resultSmil.smil.body.seq.par as Parallel[];
-      expect(parallels).toHaveLength(testPlaylist.programs!.length * 2); // each program has one pre roll
-      let spliceId = 0;
-      for (let i = 0; i < parallels.length; i++) {
-        const parallel = parallels[i];
-        if (i % 2 === 0) {
-          spliceId++;
-          // index is even - expect parallel for ad
-          expect(parallel).toMatchObject({
-            audio: [],
-            video: [],
-            '@clipBegin': undefined,
-            '@clipEnd': transformSecondsToWallClock(10),
-            EventStream: {
-              Event: {
-                Signal: {
-                  SpliceInfoSection: {
-                    SpliceInsert: [
-                      {
-                        '@outOfNetworkIndicator': 1, //out of network indicator
-                        '@spliceImmediateFlag': 1,
-                        '@spliceEventId': `${spliceId}`,
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          });
-        } else {
-          // index is odd - expect parallel for video
-          expect(parallel.audio).toHaveLength(1);
-          expect(parallel.video).toHaveLength(1);
-          expect(parallel).toMatchObject({
-            '@clipBegin': undefined,
-            '@clipEnd': undefined,
-            EventStream: {
-              Event: {
-                Signal: {
-                  SpliceInfoSection: {
-                    SpliceInsert: [
-                      {
-                        '@outOfNetworkIndicator': 0, //back to the network indicator
-                        '@spliceImmediateFlag': 1,
-                        '@spliceEventId': `${spliceId}`,
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          });
-        }
+      const parallels = resultSmil.smil.body.seq.par;
+      expect(parallels).toHaveLength(expectedNumberOfParallels);
+    },
+  );
+
+  it.each`
+    playlistDurationInSec | placeholderVideoDurationInSeconds | expectedNumberOfParallels | isDrmProtected | durationOfLastParallel
+    ${12345}              | ${60}                             | ${1235}                   | ${true}        | ${15}
+    ${9876.9876}          | ${60}                             | ${1276}                   | ${false}       | ${23}
+    ${43200}              | ${60}                             | ${720}                    | ${true}        | ${0}
+    ${43200}              | ${124}                            | ${349}                    | ${false}       | ${48}
+    ${12345}              | ${1440}                           | ${52}                     | ${true}        | ${615}
+    ${9876.9876}          | ${1440}                           | ${54}                     | ${false}       | ${203}
+    ${43200}              | ${1440}                           | ${30}                     | ${true}        | ${0}
+    ${43200}              | ${2895}                           | ${15}                     | ${false}       | ${2670}
+  `(
+    'playlist with none-zero duration, but smaller than 24H, is prolonged to hit 24 hours mark',
+    ({
+      playlistDurationInSec,
+      placeholderVideoDurationInSeconds,
+      expectedNumberOfParallels,
+      isDrmProtected,
+      durationOfLastParallel,
+    }) => {
+      // Arrange
+      const cpix = isDrmProtected
+        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+        : null;
+      const startDateTime = new Date();
+      const testPlaylist: PlaylistPublishedEvent = {
+        id: uuid(),
+        channel_id: uuid(),
+        start_date_time: startDateTime.toISOString(),
+        end_date_time: new Date(
+          startDateTime.getTime() +
+            SECOND_IN_MILLISECONDS * playlistDurationInSec,
+        ).toISOString(),
+      };
+      const generator = new PlaylistSmilGenerator(
+        {
+          decryptionCpixFile: cpix,
+          encryptionDashCpixFile: cpix,
+          encryptionHlsCpixFile: cpix,
+        },
+        stub<Config>({
+          prolongPlaylistTo24Hours: true,
+        }),
+        createTestVideo(true, uuid(), placeholderVideoDurationInSeconds),
+      );
+      // Act
+      const resultSmil = generator.generate(testPlaylist);
+      // Assert
+      const headerMetadata = resultSmil.smil.head.meta;
+      const expectedHeaderLength = isDrmProtected ? 8 : 5;
+      const expectedHeaders = [
+        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+        createHeaderMetadata(
+          HeaderMetadataNames.Vod2LiveStartTime,
+          testPlaylist.start_date_time,
+        ),
+        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+        createHeaderMetadata(
+          HeaderMetadataNames.MosaicPlaylistId,
+          testPlaylist.id,
+        ),
+      ];
+
+      if (isDrmProtected) {
+        expectedHeaders.push(
+          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+        );
       }
+      expect(headerMetadata).toHaveLength(expectedHeaderLength);
+      expect(headerMetadata).toMatchObject(expectedHeaders);
+      const parallels = resultSmil.smil.body.seq.par;
+      expect(parallels).toHaveLength(expectedNumberOfParallels);
+      const lastParallel = Array.isArray(parallels)
+        ? parallels.pop()
+        : parallels;
+      expect(lastParallel?.['@clipEnd']).toEqual(
+        transformSecondsToWallClock(durationOfLastParallel),
+      );
     },
   );
 });

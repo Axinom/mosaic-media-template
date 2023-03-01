@@ -1,5 +1,7 @@
 import { DetailedVideo } from '@axinom/mosaic-messages';
 import { WebhookValidationMessage } from '@axinom/mosaic-service-common';
+import { HOUR_IN_SECONDS } from '../../common';
+import { getPlaylistDurationInSeconds } from '../utils';
 
 export interface ValidationResult {
   errors: WebhookValidationMessage[];
@@ -38,4 +40,11 @@ export const validateVideo = (video: DetailedVideo): ValidationResult => {
   }
 
   return validationResult;
+};
+
+export const getHoursDifference = (
+  startDate: string,
+  endDate: string,
+): number => {
+  return getPlaylistDurationInSeconds(startDate, endDate) / HOUR_IN_SECONDS;
 };

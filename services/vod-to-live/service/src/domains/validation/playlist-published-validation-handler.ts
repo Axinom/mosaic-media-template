@@ -6,13 +6,15 @@ import {
   WebhookRequestMessage,
   WebhookResponse,
 } from '@axinom/mosaic-service-common';
-import { ValidationErrors } from '../../common';
-import { validateVideo, ValidationResult } from './utils';
+import { Config, ValidationErrors } from '../../common';
+import { getHoursDifference, validateVideo, ValidationResult } from './utils';
 import { ValidationWebhookHandler } from './validation-webhook-model';
 
 export class PlaylistPublishedValidationWebhookHandler
   implements ValidationWebhookHandler<PlaylistPublishedEvent>
 {
+  constructor(private config: Config) {}
+
   canHandle(message: WebhookRequestMessage<PlaylistPublishedEvent>): boolean {
     return (
       message.message_type ===
@@ -54,32 +56,40 @@ export class PlaylistPublishedValidationWebhookHandler
       );
       validationResult.errors.push(...result.flatMap((r) => r.errors));
       validationResult.warnings.push(...result.flatMap((r) => r.warnings));
-    }
 
-    const diffInHours = this.getHoursDiff(
-      event.start_date_time,
-      event.end_date_time,
-    );
-    // Return a warning if the total playlist length exceeds 24 hours.
-    if (diffInHours >= 24 && diffInHours < 25) {
-      validationResult.warnings.push(ValidationErrors.PlaylistExceeds24Hours);
-    }
-    // Return an error if the total playlist length exceeds 25 hours.
-    if (diffInHours >= 25) {
-      validationResult.errors.push(ValidationErrors.PlaylistExceeds25Hours);
+      // determine the length of playlist in hours
+      const diffInHours = getHoursDifference(
+        event.start_date_time,
+        event.end_date_time,
+      );
+      // Return a warning if the total playlist length exceeds 24 hours.
+      if (diffInHours > 24 && diffInHours < 25) {
+        validationResult.warnings.push(ValidationErrors.PlaylistExceeds24Hours);
+      }
+      // Return an error if the total playlist length exceeds 25 hours.
+      if (diffInHours >= 25) {
+        validationResult.errors.push(ValidationErrors.PlaylistExceeds25Hours);
+      }
+
+      if (this.config.prolongPlaylistTo24Hours) {
+        //Informative warning, that playlist is under 24 hours and will be prolonged with placeholder videos
+        if (diffInHours < 24) {
+          validationResult.warnings.push(ValidationErrors.PlaylistProlongation);
+        }
+
+        //determine if playlist start date is older than 24 hours in the past
+        const playlistStartTimeComparedToNow = getHoursDifference(
+          event.start_date_time,
+          new Date().toISOString(),
+        );
+        if (playlistStartTimeComparedToNow >= 24) {
+          validationResult.errors.push(ValidationErrors.PlaylistIsTooOld);
+        }
+      }
     }
     return {
       payload: validationResult.errors.length > 0 ? null : event,
       ...validationResult,
     };
-  }
-
-  private getHoursDiff(startDate: string, endDate: string): number {
-    const msInHour = 1000 * 60 * 60;
-
-    return (
-      Math.floor(new Date(endDate).getTime() - new Date(startDate).getTime()) /
-      msInHour
-    );
   }
 }

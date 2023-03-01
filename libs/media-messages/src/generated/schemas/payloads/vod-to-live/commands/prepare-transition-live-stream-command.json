@@ -7,7 +7,7 @@
   "required": [
     "channel_id",
     "playlist_id",
-    "playlist_start_date_time",
+    "transition_start_date_time",
     "smil"
   ],
   "properties": {
@@ -23,8 +23,8 @@
       "minLength": 1,
       "pattern": "^$|.*\\S.*"
     },
-    "playlist_start_date_time": {
-      "description": "Start date and time of the playlist.",
+    "transition_start_date_time": {
+      "description": "Start date and time of the transition.",
       "type": "string",
       "format": "date-time"
     },

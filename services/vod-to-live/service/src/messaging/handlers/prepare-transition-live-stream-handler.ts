@@ -21,7 +21,7 @@ export class PrepareTransitionLiveStreamHandler extends AuthenticatedMessageHand
     await prepareTransitionLiveStream(
       payload.channel_id,
       payload.playlist_id,
-      payload.playlist_start_date_time,
+      payload.transition_start_date_time,
       payload.smil,
       this.virtualChannelApi,
     );
