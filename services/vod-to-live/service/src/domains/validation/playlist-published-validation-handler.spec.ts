@@ -4,18 +4,34 @@ import {
   PlaylistPublishedEvent,
 } from '@axinom/mosaic-messages';
 import { WebhookRequestMessage } from '@axinom/mosaic-service-common';
+import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
-import { ValidationErrors } from '../../common';
+import {
+  Config,
+  DAY_IN_SECONDS,
+  SECOND_IN_MILLISECONDS,
+  ValidationErrors,
+} from '../../common';
 import { createTestVideo } from '../../tests';
 import { PlaylistPublishedValidationWebhookHandler } from './playlist-published-validation-handler';
 
 describe('PlaylistPublishedValidationWebhookHandler', () => {
-  const handler = new PlaylistPublishedValidationWebhookHandler();
-  const createPlaylistEvent = (): PlaylistPublishedEvent => {
+  const mockConfig = stub<Config>({
+    prolongPlaylistTo24Hours: true,
+  });
+  const handler = new PlaylistPublishedValidationWebhookHandler(mockConfig);
+  const createPlaylistEvent = (
+    startDate?: Date,
+    endDate?: Date,
+  ): PlaylistPublishedEvent => {
     return {
       channel_id: uuid(),
-      start_date_time: '2022-12-01T00:00:00+00:00',
-      end_date_time: '2022-12-01T00:17:00+00:00',
+      start_date_time: startDate
+        ? startDate.toISOString()
+        : '2022-12-01T00:00:00+00:00',
+      end_date_time: endDate
+        ? endDate.toISOString()
+        : '2022-12-01T00:00:00+00:00',
       id: uuid(),
     };
   };
@@ -49,7 +65,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
     it('if playlist has no programs -> error is reported', () => {
       // Arrange
       const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
-        payload: createPlaylistEvent(),
+        payload: createPlaylistEvent(new Date(), new Date()),
         message_type:
           ChannelServiceMultiTenantMessagingSettings.PlaylistPublished
             .messageType,
@@ -69,8 +85,8 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       ]);
     });
 
-    it.each([1440, 1470, 1499])(
-      'if playlist duration exceeds 24 hours -> warning is reported',
+    it.each([1441, 1470, 1499])(
+      'if playlist duration exceeds 24 hours (%s minutes) -> warning is reported',
       (minutesToAdd) => {
         // Arrange
         const startTime = new Date();
@@ -86,7 +102,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                 id: uuid(),
                 title: 'Program 1',
                 sort_index: 0,
-                video_duration_in_seconds: 86400,
+                video_duration_in_seconds: DAY_IN_SECONDS,
                 entity_id: uuid(),
                 entity_type: 'MOVIE',
                 video: createTestVideo(false),
@@ -113,6 +129,50 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       },
     );
 
+    it.each([720, 1439, 60])(
+      'if playlist duration is under 24 hours (%s minutes) -> prolongation warning is reported',
+      (minutesToAdd) => {
+        // Arrange
+        const startTime = new Date();
+        const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
+          payload: {
+            ...createPlaylistEvent(),
+            start_date_time: startTime.toISOString(),
+            end_date_time: new Date(
+              startTime.setMinutes(startTime.getMinutes() + minutesToAdd),
+            ).toISOString(),
+            programs: [
+              {
+                id: uuid(),
+                title: 'Program 1',
+                sort_index: 0,
+                video_duration_in_seconds: DAY_IN_SECONDS,
+                entity_id: uuid(),
+                entity_type: 'MOVIE',
+                video: createTestVideo(false),
+              },
+            ],
+          },
+          message_type:
+            ChannelServiceMultiTenantMessagingSettings.PlaylistPublished
+              .messageType,
+          message_id: uuid(),
+          message_version: '1.0',
+          timestamp: new Date().toISOString(),
+        };
+        // Act
+        const validationResult = handler.handle(message);
+
+        // Assert
+        expect(validationResult.payload).toMatchObject(message.payload);
+        expect(validationResult.errors).toHaveLength(0);
+        expect(validationResult.warnings).toHaveLength(1);
+        expect(validationResult.warnings).toMatchObject([
+          { ...ValidationErrors.PlaylistProlongation },
+        ]);
+      },
+    );
+
     it.each([1500, 1800, 7200])(
       'if playlist duration exceeds 25 hours -> error is reported',
       (minutesToAdd) => {
@@ -130,7 +190,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                 id: uuid(),
                 title: 'Program 1',
                 sort_index: 0,
-                video_duration_in_seconds: 86400,
+                video_duration_in_seconds: DAY_IN_SECONDS,
                 entity_id: uuid(),
                 entity_type: 'MOVIE',
                 video: createTestVideo(false),
@@ -161,15 +221,21 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       // Arrange
       const scheduleVideoId = uuid();
       const programVideoId = uuid();
+      const startDate = new Date();
       const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
         payload: {
-          ...createPlaylistEvent(),
+          ...createPlaylistEvent(
+            startDate,
+            new Date(
+              startDate.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
+            ),
+          ),
           programs: [
             {
               id: uuid(),
               title: 'Program 1',
               sort_index: 0,
-              video_duration_in_seconds: 86400,
+              video_duration_in_seconds: DAY_IN_SECONDS,
               entity_id: uuid(),
               entity_type: 'MOVIE',
               program_cue_points: [
@@ -299,15 +365,21 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
         // Arrange
         const scheduleVideoId = uuid();
         const programVideoId = uuid();
+        const startDate = new Date();
         const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
           payload: {
-            ...createPlaylistEvent(),
+            ...createPlaylistEvent(
+              startDate,
+              new Date(
+                startDate.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
+              ),
+            ),
             programs: [
               {
                 id: uuid(),
                 title: 'Program 1',
                 sort_index: 0,
-                video_duration_in_seconds: 86400,
+                video_duration_in_seconds: DAY_IN_SECONDS,
                 entity_id: uuid(),
                 entity_type: 'MOVIE',
                 program_cue_points: [
@@ -432,19 +504,72 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       },
     );
 
+    it.each([1500, 1800, 7200, 1440])(
+      'if playlist start date is older than 24 hours -> error is reported',
+      (minutesToAdd) => {
+        // Arrange
+        const now = new Date();
+        const startDate = new Date(
+          now.setMinutes(now.getMinutes() - minutesToAdd),
+        );
+        const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
+          payload: {
+            ...createPlaylistEvent(),
+            start_date_time: startDate.toISOString(),
+            end_date_time: new Date(
+              startDate.setMinutes(startDate.getMinutes() + 1440),
+            ).toISOString(),
+            programs: [
+              {
+                id: uuid(),
+                title: 'Program 1',
+                sort_index: 0,
+                video_duration_in_seconds: DAY_IN_SECONDS,
+                entity_id: uuid(),
+                entity_type: 'MOVIE',
+                video: createTestVideo(false),
+              },
+            ],
+          },
+          message_type:
+            ChannelServiceMultiTenantMessagingSettings.PlaylistPublished
+              .messageType,
+          message_id: uuid(),
+          message_version: '1.0',
+          timestamp: new Date().toISOString(),
+        };
+        // Act
+        const validationResult = handler.handle(message);
+
+        // Assert
+        expect(validationResult.payload).toBeNull();
+        expect(validationResult.warnings).toHaveLength(0);
+        expect(validationResult.errors).toHaveLength(1);
+        expect(validationResult.errors).toMatchObject([
+          { ...ValidationErrors.PlaylistIsTooOld },
+        ]);
+      },
+    );
+
     it('if playlist has videos that are encoded not in H264 -> errors are reported', () => {
       // Arrange
       const scheduleVideoId = uuid();
       const programVideoId = uuid();
+      const startDate = new Date();
       const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
         payload: {
-          ...createPlaylistEvent(),
+          ...createPlaylistEvent(
+            startDate,
+            new Date(
+              startDate.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
+            ),
+          ),
           programs: [
             {
               id: uuid(),
               title: 'Program 1',
               sort_index: 0,
-              video_duration_in_seconds: 86400,
+              video_duration_in_seconds: DAY_IN_SECONDS,
               entity_id: uuid(),
               entity_type: 'MOVIE',
               program_cue_points: [
@@ -574,15 +699,21 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
         // Arrange
         const scheduleVideoId = uuid();
         const programVideoId = uuid();
+        const startDate = new Date();
         const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
           payload: {
-            ...createPlaylistEvent(),
+            ...createPlaylistEvent(
+              startDate,
+              new Date(
+                startDate.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
+              ),
+            ),
             programs: [
               {
                 id: uuid(),
                 title: 'Program 1',
                 sort_index: 0,
-                video_duration_in_seconds: 86400,
+                video_duration_in_seconds: DAY_IN_SECONDS,
                 entity_id: uuid(),
                 entity_type: 'MOVIE',
                 program_cue_points: [

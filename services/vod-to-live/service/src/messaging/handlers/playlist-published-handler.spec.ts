@@ -2,7 +2,7 @@ import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { DetailedVideo, PlaylistPublishedEvent } from '@axinom/mosaic-messages';
 import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
-import { Config } from '../../common';
+import { Config, DAY_IN_SECONDS, SECOND_IN_MILLISECONDS } from '../../common';
 import { AzureStorage, CpixSettings, KeyServiceApi } from '../../domains';
 import * as cpixGeneration from '../../domains/cpix/generator/generate-cpix-settings';
 import { createTestVideo } from '../../tests';
@@ -28,14 +28,35 @@ describe('PlaylistPublishedHandler', () => {
     environment: 'test',
     serviceId: 'test-vod-to-live',
     logLevel: 'DEBUG',
+    transitionProcessingTimeInMinutes: 60,
   });
   beforeEach(async () => {
     generateCpixSettings = jest
       .spyOn(cpixGeneration, 'generateCpixSettings')
       .mockImplementation(
-        async (videos: DetailedVideo[]): Promise<CpixSettings> => {
-          cpixSettingsVideos = videos;
-          if (videos.find((v) => v.video_encoding.is_protected)) {
+        async (
+          _channelId: string,
+          _playlistId: string | null | undefined,
+          decryptionParams:
+            | {
+                videos: DetailedVideo[];
+                startDate: Date;
+                durationInSeconds: number;
+              }
+            | null
+            | undefined,
+          _encryptionParams:
+            | {
+                startDate: Date;
+                durationInSeconds: number;
+              }
+            | null
+            | undefined,
+          _storage: AzureStorage,
+          _keyServiceApi: KeyServiceApi,
+        ): Promise<CpixSettings> => {
+          cpixSettingsVideos = decryptionParams ? decryptionParams.videos : [];
+          if (cpixSettingsVideos.find((v) => v.video_encoding.is_protected)) {
             return {
               decryptionCpixFile:
                 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...',
@@ -79,11 +100,14 @@ describe('PlaylistPublishedHandler', () => {
 
       const programVideo = createTestVideo(isDrmProtected, '1', 600);
       const scheduleVideo = createTestVideo(isDrmProtected, '1', 10);
+      const startDate = new Date();
       const payload: PlaylistPublishedEvent = {
         id: uuid(),
         channel_id: uuid(),
-        start_date_time: new Date().toISOString(),
-        end_date_time: new Date().toISOString(),
+        start_date_time: startDate.toISOString(),
+        end_date_time: new Date(
+          startDate.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
+        ).toISOString(),
         programs: [
           {
             id: uuid(),

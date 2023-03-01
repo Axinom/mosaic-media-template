@@ -10,7 +10,7 @@ import {
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
-import { Config } from '../../common';
+import { Config, DAY_IN_SECONDS } from '../../common';
 import {
   AzureStorage,
   generateCpixSettings,
@@ -19,10 +19,13 @@ import {
 } from '../../domains';
 import {
   generateChannelFilePath,
-  isFutureDate,
+  getTransitionDateTime,
   metadataFileName,
 } from '../../domains/live-stream/utils';
-import { convertObjectToXml } from '../../domains/utils';
+import {
+  convertObjectToXml,
+  getPlaylistDurationInSeconds,
+} from '../../domains/utils';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
 export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<PlaylistPublishedEvent> {
@@ -71,37 +74,59 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
           return [...result, entry.video, ...scheduleResult];
         }, new Array<DetailedVideo>()) ?? [];
 
-      const settingAccessStartDate = isFutureDate(payload.start_date_time)
-        ? new Date(payload.start_date_time)
-        : new Date();
-      const settingAccessDuration = Math.abs(
-        (new Date(payload.end_date_time).getTime() -
-          new Date(payload.start_date_time).getTime()) /
-          1000,
+      const playlistTransitionDate = getTransitionDateTime(
+        payload.start_date_time,
+        this.config.transitionProcessingTimeInMinutes,
       );
+      const playlistDurationInSeconds = getPlaylistDurationInSeconds(
+        payload.start_date_time,
+        payload.end_date_time,
+      );
+      let encryptionDurationInSeconds = playlistDurationInSeconds;
+      let encryptionStartDate = playlistTransitionDate;
+
+      // Check if the playlist prolongation feature is on
+      if (this.config.prolongPlaylistTo24Hours) {
+        // encryption is performed on the fly, encryption startDate is set to playlist startDate
+        encryptionStartDate = payload.start_date_time;
+        // encryption is allowed for 24h or for playlist duration, if duration is bigger than 24h
+        encryptionDurationInSeconds =
+          playlistDurationInSeconds < DAY_IN_SECONDS
+            ? DAY_IN_SECONDS
+            : playlistDurationInSeconds;
+      }
       const drmSettings = await generateCpixSettings(
-        [placeholderVideo, ...videos],
-        true,
-        this.storage,
-        this.keyServiceApi,
-        settingAccessStartDate,
-        settingAccessDuration,
         channelPublishedEvent.id,
         payload.id,
+        {
+          videos: [placeholderVideo, ...videos],
+          // decryption starts immediately
+          startDate: new Date(),
+          // decryption is allowed for 24h
+          durationInSeconds: DAY_IN_SECONDS,
+        },
+        {
+          startDate: new Date(encryptionStartDate),
+          durationInSeconds: encryptionDurationInSeconds,
+        },
+        this.storage,
+        this.keyServiceApi,
       );
 
       const generator = new PlaylistSmilGenerator(
         drmSettings,
+        this.config,
         placeholderVideo,
       );
       const smilDocument = generator.generate(payload);
+
       await this.broker.publish<PrepareTransitionLiveStreamCommand>(
         VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream
           .messageType,
         {
           channel_id: payload.channel_id,
           playlist_id: payload.id,
-          playlist_start_date_time: payload.start_date_time,
+          transition_start_date_time: playlistTransitionDate,
           smil: convertObjectToXml(smilDocument),
         },
         {

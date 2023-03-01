@@ -1,6 +1,5 @@
 import {
   CreateRabbitMQConnectivityMetric,
-  envelopeLoggingMiddleware,
   setupMessagingBroker,
 } from '@axinom/mosaic-message-bus';
 import {
@@ -72,7 +71,10 @@ async function bootstrap(): Promise<void> {
     ),
     logger,
     shutdownActions,
-    onMessageMiddleware: [envelopeLoggingMiddleware(logger)],
+    onMessageMiddleware: [
+      /*envelopeLoggingMiddleware(logger)*/
+      //todo: maybe adjust logging to log only messages without the SMIL, because 24h SMIL can get very long
+    ],
     rascalConfigExportPath: './src/generated/messaging/rascal-schema.json',
   });
 

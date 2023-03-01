@@ -4,8 +4,10 @@ import {
   Program,
   ProgramCuePoint,
 } from '@axinom/mosaic-messages';
-import { Logger } from '@axinom/mosaic-service-common';
+import { Logger, MosaicError } from '@axinom/mosaic-service-common';
+import { Config, DAY_IN_SECONDS } from '../../../common';
 import { CpixSettings } from '../../cpix';
+import { getPlaylistDurationInSeconds } from '../../utils';
 import {
   createHeaderMetadata,
   createParallel,
@@ -22,6 +24,7 @@ import { SmilGenerator } from './smil-generator';
 import {
   createAdPlaceholders,
   createPlaylistEventStream,
+  determineIntegerDivisionAndRemainder,
   videoToSmilParallelReferences,
 } from './utils';
 
@@ -57,19 +60,28 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
   };
 
   private logger: Logger = new Logger({ context: 'PlaylistSmilGenerator' });
-  private placeholderVideoParallel: ParallelReference | undefined;
-  private placeholderVideoDuration: number | undefined | null;
+  private placeholderVideoParallel!: ParallelReference;
+  private placeholderVideoDuration!: number;
   constructor(
     private drmSettings: CpixSettings,
+    private config: Config,
     channelPlaceholderVideo?: DetailedVideo | undefined,
   ) {
     super();
-    if (channelPlaceholderVideo) {
+    if (
+      channelPlaceholderVideo &&
+      channelPlaceholderVideo.video_encoding.length_in_seconds
+    ) {
       this.placeholderVideoDuration =
         channelPlaceholderVideo.video_encoding.length_in_seconds;
       this.placeholderVideoParallel = videoToSmilParallelReferences(
         channelPlaceholderVideo,
       );
+    } else {
+      throw new MosaicError({
+        message: 'Placeholder video is not provided.',
+        code: 'PLACEHOLDER_VIDEO_IS_MISSING',
+      });
     }
   }
   generate(originalEvent: PlaylistPublishedEvent): SMILEnvelope {
@@ -79,6 +91,17 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
         ?.reduce((result, entry) => {
           return [...result, ...this.processProgram(entry)];
         }, new Array<Parallel>()) ?? [];
+
+    // if playlist prolongation flag is set to true,
+    // playlist duration will be extended to hit 24 hours mark, if it doesn't hit it already
+    if (this.config.prolongPlaylistTo24Hours) {
+      parallels.push(
+        ...this.tryProlongatePlaylist(
+          originalEvent.start_date_time,
+          originalEvent.end_date_time,
+        ),
+      );
+    }
 
     return createSmilEnvelope(parallels, this.populateHeader(originalEvent));
   }
@@ -276,5 +299,60 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
           }
         }, new Array<Parallel>()) ?? []
     );
+  };
+
+  /**
+   * Creates additional parallels, if playlist duration is below 24 hours.
+   * @param playlistStartDate - start date of the playlist.
+   * @param playlistEndDate - end date of the playlist.
+   * @returns list of the parallels for playlist prolongation.
+   */
+  private tryProlongatePlaylist = (
+    playlistStartDate: string,
+    playlistEndDate: string,
+  ): Parallel[] => {
+    const parallels: Parallel[] = [];
+    const playlistDurationInSeconds = getPlaylistDurationInSeconds(
+      playlistStartDate,
+      playlistEndDate,
+    );
+
+    // determine if playlist duration is under 24 hours
+    if (playlistDurationInSeconds < DAY_IN_SECONDS) {
+      // duration of added content
+      const prolongationDurationInSeconds = Math.floor(
+        DAY_IN_SECONDS - playlistDurationInSeconds,
+      );
+
+      const { quotient, remainder } = determineIntegerDivisionAndRemainder(
+        prolongationDurationInSeconds,
+        this.placeholderVideoDuration,
+      );
+
+      let eventStream = this.createEventStreamInPlaylist(
+        0,
+        prolongationDurationInSeconds,
+      );
+      for (let i = 0; i < quotient; i++) {
+        parallels.push(
+          createParallel(this.placeholderVideoParallel, eventStream),
+        );
+        //The event stream element must be added only for the first ad placeholder
+        eventStream = undefined;
+      }
+
+      if (remainder > 0) {
+        parallels.push(
+          createParallel(
+            this.placeholderVideoParallel,
+            eventStream,
+            undefined,
+            remainder,
+          ),
+        );
+      }
+    }
+
+    return parallels;
   };
 }

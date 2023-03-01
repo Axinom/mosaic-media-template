@@ -26,9 +26,29 @@ describe('ChannelPublishedHandler', () => {
     generateCpixSettings = jest
       .spyOn(cpixGeneration, 'generateCpixSettings')
       .mockImplementation(
-        async (videos: DetailedVideo[]): Promise<CpixSettings> => {
-          cpixSettingsVideos = videos;
-          if (videos.find((v) => v.video_encoding.is_protected)) {
+        async (
+          _channelId: string,
+          _playlistId: string | null | undefined,
+          decryptionParams:
+            | {
+                videos: DetailedVideo[];
+                startDate: Date;
+                durationInSeconds: number;
+              }
+            | null
+            | undefined,
+          _encryptionParams:
+            | {
+                startDate: Date;
+                durationInSeconds: number;
+              }
+            | null
+            | undefined,
+          _storage: AzureStorage,
+          _keyServiceApi: KeyServiceApi,
+        ): Promise<CpixSettings> => {
+          cpixSettingsVideos = decryptionParams ? decryptionParams.videos : [];
+          if (cpixSettingsVideos.find((v) => v.video_encoding.is_protected)) {
             return {
               decryptionCpixFile:
                 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...',

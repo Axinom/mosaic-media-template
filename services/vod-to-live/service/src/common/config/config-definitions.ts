@@ -56,7 +56,6 @@ export const getConfigDefinitions = (
       env.get('KEY_SERVICE_MANAGEMENT_KEY').required().asString(),
     drmProtectionKeyId: () =>
       env.get('DRM_PROTECTION_KEY_ID').required().required().asString(),
-
     /**
      * Optional Service Account Client ID, used to get ID service token that is
      * required to get User auth token during development
@@ -69,13 +68,30 @@ export const getConfigDefinitions = (
      */
     devServiceAccountClientSecret: () =>
       env.get('DEV_SERVICE_ACCOUNT_CLIENT_SECRET').asString(),
-
     /**
      * Optional Channel Service GraphQL Endpoint, used to setup webhook url and
      * secret during development
      */
     devChannelServiceBaseUrl: () =>
       env.get('DEV_CHANNEL_SERVICE_BASE_URL').asUrlString(),
+    /**
+     * Added to the playlist transition time, when playlist start date is in the PAST.
+     * This time frame is added in consideration for playlist videos processing required to create live stream from VOD.
+     * Defaults to 1 hour (60 minutes)
+     */
+    transitionProcessingTimeInMinutes: () =>
+      env
+        .get('TRANSITION_PROCESSING_TIME_IN_MINUTES')
+        .default(60)
+        .asIntPositive(),
+
+    /**
+     * Feature flag. When turned on every playlist with duration under 24 hours
+     * will be automatically prolonged to hit 24 hour duration.
+     * Defaults to TRUE
+     */
+    prolongPlaylistTo24Hours: () =>
+      env.get('PROLONG_PLAYLIST_TO_24_HOURS').default('true').asBoolStrict(),
   };
 };
 

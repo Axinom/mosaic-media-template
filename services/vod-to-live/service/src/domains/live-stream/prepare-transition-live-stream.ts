@@ -8,14 +8,14 @@ const logger = new Logger({ context: 'prepare-transition-live-stream' });
  * Prepare live steam for the playlist.
  * @param channelId - unique identifier of the channel.
  * @param playlistId - unique identifier of the playlist.
- * @param playlistStartDateTime - start date time for the playlist.
+ * @param transitionDateTime - start date time for the transition.
  * @param smil - XML content of the SMIL document.
  * @param virtualChannelApi - instance of VirtualChannelApi class
  */
 export const prepareTransitionLiveStream = async (
   channelId: string,
   playlistId: string,
-  playlistStartDateTime: string,
+  transitionDateTime: string,
   smil: string,
   virtualChannelApi: VirtualChannelApi,
 ): Promise<void> => {
@@ -28,7 +28,7 @@ export const prepareTransitionLiveStream = async (
         isFutureDate(t.transitionDate),
       );
       for (const futureTransition of futureTransitions) {
-        const newTransitionDate = new Date(playlistStartDateTime).toISOString();
+        const newTransitionDate = new Date(transitionDateTime).toISOString();
 
         if (futureTransition.transitionDate !== newTransitionDate) {
           const deletionResult = await virtualChannelApi.deleteTransition(
@@ -51,7 +51,7 @@ export const prepareTransitionLiveStream = async (
     return createTransition(
       channelId,
       playlistId,
-      playlistStartDateTime,
+      transitionDateTime,
       smil,
       virtualChannelApi,
     );
@@ -63,14 +63,13 @@ export const prepareTransitionLiveStream = async (
 const createTransition = async (
   channelId: string,
   playlistId: string,
-  playlistStartDateTime: string,
+  transitionStartDateTime: string,
   smil: string,
   virtualChannelApi: VirtualChannelApi,
 ): Promise<void> => {
-  const transitionDate = determineTransitionDateTime(playlistStartDateTime);
   const transitionCreationResult = await virtualChannelApi.putTransition(
     channelId,
-    transitionDate,
+    transitionStartDateTime,
     smil,
   );
   logger.debug({
@@ -78,22 +77,8 @@ const createTransition = async (
     details: {
       channelId,
       playlistId,
-      transitionDate,
+      transitionStartDateTime,
       responseMessage: transitionCreationResult,
     },
   });
-};
-
-/**
- * Creates a ISO date time for the transition start.
- * If playlist start date is in future - the start date is used.
- * Otherwise, transition date time is calculated by formula Now + 5 minutes.
- * @param playlistStartDateTime - start date time for the playlist.
- */
-const determineTransitionDateTime = (playlistStartDateTime: string): string => {
-  if (isFutureDate(playlistStartDateTime)) {
-    return new Date(playlistStartDateTime).toISOString();
-  } else {
-    return new Date(new Date().getTime() + 5 * 60000).toISOString();
-  }
 };

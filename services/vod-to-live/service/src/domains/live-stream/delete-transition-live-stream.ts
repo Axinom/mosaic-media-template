@@ -5,6 +5,7 @@ import {
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
+import { DAY_IN_SECONDS } from '../../common';
 import { AzureStorage } from '../azure';
 import { generateCpixSettings } from '../cpix';
 import { KeyServiceApi } from '../key-service';
@@ -67,14 +68,18 @@ export const deleteTransitionLiveStream = async (
         );
         return;
       }
+
       const drmSettings = await generateCpixSettings(
-        event.placeholder_video ? [event.placeholder_video] : [],
-        false,
+        event.id,
+        null,
+        {
+          videos: event.placeholder_video ? [event.placeholder_video] : [],
+          startDate: new Date(),
+          durationInSeconds: DAY_IN_SECONDS,
+        },
+        null,
         storage,
         keyServiceApi,
-        new Date(),
-        event.placeholder_video?.video_encoding?.length_in_seconds ?? 0,
-        event.id,
       );
       const generator = new ChannelSmilGenerator(drmSettings);
       const smil = generator.generate(event);
@@ -84,7 +89,7 @@ export const deleteTransitionLiveStream = async (
         {
           channel_id: channelId,
           playlist_id: channelId,
-          playlist_start_date_time: new Date().toISOString(),
+          transition_start_date_time: new Date().toISOString(),
           smil: convertObjectToXml(smil),
         },
         {

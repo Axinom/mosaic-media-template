@@ -78,11 +78,10 @@ export const createAdPlaceholders = (
 
   let adEventStream = eventStream;
   const adPodDuration = schedule.duration_in_seconds;
-
-  // determine how many times the placeholder will fit into schedule fully
-  const quotient = Math.floor(adPodDuration / placeholderLength);
-  // determine if "shortened" placeholder video required to fill the duration of schedule
-  const remainder = adPodDuration % placeholderLength;
+  const { quotient, remainder } = determineIntegerDivisionAndRemainder(
+    adPodDuration,
+    placeholderLength,
+  );
 
   for (let i = 0; i < quotient; i++) {
     adPlaceholderParallels.push(createParallel(parallel, adEventStream));
@@ -96,6 +95,16 @@ export const createAdPlaceholders = (
     );
   }
   return adPlaceholderParallels;
+};
+
+export const determineIntegerDivisionAndRemainder = (
+  number: number,
+  divisor: number,
+): { quotient: number; remainder: number } => {
+  return {
+    quotient: Math.floor(number / divisor),
+    remainder: number % divisor,
+  };
 };
 
 /**

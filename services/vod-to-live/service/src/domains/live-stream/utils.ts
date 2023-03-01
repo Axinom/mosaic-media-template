@@ -38,6 +38,25 @@ export const isFutureDate = (date: string): boolean => {
   return futureDate > today;
 };
 
+/**
+ * Creates a ISO date time for the transition start.
+ * If playlist start date is in future - the start date is used.
+ * Otherwise, transition date time is calculated by formula Now + processing buffer in minutes.
+ * @param startDateTime - start date time as string ISO for the transition.
+ */
+export const getTransitionDateTime = (
+  startDateTime: string,
+  processingTimeInMinutes: number,
+): string => {
+  if (isFutureDate(startDateTime)) {
+    return new Date(startDateTime).toISOString();
+  } else {
+    return new Date(
+      new Date().getTime() + processingTimeInMinutes * 60000,
+    ).toISOString();
+  }
+};
+
 export const metadataFileName = 'metadata.json';
 export const decryptionCpixFileName = 'decryption_cpix.xml';
 
