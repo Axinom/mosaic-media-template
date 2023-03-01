@@ -36,8 +36,8 @@ type FormData = MutationUpdateMoviesLicenseArgs['input']['patch'] & {
 };
 
 const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
-  licenseStart: getLicenseStartSchema(),
-  licenseEnd: getLicenseEndSchema(),
+  licenseStart: getLicenseStartSchema().label('From'),
+  licenseEnd: getLicenseEndSchema().label('To'),
 });
 
 export const MovieLicensingDetails: React.FC = () => {

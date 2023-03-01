@@ -27,8 +27,8 @@ type SubmitResponse = CreateSeasonsLicenseMutation['createSeasonsLicense'];
 
 const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   seasonId: Yup.number().required(),
-  licenseStart: getLicenseStartSchema(),
-  licenseEnd: getLicenseEndSchema(),
+  licenseStart: getLicenseStartSchema().label('From'),
+  licenseEnd: getLicenseEndSchema().label('To'),
 });
 
 export const SeasonLicensingCreate: React.FC = () => {

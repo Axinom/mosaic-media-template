@@ -27,8 +27,8 @@ type SubmitResponse = CreateTvshowsLicenseMutation['createTvshowsLicense'];
 
 const licenseSchema = Yup.object<ObjectSchemaDefinition<FormData>>({
   tvshowId: Yup.number(),
-  licenseStart: getLicenseStartSchema(),
-  licenseEnd: getLicenseEndSchema(),
+  licenseStart: getLicenseStartSchema().label('From'),
+  licenseEnd: getLicenseEndSchema().label('To'),
 });
 
 export const TvShowLicensingCreate: React.FC = () => {

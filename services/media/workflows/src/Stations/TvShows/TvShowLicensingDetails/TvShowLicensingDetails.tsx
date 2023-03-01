@@ -36,8 +36,8 @@ type FormData = MutationUpdateTvshowsLicenseArgs['input']['patch'] & {
 };
 
 const licenseSchema = Yup.object<ObjectSchemaDefinition<FormData>>({
-  licenseStart: getLicenseStartSchema(),
-  licenseEnd: getLicenseEndSchema(),
+  licenseStart: getLicenseStartSchema().label('From'),
+  licenseEnd: getLicenseEndSchema().label('To'),
 });
 
 export const TvShowLicensingDetails: React.FC = () => {
