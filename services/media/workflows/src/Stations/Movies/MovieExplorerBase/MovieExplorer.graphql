@@ -3,6 +3,7 @@ fragment MovieExplorerProperties on Movie {
   title
   originalTitle
   externalId
+  mainVideoId
   moviesImages(condition: { imageType: COVER }) {
     nodes {
       imageId
