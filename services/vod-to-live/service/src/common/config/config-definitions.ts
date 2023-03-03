@@ -78,11 +78,13 @@ export const getConfigDefinitions = (
      * This time frame is added in consideration for playlist videos processing required to create live stream from VOD.
      * Defaults to 1 hour (60 minutes)
      */
-    transitionProcessingTimeInMinutes: () =>
-      env
-        .get('TRANSITION_PROCESSING_TIME_IN_MINUTES')
-        .default(60)
-        .asIntPositive(),
+    /**
+     * If `PROLONG_PLAYLIST_TO_24_HOURS` is set to true, this duration is added on top of the 24h mark for smoother transition between playlists.
+     * If `PROLONG_PLAYLIST_TO_24_HOURS` is set to false, the catch up duration is added to the playlist transition time, when playlist start date is in the PAST.
+     * Defaults to 1 hour (60 minutes)
+     */
+    catchUpDurationInMinutes: () =>
+      env.get('CATCH_UP_DURATION_IN_MINUTES').default(60).asIntPositive(),
 
     /**
      * Feature flag. When turned on every playlist with duration under 24 hours

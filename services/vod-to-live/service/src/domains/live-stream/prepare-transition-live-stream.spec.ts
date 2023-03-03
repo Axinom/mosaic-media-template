@@ -1,5 +1,6 @@
 import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
+import { MINUTE_IN_MILLISECONDS } from '../../common';
 import { VirtualChannelApi } from '../virtual-channel';
 import { prepareTransitionLiveStream } from './prepare-transition-live-stream';
 
@@ -53,21 +54,21 @@ describe('prepareTransitionLiveStream', () => {
           status: 'test',
           smil: '',
           transitionDate: new Date(
-            new Date().getTime() + 100 * 60000,
+            new Date().getTime() + 100 * MINUTE_IN_MILLISECONDS,
           ).toISOString(),
         },
         {
           status: 'test',
           smil: '',
           transitionDate: new Date(
-            new Date().getTime() + 200 * 60000,
+            new Date().getTime() + 200 * MINUTE_IN_MILLISECONDS,
           ).toISOString(),
         },
         {
           status: 'test',
           smil: '',
           transitionDate: new Date(
-            new Date().getTime() + 300 * 60000,
+            new Date().getTime() + 300 * MINUTE_IN_MILLISECONDS,
           ).toISOString(),
         },
       ];
@@ -94,21 +95,21 @@ describe('prepareTransitionLiveStream', () => {
           status: 'test',
           smil: '',
           transitionDate: new Date(
-            new Date().getTime() - 100 * 60000,
+            new Date().getTime() - 100 * MINUTE_IN_MILLISECONDS,
           ).toISOString(),
         },
         {
           status: 'test',
           smil: '',
           transitionDate: new Date(
-            new Date().getTime() - 200 * 60000,
+            new Date().getTime() - 200 * MINUTE_IN_MILLISECONDS,
           ).toISOString(),
         },
         {
           status: 'test',
           smil: '',
           transitionDate: new Date(
-            new Date().getTime() - 300 * 60000,
+            new Date().getTime() - 300 * MINUTE_IN_MILLISECONDS,
           ).toISOString(),
         },
       ];

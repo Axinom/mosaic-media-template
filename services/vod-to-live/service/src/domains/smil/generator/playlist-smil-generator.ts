@@ -316,12 +316,14 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
       playlistStartDate,
       playlistEndDate,
     );
+    const prolongedPlaylistDurationInSeconds =
+      DAY_IN_SECONDS + this.config.catchUpDurationInMinutes * 60;
 
     // determine if playlist duration is under 24 hours
     if (playlistDurationInSeconds < DAY_IN_SECONDS) {
       // duration of added content
       const prolongationDurationInSeconds = Math.floor(
-        DAY_IN_SECONDS - playlistDurationInSeconds,
+        prolongedPlaylistDurationInSeconds - playlistDurationInSeconds,
       );
 
       const { quotient, remainder } = determineIntegerDivisionAndRemainder(

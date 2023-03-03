@@ -28,7 +28,7 @@ describe('PlaylistPublishedHandler', () => {
     environment: 'test',
     serviceId: 'test-vod-to-live',
     logLevel: 'DEBUG',
-    transitionProcessingTimeInMinutes: 60,
+    catchUpDurationInMinutes: 60,
   });
   beforeEach(async () => {
     generateCpixSettings = jest
