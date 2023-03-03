@@ -1,3 +1,4 @@
+import { MINUTE_IN_MILLISECONDS } from '../../common';
 import { HeaderMetadataNames } from '../smil';
 
 export interface Transition {
@@ -51,13 +52,13 @@ export const isFutureDate = (date: string): boolean => {
  */
 export const getTransitionDateTime = (
   startDateTime: string,
-  processingTimeInMinutes: number,
+  catchUpDurationInMinutes: number,
 ): string => {
   if (isFutureDate(startDateTime)) {
     return new Date(startDateTime).toISOString();
   } else {
     return new Date(
-      new Date().getTime() + processingTimeInMinutes * 60000,
+      new Date().getTime() + catchUpDurationInMinutes * MINUTE_IN_MILLISECONDS,
     ).toISOString();
   }
 };

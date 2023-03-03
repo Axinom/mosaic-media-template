@@ -75,7 +75,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
 
       const playlistTransitionDate = getTransitionDateTime(
         payload.start_date_time,
-        this.config.transitionProcessingTimeInMinutes,
+        this.config.catchUpDurationInMinutes,
       );
       const playlistDurationInSeconds = getPlaylistDurationInSeconds(
         payload.start_date_time,
@@ -89,9 +89,12 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
         // encryption is performed on the fly, encryption startDate is set to playlist startDate
         encryptionStartDate = payload.start_date_time;
         // encryption is allowed for 24h or for playlist duration, if duration is bigger than 24h
+
+        const prolongedPlaylistDurationInSeconds =
+          DAY_IN_SECONDS + this.config.catchUpDurationInMinutes * 60;
         encryptionDurationInSeconds =
           playlistDurationInSeconds < DAY_IN_SECONDS
-            ? DAY_IN_SECONDS
+            ? prolongedPlaylistDurationInSeconds
             : playlistDurationInSeconds;
       }
       const drmSettings = await generateCpixSettings(

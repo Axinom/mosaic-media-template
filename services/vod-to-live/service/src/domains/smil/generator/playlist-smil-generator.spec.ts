@@ -27,6 +27,7 @@ import { videoToSmilParallelReferences } from './utils';
 describe('PlaylistSmilGenerator', () => {
   const mockConfig = stub<Config>({
     prolongPlaylistTo24Hours: false,
+    catchUpDurationInMinutes: 0,
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -154,877 +155,968 @@ describe('PlaylistSmilGenerator', () => {
     };
   };
 
-  it.each([true, false])(
-    'created SMIL object for playlist with programs',
-    (isDrmProtected: boolean) => {
-      // Arrange
-      const cpix = isDrmProtected
-        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-        : null;
-      const testPlaylist = createPlaylistWithPrograms(
-        new Date(),
-        isDrmProtected,
-      );
-      const generator = new PlaylistSmilGenerator(
-        {
-          decryptionCpixFile: cpix,
-          encryptionDashCpixFile: cpix,
-          encryptionHlsCpixFile: cpix,
-        },
-        mockConfig,
-        PLACEHOLDER_VIDEO,
-      );
-
-      // Act
-      const resultSmil = generator.generate(testPlaylist);
-
-      // Assert
-      const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 8 : 5;
-      const expectedHeaders = [
-        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.Vod2LiveStartTime,
-          testPlaylist.start_date_time,
-        ),
-        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.MosaicPlaylistId,
-          testPlaylist.id,
-        ),
-      ];
-
-      if (isDrmProtected) {
-        expectedHeaders.push(
-          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+  describe('generate SMIL', () => {
+    it.each([true, false])(
+      'created SMIL object for playlist with programs',
+      (isDrmProtected: boolean) => {
+        // Arrange
+        const cpix = isDrmProtected
+          ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+          : null;
+        const testPlaylist = createPlaylistWithPrograms(
+          new Date(),
+          isDrmProtected,
         );
-      }
-
-      expect(headerMetadata).toHaveLength(expectedHeaderLength);
-      expect(headerMetadata).toMatchObject(expectedHeaders);
-      const parallels = resultSmil.smil.body.seq.par;
-      expect(parallels).toHaveLength(testPlaylist.programs!.length);
-      expect(parallels).toMatchObject([
-        ...testPlaylist.programs!.map((p) =>
-          videoToSmilParallelReferences(p.video),
-        ),
-      ]);
-    },
-  );
-
-  it.each([true, false])(
-    'created SMIL object for playlist with programs and pre-roll ad for each program',
-    (isDrmProtected: boolean) => {
-      // Arrange
-      const cpix = isDrmProtected
-        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-        : null;
-      const testPlaylist = createPlaylistWithProgramsAndSchedules(
-        'PRE',
-        'AD_POD',
-        isDrmProtected,
-      );
-      const generator = new PlaylistSmilGenerator(
-        {
-          decryptionCpixFile: cpix,
-          encryptionDashCpixFile: cpix,
-          encryptionHlsCpixFile: cpix,
-        },
-        mockConfig,
-        PLACEHOLDER_VIDEO,
-      );
-
-      // Act
-      const resultSmil = generator.generate(testPlaylist);
-
-      // Assert
-      const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 8 : 5;
-      const expectedHeaders = [
-        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.Vod2LiveStartTime,
-          testPlaylist.start_date_time,
-        ),
-        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.MosaicPlaylistId,
-          testPlaylist.id,
-        ),
-      ];
-
-      if (isDrmProtected) {
-        expectedHeaders.push(
-          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+        const generator = new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: cpix,
+            encryptionDashCpixFile: cpix,
+            encryptionHlsCpixFile: cpix,
+          },
+          mockConfig,
+          PLACEHOLDER_VIDEO,
         );
-      }
-      expect(headerMetadata).toHaveLength(expectedHeaderLength);
-      expect(headerMetadata).toMatchObject(expectedHeaders);
-      const parallels = resultSmil.smil.body.seq.par as Parallel[];
-      expect(parallels).toHaveLength(testPlaylist.programs!.length * 2); // each program has one pre roll
-      let spliceId = 0;
-      for (let i = 0; i < parallels.length; i++) {
-        const parallel = parallels[i];
-        if (i % 2 === 0) {
-          spliceId++;
-          // index is even - expect parallel for ad
-          expect(parallel).toMatchObject({
-            ...videoToSmilParallelReferences(PLACEHOLDER_VIDEO),
-            '@clipBegin': undefined,
-            '@clipEnd': transformSecondsToWallClock(10),
-            EventStream: {
-              Event: {
-                Signal: {
-                  SpliceInfoSection: {
-                    SpliceInsert: [
-                      {
-                        '@outOfNetworkIndicator': 1, //out of network indicator
-                        '@spliceImmediateFlag': 1,
-                        '@spliceEventId': `${spliceId}`,
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          });
-        } else {
-          // index is odd - expect parallel for video
-          expect(parallel.audio).toHaveLength(1);
-          expect(parallel.video).toHaveLength(1);
-          expect(parallel).toMatchObject({
-            '@clipBegin': undefined,
-            '@clipEnd': undefined,
-            EventStream: {
-              Event: {
-                Signal: {
-                  SpliceInfoSection: {
-                    SpliceInsert: [
-                      {
-                        '@outOfNetworkIndicator': 0, //back to the network indicator
-                        '@spliceImmediateFlag': 1,
-                        '@spliceEventId': `${spliceId}`,
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          });
+
+        // Act
+        const resultSmil = generator.generate(testPlaylist);
+
+        // Assert
+        const headerMetadata = resultSmil.smil.head.meta;
+        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaders = [
+          createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.Vod2LiveStartTime,
+            testPlaylist.start_date_time,
+          ),
+          createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+          createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.MosaicPlaylistId,
+            testPlaylist.id,
+          ),
+        ];
+
+        if (isDrmProtected) {
+          expectedHeaders.push(
+            createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+          );
         }
-      }
-    },
-  );
 
-  it.each([true, false])(
-    'created SMIL object for playlist with programs and post-roll ad for each program',
-    (isDrmProtected: boolean) => {
-      // Arrange
-      const cpix = isDrmProtected
-        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-        : null;
-      const testPlaylist = createPlaylistWithProgramsAndSchedules(
-        'POST',
-        'AD_POD',
-        isDrmProtected,
-      );
-      const generator = new PlaylistSmilGenerator(
-        {
-          decryptionCpixFile: cpix,
-          encryptionDashCpixFile: cpix,
-          encryptionHlsCpixFile: cpix,
-        },
-        mockConfig,
-        PLACEHOLDER_VIDEO,
-      );
+        expect(headerMetadata).toHaveLength(expectedHeaderLength);
+        expect(headerMetadata).toMatchObject(expectedHeaders);
+        const parallels = resultSmil.smil.body.seq.par;
+        expect(parallels).toHaveLength(testPlaylist.programs!.length);
+        expect(parallels).toMatchObject([
+          ...testPlaylist.programs!.map((p) =>
+            videoToSmilParallelReferences(p.video),
+          ),
+        ]);
+      },
+    );
 
-      // Act
-      const resultSmil = generator.generate(testPlaylist);
-
-      // Assert
-      const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 8 : 5;
-      const expectedHeaders = [
-        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.Vod2LiveStartTime,
-          testPlaylist.start_date_time,
-        ),
-        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.MosaicPlaylistId,
-          testPlaylist.id,
-        ),
-      ];
-
-      if (isDrmProtected) {
-        expectedHeaders.push(
-          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+    it.each([true, false])(
+      'created SMIL object for playlist with programs and pre-roll ad for each program',
+      (isDrmProtected: boolean) => {
+        // Arrange
+        const cpix = isDrmProtected
+          ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+          : null;
+        const testPlaylist = createPlaylistWithProgramsAndSchedules(
+          'PRE',
+          'AD_POD',
+          isDrmProtected,
         );
-      }
-      expect(headerMetadata).toHaveLength(expectedHeaderLength);
-      expect(headerMetadata).toMatchObject(expectedHeaders);
-      const parallels = resultSmil.smil.body.seq.par as Parallel[];
-      expect(parallels).toHaveLength(testPlaylist.programs!.length * 2); // each program has one pre roll
-      let spliceId = 0;
-      for (let i = 0; i < parallels.length; i++) {
-        const parallel = parallels[i];
-        if (i % 2 === 0) {
-          // index is even - expect parallel for video
-          expect(parallel.audio).toHaveLength(1);
-          expect(parallel.video).toHaveLength(1);
-          expect(parallel).toMatchObject({
-            '@clipBegin': undefined,
-            '@clipEnd': undefined,
-            EventStream:
-              spliceId === 0
-                ? undefined
-                : {
-                    Event: {
-                      Signal: {
-                        SpliceInfoSection: {
-                          SpliceInsert: [
-                            {
-                              '@outOfNetworkIndicator': 0, //back to the network indicator
-                              '@spliceImmediateFlag': 1,
-                              '@spliceEventId': `${spliceId}`,
-                            },
-                          ],
+        const generator = new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: cpix,
+            encryptionDashCpixFile: cpix,
+            encryptionHlsCpixFile: cpix,
+          },
+          mockConfig,
+          PLACEHOLDER_VIDEO,
+        );
+
+        // Act
+        const resultSmil = generator.generate(testPlaylist);
+
+        // Assert
+        const headerMetadata = resultSmil.smil.head.meta;
+        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaders = [
+          createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.Vod2LiveStartTime,
+            testPlaylist.start_date_time,
+          ),
+          createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+          createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.MosaicPlaylistId,
+            testPlaylist.id,
+          ),
+        ];
+
+        if (isDrmProtected) {
+          expectedHeaders.push(
+            createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+          );
+        }
+        expect(headerMetadata).toHaveLength(expectedHeaderLength);
+        expect(headerMetadata).toMatchObject(expectedHeaders);
+        const parallels = resultSmil.smil.body.seq.par as Parallel[];
+        expect(parallels).toHaveLength(testPlaylist.programs!.length * 2); // each program has one pre roll
+        let spliceId = 0;
+        for (let i = 0; i < parallels.length; i++) {
+          const parallel = parallels[i];
+          if (i % 2 === 0) {
+            spliceId++;
+            // index is even - expect parallel for ad
+            expect(parallel).toMatchObject({
+              ...videoToSmilParallelReferences(PLACEHOLDER_VIDEO),
+              '@clipBegin': undefined,
+              '@clipEnd': transformSecondsToWallClock(10),
+              EventStream: {
+                Event: {
+                  Signal: {
+                    SpliceInfoSection: {
+                      SpliceInsert: [
+                        {
+                          '@outOfNetworkIndicator': 1, //out of network indicator
+                          '@spliceImmediateFlag': 1,
+                          '@spliceEventId': `${spliceId}`,
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            });
+          } else {
+            // index is odd - expect parallel for video
+            expect(parallel.audio).toHaveLength(1);
+            expect(parallel.video).toHaveLength(1);
+            expect(parallel).toMatchObject({
+              '@clipBegin': undefined,
+              '@clipEnd': undefined,
+              EventStream: {
+                Event: {
+                  Signal: {
+                    SpliceInfoSection: {
+                      SpliceInsert: [
+                        {
+                          '@outOfNetworkIndicator': 0, //back to the network indicator
+                          '@spliceImmediateFlag': 1,
+                          '@spliceEventId': `${spliceId}`,
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            });
+          }
+        }
+      },
+    );
+
+    it.each([true, false])(
+      'created SMIL object for playlist with programs and post-roll ad for each program',
+      (isDrmProtected: boolean) => {
+        // Arrange
+        const cpix = isDrmProtected
+          ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+          : null;
+        const testPlaylist = createPlaylistWithProgramsAndSchedules(
+          'POST',
+          'AD_POD',
+          isDrmProtected,
+        );
+        const generator = new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: cpix,
+            encryptionDashCpixFile: cpix,
+            encryptionHlsCpixFile: cpix,
+          },
+          mockConfig,
+          PLACEHOLDER_VIDEO,
+        );
+
+        // Act
+        const resultSmil = generator.generate(testPlaylist);
+
+        // Assert
+        const headerMetadata = resultSmil.smil.head.meta;
+        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaders = [
+          createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.Vod2LiveStartTime,
+            testPlaylist.start_date_time,
+          ),
+          createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+          createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.MosaicPlaylistId,
+            testPlaylist.id,
+          ),
+        ];
+
+        if (isDrmProtected) {
+          expectedHeaders.push(
+            createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+          );
+        }
+        expect(headerMetadata).toHaveLength(expectedHeaderLength);
+        expect(headerMetadata).toMatchObject(expectedHeaders);
+        const parallels = resultSmil.smil.body.seq.par as Parallel[];
+        expect(parallels).toHaveLength(testPlaylist.programs!.length * 2); // each program has one pre roll
+        let spliceId = 0;
+        for (let i = 0; i < parallels.length; i++) {
+          const parallel = parallels[i];
+          if (i % 2 === 0) {
+            // index is even - expect parallel for video
+            expect(parallel.audio).toHaveLength(1);
+            expect(parallel.video).toHaveLength(1);
+            expect(parallel).toMatchObject({
+              '@clipBegin': undefined,
+              '@clipEnd': undefined,
+              EventStream:
+                spliceId === 0
+                  ? undefined
+                  : {
+                      Event: {
+                        Signal: {
+                          SpliceInfoSection: {
+                            SpliceInsert: [
+                              {
+                                '@outOfNetworkIndicator': 0, //back to the network indicator
+                                '@spliceImmediateFlag': 1,
+                                '@spliceEventId': `${spliceId}`,
+                              },
+                            ],
+                          },
                         },
                       },
                     },
+            });
+          } else {
+            // index is odd - expect parallel for ad
+            spliceId++;
+            expect(parallel).toMatchObject({
+              ...videoToSmilParallelReferences(PLACEHOLDER_VIDEO),
+              '@clipBegin': undefined,
+              '@clipEnd': transformSecondsToWallClock(10),
+              EventStream: {
+                Event: {
+                  Signal: {
+                    SpliceInfoSection: {
+                      SpliceInsert: [
+                        {
+                          '@outOfNetworkIndicator': 1, //out of network indicator
+                          '@spliceImmediateFlag': 1,
+                          '@spliceEventId': `${spliceId}`,
+                        },
+                      ],
+                    },
                   },
-          });
-        } else {
-          // index is odd - expect parallel for ad
-          spliceId++;
+                },
+              },
+            });
+          }
+        }
+      },
+    );
+
+    it.each([true, false])(
+      'created SMIL object for playlist with programs and pre-roll video for each program',
+      (isDrmProtected: boolean) => {
+        // Arrange
+        const cpix = isDrmProtected
+          ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+          : null;
+        const testPlaylist = createPlaylistWithProgramsAndSchedules(
+          'PRE',
+          'VIDEO',
+          isDrmProtected,
+        );
+        const generator = new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: cpix,
+            encryptionDashCpixFile: cpix,
+            encryptionHlsCpixFile: cpix,
+          },
+          mockConfig,
+          PLACEHOLDER_VIDEO,
+        );
+
+        // Act
+        const resultSmil = generator.generate(testPlaylist);
+
+        // Assert
+        const headerMetadata = resultSmil.smil.head.meta;
+        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaders = [
+          createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.Vod2LiveStartTime,
+            testPlaylist.start_date_time,
+          ),
+          createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+          createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.MosaicPlaylistId,
+            testPlaylist.id,
+          ),
+        ];
+
+        if (isDrmProtected) {
+          expectedHeaders.push(
+            createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+          );
+        }
+        expect(headerMetadata).toHaveLength(expectedHeaderLength);
+        expect(headerMetadata).toMatchObject(expectedHeaders);
+        const parallels = resultSmil.smil.body.seq.par as Parallel[];
+        expect(parallels).toHaveLength(testPlaylist.programs!.length * 2); // each program has one pre roll
+        for (let i = 0; i < parallels.length; i++) {
+          const parallel = parallels[i];
+          if (i % 2 === 0) {
+            // index is even - expect parallel for video insert
+            expect(parallel['@clipEnd']).toEqual(
+              transformSecondsToWallClock(10),
+            );
+          } else {
+            // index is odd - expect parallel for video of the program
+            expect(parallel['@clipEnd']).toBeUndefined();
+          }
+          expect(parallel.audio).toHaveLength(1);
+          expect(parallel.video).toHaveLength(1);
           expect(parallel).toMatchObject({
-            ...videoToSmilParallelReferences(PLACEHOLDER_VIDEO),
+            '@clipBegin': undefined,
+            EventStream: undefined,
+          });
+        }
+      },
+    );
+
+    it.each([true, false])(
+      'created SMIL object for playlist with programs and post-roll video for each program',
+      (isDrmProtected: boolean) => {
+        // Arrange
+        const cpix = isDrmProtected
+          ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+          : null;
+        const testPlaylist = createPlaylistWithProgramsAndSchedules(
+          'POST',
+          'VIDEO',
+          isDrmProtected,
+        );
+        const generator = new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: cpix,
+            encryptionDashCpixFile: cpix,
+            encryptionHlsCpixFile: cpix,
+          },
+          mockConfig,
+          PLACEHOLDER_VIDEO,
+        );
+
+        // Act
+        const resultSmil = generator.generate(testPlaylist);
+
+        // Assert
+        const headerMetadata = resultSmil.smil.head.meta;
+        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaders = [
+          createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.Vod2LiveStartTime,
+            testPlaylist.start_date_time,
+          ),
+          createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+          createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.MosaicPlaylistId,
+            testPlaylist.id,
+          ),
+        ];
+
+        if (isDrmProtected) {
+          expectedHeaders.push(
+            createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+          );
+        }
+        expect(headerMetadata).toHaveLength(expectedHeaderLength);
+        expect(headerMetadata).toMatchObject(expectedHeaders);
+        const parallels = resultSmil.smil.body.seq.par as Parallel[];
+        expect(parallels).toHaveLength(testPlaylist.programs!.length * 2); // each program has one post roll
+        for (let i = 0; i < parallels.length; i++) {
+          const parallel = parallels[i];
+          if (i % 2 === 0) {
+            // index is odd - expect parallel for video insert
+            expect(parallel['@clipEnd']).toBeUndefined();
+          } else {
+            {
+              // index is even - expect parallel for video of the program
+              expect(parallel['@clipEnd']).toEqual(
+                transformSecondsToWallClock(10),
+              );
+            }
+          }
+          expect(parallel.audio).toHaveLength(1);
+          expect(parallel.video).toHaveLength(1);
+          expect(parallel).toMatchObject({
+            '@clipBegin': undefined,
+            EventStream: undefined,
+          });
+        }
+      },
+    );
+
+    it.each([true, false])(
+      'created SMIL object for playlist with program and several ad mid-rolls',
+      (isDrmProtected: boolean) => {
+        // Arrange
+        const cpix = isDrmProtected
+          ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+          : null;
+        const testPlaylist = createPlaylistVideoAndMidSchedules(
+          'AD_POD',
+          isDrmProtected,
+        );
+        const generator = new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: cpix,
+            encryptionDashCpixFile: cpix,
+            encryptionHlsCpixFile: cpix,
+          },
+          mockConfig,
+          PLACEHOLDER_VIDEO,
+        );
+        // Act
+        const resultSmil = generator.generate(testPlaylist);
+        // Assert
+        const headerMetadata = resultSmil.smil.head.meta;
+        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaders = [
+          createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.Vod2LiveStartTime,
+            testPlaylist.start_date_time,
+          ),
+          createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+          createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.MosaicPlaylistId,
+            testPlaylist.id,
+          ),
+        ];
+
+        if (isDrmProtected) {
+          expectedHeaders.push(
+            createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+          );
+        }
+        expect(headerMetadata).toHaveLength(expectedHeaderLength);
+        expect(headerMetadata).toMatchObject(expectedHeaders);
+        const parallels = resultSmil.smil.body.seq.par;
+        expect(parallels).toHaveLength(7); // 3 parallels for ads and 4 for program's video
+        expect(parallels).toMatchObject([
+          //program is played for 10 seconds
+          {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(10),
+            EventStream: undefined,
+          },
+          //ad is played for 5 seconds
+          {
+            '@clipBegin': undefined,
+            '@clipEnd': transformSecondsToWallClock(5),
             EventStream: {
               Event: {
                 Signal: {
                   SpliceInfoSection: {
                     SpliceInsert: [
                       {
-                        '@outOfNetworkIndicator': 1, //out of network indicator
+                        '@outOfNetworkIndicator': 1, //out of the network indicator
                         '@spliceImmediateFlag': 1,
-                        '@spliceEventId': `${spliceId}`,
+                        '@spliceEventId': `1`,
                       },
                     ],
                   },
                 },
               },
             },
-          });
-        }
-      }
-    },
-  );
-
-  it.each([true, false])(
-    'created SMIL object for playlist with programs and pre-roll video for each program',
-    (isDrmProtected: boolean) => {
-      // Arrange
-      const cpix = isDrmProtected
-        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-        : null;
-      const testPlaylist = createPlaylistWithProgramsAndSchedules(
-        'PRE',
-        'VIDEO',
-        isDrmProtected,
-      );
-      const generator = new PlaylistSmilGenerator(
-        {
-          decryptionCpixFile: cpix,
-          encryptionDashCpixFile: cpix,
-          encryptionHlsCpixFile: cpix,
-        },
-        mockConfig,
-        PLACEHOLDER_VIDEO,
-      );
-
-      // Act
-      const resultSmil = generator.generate(testPlaylist);
-
-      // Assert
-      const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 8 : 5;
-      const expectedHeaders = [
-        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.Vod2LiveStartTime,
-          testPlaylist.start_date_time,
-        ),
-        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.MosaicPlaylistId,
-          testPlaylist.id,
-        ),
-      ];
-
-      if (isDrmProtected) {
-        expectedHeaders.push(
-          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
-        );
-      }
-      expect(headerMetadata).toHaveLength(expectedHeaderLength);
-      expect(headerMetadata).toMatchObject(expectedHeaders);
-      const parallels = resultSmil.smil.body.seq.par as Parallel[];
-      expect(parallels).toHaveLength(testPlaylist.programs!.length * 2); // each program has one pre roll
-      for (let i = 0; i < parallels.length; i++) {
-        const parallel = parallels[i];
-        if (i % 2 === 0) {
-          // index is even - expect parallel for video insert
-          expect(parallel['@clipEnd']).toEqual(transformSecondsToWallClock(10));
-        } else {
-          // index is odd - expect parallel for video of the program
-          expect(parallel['@clipEnd']).toBeUndefined();
-        }
-        expect(parallel.audio).toHaveLength(1);
-        expect(parallel.video).toHaveLength(1);
-        expect(parallel).toMatchObject({
-          '@clipBegin': undefined,
-          EventStream: undefined,
-        });
-      }
-    },
-  );
-
-  it.each([true, false])(
-    'created SMIL object for playlist with programs and post-roll video for each program',
-    (isDrmProtected: boolean) => {
-      // Arrange
-      const cpix = isDrmProtected
-        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-        : null;
-      const testPlaylist = createPlaylistWithProgramsAndSchedules(
-        'POST',
-        'VIDEO',
-        isDrmProtected,
-      );
-      const generator = new PlaylistSmilGenerator(
-        {
-          decryptionCpixFile: cpix,
-          encryptionDashCpixFile: cpix,
-          encryptionHlsCpixFile: cpix,
-        },
-        mockConfig,
-        PLACEHOLDER_VIDEO,
-      );
-
-      // Act
-      const resultSmil = generator.generate(testPlaylist);
-
-      // Assert
-      const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 8 : 5;
-      const expectedHeaders = [
-        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.Vod2LiveStartTime,
-          testPlaylist.start_date_time,
-        ),
-        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.MosaicPlaylistId,
-          testPlaylist.id,
-        ),
-      ];
-
-      if (isDrmProtected) {
-        expectedHeaders.push(
-          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
-        );
-      }
-      expect(headerMetadata).toHaveLength(expectedHeaderLength);
-      expect(headerMetadata).toMatchObject(expectedHeaders);
-      const parallels = resultSmil.smil.body.seq.par as Parallel[];
-      expect(parallels).toHaveLength(testPlaylist.programs!.length * 2); // each program has one post roll
-      for (let i = 0; i < parallels.length; i++) {
-        const parallel = parallels[i];
-        if (i % 2 === 0) {
-          // index is odd - expect parallel for video insert
-          expect(parallel['@clipEnd']).toBeUndefined();
-        } else {
+          },
+          //program is played from 10s mark to 25
           {
-            // index is even - expect parallel for video of the program
-            expect(parallel['@clipEnd']).toEqual(
-              transformSecondsToWallClock(10),
-            );
-          }
-        }
-        expect(parallel.audio).toHaveLength(1);
-        expect(parallel.video).toHaveLength(1);
-        expect(parallel).toMatchObject({
-          '@clipBegin': undefined,
-          EventStream: undefined,
-        });
-      }
-    },
-  );
-
-  it.each([true, false])(
-    'created SMIL object for playlist with program and several ad mid-rolls',
-    (isDrmProtected: boolean) => {
-      // Arrange
-      const cpix = isDrmProtected
-        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-        : null;
-      const testPlaylist = createPlaylistVideoAndMidSchedules(
-        'AD_POD',
-        isDrmProtected,
-      );
-      const generator = new PlaylistSmilGenerator(
-        {
-          decryptionCpixFile: cpix,
-          encryptionDashCpixFile: cpix,
-          encryptionHlsCpixFile: cpix,
-        },
-        mockConfig,
-        PLACEHOLDER_VIDEO,
-      );
-      // Act
-      const resultSmil = generator.generate(testPlaylist);
-      // Assert
-      const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 8 : 5;
-      const expectedHeaders = [
-        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.Vod2LiveStartTime,
-          testPlaylist.start_date_time,
-        ),
-        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.MosaicPlaylistId,
-          testPlaylist.id,
-        ),
-      ];
-
-      if (isDrmProtected) {
-        expectedHeaders.push(
-          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
-        );
-      }
-      expect(headerMetadata).toHaveLength(expectedHeaderLength);
-      expect(headerMetadata).toMatchObject(expectedHeaders);
-      const parallels = resultSmil.smil.body.seq.par;
-      expect(parallels).toHaveLength(7); // 3 parallels for ads and 4 for program's video
-      expect(parallels).toMatchObject([
-        //program is played for 10 seconds
-        {
-          '@clipBegin': undefined,
-          '@clipEnd': transformSecondsToWallClock(10),
-          EventStream: undefined,
-        },
-        //ad is played for 5 seconds
-        {
-          '@clipBegin': undefined,
-          '@clipEnd': transformSecondsToWallClock(5),
-          EventStream: {
-            Event: {
-              Signal: {
-                SpliceInfoSection: {
-                  SpliceInsert: [
-                    {
-                      '@outOfNetworkIndicator': 1, //out of the network indicator
-                      '@spliceImmediateFlag': 1,
-                      '@spliceEventId': `1`,
-                    },
-                  ],
+            '@clipBegin': transformSecondsToWallClock(10),
+            '@clipEnd': transformSecondsToWallClock(25),
+            EventStream: {
+              Event: {
+                Signal: {
+                  SpliceInfoSection: {
+                    SpliceInsert: [
+                      {
+                        '@outOfNetworkIndicator': 0, //to the network indicator
+                        '@spliceImmediateFlag': 1,
+                        '@spliceEventId': `1`,
+                      },
+                    ],
+                  },
                 },
               },
             },
           },
-        },
-        //program is played from 10s mark to 25
-        {
-          '@clipBegin': transformSecondsToWallClock(10),
-          '@clipEnd': transformSecondsToWallClock(25),
-          EventStream: {
-            Event: {
-              Signal: {
-                SpliceInfoSection: {
-                  SpliceInsert: [
-                    {
-                      '@outOfNetworkIndicator': 0, //to the network indicator
-                      '@spliceImmediateFlag': 1,
-                      '@spliceEventId': `1`,
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
-        //ad is played for 7 seconds
-        {
-          '@clipBegin': undefined,
-          '@clipEnd': transformSecondsToWallClock(7),
-          EventStream: {
-            Event: {
-              Signal: {
-                SpliceInfoSection: {
-                  SpliceInsert: [
-                    {
-                      '@outOfNetworkIndicator': 1, //out of the network indicator
-                      '@spliceImmediateFlag': 1,
-                      '@spliceEventId': `2`,
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
-        //program is played from 10s mark to 25
-        {
-          '@clipBegin': transformSecondsToWallClock(25),
-          '@clipEnd': transformSecondsToWallClock(47),
-          EventStream: {
-            Event: {
-              Signal: {
-                SpliceInfoSection: {
-                  SpliceInsert: [
-                    {
-                      '@outOfNetworkIndicator': 0, //to the network indicator
-                      '@spliceImmediateFlag': 1,
-                      '@spliceEventId': `2`,
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
-        //ad is played for 13 seconds
-        {
-          '@clipBegin': undefined,
-          '@clipEnd': transformSecondsToWallClock(13),
-          EventStream: {
-            Event: {
-              Signal: {
-                SpliceInfoSection: {
-                  SpliceInsert: [
-                    {
-                      '@outOfNetworkIndicator': 1, //out of the network indicator
-                      '@spliceImmediateFlag': 1,
-                      '@spliceEventId': `3`,
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
-        //program is played from 47s mark till end
-        {
-          '@clipBegin': transformSecondsToWallClock(47),
-          '@clipEnd': undefined,
-          EventStream: {
-            Event: {
-              Signal: {
-                SpliceInfoSection: {
-                  SpliceInsert: [
-                    {
-                      '@outOfNetworkIndicator': 0, //to the network indicator
-                      '@spliceImmediateFlag': 1,
-                      '@spliceEventId': `3`,
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
-      ]);
-    },
-  );
-
-  it.each([true, false])(
-    'created SMIL object for playlist with program and several video mid-rolls',
-    (isDrmProtected: boolean) => {
-      // Arrange
-      const cpix = isDrmProtected
-        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-        : null;
-      const testPlaylist = createPlaylistVideoAndMidSchedules(
-        'VIDEO',
-        isDrmProtected,
-      );
-      const generator = new PlaylistSmilGenerator(
-        {
-          decryptionCpixFile: cpix,
-          encryptionDashCpixFile: cpix,
-          encryptionHlsCpixFile: cpix,
-        },
-        mockConfig,
-        PLACEHOLDER_VIDEO,
-      );
-      // Act
-      const resultSmil = generator.generate(testPlaylist);
-      // Assert
-      const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 8 : 5;
-      const expectedHeaders = [
-        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.Vod2LiveStartTime,
-          testPlaylist.start_date_time,
-        ),
-        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.MosaicPlaylistId,
-          testPlaylist.id,
-        ),
-      ];
-
-      if (isDrmProtected) {
-        expectedHeaders.push(
-          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
-        );
-      }
-      expect(headerMetadata).toHaveLength(expectedHeaderLength);
-      expect(headerMetadata).toMatchObject(expectedHeaders);
-      const parallels = resultSmil.smil.body.seq.par;
-      expect(parallels).toHaveLength(7); // 3 parallels for ads and 4 for program's video
-      expect(parallels).toMatchObject([
-        //program is played for 10 seconds
-        {
-          '@clipBegin': undefined,
-          '@clipEnd': transformSecondsToWallClock(10),
-          EventStream: undefined,
-        },
-        //ad video is played for 5 seconds
-        {
-          '@clipBegin': undefined,
-          '@clipEnd': transformSecondsToWallClock(5),
-          EventStream: undefined,
-        },
-        //program is played from 10s mark to 25
-        {
-          '@clipBegin': transformSecondsToWallClock(10),
-          '@clipEnd': transformSecondsToWallClock(25),
-          EventStream: undefined,
-        },
-        //ad video is played for 7 seconds
-        {
-          '@clipBegin': undefined,
-          '@clipEnd': transformSecondsToWallClock(7),
-          EventStream: undefined,
-        },
-        //program is played from 10s mark to 25
-        {
-          '@clipBegin': transformSecondsToWallClock(25),
-          '@clipEnd': transformSecondsToWallClock(47),
-          EventStream: undefined,
-        },
-        //ad video is played for 13 seconds
-        {
-          '@clipBegin': undefined,
-          '@clipEnd': transformSecondsToWallClock(13),
-          EventStream: undefined,
-        },
-        //program is played from 47s mark till end
-        {
-          '@clipBegin': transformSecondsToWallClock(47),
-          '@clipEnd': undefined,
-          EventStream: undefined,
-        },
-      ]);
-    },
-  );
-
-  it.each([null, undefined])(
-    'error is thrown if placeholder video is not defined',
-    (video) => {
-      // Arrange;
-      //Act & Assert
-      expect(() => {
-        new PlaylistSmilGenerator(
+          //ad is played for 7 seconds
           {
-            decryptionCpixFile: undefined,
-            encryptionDashCpixFile: undefined,
-            encryptionHlsCpixFile: undefined,
+            '@clipBegin': undefined,
+            '@clipEnd': transformSecondsToWallClock(7),
+            EventStream: {
+              Event: {
+                Signal: {
+                  SpliceInfoSection: {
+                    SpliceInsert: [
+                      {
+                        '@outOfNetworkIndicator': 1, //out of the network indicator
+                        '@spliceImmediateFlag': 1,
+                        '@spliceEventId': `2`,
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          //program is played from 10s mark to 25
+          {
+            '@clipBegin': transformSecondsToWallClock(25),
+            '@clipEnd': transformSecondsToWallClock(47),
+            EventStream: {
+              Event: {
+                Signal: {
+                  SpliceInfoSection: {
+                    SpliceInsert: [
+                      {
+                        '@outOfNetworkIndicator': 0, //to the network indicator
+                        '@spliceImmediateFlag': 1,
+                        '@spliceEventId': `2`,
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          //ad is played for 13 seconds
+          {
+            '@clipBegin': undefined,
+            '@clipEnd': transformSecondsToWallClock(13),
+            EventStream: {
+              Event: {
+                Signal: {
+                  SpliceInfoSection: {
+                    SpliceInsert: [
+                      {
+                        '@outOfNetworkIndicator': 1, //out of the network indicator
+                        '@spliceImmediateFlag': 1,
+                        '@spliceEventId': `3`,
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          //program is played from 47s mark till end
+          {
+            '@clipBegin': transformSecondsToWallClock(47),
+            '@clipEnd': undefined,
+            EventStream: {
+              Event: {
+                Signal: {
+                  SpliceInfoSection: {
+                    SpliceInsert: [
+                      {
+                        '@outOfNetworkIndicator': 0, //to the network indicator
+                        '@spliceImmediateFlag': 1,
+                        '@spliceEventId': `3`,
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        ]);
+      },
+    );
+
+    it.each([true, false])(
+      'created SMIL object for playlist with program and several video mid-rolls',
+      (isDrmProtected: boolean) => {
+        // Arrange
+        const cpix = isDrmProtected
+          ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+          : null;
+        const testPlaylist = createPlaylistVideoAndMidSchedules(
+          'VIDEO',
+          isDrmProtected,
+        );
+        const generator = new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: cpix,
+            encryptionDashCpixFile: cpix,
+            encryptionHlsCpixFile: cpix,
           },
           mockConfig,
-          video as DetailedVideo | undefined,
+          PLACEHOLDER_VIDEO,
         );
-      }).toThrow();
-    },
-  );
+        // Act
+        const resultSmil = generator.generate(testPlaylist);
+        // Assert
+        const headerMetadata = resultSmil.smil.head.meta;
+        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaders = [
+          createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.Vod2LiveStartTime,
+            testPlaylist.start_date_time,
+          ),
+          createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+          createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.MosaicPlaylistId,
+            testPlaylist.id,
+          ),
+        ];
 
-  it.each`
-    placeholderVideoDurationInSeconds | expectedNumberOfParallels | isDrmProtected
-    ${60}                             | ${1440}                   | ${true}
-    ${3600}                           | ${24}                     | ${true}
-    ${60}                             | ${1440}                   | ${false}
-    ${3600}                           | ${24}                     | ${false}
-  `(
-    'playlist with zero duration is prolonged to fit 24H mark',
-    ({
-      placeholderVideoDurationInSeconds,
-      expectedNumberOfParallels,
-      isDrmProtected,
-    }) => {
-      // Arrange
-      const cpix = isDrmProtected
-        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-        : null;
-      const startDateTime = new Date();
-      const testPlaylist: PlaylistPublishedEvent = {
-        id: uuid(),
-        channel_id: uuid(),
-        start_date_time: startDateTime.toISOString(),
-        end_date_time: startDateTime.toISOString(),
-      };
-      const generator = new PlaylistSmilGenerator(
-        {
-          decryptionCpixFile: cpix,
-          encryptionDashCpixFile: cpix,
-          encryptionHlsCpixFile: cpix,
-        },
-        stub<Config>({
-          prolongPlaylistTo24Hours: true,
-        }),
-        createTestVideo(true, uuid(), placeholderVideoDurationInSeconds),
-      );
-      // Act
-      const resultSmil = generator.generate(testPlaylist);
-      // Assert
-      const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 8 : 5;
-      const expectedHeaders = [
-        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.Vod2LiveStartTime,
-          testPlaylist.start_date_time,
-        ),
-        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.MosaicPlaylistId,
-          testPlaylist.id,
-        ),
-      ];
+        if (isDrmProtected) {
+          expectedHeaders.push(
+            createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+          );
+        }
+        expect(headerMetadata).toHaveLength(expectedHeaderLength);
+        expect(headerMetadata).toMatchObject(expectedHeaders);
+        const parallels = resultSmil.smil.body.seq.par;
+        expect(parallels).toHaveLength(7); // 3 parallels for ads and 4 for program's video
+        expect(parallels).toMatchObject([
+          //program is played for 10 seconds
+          {
+            '@clipBegin': undefined,
+            '@clipEnd': transformSecondsToWallClock(10),
+            EventStream: undefined,
+          },
+          //ad video is played for 5 seconds
+          {
+            '@clipBegin': undefined,
+            '@clipEnd': transformSecondsToWallClock(5),
+            EventStream: undefined,
+          },
+          //program is played from 10s mark to 25
+          {
+            '@clipBegin': transformSecondsToWallClock(10),
+            '@clipEnd': transformSecondsToWallClock(25),
+            EventStream: undefined,
+          },
+          //ad video is played for 7 seconds
+          {
+            '@clipBegin': undefined,
+            '@clipEnd': transformSecondsToWallClock(7),
+            EventStream: undefined,
+          },
+          //program is played from 10s mark to 25
+          {
+            '@clipBegin': transformSecondsToWallClock(25),
+            '@clipEnd': transformSecondsToWallClock(47),
+            EventStream: undefined,
+          },
+          //ad video is played for 13 seconds
+          {
+            '@clipBegin': undefined,
+            '@clipEnd': transformSecondsToWallClock(13),
+            EventStream: undefined,
+          },
+          //program is played from 47s mark till end
+          {
+            '@clipBegin': transformSecondsToWallClock(47),
+            '@clipEnd': undefined,
+            EventStream: undefined,
+          },
+        ]);
+      },
+    );
 
-      if (isDrmProtected) {
-        expectedHeaders.push(
-          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+    it.each([null, undefined])(
+      'error is thrown if placeholder video is not defined',
+      (video) => {
+        // Arrange;
+        //Act & Assert
+        expect(() => {
+          new PlaylistSmilGenerator(
+            {
+              decryptionCpixFile: undefined,
+              encryptionDashCpixFile: undefined,
+              encryptionHlsCpixFile: undefined,
+            },
+            mockConfig,
+            video as DetailedVideo | undefined,
+          );
+        }).toThrow();
+      },
+    );
+  });
+
+  describe('generate SMIL with `PROLONG_PLAYLIST_TO_24_HOURS` flag on', () => {
+    it.each`
+      placeholderVideoDurationInSeconds | expectedNumberOfParallels | isDrmProtected
+      ${60}                             | ${1440}                   | ${true}
+      ${3600}                           | ${24}                     | ${true}
+      ${60}                             | ${1440}                   | ${false}
+      ${3600}                           | ${24}                     | ${false}
+    `(
+      'playlist with zero duration is prolonged to fit 24H mark',
+      ({
+        placeholderVideoDurationInSeconds,
+        expectedNumberOfParallels,
+        isDrmProtected,
+      }) => {
+        // Arrange
+        const cpix = isDrmProtected
+          ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+          : null;
+        const startDateTime = new Date();
+        const testPlaylist: PlaylistPublishedEvent = {
+          id: uuid(),
+          channel_id: uuid(),
+          start_date_time: startDateTime.toISOString(),
+          end_date_time: startDateTime.toISOString(),
+        };
+        const generator = new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: cpix,
+            encryptionDashCpixFile: cpix,
+            encryptionHlsCpixFile: cpix,
+          },
+          stub<Config>({
+            prolongPlaylistTo24Hours: true,
+            catchUpDurationInMinutes: 0,
+          }),
+          createTestVideo(true, uuid(), placeholderVideoDurationInSeconds),
         );
-      }
-      expect(headerMetadata).toHaveLength(expectedHeaderLength);
-      expect(headerMetadata).toMatchObject(expectedHeaders);
-      const parallels = resultSmil.smil.body.seq.par;
-      expect(parallels).toHaveLength(expectedNumberOfParallels);
-    },
-  );
+        // Act
+        const resultSmil = generator.generate(testPlaylist);
+        // Assert
+        const headerMetadata = resultSmil.smil.head.meta;
+        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaders = [
+          createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.Vod2LiveStartTime,
+            testPlaylist.start_date_time,
+          ),
+          createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+          createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.MosaicPlaylistId,
+            testPlaylist.id,
+          ),
+        ];
 
-  it.each`
-    playlistDurationInSec | placeholderVideoDurationInSeconds | expectedNumberOfParallels | isDrmProtected | durationOfLastParallel
-    ${12345}              | ${60}                             | ${1235}                   | ${true}        | ${15}
-    ${9876.9876}          | ${60}                             | ${1276}                   | ${false}       | ${23}
-    ${43200}              | ${60}                             | ${720}                    | ${true}        | ${0}
-    ${43200}              | ${124}                            | ${349}                    | ${false}       | ${48}
-    ${12345}              | ${1440}                           | ${52}                     | ${true}        | ${615}
-    ${9876.9876}          | ${1440}                           | ${54}                     | ${false}       | ${203}
-    ${43200}              | ${1440}                           | ${30}                     | ${true}        | ${0}
-    ${43200}              | ${2895}                           | ${15}                     | ${false}       | ${2670}
-  `(
-    'playlist with none-zero duration, but smaller than 24H, is prolonged to hit 24 hours mark',
-    ({
-      playlistDurationInSec,
-      placeholderVideoDurationInSeconds,
-      expectedNumberOfParallels,
-      isDrmProtected,
-      durationOfLastParallel,
-    }) => {
-      // Arrange
-      const cpix = isDrmProtected
-        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-        : null;
-      const startDateTime = new Date();
-      const testPlaylist: PlaylistPublishedEvent = {
-        id: uuid(),
-        channel_id: uuid(),
-        start_date_time: startDateTime.toISOString(),
-        end_date_time: new Date(
-          startDateTime.getTime() +
-            SECOND_IN_MILLISECONDS * playlistDurationInSec,
-        ).toISOString(),
-      };
-      const generator = new PlaylistSmilGenerator(
-        {
-          decryptionCpixFile: cpix,
-          encryptionDashCpixFile: cpix,
-          encryptionHlsCpixFile: cpix,
-        },
-        stub<Config>({
-          prolongPlaylistTo24Hours: true,
-        }),
-        createTestVideo(true, uuid(), placeholderVideoDurationInSeconds),
-      );
-      // Act
-      const resultSmil = generator.generate(testPlaylist);
-      // Assert
-      const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 8 : 5;
-      const expectedHeaders = [
-        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.Vod2LiveStartTime,
-          testPlaylist.start_date_time,
-        ),
-        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-        createHeaderMetadata(
-          HeaderMetadataNames.MosaicPlaylistId,
-          testPlaylist.id,
-        ),
-      ];
+        if (isDrmProtected) {
+          expectedHeaders.push(
+            createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+          );
+        }
+        expect(headerMetadata).toHaveLength(expectedHeaderLength);
+        expect(headerMetadata).toMatchObject(expectedHeaders);
+        const parallels = resultSmil.smil.body.seq.par;
+        expect(parallels).toHaveLength(expectedNumberOfParallels);
+      },
+    );
 
-      if (isDrmProtected) {
-        expectedHeaders.push(
-          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+    it.each`
+      playlistDurationInSec | placeholderVideoDurationInSeconds | expectedNumberOfParallels | isDrmProtected | durationOfLastParallel
+      ${12345}              | ${60}                             | ${1235}                   | ${true}        | ${15}
+      ${9876.9876}          | ${60}                             | ${1276}                   | ${false}       | ${23}
+      ${43200}              | ${60}                             | ${720}                    | ${true}        | ${0}
+      ${43200}              | ${124}                            | ${349}                    | ${false}       | ${48}
+      ${12345}              | ${1440}                           | ${52}                     | ${true}        | ${615}
+      ${9876.9876}          | ${1440}                           | ${54}                     | ${false}       | ${203}
+      ${43200}              | ${1440}                           | ${30}                     | ${true}        | ${0}
+      ${43200}              | ${2895}                           | ${15}                     | ${false}       | ${2670}
+    `(
+      'playlist with none-zero duration, but smaller than 24H, is prolonged to hit 24 hours mark',
+      ({
+        playlistDurationInSec,
+        placeholderVideoDurationInSeconds,
+        expectedNumberOfParallels,
+        isDrmProtected,
+        durationOfLastParallel,
+      }) => {
+        // Arrange
+        const cpix = isDrmProtected
+          ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+          : null;
+        const startDateTime = new Date();
+        const testPlaylist: PlaylistPublishedEvent = {
+          id: uuid(),
+          channel_id: uuid(),
+          start_date_time: startDateTime.toISOString(),
+          end_date_time: new Date(
+            startDateTime.getTime() +
+              SECOND_IN_MILLISECONDS * playlistDurationInSec,
+          ).toISOString(),
+        };
+        const generator = new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: cpix,
+            encryptionDashCpixFile: cpix,
+            encryptionHlsCpixFile: cpix,
+          },
+          stub<Config>({
+            prolongPlaylistTo24Hours: true,
+            catchUpDurationInMinutes: 0,
+          }),
+          createTestVideo(true, uuid(), placeholderVideoDurationInSeconds),
         );
-      }
-      expect(headerMetadata).toHaveLength(expectedHeaderLength);
-      expect(headerMetadata).toMatchObject(expectedHeaders);
-      const parallels = resultSmil.smil.body.seq.par;
-      expect(parallels).toHaveLength(expectedNumberOfParallels);
-      const lastParallel = Array.isArray(parallels)
-        ? parallels.pop()
-        : parallels;
-      expect(lastParallel?.['@clipEnd']).toEqual(
-        transformSecondsToWallClock(durationOfLastParallel),
-      );
-    },
-  );
+        // Act
+        const resultSmil = generator.generate(testPlaylist);
+        // Assert
+        const headerMetadata = resultSmil.smil.head.meta;
+        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaders = [
+          createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.Vod2LiveStartTime,
+            testPlaylist.start_date_time,
+          ),
+          createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+          createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.MosaicPlaylistId,
+            testPlaylist.id,
+          ),
+        ];
+
+        if (isDrmProtected) {
+          expectedHeaders.push(
+            createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+          );
+        }
+        expect(headerMetadata).toHaveLength(expectedHeaderLength);
+        expect(headerMetadata).toMatchObject(expectedHeaders);
+        const parallels = resultSmil.smil.body.seq.par;
+        expect(parallels).toHaveLength(expectedNumberOfParallels);
+        const lastParallel = Array.isArray(parallels)
+          ? parallels.pop()
+          : parallels;
+        expect(lastParallel?.['@clipEnd']).toEqual(
+          transformSecondsToWallClock(durationOfLastParallel),
+        );
+      },
+    );
+
+    it.each`
+      playlistDurationInSec | placeholderVideoDurationInSeconds | catchUpDurationInMinutes | expectedNumberOfParallels | isDrmProtected | durationOfLastParallel
+      ${43200}              | ${60}                             | ${0}                     | ${720}                    | ${true}        | ${0}
+      ${43200}              | ${60}                             | ${1}                     | ${721}                    | ${true}        | ${0}
+      ${43200}              | ${60}                             | ${60}                    | ${780}                    | ${true}        | ${0}
+      ${8640}               | ${60}                             | ${0}                     | ${1296}                   | ${true}        | ${0}
+      ${8640}               | ${60}                             | ${1}                     | ${1297}                   | ${true}        | ${0}
+      ${8640}               | ${60}                             | ${60}                    | ${1356}                   | ${true}        | ${0}
+    `(
+      'playlist with none-zero duration, but smaller than 24H, is prolonged to hit 24 hours mark + catch up',
+      ({
+        playlistDurationInSec,
+        placeholderVideoDurationInSeconds,
+        catchUpDurationInMinutes,
+        expectedNumberOfParallels,
+        isDrmProtected,
+        durationOfLastParallel,
+      }) => {
+        // Arrange
+        const cpix = isDrmProtected
+          ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+          : null;
+        const startDateTime = new Date();
+        const testPlaylist: PlaylistPublishedEvent = {
+          id: uuid(),
+          channel_id: uuid(),
+          start_date_time: startDateTime.toISOString(),
+          end_date_time: new Date(
+            startDateTime.getTime() +
+              SECOND_IN_MILLISECONDS * playlistDurationInSec,
+          ).toISOString(),
+        };
+        const generator = new PlaylistSmilGenerator(
+          {
+            decryptionCpixFile: cpix,
+            encryptionDashCpixFile: cpix,
+            encryptionHlsCpixFile: cpix,
+          },
+          stub<Config>({
+            prolongPlaylistTo24Hours: true,
+            catchUpDurationInMinutes: catchUpDurationInMinutes,
+          }),
+          createTestVideo(true, uuid(), placeholderVideoDurationInSeconds),
+        );
+        // Act
+        const resultSmil = generator.generate(testPlaylist);
+        // Assert
+        const headerMetadata = resultSmil.smil.head.meta;
+        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaders = [
+          createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.Vod2LiveStartTime,
+            testPlaylist.start_date_time,
+          ),
+          createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+          createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(
+            HeaderMetadataNames.MosaicPlaylistId,
+            testPlaylist.id,
+          ),
+        ];
+
+        if (isDrmProtected) {
+          expectedHeaders.push(
+            createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
+            createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
+          );
+        }
+        expect(headerMetadata).toHaveLength(expectedHeaderLength);
+        expect(headerMetadata).toMatchObject(expectedHeaders);
+        const parallels = resultSmil.smil.body.seq.par;
+        expect(parallels).toHaveLength(expectedNumberOfParallels);
+        const lastParallel = Array.isArray(parallels)
+          ? parallels.pop()
+          : parallels;
+        expect(lastParallel?.['@clipEnd']).toEqual(
+          transformSecondsToWallClock(durationOfLastParallel),
+        );
+      },
+    );
+  });
 });

@@ -3,6 +3,7 @@ import { Broker } from '@axinom/mosaic-message-bus';
 import { stub } from 'jest-auto-stub';
 import { VodToLiveServiceMessagingSettings } from 'media-messages';
 import { v4 as uuid } from 'uuid';
+import { MINUTE_IN_MILLISECONDS } from '../../common';
 import { createTestVideo } from '../../tests';
 import { AzureStorage } from '../azure/azure-storage';
 import { KeyServiceApi } from '../key-service';
@@ -69,21 +70,21 @@ describe('deleteTransitionLiveStream', () => {
           status: 'test',
           smil: 'test 1',
           transitionDate: new Date(
-            new Date().getTime() + 2 * 60000,
+            new Date().getTime() + 2 * MINUTE_IN_MILLISECONDS,
           ).toISOString(),
         },
         {
           status: 'test',
           smil: 'test 2',
           transitionDate: new Date(
-            new Date().getTime() + 2 * 60000,
+            new Date().getTime() + 2 * MINUTE_IN_MILLISECONDS,
           ).toISOString(),
         },
         {
           status: 'test',
           smil: 'test 3',
           transitionDate: new Date(
-            new Date().getTime() + 2 * 60000,
+            new Date().getTime() + 2 * MINUTE_IN_MILLISECONDS,
           ).toISOString(),
         },
       ];
