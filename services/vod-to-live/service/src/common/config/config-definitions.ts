@@ -54,8 +54,7 @@ export const getConfigDefinitions = (
       env.get('KEY_SERVICE_TENANT_ID').required().asString(),
     keyServiceManagementKey: () =>
       env.get('KEY_SERVICE_MANAGEMENT_KEY').required().asString(),
-    drmProtectionKeyId: () =>
-      env.get('DRM_PROTECTION_KEY_ID').required().required().asString(),
+    drmKeySeedId: () => env.get('DRM_KEY_SEED_ID').required().asString(),
     /**
      * Optional Service Account Client ID, used to get ID service token that is
      * required to get User auth token during development

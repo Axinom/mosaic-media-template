@@ -1,5 +1,6 @@
 import {
   CreateRabbitMQConnectivityMetric,
+  envelopeLoggingMiddleware,
   setupMessagingBroker,
 } from '@axinom/mosaic-message-bus';
 import {
@@ -25,7 +26,6 @@ import {
   VirtualChannelApi,
 } from './domains';
 import { registerMessaging } from './messaging/register-messaging';
-import { createProtectionCpix } from './setup';
 
 const logger = new Logger({ context: 'bootstrap' });
 
@@ -55,10 +55,8 @@ async function bootstrap(): Promise<void> {
     config.keyServiceApiBaseUrl,
     config.keyServiceTenantId,
     config.keyServiceManagementKey,
+    config.drmKeySeedId,
   );
-
-  await createProtectionCpix(config, keyServiceApi, storage, logger);
-
   const broker = await setupMessagingBroker({
     app,
     config,
@@ -72,8 +70,7 @@ async function bootstrap(): Promise<void> {
     logger,
     shutdownActions,
     onMessageMiddleware: [
-      /*envelopeLoggingMiddleware(logger)*/
-      //todo: maybe adjust logging to log only messages without the SMIL, because 24h SMIL can get very long
+      envelopeLoggingMiddleware(logger)
     ],
     rascalConfigExportPath: './src/generated/messaging/rascal-schema.json',
   });

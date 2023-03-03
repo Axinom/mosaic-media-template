@@ -4,11 +4,17 @@ import { VodToLiveServiceMessagingSettings } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { createTestVideo } from '../../tests';
 import { AzureStorage } from '../azure';
+import { ContentKeyResponse, KeyServiceApi } from '../key-service';
 import { ChannelSmilGenerator } from '../smil';
 import { convertObjectToXml } from '../utils';
 import { VirtualChannelApi } from '../virtual-channel';
 import { prepareChannelLiveStream } from './prepare-channel-live-stream';
-import { generateChannelFilePath, metadataFileName } from './utils';
+import {
+  generateChannelFilePath,
+  metadataFileName,
+  protectionDashCpixFileName,
+  protectionHlsCpixFileName,
+} from './utils';
 
 describe('prepareChannelLiveStream', () => {
   let messages: {
@@ -16,10 +22,12 @@ describe('prepareChannelLiveStream', () => {
     message: any;
   }[] = [];
   let createdVirtualChannels: { channelId: string }[] = [];
-  let storedMetadata: {
+  let createdContentKeys: { channel: string; keyId: string }[] = [];
+  let filesStoredInStorage: {
     relativeFilePath: string;
     fileContent: string;
   }[] = [];
+  const mockedContentKeyId = uuid();
   const testChannelData = (
     isDrmProtected: boolean,
   ): { channelId: string; channelJson: string; channelSmil: string } => {
@@ -57,13 +65,51 @@ describe('prepareChannelLiveStream', () => {
       ),
     };
   };
+  const mockedKeyServiceApi = stub<KeyServiceApi>({
+    postSpekeRequest: async (): Promise<string> => {
+      return '<mocked SpekeV2 response!>';
+    },
+    postContentKey: async (
+      contentKeyName: string,
+    ): Promise<ContentKeyResponse> => {
+      createdContentKeys.push({
+        channel: contentKeyName,
+        keyId: mockedContentKeyId,
+      });
+      return {
+        Id: mockedContentKeyId,
+        Name: contentKeyName,
+        Created: new Date().toISOString(),
+        Updated: new Date().toISOString(),
+        CreationMethod: 1,
+      };
+    },
+  });
   // SMIL representing Channel with none-DRM protected content
   const mockedStorage = stub<AzureStorage>({
+    getFileContent: async () => {
+      return JSON.stringify({
+        description: null,
+        id: uuid(),
+        images: [
+          {
+            height: 646,
+            id: 'db561b84-1e78-4f4d-9a3f-446e34db40de',
+            path: '/transform/0-0/U5uZEHhwrXGde33yxwVHx9.png',
+            type: 'channel_logo',
+            width: 860,
+          },
+        ],
+        placeholder_video: createTestVideo(true, uuid(), 142),
+        title: 'Discovery',
+        key_id: mockedContentKeyId,
+      });
+    },
     createFile: async (
       relativeFilePath: string,
       fileContent: string,
     ): Promise<boolean> => {
-      storedMetadata.push({ relativeFilePath, fileContent });
+      filesStoredInStorage.push({ relativeFilePath, fileContent });
       return true;
     },
   });
@@ -90,8 +136,9 @@ describe('prepareChannelLiveStream', () => {
 
   afterEach(() => {
     messages = [];
-    storedMetadata = [];
+    filesStoredInStorage = [];
     createdVirtualChannels = [];
+    createdContentKeys = [];
     jest.clearAllMocks();
   });
 
@@ -113,6 +160,7 @@ describe('prepareChannelLiveStream', () => {
         channelData.channelJson,
         mockedVirtualChannelApi,
         mockedStorage,
+        mockedKeyServiceApi,
         mockedBroker,
         '',
       );
@@ -122,14 +170,39 @@ describe('prepareChannelLiveStream', () => {
         { channelId: channelData.channelId },
       ]);
       expect(messages).toHaveLength(0);
-      expect(storedMetadata).toHaveLength(1);
-      expect(storedMetadata).toMatchObject([
+
+      expect(createdContentKeys).toHaveLength(1);
+      expect(createdContentKeys).toMatchObject([
+        { channel: channelData.channelId, keyId: mockedContentKeyId },
+      ]);
+
+      const channelMetadata = {
+        ...JSON.parse(channelData.channelJson),
+        key_id: mockedContentKeyId,
+      };
+
+      expect(filesStoredInStorage).toHaveLength(3);
+      expect(filesStoredInStorage).toMatchObject([
+        {
+          relativeFilePath: generateChannelFilePath(
+            channelData.channelId,
+            protectionHlsCpixFileName,
+          ),
+          fileContent: '<mocked SpekeV2 response!>',
+        },
+        {
+          relativeFilePath: generateChannelFilePath(
+            channelData.channelId,
+            protectionDashCpixFileName,
+          ),
+          fileContent: '<mocked SpekeV2 response!>',
+        },
         {
           relativeFilePath: generateChannelFilePath(
             channelData.channelId,
             metadataFileName,
           ),
-          fileContent: channelData.channelJson,
+          fileContent: JSON.stringify(channelMetadata),
         },
       ]);
     },
@@ -155,6 +228,7 @@ describe('prepareChannelLiveStream', () => {
         channelJson,
         mockedVirtualChannelApi,
         mockedStorage,
+        mockedKeyServiceApi,
         mockedBroker,
         '',
       );
@@ -173,14 +247,20 @@ describe('prepareChannelLiveStream', () => {
           },
         },
       ]);
-      expect(storedMetadata).toHaveLength(1);
-      expect(storedMetadata).toMatchObject([
+      expect(createdContentKeys).toHaveLength(0); //no new key ids were requested
+      const channelMetadata = {
+        ...JSON.parse(channelJson),
+        key_id: mockedContentKeyId,
+      };
+
+      expect(filesStoredInStorage).toHaveLength(1);
+      expect(filesStoredInStorage).toMatchObject([
         {
           relativeFilePath: generateChannelFilePath(
             channelId,
             metadataFileName,
           ),
-          fileContent: channelJson,
+          fileContent: JSON.stringify(channelMetadata),
         },
       ]);
     },
@@ -206,20 +286,28 @@ describe('prepareChannelLiveStream', () => {
         channelJson,
         mockedVirtualChannelApi,
         mockedStorage,
+        mockedKeyServiceApi,
         mockedBroker,
         '',
       );
       // Assert
       expect(createdVirtualChannels).toHaveLength(0);
       expect(messages).toHaveLength(0);
-      expect(storedMetadata).toHaveLength(1);
-      expect(storedMetadata).toMatchObject([
+
+      expect(createdContentKeys).toHaveLength(0); //no new key ids were requested
+      const channelMetadata = {
+        ...JSON.parse(channelJson),
+        key_id: mockedContentKeyId,
+      };
+
+      expect(filesStoredInStorage).toHaveLength(1);
+      expect(filesStoredInStorage).toMatchObject([
         {
           relativeFilePath: generateChannelFilePath(
             channelId,
             metadataFileName,
           ),
-          fileContent: channelJson,
+          fileContent: JSON.stringify(channelMetadata),
         },
       ]);
     },

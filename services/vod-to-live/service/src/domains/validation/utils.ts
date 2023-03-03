@@ -15,7 +15,7 @@ export const validateVideo = (video: DetailedVideo): ValidationResult => {
   if (video.video_encoding.is_protected) {
     if (video.video_encoding.video_streams.find((s) => !s.key_id)) {
       validationResult.errors.push({
-        message: `Video ${video.id} is missing DRM Keys.`,
+        message: `Video ${video.id} is missing key ids.`,
         code: 'MISSING_DRM_KEYS',
       });
     }

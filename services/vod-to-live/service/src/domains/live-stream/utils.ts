@@ -24,8 +24,13 @@ export const generateChannelFilePath = (
 export const generatePlaylistFilePath = (
   channelId: string,
   playlistId: string,
-  fileName: string,
-): string => `${channelId}/${playlistId}/${fileName}`;
+  fileName?: string,
+): string => {
+  if (fileName) {
+    return `${channelId}/${playlistId}/${fileName}`;
+  }
+  return `${channelId}/${playlistId}`;
+};
 
 /**
  * Checks if provided string date-time is in the future.

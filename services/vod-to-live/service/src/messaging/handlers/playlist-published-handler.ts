@@ -1,6 +1,5 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import {
-  ChannelPublishedEvent,
   ChannelServiceMultiTenantMessagingSettings,
   DetailedVideo,
   PlaylistPublishedEvent,
@@ -10,6 +9,7 @@ import {
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
+import { ChannelMetadataModel } from 'src/domains/models';
 import { Config, DAY_IN_SECONDS } from '../../common';
 import {
   AzureStorage,
@@ -52,8 +52,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
     const channelJson = await this.storage.getFileContent(
       generateChannelFilePath(payload.channel_id, metadataFileName),
     );
-    const channelPublishedEvent: ChannelPublishedEvent =
-      JSON.parse(channelJson);
+    const channelPublishedEvent: ChannelMetadataModel = JSON.parse(channelJson);
     const placeholderVideo: DetailedVideo | undefined =
       channelPublishedEvent?.placeholder_video;
 

@@ -7,6 +7,7 @@ import { Config } from '../../common';
 import {
   AzureStorage,
   deleteChannelLiveStream,
+  KeyServiceApi,
   VirtualChannelApi,
 } from '../../domains';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
@@ -16,6 +17,7 @@ export class ChannelUnpublishedHandler extends AuthenticatedMessageHandler<Chann
     config: Config,
     private storage: AzureStorage,
     private virtualChannelApi: VirtualChannelApi,
+    private keyServiceApi: KeyServiceApi,
   ) {
     super(
       ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished.messageType,
@@ -30,6 +32,7 @@ export class ChannelUnpublishedHandler extends AuthenticatedMessageHandler<Chann
       payload.id,
       this.virtualChannelApi,
       this.storage,
+      this.keyServiceApi,
     );
   }
 }

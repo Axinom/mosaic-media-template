@@ -127,7 +127,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
         {
           message: `Video ${
             message.payload.placeholder_video!.id
-          } is missing DRM Keys.`,
+          } is missing key ids.`,
           code: 'MISSING_DRM_KEYS',
         },
       ]);
