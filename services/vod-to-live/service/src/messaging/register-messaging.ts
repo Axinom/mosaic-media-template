@@ -37,7 +37,13 @@ export const registerMessaging = (
       ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished,
       config,
     ).subscribeForEvent(
-      () => new ChannelUnpublishedHandler(config, storage, virtualChannelApi),
+      () =>
+        new ChannelUnpublishedHandler(
+          config,
+          storage,
+          virtualChannelApi,
+          keyServiceApi,
+        ),
     ),
     new RascalConfigBuilder(
       ChannelServiceMultiTenantMessagingSettings.PlaylistPublished,
@@ -82,6 +88,7 @@ export const registerMessaging = (
             storage,
             broker,
             virtualChannelApi,
+            keyServiceApi,
           ),
       ),
   ];

@@ -8,7 +8,7 @@ import { AzureStorage } from '../azure/azure-storage';
 import { KeyServiceApi } from '../key-service';
 import { VirtualChannelApi } from '../virtual-channel';
 import { deleteTransitionLiveStream } from './delete-transition-live-stream';
-import { decryptionCpixFileName } from './utils';
+import { decryptionCpixFileName, generateChannelFilePath } from './utils';
 
 describe('deleteTransitionLiveStream', () => {
   let savedFiles: { relativeFilePath: string; fileContent: string }[] = [];
@@ -162,7 +162,10 @@ describe('deleteTransitionLiveStream', () => {
         expect(savedFiles).toHaveLength(1);
         expect(savedFiles).toMatchObject([
           {
-            relativeFilePath: `${channelId}/${decryptionCpixFileName}`,
+            relativeFilePath: generateChannelFilePath(
+              channelId,
+              decryptionCpixFileName,
+            ),
             fileContent: '<mocked speke response!>',
           },
         ]);

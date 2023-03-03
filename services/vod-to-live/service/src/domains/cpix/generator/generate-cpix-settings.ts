@@ -18,7 +18,6 @@ import {
 } from '../models';
 import { getDrmKeys } from './utils';
 
-//todo: cover with unit tests
 /**
  * Generates a CpixSetting, containing paths to CPIX files required for videos decryption and Live Stream protection.
  * @param channelId - unique identifier of the Channel.
@@ -98,13 +97,13 @@ export const generateCpixSettings = async (
       startDate.getTime() + durationInSeconds * SECOND_IN_MILLISECONDS,
     );
     encryptionDashCpixFile = await storage.getFileSasUrl(
-      protectionDashCpixFileName,
-      startDate, // protection token start to be accessible from the transition start date-time
+      generateChannelFilePath(channelId, protectionDashCpixFileName),
+      startDate,
       encryptionAccessEndDate,
     );
     encryptionHlsCpixFile = await storage.getFileSasUrl(
-      protectionHlsCpixFileName,
-      startDate, // protection token start to be accessible from the transition start date-time
+      generateChannelFilePath(channelId, protectionHlsCpixFileName),
+      startDate,
       encryptionAccessEndDate,
     );
   }

@@ -349,11 +349,11 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       expect(validationResult.errors).toHaveLength(2);
       expect(validationResult.errors).toMatchObject([
         {
-          message: `Video ${programVideoId} is missing DRM Keys.`,
+          message: `Video ${programVideoId} is missing key ids.`,
           code: 'MISSING_DRM_KEYS',
         },
         {
-          message: `Video ${scheduleVideoId} is missing DRM Keys.`,
+          message: `Video ${scheduleVideoId} is missing key ids.`,
           code: 'MISSING_DRM_KEYS',
         },
       ]);

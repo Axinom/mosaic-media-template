@@ -6,6 +6,7 @@ import {
 import { Config } from '../../common';
 import {
   AzureStorage,
+  KeyServiceApi,
   prepareChannelLiveStream,
   VirtualChannelApi,
 } from '../../domains';
@@ -17,6 +18,7 @@ export class PrepareChannelLiveStreamHandler extends AuthenticatedMessageHandler
     private storage: AzureStorage,
     private broker: Broker,
     private virtualChannelApi: VirtualChannelApi,
+    private keyServiceApi: KeyServiceApi,
   ) {
     super(
       VodToLiveServiceMessagingSettings.PrepareChannelLiveStream.messageType,
@@ -33,6 +35,7 @@ export class PrepareChannelLiveStreamHandler extends AuthenticatedMessageHandler
       payload.json,
       this.virtualChannelApi,
       this.storage,
+      this.keyServiceApi,
       this.broker,
       message.envelope.auth_token,
     );
