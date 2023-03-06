@@ -17,6 +17,7 @@ import {
   tenantEnvironmentIdsLogMiddleware,
   trimErrorsSkipMaskMiddleware,
 } from '@axinom/mosaic-service-common';
+import bodyParser from 'body-parser';
 import express from 'express';
 import { getFullConfig } from './common';
 import {
@@ -35,6 +36,11 @@ async function bootstrap(): Promise<void> {
   setupGlobalSkipMaskMiddleware(trimErrorsSkipMaskMiddleware);
   setupGlobalConsoleOverride(logger);
   const app = express();
+  app.use(
+    bodyParser.json({
+      limit: '50mb',
+    }),
+  );
   const config = getFullConfig();
   setupGlobalLogMiddleware([tenantEnvironmentIdsLogMiddleware(config)]);
 
@@ -69,9 +75,7 @@ async function bootstrap(): Promise<void> {
     ),
     logger,
     shutdownActions,
-    onMessageMiddleware: [
-      envelopeLoggingMiddleware(logger)
-    ],
+    onMessageMiddleware: [envelopeLoggingMiddleware(logger)],
     rascalConfigExportPath: './src/generated/messaging/rascal-schema.json',
   });
 

@@ -199,6 +199,10 @@
         "PrepareChannelLiveStream": {
           "exchange": "command",
           "routingKey": "vod-to-live-service.channel.prepare_live_stream"
+        },
+        "ChannelProtectionKeyCreated": {
+          "exchange": "event",
+          "routingKey": "vod-to-live-service.channel.protection_key_created"
         }
       },
       "subscriptions": {

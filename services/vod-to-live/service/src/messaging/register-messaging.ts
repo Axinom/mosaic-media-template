@@ -91,5 +91,11 @@ export const registerMessaging = (
             keyServiceApi,
           ),
       ),
+
+    // Channel Protection Key Created
+    new RascalConfigBuilder(
+      VodToLiveServiceMessagingSettings.ChannelProtectionKeyCreated,
+      config,
+    ).publishEvent(),
   ];
 };

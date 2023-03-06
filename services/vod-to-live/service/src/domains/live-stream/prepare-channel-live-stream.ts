@@ -1,6 +1,7 @@
 import { Broker } from '@axinom/mosaic-message-bus';
 import { getMappedError, Logger } from '@axinom/mosaic-service-common';
 import {
+  ChannelProtectionKeyCreatedEvent,
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
@@ -71,7 +72,17 @@ export const prepareChannelLiveStream = async (
         channelId,
         smil,
       );
-      //TODO: send RabbitMQ event message to channel's key_id (or send channel metadata + key_id?)
+      await broker.publish<ChannelProtectionKeyCreatedEvent>(
+        VodToLiveServiceMessagingSettings.ChannelProtectionKeyCreated
+          .messageType,
+        {
+          channel_id: channelId,
+          key_id: channelKey.Id,
+        },
+        {
+          auth_token: authToken,
+        },
+      );
       logger.debug({
         message: `Virtual Channel ${channelId} creation result:`,
         details: {
