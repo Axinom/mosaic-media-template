@@ -97,7 +97,7 @@ export const prepareChannelLiveStream = async (
 
 /**
  * Executed once per each new channel: creates in the Azure storage in directory {channelId}
- * CPIX files required for DASh and HLS live stream protection.
+ * CPIX files required for DASH and HLS live stream protection.
  * All Live Streams created for the specified channel will use files for protection
  * with Azure SAS token limited in time by the playlist duration.
  */
@@ -123,7 +123,7 @@ const createProtectionCpix = async (
     generateChannelFilePath(channelId, protectionHlsCpixFileName),
   );
 
-  // store Dash CPIX response
+  // store DASH CPIX response
   const wasDashCpixFileCreated = await storeSpekeResponse(
     azureStorage,
     keyServiceApi,
