@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "channel_protection_key_created_event",
+  "description": "DRM protection key for Channel was created.",
+  "additionalProperties": false,
+  "required": [
+    "channel_id",
+    "key_id"
+  ],
+  "properties": {
+    "channel_id": {
+      "description": "Unique identifier of the channel.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*"
+    },
+    "key_id": {
+      "description": "Unique identifier of the key.",
+      "type": "string",
+      "minLength": 32,
+      "maxLength": 36,
+      "format": "uuid"
+    }
+  }
+}

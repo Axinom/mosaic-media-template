@@ -169,7 +169,18 @@ describe('prepareChannelLiveStream', () => {
       expect(createdVirtualChannels).toMatchObject([
         { channelId: channelData.channelId },
       ]);
-      expect(messages).toHaveLength(0);
+      expect(messages).toHaveLength(1);
+      expect(messages).toMatchObject([
+        {
+          messageType:
+            VodToLiveServiceMessagingSettings.ChannelProtectionKeyCreated
+              .messageType,
+          message: {
+            channel_id: channelData.channelId,
+            key_id: mockedContentKeyId,
+          },
+        },
+      ]);
 
       expect(createdContentKeys).toHaveLength(1);
       expect(createdContentKeys).toMatchObject([

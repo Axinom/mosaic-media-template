@@ -25,6 +25,15 @@ channels:
     publish:
       message:
         $ref: '#/components/messages/prepare-channel-live-stream-command'
+  # events
+  'channel.protection_key_created':
+    bindings:
+      amqp:
+        queue:
+          name: channel:protection_key_created
+    subscribe:
+      message:
+        $ref: '#/components/messages/channel-protection-key-created-event'
 
 components:
   messages:
@@ -37,3 +46,8 @@ components:
       contentType: application/json
       payload:
         $ref: 'prepare-channel-live-stream-command.json'
+    # events
+    channel-protection-key-created-event:
+      contentType: application/json
+      payload:
+        $ref: 'channel-protection-key-created-event.json'
