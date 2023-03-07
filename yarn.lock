@@ -186,15 +186,15 @@
     pg "^8.5.1"
     sql-formatter "^4.0.2"
 
-"@axinom/mosaic-core@^0.3.0-rc.10":
-  version "0.3.0-rc.10"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.3.0-rc.10.tgz#41fdbf22166ee7aa3cb3cfed73d29690af10e9b0"
-  integrity sha512-DdzKhRYGDjTlXMNXqDlmE02jWnId9jIGw31+KlbHQYyfLjfxqhKlkwmCxg9lL4GhDRWIi3vAYdUNnxI9/FT9IQ==
-
 "@axinom/mosaic-core@^0.3.0-rc.16":
   version "0.3.0-rc.16"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.3.0-rc.16.tgz#a0c73dafcbb8103984df5ed14a9be5ea8f7b3916"
   integrity sha512-F49TW4NFR1JdadsWuJSvvoo/hqPCdhkyfL+8Y1obAkNDTPMtZvizaudEY9zGrwKZHgzm45mIoaqPlTychaRQeQ==
+
+"@axinom/mosaic-core@^0.3.0-rc.18":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.3.0.tgz#2a3d2c4d6a94f99aaa7b271b0bd70abd773cab70"
+  integrity sha512-jP9LyIkIkeqSEUVJ4r//x3Jg7yonMUJ7lfaGBUUFEb5mSHOCFkyraKGC93MiK9BF9DxJ9vK6ULb7yVrNgUl7Gw==
 
 "@axinom/mosaic-db-common@0.22.0-rc.16":
   version "0.22.0-rc.16"
@@ -309,12 +309,12 @@
     uuid-encoder "^1.2.0"
     verror "^1.10.0"
 
-"@axinom/mosaic-ui@0.26.0-rc.10":
-  version "0.26.0-rc.10"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.26.0-rc.10.tgz#464a3b8d0ab25d8791726971a1c2e8d1649ecb36"
-  integrity sha512-fou5gH4SJ44j+a55BvrUZ48oSlGdObELNrbTnwvxxiFkVRdi5K2mw/kttNZaFyrwFDNEynwr+TXOoQyr5wx2iw==
+"@axinom/mosaic-ui@0.26.0-rc.18":
+  version "0.26.0-rc.18"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.26.0-rc.18.tgz#7bc5f625d277b3668cd6582cff3ddccfb8ccafd3"
+  integrity sha512-9RyQpA2Y+LliitH4fv62l+NG8n5MPjlKjAaKaYLAFQFlRuZT5rUCncArtybhY8a9NGN1JBk3BU081fvA/pJfUg==
   dependencies:
-    "@axinom/mosaic-core" "^0.3.0-rc.10"
+    "@axinom/mosaic-core" "^0.3.0-rc.18"
     "@faker-js/faker" "^7.4.0"
     "@popperjs/core" "^2.9.2"
     clsx "^1.1.0"
