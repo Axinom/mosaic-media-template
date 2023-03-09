@@ -6,7 +6,7 @@
       "-- TODO: To enable subscriptions:",
       "-- - Use `setupHttpServerWithWebsockets` with `setupManagementGQLSubscriptionAuthentication` as 3rd parameter to enable authentication.",
       "-- - Create the plugin via SubscriptionsPluginFactory('${1:table_name}', '${2:SingularTableNameInPascalCase}', '${4|UUID,Int|}')",
-      "-- - Use `enableSubscriptions` and `.addHookPluginFactory(subscriptionAuthorizationHookFactory)` and on the `PostgraphileOptionsBuilder`.",
+      "-- - Use `enableSubscriptions` on the `PostgraphileOptionsBuilder`.",
       "-- - Enhance your HTTP server with websocket support with `enhanceHttpServerWithSubscriptions`."
     ],
     "description": [
@@ -450,6 +450,20 @@
     ],
     "scope": "sql"
   },
+  "Constraint Matches Pattern (Ax Utils)": {
+    "prefix": "ax-constraint-matches-pattern",
+    "body": [
+      "ALTER TABLE ${4:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_matches_pattern;",
+      "ALTER TABLE ${4:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_matches_pattern",
+      "   CHECK(ax_utils.constraint_matches_pattern(${2:column_name}, '${3:^[\\w]+$}', 'The ${2/[_]/ /g} does not match the pattern \"%2\\$s\"'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the property value does not match a provided pattern.",
+      "The message parameter is optional. The default message includes the value and pattern which did not match but does not include the property name.",
+      "By default, the used error code is 'PATRN' but can be overridden using the 4th parameter."
+    ],
+    "scope": "sql"
+  },
   "Constraint Max Length (Ax Utils)": {
     "prefix": "ax-constraint-max-length",
     "body": [
@@ -545,6 +559,20 @@
       "Adds a constraint that throws an error if the value is not Base64 encoded.",
       "The message parameter is optional. The default message does not include the property name.",
       "By default, the used error code is 'BAS64' but can be overridden using the 3rd parameter."
+    ],
+    "scope": "sql"
+  },
+  "Constraint Is Identifier Key (Ax Utils)": {
+    "prefix": "ax-constraint-is-identifier-key",
+    "body": [
+      "ALTER TABLE ${3:app_public}.${1:table_name} DROP CONSTRAINT IF EXISTS ${2:column_name}_is_identifier_key;",
+      "ALTER TABLE ${3:app_public}.${1:table_name} ADD CONSTRAINT ${2:column_name}_is_identifier_key",
+      "   CHECK(ax_utils.constraint_is_identifier_key(${2:column_name}, 'The ${2/[_]/ /g} must only contain letters, numbers, underscores, and dashes.'));"
+    ],
+    "description": [
+      "Adds a constraint that throws an error if the value contains characters other than letters, numbers, underscores, and dashes.",
+      "The message parameter is optional. The default message does not include the property name.",
+      "By default, the used error code is 'IDKEY' but can be overridden using the 3rd parameter."
     ],
     "scope": "sql"
   },
@@ -651,6 +679,17 @@
     ],
     "scope": "sql"
   },
+  "Validation Is Identifier Key (Ax Utils)": {
+    "prefix": "ax-validation-is-identifier-key",
+    "body": [
+      "ax_utils.validation_is_identifier_key(${1:column_or_variable})"
+    ],
+    "description": [
+      "Returns true if the value only contains letters, numbers, underscores, and dashes.",
+      "Returns false otherwise."
+    ],
+    "scope": "sql"
+  },
   "Validation Is Url (Ax Utils)": {
     "prefix": "ax-validation-is-url",
     "body": [
@@ -704,7 +743,7 @@
   "User Has Setting (Ax Utils)": {
     "prefix": "ax-user-has-setting",
     "body": [
-      "ax_utils.user_has_setting(${1:'ENTITIES_VIEW,ADMIN'}, '${2:mosaic.auth.permissions}')"
+      "SELECT ax_utils.user_has_setting(${1:'ENTITIES_VIEW,ADMIN'}, '${2:mosaic.auth.permissions}');"
     ],
     "description": [
       "Checks if a user has one of the given settings in a local variable."
@@ -714,21 +753,21 @@
   "User Has Permission (Ax Utils)": {
     "prefix": "ax-user-has-permission",
     "body": [
-      "ax_utils.user_has_permission(${1:'ENTITIES_VIEW,ADMIN'})"
+      "SELECT ax_utils.user_has_permission(${1:'ENTITIES_VIEW,ADMIN'});"
     ],
     "description": [
       "Checks if a user has at least one of the given permissions.",
       "For example, user_has_permission('ENTITIES_VIEW,ADMIN') would return true if he has either the permission 'ENTITIES_VIEW' and/or 'ADMIN'.",
       "If the user has no required permission, it throws an error with the 'PERMI' error code value.",
       "You will use this function most often in policies like:\n",
-      "CREATE POLICY my_table_authorization ON app_public.my_table FOR SELECT USING (ax_utils.user_has_permission('ENTITIES_VIEW,ADMIN'));"
+      "CREATE POLICY my_table_authorization ON app_public.my_table FOR SELECT USING ((SELECT ax_utils.user_has_permission('ENTITIES_VIEW,ADMIN')));"
     ],
     "scope": "sql"
   },
   "User Has Tag (Ax Utils)": {
     "prefix": "ax-user-has-tag",
     "body": [
-      "ax_utils.user_has_tag(${1:'tag1,tag2'})"
+      "SELECT ax_utils.user_has_tag(${1:'tag1,tag2'});"
     ],
     "description": [
       "Checks if a user has one of the specified tags.\n",
@@ -739,7 +778,7 @@
   "User Has Permission And Tag (Ax Utils)": {
     "prefix": "ax-user-has-permission-and-tag",
     "body": [
-      "ax_utils.user_has_permission_and_tag(${1:'ENTITIES_VIEW,ADMIN'}, ${2:column_value})"
+      "SELECT ax_utils.user_has_permission_and_tag(${1:'ENTITIES_VIEW,ADMIN'}, ${2:column_value});"
     ],
     "description": [
       "Checks if a user has a specific permission.",
@@ -752,7 +791,7 @@
   "Current Tenant Id (Ax Utils)": {
     "prefix": "ax-current-tenant-id",
     "body": [
-      "ax_utils.current_tenant_id()"
+      "SELECT ax_utils.current_tenant_id();"
     ],
     "description": [
       "Gets the tenant ID from the context of the current user.",
@@ -763,7 +802,7 @@
   "Current Environment Id (Ax Utils)": {
     "prefix": "ax-current-environment-id",
     "body": [
-      "ax_utils.current_environment_id()"
+      "SELECT ax_utils.current_environment_id();"
     ],
     "description": [
       "Gets the environment ID from the context of the current user.",
@@ -774,7 +813,7 @@
   "Current User Id (Ax Utils)": {
     "prefix": "ax-current-user-id",
     "body": [
-      "ax_utils.current_user_id()"
+      "SELECT ax_utils.current_user_id();"
     ],
     "description": [
       "Gets the User ID from the context of the current user.",
@@ -955,7 +994,7 @@
       "",
       "-- $0TODO: After a new table is added and service is running, new GraphQL queries/mutations will become available based on GRANT statements.",
       "--       Newly added operations must be assigned to permissions in the PermissionDefinition to become accessible.",
-      "-- TODO: Adjust SubscriptionsPlugin by adding a subscription GraphQL endpoint, e.g. `SubscriptionsPluginFactory('${1:table_name}', '${6:SingularTableNameInPascalCase}', '${7|Int,UUID|}')`"
+      "-- TODO: Adjust SubscriptionsPlugin by adding a subscription GraphQL endpoint, e.g. `SubscriptionsPluginFactory('${1:table_name}', '${6:SingularTableNameInPascalCase}', 'Int')`"
     ],
     "description": "Creates a table with enabled authentication. Includes examples of audit properties, indexes, subscriptions trigger, grants, and constraints."
   },

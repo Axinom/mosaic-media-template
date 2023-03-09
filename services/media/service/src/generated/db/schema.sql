@@ -321,30 +321,30 @@ BEGIN
 
   if (filterReadPermissions <> '' and allowedModifyPermissions <> '' and allowedReadPermissions <> '') then
     EXECUTE 'CREATE POLICY snapshots_' || entityType || '_authorization_select ON app_public.snapshots FOR SELECT 
-      USING (' || type_rls_string || ' AND app_hidden.user_has_filter_permission(''' || filterReadPermissions || ''') AND ax_utils.user_has_permission(''' || allowedReadPermissions || '''));';
+      USING (' || type_rls_string || ' AND (SELECT app_hidden.user_has_filter_permission(''' || filterReadPermissions || ''')) AND (SELECT ax_utils.user_has_permission(''' || allowedReadPermissions || ''')));';
 
     EXECUTE 'CREATE POLICY snapshots_' || entityType || '_authorization_insert ON app_public.snapshots FOR INSERT
-      WITH CHECK (' || type_rls_string || ' AND ax_utils.user_has_permission(''' || allowedModifyPermissions || '''));';
+      WITH CHECK (' || type_rls_string || ' AND (SELECT ax_utils.user_has_permission(''' || allowedModifyPermissions || ''')));';
 
     EXECUTE 'CREATE POLICY snapshots_' || entityType || '_authorization_update ON app_public.snapshots FOR UPDATE
-      USING (' || type_rls_string || ' AND ax_utils.user_has_permission(''' || allowedModifyPermissions || '''))
-      WITH CHECK (' || type_rls_string || ' AND ax_utils.user_has_permission(''' || allowedModifyPermissions || '''));';
+      USING (' || type_rls_string || ' AND (SELECT ax_utils.user_has_permission(''' || allowedModifyPermissions || ''')))
+      WITH CHECK (' || type_rls_string || ' AND (SELECT ax_utils.user_has_permission(''' || allowedModifyPermissions || ''')));';
 
     EXECUTE 'CREATE POLICY snapshots_' || entityType || '_authorization_delete ON app_public.snapshots FOR DELETE
-      USING (' || type_rls_string || ' AND ax_utils.user_has_permission(''' || allowedModifyPermissions || '''));';
+      USING (' || type_rls_string || ' AND (SELECT ax_utils.user_has_permission(''' || allowedModifyPermissions || ''')));';
 
     EXECUTE 'CREATE POLICY snapshots_validation_' || entityType || '_authorization_select ON app_public.snapshot_validation_results FOR SELECT 
-      USING (' || type_rls_string || ' AND app_hidden.user_has_filter_permission(''' || filterReadPermissions || ''') AND ax_utils.user_has_permission(''' || allowedReadPermissions || '''));';
+      USING (' || type_rls_string || ' AND (SELECT app_hidden.user_has_filter_permission(''' || filterReadPermissions || ''')) AND (SELECT ax_utils.user_has_permission(''' || allowedReadPermissions || ''')));';
 
     EXECUTE 'CREATE POLICY snapshots_validation_' || entityType || '_authorization_insert ON app_public.snapshot_validation_results FOR INSERT
-      WITH CHECK (' || type_rls_string || ' AND ax_utils.user_has_permission(''' || allowedModifyPermissions || '''));';
+      WITH CHECK (' || type_rls_string || ' AND (SELECT ax_utils.user_has_permission(''' || allowedModifyPermissions || ''')));';
 
     EXECUTE 'CREATE POLICY snapshots_validation_' || entityType || '_authorization_update ON app_public.snapshot_validation_results FOR UPDATE
-      USING (' || type_rls_string || ' AND ax_utils.user_has_permission(''' || allowedModifyPermissions || '''))
-      WITH CHECK (' || type_rls_string || ' AND ax_utils.user_has_permission(''' || allowedModifyPermissions || '''));';
+      USING (' || type_rls_string || ' AND (SELECT ax_utils.user_has_permission(''' || allowedModifyPermissions || ''')))
+      WITH CHECK (' || type_rls_string || ' AND (SELECT ax_utils.user_has_permission(''' || allowedModifyPermissions || ''')));';
 
     EXECUTE 'CREATE POLICY snapshots_validation_' || entityType || '_authorization_delete ON app_public.snapshot_validation_results FOR DELETE
-      USING (' || type_rls_string || ' AND ax_utils.user_has_permission(''' || allowedModifyPermissions || '''));';
+      USING (' || type_rls_string || ' AND (SELECT ax_utils.user_has_permission(''' || allowedModifyPermissions || ''')));';
   else
     perform ax_utils.raise_error('Invalid parameters provided to "ax_utils.define_snapshot_authentication".', 'SETUP');
   end if;
@@ -2126,17 +2126,17 @@ BEGIN
 
   if (readPermissions <> '' and modifyPermissions <> '') then
     EXECUTE 'CREATE POLICY ' || tableName || '_authorization ON ' || schemaName || '.' || tableName || ' FOR ALL
-      USING (ax_utils.user_has_permission(''' || readPermissions || ''') AND ' || additionalRls || ')
-      WITH CHECK (ax_utils.user_has_permission(''' || modifyPermissions || ''') AND ' || additionalRls || ');';
+      USING ((SELECT ax_utils.user_has_permission(''' || readPermissions || ''')) AND ' || additionalRls || ')
+      WITH CHECK ((SELECT ax_utils.user_has_permission(''' || modifyPermissions || ''')) AND ' || additionalRls || ');';
     EXECUTE 'DROP POLICY IF EXISTS ' || tableName || '_authorization_delete ON ' || schemaName || '.' || tableName || ';';
     EXECUTE 'CREATE POLICY ' || tableName || '_authorization_delete ON ' || schemaName || '.' || tableName || ' AS restrictive FOR DELETE
-    USING (ax_utils.user_has_permission(''' || modifyPermissions || '''));';
+    USING ((SELECT ax_utils.user_has_permission(''' || modifyPermissions || ''')));';
   elsif (readPermissions <> '') then
     EXECUTE 'CREATE POLICY ' || tableName || '_authorization ON ' || schemaName || '.' || tableName || ' FOR SELECT
-      USING (ax_utils.user_has_permission(''' || readPermissions || ''') AND ' || additionalRls || ');';
+      USING ((SELECT ax_utils.user_has_permission(''' || readPermissions || ''')) AND ' || additionalRls || ');';
   elsif (additionalRls <> '') then
     EXECUTE 'CREATE POLICY ' || tableName || '_authorization ON ' || schemaName || '.' || tableName || ' FOR ALL
-      USING (' || tenant_rls_string || ');';
+      USING (' || additionalRls || ');';
   else
     perform ax_utils.raise_error('Invalid parameters provided to "define_authentication". At least the "readPermissions" or "additionalRls" must be provided.', 'SETUP');
   end if;
@@ -2169,7 +2169,7 @@ CREATE FUNCTION ax_define.define_end_user_authentication(tablename text, scheman
     LANGUAGE plpgsql
     AS $$
 DECLARE
-  end_user_rls_string TEXT := '((user_id = ax_utils.current_user_id() OR ax_utils.current_user_id() = uuid_nil()))';
+  end_user_rls_string TEXT := '((user_id = (SELECT ax_utils.current_user_id()) OR (SELECT ax_utils.current_user_id()) = uuid_nil()))';
 BEGIN
   EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ENABLE ROW LEVEL SECURITY;';
   EXECUTE 'DROP POLICY IF EXISTS ' || tableName || '_end_user_authorization ON ' || schemaName || '.' || tableName || ';';
@@ -9194,14 +9194,14 @@ ALTER TABLE app_public.collection_relations ENABLE ROW LEVEL SECURITY;
 -- Name: collection_relations collection_relations_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collection_relations_authorization ON app_public.collection_relations USING ((ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY collection_relations_authorization ON app_public.collection_relations USING ((( SELECT ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: collection_relations collection_relations_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collection_relations_authorization_delete ON app_public.collection_relations AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text));
+CREATE POLICY collection_relations_authorization_delete ON app_public.collection_relations AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9214,14 +9214,14 @@ ALTER TABLE app_public.collections ENABLE ROW LEVEL SECURITY;
 -- Name: collections collections_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collections_authorization ON app_public.collections USING ((ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY collections_authorization ON app_public.collections USING ((( SELECT ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: collections collections_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collections_authorization_delete ON app_public.collections AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text));
+CREATE POLICY collections_authorization_delete ON app_public.collections AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9234,14 +9234,14 @@ ALTER TABLE app_public.collections_images ENABLE ROW LEVEL SECURITY;
 -- Name: collections_images collections_images_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collections_images_authorization ON app_public.collections_images USING ((ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY collections_images_authorization ON app_public.collections_images USING ((( SELECT ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: collections_images collections_images_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collections_images_authorization_delete ON app_public.collections_images AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text));
+CREATE POLICY collections_images_authorization_delete ON app_public.collections_images AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9254,14 +9254,14 @@ ALTER TABLE app_public.collections_snapshots ENABLE ROW LEVEL SECURITY;
 -- Name: collections_snapshots collections_snapshots_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collections_snapshots_authorization ON app_public.collections_snapshots USING ((ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY collections_snapshots_authorization ON app_public.collections_snapshots USING ((( SELECT ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: collections_snapshots collections_snapshots_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collections_snapshots_authorization_delete ON app_public.collections_snapshots AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text));
+CREATE POLICY collections_snapshots_authorization_delete ON app_public.collections_snapshots AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9274,14 +9274,14 @@ ALTER TABLE app_public.collections_tags ENABLE ROW LEVEL SECURITY;
 -- Name: collections_tags collections_tags_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collections_tags_authorization ON app_public.collections_tags USING ((ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY collections_tags_authorization ON app_public.collections_tags USING ((( SELECT ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: collections_tags collections_tags_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collections_tags_authorization_delete ON app_public.collections_tags AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text));
+CREATE POLICY collections_tags_authorization_delete ON app_public.collections_tags AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9294,14 +9294,14 @@ ALTER TABLE app_public.episodes ENABLE ROW LEVEL SECURITY;
 -- Name: episodes episodes_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_authorization ON app_public.episodes USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY episodes_authorization ON app_public.episodes USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes episodes_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_authorization_delete ON app_public.episodes AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY episodes_authorization_delete ON app_public.episodes AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9314,14 +9314,14 @@ ALTER TABLE app_public.episodes_casts ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_casts episodes_casts_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_casts_authorization ON app_public.episodes_casts USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY episodes_casts_authorization ON app_public.episodes_casts USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_casts episodes_casts_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_casts_authorization_delete ON app_public.episodes_casts AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY episodes_casts_authorization_delete ON app_public.episodes_casts AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9334,14 +9334,14 @@ ALTER TABLE app_public.episodes_images ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_images episodes_images_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_images_authorization ON app_public.episodes_images USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY episodes_images_authorization ON app_public.episodes_images USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_images episodes_images_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_images_authorization_delete ON app_public.episodes_images AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY episodes_images_authorization_delete ON app_public.episodes_images AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9354,14 +9354,14 @@ ALTER TABLE app_public.episodes_licenses ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_licenses episodes_licenses_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_licenses_authorization ON app_public.episodes_licenses USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY episodes_licenses_authorization ON app_public.episodes_licenses USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_licenses episodes_licenses_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_licenses_authorization_delete ON app_public.episodes_licenses AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY episodes_licenses_authorization_delete ON app_public.episodes_licenses AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9374,14 +9374,14 @@ ALTER TABLE app_public.episodes_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_licenses_countries episodes_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_licenses_countries_authorization ON app_public.episodes_licenses_countries USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY episodes_licenses_countries_authorization ON app_public.episodes_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_licenses_countries episodes_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_licenses_countries_authorization_delete ON app_public.episodes_licenses_countries AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY episodes_licenses_countries_authorization_delete ON app_public.episodes_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9394,14 +9394,14 @@ ALTER TABLE app_public.episodes_production_countries ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_production_countries episodes_production_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_production_countries_authorization ON app_public.episodes_production_countries USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY episodes_production_countries_authorization ON app_public.episodes_production_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_production_countries episodes_production_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_production_countries_authorization_delete ON app_public.episodes_production_countries AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY episodes_production_countries_authorization_delete ON app_public.episodes_production_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9414,14 +9414,14 @@ ALTER TABLE app_public.episodes_snapshots ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_snapshots episodes_snapshots_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_snapshots_authorization ON app_public.episodes_snapshots USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY episodes_snapshots_authorization ON app_public.episodes_snapshots USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_snapshots episodes_snapshots_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_snapshots_authorization_delete ON app_public.episodes_snapshots AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY episodes_snapshots_authorization_delete ON app_public.episodes_snapshots AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9434,14 +9434,14 @@ ALTER TABLE app_public.episodes_tags ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_tags episodes_tags_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_tags_authorization ON app_public.episodes_tags USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY episodes_tags_authorization ON app_public.episodes_tags USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_tags episodes_tags_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_tags_authorization_delete ON app_public.episodes_tags AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY episodes_tags_authorization_delete ON app_public.episodes_tags AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9454,14 +9454,14 @@ ALTER TABLE app_public.episodes_trailers ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_trailers episodes_trailers_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_trailers_authorization ON app_public.episodes_trailers USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY episodes_trailers_authorization ON app_public.episodes_trailers USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_trailers episodes_trailers_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_trailers_authorization_delete ON app_public.episodes_trailers AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY episodes_trailers_authorization_delete ON app_public.episodes_trailers AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9474,14 +9474,14 @@ ALTER TABLE app_public.episodes_tvshow_genres ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_tvshow_genres episodes_tvshow_genres_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_tvshow_genres_authorization ON app_public.episodes_tvshow_genres USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY episodes_tvshow_genres_authorization ON app_public.episodes_tvshow_genres USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_tvshow_genres episodes_tvshow_genres_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_tvshow_genres_authorization_delete ON app_public.episodes_tvshow_genres AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY episodes_tvshow_genres_authorization_delete ON app_public.episodes_tvshow_genres AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9494,14 +9494,14 @@ ALTER TABLE app_public.ingest_documents ENABLE ROW LEVEL SECURITY;
 -- Name: ingest_documents ingest_documents_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY ingest_documents_authorization ON app_public.ingest_documents USING ((ax_utils.user_has_permission('INGESTS_VIEW,INGESTS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY ingest_documents_authorization ON app_public.ingest_documents USING ((( SELECT ax_utils.user_has_permission('INGESTS_VIEW,INGESTS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: ingest_documents ingest_documents_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY ingest_documents_authorization_delete ON app_public.ingest_documents AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text));
+CREATE POLICY ingest_documents_authorization_delete ON app_public.ingest_documents AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9514,14 +9514,14 @@ ALTER TABLE app_public.ingest_item_steps ENABLE ROW LEVEL SECURITY;
 -- Name: ingest_item_steps ingest_item_steps_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY ingest_item_steps_authorization ON app_public.ingest_item_steps USING ((ax_utils.user_has_permission('INGESTS_VIEW,INGESTS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY ingest_item_steps_authorization ON app_public.ingest_item_steps USING ((( SELECT ax_utils.user_has_permission('INGESTS_VIEW,INGESTS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: ingest_item_steps ingest_item_steps_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY ingest_item_steps_authorization_delete ON app_public.ingest_item_steps AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text));
+CREATE POLICY ingest_item_steps_authorization_delete ON app_public.ingest_item_steps AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9534,14 +9534,14 @@ ALTER TABLE app_public.ingest_items ENABLE ROW LEVEL SECURITY;
 -- Name: ingest_items ingest_items_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY ingest_items_authorization ON app_public.ingest_items USING ((ax_utils.user_has_permission('INGESTS_VIEW,INGESTS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY ingest_items_authorization ON app_public.ingest_items USING ((( SELECT ax_utils.user_has_permission('INGESTS_VIEW,INGESTS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: ingest_items ingest_items_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY ingest_items_authorization_delete ON app_public.ingest_items AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text));
+CREATE POLICY ingest_items_authorization_delete ON app_public.ingest_items AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9554,14 +9554,14 @@ ALTER TABLE app_public.movie_genres ENABLE ROW LEVEL SECURITY;
 -- Name: movie_genres movie_genres_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movie_genres_authorization ON app_public.movie_genres USING ((ax_utils.user_has_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movie_genres_authorization ON app_public.movie_genres USING ((( SELECT ax_utils.user_has_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movie_genres movie_genres_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movie_genres_authorization_delete ON app_public.movie_genres AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text));
+CREATE POLICY movie_genres_authorization_delete ON app_public.movie_genres AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9574,14 +9574,14 @@ ALTER TABLE app_public.movies ENABLE ROW LEVEL SECURITY;
 -- Name: movies movies_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_authorization ON app_public.movies USING ((ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movies_authorization ON app_public.movies USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies movies_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_authorization_delete ON app_public.movies AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text));
+CREATE POLICY movies_authorization_delete ON app_public.movies AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9594,14 +9594,14 @@ ALTER TABLE app_public.movies_casts ENABLE ROW LEVEL SECURITY;
 -- Name: movies_casts movies_casts_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_casts_authorization ON app_public.movies_casts USING ((ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movies_casts_authorization ON app_public.movies_casts USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_casts movies_casts_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_casts_authorization_delete ON app_public.movies_casts AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text));
+CREATE POLICY movies_casts_authorization_delete ON app_public.movies_casts AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9614,14 +9614,14 @@ ALTER TABLE app_public.movies_images ENABLE ROW LEVEL SECURITY;
 -- Name: movies_images movies_images_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_images_authorization ON app_public.movies_images USING ((ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movies_images_authorization ON app_public.movies_images USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_images movies_images_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_images_authorization_delete ON app_public.movies_images AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text));
+CREATE POLICY movies_images_authorization_delete ON app_public.movies_images AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9634,14 +9634,14 @@ ALTER TABLE app_public.movies_licenses ENABLE ROW LEVEL SECURITY;
 -- Name: movies_licenses movies_licenses_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_licenses_authorization ON app_public.movies_licenses USING ((ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movies_licenses_authorization ON app_public.movies_licenses USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_licenses movies_licenses_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_licenses_authorization_delete ON app_public.movies_licenses AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text));
+CREATE POLICY movies_licenses_authorization_delete ON app_public.movies_licenses AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9654,14 +9654,14 @@ ALTER TABLE app_public.movies_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: movies_licenses_countries movies_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_licenses_countries_authorization ON app_public.movies_licenses_countries USING ((ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movies_licenses_countries_authorization ON app_public.movies_licenses_countries USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_licenses_countries movies_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_licenses_countries_authorization_delete ON app_public.movies_licenses_countries AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text));
+CREATE POLICY movies_licenses_countries_authorization_delete ON app_public.movies_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9674,14 +9674,14 @@ ALTER TABLE app_public.movies_movie_genres ENABLE ROW LEVEL SECURITY;
 -- Name: movies_movie_genres movies_movie_genres_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_movie_genres_authorization ON app_public.movies_movie_genres USING ((ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movies_movie_genres_authorization ON app_public.movies_movie_genres USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_movie_genres movies_movie_genres_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_movie_genres_authorization_delete ON app_public.movies_movie_genres AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text));
+CREATE POLICY movies_movie_genres_authorization_delete ON app_public.movies_movie_genres AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9694,14 +9694,14 @@ ALTER TABLE app_public.movies_production_countries ENABLE ROW LEVEL SECURITY;
 -- Name: movies_production_countries movies_production_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_production_countries_authorization ON app_public.movies_production_countries USING ((ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movies_production_countries_authorization ON app_public.movies_production_countries USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_production_countries movies_production_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_production_countries_authorization_delete ON app_public.movies_production_countries AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text));
+CREATE POLICY movies_production_countries_authorization_delete ON app_public.movies_production_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9714,14 +9714,14 @@ ALTER TABLE app_public.movies_snapshots ENABLE ROW LEVEL SECURITY;
 -- Name: movies_snapshots movies_snapshots_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_snapshots_authorization ON app_public.movies_snapshots USING ((ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movies_snapshots_authorization ON app_public.movies_snapshots USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_snapshots movies_snapshots_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_snapshots_authorization_delete ON app_public.movies_snapshots AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text));
+CREATE POLICY movies_snapshots_authorization_delete ON app_public.movies_snapshots AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9734,14 +9734,14 @@ ALTER TABLE app_public.movies_tags ENABLE ROW LEVEL SECURITY;
 -- Name: movies_tags movies_tags_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_tags_authorization ON app_public.movies_tags USING ((ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movies_tags_authorization ON app_public.movies_tags USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_tags movies_tags_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_tags_authorization_delete ON app_public.movies_tags AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text));
+CREATE POLICY movies_tags_authorization_delete ON app_public.movies_tags AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9754,14 +9754,14 @@ ALTER TABLE app_public.movies_trailers ENABLE ROW LEVEL SECURITY;
 -- Name: movies_trailers movies_trailers_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_trailers_authorization ON app_public.movies_trailers USING ((ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY movies_trailers_authorization ON app_public.movies_trailers USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_trailers movies_trailers_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_trailers_authorization_delete ON app_public.movies_trailers AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text));
+CREATE POLICY movies_trailers_authorization_delete ON app_public.movies_trailers AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9774,14 +9774,14 @@ ALTER TABLE app_public.seasons ENABLE ROW LEVEL SECURITY;
 -- Name: seasons seasons_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_authorization ON app_public.seasons USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY seasons_authorization ON app_public.seasons USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons seasons_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_authorization_delete ON app_public.seasons AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY seasons_authorization_delete ON app_public.seasons AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9794,14 +9794,14 @@ ALTER TABLE app_public.seasons_casts ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_casts seasons_casts_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_casts_authorization ON app_public.seasons_casts USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY seasons_casts_authorization ON app_public.seasons_casts USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_casts seasons_casts_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_casts_authorization_delete ON app_public.seasons_casts AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY seasons_casts_authorization_delete ON app_public.seasons_casts AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9814,14 +9814,14 @@ ALTER TABLE app_public.seasons_images ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_images seasons_images_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_images_authorization ON app_public.seasons_images USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY seasons_images_authorization ON app_public.seasons_images USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_images seasons_images_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_images_authorization_delete ON app_public.seasons_images AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY seasons_images_authorization_delete ON app_public.seasons_images AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9834,14 +9834,14 @@ ALTER TABLE app_public.seasons_licenses ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_licenses seasons_licenses_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_licenses_authorization ON app_public.seasons_licenses USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY seasons_licenses_authorization ON app_public.seasons_licenses USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_licenses seasons_licenses_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_licenses_authorization_delete ON app_public.seasons_licenses AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY seasons_licenses_authorization_delete ON app_public.seasons_licenses AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9854,14 +9854,14 @@ ALTER TABLE app_public.seasons_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_licenses_countries seasons_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_licenses_countries_authorization ON app_public.seasons_licenses_countries USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY seasons_licenses_countries_authorization ON app_public.seasons_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_licenses_countries seasons_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_licenses_countries_authorization_delete ON app_public.seasons_licenses_countries AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY seasons_licenses_countries_authorization_delete ON app_public.seasons_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9874,14 +9874,14 @@ ALTER TABLE app_public.seasons_production_countries ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_production_countries seasons_production_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_production_countries_authorization ON app_public.seasons_production_countries USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY seasons_production_countries_authorization ON app_public.seasons_production_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_production_countries seasons_production_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_production_countries_authorization_delete ON app_public.seasons_production_countries AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY seasons_production_countries_authorization_delete ON app_public.seasons_production_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9894,14 +9894,14 @@ ALTER TABLE app_public.seasons_snapshots ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_snapshots seasons_snapshots_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_snapshots_authorization ON app_public.seasons_snapshots USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY seasons_snapshots_authorization ON app_public.seasons_snapshots USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_snapshots seasons_snapshots_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_snapshots_authorization_delete ON app_public.seasons_snapshots AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY seasons_snapshots_authorization_delete ON app_public.seasons_snapshots AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9914,14 +9914,14 @@ ALTER TABLE app_public.seasons_tags ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_tags seasons_tags_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_tags_authorization ON app_public.seasons_tags USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY seasons_tags_authorization ON app_public.seasons_tags USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_tags seasons_tags_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_tags_authorization_delete ON app_public.seasons_tags AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY seasons_tags_authorization_delete ON app_public.seasons_tags AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9934,14 +9934,14 @@ ALTER TABLE app_public.seasons_trailers ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_trailers seasons_trailers_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_trailers_authorization ON app_public.seasons_trailers USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY seasons_trailers_authorization ON app_public.seasons_trailers USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_trailers seasons_trailers_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_trailers_authorization_delete ON app_public.seasons_trailers AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY seasons_trailers_authorization_delete ON app_public.seasons_trailers AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9954,14 +9954,14 @@ ALTER TABLE app_public.seasons_tvshow_genres ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_tvshow_genres seasons_tvshow_genres_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_tvshow_genres_authorization ON app_public.seasons_tvshow_genres USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY seasons_tvshow_genres_authorization ON app_public.seasons_tvshow_genres USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_tvshow_genres seasons_tvshow_genres_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_tvshow_genres_authorization_delete ON app_public.seasons_tvshow_genres AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY seasons_tvshow_genres_authorization_delete ON app_public.seasons_tvshow_genres AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -9980,392 +9980,392 @@ ALTER TABLE app_public.snapshots ENABLE ROW LEVEL SECURITY;
 -- Name: snapshots snapshots_collection_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_collection_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'COLLECTION'::text) AND ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_collection_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'COLLECTION'::text) AND ( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_collection_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_collection_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'COLLECTION'::text) AND ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_collection_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'COLLECTION'::text) AND ( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_collection_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_collection_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'COLLECTION'::text) AND app_hidden.user_has_filter_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_collection_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'COLLECTION'::text) AND ( SELECT app_hidden.user_has_filter_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_collection_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_collection_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'COLLECTION'::text) AND ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'COLLECTION'::text) AND ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_collection_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'COLLECTION'::text) AND ( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'COLLECTION'::text) AND ( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_episode_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_episode_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'EPISODE'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_episode_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'EPISODE'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_episode_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_episode_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'EPISODE'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_episode_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'EPISODE'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_episode_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_episode_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'EPISODE'::text) AND app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_episode_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'EPISODE'::text) AND ( SELECT app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_episode_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_episode_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'EPISODE'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'EPISODE'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_episode_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'EPISODE'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'EPISODE'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_movie_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_movie_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'MOVIE'::text) AND ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_movie_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'MOVIE'::text) AND ( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_movie_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_movie_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'MOVIE'::text) AND ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_movie_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'MOVIE'::text) AND ( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_movie_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_movie_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'MOVIE'::text) AND app_hidden.user_has_filter_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_movie_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'MOVIE'::text) AND ( SELECT app_hidden.user_has_filter_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_movie_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_movie_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'MOVIE'::text) AND ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'MOVIE'::text) AND ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_movie_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'MOVIE'::text) AND ( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'MOVIE'::text) AND ( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_movie_genre_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_movie_genre_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_movie_genre_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_movie_genre_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_movie_genre_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_movie_genre_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_movie_genre_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_movie_genre_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND app_hidden.user_has_filter_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_movie_genre_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ( SELECT app_hidden.user_has_filter_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_movie_genre_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_movie_genre_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_movie_genre_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_season_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_season_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'SEASON'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_season_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'SEASON'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_season_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_season_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'SEASON'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_season_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'SEASON'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_season_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_season_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'SEASON'::text) AND app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_season_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'SEASON'::text) AND ( SELECT app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_season_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_season_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'SEASON'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'SEASON'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_season_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'SEASON'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'SEASON'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_tvshow_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_tvshow_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'TVSHOW'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_tvshow_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'TVSHOW'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_tvshow_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_tvshow_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'TVSHOW'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_tvshow_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'TVSHOW'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_tvshow_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_tvshow_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'TVSHOW'::text) AND app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_tvshow_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'TVSHOW'::text) AND ( SELECT app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_tvshow_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_tvshow_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'TVSHOW'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'TVSHOW'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_tvshow_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'TVSHOW'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'TVSHOW'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_tvshow_genre_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_tvshow_genre_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_tvshow_genre_authorization_delete ON app_public.snapshots FOR DELETE USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_tvshow_genre_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_tvshow_genre_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_tvshow_genre_authorization_insert ON app_public.snapshots FOR INSERT WITH CHECK ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_tvshow_genre_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_tvshow_genre_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND app_hidden.user_has_filter_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_tvshow_genre_authorization_select ON app_public.snapshots FOR SELECT USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ( SELECT app_hidden.user_has_filter_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshots snapshots_tvshow_genre_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_tvshow_genre_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_tvshow_genre_authorization_update ON app_public.snapshots FOR UPDATE USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_collection_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_collection_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'COLLECTION'::text) AND ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_collection_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'COLLECTION'::text) AND ( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_collection_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_collection_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'COLLECTION'::text) AND ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_collection_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'COLLECTION'::text) AND ( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_collection_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_collection_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'COLLECTION'::text) AND app_hidden.user_has_filter_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_collection_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'COLLECTION'::text) AND ( SELECT app_hidden.user_has_filter_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_collection_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_collection_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'COLLECTION'::text) AND ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'COLLECTION'::text) AND ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_collection_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'COLLECTION'::text) AND ( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'COLLECTION'::text) AND ( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_episode_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_episode_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'EPISODE'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_episode_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'EPISODE'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_episode_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_episode_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'EPISODE'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_episode_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'EPISODE'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_episode_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_episode_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'EPISODE'::text) AND app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_episode_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'EPISODE'::text) AND ( SELECT app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_episode_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_episode_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'EPISODE'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'EPISODE'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_episode_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'EPISODE'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'EPISODE'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_movie_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_movie_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'MOVIE'::text) AND ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_movie_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'MOVIE'::text) AND ( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_movie_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_movie_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'MOVIE'::text) AND ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_movie_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'MOVIE'::text) AND ( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_movie_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_movie_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'MOVIE'::text) AND app_hidden.user_has_filter_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_movie_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'MOVIE'::text) AND ( SELECT app_hidden.user_has_filter_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_movie_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_movie_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'MOVIE'::text) AND ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'MOVIE'::text) AND ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_movie_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'MOVIE'::text) AND ( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'MOVIE'::text) AND ( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_movie_genre_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_movie_genre_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_movie_genre_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_movie_genre_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_movie_genre_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_movie_genre_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_movie_genre_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_movie_genre_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND app_hidden.user_has_filter_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_movie_genre_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ( SELECT app_hidden.user_has_filter_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_movie_genre_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_movie_genre_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_movie_genre_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'MOVIE_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_season_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_season_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'SEASON'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_season_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'SEASON'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_season_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_season_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'SEASON'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_season_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'SEASON'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_season_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_season_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'SEASON'::text) AND app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_season_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'SEASON'::text) AND ( SELECT app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_season_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_season_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'SEASON'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'SEASON'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_season_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'SEASON'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'SEASON'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_tvshow_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_tvshow_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'TVSHOW'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_tvshow_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'TVSHOW'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_tvshow_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_tvshow_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'TVSHOW'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_tvshow_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'TVSHOW'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_tvshow_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_tvshow_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'TVSHOW'::text) AND app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_tvshow_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'TVSHOW'::text) AND ( SELECT app_hidden.user_has_filter_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_tvshow_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_tvshow_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'TVSHOW'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'TVSHOW'::text) AND ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_tvshow_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'TVSHOW'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'TVSHOW'::text) AND ( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_tvshow_genre_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_tvshow_genre_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_tvshow_genre_authorization_delete ON app_public.snapshot_validation_results FOR DELETE USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_tvshow_genre_authorization_insert; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_tvshow_genre_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_tvshow_genre_authorization_insert ON app_public.snapshot_validation_results FOR INSERT WITH CHECK ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_tvshow_genre_authorization_select; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_tvshow_genre_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND app_hidden.user_has_filter_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AND ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_tvshow_genre_authorization_select ON app_public.snapshot_validation_results FOR SELECT USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ( SELECT app_hidden.user_has_filter_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AS user_has_filter_permission) AND ( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
 -- Name: snapshot_validation_results snapshots_validation_tvshow_genre_authorization_update; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY snapshots_validation_tvshow_genre_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text))) WITH CHECK ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text)));
+CREATE POLICY snapshots_validation_tvshow_genre_authorization_update ON app_public.snapshot_validation_results FOR UPDATE USING ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission))) WITH CHECK ((((entity_type)::text = 'TVSHOW_GENRE'::text) AND ( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission)));
 
 
 --
@@ -10378,14 +10378,14 @@ ALTER TABLE app_public.tvshow_genres ENABLE ROW LEVEL SECURITY;
 -- Name: tvshow_genres tvshow_genres_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshow_genres_authorization ON app_public.tvshow_genres USING ((ax_utils.user_has_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshow_genres_authorization ON app_public.tvshow_genres USING ((( SELECT ax_utils.user_has_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshow_genres tvshow_genres_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshow_genres_authorization_delete ON app_public.tvshow_genres AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text));
+CREATE POLICY tvshow_genres_authorization_delete ON app_public.tvshow_genres AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -10398,14 +10398,14 @@ ALTER TABLE app_public.tvshows ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows tvshows_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_authorization ON app_public.tvshows USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshows_authorization ON app_public.tvshows USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows tvshows_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_authorization_delete ON app_public.tvshows AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY tvshows_authorization_delete ON app_public.tvshows AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -10418,14 +10418,14 @@ ALTER TABLE app_public.tvshows_casts ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_casts tvshows_casts_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_casts_authorization ON app_public.tvshows_casts USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshows_casts_authorization ON app_public.tvshows_casts USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_casts tvshows_casts_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_casts_authorization_delete ON app_public.tvshows_casts AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY tvshows_casts_authorization_delete ON app_public.tvshows_casts AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -10438,14 +10438,14 @@ ALTER TABLE app_public.tvshows_images ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_images tvshows_images_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_images_authorization ON app_public.tvshows_images USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshows_images_authorization ON app_public.tvshows_images USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_images tvshows_images_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_images_authorization_delete ON app_public.tvshows_images AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY tvshows_images_authorization_delete ON app_public.tvshows_images AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -10458,14 +10458,14 @@ ALTER TABLE app_public.tvshows_licenses ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_licenses tvshows_licenses_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_licenses_authorization ON app_public.tvshows_licenses USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshows_licenses_authorization ON app_public.tvshows_licenses USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_licenses tvshows_licenses_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_licenses_authorization_delete ON app_public.tvshows_licenses AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY tvshows_licenses_authorization_delete ON app_public.tvshows_licenses AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -10478,14 +10478,14 @@ ALTER TABLE app_public.tvshows_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_licenses_countries tvshows_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_licenses_countries_authorization ON app_public.tvshows_licenses_countries USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshows_licenses_countries_authorization ON app_public.tvshows_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_licenses_countries tvshows_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_licenses_countries_authorization_delete ON app_public.tvshows_licenses_countries AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY tvshows_licenses_countries_authorization_delete ON app_public.tvshows_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -10498,14 +10498,14 @@ ALTER TABLE app_public.tvshows_production_countries ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_production_countries tvshows_production_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_production_countries_authorization ON app_public.tvshows_production_countries USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshows_production_countries_authorization ON app_public.tvshows_production_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_production_countries tvshows_production_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_production_countries_authorization_delete ON app_public.tvshows_production_countries AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY tvshows_production_countries_authorization_delete ON app_public.tvshows_production_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -10518,14 +10518,14 @@ ALTER TABLE app_public.tvshows_snapshots ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_snapshots tvshows_snapshots_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_snapshots_authorization ON app_public.tvshows_snapshots USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshows_snapshots_authorization ON app_public.tvshows_snapshots USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_snapshots tvshows_snapshots_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_snapshots_authorization_delete ON app_public.tvshows_snapshots AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY tvshows_snapshots_authorization_delete ON app_public.tvshows_snapshots AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -10538,14 +10538,14 @@ ALTER TABLE app_public.tvshows_tags ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_tags tvshows_tags_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_tags_authorization ON app_public.tvshows_tags USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshows_tags_authorization ON app_public.tvshows_tags USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_tags tvshows_tags_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_tags_authorization_delete ON app_public.tvshows_tags AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY tvshows_tags_authorization_delete ON app_public.tvshows_tags AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -10558,14 +10558,14 @@ ALTER TABLE app_public.tvshows_trailers ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_trailers tvshows_trailers_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_trailers_authorization ON app_public.tvshows_trailers USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshows_trailers_authorization ON app_public.tvshows_trailers USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_trailers tvshows_trailers_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_trailers_authorization_delete ON app_public.tvshows_trailers AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY tvshows_trailers_authorization_delete ON app_public.tvshows_trailers AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -10578,14 +10578,14 @@ ALTER TABLE app_public.tvshows_tvshow_genres ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_tvshow_genres tvshows_tvshow_genres_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_tvshow_genres_authorization ON app_public.tvshows_tvshow_genres USING ((ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1))) WITH CHECK ((ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AND (1 = 1)));
+CREATE POLICY tvshows_tvshow_genres_authorization ON app_public.tvshows_tvshow_genres USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_tvshow_genres tvshows_tvshow_genres_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_tvshow_genres_authorization_delete ON app_public.tvshows_tvshow_genres AS RESTRICTIVE FOR DELETE USING (ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text));
+CREATE POLICY tvshows_tvshow_genres_authorization_delete ON app_public.tvshows_tvshow_genres AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --

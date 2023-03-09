@@ -1,6 +1,7 @@
 import { OwnerPgPool } from '@axinom/mosaic-db-common';
 import { ManagementAuthenticationContext } from '@axinom/mosaic-id-guard';
 import { Broker } from '@axinom/mosaic-message-bus';
+import { WebSocket } from 'graphql-ws';
 import { Client } from 'pg';
 import {
   AtomicMutationRequest,
@@ -18,4 +19,5 @@ export interface ExtendedGraphQLContext
   jwtToken?: string;
   pgRole?: string; // set from PostGraphile
   pgClient?: Client; // set from PostGraphile
+  websocket?: WebSocket;
 }

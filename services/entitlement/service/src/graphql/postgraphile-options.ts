@@ -38,11 +38,8 @@ export const buildPostgraphileOptions = (
   authConfig?: AuthenticationConfig,
 ): PostGraphileOptions<Request, Response> => {
   const logger = new Logger({ config, context: buildPostgraphileOptions.name });
-  let options = new PostgraphileOptionsBuilder(
-    config.isDev,
-    config.graphqlGuiEnabled,
-  )
-    .setDefaultSettings()
+  let options = new PostgraphileOptionsBuilder()
+    .setDefaultSettings(config.isDev, config.graphqlGuiEnabled)
     .setErrorsHandler((errors) => {
       return graphqlErrorsHandler(
         errors,

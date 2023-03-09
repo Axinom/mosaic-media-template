@@ -69,7 +69,7 @@ enum ErrorCodesEnum {
   OUTDATED_WEBHOOK_REQUEST
 
   """
-  The webhook request has failed because the provided webhook secret is empty.
+  The webhook request validation has failed because the provided webhook secret is empty.
   """
   EMPTY_WEBHOOK_SECRET
 
@@ -134,6 +134,9 @@ enum ErrorCodesEnum {
   """Passed JWT is not a Mosaic End-User Token. Cannot be verified."""
   JWT_IS_NOT_MOSAIC_TOKEN
 
+  """Authenticated Management Subject not found."""
+  AUTHENTICATED_MANAGEMENT_SUBJECT_NOT_FOUND
+
   """The token is not an Authenticated End-User"""
   NOT_AUTHENTICATED_END_USER
 
@@ -157,6 +160,19 @@ enum ErrorCodesEnum {
 
   """Malformed access token received"""
   MALFORMED_TOKEN
+
+  """Authenticated End User not found."""
+  AUTHENTICATED_END_USER_NOT_FOUND
+
+  """
+  Websocket not found in ExtendedGraphQLContext. This is a development time issue. A reference to the websocket must be included in Postgraphile build options.
+  """
+  WEBSOCKET_NOT_FOUND
+
+  """
+  A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue.
+  """
+  AUTHORIZATION_OPTIONS_MISCONFIGURED
 
   """
   Error(s) occurred while trying to retrieve the %s with ID '%s' from the catalog service. Please contact the service support.
