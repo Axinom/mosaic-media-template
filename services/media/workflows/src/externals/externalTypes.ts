@@ -1,4 +1,4 @@
-import { Scalars } from '../generated/graphql';
+import { Maybe, Scalars } from '../generated/graphql';
 
 export type VideoID = Scalars['UUID'];
 export type ImageID = Scalars['UUID'];
@@ -57,3 +57,36 @@ export interface ImageSelectExplorerProps {
   /** Callback called when the user cancels the selection */
   onCancel?: () => void;
 }
+
+// #region Channel Service (workflows) external types - TODO: Import from service workflows
+export interface ProgramEntity {
+  title: Scalars['String'];
+  videoId: Scalars['UUID'];
+  entityId: Scalars['String'];
+  imageId?: Maybe<Scalars['UUID']>;
+}
+
+export interface FastProviderData {
+  type: string;
+  label: string;
+  selectionComponent: React.FC<{
+    onClose: () => void;
+    onSelected: (items: ProgramEntity[]) => void;
+  }>;
+  detailsResolver?: (params: {
+    entityId: string;
+    entityType: string;
+  }) => string;
+}
+
+export type FastProviderType = 'fast-provider';
+
+declare module '@axinom/mosaic-portal' {
+  interface ProviderRegistration {
+    (type: FastProviderType, data: FastProviderData): void;
+  }
+  interface GetProviders {
+    (type: FastProviderType): FastProviderData[];
+  }
+}
+// #endregion

@@ -3,6 +3,7 @@ fragment EpisodeExplorerProperties on Episode {
   title
   index
   externalId
+  mainVideoId
   episodesImages(condition: { imageType: COVER }) {
     nodes {
       imageId

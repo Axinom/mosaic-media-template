@@ -122,21 +122,14 @@ const Form: React.FC = () => {
             render: (value) => {
               return formatTitleCase(value as string);
             },
-            sortable: false,
           },
           {
             propertyName: 'severity',
             label: 'Validation Result',
             size: '2.5fr',
             render: SeverityRenderer,
-            sortable: false,
           },
-          {
-            propertyName: 'message',
-            label: 'Message',
-            size: '5fr',
-            sortable: false,
-          },
+          { propertyName: 'message', label: 'Message', size: '5fr' },
         ]}
         data={mapValidationData(
           values.snapshot?.snapshotValidationResults.nodes ?? [],

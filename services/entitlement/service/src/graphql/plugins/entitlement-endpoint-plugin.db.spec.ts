@@ -97,6 +97,33 @@ describe('EntitlementEndpointPlugin', () => {
         iv: 'E32805950106648E',
         languageCode: null,
       },
+      {
+        keyId: null,
+        file: 'dash/subtitle-de_init.mp4',
+        format: 'DASH',
+        label: 'subtitle',
+        bitrateInKbps: 0,
+        iv: null,
+        languageCode: 'de',
+      },
+      {
+        keyId: undefined,
+        file: 'dash/caption-en_init.mp4',
+        format: 'DASH',
+        label: 'closed-caption',
+        bitrateInKbps: 0,
+        iv: null,
+        languageCode: 'en',
+      },
+      {
+        keyId: '',
+        file: 'dash/caption-de_init.mp4',
+        format: 'DASH',
+        label: 'closed-caption',
+        bitrateInKbps: 0,
+        iv: null,
+        languageCode: 'de',
+      },
     ],
   };
 
@@ -501,6 +528,7 @@ describe('EntitlementEndpointPlugin', () => {
     it.each([
       { isProtected: false },
       { isProtected: true },
+      { isProtected: true, videoStreams: { nodes: null } },
       { isProtected: true, videoStreams: { nodes: [] } },
       {
         isProtected: true,

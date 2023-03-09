@@ -68,7 +68,7 @@ export const getPolicy = (mode: PolicyMode): Dict<unknown> => {
 };
 
 export const generateEntitlementMessageJwt = (
-  keyIds: (MovieVideoStream | EpisodeVideoStream)['keyId'][],
+  keyIds: (MovieVideoStream | EpisodeVideoStream)['keyId'][] | undefined,
   claims: string[],
   config: Config,
   policyMode: PolicyMode,
@@ -84,7 +84,7 @@ export const generateEntitlementMessageJwt = (
         allow_persistence: claims.includes(ENABLE_VIDEOS_DOWNLOAD), // Allows to specify whether the license can be persisted on the playback device.
       },
       content_keys_source: {
-        inline: [...new Set(keyIds ?? [])].map((id) => ({
+        inline: [...new Set(keyIds?.filter(Boolean) ?? [])].map((id) => ({
           id,
           usage_policy: 'Policy A',
         })),
