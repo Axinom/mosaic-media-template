@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
 
 /**
- * Schema to validate that the license start date is either null or a valid date.
+ * A schema to ensure that the start date of the license is either a valid date or null.
  */
 export const getLicenseStartSchema = (): Yup.AnySchema => Yup.date().nullable();
 /**
- * Schema to validate that the license end date is either null or a valid date and is after the start date.
+ * A schema to ensure that the end date of the license is either a valid date or null, and that it occurs after the start date.
  * @param startProperty the property name of the start date
  */
 export const getLicenseEndSchema = (
