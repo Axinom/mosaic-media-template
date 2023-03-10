@@ -9,7 +9,7 @@ import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { array, object } from 'yup';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
   Mutation,
@@ -23,10 +23,10 @@ interface FormData {
   episodes: SeasonEpisode[];
 }
 
-const seasonEpisodeManagementSchema = object().shape<
+const seasonEpisodeManagementSchema = Yup.object().shape<
   ObjectSchemaDefinition<FormData>
 >({
-  episodes: array().of(object()),
+  episodes: Yup.array().of(Yup.object()),
 });
 
 export const SeasonEpisodeManagement: React.FC = () => {
@@ -47,9 +47,8 @@ export const SeasonEpisodeManagement: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const episodeAssignmentMutations = generateArrayMutations({
         current: formData.episodes,

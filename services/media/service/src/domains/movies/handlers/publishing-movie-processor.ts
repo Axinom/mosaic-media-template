@@ -3,7 +3,7 @@ import {
   MoviePublishedEventSchema,
   PublishServiceMessagingSettings,
 } from 'media-messages';
-import * as yup from 'yup';
+import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
 import { Config } from '../../../common';
 import {
@@ -106,7 +106,7 @@ const movieDataAggregator: SnapshotDataAggregator = async (
 const customMovieValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
-  const yupSchema = yup.object({
+  const yupSchema = Yup.object({
     genre_ids: atLeastOneString,
     images: requiredCover,
     videos: videosValidation('MAIN', 'TRAILER'),

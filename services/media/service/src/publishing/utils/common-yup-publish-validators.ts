@@ -3,7 +3,7 @@ import {
   getJsonPropertyReadablePath,
 } from '@axinom/mosaic-service-common';
 import { humanize, singularize } from 'inflection';
-import * as yup from 'yup';
+import * as Yup from 'yup';
 import { OptionalObjectSchema } from 'yup/lib/object';
 import {
   SnapshotValidationIssueContextEnum,
@@ -85,25 +85,22 @@ export const isPositiveNumber = (params: { path: string }): string => {
 /**
  * yup validation rule to check that string array has at least one element.
  */
-export const atLeastOneString = yup.array(yup.string()).min(1, oneItemError);
+export const atLeastOneString = Yup.array(Yup.string()).min(1, oneItemError);
 
 /**
  * yup validation rule to check that array of objects has at least one object with type `COVER`
  */
-export const requiredCover = yup
-  .array(
-    yup.object({
-      width: yup.number().positive(isPositiveNumber).required(isRequired),
-      height: yup.number().positive(isPositiveNumber).required(isRequired),
-      type: yup.string(),
-    }),
-  )
-  .test({
-    name: 'required_cover',
-    message: 'Cover image is not assigned.',
-    test: (images) =>
-      !!images && images.some((image) => image.type === 'COVER'),
-  });
+export const requiredCover = Yup.array(
+  Yup.object({
+    width: Yup.number().positive(isPositiveNumber).required(isRequired),
+    height: Yup.number().positive(isPositiveNumber).required(isRequired),
+    type: Yup.string(),
+  }),
+).test({
+  name: 'required_cover',
+  message: 'Cover image is not assigned.',
+  test: (images) => !!images && images.some((image) => image.type === 'COVER'),
+});
 
 /**
  * yup validation rule to check that all videos to be published are valid.
@@ -111,31 +108,27 @@ export const requiredCover = yup
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const videosValidation = (...supportedTypes: string[]): any => {
-  const commonVideosValidation = yup.array(
-    yup
-      .object({
-        length_in_seconds: yup
-          .number()
-          .positive(isPositiveNumber)
-          .required(isRequired),
-        audio_languages: yup
-          .array(yup.string())
-          .required(isRequired)
-          .min(1, nonEmptyProperty),
-        subtitle_languages: yup.array(yup.string()).required(isRequired).min(0),
-        caption_languages: yup.array(yup.string()).required(isRequired).min(0),
-        dash_manifest: yup.string().nullable().url(isUrl),
-        hls_manifest: yup.string().nullable().url(isUrl),
-        type: yup.string(),
-      })
-      .test({
-        name: 'at_least_one_manifest',
-        message: (params) => {
-          const identifier = getReadablePath(params.path);
-          return `${identifier} must have either DASH Manifest or HLS Manifest defined. Most probably assigned video is still processing.`;
-        },
-        test: (value) => !!value.dash_manifest || !!value.hls_manifest,
-      }),
+  const commonVideosValidation = Yup.array(
+    Yup.object({
+      length_in_seconds: Yup.number()
+        .positive(isPositiveNumber)
+        .required(isRequired),
+      audio_languages: Yup.array(Yup.string())
+        .required(isRequired)
+        .min(1, nonEmptyProperty),
+      subtitle_languages: Yup.array(Yup.string()).required(isRequired).min(0),
+      caption_languages: Yup.array(Yup.string()).required(isRequired).min(0),
+      dash_manifest: Yup.string().nullable().url(isUrl),
+      hls_manifest: Yup.string().nullable().url(isUrl),
+      type: Yup.string(),
+    }).test({
+      name: 'at_least_one_manifest',
+      message: (params) => {
+        const identifier = getReadablePath(params.path);
+        return `${identifier} must have either DASH Manifest or HLS Manifest defined. Most probably assigned video is still processing.`;
+      },
+      test: (value) => !!value.dash_manifest || !!value.hls_manifest,
+    }),
   );
 
   if (supportedTypes.some((t) => t === 'MAIN')) {
@@ -156,34 +149,30 @@ export const videosValidation = (...supportedTypes: string[]): any => {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const licensesValidation = (atLeastOneLicenseRequired: boolean): any => {
-  return yup
-    .array(
-      yup
-        .object({
-          start_time: yup.date(),
-          end_time: yup.date().when('start_time', {
-            is: (start: unknown) => !!start,
-            then: (end) =>
-              end.min(yup.ref('start_time'), (params) => {
-                const identifier = getReadablePath(params.path);
-                return `${identifier} must be greater than start_time.`;
-              }),
-          }),
-          countries: yup.array(yup.string()), // Values validation is done using DB FK Constraints
-        })
-        .test({
-          name: 'license_props',
-          message: (params) => {
+  return Yup.array(
+    Yup.object({
+      start_time: Yup.date(),
+      end_time: Yup.date().when('start_time', {
+        is: (start: unknown) => !!start,
+        then: (end) =>
+          end.min(Yup.ref('start_time'), (params) => {
             const identifier = getReadablePath(params.path);
-            return `${identifier} must have either start_time, end_time, or at least one country defined.`;
-          },
-          test: (value) =>
-            !!value.start_time ||
-            !!value.end_time ||
-            (!!value.countries && value.countries.length > 0),
-        }),
-    )
-    .min(1, atLeastOneLicenseRequired ? oneItemError : oneItemWarning);
+            return `${identifier} must be greater than start_time.`;
+          }),
+      }),
+      countries: Yup.array(Yup.string()), // Values validation is done using DB FK Constraints
+    }).test({
+      name: 'license_props',
+      message: (params) => {
+        const identifier = getReadablePath(params.path);
+        return `${identifier} must have either start_time, end_time, or at least one country defined.`;
+      },
+      test: (value) =>
+        !!value.start_time ||
+        !!value.end_time ||
+        (!!value.countries && value.countries.length > 0),
+    }),
+  ).min(1, atLeastOneLicenseRequired ? oneItemError : oneItemWarning);
 };
 
 /**
@@ -197,7 +186,7 @@ export const validateYupPublishSchema = async (
   let results: SnapshotValidationResult[] = [];
   await yupSchema
     .validate(json, { abortEarly: false })
-    .catch((validation: yup.ValidationError) => {
+    .catch((validation: Yup.ValidationError) => {
       results = validation.errors.map(
         (value: string | YupValidationError): SnapshotValidationResult =>
           typeof value === 'string'

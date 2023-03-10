@@ -9,31 +9,26 @@ import { Field } from 'formik';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { date, number, object, ref } from 'yup';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
   CreateEpisodesLicenseMutation,
   MutationCreateEpisodesLicenseArgs,
   useCreateEpisodesLicenseMutation,
 } from '../../../generated/graphql';
+import {
+  getLicenseEndSchema,
+  getLicenseStartSchema,
+} from '../../../Util/LicenseDateSchema/LicenseDateSchema';
 
 type FormData = MutationCreateEpisodesLicenseArgs['input']['episodesLicense'];
 
 type SubmitResponse = CreateEpisodesLicenseMutation['createEpisodesLicense'];
 
-const licenseSchema = object<ObjectSchemaDefinition<FormData>>({
-  episodeId: number().required(),
-  licenseStart: date(),
-  licenseEnd: date()
-    .when('licenseStart', {
-      is: (start) => start != null,
-      then: (end) =>
-        end.min(
-          ref('licenseStart'),
-          'License end date cannot be before start date',
-        ),
-    })
-    .nullable(),
+const licenseSchema = Yup.object<ObjectSchemaDefinition<FormData>>({
+  episodeId: Yup.number().required(),
+  licenseStart: getLicenseStartSchema().label('From'),
+  licenseEnd: getLicenseEndSchema().label('To'),
 });
 
 export const EpisodeLicensingCreate: React.FC = () => {

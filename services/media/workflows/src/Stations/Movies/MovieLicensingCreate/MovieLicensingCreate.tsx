@@ -16,6 +16,10 @@ import {
   MutationCreateMoviesLicenseArgs,
   useCreateMoviesLicenseMutation,
 } from '../../../generated/graphql';
+import {
+  getLicenseEndSchema,
+  getLicenseStartSchema,
+} from '../../../Util/LicenseDateSchema/LicenseDateSchema';
 
 type FormData = MutationCreateMoviesLicenseArgs['input']['moviesLicense'];
 
@@ -23,15 +27,8 @@ type SubmitResponse = CreateMoviesLicenseMutation['createMoviesLicense'];
 
 const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   movieId: Yup.number().required(),
-  licenseStart: Yup.date(),
-  licenseEnd: Yup.date().when('licenseStart', {
-    is: (start) => start != null,
-    then: (end) =>
-      end.min(
-        Yup.ref('licenseStart'),
-        'License end date cannot be before start date',
-      ),
-  }),
+  licenseStart: getLicenseStartSchema().label('From'),
+  licenseEnd: getLicenseEndSchema().label('To'),
 });
 
 export const MovieLicensingCreate: React.FC = () => {

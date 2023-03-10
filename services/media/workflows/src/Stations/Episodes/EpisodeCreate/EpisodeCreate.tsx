@@ -9,7 +9,7 @@ import { Field } from 'formik';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { number, object, string } from 'yup';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
   CreateEpisodeMutation,
@@ -21,11 +21,9 @@ type FormData = CreateEpisodeMutationVariables['input']['episode'];
 
 type SubmitResponse = Nullable<CreateEpisodeMutation['createEpisode']>;
 
-const episodeCreateSchema = object<ObjectSchemaDefinition<FormData>>({
-  title: string()
-    .required('Title is a required field')
-    .max(100),
-  index: number()
+const episodeCreateSchema = Yup.object<ObjectSchemaDefinition<FormData>>({
+  title: Yup.string().required('Title is a required field').max(100),
+  index: Yup.number()
     .positive('Episode Index must be a positive number')
     .integer('Episode Index must be an integer')
     .required('Episode Index is a required field'),

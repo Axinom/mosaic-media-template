@@ -9,7 +9,7 @@ import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { array, mixed, object } from 'yup';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext, VideoID } from '../../../externals';
 import {
@@ -23,8 +23,10 @@ interface FormData {
   trailerVideos: VideoID[];
 }
 
-const tvShowVideoManagementSchema = object<ObjectSchemaDefinition<FormData>>({
-  trailerVideos: array().of(mixed()),
+const tvShowVideoManagementSchema = Yup.object<
+  ObjectSchemaDefinition<FormData>
+>({
+  trailerVideos: Yup.array().of(Yup.mixed()),
 });
 
 export const TvShowVideoManagement: React.FC = () => {
@@ -47,9 +49,8 @@ export const TvShowVideoManagement: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const trailerAssignmentMutations = generateArrayMutations({
         current: formData.trailerVideos,
