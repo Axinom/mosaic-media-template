@@ -6,6 +6,7 @@ module.exports = {
   modulePathIgnorePatterns: ['./dist/'],
   setupFilesAfterEnv: ['jest-expect-message', 'jest-extended/all'],
   projects: [
+    '<rootDir>/services/scripts/jest.config.js',
     '<rootDir>/services/**/jest.config.js',
     //'<rootDir>/libs/**/jest.config.js',
   ],
