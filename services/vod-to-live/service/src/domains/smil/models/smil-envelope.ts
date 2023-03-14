@@ -60,7 +60,6 @@ export interface Reference {
 export interface EventStream {
   '@xmlns': EventStreamXmlns;
   '@schemeIdUri': SchemeIdUri;
-  '@timescale': string;
   Event: Event;
 }
 
@@ -71,8 +70,6 @@ export interface ParallelReference {
 
 export interface Event {
   '@id'?: string;
-  '@presentationTime': string;
-  '@duration': string;
   Signal: Signal;
 }
 

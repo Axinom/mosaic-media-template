@@ -182,7 +182,7 @@ describe('PlaylistSmilGenerator', () => {
 
         // Assert
         const headerMetadata = resultSmil.smil.head.meta;
-        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaderLength = isDrmProtected ? 10 : 7;
         const expectedHeaders = [
           createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
           createHeaderMetadata(
@@ -191,6 +191,8 @@ describe('PlaylistSmilGenerator', () => {
           ),
           createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
           createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+          createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
           createHeaderMetadata(
             HeaderMetadataNames.MosaicPlaylistId,
             testPlaylist.id,
@@ -244,7 +246,7 @@ describe('PlaylistSmilGenerator', () => {
 
         // Assert
         const headerMetadata = resultSmil.smil.head.meta;
-        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaderLength = isDrmProtected ? 10 : 7;
         const expectedHeaders = [
           createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
           createHeaderMetadata(
@@ -253,6 +255,8 @@ describe('PlaylistSmilGenerator', () => {
           ),
           createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
           createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+          createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
           createHeaderMetadata(
             HeaderMetadataNames.MosaicPlaylistId,
             testPlaylist.id,
@@ -351,7 +355,7 @@ describe('PlaylistSmilGenerator', () => {
 
         // Assert
         const headerMetadata = resultSmil.smil.head.meta;
-        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaderLength = isDrmProtected ? 10 : 7;
         const expectedHeaders = [
           createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
           createHeaderMetadata(
@@ -360,6 +364,8 @@ describe('PlaylistSmilGenerator', () => {
           ),
           createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
           createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+          createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
           createHeaderMetadata(
             HeaderMetadataNames.MosaicPlaylistId,
             testPlaylist.id,
@@ -461,7 +467,7 @@ describe('PlaylistSmilGenerator', () => {
 
         // Assert
         const headerMetadata = resultSmil.smil.head.meta;
-        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaderLength = isDrmProtected ? 10 : 7;
         const expectedHeaders = [
           createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
           createHeaderMetadata(
@@ -470,6 +476,8 @@ describe('PlaylistSmilGenerator', () => {
           ),
           createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
           createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+          createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
           createHeaderMetadata(
             HeaderMetadataNames.MosaicPlaylistId,
             testPlaylist.id,
@@ -535,7 +543,7 @@ describe('PlaylistSmilGenerator', () => {
 
         // Assert
         const headerMetadata = resultSmil.smil.head.meta;
-        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaderLength = isDrmProtected ? 10 : 7;
         const expectedHeaders = [
           createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
           createHeaderMetadata(
@@ -544,6 +552,8 @@ describe('PlaylistSmilGenerator', () => {
           ),
           createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
           createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+          createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
           createHeaderMetadata(
             HeaderMetadataNames.MosaicPlaylistId,
             testPlaylist.id,
@@ -608,7 +618,7 @@ describe('PlaylistSmilGenerator', () => {
         const resultSmil = generator.generate(testPlaylist);
         // Assert
         const headerMetadata = resultSmil.smil.head.meta;
-        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaderLength = isDrmProtected ? 10 : 7;
         const expectedHeaders = [
           createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
           createHeaderMetadata(
@@ -617,6 +627,8 @@ describe('PlaylistSmilGenerator', () => {
           ),
           createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
           createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+          createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
           createHeaderMetadata(
             HeaderMetadataNames.MosaicPlaylistId,
             testPlaylist.id,
@@ -789,7 +801,7 @@ describe('PlaylistSmilGenerator', () => {
         const resultSmil = generator.generate(testPlaylist);
         // Assert
         const headerMetadata = resultSmil.smil.head.meta;
-        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaderLength = isDrmProtected ? 10 : 7;
         const expectedHeaders = [
           createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
           createHeaderMetadata(
@@ -798,6 +810,8 @@ describe('PlaylistSmilGenerator', () => {
           ),
           createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
           createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+          createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
           createHeaderMetadata(
             HeaderMetadataNames.MosaicPlaylistId,
             testPlaylist.id,
@@ -923,7 +937,7 @@ describe('PlaylistSmilGenerator', () => {
         const resultSmil = generator.generate(testPlaylist);
         // Assert
         const headerMetadata = resultSmil.smil.head.meta;
-        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaderLength = isDrmProtected ? 10 : 7;
         const expectedHeaders = [
           createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
           createHeaderMetadata(
@@ -932,6 +946,8 @@ describe('PlaylistSmilGenerator', () => {
           ),
           createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
           createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+          createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
           createHeaderMetadata(
             HeaderMetadataNames.MosaicPlaylistId,
             testPlaylist.id,
@@ -1001,7 +1017,7 @@ describe('PlaylistSmilGenerator', () => {
         const resultSmil = generator.generate(testPlaylist);
         // Assert
         const headerMetadata = resultSmil.smil.head.meta;
-        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaderLength = isDrmProtected ? 10 : 7;
         const expectedHeaders = [
           createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
           createHeaderMetadata(
@@ -1010,6 +1026,8 @@ describe('PlaylistSmilGenerator', () => {
           ),
           createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
           createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+          createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
           createHeaderMetadata(
             HeaderMetadataNames.MosaicPlaylistId,
             testPlaylist.id,
@@ -1084,7 +1102,7 @@ describe('PlaylistSmilGenerator', () => {
         const resultSmil = generator.generate(testPlaylist);
         // Assert
         const headerMetadata = resultSmil.smil.head.meta;
-        const expectedHeaderLength = isDrmProtected ? 8 : 5;
+        const expectedHeaderLength = isDrmProtected ? 10 : 7;
         const expectedHeaders = [
           createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
           createHeaderMetadata(
@@ -1093,6 +1111,8 @@ describe('PlaylistSmilGenerator', () => {
           ),
           createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
           createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+          createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+          createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
           createHeaderMetadata(
             HeaderMetadataNames.MosaicPlaylistId,
             testPlaylist.id,

@@ -5,6 +5,7 @@ import { getPlaylistIdHeaderRegex, Transition } from '../live-stream/utils';
 import {
   ChannelEntry,
   ChannelResponse,
+  ChannelStatusResponse,
   ChannelTransitionResponse,
 } from './virtual-channel-api-models';
 
@@ -200,6 +201,19 @@ export class VirtualChannelApi {
       }
     }
     return matchingTransitions;
+  };
+
+  public getChannelStatus = async (
+    channelId: string,
+  ): Promise<ChannelStatusResponse> => {
+    try {
+      const result = await axios.get<ChannelStatusResponse>(
+        urljoin(this.virtualChannelApiUrl, 'channels', channelId, 'status'),
+      );
+      return result.data;
+    } catch (error) {
+      throw getVirtualChannelApiMappedError(error);
+    }
   };
 
   public channelHasPlaylistTransitions = async (

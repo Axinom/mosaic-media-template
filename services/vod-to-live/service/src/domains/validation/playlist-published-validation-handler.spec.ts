@@ -693,6 +693,130 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       ]);
     });
 
+    it('if playlist has videos that are missing AUDIO streams -> errors are reported', () => {
+      // Arrange
+      const scheduleVideoId = uuid();
+      const programVideoId = uuid();
+      const startDate = new Date();
+      const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
+        payload: {
+          ...createPlaylistEvent(
+            startDate,
+            new Date(
+              startDate.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
+            ),
+          ),
+          programs: [
+            {
+              id: uuid(),
+              title: 'Program 1',
+              sort_index: 0,
+              video_duration_in_seconds: DAY_IN_SECONDS,
+              entity_id: uuid(),
+              entity_type: 'MOVIE',
+              program_cue_points: [
+                {
+                  id: uuid(),
+                  type: 'PRE',
+                  schedules: [
+                    {
+                      id: uuid(),
+                      type: 'VIDEO',
+                      sort_index: 0,
+                      duration_in_seconds: 10,
+                      video: {
+                        id: scheduleVideoId,
+                        title: 'TEST MOVIE',
+                        source_location: 'test',
+                        is_archived: false,
+                        videos_tags: [],
+                        video_encoding: {
+                          audio_languages: ['en'],
+                          caption_languages: [],
+                          dash_manifest_path:
+                            'https://test.blob.core.windows.net/video-output/0-0/cmaf/manifest.mpd',
+                          encoding_state: 'READY',
+                          is_protected: false,
+                          output_format: 'CMAF',
+                          preview_status: 'NOT_PREVIEWED',
+                          subtitle_languages: [],
+                          video_streams: [
+                            {
+                              codecs: 'H264',
+                              file: 'cmaf/video-H264-720-2100k-video-avc1.mp4',
+                              format: 'CMAF',
+                              label: 'HD',
+                              type: 'VIDEO',
+                            },
+                          ],
+                        },
+                      },
+                    },
+                    {
+                      id: uuid(),
+                      type: 'AD_POD',
+                      sort_index: 0,
+                      duration_in_seconds: 10,
+                    },
+                  ],
+                },
+              ],
+              video: {
+                id: programVideoId,
+                title: 'TEST MOVIE',
+                source_location: 'test',
+                is_archived: false,
+                videos_tags: [],
+                video_encoding: {
+                  audio_languages: ['en'],
+                  caption_languages: [],
+                  dash_manifest_path:
+                    'https://test.blob.core.windows.net/video-output/0-0/cmaf/manifest.mpd',
+                  encoding_state: 'READY',
+                  is_protected: false,
+                  output_format: 'CMAF',
+                  preview_status: 'NOT_PREVIEWED',
+                  subtitle_languages: [],
+                  video_streams: [
+                    {
+                      codecs: 'H264',
+                      file: 'cmaf/video-H264-720-2100k-video-avc1.mp4',
+                      format: 'CMAF',
+                      label: 'HD',
+                      type: 'VIDEO',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+        message_type:
+          ChannelServiceMultiTenantMessagingSettings.PlaylistPublished
+            .messageType,
+        message_id: uuid(),
+        message_version: '1.0',
+        timestamp: new Date().toISOString(),
+      };
+      // Act
+      const validationResult = handler.handle(message);
+
+      // Assert
+      expect(validationResult.payload).toBeNull();
+      expect(validationResult.warnings).toHaveLength(0);
+      expect(validationResult.errors).toHaveLength(2);
+      expect(validationResult.errors).toMatchObject([
+        {
+          message: `Video ${programVideoId} is missing AUDIO stream.`,
+          code: 'MISSING_AUDIO_STREAM',
+        },
+        {
+          message: `Video ${scheduleVideoId} is missing AUDIO stream.`,
+          code: 'MISSING_AUDIO_STREAM',
+        },
+      ]);
+    });
+
     it.each([true, false])(
       'if playlist is valid -> no errors and warnings',
       (isDrmProtected: boolean) => {

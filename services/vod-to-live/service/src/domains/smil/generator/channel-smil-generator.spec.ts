@@ -62,10 +62,14 @@ describe('ChannelSmilGenerator', () => {
       // Assert
       expect(resultSmil).not.toBeNull();
       const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 6 : 3;
+      const expectedHeaderLength = isDrmProtected ? 10 : 7;
       const expectedHeaders = [
         createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
         { '@name': HeaderMetadataNames.Vod2LiveStartTime },
+        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+        createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+        createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
         createHeaderMetadata(
           HeaderMetadataNames.MosaicChannelId,
           channelWithPlaceholderVideo.id,

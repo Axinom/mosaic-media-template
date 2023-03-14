@@ -28,6 +28,13 @@ export const validateVideo = (video: DetailedVideo): ValidationResult => {
     });
   }
 
+  if (!video.video_encoding.video_streams.find((s) => s.type === 'AUDIO')) {
+    validationResult.errors.push({
+      message: `Video ${video.id} is missing AUDIO stream.`,
+      code: 'MISSING_AUDIO_STREAM',
+    });
+  }
+
   if (
     video.video_encoding.video_streams.find(
       (s) => s.type === 'VIDEO' && s.codecs !== 'H264',

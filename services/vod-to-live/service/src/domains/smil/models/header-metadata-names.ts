@@ -42,4 +42,7 @@ export const HeaderMetadataNames = {
    * Should contain a unique identifier of the published Playlist.
    */
   MosaicPlaylistId: 'mosaic_playlist_id',
+
+  MpdSegmentTemplate: 'mpd_segment_template',
+  HlsClientManifestVersion: 'hls_client_manifest_version',
 } as const;

@@ -71,6 +71,7 @@ const createTransition = async (
     channelId,
     transitionStartDateTime,
     smil,
+    true,
   );
   logger.debug({
     message: `Transition for playlist ${playlistId} creation result:`,

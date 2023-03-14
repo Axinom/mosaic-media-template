@@ -46,13 +46,11 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
    */
   private createEventStreamInPlaylist = (
     outOfNetworkIndicator: OutOfNetworkIndicator,
-    eventDuration: number,
   ): EventStream | undefined => {
     const playlistEvent = createPlaylistEventStream(
       outOfNetworkIndicator,
       this.lastOutOfNetworkIndicator,
       this.spliceEventId,
-      eventDuration,
     );
     this.lastOutOfNetworkIndicator = playlistEvent.outOfNetworkIndicator;
     this.spliceEventId = playlistEvent.spliceEventId;
@@ -116,6 +114,8 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
       ),
       createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
       createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+      createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+      createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
       createHeaderMetadata(
         HeaderMetadataNames.MosaicPlaylistId,
         originalEvent.id,
@@ -190,7 +190,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
             result.parallels.push(
               createParallel(
                 programReference,
-                this.createEventStreamInPlaylist(0, 0),
+                this.createEventStreamInPlaylist(0),
                 result.lastSpliceTimeInSeconds === 0
                   ? undefined
                   : result.lastSpliceTimeInSeconds,
@@ -224,7 +224,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
     parallels.push(
       createParallel(
         programReference,
-        this.createEventStreamInPlaylist(0, 0),
+        this.createEventStreamInPlaylist(0),
         splicedWithCuePoints.lastSpliceTimeInSeconds === 0
           ? undefined
           : splicedWithCuePoints.lastSpliceTimeInSeconds,
@@ -263,10 +263,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
                   entry,
                   this.placeholderVideoParallel,
                   this.placeholderVideoDuration,
-                  this.createEventStreamInPlaylist(
-                    1,
-                    entry.duration_in_seconds,
-                  ),
+                  this.createEventStreamInPlaylist(1),
                 ),
               ];
             } else {
@@ -274,10 +271,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
                 ...result,
                 createParallel(
                   { audio: [], video: [] },
-                  this.createEventStreamInPlaylist(
-                    1,
-                    entry.duration_in_seconds,
-                  ),
+                  this.createEventStreamInPlaylist(1),
                   undefined,
                   entry.duration_in_seconds,
                 ),
@@ -289,7 +283,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
                 ...result,
                 createParallel(
                   videoToSmilParallelReferences(entry.video),
-                  this.createEventStreamInPlaylist(0, 0),
+                  this.createEventStreamInPlaylist(0),
                   undefined,
                   entry.duration_in_seconds,
                 ),
@@ -331,10 +325,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
         this.placeholderVideoDuration,
       );
 
-      let eventStream = this.createEventStreamInPlaylist(
-        0,
-        prolongationDurationInSeconds,
-      );
+      let eventStream = this.createEventStreamInPlaylist(0);
       for (let i = 0; i < quotient; i++) {
         parallels.push(
           createParallel(this.placeholderVideoParallel, eventStream),

@@ -71,6 +71,7 @@ export const prepareChannelLiveStream = async (
       const channelCreationResult = await virtualChannelApi.putChannel(
         channelId,
         smil,
+        true,
       );
       await broker.publish<ChannelProtectionKeyCreatedEvent>(
         VodToLiveServiceMessagingSettings.ChannelProtectionKeyCreated

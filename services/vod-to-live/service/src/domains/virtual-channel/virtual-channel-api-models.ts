@@ -18,3 +18,16 @@ export interface ChannelTransitionResponse {
     [k: string]: DetailedTransitionEntry;
   };
 }
+
+export interface ChannelStatusResponse {
+  status: string;
+  origin_url: string;
+  details: ChannelStatusDetailResponse[];
+}
+
+export interface ChannelStatusDetailResponse {
+  name: string;
+  status: string;
+  time: string;
+  details: string;
+}

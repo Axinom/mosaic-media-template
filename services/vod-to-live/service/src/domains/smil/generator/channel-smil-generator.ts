@@ -47,6 +47,10 @@ export class ChannelSmilGenerator extends SmilGenerator<ChannelPublishedEvent> {
         HeaderMetadataNames.Vod2LiveStartTime,
         new Date().toISOString(),
       ), // start of the channel is a "publication" date
+      createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
+      createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+      createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+      createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
       // Axinom mosaic specific properties
       createHeaderMetadata(
         HeaderMetadataNames.MosaicChannelId,

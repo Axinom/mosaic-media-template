@@ -20,22 +20,16 @@ describe('smil-utils', () => {
       const previousOutOfNetworkIndicator = 0; //in network
       const newOutOfNetworkIndicator = 1; //jump out of network
       const previousSpliceId = 0;
-      const eventDuration = 60; // duration of the event 60 sec
       // Act
       const result = createPlaylistEventStream(
         newOutOfNetworkIndicator,
         previousOutOfNetworkIndicator,
         previousSpliceId,
-        eventDuration,
       );
       // Assert
       expect(result.eventStream).not.toBeUndefined();
       expect(result.eventStream).toMatchObject(
-        createEventStream(
-          newOutOfNetworkIndicator,
-          eventDuration,
-          `${previousSpliceId + 1}`,
-        ),
+        createEventStream(newOutOfNetworkIndicator, `${previousSpliceId + 1}`),
       );
       expect(result.outOfNetworkIndicator).toEqual(newOutOfNetworkIndicator);
       expect(result.spliceEventId).toEqual(previousSpliceId + 1);
@@ -45,22 +39,16 @@ describe('smil-utils', () => {
       const previousOutOfNetworkIndicator = 1; //out of network
       const newOutOfNetworkIndicator = 0; //jump into network
       const previousSpliceId = 0;
-      const eventDuration = 0;
       // Act
       const result = createPlaylistEventStream(
         newOutOfNetworkIndicator,
         previousOutOfNetworkIndicator,
         previousSpliceId,
-        eventDuration,
       );
       // Assert
       expect(result.eventStream).not.toBeUndefined();
       expect(result.eventStream).toMatchObject(
-        createEventStream(
-          newOutOfNetworkIndicator,
-          eventDuration,
-          `${previousSpliceId}`,
-        ),
+        createEventStream(newOutOfNetworkIndicator, `${previousSpliceId}`),
       );
       expect(result.outOfNetworkIndicator).toEqual(newOutOfNetworkIndicator);
       expect(result.spliceEventId).toEqual(previousSpliceId);
@@ -70,13 +58,11 @@ describe('smil-utils', () => {
       const previousOutOfNetworkIndicator = 0; //in network
       const newOutOfNetworkIndicator = 0; //staying in network
       const previousSpliceId = 0;
-      const eventDuration = 300;
       // Act
       const result = createPlaylistEventStream(
         newOutOfNetworkIndicator,
         previousOutOfNetworkIndicator,
         previousSpliceId,
-        eventDuration,
       );
       // Assert
       expect(result.eventStream).toBeUndefined();
@@ -88,13 +74,11 @@ describe('smil-utils', () => {
       const previousOutOfNetworkIndicator = 1; // out of network
       const newOutOfNetworkIndicator = 1; //staying out of network
       const previousSpliceId = 0;
-      const eventDuration = 100;
       // Act
       const result = createPlaylistEventStream(
         newOutOfNetworkIndicator,
         previousOutOfNetworkIndicator,
         previousSpliceId,
-        eventDuration,
       );
       // Assert
       expect(result.eventStream).toBeUndefined();
@@ -123,7 +107,7 @@ describe('smil-utils', () => {
         schedule,
         PLACEHOLDER_PARALLEL,
         PLACEHOLDER_VIDEO_LENGTH,
-        createEventStream(1, schedule.duration_in_seconds, `1`),
+        createEventStream(1, `1`),
       );
       // Assert
       expect(result).toHaveLength(1);
@@ -168,7 +152,7 @@ describe('smil-utils', () => {
           schedule,
           PLACEHOLDER_PARALLEL,
           PLACEHOLDER_VIDEO_LENGTH,
-          createEventStream(1, schedule.duration_in_seconds, `1`),
+          createEventStream(1, `1`),
         );
         // Assert
         expect(result).toHaveLength(expectedParallels);

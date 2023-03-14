@@ -268,6 +268,63 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
       ]);
     });
 
+    it('if channel placeholder video is missing audio stream -> error is reported', () => {
+      // Arrange
+      const message: WebhookRequestMessage<ChannelPublishedEvent> = {
+        payload: {
+          ...createChannelEvent(),
+          placeholder_video: {
+            id: uuid(),
+            title: 'Channel Spinning LOGO',
+            source_location: 'test',
+            is_archived: false,
+            videos_tags: [],
+            video_encoding: {
+              audio_languages: ['en'],
+              caption_languages: [],
+              dash_manifest_path:
+                'https://test.blob.core.windows.net/video-output/0-0/cmaf/manifest.mpd',
+              encoding_state: 'READY',
+              is_protected: false,
+              output_format: 'CMAF',
+              preview_status: 'NOT_PREVIEWED',
+              subtitle_languages: [],
+              video_streams: [
+                {
+                  codecs: 'H264',
+                  file: 'cmaf/video-H264-720-2100k-video-avc1.mp4',
+                  format: 'CMAF',
+                  label: 'HD',
+                  type: 'VIDEO',
+                },
+              ],
+            },
+          },
+        },
+        message_type:
+          ChannelServiceMultiTenantMessagingSettings.ChannelPublished
+            .messageType,
+        message_id: uuid(),
+        message_version: '1.0',
+        timestamp: new Date().toISOString(),
+      };
+      // Act
+      const validationResult = handler.handle(message);
+
+      // Assert
+      expect(validationResult.payload).toBeNull();
+      expect(validationResult.warnings).toHaveLength(0);
+      expect(validationResult.errors).toHaveLength(1);
+      expect(validationResult.errors).toMatchObject([
+        {
+          message: `Video ${
+            message.payload.placeholder_video!.id
+          } is missing AUDIO stream.`,
+          code: 'MISSING_AUDIO_STREAM',
+        },
+      ]);
+    });
+
     it.each([true, false])(
       'if channel placeholder has a valid video with DRM protection set to %s -> no errors and warnings',
       (isDrmProtected: boolean) => {

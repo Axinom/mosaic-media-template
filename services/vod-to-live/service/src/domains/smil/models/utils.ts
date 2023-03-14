@@ -65,14 +65,11 @@ export const createHeaderMetadata = (
 
 export const createEventStream = (
   outOfNetworkIndicator: OutOfNetworkIndicator,
-  eventDuration: number,
   spliceEventId?: string | undefined,
 ): EventStream => ({
   '@xmlns': 'urn:mpeg:dash:schema:mpd:2011',
   '@schemeIdUri': 'urn:scte:scte35:2013:xml',
-  // 10000000 is the default (source: https://learn.microsoft.com/en-us/azure/media-services/previous/media-services-specifications-live-timed-metadata)
-  '@timescale': '10000000',
-  Event: createEvent(outOfNetworkIndicator, eventDuration, spliceEventId),
+  Event: createEvent(outOfNetworkIndicator, spliceEventId),
 });
 
 export const createReference = (source: string): Reference => ({
@@ -81,12 +78,9 @@ export const createReference = (source: string): Reference => ({
 
 const createEvent = (
   outOfNetworkIndicator: OutOfNetworkIndicator,
-  eventDuration: number,
   spliceEventId?: string | undefined,
 ): Event => ({
   '@id': spliceEventId,
-  '@duration': `${eventDuration}`,
-  '@presentationTime': '0',
   Signal: createSignal(outOfNetworkIndicator, spliceEventId),
 });
 

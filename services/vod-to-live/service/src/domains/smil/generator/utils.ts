@@ -23,14 +23,12 @@ export interface PlaylistEventStream {
  * @param outOfNetworkIndicator  out of network indicator of the playlist item.
  * @param previousOutOfNetworkIndicator out of network indicator of the previous playlist item.
  * @param previousSpliceEventId splice event id of the previous playlist item.
- * @param eventDuration duration of the event.
  * @returns An object containing calculated OONI indicator, splice identifier and EventStream, if required.
  */
 export const createPlaylistEventStream = (
   outOfNetworkIndicator: OutOfNetworkIndicator,
   previousOutOfNetworkIndicator: OutOfNetworkIndicator,
   previousSpliceEventId: number,
-  eventDuration: number,
 ): PlaylistEventStream => {
   let spliceEventId = previousSpliceEventId;
   //event not needed if new OONI matches last OONI
@@ -46,11 +44,7 @@ export const createPlaylistEventStream = (
     spliceEventId++;
   }
   return {
-    eventStream: createEventStream(
-      outOfNetworkIndicator,
-      eventDuration,
-      `${spliceEventId}`,
-    ),
+    eventStream: createEventStream(outOfNetworkIndicator, `${spliceEventId}`),
     outOfNetworkIndicator,
     spliceEventId,
   };
