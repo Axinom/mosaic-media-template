@@ -110,6 +110,10 @@ export const getConfigDefinitions = (
      */
     devServiceAccountClientSecret: () =>
       env.get('DEV_SERVICE_ACCOUNT_CLIENT_SECRET').asString(),
+    /**
+     * Optional flag for turning on DEMO mode for Entitlement Service.
+     */
+    demoMode: () => env.get('DEMO_MODE').default('false').asBoolStrict(),
   };
 };
 

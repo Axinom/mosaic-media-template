@@ -10,10 +10,14 @@ import {
   handleWebhookErrorMiddleware,
   isEmptyObject,
   MosaicError,
+  transformJsonSchemaValidationErrors,
   verifyWebhookRequestMiddleware,
+  WebhookErrors,
   WebhookRequestMessage,
 } from '@axinom/mosaic-service-common';
-import { Express, NextFunction, Request, Response } from 'express';
+import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
+import { Express, json, NextFunction, Request, Response } from 'express';
 import { CommonErrors, Config } from '../../common';
 import { generateEntitlementMessageJwt } from '../../graphql/plugins/entitlement-endpoint/entitlement-message-generation';
 
@@ -41,16 +45,65 @@ const validateVideoPlaybackPermissionMiddleware = (
   next();
 };
 
+/**
+ * Middleware to validate Webhook requests, when service is in DEMO mode.
+ */
+const verifyDemoWebhookRequestMiddleware = (
+  payloadJsonSchema?: Record<string, unknown>,
+  expirationInSeconds?: number,
+): ((req: Request, res: Response, next: NextFunction) => void) => {
+  return json({
+    verify: (req: Request, _res: Response, buffer: Buffer): void => {
+      const requestBody = buffer.toString();
+      expirationInSeconds = expirationInSeconds ?? 120;
+      const parsedBody: WebhookRequestMessage<PlaybackVideoWebhookRequestPayload> =
+        typeof requestBody === 'string' ? JSON.parse(requestBody) : requestBody;
+      if (payloadJsonSchema) {
+        const ajv = new Ajv({
+          strict: true,
+          allErrors: true,
+        });
+        addFormats(ajv);
+        const validate = ajv.compile(payloadJsonSchema);
+        validate(parsedBody.payload);
+
+        const errors = transformJsonSchemaValidationErrors(validate.errors);
+
+        if (errors.length > 0) {
+          throw new MosaicError({
+            ...WebhookErrors.WebhookPayloadValidationFailed,
+            details: { validationMessages: errors.map((e) => e.message) },
+          });
+        }
+      }
+
+      const now = new Date().getTime();
+      const sent = new Date(parsedBody.timestamp).getTime();
+      const secondsSinceRequest = (now - sent) / 1000;
+      if (secondsSinceRequest > expirationInSeconds) {
+        throw new MosaicError({
+          ...WebhookErrors.OutdatedWebhookRequest,
+          messageParams: [Math.round(secondsSinceRequest)],
+        });
+      }
+    },
+  });
+};
+
 export const setupEntitlementWebhookEndpoint = (
   app: Express,
   config: Config,
 ): void => {
   app.post(
     '/entitlement',
-    verifyWebhookRequestMiddleware({
-      webhookSecret: config.entitlementWebhookSecret,
-      payloadJsonSchema: PlaybackVideoWebhookRequestPayloadSchema,
-    }),
+    config.demoMode
+      ? verifyDemoWebhookRequestMiddleware(
+          PlaybackVideoWebhookRequestPayloadSchema,
+        )
+      : verifyWebhookRequestMiddleware({
+          webhookSecret: config.entitlementWebhookSecret,
+          payloadJsonSchema: PlaybackVideoWebhookRequestPayloadSchema,
+        }),
     validateVideoPlaybackPermissionMiddleware,
     handleWebhookErrorMiddleware,
     async (
@@ -93,10 +146,14 @@ export const setupManifestWebhookEndpoint = (
 ): void => {
   app.post(
     '/manifest',
-    verifyWebhookRequestMiddleware({
-      webhookSecret: config.manifestWebhookSecret,
-      payloadJsonSchema: PlaybackVideoWebhookRequestPayloadSchema,
-    }),
+    config.demoMode
+      ? verifyDemoWebhookRequestMiddleware(
+          PlaybackVideoWebhookRequestPayloadSchema,
+        )
+      : verifyWebhookRequestMiddleware({
+          webhookSecret: config.manifestWebhookSecret,
+          payloadJsonSchema: PlaybackVideoWebhookRequestPayloadSchema,
+        }),
     validateVideoPlaybackPermissionMiddleware,
     handleWebhookErrorMiddleware,
     async (
