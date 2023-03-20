@@ -52,6 +52,8 @@
     "@axinom/mosaic-message-bus": "0.14.0-rc.12",
     "@axinom/mosaic-messages": "0.25.0-rc.12",
     "@axinom/mosaic-service-common": "0.29.0-rc.12",
+    "ajv": "^7.2.4",
+    "ajv-formats": "^1.6.1",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "dotenv": "^8.6.0",
     "env-cmd": "^10.1.0",
