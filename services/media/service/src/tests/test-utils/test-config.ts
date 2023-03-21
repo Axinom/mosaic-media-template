@@ -27,18 +27,9 @@ export const createTestConfig = (
       process.env.DATABASE_NAME,
       testFilePath,
     ),
-    DATABASE_OWNER: createTestDbIdentifier(
-      process.env.DATABASE_OWNER,
-      testFilePath,
-    ),
-    DATABASE_LOGIN: createTestDbIdentifier(
-      process.env.DATABASE_LOGIN,
-      testFilePath,
-    ),
-    DATABASE_GQL_ROLE: createTestDbIdentifier(
-      process.env.DATABASE_GQL_ROLE,
-      testFilePath,
-    ),
+    DATABASE_OWNER: createTestDbIdentifier(process.env.DATABASE_OWNER),
+    DATABASE_LOGIN: createTestDbIdentifier(process.env.DATABASE_LOGIN),
+    DATABASE_GQL_ROLE: createTestDbIdentifier(process.env.DATABASE_GQL_ROLE),
   };
 
   return getValidatedConfig(

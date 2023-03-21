@@ -23,7 +23,6 @@
     "debug": "concurrently -n \"tsc,graphile-migrate\" -c \"bgBlue.bold,bgMagenta.bold\" \"yarn debug:watch\" \"yarn internal:migrate-watch\"",
     "debug:watch": "yarn util:load-vars tsc-watch --project tsconfig.build.json --onSuccess \"node --inspect dist/index.js\"",
     "test:reset:dbs": "yarn util:load-vars ts-node --files scripts/test-reset-dbs.ts",
-    "test:create:dbs": "yarn util:load-vars ts-node --files scripts/test-create-dbs.ts",
     "test": "yarn util:load-vars jest --silent",
     "test:watch": "yarn test --watch",
     "test:debug": "yarn util:load-vars node --inspect -r tsconfig-paths/register -r ts-node/register ../../../node_modules/jest/bin/jest --runInBand --silent",
