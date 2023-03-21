@@ -297,17 +297,17 @@ describe('publishingMovieProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'images' is required.`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
           message: `Property 'licenses' is required.`,
           severity: 'ERROR',
         },
         {
           context: 'METADATA',
           message: `Property 'genre_ids' is required.`,
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message: `Property 'images' is required.`,
           severity: 'ERROR',
         },
         {
@@ -405,12 +405,12 @@ describe('publishingMovieProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'is_protected' of the first video is required.`,
+          message: `Property 'output_format' of the first video is required.`,
           severity: 'ERROR',
         },
         {
           context: 'METADATA',
-          message: `Property 'output_format' of the first video is required.`,
+          message: `Property 'is_protected' of the first video is required.`,
           severity: 'ERROR',
         },
       ]);

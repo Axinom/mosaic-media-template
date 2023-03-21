@@ -56,7 +56,6 @@
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "ajv": "^7.2.4",
     "ajv-formats": "^1.6.1",
-    "ajv-v6": "npm:ajv@^6.12.6",
     "altair-express-middleware": "^2.5.2",
     "amqplib": "^0.6.0",
     "axios": "^0.24.0",
