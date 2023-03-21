@@ -66,7 +66,7 @@ export const setupEntitlementWebhookEndpoint = (
         const keyIds =
           req.body?.payload?.video?.video_encoding?.video_streams?.map(
             (s) => s.key_id,
-          ) ?? [];
+          );
         const jwt = generateEntitlementMessageJwt(keyIds, [], config, 'STRICT');
         const response =
           generateWebhookResponse<EntitlementWebhookResponsePayload>({

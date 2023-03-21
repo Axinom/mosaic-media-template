@@ -3,7 +3,7 @@ import {
   SeasonPublishedEvent,
   SeasonPublishedEventSchema,
 } from 'media-messages';
-import * as yup from 'yup';
+import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
 import { Config } from '../../../common';
 import {
@@ -108,7 +108,7 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
 const customSeasonValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
-  const yupSchema = yup.object({
+  const yupSchema = Yup.object({
     genre_ids: atLeastOneString,
     images: requiredCover,
     videos: videosValidation('TRAILER'),

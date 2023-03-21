@@ -175,7 +175,7 @@ packaged workflows.
 To deploy the workflows into an environment run a command like:
 
 ```sh
-npx piral-cli@latest publish-pilet --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/{tenantId}/{environmentId}" --api-key "{serviceAccountCredentials}" {packageFile}
+yarn run pilet publish --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/{tenantId}/{environmentId}" --api-key "{serviceAccountCredentials}" {packageFile}
 ```
 
 Please note, that you need to provide the 'Base64 Encoded Credentials' of a

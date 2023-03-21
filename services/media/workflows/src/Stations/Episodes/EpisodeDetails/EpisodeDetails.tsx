@@ -19,7 +19,7 @@ import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { number, object, string } from 'yup';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext, ImageID } from '../../../externals';
 import {
@@ -54,13 +54,11 @@ import { useEpisodeDetailsActions } from './EpisodeDetails.actions';
 import classes from './EpisodeDetails.module.scss';
 import { EpisodeDetailsFormData } from './EpisodeDetails.types';
 
-const episodeDetailSchema = object<
+const episodeDetailSchema = Yup.object<
   ObjectSchemaDefinition<EpisodeDetailsFormData>
 >({
-  title: string()
-    .required('Title is a required field')
-    .max(100),
-  index: number()
+  title: Yup.string().required('Title is a required field').max(100),
+  index: Yup.number()
     .positive('Episode Index must be a positive number')
     .integer('Episode Index must be an integer')
     .required('Episode Index is a required field'),
@@ -107,9 +105,8 @@ export const EpisodeDetails: React.FC = () => {
       formData: EpisodeDetailsFormData,
       initialData: DetailsProps<EpisodeDetailsFormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const tagAssignmentMutations = generateArrayMutations({
         current: formData.tags,
@@ -134,16 +131,17 @@ export const EpisodeDetails: React.FC = () => {
           const tvshowGenresId = allGenres[name].id;
 
           if (tvshowGenresId) {
-            return generateUpdateGQLFragment<
-              MutationCreateEpisodesTvshowGenreArgs
-            >('createEpisodesTvshowGenre', {
-              input: {
-                episodesTvshowGenre: {
-                  episodeId,
-                  tvshowGenresId,
+            return generateUpdateGQLFragment<MutationCreateEpisodesTvshowGenreArgs>(
+              'createEpisodesTvshowGenre',
+              {
+                input: {
+                  episodesTvshowGenre: {
+                    episodeId,
+                    tvshowGenresId,
+                  },
                 },
               },
-            });
+            );
           } else {
             return '';
           }
@@ -151,11 +149,12 @@ export const EpisodeDetails: React.FC = () => {
         generateDeleteMutation: (name) => {
           const tvshowGenresId = allGenres[name].id;
           if (tvshowGenresId) {
-            return generateUpdateGQLFragment<
-              MutationDeleteEpisodesTvshowGenreArgs
-            >('deleteEpisodesTvshowGenre', {
-              input: { episodeId, tvshowGenresId },
-            });
+            return generateUpdateGQLFragment<MutationDeleteEpisodesTvshowGenreArgs>(
+              'deleteEpisodesTvshowGenre',
+              {
+                input: { episodeId, tvshowGenresId },
+              },
+            );
           } else {
             return '';
           }
@@ -183,15 +182,17 @@ export const EpisodeDetails: React.FC = () => {
         current: formData.productionCountries,
         original: initialData.data?.productionCountries,
         generateCreateMutation: (name) =>
-          generateUpdateGQLFragment<
-            MutationCreateEpisodesProductionCountryArgs
-          >('createEpisodesProductionCountry', {
-            input: { episodesProductionCountry: { name, episodeId } },
-          }),
+          generateUpdateGQLFragment<MutationCreateEpisodesProductionCountryArgs>(
+            'createEpisodesProductionCountry',
+            {
+              input: { episodesProductionCountry: { name, episodeId } },
+            },
+          ),
         generateDeleteMutation: (name) =>
-          generateUpdateGQLFragment<
-            MutationDeleteEpisodesProductionCountryArgs
-          >('deleteEpisodesProductionCountry', { input: { episodeId, name } }),
+          generateUpdateGQLFragment<MutationDeleteEpisodesProductionCountryArgs>(
+            'deleteEpisodesProductionCountry',
+            { input: { episodeId, name } },
+          ),
         prefix: 'productionCountry',
       });
 

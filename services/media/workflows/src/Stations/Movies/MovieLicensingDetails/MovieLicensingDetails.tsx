@@ -26,26 +26,18 @@ import {
   useMoviesLicenseQuery,
 } from '../../../generated/graphql';
 import { CountryNames } from '../../../Util/CountryNames/CountryNames';
+import {
+  getLicenseEndSchema,
+  getLicenseStartSchema,
+} from '../../../Util/LicenseDateSchema/LicenseDateSchema';
 
 type FormData = MutationUpdateMoviesLicenseArgs['input']['patch'] & {
   countries?: IsoAlphaTwoCountryCodes[];
 };
 
 const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
-  licenseStart: Yup.date().typeError('required'),
-  licenseEnd: Yup.date()
-    .typeError('required')
-    .test(
-      'checkEndDate',
-      'License end date cannot be before start date',
-      function (value) {
-        const { parent } = this;
-        if (value) {
-          return parent.licenseStart.getTime() < value.getTime();
-        }
-        return true;
-      },
-    ),
+  licenseStart: getLicenseStartSchema().label('From'),
+  licenseEnd: getLicenseEndSchema().label('To'),
 });
 
 export const MovieLicensingDetails: React.FC = () => {

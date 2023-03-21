@@ -86,11 +86,11 @@ const getCatalogResponseVideo = (
     });
   }
 
+  const [video] = videos;
   if (
-    !videos[0].isProtected ||
-    !videos[0].videoStreams ||
-    videos[0].videoStreams.nodes.length === 0 || // A protected video will always have a video_streams record
-    videos[0].videoStreams.nodes
+    !video.isProtected ||
+    !video.videoStreams?.nodes?.length ||
+    video.videoStreams.nodes // A protected video will always have at least one stream with non-empty Key ID
       .map((videoStream) => videoStream.keyId)
       .filter((keyId) => !isNullOrWhitespace(keyId)).length === 0
   ) {
@@ -100,7 +100,7 @@ const getCatalogResponseVideo = (
     });
   }
 
-  return videos[0];
+  return video;
 };
 
 export const getEntityType = (id: string): EntityWithVideoType => {

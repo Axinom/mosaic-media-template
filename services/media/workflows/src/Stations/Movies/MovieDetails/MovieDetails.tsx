@@ -19,7 +19,7 @@ import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { object, string } from 'yup';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext, ImageID } from '../../../externals';
 import {
@@ -53,10 +53,10 @@ import { useMovieDetailsActions } from './MovieDetails.actions';
 import classes from './MovieDetails.module.scss';
 import { MovieDetailsFormData } from './MovieDetails.types';
 
-const movieDetailSchema = object<ObjectSchemaDefinition<MovieDetailsFormData>>({
-  title: string()
-    .required('Title is a required field')
-    .max(100),
+const movieDetailSchema = Yup.object<
+  ObjectSchemaDefinition<MovieDetailsFormData>
+>({
+  title: Yup.string().required('Title is a required field').max(100),
 });
 
 export const MovieDetails: React.FC = () => {
@@ -100,9 +100,8 @@ export const MovieDetails: React.FC = () => {
       formData: MovieDetailsFormData,
       initialData: DetailsProps<MovieDetailsFormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const tagAssignmentMutations = generateArrayMutations({
         current: formData.tags,
@@ -127,16 +126,17 @@ export const MovieDetails: React.FC = () => {
           const movieGenresId = allGenres[name].id;
 
           if (movieGenresId) {
-            return generateUpdateGQLFragment<
-              MutationCreateMoviesMovieGenreArgs
-            >('createMoviesMovieGenre', {
-              input: {
-                moviesMovieGenre: {
-                  movieId,
-                  movieGenresId,
+            return generateUpdateGQLFragment<MutationCreateMoviesMovieGenreArgs>(
+              'createMoviesMovieGenre',
+              {
+                input: {
+                  moviesMovieGenre: {
+                    movieId,
+                    movieGenresId,
+                  },
                 },
               },
-            });
+            );
           } else {
             return '';
           }
@@ -144,11 +144,12 @@ export const MovieDetails: React.FC = () => {
         generateDeleteMutation: (name) => {
           const movieGenresId = allGenres[name].id;
           if (movieGenresId) {
-            return generateUpdateGQLFragment<
-              MutationDeleteMoviesMovieGenreArgs
-            >('deleteMoviesMovieGenre', {
-              input: { movieId, movieGenresId },
-            });
+            return generateUpdateGQLFragment<MutationDeleteMoviesMovieGenreArgs>(
+              'deleteMoviesMovieGenre',
+              {
+                input: { movieId, movieGenresId },
+              },
+            );
           } else {
             return '';
           }
