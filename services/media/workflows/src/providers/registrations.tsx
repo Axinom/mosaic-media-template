@@ -1,4 +1,5 @@
 import { PiletApi } from '@axinom/mosaic-portal';
+import { IconName } from '@axinom/mosaic-ui';
 import React from 'react';
 import { EpisodeExplorer } from '../Stations/Episodes/EpisodeExplorerBase/EpisodeExplorer';
 import { MovieExplorer } from '../Stations/Movies/MovieExplorerBase/MovieExplorer';
@@ -7,7 +8,7 @@ export function register(app: PiletApi): void {
   app.addProvider('fast-provider', {
     type: 'Movie',
     label: 'Movie',
-    selectionComponent: ({ onSelected }) => (
+    selectionComponent: ({ onSelected, onClose }) => (
       <MovieExplorer
         kind="SelectionExplorer"
         title="Select Movie"
@@ -17,6 +18,13 @@ export function register(app: PiletApi): void {
         defaultFilterValues={{
           mainVideoId: true,
         }}
+        actions={[
+          {
+            label: 'Cancel',
+            icon: IconName.X,
+            onClick: onClose,
+          },
+        ]}
         onSelection={(selection) => {
           const items =
             selection.mode === 'SINGLE_ITEMS' ? selection.items ?? [] : [];
@@ -37,7 +45,7 @@ export function register(app: PiletApi): void {
   app.addProvider('fast-provider', {
     type: 'Episode',
     label: 'Episode',
-    selectionComponent: ({ onSelected }) => (
+    selectionComponent: ({ onSelected, onClose }) => (
       <EpisodeExplorer
         kind="SelectionExplorer"
         title="Select Episode"
@@ -47,6 +55,13 @@ export function register(app: PiletApi): void {
         defaultFilterValues={{
           mainVideoId: true,
         }}
+        actions={[
+          {
+            label: 'Cancel',
+            icon: IconName.X,
+            onClick: onClose,
+          },
+        ]}
         onSelection={(selection) => {
           const items =
             selection.mode === 'SINGLE_ITEMS' ? selection.items ?? [] : [];
