@@ -14,6 +14,9 @@ export function register(app: PiletApi): void {
         stationKey="FASTMovieSelection"
         allowBulkSelect={false}
         enableSelectAll={false}
+        defaultFilterValues={{
+          mainVideoId: true,
+        }}
         onSelection={(selection) => {
           const items =
             selection.mode === 'SINGLE_ITEMS' ? selection.items ?? [] : [];
@@ -41,6 +44,9 @@ export function register(app: PiletApi): void {
         stationKey="FASTEpisodeSelection"
         allowBulkSelect={false}
         enableSelectAll={false}
+        defaultFilterValues={{
+          mainVideoId: true,
+        }}
         onSelection={(selection) => {
           const items =
             selection.mode === 'SINGLE_ITEMS' ? selection.items ?? [] : [];
