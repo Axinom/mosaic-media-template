@@ -1,5 +1,5 @@
 import { Dict, UnreachableCaseError } from '@axinom/mosaic-service-common';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { Config } from '../../../common';
 import { ENABLE_VIDEOS_DOWNLOAD } from '../../../domains';
 import {
