@@ -128,9 +128,13 @@ describe('EntitlementEndpointPlugin', () => {
   };
 
   beforeAll(async () => {
-    ctx = await createTestContext({ MOSAIC_TESTING_IP_ENABLED: 'false' });
+    ctx = await createTestContext({
+      MOSAIC_TESTING_IP_ENABLED: 'false',
+      DRM_LICENSE_COMMUNICATION_KEY: 'secret_key',
+    });
     ipTestCtx = await createTestContext({
       MOSAIC_TESTING_IP_ENABLED: 'true',
+      DRM_LICENSE_COMMUNICATION_KEY: 'secret_key',
     });
     defaultRequestContext = {
       ip: '95.235.33.161', // IT
