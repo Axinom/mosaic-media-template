@@ -46,12 +46,12 @@
     "util:define-func-migration": "yarn mosaic generate-define-func-migration"
   },
   "dependencies": {
-    "@axinom/mosaic-db-common": "0.24.0-rc.10",
-    "@axinom/mosaic-id-guard": "0.20.0-rc.4",
-    "@axinom/mosaic-id-utils": "0.13.1-rc.14",
-    "@axinom/mosaic-message-bus": "0.14.1-rc.14",
-    "@axinom/mosaic-messages": "0.25.1-rc.14",
-    "@axinom/mosaic-service-common": "0.30.0-rc.5",
+    "@axinom/mosaic-db-common": "0.24.0",
+    "@axinom/mosaic-id-guard": "0.20.0",
+    "@axinom/mosaic-id-utils": "0.13.1",
+    "@axinom/mosaic-message-bus": "0.14.1",
+    "@axinom/mosaic-messages": "0.25.1",
+    "@axinom/mosaic-service-common": "0.30.0",
     "ajv": "^7.2.4",
     "ajv-formats": "^1.6.1",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
