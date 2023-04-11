@@ -43,7 +43,7 @@
     "build:media-workflows:prod": "yarn && wsrun -trm -p media-workflows -c build && pilet pack services/media/workflows"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.17.0",
+    "@axinom/mosaic-cli": "0.18.0",
     "@dbeining/react-atom": "^4.1.21",
     "@jest/globals": "^29.1.2",
     "@libre/atom": "^1.3.3",

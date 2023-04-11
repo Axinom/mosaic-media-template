@@ -17,10 +17,8 @@ export function useMoviesFilters(): {
     excludeItems?: number[],
   ) => MovieFilter | undefined;
 } {
-  const [
-    createFromDateFilterValidator,
-    createToDateFilterValidator,
-  ] = createDateRangeFilterValidators<MovieData>();
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<MovieData>();
 
   const filterOptions: FilterType<MovieData>[] = [
     {
@@ -113,6 +111,21 @@ export function useMoviesFilters(): {
       property: 'id',
       type: FilterTypes.Numeric,
     },
+    {
+      label: 'Main Video',
+      property: 'mainVideoId',
+      type: FilterTypes.Options,
+      options: [
+        {
+          label: 'Assigned',
+          value: true,
+        },
+        {
+          label: 'Not Assigned',
+          value: false,
+        },
+      ],
+    },
   ];
 
   const transformFilters = (
@@ -151,6 +164,9 @@ export function useMoviesFilters(): {
       released: transformRange,
       createdDate: transformRange,
       publishedDate: transformRange,
+      mainVideoId: (value) => ({
+        isNull: !value,
+      }),
     });
   };
 

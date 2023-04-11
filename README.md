@@ -51,9 +51,9 @@ without `sudo`, please see
 ## Prepare and connect the media-template solution
 
 > :warning: This section is describing the steps on how to setup the solution
-> for development purpose.  
-> If you're interested in how to prepare the services for production use please
-> continue reading [here](#Package-the-services-for-production-use).
+> for development purpose. If you're interested in how to prepare the services
+> for production use please continue reading
+> [here](#Package-the-services-for-production-use).
 
 1. Run `yarn` to install all package dependencies for the workspace.
 2. Run `yarn apply-templates` to create local copies of all `*.template` files
@@ -82,9 +82,9 @@ without `sudo`, please see
 ## Run the solution
 
 > :warning: This section is describing the steps on how to run the solution for
-> development purpose.  
-> If you're interested in how to prepare the services for production use please
-> continue reading [here](#Package-the-services-for-production-use).
+> development purpose. If you're interested in how to prepare the services for
+> production use please continue reading
+> [here](#Package-the-services-for-production-use).
 
 Start the following commands in parallel (in separate terminals):
 
@@ -198,7 +198,7 @@ workflow.
 
 - `zapatos` models will be generated after `yarn db:commit` but you can trigger
   the generator manually via `yarn internal:zapatos`.
-- Run `yarn test:create:dbs` before running `yarn test` in case new test files
+- Run `yarn test:reset:dbs` before running `yarn test` in case new test files
   were created or existing ones renamed or moved.
 - To obtain a development-time auth token for a service, run `yarn util:token`
   in that service's workspace. There should also be a corresponding permissions

@@ -23,7 +23,6 @@
     "debug": "concurrently -n \"tsc,graphile-migrate\" -c \"bgBlue.bold,bgMagenta.bold\" \"yarn debug:watch\" \"yarn internal:migrate-watch\"",
     "debug:watch": "yarn util:load-vars tsc-watch --project tsconfig.build.json --onSuccess \"node --inspect dist/index.js\"",
     "test:reset:dbs": "yarn util:load-vars ts-node --files scripts/test-reset-dbs.ts",
-    "test:create:dbs": "yarn util:load-vars ts-node --files scripts/test-create-dbs.ts",
     "test": "yarn util:load-vars jest --silent",
     "test:watch": "yarn test --watch",
     "test:debug": "yarn util:load-vars node --inspect -r tsconfig-paths/register -r ts-node/register ../../../node_modules/jest/bin/jest --runInBand --silent",
@@ -42,10 +41,10 @@
     "util:define-func-migration": "yarn mosaic generate-define-func-migration"
   },
   "dependencies": {
-    "@axinom/mosaic-db-common": "0.23.0",
-    "@axinom/mosaic-message-bus": "0.14.0",
-    "@axinom/mosaic-message-bus-abstractions": "0.5.0",
-    "@axinom/mosaic-service-common": "0.29.0",
+    "@axinom/mosaic-db-common": "0.24.0",
+    "@axinom/mosaic-message-bus": "0.14.1",
+    "@axinom/mosaic-message-bus-abstractions": "0.5.1",
+    "@axinom/mosaic-service-common": "0.30.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "add": "^2.0.6",
     "amqplib": "^0.6.0",
