@@ -3,7 +3,6 @@ pr: none
 
 pool:
   vmImage: 'ubuntu-latest'
-  demands: project_navy
 
 variables:
   dockerfilePath: '.adops/docker/Dockerfile.backend'
