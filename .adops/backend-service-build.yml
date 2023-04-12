@@ -13,7 +13,7 @@ variables:
   continueBuild: true
   dockerfilePath: '.adops/docker/Dockerfile.backend'
   tag: '$(Build.BuildNumber)'
-  ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.Reason'], 'Schedule')) }}:
+  ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.Reason'], 'Schedule')) }}:
     additionalBuildNameSuffix: 'cb-'
   ${{ else }}:
     additionalBuildNameSuffix: ''
@@ -35,8 +35,8 @@ stages:
           # For CB builds, determine if the service directory has any updates/changes and the continuous builds variable is set to `true`.
           # If not, skip the rest of the steps.
           # By default, the value of `continueBuild` will be true, this allowing all the steps in the pipeline to run from
-          # non-main branches.
-          - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.Reason'], 'Schedule')) }}:
+          # non-dev branches.
+          - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.Reason'], 'Schedule')) }}:
               - task: AzureCLI@2
                 displayName: Generate Changelist
                 env:
