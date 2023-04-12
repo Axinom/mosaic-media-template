@@ -108,7 +108,7 @@ stages:
                 inputs:
                   targetType: 'inline'
                   script: |
-                    $buildType = if ("$(Build.SourceBranch)" -contains "refs/heads/release" ) { "stable" } else { "prerelease" }
+                    $buildType = if ("$(Build.SourceBranch)" -like "*refs/heads/release*" ) { "stable" } else { "prerelease" }
                     Write-Host "##vso[build.addbuildtag]$buildType"
                     Write-Host "##vso[build.addbuildtag]complete-build"
 
