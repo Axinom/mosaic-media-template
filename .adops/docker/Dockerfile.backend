@@ -6,7 +6,7 @@ ARG PACKAGE_ROOT
 ARG PACKAGE_BUILD_COMMAND
 
 # BASE
-FROM node:fermium-buster-slim AS base
+FROM node:18-buster-slim AS base
 WORKDIR /checkout
 
 ARG PACKAGE_ROOT
@@ -29,7 +29,7 @@ RUN mv node_modules_full node_modules
 RUN mkdir -p "$PACKAGE_ROOT/node_modules"
 
 # RELEASE
-FROM node:fermium-buster-slim
+FROM node:18-buster-slim
 
 ARG PACKAGE_ROOT
 ARG PACKAGE_BUILD_COMMAND

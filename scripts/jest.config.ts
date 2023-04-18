@@ -1,16 +1,18 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
-/* eslint-disable @typescript-eslint/no-var-requires */
+import type { JestConfigWithTsJest } from 'ts-jest';
 
-module.exports = {
+const jestConfig: JestConfigWithTsJest = {
   preset: 'ts-jest',
   modulePathIgnorePatterns: ['./dist/', './legacy/'],
   setupFilesAfterEnv: ['jest-expect-message', 'jest-extended/all'],
   displayName: 'repo-scripts',
-  globals: {
-    'ts-jest': {
-      tsconfig: {
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
         esModuleInterop: true,
       },
-    },
+    ],
   },
 };
+
+export default jestConfig;
