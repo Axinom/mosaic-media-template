@@ -23,6 +23,18 @@ export function register(app: PiletApi, extensions: Extensions): void {
     icon: <MediaIcons icon={MediaIconName.Episodes} />,
   };
 
+  app.registerRouteResolver({
+    station: 'episode-details',
+    resolver: (dynamicRouteSegments?: Record<string, string> | string) => {
+      const episodeId =
+        typeof dynamicRouteSegments === 'string'
+          ? dynamicRouteSegments
+          : dynamicRouteSegments?.episodeId;
+
+      return episodeId ? `/episodes/${episodeId}` : undefined;
+    },
+  });
+
   app.registerTile(
     {
       ...episodesNav,

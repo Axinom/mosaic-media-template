@@ -32,6 +32,24 @@ export function register(app: PiletApi, extensions: Extensions): void {
     icon: <MediaIcons icon={MediaIconName.TV} />,
   };
 
+  app.registerRouteResolver({
+    station: 'tv_show-details',
+    resolver: (dynamicSegments?: Record<string, string> | string) => {
+      const tvshowId =
+        typeof dynamicSegments === 'string'
+          ? dynamicSegments
+          : dynamicSegments?.tvshowId;
+
+      return tvshowId ? `/tvshows/${tvshowId}` : undefined;
+    },
+  });
+
+  app.registerRouteResolver({
+    station: 'tv_show_genre-details',
+    resolver: (_dynamicRouteSegments?: Record<string, string> | string) =>
+      '/settings/media/tvshowgenres',
+  });
+
   app.registerTile(
     {
       ...tvshowNav,

@@ -24,6 +24,20 @@ export function register(app: PiletApi, extensions: Extensions): void {
     icon: <MediaIcons icon={MediaIconName.Seasons} />,
   };
 
+  app.registerRouteResolver({
+    station: 'season-details',
+    resolver: (dynamicRouteSegments?: Record<string, string> | string) => {
+      const dynamicRouteSegmentsString =
+        typeof dynamicRouteSegments === 'string'
+          ? dynamicRouteSegments
+          : dynamicRouteSegments?.seasonId;
+
+      return dynamicRouteSegmentsString
+        ? `/seasons/${dynamicRouteSegmentsString}`
+        : undefined;
+    },
+  });
+
   app.registerTile(
     {
       ...seasonsNav,

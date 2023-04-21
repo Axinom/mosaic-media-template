@@ -31,6 +31,24 @@ export function register(app: PiletApi, extensions: Extensions): void {
     icon: <MediaIcons icon={MediaIconName.Movie} />,
   };
 
+  app.registerRouteResolver({
+    station: 'movie-details',
+    resolver: (dynamicRouteSegments?: Record<string, string> | string) => {
+      const movieId =
+        typeof dynamicRouteSegments === 'string'
+          ? dynamicRouteSegments
+          : dynamicRouteSegments?.movieId;
+
+      return movieId ? `/movies/${movieId}` : undefined;
+    },
+  });
+
+  app.registerRouteResolver({
+    station: 'movie_genre-details',
+    resolver: (_dynamicRouteSegments?: Record<string, string> | string) =>
+      '/settings/media/moviegenres',
+  });
+
   app.registerTile(
     {
       ...moviesNav,
