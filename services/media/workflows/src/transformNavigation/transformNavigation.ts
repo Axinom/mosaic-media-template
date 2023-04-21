@@ -7,6 +7,7 @@ const curationCategoryItemNames = [
   'monetization-subscriptionplans',
   'monetization-claimsets',
   'channels',
+  'localizations',
 ];
 
 export const transformNavigationItems = (
