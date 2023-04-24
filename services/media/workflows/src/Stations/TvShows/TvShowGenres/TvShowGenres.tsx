@@ -1,4 +1,7 @@
+import { getTranslationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
 import {
+  ActionData,
+  ActionType,
   createInputRenderer,
   createUpdateGQLFragmentGenerator,
   Details,
@@ -13,6 +16,7 @@ import {
 import { useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import React, { useCallback, useMemo } from 'react';
+import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
 import { Constants } from '../../../constants';
 import {
@@ -103,6 +107,36 @@ export const TvShowGenres: React.FC = () => {
 
 const Form: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<TvShowGenresFormData>();
+  const localizationPath = getTranslationEntryPoint('tv_show_genre');
+  const history = useHistory();
+
+  const generateInlineMenuActions: ((data) => ActionData[]) | undefined =
+    localizationPath
+      ? ({ id: genreId }) => {
+          return [
+            {
+              label: 'Localizations',
+              onActionSelected: () =>
+                history.push(localizationPath.replace(':genreId', genreId)),
+            },
+            {
+              label: 'Delete',
+              actionType: ActionType.Context,
+              onActionSelected: () => {
+                const removeIndex: number = (values.genres || []).findIndex(
+                  (item) => item.id === genreId,
+                );
+                if (values.genres?.length && removeIndex >= 0) {
+                  setFieldValue('genres', [
+                    ...values.genres.slice(0, removeIndex),
+                    ...values.genres.slice(removeIndex + 1),
+                  ]);
+                }
+              },
+            },
+          ];
+        }
+      : undefined;
   return (
     <DynamicDataList<FormDataGenre>
       columns={[
@@ -119,6 +153,7 @@ const Form: React.FC = () => {
         setFieldValue('genres', v);
       }}
       stickyHeader={false}
+      inlineMenuActions={generateInlineMenuActions}
     />
   );
 };
