@@ -1,14 +1,29 @@
 trigger: none
 pr: none
+schedules:
+  - cron: '0 1 * * Mon-Fri'
+    displayName: 'Nightly builds within working days'
+    branches:
+      include:
+        - dev
+    always: true
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+  continueBuild: true
   dockerfilePath: '.adops/docker/Dockerfile.backend'
   tag: '$(Build.BuildNumber)'
-  # Yarn Cache Folder
-  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+  ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.Reason'], 'Schedule')) }}:
+    additionalBuildNameSuffix: 'cb-'
+  ${{ else }}:
+    additionalBuildNameSuffix: ''
+
+# Name must change depending on the source branch so that we can identify docker images,
+# that were built for CB and for releases separately.
+name: '$(Date:yyyyMMdd).$(additionalBuildNameSuffix)$(Rev:r)'
 
 stages:
   - stage: Build
@@ -20,22 +35,67 @@ stages:
           vmImage: 'ubuntu-latest'
           demands: project_navy
         steps:
-          - task: Docker@2
-            displayName: Build Docker Image
-            inputs:
-              containerRegistry: $(containerRegistry)
-              repository: $(imageRepository)
-              command: 'build'
-              Dockerfile: $(dockerfilePath)
-              buildContext: '.'
-              tags: '$(tag)'
-              arguments:
-                '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg
-                PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
-          - task: Docker@2
-            displayName: Push Docker Image to Axinom Container Registry
-            inputs:
-              containerRegistry: $(containerRegistry)
-              repository: $(imageRepository)
-              command: 'push'
-              tags: '$(tag)'
+          # For CB builds, determine if the service directory has any updates/changes and the continuous builds variable is set to `true`.
+          # If not, skip the rest of the steps.
+          # By default, the value of `continueBuild` will be true, this allowing all the steps in the pipeline to run from
+          # non-dev branches.
+          - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.Reason'], 'Schedule')) }}:
+              - task: AzureCLI@2
+                displayName: Generate Changelist
+                env:
+                  AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+                inputs:
+                  azureSubscription: '$(azureSubscription)'
+                  scriptType: 'bash'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: |
+                    echo "Skip Change List Check: $(skipChangeList)"
+                    [[ "$(skipChangeList)" == "true" ]] && exit 0
+                    
+                    echo "Variable cbContinuousDeploymentEnabled is set to $(cbContinuousDeploymentEnabled)"
+                    previousSuccessfulCommitId=$(az pipelines build list --definition-ids $(System.DefinitionId) --result succeeded --reason schedule --top 1 --organization $(System.CollectionUri) --project $(System.TeamProject) --query "[0].sourceVersion" --output tsv)
+                    
+                    echo "Current Commit ID                 : $(Build.SourceVersion)"
+                    echo "Previous Scheduled Build Commit ID: $previousSuccessfulCommitId"
+                    echo "Generating file delta between $(Build.SourceVersion) and $previousSuccessfulCommitId"
+                    
+                    DIFFS="$(git diff $(Build.SourceVersion) $previousSuccessfulCommitId --name-only)"
+                    echo "Changed File List: $DIFFS"
+                    [[ "$(cbContinuousDeploymentEnabled)" == "true" && "${DIFFS[@]}" =~ "$(packageRoot)" ]] || echo "##vso[task.setvariable variable=continueBuild;]false"
+
+          - ${{ if eq(variables['continueBuild'], 'true') }}:
+              - task: Docker@2
+                displayName: Build Docker Image
+                inputs:
+                  containerRegistry: $(containerRegistry)
+                  repository: $(imageRepository)
+                  command: 'build'
+                  Dockerfile: $(dockerfilePath)
+                  buildContext: '.'
+                  tags: '$(tag)'
+                  arguments: '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
+
+              - task: Docker@2
+                displayName: Push Docker Image to Axinom Container Registry
+                inputs:
+                  containerRegistry: $(containerRegistry)
+                  repository: $(imageRepository)
+                  command: 'push'
+                  tags: '$(tag)'
+
+              - task: PowerShell@2
+                displayName: Tag Build
+                inputs:
+                  targetType: 'inline'
+                  script: |
+                    $buildType = if ("$(Build.SourceBranch)" -like "*refs/heads/release*" ) { "stable" } else { "prerelease" }
+                    Write-Host "##vso[build.addbuildtag]$buildType"
+                    Write-Host "##vso[build.addbuildtag]complete-build"
+
+          - ${{ else }}:
+              - task: PowerShell@2
+                displayName: Tag Build
+                inputs:
+                  targetType: 'inline'
+                  script: |
+                    Write-Host "##vso[build.addbuildtag]skipped-build"
