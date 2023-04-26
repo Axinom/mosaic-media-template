@@ -8,7 +8,7 @@ pool:
 resources:
   pipelines:
     - pipeline: packageRelease
-      source: 'Package release'
+      source: 'release-managed-libraries'
       trigger:
         branches:
           include:
