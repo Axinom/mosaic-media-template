@@ -9,6 +9,7 @@ import {
 } from '@axinom/mosaic-service-common';
 import { Express, Request, Response } from 'express';
 import { Config, ValidationErrors } from '../../common';
+import { AzureStorage } from '../azure';
 import { ChannelPublishedValidationWebhookHandler } from './channel-published-validation-handler';
 import { PlaylistPublishedValidationWebhookHandler } from './playlist-published-validation-handler';
 import {
@@ -23,10 +24,11 @@ const logger = new Logger({
 export const setupPrePublishingValidationWebhook = (
   app: Express,
   config: Config,
+  storage: AzureStorage,
 ): void => {
   const handlers: ValidationWebhookHandler<PrePublishingPayload>[] = [
     new ChannelPublishedValidationWebhookHandler(),
-    new PlaylistPublishedValidationWebhookHandler(config),
+    new PlaylistPublishedValidationWebhookHandler(config, storage),
   ];
   app.post(
     '/pre-publishing',
@@ -48,7 +50,7 @@ export const setupPrePublishingValidationWebhook = (
       const handler = handlers.find((h) => h.canHandle(requestBody));
       if (handler) {
         try {
-          const result = handler.handle(requestBody);
+          const result = await handler.handle(requestBody);
           validationResponse =
             generateWebhookResponse<PrePublishingPayload>(result);
         } catch (error) {

@@ -1,6 +1,17 @@
 import { DetailedVideo } from '@axinom/mosaic-messages';
+import { StreamParams } from 'src/domains';
 import { v4 as uuid } from 'uuid';
 
+export const getTestMutualStreamParams = (): StreamParams[] => {
+  return [
+    {
+      width: 384,
+      height: 216,
+      bitrate_in_kbps: 300,
+      frame_rate: 30,
+    },
+  ];
+};
 /**
  * Create an instance of Detailed Video for testing. Video instance contains one video stream and one audio stream.
  * @param isDrmProtected - is the video DRM protected, or not

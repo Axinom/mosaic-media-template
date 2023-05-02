@@ -13,5 +13,5 @@ export type PrePublishingPayload =
 
 export interface ValidationWebhookHandler<T> {
   canHandle(message: WebhookRequestMessage<T>): boolean;
-  handle(message: WebhookRequestMessage<T>): WebhookResponse<T>;
+  handle(message: WebhookRequestMessage<T>): Promise<WebhookResponse<T>>;
 }

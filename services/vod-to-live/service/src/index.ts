@@ -83,7 +83,7 @@ async function bootstrap(): Promise<void> {
     metrics: [CreateRabbitMQConnectivityMetric(broker)],
   });
 
-  setupPrePublishingValidationWebhook(app, config);
+  setupPrePublishingValidationWebhook(app, config, storage);
 
   const server = app.listen(config.port, () => {
     if (config.isDev) {

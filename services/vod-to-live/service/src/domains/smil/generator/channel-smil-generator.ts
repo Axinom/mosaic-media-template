@@ -5,13 +5,17 @@ import {
   createHeaderMetadata,
   createParallel,
   createSmilEnvelope,
+  getDefaultMetadataHeaders,
   HeaderMetadata,
   HeaderMetadataNames,
   Parallel,
   SMILEnvelope,
 } from '../models';
 import { SmilGenerator } from './smil-generator';
-import { videoToSmilParallelReferences } from './utils';
+import {
+  extractSharedVideoStreamFormats,
+  videoToSmilParallelReferences,
+} from './utils';
 
 /**
  * Class to generate the SMIL Document from the channel published event.
@@ -26,6 +30,7 @@ export class ChannelSmilGenerator extends SmilGenerator<ChannelPublishedEvent> {
     if (originalEvent.placeholder_video) {
       const placeholderVideo = videoToSmilParallelReferences(
         originalEvent.placeholder_video,
+        extractSharedVideoStreamFormats([originalEvent.placeholder_video]),
       );
       parallels.push(createParallel(placeholderVideo));
     } else {
@@ -41,17 +46,7 @@ export class ChannelSmilGenerator extends SmilGenerator<ChannelPublishedEvent> {
     originalEvent: ChannelPublishedEvent,
   ): HeaderMetadata[] {
     const headers = [
-      //mandatory properties
-      createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-      createHeaderMetadata(
-        HeaderMetadataNames.Vod2LiveStartTime,
-        new Date().toISOString(),
-      ), // start of the channel is a "publication" date
-      createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-      createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-      createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
-      createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
-      // Axinom mosaic specific properties
+      ...getDefaultMetadataHeaders(new Date()),
       createHeaderMetadata(
         HeaderMetadataNames.MosaicChannelId,
         originalEvent.id,

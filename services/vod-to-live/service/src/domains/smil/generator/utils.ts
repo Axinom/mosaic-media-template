@@ -78,7 +78,10 @@ export const createAdPlaceholders = (
   );
 
   for (let i = 0; i < quotient; i++) {
-    adPlaceholderParallels.push(createParallel(parallel, adEventStream));
+    //ad parallels should always have the end-time defined, for proper ad time calculation in HLS manifest
+    adPlaceholderParallels.push(
+      createParallel(parallel, adEventStream, undefined, placeholderLength),
+    );
     //The event stream element must be added only for the first ad placeholder
     adEventStream = undefined;
   }
@@ -107,6 +110,7 @@ export const determineIntegerDivisionAndRemainder = (
  */
 export const videoToSmilParallelReferences = (
   video: DetailedVideo,
+  formats: StreamParams[],
 ): ParallelReference => {
   const parallelReference: ParallelReference = { audio: [], video: [] };
   const videoEncoding = video.video_encoding;
@@ -132,11 +136,64 @@ export const videoToSmilParallelReferences = (
         if (stream.type === 'AUDIO') {
           parallelReference.audio.push(referenceToStreamFile);
         }
-        if (stream.type === 'VIDEO') {
+        if (
+          stream.type === 'VIDEO' &&
+          formats.find(
+            (f) =>
+              f.bitrate_in_kbps === stream.bitrate_in_kbps &&
+              f.height === stream.height &&
+              f.width === stream.width &&
+              f.frame_rate === stream.frame_rate,
+          )
+        ) {
           parallelReference.video.push(referenceToStreamFile);
         }
       }
     }
   }
   return parallelReference;
+};
+
+export interface StreamParams {
+  width: number | undefined | null;
+  height: number | undefined | null;
+  bitrate_in_kbps: number | undefined | null;
+  frame_rate: number | undefined | null;
+}
+
+/**
+ *  Gets a list of video stream parameters that are shared across all videos.
+ * @param videos - list of videos, where to find shared stream formats.
+ * @returns - list of stream parameters, shared by all videos.
+ */
+//todo: cover with tests
+export const extractSharedVideoStreamFormats = (
+  videos: DetailedVideo[],
+): StreamParams[] => {
+  const videoStreams =
+    videos.reduce((result, entry) => {
+      const streams = entry.video_encoding.video_streams
+        .filter((x) => x.type === 'VIDEO')
+        .map((vs) => {
+          return {
+            width: vs.width,
+            height: vs.height,
+            bitrate_in_kbps: vs.bitrate_in_kbps,
+            frame_rate: vs.frame_rate,
+          };
+        });
+      return [...result, streams];
+    }, new Array<StreamParams[]>()) ?? new Array<StreamParams[]>();
+
+  return videoStreams.reduce((join, current) =>
+    join.filter((el) =>
+      current.find(
+        (c) =>
+          c.height === el.height &&
+          c.width === el.width &&
+          c.bitrate_in_kbps === el.bitrate_in_kbps &&
+          c.frame_rate === el.frame_rate,
+      ),
+    ),
+  );
 };

@@ -13,13 +13,40 @@ import {
   ValidationErrors,
 } from '../../common';
 import { createTestVideo } from '../../tests';
+import { AzureStorage } from '../azure';
 import { PlaylistPublishedValidationWebhookHandler } from './playlist-published-validation-handler';
 
 describe('PlaylistPublishedValidationWebhookHandler', () => {
   const mockConfig = stub<Config>({
     prolongPlaylistTo24Hours: true,
   });
-  const handler = new PlaylistPublishedValidationWebhookHandler(mockConfig);
+  const mockAzureStorage = stub<AzureStorage>({
+    getFileContent: async () => {
+      return JSON.stringify({
+        description: null,
+        id: 'test-id',
+        images: [
+          {
+            height: 646,
+            id: 'db561b84-1e78-4f4d-9a3f-446e34db40de',
+            path: '/transform/0-0/U5uZEHhwrXGde33yxwVHx9.png',
+            type: 'channel_logo',
+            width: 860,
+          },
+        ],
+        placeholder_video: createTestVideo(
+          true,
+          '3a8e5dc9-5c91-4d61-bf95-c4e719b705f2',
+          62,
+        ),
+        title: 'Discovery++',
+      });
+    },
+  });
+  const handler = new PlaylistPublishedValidationWebhookHandler(
+    mockConfig,
+    mockAzureStorage,
+  );
   const createPlaylistEvent = (
     startDate?: Date,
     endDate?: Date,
@@ -44,7 +71,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       ${ChannelServiceMultiTenantMessagingSettings.PlaylistUnpublished.messageType} | ${false}
     `(
       'for message type %messageType, result is %expectedResult',
-      ({ messageType, expectedResult }) => {
+      async ({ messageType, expectedResult }) => {
         // Arrange
         const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
           payload: createPlaylistEvent(),
@@ -62,7 +89,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
     );
   });
   describe('handle', () => {
-    it('if playlist has no programs -> error is reported', () => {
+    it('if playlist has no programs -> error is reported', async () => {
       // Arrange
       const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
         payload: createPlaylistEvent(new Date(), new Date()),
@@ -74,7 +101,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
         timestamp: new Date().toISOString(),
       };
       // Act
-      const validationResult = handler.handle(message);
+      const validationResult = await handler.handle(message);
 
       // Assert
       expect(validationResult.payload).toBeNull();
@@ -87,7 +114,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
 
     it.each([1441, 1470, 1499])(
       'if playlist duration exceeds 24 hours (%s minutes) -> warning is reported',
-      (minutesToAdd) => {
+      async (minutesToAdd) => {
         // Arrange
         const startTime = new Date();
         const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
@@ -117,7 +144,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
           timestamp: new Date().toISOString(),
         };
         // Act
-        const validationResult = handler.handle(message);
+        const validationResult = await handler.handle(message);
 
         // Assert
         expect(validationResult.payload).toMatchObject(message.payload);
@@ -131,7 +158,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
 
     it.each([720, 1439, 60])(
       'if playlist duration is under 24 hours (%s minutes) -> prolongation warning is reported',
-      (minutesToAdd) => {
+      async (minutesToAdd) => {
         // Arrange
         const startTime = new Date();
         const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
@@ -161,7 +188,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
           timestamp: new Date().toISOString(),
         };
         // Act
-        const validationResult = handler.handle(message);
+        const validationResult = await handler.handle(message);
 
         // Assert
         expect(validationResult.payload).toMatchObject(message.payload);
@@ -175,7 +202,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
 
     it.each([1500, 1800, 7200])(
       'if playlist duration exceeds 25 hours -> error is reported',
-      (minutesToAdd) => {
+      async (minutesToAdd) => {
         // Arrange
         const startTime = new Date();
         const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
@@ -205,7 +232,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
           timestamp: new Date().toISOString(),
         };
         // Act
-        const validationResult = handler.handle(message);
+        const validationResult = await handler.handle(message);
 
         // Assert
         expect(validationResult.payload).toBeNull();
@@ -217,7 +244,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       },
     );
 
-    it('if playlist has videos that are DRM protected, but stream keys are missing -> errors are reported', () => {
+    it('if playlist has videos that are DRM protected, but stream keys are missing -> errors are reported', async () => {
       // Arrange
       const scheduleVideoId = uuid();
       const programVideoId = uuid();
@@ -271,6 +298,10 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                               format: 'CMAF',
                               label: 'HD',
                               type: 'VIDEO',
+                              width: 384,
+                              frame_rate: 30,
+                              height: 216,
+                              bitrate_in_kbps: 300,
                             },
                             {
                               codecs: 'AAC',
@@ -317,6 +348,10 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                       format: 'CMAF',
                       label: 'HD',
                       type: 'VIDEO',
+                      width: 384,
+                      frame_rate: 30,
+                      height: 216,
+                      bitrate_in_kbps: 300,
                     },
                     {
                       codecs: 'AAC',
@@ -341,7 +376,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
         timestamp: new Date().toISOString(),
       };
       // Act
-      const validationResult = handler.handle(message);
+      const validationResult = await handler.handle(message);
 
       // Assert
       expect(validationResult.payload).toBeNull();
@@ -361,7 +396,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
 
     it.each(['HLS', 'DASH', 'DASH_HLS', 'DASH_ON_DEMAND'])(
       'if playlist has videos with output format %s -> errors are reported',
-      (format) => {
+      async (format) => {
         // Arrange
         const scheduleVideoId = uuid();
         const programVideoId = uuid();
@@ -415,6 +450,10 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                                 format: 'CMAF',
                                 label: 'HD',
                                 type: 'VIDEO',
+                                width: 384,
+                                frame_rate: 30,
+                                height: 216,
+                                bitrate_in_kbps: 300,
                               },
                               {
                                 codecs: 'AAC',
@@ -461,6 +500,10 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                         format: 'CMAF',
                         label: 'HD',
                         type: 'VIDEO',
+                        width: 384,
+                        frame_rate: 30,
+                        height: 216,
+                        bitrate_in_kbps: 300,
                       },
                       {
                         codecs: 'AAC',
@@ -485,7 +528,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
           timestamp: new Date().toISOString(),
         };
         // Act
-        const validationResult = handler.handle(message);
+        const validationResult = await handler.handle(message);
 
         // Assert
         expect(validationResult.payload).toBeNull();
@@ -506,7 +549,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
 
     it.each([1500, 1800, 7200, 1440])(
       'if playlist start date is older than 24 hours -> error is reported',
-      (minutesToAdd) => {
+      async (minutesToAdd) => {
         // Arrange
         const now = new Date();
         const startDate = new Date(
@@ -539,7 +582,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
           timestamp: new Date().toISOString(),
         };
         // Act
-        const validationResult = handler.handle(message);
+        const validationResult = await handler.handle(message);
 
         // Assert
         expect(validationResult.payload).toBeNull();
@@ -551,7 +594,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       },
     );
 
-    it('if playlist has videos that are encoded not in H264 -> errors are reported', () => {
+    it('if playlist has videos that are encoded not in H264 -> errors are reported', async () => {
       // Arrange
       const scheduleVideoId = uuid();
       const programVideoId = uuid();
@@ -605,6 +648,10 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                               format: 'CMAF',
                               label: 'HD',
                               type: 'VIDEO',
+                              width: 384,
+                              frame_rate: 30,
+                              height: 216,
+                              bitrate_in_kbps: 300,
                             },
                             {
                               codecs: 'AAC',
@@ -651,6 +698,10 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                       format: 'CMAF',
                       label: 'HD',
                       type: 'VIDEO',
+                      width: 384,
+                      frame_rate: 30,
+                      height: 216,
+                      bitrate_in_kbps: 300,
                     },
                     {
                       codecs: 'AAC',
@@ -675,7 +726,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
         timestamp: new Date().toISOString(),
       };
       // Act
-      const validationResult = handler.handle(message);
+      const validationResult = await handler.handle(message);
 
       // Assert
       expect(validationResult.payload).toBeNull();
@@ -693,7 +744,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       ]);
     });
 
-    it('if playlist has videos that are missing AUDIO streams -> errors are reported', () => {
+    it('if playlist has videos that are missing AUDIO streams -> errors are reported', async () => {
       // Arrange
       const scheduleVideoId = uuid();
       const programVideoId = uuid();
@@ -747,6 +798,10 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                               format: 'CMAF',
                               label: 'HD',
                               type: 'VIDEO',
+                              width: 384,
+                              frame_rate: 30,
+                              height: 216,
+                              bitrate_in_kbps: 300,
                             },
                           ],
                         },
@@ -784,6 +839,10 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                       format: 'CMAF',
                       label: 'HD',
                       type: 'VIDEO',
+                      width: 384,
+                      frame_rate: 30,
+                      height: 216,
+                      bitrate_in_kbps: 300,
                     },
                   ],
                 },
@@ -799,7 +858,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
         timestamp: new Date().toISOString(),
       };
       // Act
-      const validationResult = handler.handle(message);
+      const validationResult = await handler.handle(message);
 
       // Assert
       expect(validationResult.payload).toBeNull();
@@ -817,9 +876,175 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       ]);
     });
 
+    it('if playlist has no mutual video streams-> error is reported', async () => {
+      // Arrange
+      const startDate = new Date();
+      const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
+        payload: {
+          ...createPlaylistEvent(
+            startDate,
+            new Date(
+              startDate.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
+            ),
+          ),
+          programs: [
+            {
+              id: uuid(),
+              title: 'Program 1',
+              sort_index: 0,
+              video_duration_in_seconds: DAY_IN_SECONDS,
+              entity_id: uuid(),
+              entity_type: 'MOVIE',
+              program_cue_points: [
+                {
+                  id: uuid(),
+                  type: 'PRE',
+                  schedules: [
+                    {
+                      id: uuid(),
+                      type: 'AD_POD',
+                      sort_index: 0,
+                      duration_in_seconds: 10,
+                    },
+                  ],
+                },
+              ],
+              video: {
+                ...createTestVideo(false),
+              },
+            },
+          ],
+        },
+        message_type:
+          ChannelServiceMultiTenantMessagingSettings.PlaylistPublished
+            .messageType,
+        message_id: uuid(),
+        message_version: '1.0',
+        timestamp: new Date().toISOString(),
+      };
+
+      message.payload.programs![0].video.video_encoding.video_streams = [
+        {
+          bitrate_in_kbps: 300,
+          codecs: 'H264',
+          display_aspect_ratio: '16:9',
+          file: 'cmaf/video-H264-216-300k-video-avc1.mp4',
+          file_template: null,
+          format: 'CMAF',
+          frame_rate: 60,
+          height: 216,
+          iv: null,
+          key_id: null,
+          label: 'SD',
+          language_code: null,
+          language_name: null,
+          pixel_aspect_ratio: '1:1',
+          sampling_rate: null,
+          type: 'VIDEO',
+          width: 384,
+        },
+        {
+          bitrate_in_kbps: 128,
+          codecs: 'AAC',
+          display_aspect_ratio: null,
+          file: 'cmaf/audio-en-audio-en-mp4a.mp4',
+          file_template: null,
+          format: 'CMAF',
+          frame_rate: null,
+          height: null,
+          iv: null,
+          key_id: null,
+          label: 'audio',
+          language_code: 'en',
+          language_name: 'English',
+          pixel_aspect_ratio: null,
+          sampling_rate: 48000,
+          type: 'AUDIO',
+          width: null,
+        },
+      ];
+      // Act
+      const validationResult = await handler.handle(message);
+
+      // Assert
+      expect(validationResult.payload).toBeNull();
+      expect(validationResult.warnings).toHaveLength(0);
+      expect(validationResult.errors).toHaveLength(1);
+      expect(validationResult.errors).toMatchObject([
+        ValidationErrors.PlaylistVideosHaveNoMutualStreams,
+      ]);
+    });
+
+    it('if playlist starts and ends with an "AD_POD" -> error is reported', async () => {
+      // Arrange
+      const startDate = new Date();
+      const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
+        payload: {
+          ...createPlaylistEvent(
+            startDate,
+            new Date(
+              startDate.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
+            ),
+          ),
+          programs: [
+            {
+              id: uuid(),
+              title: 'Program 1',
+              sort_index: 0,
+              video_duration_in_seconds: DAY_IN_SECONDS,
+              entity_id: uuid(),
+              entity_type: 'MOVIE',
+              program_cue_points: [
+                {
+                  id: uuid(),
+                  type: 'PRE',
+                  schedules: [
+                    {
+                      id: uuid(),
+                      type: 'AD_POD',
+                      sort_index: 0,
+                      duration_in_seconds: 10,
+                    },
+                  ],
+                },
+                {
+                  id: uuid(),
+                  type: 'POST',
+                  schedules: [
+                    {
+                      id: uuid(),
+                      type: 'AD_POD',
+                      sort_index: 0,
+                      duration_in_seconds: 10,
+                    },
+                  ],
+                },
+              ],
+              video: createTestVideo(false),
+            },
+          ],
+        },
+        message_type:
+          ChannelServiceMultiTenantMessagingSettings.PlaylistPublished
+            .messageType,
+        message_id: uuid(),
+        message_version: '1.0',
+        timestamp: new Date().toISOString(),
+      };
+      // Act
+      const validationResult = await handler.handle(message);
+
+      // Assert
+      expect(validationResult.payload).toBeNull();
+      expect(validationResult.warnings).toHaveLength(0);
+      expect(validationResult.errors).toHaveLength(1);
+      expect(validationResult.errors).toMatchObject([
+        ValidationErrors.PlaylistCannotStartAndEndWithAdPod,
+      ]);
+    });
     it.each([true, false])(
       'if playlist is valid -> no errors and warnings',
-      (isDrmProtected: boolean) => {
+      async (isDrmProtected: boolean) => {
         // Arrange
         const scheduleVideoId = uuid();
         const programVideoId = uuid();
@@ -873,7 +1098,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
           timestamp: new Date().toISOString(),
         };
         // Act
-        const validationResult = handler.handle(message);
+        const validationResult = await handler.handle(message);
 
         // Assert
         expect(validationResult.payload).toMatchObject(message.payload);

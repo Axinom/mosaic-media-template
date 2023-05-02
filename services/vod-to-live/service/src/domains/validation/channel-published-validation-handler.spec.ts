@@ -44,7 +44,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
     );
   });
   describe('handle', () => {
-    it('if channel missing the placeholder video -> error is reported', () => {
+    it('if channel missing the placeholder video -> error is reported', async () => {
       // Arrange
       const message: WebhookRequestMessage<ChannelPublishedEvent> = {
         payload: createChannelEvent(),
@@ -56,7 +56,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
         timestamp: new Date().toISOString(),
       };
       // Act
-      const validationResult = handler.handle(message);
+      const validationResult = await handler.handle(message);
 
       // Assert
       expect(validationResult.payload).toBeNull();
@@ -67,7 +67,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
       ]);
     });
 
-    it('if channel placeholder video is DRM protected, but stream keys are missing -> error is reported', () => {
+    it('if channel placeholder video is DRM protected, but stream keys are missing -> error is reported', async () => {
       // Arrange
       const message: WebhookRequestMessage<ChannelPublishedEvent> = {
         payload: {
@@ -117,7 +117,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
         timestamp: new Date().toISOString(),
       };
       // Act
-      const validationResult = handler.handle(message);
+      const validationResult = await handler.handle(message);
 
       // Assert
       expect(validationResult.payload).toBeNull();
@@ -135,7 +135,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
 
     it.each(['HLS', 'DASH', 'DASH_HLS', 'DASH_ON_DEMAND'])(
       'if channel placeholder video has format %s -> error is reported',
-      (format) => {
+      async (format) => {
         // Arrange
         const message: WebhookRequestMessage<ChannelPublishedEvent> = {
           payload: {
@@ -185,7 +185,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
           timestamp: new Date().toISOString(),
         };
         // Act
-        const validationResult = handler.handle(message);
+        const validationResult = await handler.handle(message);
 
         // Assert
         expect(validationResult.payload).toBeNull();
@@ -202,7 +202,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
       },
     );
 
-    it('if channel placeholder video is encoded not in H264 -> error is reported', () => {
+    it('if channel placeholder video is encoded not in H264 -> error is reported', async () => {
       // Arrange
       const message: WebhookRequestMessage<ChannelPublishedEvent> = {
         payload: {
@@ -252,7 +252,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
         timestamp: new Date().toISOString(),
       };
       // Act
-      const validationResult = handler.handle(message);
+      const validationResult = await handler.handle(message);
 
       // Assert
       expect(validationResult.payload).toBeNull();
@@ -268,7 +268,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
       ]);
     });
 
-    it('if channel placeholder video is missing audio stream -> error is reported', () => {
+    it('if channel placeholder video is missing audio stream -> error is reported', async () => {
       // Arrange
       const message: WebhookRequestMessage<ChannelPublishedEvent> = {
         payload: {
@@ -309,7 +309,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
         timestamp: new Date().toISOString(),
       };
       // Act
-      const validationResult = handler.handle(message);
+      const validationResult = await handler.handle(message);
 
       // Assert
       expect(validationResult.payload).toBeNull();
@@ -327,7 +327,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
 
     it.each([true, false])(
       'if channel placeholder has a valid video with DRM protection set to %s -> no errors and warnings',
-      (isDrmProtected: boolean) => {
+      async (isDrmProtected: boolean) => {
         // Arrange
         const message: WebhookRequestMessage<ChannelPublishedEvent> = {
           payload: {
@@ -342,7 +342,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
           timestamp: new Date().toISOString(),
         };
         // Act
-        const validationResult = handler.handle(message);
+        const validationResult = await handler.handle(message);
 
         // Assert
         expect(validationResult.warnings).toHaveLength(0);

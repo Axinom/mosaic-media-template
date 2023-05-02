@@ -1,6 +1,6 @@
 import { CuePointSchedule } from '@axinom/mosaic-messages';
 import { URL } from 'url';
-import { createTestVideo } from '../../../tests';
+import { createTestVideo, getTestMutualStreamParams } from '../../../tests';
 import {
   createEventStream,
   createParallel,
@@ -120,12 +120,12 @@ describe('smil-utils', () => {
       {
         adPodDuration: 10,
         expectedParallels: 1,
-        clipEndOfLastParallel: transformSecondsToWallClock(),
+        clipEndOfLastParallel: transformSecondsToWallClock(10),
       },
       {
         adPodDuration: 20,
         expectedParallels: 2,
-        clipEndOfLastParallel: transformSecondsToWallClock(),
+        clipEndOfLastParallel: transformSecondsToWallClock(10),
       },
       {
         adPodDuration: 53,
@@ -157,21 +157,17 @@ describe('smil-utils', () => {
         // Assert
         expect(result).toHaveLength(expectedParallels);
 
-        // first parallel has event stream object
-        const firstParallel = result.shift();
-        expect(firstParallel?.EventStream).not.toBeUndefined();
-
-        // last parallel has `clipEnd` timing, if required
-        const lastParallel = result.pop();
-        expect(lastParallel?.['@clipEnd']).toEqual(clipEndOfLastParallel);
-
-        // all parallels, except last one do not have @clipEnd and @clipBegin set
-        result.forEach((parallel) => {
-          expect(parallel).toMatchObject({
-            '@clipEnd': undefined,
+        expect(result[0]?.EventStream).not.toBeUndefined();
+        for (let i = 0; i < result.length; i++) {
+          let expectedClipEnd = transformSecondsToWallClock(10);
+          if (i + 1 === result.length) {
+            expectedClipEnd = clipEndOfLastParallel;
+          }
+          expect(result[i]).toMatchObject({
+            '@clipEnd': expectedClipEnd,
             '@clipBegin': undefined,
           });
-        });
+        }
       },
     );
   });
@@ -183,7 +179,10 @@ describe('smil-utils', () => {
         // Arrange
         const testVideo = createTestVideo(isDrmProtected);
         // Act
-        const result = videoToSmilParallelReferences(testVideo);
+        const result = videoToSmilParallelReferences(
+          testVideo,
+          getTestMutualStreamParams(),
+        );
         // Assert
         expect(result).not.toBeNull();
         expect(result.audio).toHaveLength(

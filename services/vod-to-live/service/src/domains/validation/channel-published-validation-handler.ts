@@ -19,9 +19,9 @@ export class ChannelPublishedValidationWebhookHandler
       ChannelServiceMultiTenantMessagingSettings.ChannelPublished.messageType
     );
   }
-  handle(
+  async handle(
     message: WebhookRequestMessage<ChannelPublishedEvent>,
-  ): WebhookResponse<ChannelPublishedEvent> {
+  ): Promise<WebhookResponse<ChannelPublishedEvent>> {
     const validationResult: ValidationResult = {
       errors: [],
       warnings: [],

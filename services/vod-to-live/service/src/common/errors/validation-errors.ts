@@ -26,6 +26,18 @@ export const ValidationErrors = {
     message: 'Playlist start date is older than 24 hours.',
     code: 'PLAYLIST_START_DATE_TOO_OLD',
   },
+  PlaylistCannotStartAndEndWithAdPod: {
+    message: 'Playlist cannot start and end with "AD_POD".',
+    code: 'PLAYLIST_CANNOT_START_AND_END_WITH_AD_POD',
+  },
+  PlaylistVideosHaveNoMutualStreams: {
+    message: 'Videos in the playlist have no mutual stream formats.',
+    code: 'PLAYLIST_VIDEOS_HAVE_NO_MUTUAL_STREAMS',
+  },
+  PlaylistPlaceholderVideoWasNotFound: {
+    message: 'Placeholder video for the playlist was not found.',
+    code: 'PLAYLIST_PLACEHOLDER_VIDEO_WAS_NOT_FOUND',
+  },
   // General validation messages
   ValidationFailed: {
     message: `Unexpected error happened while validating message.`,

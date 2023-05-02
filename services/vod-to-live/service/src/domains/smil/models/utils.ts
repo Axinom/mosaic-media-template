@@ -1,4 +1,5 @@
 import { SECOND_IN_MILLISECONDS } from '../../../common';
+import { HeaderMetadataNames } from './header-metadata-names';
 import {
   Event,
   EventStream,
@@ -53,6 +54,24 @@ export const createSmilEnvelope = (
   },
 });
 
+export const getDefaultMetadataHeaders = (
+  vod2LiveStartTime: Date,
+): HeaderMetadata[] => {
+  return [
+    createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+    createHeaderMetadata(
+      HeaderMetadataNames.Vod2LiveStartTime,
+      vod2LiveStartTime.toISOString(),
+    ),
+    //`splice_media` should be set to `true`
+    // but is set to `false` temporary due to bug in Origin affecting the HLS streams
+    //todo: set `splice_media` to `true`, when Origin bug is fixed
+    createHeaderMetadata(HeaderMetadataNames.SpliceMedia, false),
+    createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+    createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+    createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
+  ];
+};
 export const createHeaderMetadata = (
   name: string,
   content: string | boolean | number | undefined | null,

@@ -19,7 +19,7 @@ export const HeaderMetadataNames = {
    * Mandatory header for transitions with ads.
    * Indicates to splice media segments on the splice points when creating the Live server manifest.
    */
-  SplicedMedia: 'splice_media',
+  SpliceMedia: 'splice_media',
   /**
    * Header used to define path to the CPIX file for video decryption.
    */

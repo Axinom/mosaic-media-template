@@ -13,6 +13,7 @@ import {
   createParallel,
   createSmilEnvelope,
   EventStream,
+  getDefaultMetadataHeaders,
   HeaderMetadata,
   HeaderMetadataNames,
   OutOfNetworkIndicator,
@@ -25,6 +26,8 @@ import {
   createAdPlaceholders,
   createPlaylistEventStream,
   determineIntegerDivisionAndRemainder,
+  extractSharedVideoStreamFormats,
+  StreamParams,
   videoToSmilParallelReferences,
 } from './utils';
 
@@ -60,6 +63,8 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
   private logger: Logger = new Logger({ context: 'PlaylistSmilGenerator' });
   private placeholderVideoParallel!: ParallelReference;
   private placeholderVideoDuration!: number;
+  private mutualStreams!: StreamParams[];
+  private placeholderVideo!: DetailedVideo;
   constructor(
     private drmSettings: CpixSettings,
     private config: Config,
@@ -72,9 +77,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
     ) {
       this.placeholderVideoDuration =
         channelPlaceholderVideo.video_encoding.length_in_seconds;
-      this.placeholderVideoParallel = videoToSmilParallelReferences(
-        channelPlaceholderVideo,
-      );
+      this.placeholderVideo = channelPlaceholderVideo;
     } else {
       throw new MosaicError({
         message: 'Placeholder video is not provided.',
@@ -83,6 +86,29 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
     }
   }
   generate(originalEvent: PlaylistPublishedEvent): SMILEnvelope {
+    const videos =
+      originalEvent.programs?.reduce((result, entry) => {
+        let scheduleResult: DetailedVideo[] = [];
+        if (entry.program_cue_points) {
+          scheduleResult = entry.program_cue_points
+            .flatMap((cp) => cp.schedules)
+            .reduce((result, schedule) => {
+              if (schedule?.video) {
+                return [...result, schedule.video];
+              }
+              return result;
+            }, new Array<DetailedVideo>());
+        }
+        return [...result, entry.video, ...scheduleResult];
+      }, new Array<DetailedVideo>()) ?? [];
+    this.mutualStreams = extractSharedVideoStreamFormats([
+      this.placeholderVideo,
+      ...videos,
+    ]);
+    this.placeholderVideoParallel = videoToSmilParallelReferences(
+      this.placeholderVideo,
+      this.mutualStreams,
+    );
     const parallels =
       originalEvent.programs
         ?.sort((p) => p.sort_index)
@@ -101,21 +127,33 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
       );
     }
 
+    // if first and last parallels are `out of network`
+    // come back 'in network' parallel should be added for proper looping in USP
+    const firstParallel = parallels[0];
+    const lastParallel = parallels.slice(-1)[0];
+    if (
+      lastParallel?.EventStream?.Event?.Signal?.SpliceInfoSection?.SpliceInsert?.slice(
+        -1,
+      )[0]?.['@outOfNetworkIndicator'] === 1 &&
+      firstParallel?.EventStream?.Event?.Signal?.SpliceInfoSection?.SpliceInsert?.slice(
+        -1,
+      )[0]?.['@outOfNetworkIndicator'] === 1
+    ) {
+      parallels.push(
+        createParallel(
+          { video: [], audio: [] },
+          this.createEventStreamInPlaylist(0),
+        ),
+      );
+    }
+
     return createSmilEnvelope(parallels, this.populateHeader(originalEvent));
   }
   private populateHeader(
     originalEvent: PlaylistPublishedEvent,
   ): HeaderMetadata[] {
     const headers = [
-      createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-      createHeaderMetadata(
-        HeaderMetadataNames.Vod2LiveStartTime,
-        new Date(originalEvent.start_date_time).toISOString(),
-      ),
-      createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-      createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-      createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
-      createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
+      ...getDefaultMetadataHeaders(new Date(originalEvent.start_date_time)),
       createHeaderMetadata(
         HeaderMetadataNames.MosaicPlaylistId,
         originalEvent.id,
@@ -156,7 +194,10 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
   private processProgram(program: Program): Parallel[] {
     const parallels: Parallel[] = [];
     // getting audio and video streams of the video
-    const programReference = videoToSmilParallelReferences(program.video);
+    const programReference = videoToSmilParallelReferences(
+      program.video,
+      this.mutualStreams,
+    );
 
     const preCuePoint = program.program_cue_points?.filter(
       (cp) => cp.type === 'PRE',
@@ -282,7 +323,10 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
               return [
                 ...result,
                 createParallel(
-                  videoToSmilParallelReferences(entry.video),
+                  videoToSmilParallelReferences(
+                    entry.video,
+                    this.mutualStreams,
+                  ),
                   this.createEventStreamInPlaylist(0),
                   undefined,
                   entry.duration_in_seconds,

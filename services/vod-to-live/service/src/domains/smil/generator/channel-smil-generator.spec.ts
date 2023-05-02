@@ -1,5 +1,6 @@
 import { ChannelPublishedEvent } from '@axinom/mosaic-messages';
-import { createTestVideo } from '../../../tests';
+import { CpixSettings } from '../../../domains/cpix';
+import { createTestVideo, getTestMutualStreamParams } from '../../../tests';
 import { createHeaderMetadata, HeaderMetadataNames } from '../models';
 import { ChannelSmilGenerator } from './channel-smil-generator';
 import { videoToSmilParallelReferences } from './utils';
@@ -43,53 +44,68 @@ describe('ChannelSmilGenerator', () => {
     title: 'Discovery++',
   };
 
+  const testCpix =
+    'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...';
+
+  const createTestCpixSettings = (isDrmProtected: boolean): CpixSettings => {
+    return {
+      decryptionCpixFile: isDrmProtected ? testCpix : null,
+      encryptionDashCpixFile: isDrmProtected ? testCpix : null,
+      encryptionHlsCpixFile: isDrmProtected ? testCpix : null,
+    };
+  };
+
+  const getExpectedMetadataHeaders = (
+    isDrmProtected: boolean,
+    channelId: string,
+  ): { '@name': string; '@content'?: string }[] => {
+    const headers: { '@name': string; '@content'?: string }[] = [
+      createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
+      { '@name': HeaderMetadataNames.Vod2LiveStartTime },
+      //temporary set to false, due to bug in Origin
+      createHeaderMetadata(HeaderMetadataNames.SpliceMedia, false),
+      createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
+      createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
+      createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
+      createHeaderMetadata(HeaderMetadataNames.MosaicChannelId, channelId),
+    ];
+
+    if (isDrmProtected) {
+      headers.push(
+        createHeaderMetadata(HeaderMetadataNames.DecryptCpix, testCpix),
+        createHeaderMetadata(HeaderMetadataNames.MpdCpix, testCpix),
+        createHeaderMetadata(HeaderMetadataNames.HlsCpix, testCpix),
+      );
+    }
+    return headers;
+  };
+
   it.each([true, false])(
     'created SMIL object with channel placeholder video',
     (isDrmProtected: boolean) => {
       // Arrange
-      const cpix = isDrmProtected
-        ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-        : null;
       const channelWithPlaceholderVideo =
         createChannelWithVideo(isDrmProtected);
-      const generator = new ChannelSmilGenerator({
-        decryptionCpixFile: cpix,
-        encryptionDashCpixFile: cpix,
-        encryptionHlsCpixFile: cpix,
-      });
+      const generator = new ChannelSmilGenerator(
+        createTestCpixSettings(isDrmProtected),
+      );
       // Act
       const resultSmil = generator.generate(channelWithPlaceholderVideo);
       // Assert
       expect(resultSmil).not.toBeNull();
       const headerMetadata = resultSmil.smil.head.meta;
-      const expectedHeaderLength = isDrmProtected ? 10 : 7;
-      const expectedHeaders = [
-        createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
-        { '@name': HeaderMetadataNames.Vod2LiveStartTime },
-        createHeaderMetadata(HeaderMetadataNames.SplicedMedia, true),
-        createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
-        createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
-        createHeaderMetadata(HeaderMetadataNames.HlsClientManifestVersion, 5),
-        createHeaderMetadata(
-          HeaderMetadataNames.MosaicChannelId,
-          channelWithPlaceholderVideo.id,
-        ),
-      ];
-
-      if (isDrmProtected) {
-        expectedHeaders.push(
-          createHeaderMetadata(HeaderMetadataNames.DecryptCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.MpdCpix, cpix),
-          createHeaderMetadata(HeaderMetadataNames.HlsCpix, cpix),
-        );
-      }
-      expect(headerMetadata).toHaveLength(expectedHeaderLength);
+      const expectedHeaders = getExpectedMetadataHeaders(
+        isDrmProtected,
+        channelWithPlaceholderVideo.id,
+      );
+      expect(headerMetadata).toHaveLength(expectedHeaders.length);
       expect(headerMetadata).toMatchObject(expectedHeaders);
       const parallels = resultSmil.smil.body.seq.par;
       expect(parallels).toHaveLength(1);
       expect(parallels).toMatchObject([
         videoToSmilParallelReferences(
           channelWithPlaceholderVideo.placeholder_video!,
+          getTestMutualStreamParams(),
         ),
       ]);
     },
