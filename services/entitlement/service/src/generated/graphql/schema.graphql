@@ -28,7 +28,7 @@ enum ErrorCodesEnum {
   INTERNAL_SERVER_ERROR
 
   """
-  An unhandled database-related has occurred. Please contact the service support.
+  An unhandled database-related error has occurred. Please contact the service support.
   """
   UNHANDLED_DATABASE_ERROR
 

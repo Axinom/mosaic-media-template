@@ -22,8 +22,8 @@ solution will be provided, updated and maintained by Axinom.
 Before using the customizable solution make sure that you have the following
 software installed:
 
-- [node.js](https://nodejs.org/en/) of version 14.\* needs to be installed.
-  - [Version 14.18.2](https://nodejs.org/download/release/v14.18.2/) is
+- [node.js](https://nodejs.org/en/) of version 18.\* needs to be installed.
+  - [Version 18.15.0](https://nodejs.org/download/release/v18.15.0/) is
     confirmed to work, where other versions may work as well, but would need to
     be tested
   - To install node.js via a package manager, see
