@@ -38,6 +38,7 @@ export class PrepareChannelLiveStreamHandler extends AuthenticatedMessageHandler
       this.keyServiceApi,
       this.broker,
       message.envelope.auth_token,
+      this.config,
     );
   }
 }

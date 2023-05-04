@@ -29,6 +29,7 @@ describe('PlaylistPublishedHandler', () => {
     serviceId: 'test-vod-to-live',
     logLevel: 'DEBUG',
     catchUpDurationInMinutes: 60,
+    isDrmEnabled: false,
   });
   beforeEach(async () => {
     generateCpixSettings = jest
@@ -45,7 +46,7 @@ describe('PlaylistPublishedHandler', () => {
               }
             | null
             | undefined,
-          _encryptionParams:
+          encryptionParams:
             | {
                 startDate: Date;
                 durationInSeconds: number;
@@ -58,12 +59,15 @@ describe('PlaylistPublishedHandler', () => {
           cpixSettingsVideos = decryptionParams ? decryptionParams.videos : [];
           if (cpixSettingsVideos.find((v) => v.video_encoding.is_protected)) {
             return {
-              decryptionCpixFile:
-                'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...',
-              encryptionDashCpixFile:
-                'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...',
-              encryptionHlsCpixFile:
-                'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...',
+              decryptionCpixFile: decryptionParams
+                ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+                : undefined,
+              encryptionDashCpixFile: encryptionParams
+                ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+                : undefined,
+              encryptionHlsCpixFile: encryptionParams
+                ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
+                : undefined,
             };
           }
           return {

@@ -16,15 +16,31 @@ transition from one source to another.
 
 ## Setup
 
+- Prerequisites: The
+  [Unified Virtual Channel](https://beta.docs.unified-streaming.com/documentation/virtual-channel/gettingstarted/index.html)
+  should be setup.
 - Follow the instructions from the `README.md` file in the Media solution root
   folder.
-- [Setup](https://beta.docs.unified-streaming.com/documentation/virtual-channel/gettingstarted/index.html)
-  Unified Virtual Channel.
 - Open configuration file `.env` for the VOD-to-Live service:
-  - `VIRTUAL_CHANNEL_API_BASE_URL` - should be set to the Virtual Channel API
-    url, that was setup in the previous step.
-  - `PRE_PUBLISHING_WEBHOOK_SECRET` - value can be obtained by making request to
-    Channel Service GraphQL mutation `generatePrePublishingWebhookSecret`. The
-    access token should contain permission `Settings: Edit` for Channel Service.
-  - `AZURE_STORAGE_CONNECTION` and `AZURE_BLOB_CONTAINER_NAME` are used to
-    configure the Azure Storage for persisting service data.
+
+  - `VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL` - should be set to the Virtual
+    Channel Management API url.
+  - `PRE_PUBLISHING_WEBHOOK_SECRET` - value for this configuration can be
+    obtained in the Mosaic Admin Portal when setting up the pre publishing
+    webhook for the Channel Service.
+  - `AZURE_STORAGE_CONNECTION` and `AZURE_BLOB_CONTAINER_NAME` should be setup
+    to Azure Storage.
+  - DRM configurations `KEY_SERVICE_API_BASE_URL`, `KEY_SERVICE_TENANT_ID`,
+    `KEY_SERVICE_MANAGEMENT_KEY`, `DRM_KEY_SEED_ID` are optional. And should be
+    configured in case if the DRM protected VODs are used for the channel
+    creation. Values for for DRM decryption and protection are available in the
+    Axinom Portal.
+  - `PROLONG_PLAYLIST_TO_24_HOURS` is a feature flag. When set ti TRUE every
+    playlist with duration under 24 hours will be automatically prolonged to hit
+    24 hour duration.
+  - `CATCH_UP_DURATION_IN_MINUTES` a catch up duration. If
+    `PROLONG_PLAYLIST_TO_24_HOURS` is set to TRUE, this duration is added on top
+    of the 24h mark for smoother transition between playlists. If
+    `PROLONG_PLAYLIST_TO_24_HOURS` is set to FALSE, the catch up duration is
+    added to the playlist transition time, when playlist start date is in the
+    PAST.

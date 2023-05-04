@@ -19,6 +19,7 @@ import { PlaylistPublishedValidationWebhookHandler } from './playlist-published-
 describe('PlaylistPublishedValidationWebhookHandler', () => {
   const mockConfig = stub<Config>({
     prolongPlaylistTo24Hours: true,
+    isDrmEnabled: true,
   });
   const mockAzureStorage = stub<AzureStorage>({
     getFileContent: async () => {
@@ -1042,6 +1043,85 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
         ValidationErrors.PlaylistCannotStartAndEndWithAdPod,
       ]);
     });
+
+    it('if playlist has drm protected videos, but drm is disabled -> error is reported', async () => {
+      // Arrange
+      const scheduleVideoId = uuid();
+      const programVideoId = uuid();
+      const startDate = new Date();
+      const message: WebhookRequestMessage<PlaylistPublishedEvent> = {
+        payload: {
+          ...createPlaylistEvent(
+            startDate,
+            new Date(
+              startDate.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
+            ),
+          ),
+          programs: [
+            {
+              id: uuid(),
+              title: 'Program 1',
+              sort_index: 0,
+              video_duration_in_seconds: DAY_IN_SECONDS,
+              entity_id: uuid(),
+              entity_type: 'MOVIE',
+              program_cue_points: [
+                {
+                  id: uuid(),
+                  type: 'PRE',
+                  schedules: [
+                    {
+                      id: uuid(),
+                      type: 'VIDEO',
+                      sort_index: 0,
+                      duration_in_seconds: 10,
+                      video: createTestVideo(true, scheduleVideoId),
+                    },
+                    {
+                      id: uuid(),
+                      type: 'AD_POD',
+                      sort_index: 0,
+                      duration_in_seconds: 10,
+                    },
+                  ],
+                },
+              ],
+              video: createTestVideo(true, programVideoId),
+            },
+          ],
+        },
+        message_type:
+          ChannelServiceMultiTenantMessagingSettings.PlaylistPublished
+            .messageType,
+        message_id: uuid(),
+        message_version: '1.0',
+        timestamp: new Date().toISOString(),
+      };
+      // Act
+      const testHandler = new PlaylistPublishedValidationWebhookHandler(
+        stub<Config>({
+          isDrmEnabled: false,
+        }),
+        mockAzureStorage,
+      );
+      const validationResult = await testHandler.handle(message);
+
+      // Assert
+      expect(validationResult.payload).toBeNull();
+      expect(validationResult.warnings).toHaveLength(0);
+      expect(validationResult.errors).toHaveLength(2);
+      expect(validationResult.errors).toMatchObject([
+        {
+          code: 'VIDEO_IS_DRM_PROTECTED',
+          message: `Video ${programVideoId} is DRM protected.`,
+        },
+        {
+          code: 'VIDEO_IS_DRM_PROTECTED',
+          message: `Video ${scheduleVideoId} is DRM protected.`,
+        },
+      ]);
+    });
+
     it.each([true, false])(
       'if playlist is valid -> no errors and warnings',
       async (isDrmProtected: boolean) => {

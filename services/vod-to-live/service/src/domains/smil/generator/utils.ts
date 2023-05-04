@@ -166,7 +166,6 @@ export interface StreamParams {
  * @param videos - list of videos, where to find shared stream formats.
  * @returns - list of stream parameters, shared by all videos.
  */
-//todo: cover with tests
 export const extractSharedVideoStreamFormats = (
   videos: DetailedVideo[],
 ): StreamParams[] => {
@@ -185,15 +184,19 @@ export const extractSharedVideoStreamFormats = (
       return [...result, streams];
     }, new Array<StreamParams[]>()) ?? new Array<StreamParams[]>();
 
-  return videoStreams.reduce((join, current) =>
-    join.filter((el) =>
-      current.find(
-        (c) =>
-          c.height === el.height &&
-          c.width === el.width &&
-          c.bitrate_in_kbps === el.bitrate_in_kbps &&
-          c.frame_rate === el.frame_rate,
+  if (videoStreams.length > 0) {
+    return videoStreams.reduce((join, current) =>
+      join.filter((el) =>
+        current.find(
+          (c) =>
+            c.height === el.height &&
+            c.width === el.width &&
+            c.bitrate_in_kbps === el.bitrate_in_kbps &&
+            c.frame_rate === el.frame_rate,
+        ),
       ),
-    ),
-  );
+    );
+  } else {
+    return [];
+  }
 };

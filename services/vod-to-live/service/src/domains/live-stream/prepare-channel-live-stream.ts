@@ -5,6 +5,7 @@ import {
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
+import { Config } from '../../common';
 import { AzureStorage } from '../azure';
 import {
   createDashCpixRequest,
@@ -32,6 +33,7 @@ export const prepareChannelLiveStream = async (
   keyServiceApi: KeyServiceApi,
   broker: Broker,
   authToken: string | undefined,
+  config: Config,
 ): Promise<void> => {
   try {
     const newChannelMetadata: ChannelMetadataModel = JSON.parse(json);
@@ -53,42 +55,54 @@ export const prepareChannelLiveStream = async (
           },
         );
       }
-      const storedChannelJson = await storage.getFileContent(
-        generateChannelFilePath(channelId, metadataFileName),
-      );
-      const storedChannelMetadata: ChannelMetadataModel =
-        JSON.parse(storedChannelJson);
-      newChannelMetadata.key_id = storedChannelMetadata.key_id;
+      if (config.isDrmEnabled) {
+        const storedChannelJson = await storage.getFileContent(
+          generateChannelFilePath(channelId, metadataFileName),
+        );
+        const storedChannelMetadata: ChannelMetadataModel =
+          JSON.parse(storedChannelJson);
+        newChannelMetadata.key_id = storedChannelMetadata.key_id;
+      }
     } else {
-      const channelKey = await keyServiceApi.postContentKey(channelId);
-      newChannelMetadata.key_id = channelKey.Id;
-      const protectionCpixCreationResult = await createProtectionCpix(
-        channelKey.Id,
-        channelId,
-        keyServiceApi,
-        storage,
-      );
+      if (config.isDrmEnabled) {
+        const channelKey = await keyServiceApi.postContentKey(channelId);
+        newChannelMetadata.key_id = channelKey.Id;
+        const protectionCpixCreationResult = await createProtectionCpix(
+          channelKey.Id,
+          channelId,
+          keyServiceApi,
+          storage,
+        );
+        await broker.publish<ChannelProtectionKeyCreatedEvent>(
+          VodToLiveServiceMessagingSettings.ChannelProtectionKeyCreated
+            .messageType,
+          {
+            channel_id: channelId,
+            key_id: channelKey.Id,
+          },
+          {
+            auth_token: authToken,
+          },
+        );
+
+        logger.debug({
+          message: `Virtual Channel ${channelId} cpix creation result:`,
+          details: {
+            encryptionFilesCreationResult: protectionCpixCreationResult,
+          },
+        });
+      }
+
       const channelCreationResult = await virtualChannelApi.putChannel(
         channelId,
         smil,
         true,
       );
-      await broker.publish<ChannelProtectionKeyCreatedEvent>(
-        VodToLiveServiceMessagingSettings.ChannelProtectionKeyCreated
-          .messageType,
-        {
-          channel_id: channelId,
-          key_id: channelKey.Id,
-        },
-        {
-          auth_token: authToken,
-        },
-      );
+
       logger.debug({
         message: `Virtual Channel ${channelId} creation result:`,
         details: {
           virtualChannelCreationResult: channelCreationResult,
-          encryptionFilesCreationResult: protectionCpixCreationResult,
         },
       });
     }

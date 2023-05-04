@@ -1,7 +1,18 @@
-import { mosaicErrorMappingFactory } from '@axinom/mosaic-service-common';
+import {
+  MosaicError,
+  mosaicErrorMappingFactory,
+} from '@axinom/mosaic-service-common';
 import axios from 'axios';
 import urljoin from 'url-join';
+import { Config } from '../../common';
 import { ContentKeyResponse } from './key-service-api-models';
+
+export const KeyServiceApiErrors = {
+  DrmIsDisabled: {
+    message: 'DRM protection is disabled.',
+    code: 'DRM_IS_DISABLED',
+  },
+};
 
 const getKeyServiceApiMappedError = mosaicErrorMappingFactory(
   (
@@ -24,16 +35,28 @@ const getKeyServiceApiMappedError = mosaicErrorMappingFactory(
 );
 
 export class KeyServiceApi {
-  constructor(
-    private keyServiceApiUrl: string,
-    private keyServiceTenantId: string,
-    private keyServiceManagementKey: string,
-    private drmKeySeedId: string,
-  ) {}
+  private keyServiceApiUrl: string | undefined;
+  private keyServiceTenantId: string | undefined;
+  private keyServiceManagementKey: string | undefined;
+  private drmKeySeedId: string | undefined;
+  constructor(config: Config) {
+    if (config.isDrmEnabled) {
+      this.keyServiceApiUrl = config.keyServiceApiBaseUrl;
+      this.keyServiceTenantId = config.keyServiceTenantId;
+      this.keyServiceManagementKey = config.keyServiceManagementKey;
+      this.drmKeySeedId = config.drmKeySeedId;
+    }
+  }
 
   public postContentKey = async (
     contentKeyName: string,
   ): Promise<ContentKeyResponse> => {
+    if (!this.keyServiceApiUrl) {
+      throw new MosaicError({
+        ...KeyServiceApiErrors.DrmIsDisabled,
+        details: { errorMessage: 'Key Service API url is not set.' },
+      });
+    }
     try {
       const result = await axios.post<ContentKeyResponse>(
         urljoin(this.keyServiceApiUrl, 'api', 'ContentKeys'),
@@ -54,6 +77,12 @@ export class KeyServiceApi {
   };
 
   public deleteContentKey = async (contentKeyId: string): Promise<void> => {
+    if (!this.keyServiceApiUrl) {
+      throw new MosaicError({
+        ...KeyServiceApiErrors.DrmIsDisabled,
+        details: { errorMessage: 'Key Service API url is not set.' },
+      });
+    }
     try {
       await axios.delete(
         urljoin(this.keyServiceApiUrl, 'api', 'ContentKeys', contentKeyId),
@@ -69,6 +98,12 @@ export class KeyServiceApi {
   };
 
   public postSpekeRequest = async (request: string): Promise<string> => {
+    if (!this.keyServiceApiUrl) {
+      throw new MosaicError({
+        ...KeyServiceApiErrors.DrmIsDisabled,
+        details: { errorMessage: 'Key Service API url is not set.' },
+      });
+    }
     try {
       const result = await axios.post<string>(
         urljoin(this.keyServiceApiUrl, 'api', 'SpekeV2'),

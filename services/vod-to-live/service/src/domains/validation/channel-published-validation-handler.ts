@@ -6,13 +6,15 @@ import {
   WebhookRequestMessage,
   WebhookResponse,
 } from '@axinom/mosaic-service-common';
-import { ValidationErrors } from '../../common';
+import { Config, ValidationErrors } from '../../common';
 import { validateVideo, ValidationResult } from './utils';
 import { ValidationWebhookHandler } from './validation-webhook-model';
 
 export class ChannelPublishedValidationWebhookHandler
   implements ValidationWebhookHandler<ChannelPublishedEvent>
 {
+  constructor(private config: Config) {}
+
   canHandle(message: WebhookRequestMessage<ChannelPublishedEvent>): boolean {
     return (
       message.message_type ===
@@ -34,6 +36,7 @@ export class ChannelPublishedValidationWebhookHandler
     } else {
       const { errors: videoErrors, warnings: videoWarnings } = validateVideo(
         event.placeholder_video,
+        this.config,
       );
       validationResult.errors.push(...videoErrors);
       validationResult.warnings.push(...videoWarnings);

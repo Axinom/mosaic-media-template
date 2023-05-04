@@ -1,22 +1,32 @@
 import { DetailedVideo } from '@axinom/mosaic-messages';
 import { WebhookValidationMessage } from '@axinom/mosaic-service-common';
-import { HOUR_IN_SECONDS } from '../../common';
+import { Config, HOUR_IN_SECONDS } from '../../common';
 import { getPlaylistDurationInSeconds } from '../utils';
 
 export interface ValidationResult {
   errors: WebhookValidationMessage[];
   warnings: WebhookValidationMessage[];
 }
-export const validateVideo = (video: DetailedVideo): ValidationResult => {
+export const validateVideo = (
+  video: DetailedVideo,
+  config: Config,
+): ValidationResult => {
   const validationResult: ValidationResult = {
     errors: [],
     warnings: [],
   };
   if (video.video_encoding.is_protected) {
-    if (video.video_encoding.video_streams.find((s) => !s.key_id)) {
+    if (config.isDrmEnabled) {
+      if (video.video_encoding.video_streams.find((s) => !s.key_id)) {
+        validationResult.errors.push({
+          message: `Video ${video.id} is missing key ids.`,
+          code: 'MISSING_DRM_KEYS',
+        });
+      }
+    } else {
       validationResult.errors.push({
-        message: `Video ${video.id} is missing key ids.`,
-        code: 'MISSING_DRM_KEYS',
+        message: `Video ${video.id} is DRM protected.`,
+        code: 'VIDEO_IS_DRM_PROTECTED',
       });
     }
   }

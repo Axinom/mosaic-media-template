@@ -54,15 +54,10 @@ async function bootstrap(): Promise<void> {
   );
 
   const virtualChannelApi = new VirtualChannelApi(
-    config.virtualChannelApiBaseUrl,
+    config.virtualChannelManagementApiBaseUrl,
   );
 
-  const keyServiceApi = new KeyServiceApi(
-    config.keyServiceApiBaseUrl,
-    config.keyServiceTenantId,
-    config.keyServiceManagementKey,
-    config.drmKeySeedId,
-  );
+  const keyServiceApi = new KeyServiceApi(config);
   const broker = await setupMessagingBroker({
     app,
     config,

@@ -33,6 +33,7 @@ export class ChannelUnpublishedHandler extends AuthenticatedMessageHandler<Chann
       this.virtualChannelApi,
       this.storage,
       this.keyServiceApi,
+      this.config,
     );
   }
 }

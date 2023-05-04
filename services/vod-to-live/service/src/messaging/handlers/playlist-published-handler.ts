@@ -97,6 +97,12 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
             ? prolongedPlaylistDurationInSeconds
             : playlistDurationInSeconds;
       }
+      const encryptionParams = this.config.isDrmEnabled
+        ? {
+            startDate: new Date(encryptionStartDate),
+            durationInSeconds: encryptionDurationInSeconds,
+          }
+        : undefined;
       const drmSettings = await generateCpixSettings(
         channelPublishedEvent.id,
         payload.id,
@@ -107,10 +113,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
           // decryption is allowed for 24h
           durationInSeconds: DAY_IN_SECONDS,
         },
-        {
-          startDate: new Date(encryptionStartDate),
-          durationInSeconds: encryptionDurationInSeconds,
-        },
+        encryptionParams,
         this.storage,
         this.keyServiceApi,
       );

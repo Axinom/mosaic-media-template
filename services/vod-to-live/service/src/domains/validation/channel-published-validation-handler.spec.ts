@@ -4,13 +4,17 @@ import {
   OutputFormat,
 } from '@axinom/mosaic-messages';
 import { WebhookRequestMessage } from '@axinom/mosaic-service-common';
+import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
-import { ValidationErrors } from '../../common';
+import { Config, ValidationErrors } from '../../common';
 import { createTestVideo } from '../../tests';
 import { ChannelPublishedValidationWebhookHandler } from './channel-published-validation-handler';
 
 describe('ChannelPublishedValidationWebhookHandler', () => {
-  const handler = new ChannelPublishedValidationWebhookHandler();
+  const mockConfig = stub<Config>({
+    isDrmEnabled: true,
+  });
+  const handler = new ChannelPublishedValidationWebhookHandler(mockConfig);
   const createChannelEvent = (): ChannelPublishedEvent => {
     return {
       id: uuid(),
@@ -350,5 +354,41 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
         expect(validationResult.payload).toMatchObject(message.payload);
       },
     );
+
+    it('if channel placeholder video is DRM protected, but drm is disabled -> error is reported', async () => {
+      // Arrange
+      const message: WebhookRequestMessage<ChannelPublishedEvent> = {
+        payload: {
+          ...createChannelEvent(),
+          placeholder_video: createTestVideo(true),
+        },
+        message_type:
+          ChannelServiceMultiTenantMessagingSettings.ChannelPublished
+            .messageType,
+        message_id: uuid(),
+        message_version: '1.0',
+        timestamp: new Date().toISOString(),
+      };
+      // Act
+      const testHandler = new ChannelPublishedValidationWebhookHandler(
+        stub<Config>({
+          isDrmEnabled: false,
+        }),
+      );
+      const validationResult = await testHandler.handle(message);
+
+      // Assert
+      expect(validationResult.payload).toBeNull();
+      expect(validationResult.warnings).toHaveLength(0);
+      expect(validationResult.errors).toHaveLength(1);
+      expect(validationResult.errors).toMatchObject([
+        {
+          message: `Video ${
+            message.payload.placeholder_video!.id
+          } is DRM protected.`,
+          code: 'VIDEO_IS_DRM_PROTECTED',
+        },
+      ]);
+    });
   });
 });

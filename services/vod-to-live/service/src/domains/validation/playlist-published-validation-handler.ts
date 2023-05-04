@@ -50,12 +50,19 @@ export class PlaylistPublishedValidationWebhookHandler
               .flatMap((cp) => cp.schedules)
               .reduce((result, schedule) => {
                 if (schedule?.video) {
-                  return [...result, validateVideo(schedule.video)];
+                  return [
+                    ...result,
+                    validateVideo(schedule.video, this.config),
+                  ];
                 }
                 return result;
               }, new Array<ValidationResult>());
           }
-          return [...result, validateVideo(entry.video), ...scheduleResult];
+          return [
+            ...result,
+            validateVideo(entry.video, this.config),
+            ...scheduleResult,
+          ];
         },
         new Array<ValidationResult>(),
       );

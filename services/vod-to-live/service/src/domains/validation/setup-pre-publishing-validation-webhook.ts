@@ -27,7 +27,7 @@ export const setupPrePublishingValidationWebhook = (
   storage: AzureStorage,
 ): void => {
   const handlers: ValidationWebhookHandler<PrePublishingPayload>[] = [
-    new ChannelPublishedValidationWebhookHandler(),
+    new ChannelPublishedValidationWebhookHandler(config),
     new PlaylistPublishedValidationWebhookHandler(config, storage),
   ];
   app.post(

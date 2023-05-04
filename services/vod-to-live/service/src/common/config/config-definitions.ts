@@ -38,8 +38,11 @@ export const getConfigDefinitions = (
     // secret
     prePublishingWebhookSecret: () =>
       env.get('PRE_PUBLISHING_WEBHOOK_SECRET').required().asString(),
-    virtualChannelApiBaseUrl: () =>
-      env.get('VIRTUAL_CHANNEL_API_BASE_URL').required().asUrlString(),
+    virtualChannelManagementApiBaseUrl: () =>
+      env
+        .get('VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL')
+        .required()
+        .asUrlString(),
 
     // Azure Storage
     azureStorageConnection: () =>
@@ -49,12 +52,20 @@ export const getConfigDefinitions = (
 
     //Key Service Management API
     keyServiceApiBaseUrl: () =>
-      env.get('KEY_SERVICE_API_BASE_URL').required().asUrlString(),
-    keyServiceTenantId: () =>
-      env.get('KEY_SERVICE_TENANT_ID').required().asString(),
+      env.get('KEY_SERVICE_API_BASE_URL').asUrlString(),
+    keyServiceTenantId: () => env.get('KEY_SERVICE_TENANT_ID').asString(),
     keyServiceManagementKey: () =>
-      env.get('KEY_SERVICE_MANAGEMENT_KEY').required().asString(),
-    drmKeySeedId: () => env.get('DRM_KEY_SEED_ID').required().asString(),
+      env.get('KEY_SERVICE_MANAGEMENT_KEY').asString(),
+    drmKeySeedId: () => env.get('DRM_KEY_SEED_ID').asString(),
+
+    isDrmEnabled: function () {
+      return this.keyServiceApiBaseUrl() &&
+        this.keyServiceTenantId() &&
+        this.keyServiceManagementKey() &&
+        this.drmKeySeedId()
+        ? true
+        : false;
+    },
     /**
      * Optional Service Account Client ID, used to get ID service token that is
      * required to get User auth token during development

@@ -1,5 +1,10 @@
-import { CuePointSchedule } from '@axinom/mosaic-messages';
+import {
+  CuePointSchedule,
+  DetailedVideo,
+  Stream,
+} from '@axinom/mosaic-messages';
 import { URL } from 'url';
+import { v4 as uuid } from 'uuid';
 import { createTestVideo, getTestMutualStreamParams } from '../../../tests';
 import {
   createEventStream,
@@ -10,6 +15,8 @@ import {
 import {
   createAdPlaceholders,
   createPlaylistEventStream,
+  extractSharedVideoStreamFormats,
+  StreamParams,
   videoToSmilParallelReferences,
 } from './utils';
 
@@ -211,5 +218,162 @@ describe('smil-utils', () => {
         expect(retrievedReferences).toMatchObject(expectedReferences);
       },
     );
+  });
+
+  describe('extractSharedVideoStreamFormats', () => {
+    const createTestVideoStream = (streamParams: StreamParams): Stream => {
+      return {
+        ...streamParams,
+        type: 'VIDEO',
+        format: 'CMAF',
+        label: 'video',
+      };
+    };
+    const createTestVideo = (streamParams: StreamParams[]): DetailedVideo => {
+      const id = uuid();
+      return {
+        id: id,
+        is_archived: false,
+        source_file_extension: '.mp4',
+        source_file_name: `source_${id}`,
+        source_full_file_name: `source_${id}.mp4`,
+        source_location: 'test',
+        source_size_in_bytes: 80788234,
+        title: `Test Video ${id}`,
+        video_encoding: {
+          audio_languages: ['en'],
+          caption_languages: [],
+          cmaf_size_in_bytes: 128070139,
+          dash_manifest_path:
+            'https://test.blob.core.windows.net/video-output/8EPGt6rB2D4oJbJqb1tw3o/cmaf/manifest.mpd',
+          dash_size_in_bytes: null,
+          length_in_seconds: 1000,
+          encoding_state: 'READY',
+          finished_date: '2022-11-25T12:26:41.396001+00:00',
+          hls_manifest_path:
+            'https://test.blob.core.windows.net/video-output/8EPGt6rB2D4oJbJqb1tw3o/cmaf/manifest.m3u8',
+          hls_size_in_bytes: null,
+          is_protected: true,
+          output_format: 'CMAF',
+          output_location: '8EPGt6rB2D4oJbJqb1tw3o',
+          preview_comment: null,
+          preview_status: 'NOT_PREVIEWED',
+          subtitle_languages: [],
+          title: `Test Video ${id}`,
+          video_streams: streamParams.map((s) => createTestVideoStream(s)),
+        },
+        videos_tags: ['vod2live'],
+      };
+    };
+    it('if no videos are passed-> returned empty array of streams', () => {
+      // Arrange & Act
+      const result = extractSharedVideoStreamFormats([]);
+      // Assert
+      expect(result).toHaveLength(0);
+    });
+
+    it('if one video is passed-> all video formats are returned', () => {
+      // Arrange
+      const streamParams = [
+        {
+          width: 512,
+          height: 288,
+          bitrate_in_kbps: 400,
+          frame_rate: 60,
+        },
+        {
+          width: 384,
+          height: 216,
+          bitrate_in_kbps: 300,
+          frame_rate: 60,
+        },
+        {
+          width: 1920,
+          height: 1080,
+          bitrate_in_kbps: 3000,
+          frame_rate: 60,
+        },
+      ];
+      const videos = [createTestVideo(streamParams)];
+      // Act
+      const result = extractSharedVideoStreamFormats(videos);
+
+      // Assert
+      expect(result).toHaveLength(3);
+      expect(result).toMatchObject(streamParams);
+    });
+
+    it('if multiple videos with mutual formats are passed-> mutual formats are returned', () => {
+      // Arrange
+      const mutualFormat = {
+        width: 384,
+        height: 216,
+        bitrate_in_kbps: 300,
+        frame_rate: 60,
+      };
+      const videos = [
+        createTestVideo([
+          mutualFormat,
+          {
+            width: 1920,
+            height: 1080,
+            bitrate_in_kbps: 3000,
+            frame_rate: 60,
+          },
+        ]),
+        createTestVideo([mutualFormat]),
+        createTestVideo([
+          mutualFormat,
+          {
+            width: 512,
+            height: 288,
+            bitrate_in_kbps: 400,
+            frame_rate: 60,
+          },
+        ]),
+      ];
+      // Act
+      const result = extractSharedVideoStreamFormats(videos);
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result).toMatchObject([mutualFormat]);
+    });
+
+    it('if multiple videos are  passed with no mutual formats -> empty array is returned', () => {
+      // Arrange
+      const videos = [
+        createTestVideo([
+          {
+            width: 1920,
+            height: 1080,
+            bitrate_in_kbps: 3000,
+            frame_rate: 60,
+          },
+        ]),
+        createTestVideo([
+          {
+            width: 384,
+            height: 216,
+            bitrate_in_kbps: 300,
+            frame_rate: 60,
+          },
+        ]),
+        createTestVideo([
+          {
+            width: 512,
+            height: 288,
+            bitrate_in_kbps: 400,
+            frame_rate: 60,
+          },
+        ]),
+      ];
+      // Act
+      const result = extractSharedVideoStreamFormats(videos);
+
+      // Assert
+      expect(result).toHaveLength(0);
+      expect(result).toMatchObject([]);
+    });
   });
 });

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { stub } from 'jest-auto-stub';
+import { Config } from 'src/common';
 import { v4 as uuid } from 'uuid';
 import { createTestVideo } from '../../tests';
 import { AzureStorage } from '../azure';
@@ -71,6 +72,7 @@ describe('deleteChannelLiveStream', () => {
       virtualChannelApi,
       mockedStorage,
       mockedKeyServiceApi,
+      stub<Config>({ isDrmEnabled: true }),
     );
     // Assert
     expect(deletedFolders).toHaveLength(1);
@@ -78,5 +80,24 @@ describe('deleteChannelLiveStream', () => {
     expect(mockedAxios.delete).toHaveBeenCalledTimes(1);
     expect(deletedContentKeys).toHaveLength(1);
     expect(deletedContentKeys).toMatchObject([mockContentKeyId]);
+  });
+
+  it('on channel deletion the DRM key is not removed if DRN is disabled', async () => {
+    // Arrange
+    const mockedAxios = jest.mocked(axios);
+    // Act
+    await deleteChannelLiveStream(
+      channelId,
+      virtualChannelApi,
+      mockedStorage,
+      mockedKeyServiceApi,
+      stub<Config>({ isDrmEnabled: false }),
+    );
+    // Assert
+    expect(deletedFolders).toHaveLength(1);
+    expect(deletedFolders).toMatchObject([channelId]);
+    expect(mockedAxios.delete).toHaveBeenCalledTimes(1);
+    expect(deletedContentKeys).toHaveLength(0);
+    expect(deletedContentKeys).toMatchObject([]);
   });
 });
