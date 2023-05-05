@@ -1,11 +1,13 @@
 import { LoginPgPool } from '@axinom/mosaic-db-common';
 import { RascalConfigBuilder } from '@axinom/mosaic-message-bus';
 import { ChannelServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
+import { VodToLiveServiceMessagingSettings } from 'media-messages';
 import { Config } from '../../common';
 import { ContentTypeRegistrant } from '../../messaging';
 import {
   ChannelPublishedEventHandler,
   ChannelUnpublishedEventHandler,
+  EnsureChannelLiveReadyEventHandler,
 } from './handlers';
 
 export const registerChannelsMessaging: ContentTypeRegistrant = function (
@@ -24,6 +26,13 @@ export const registerChannelsMessaging: ContentTypeRegistrant = function (
       config,
     ).subscribeForEvent(
       () => new ChannelUnpublishedEventHandler(loginPool, config),
+    ),
+
+    new RascalConfigBuilder(
+      VodToLiveServiceMessagingSettings.EnsureChannelLiveReady,
+      config,
+    ).subscribeForEvent(
+      () => new EnsureChannelLiveReadyEventHandler(loginPool, config),
     ),
   ];
 };

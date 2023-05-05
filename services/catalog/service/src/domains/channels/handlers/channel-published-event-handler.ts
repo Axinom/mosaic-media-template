@@ -3,7 +3,7 @@ import {
   ChannelPublishedEvent,
   ChannelServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
-import { deletes, insert, IsolationLevel } from 'zapatos/db';
+import { deletes, insert, IsolationLevel, upsert } from 'zapatos/db';
 import { channel_images } from 'zapatos/schema';
 import { Config } from '../../../common';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
@@ -25,20 +25,25 @@ export class ChannelPublishedEventHandler extends AuthenticatedMessageHandler<Ch
       IsolationLevel.Serializable,
       { role: this.config.dbGqlRole },
       async (txnClient) => {
-        await deletes('channel', { id: payload.id }).run(txnClient);
+        const dbChannel = await upsert(
+          'channel',
+          {
+            id: payload.id,
+            title: payload.title,
+            description: payload.description,
+          },
+          ['id'],
+        ).run(txnClient);
 
-        const insertedChannel = await insert('channel', {
-          id: payload.id,
-          title: payload.title,
-          description: payload.description,
-        }).run(txnClient);
-
+        await deletes('channel_images', { channel_id: payload.id }).run(
+          txnClient,
+        );
         if (payload.images) {
           await insert(
             'channel_images',
             payload.images.map(
               (image): channel_images.Insertable => ({
-                channel_id: insertedChannel.id,
+                channel_id: dbChannel.id,
                 type: image.type,
                 path: image.path,
                 width: image.width,

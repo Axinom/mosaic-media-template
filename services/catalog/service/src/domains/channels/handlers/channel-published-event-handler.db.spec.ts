@@ -63,6 +63,8 @@ describe('ChannelPublishEventHandler', () => {
       await insert('channel', {
         id: 'channel-1',
         title: 'Old title',
+        dash_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.mpd',
+        hls_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.m3u8',
       }).run(ctx.ownerPool);
       const message = createChannelPublishedEvent('channel-1');
       message.title = 'New title';
@@ -76,6 +78,12 @@ describe('ChannelPublishEventHandler', () => {
       }).run(ctx.ownerPool);
 
       expect(channel?.title).toEqual('New title');
+      expect(channel?.dash_stream_url).toEqual(
+        'https://axinom-test-origin.com/channel-1.isml/.mpd',
+      );
+      expect(channel?.hls_stream_url).toEqual(
+        'https://axinom-test-origin.com/channel-1.isml/.m3u8',
+      );
     });
   });
 });
