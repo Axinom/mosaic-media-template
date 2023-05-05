@@ -1,0 +1,51 @@
+asyncapi: 2.0.0
+info:
+  title: VOD-to-Live Service
+  version: '1.0.0'
+  description: |
+    VOD-to-Live Service
+# AsyncAPI extension, used to define service id. If not defined, as service id will be used info.title in lower-kebab-case
+x-service-id: vod-to-live-service
+
+channels:
+  # events
+  'channel.protection_key_created':
+    bindings:
+      amqp:
+        queue:
+          name: channel:protection_key_created
+    subscribe:
+      message:
+        $ref: '#/components/messages/channel-protection-key-created-event'
+  'channel.ensure_channel_live_failed':
+    bindings:
+      amqp:
+        queue:
+          name: channel:ensure_channel_live_failed
+    subscribe:
+      message:
+        $ref: '#/components/messages/ensure-channel-live-failed-event'
+  'channel.ensure_channel_live_ready':
+    bindings:
+      amqp:
+        queue:
+          name: channel:ensure_channel_live_ready
+    subscribe:
+      message:
+        $ref: '#/components/messages/ensure-channel-live-ready-event'
+
+components:
+  messages:
+    # events
+    channel-protection-key-created-event:
+      contentType: application/json
+      payload:
+        $ref: 'events/live-stream-protection-key-created-event.json'
+    ensure-channel-live-failed-event:
+      contentType: application/json
+      payload:
+        $ref: 'events/ensure-channel-live-failed-event.json'
+    ensure-channel-live-ready-event:
+      contentType: application/json
+      payload:
+        $ref: 'events/ensure-channel-live-ready-event.json'
