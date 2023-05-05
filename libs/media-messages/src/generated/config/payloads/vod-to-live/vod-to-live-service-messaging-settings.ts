@@ -11,10 +11,25 @@ export class VodToLiveServiceMessagingSettings implements MessagingSettings {
     'channel:prepare_live_stream', 
     'channel.prepare_live_stream'
     );
-  public static ChannelProtectionKeyCreated = new VodToLiveServiceMessagingSettings(
-    'ChannelProtectionKeyCreated', 
+  public static EnsureChannelLive = new VodToLiveServiceMessagingSettings(
+    'EnsureChannelLive', 
+    'channel:ensure_channel_live', 
+    'channel.ensure_channel_live'
+    );
+  public static LiveStreamProtectionKeyCreated = new VodToLiveServiceMessagingSettings(
+    'LiveStreamProtectionKeyCreated', 
     'channel:protection_key_created', 
     'channel.protection_key_created'
+    );
+  public static EnsureChannelLiveFailed = new VodToLiveServiceMessagingSettings(
+    'EnsureChannelLiveFailed', 
+    'channel:ensure_channel_live_failed', 
+    'channel.ensure_channel_live_failed'
+    );
+  public static EnsureChannelLiveReady = new VodToLiveServiceMessagingSettings(
+    'EnsureChannelLiveReady', 
+    'channel:ensure_channel_live_ready', 
+    'channel.ensure_channel_live_ready'
     );
   
   public readonly serviceId = 'vod-to-live-service';

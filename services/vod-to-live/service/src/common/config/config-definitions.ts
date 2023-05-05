@@ -44,6 +44,9 @@ export const getConfigDefinitions = (
         .required()
         .asUrlString(),
 
+    virtualChannelOriginBaseUrl: () =>
+      env.get('VIRTUAL_CHANNEL_ORIGIN_BASE_URL').required().asUrlString(),
+
     // Azure Storage
     azureStorageConnection: () =>
       env.get('AZURE_STORAGE_CONNECTION').required().asString(),
@@ -104,6 +107,16 @@ export const getConfigDefinitions = (
      */
     prolongPlaylistTo24Hours: () =>
       env.get('PROLONG_PLAYLIST_TO_24_HOURS').default('true').asBoolStrict(),
+
+    /**
+     * Defines the amount of time service will wait for Virtual Channel to finish processing the channel SMIL.
+     * Defaults to 10 minutes (600 sec)
+     */
+    channelProcessingWaitTimeInSeconds: () =>
+      env
+        .get('CHANNEL_PROCESSING_WAIT_TIME_IN_SECONDS')
+        .default('600')
+        .asIntPositive(),
   };
 };
 

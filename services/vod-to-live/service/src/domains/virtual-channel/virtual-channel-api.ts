@@ -143,6 +143,17 @@ export class VirtualChannelApi {
       });
       return result.data;
     } catch (error) {
+      const axiosErrorResponse = (error as AxiosError)?.response;
+      const errorCode = axiosErrorResponse?.status;
+      if (errorCode === 404) {
+        return {
+          task_id: '',
+          status_url: '',
+          errorMessage:
+            axiosErrorResponse?.data?.detail ??
+            `Channel ${channelId} was not found!`,
+        };
+      }
       throw getVirtualChannelApiMappedError(error);
     }
   };
@@ -159,6 +170,14 @@ export class VirtualChannelApi {
       );
       return result.data;
     } catch (error) {
+      const axiosErrorResponse = (error as AxiosError)?.response;
+      const errorCode = axiosErrorResponse?.status;
+      if (errorCode === 404) {
+        return (
+          axiosErrorResponse?.data?.detail ??
+          `Channel ${channelId} was not found!`
+        );
+      }
       throw getVirtualChannelApiMappedError(error);
     }
   };
@@ -212,6 +231,24 @@ export class VirtualChannelApi {
       );
       return result.data;
     } catch (error) {
+      const axiosErrorResponse = (error as AxiosError)?.response;
+      const errorCode = axiosErrorResponse?.status;
+      if (errorCode === 404) {
+        return {
+          status: 'Failed',
+          origin_url: '',
+          details: [
+            {
+              name: 'Retrieve channel status',
+              status: 'Failed',
+              time: new Date().toISOString(),
+              details:
+                axiosErrorResponse?.data?.detail ??
+                `Channel ${channelId} was not found!`,
+            },
+          ],
+        };
+      }
       throw getVirtualChannelApiMappedError(error);
     }
   };

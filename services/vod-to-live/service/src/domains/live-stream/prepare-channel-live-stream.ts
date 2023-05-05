@@ -1,7 +1,8 @@
 import { Broker } from '@axinom/mosaic-message-bus';
 import { getMappedError, Logger } from '@axinom/mosaic-service-common';
 import {
-  ChannelProtectionKeyCreatedEvent,
+  EnsureChannelLiveCommand,
+  LiveStreamProtectionKeyCreatedEvent,
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
@@ -73,8 +74,8 @@ export const prepareChannelLiveStream = async (
           keyServiceApi,
           storage,
         );
-        await broker.publish<ChannelProtectionKeyCreatedEvent>(
-          VodToLiveServiceMessagingSettings.ChannelProtectionKeyCreated
+        await broker.publish<LiveStreamProtectionKeyCreatedEvent>(
+          VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated
             .messageType,
           {
             channel_id: channelId,
@@ -85,7 +86,7 @@ export const prepareChannelLiveStream = async (
           },
         );
 
-        logger.debug({
+        logger.log({
           message: `Virtual Channel ${channelId} cpix creation result:`,
           details: {
             encryptionFilesCreationResult: protectionCpixCreationResult,
@@ -99,18 +100,28 @@ export const prepareChannelLiveStream = async (
         true,
       );
 
-      logger.debug({
+      logger.log({
         message: `Virtual Channel ${channelId} creation result:`,
         details: {
           virtualChannelCreationResult: channelCreationResult,
         },
       });
+      await broker.publish<EnsureChannelLiveCommand>(
+        VodToLiveServiceMessagingSettings.EnsureChannelLive.messageType,
+        {
+          channel_id: channelId,
+          seconds_elapsed_while_waiting: 0,
+        },
+        {
+          auth_token: authToken,
+        },
+      );
     }
     const saveResult = await storage.createFile(
       generateChannelFilePath(channelId, metadataFileName),
       JSON.stringify(newChannelMetadata),
     );
-    logger.debug({
+    logger.log({
       message: `Channel ${channelId} metadata saving result:`,
       details: {
         wasSaved: saveResult,

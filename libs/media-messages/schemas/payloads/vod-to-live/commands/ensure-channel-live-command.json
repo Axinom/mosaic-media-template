@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "ensure_channel_live_command",
+  "description": "Ensure Channel live stream is live.",
+  "additionalProperties": false,
+  "required": [
+    "seconds_elapsed_while_waiting",
+    "channel_id"
+  ],
+  "properties": {
+    "channel_id": {
+      "description": "Unique identifier of the channel.",
+      "$ref": "../../common.json#/definitions/non_empty_string"
+    },
+    "seconds_elapsed_while_waiting": {
+      "type": "integer",
+      "description": "Seconds counter to track the amount of time waiting for channel to go live. If this counter reaches configurable amount of minutes - live stream processing is considered as failed for an unknown reason, e.g. somehow the whole process froze."
+    }
+  }
+}

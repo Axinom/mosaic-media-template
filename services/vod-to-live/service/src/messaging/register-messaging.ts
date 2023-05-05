@@ -2,6 +2,7 @@ import { Broker, RascalConfigBuilder } from '@axinom/mosaic-message-bus';
 import { ChannelServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import { Express } from 'express';
 import {
+  EnsureChannelLiveCommand,
   PrepareChannelLiveStreamCommand,
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
@@ -11,6 +12,7 @@ import { AzureStorage, KeyServiceApi, VirtualChannelApi } from '../domains';
 import {
   ChannelPublishedHandler,
   ChannelUnpublishedHandler,
+  EnsureChannelLiveHandler,
   PlaylistPublishedHandler,
   PlaylistUnpublishedHandler,
   PrepareChannelLiveStreamHandler,
@@ -92,9 +94,28 @@ export const registerMessaging = (
           ),
       ),
 
+    // Ensure Channel is Live
+    new RascalConfigBuilder(
+      VodToLiveServiceMessagingSettings.EnsureChannelLive,
+      config,
+    )
+      .sendCommand()
+      .subscribeForCommand<EnsureChannelLiveCommand>(
+        (broker: Broker) =>
+          new EnsureChannelLiveHandler(config, virtualChannelApi, broker),
+      ),
+    new RascalConfigBuilder(
+      VodToLiveServiceMessagingSettings.EnsureChannelLiveFailed,
+      config,
+    ).publishEvent(),
+    new RascalConfigBuilder(
+      VodToLiveServiceMessagingSettings.EnsureChannelLiveReady,
+      config,
+    ).publishEvent(),
+
     // Channel Protection Key Created
     new RascalConfigBuilder(
-      VodToLiveServiceMessagingSettings.ChannelProtectionKeyCreated,
+      VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated,
       config,
     ).publishEvent(),
   ];

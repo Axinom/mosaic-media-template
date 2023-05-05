@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "title": "channel_protection_key_created_event",
-  "description": "DRM protection key for Channel was created.",
-  "additionalProperties": false,
+  "title": "ensure_channel_live_failed_event",
+  "description": "Channel has failed processing. The live stream was not created.",
+  "additionalProperties": true,
   "required": [
     "channel_id",
-    "key_id"
+    "message"
   ],
   "properties": {
     "channel_id": {
@@ -15,12 +15,9 @@
       "minLength": 1,
       "pattern": "^$|.*\\S.*"
     },
-    "key_id": {
-      "description": "Unique identifier of the key.",
+    "message": {
       "type": "string",
-      "minLength": 32,
-      "maxLength": 36,
-      "format": "uuid"
+      "description": "Message that describes a reason for command processing failure."
     }
   }
 }

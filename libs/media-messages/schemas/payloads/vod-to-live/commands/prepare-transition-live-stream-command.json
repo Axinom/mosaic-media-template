@@ -13,11 +13,11 @@
   "properties": {
     "channel_id": {
       "description": "Unique identifier of the channel.",
-      "$ref": "../common.json#/definitions/non_empty_string"
+      "$ref": "../../common.json#/definitions/non_empty_string"
     },
     "playlist_id": {
       "description": "Unique identifier of the playlist.",
-      "$ref": "../common.json#/definitions/non_empty_string"
+      "$ref": "../../common.json#/definitions/non_empty_string"
     },
     "transition_start_date_time":{
       "description": "Start date and time of the transition.",

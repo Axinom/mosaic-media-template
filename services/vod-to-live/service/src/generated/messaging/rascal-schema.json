@@ -96,6 +96,15 @@
               "x-queue-type": "quorum"
             }
           }
+        },
+        "vod-to-live-service:channel:ensure_channel_live": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "vod-to-live-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
         }
       },
       "bindings": {
@@ -173,6 +182,16 @@
           "source": "command",
           "bindingKey": "vod-to-live-service.channel.prepare_live_stream",
           "destination": "vod-to-live-service:channel:prepare_live_stream"
+        },
+        "retry:vod-to-live-service:channel:ensure_channel_live": {
+          "source": "retry",
+          "bindingKey": "vod-to-live-service:channel:ensure_channel_live.#",
+          "destination": "vod-to-live-service:channel:ensure_channel_live"
+        },
+        "vod-to-live-service:channel:ensure_channel_live": {
+          "source": "command",
+          "bindingKey": "vod-to-live-service.channel.ensure_channel_live",
+          "destination": "vod-to-live-service:channel:ensure_channel_live"
         }
       },
       "publications": {
@@ -200,7 +219,19 @@
           "exchange": "command",
           "routingKey": "vod-to-live-service.channel.prepare_live_stream"
         },
-        "ChannelProtectionKeyCreated": {
+        "EnsureChannelLive": {
+          "exchange": "command",
+          "routingKey": "vod-to-live-service.channel.ensure_channel_live"
+        },
+        "EnsureChannelLiveFailed": {
+          "exchange": "event",
+          "routingKey": "vod-to-live-service.channel.ensure_channel_live_failed"
+        },
+        "EnsureChannelLiveReady": {
+          "exchange": "event",
+          "routingKey": "vod-to-live-service.channel.ensure_channel_live_ready"
+        },
+        "LiveStreamProtectionKeyCreated": {
           "exchange": "event",
           "routingKey": "vod-to-live-service.channel.protection_key_created"
         }
@@ -253,6 +284,15 @@
         },
         "PrepareChannelLiveStream": {
           "queue": "vod-to-live-service:channel:prepare_live_stream",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EnsureChannelLive": {
+          "queue": "vod-to-live-service:channel:ensure_channel_live",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {

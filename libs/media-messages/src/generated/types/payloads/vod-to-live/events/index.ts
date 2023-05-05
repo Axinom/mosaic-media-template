@@ -1,9 +1,15 @@
-export * from './channel-protection-key-created-event';
+export * from './ensure-channel-live-failed-event';
+export * from './ensure-channel-live-ready-event';
+export * from './live-stream-protection-key-created-event';
 
 export enum VodToLiveEventsSchemas {
-  ChannelProtectionKeyCreatedEvent = 'payloads/vod-to-live/events/channel-protection-key-created-event.json'
+  EnsureChannelLiveFailedEvent = 'payloads/vod-to-live/events/ensure-channel-live-failed-event.json',
+  EnsureChannelLiveReadyEvent = 'payloads/vod-to-live/events/ensure-channel-live-ready-event.json',
+  LiveStreamProtectionKeyCreatedEvent = 'payloads/vod-to-live/events/live-stream-protection-key-created-event.json'
 }
 
 export enum VodToLiveEventsTypes {
-  ChannelProtectionKeyCreatedEvent = 'ChannelProtectionKeyCreatedEvent'
+  EnsureChannelLiveFailedEvent = 'EnsureChannelLiveFailedEvent',
+  EnsureChannelLiveReadyEvent = 'EnsureChannelLiveReadyEvent',
+  LiveStreamProtectionKeyCreatedEvent = 'LiveStreamProtectionKeyCreatedEvent'
 }

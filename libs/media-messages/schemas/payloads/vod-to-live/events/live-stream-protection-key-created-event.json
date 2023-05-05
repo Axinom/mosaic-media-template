@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "title": "channel_protection_key_created_event",
+  "title": "live_stream_protection_key_created_event",
   "description": "DRM protection key for Channel was created.",
   "additionalProperties": false,
   "required": [
@@ -11,11 +11,11 @@
   "properties": {
     "channel_id": {
       "description": "Unique identifier of the channel.",
-      "$ref": "../common.json#/definitions/non_empty_string"
+      "$ref": "../../common.json#/definitions/non_empty_string"
     },
     "key_id": {
-      "description": "Unique identifier of the key.",
-      "$ref": "../common.json#/definitions/non_empty_uuid"
+      "description": "Unique identifier of the protection key.",
+      "$ref": "../../common.json#/definitions/non_empty_uuid"
     }
   }
 }

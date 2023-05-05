@@ -175,16 +175,24 @@ describe('prepareChannelLiveStream', () => {
         expect(createdVirtualChannels).toMatchObject([
           { channelId: channelData.channelId },
         ]);
-        expect(messages).toHaveLength(1);
+        expect(messages).toHaveLength(2);
         expect(messages).toMatchObject([
           {
             messageType:
-              VodToLiveServiceMessagingSettings.ChannelProtectionKeyCreated
+              VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated
                 .messageType,
             message: {
               channel_id: channelData.channelId,
               key_id: mockedContentKeyId,
             },
+          },
+          {
+            message: {
+              channel_id: channelData.channelId,
+              seconds_elapsed_while_waiting: 0,
+            },
+            messageType:
+              VodToLiveServiceMessagingSettings.EnsureChannelLive.messageType,
           },
         ]);
 
@@ -365,7 +373,17 @@ describe('prepareChannelLiveStream', () => {
         expect(createdVirtualChannels).toMatchObject([
           { channelId: channelData.channelId },
         ]);
-        expect(messages).toHaveLength(0);
+        expect(messages).toHaveLength(1);
+        expect(messages).toMatchObject([
+          {
+            message: {
+              channel_id: channelData.channelId,
+              seconds_elapsed_while_waiting: 0,
+            },
+            messageType:
+              VodToLiveServiceMessagingSettings.EnsureChannelLive.messageType,
+          },
+        ]);
         expect(createdContentKeys).toHaveLength(0);
         const channelMetadata = JSON.parse(channelData.channelJson);
 

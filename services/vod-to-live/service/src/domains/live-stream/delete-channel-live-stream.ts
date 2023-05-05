@@ -26,7 +26,7 @@ export const deleteChannelLiveStream = async (
       await keyServiceApi.deleteContentKey(storedChannelMetadata.key_id);
     }
     const storageFileDeletion = await storage.deleteFolder(channelId);
-    logger.debug({
+    logger.log({
       message: 'Channel deletion result:',
       details: {
         channelId,

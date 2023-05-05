@@ -6,6 +6,7 @@ export interface ChannelEntry {
 export interface ChannelResponse {
   task_id: string;
   status_url: string;
+  errorMessage?: string;
 }
 
 export interface DetailedTransitionEntry {
@@ -19,15 +20,16 @@ export interface ChannelTransitionResponse {
   };
 }
 
+export type ChannelStatus = 'Pending' | 'In Progress' | 'Success' | 'Failed';
 export interface ChannelStatusResponse {
-  status: string;
+  status: ChannelStatus;
   origin_url: string;
   details: ChannelStatusDetailResponse[];
 }
 
 export interface ChannelStatusDetailResponse {
   name: string;
-  status: string;
+  status: ChannelStatus;
   time: string;
   details: string;
 }

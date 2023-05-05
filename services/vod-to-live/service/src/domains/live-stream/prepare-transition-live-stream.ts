@@ -35,7 +35,7 @@ export const prepareTransitionLiveStream = async (
             channelId,
             futureTransition.transitionDate,
           );
-          logger.debug({
+          logger.log({
             message: `Previously planned playlist transition removal result:`,
             details: {
               channelId,
@@ -73,7 +73,7 @@ const createTransition = async (
     smil,
     true,
   );
-  logger.debug({
+  logger.log({
     message: `Transition for playlist ${playlistId} creation result:`,
     details: {
       channelId,

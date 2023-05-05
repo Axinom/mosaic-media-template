@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "ensure_channel_live_ready_event",
+  "description": "Channel live stream is live.",
+  "additionalProperties": true,
+  "required": [
+    "channel_id",
+    "dash_stream_url",
+    "hls_stream_url"
+  ],
+  "properties": {
+    "channel_id": {
+      "description": "Unique identifier of the channel.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*"
+    },
+    "dash_stream_url": {
+      "type": "string",
+      "description": "URL pointing to DASH live stream."
+    },
+    "hls_stream_url": {
+      "type": "string",
+      "description": "URL pointing to HLS live stream."
+    }
+  }
+}

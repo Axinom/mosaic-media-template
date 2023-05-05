@@ -34,7 +34,7 @@ export const deleteTransitionLiveStream = async (
         channelId,
         transitionDate,
       );
-      logger.debug({
+      logger.log({
         message: `Transition with date ${transitionDate} deletion result:`,
         details: {
           channelId,
@@ -47,7 +47,7 @@ export const deleteTransitionLiveStream = async (
     const storageFileDeletion = await storage.deleteFolder(
       `${channelId}/${playlistId}`,
     );
-    logger.debug({
+    logger.log({
       message: 'Playlist deletion from Azure Storage result:',
       details: {
         channelId,
