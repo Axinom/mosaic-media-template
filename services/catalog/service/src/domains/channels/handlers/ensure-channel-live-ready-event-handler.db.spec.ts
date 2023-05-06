@@ -1,3 +1,4 @@
+import { rejectionOf } from '@axinom/mosaic-service-common';
 import { EnsureChannelLiveReadyEvent } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
@@ -23,7 +24,7 @@ describe('EnsureChannelLiveReadyEventHandler', () => {
   });
 
   describe('onMessage', () => {
-    test('live stream is ready, but the channel is not yet registered in catalog -> channel is not updated', async () => {
+    test('live stream is ready, but the channel is not yet registered in catalog -> error is thrown & channel is not created', async () => {
       // Arrange
       const message: EnsureChannelLiveReadyEvent = {
         channel_id: uuid(),
@@ -32,9 +33,13 @@ describe('EnsureChannelLiveReadyEventHandler', () => {
       };
 
       // Act
-      await handler.onMessage(message);
+      const error = await rejectionOf(handler.onMessage(message));
 
       // Assert
+      expect(error).toMatchObject({
+        message: `Channel with id ${message.channel_id} not found! Failed to add links to channel's live stream.`,
+        code: 'CHANNEL_NOT_FOUND',
+      });
       const channel = await selectOne('channel', {
         id: message.channel_id,
       }).run(ctx.ownerPool);
