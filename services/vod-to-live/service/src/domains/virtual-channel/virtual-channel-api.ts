@@ -1,4 +1,4 @@
-import { mosaicErrorMappingFactory } from '@axinom/mosaic-service-common';
+import { Dict, mosaicErrorMappingFactory } from '@axinom/mosaic-service-common';
 import axios, { AxiosError } from 'axios';
 import urljoin from 'url-join';
 import { getPlaylistIdHeaderRegex, Transition } from '../live-stream/utils';
@@ -30,7 +30,10 @@ const getVirtualChannelApiMappedError = mosaicErrorMappingFactory(
 );
 
 export class VirtualChannelApi {
-  constructor(private virtualChannelApiUrl: string) {}
+  constructor(
+    private virtualChannelApiUrl: string,
+    private virtualChannelApiKey?: string,
+  ) {}
 
   /**
    * Retrieve list of all virtual channels.
@@ -39,6 +42,9 @@ export class VirtualChannelApi {
     try {
       const result = await axios.get<ChannelEntry[]>(
         urljoin(this.virtualChannelApiUrl, 'channels'),
+        {
+          headers: this.getAuthorizationHeader(),
+        },
       );
       return result.data;
     } catch (error) {
@@ -67,6 +73,9 @@ export class VirtualChannelApi {
             channelId,
             'transitions',
           ),
+          {
+            headers: this.getAuthorizationHeader(),
+          },
         )
       ).data;
       const result: Transition[] = [];
@@ -105,7 +114,10 @@ export class VirtualChannelApi {
       }
 
       const result = await axios.put<ChannelResponse>(url.href, smil, {
-        headers: { 'Content-Type': 'application/xml' },
+        headers: {
+          ...this.getAuthorizationHeader(),
+          'Content-Type': 'application/xml',
+        },
       });
       return result.data;
     } catch (error) {
@@ -139,7 +151,10 @@ export class VirtualChannelApi {
         url.searchParams.append('force', 'true');
       }
       const result = await axios.put<ChannelResponse>(url.href, smil, {
-        headers: { 'Content-Type': 'application/xml' },
+        headers: {
+          ...this.getAuthorizationHeader(),
+          'Content-Type': 'application/xml',
+        },
       });
       return result.data;
     } catch (error) {
@@ -167,6 +182,9 @@ export class VirtualChannelApi {
     try {
       const result = await axios.delete<string>(
         urljoin(this.virtualChannelApiUrl, 'channels', channelId),
+        {
+          headers: this.getAuthorizationHeader(),
+        },
       );
       return result.data;
     } catch (error) {
@@ -201,6 +219,9 @@ export class VirtualChannelApi {
           'transitions',
           transition,
         ),
+        {
+          headers: this.getAuthorizationHeader(),
+        },
       );
       return result.data;
     } catch (error) {
@@ -228,6 +249,9 @@ export class VirtualChannelApi {
     try {
       const result = await axios.get<ChannelStatusResponse>(
         urljoin(this.virtualChannelApiUrl, 'channels', channelId, 'status'),
+        {
+          headers: this.getAuthorizationHeader(),
+        },
       );
       return result.data;
     } catch (error) {
@@ -260,5 +284,15 @@ export class VirtualChannelApi {
     return transitions.find((t) => getPlaylistIdHeaderRegex().test(t.smil))
       ? true
       : false;
+  };
+
+  private getAuthorizationHeader = (): Dict<string> => {
+    if (this.virtualChannelApiKey) {
+      return {
+        'USP-API-KEY': this.virtualChannelApiKey,
+      };
+    }
+
+    return {};
   };
 }

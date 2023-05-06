@@ -25,6 +25,9 @@ transition from one source to another.
 
   - `VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL` - should be set to the Virtual
     Channel Management API url.
+  - `VIRTUAL_CHANNEL_MANAGEMENT_API_KEY` - optional. Should be set to API_KEY
+  - `VIRTUAL_CHANNEL_ORIGIN_BASE_URL` - should be set to the Origin base url.
+    configured for the USP Virtual Channel API.
   - `PRE_PUBLISHING_WEBHOOK_SECRET` - value for this configuration can be
     obtained in the Mosaic Admin Portal when setting up the pre publishing
     webhook for the Channel Service.

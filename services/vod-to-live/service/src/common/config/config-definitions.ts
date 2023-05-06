@@ -43,7 +43,8 @@ export const getConfigDefinitions = (
         .get('VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL')
         .required()
         .asUrlString(),
-
+    virtualChannelManagementApiKey: () =>
+      env.get('VIRTUAL_CHANNEL_MANAGEMENT_API_KEY').asString(),
     virtualChannelOriginBaseUrl: () =>
       env.get('VIRTUAL_CHANNEL_ORIGIN_BASE_URL').required().asUrlString(),
 

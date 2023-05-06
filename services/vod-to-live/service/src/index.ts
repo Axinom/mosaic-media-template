@@ -55,6 +55,7 @@ async function bootstrap(): Promise<void> {
 
   const virtualChannelApi = new VirtualChannelApi(
     config.virtualChannelManagementApiBaseUrl,
+    config.virtualChannelManagementApiKey,
   );
 
   const keyServiceApi = new KeyServiceApi(config);
