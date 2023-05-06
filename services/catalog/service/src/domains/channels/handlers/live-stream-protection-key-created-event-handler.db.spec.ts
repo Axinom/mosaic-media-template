@@ -1,3 +1,4 @@
+import { rejectionOf } from '@axinom/mosaic-service-common';
 import { LiveStreamProtectionKeyCreatedEvent } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
@@ -26,7 +27,7 @@ describe('LiveStreamProtectionKeyCreatedEventHandler', () => {
   });
 
   describe('onMessage', () => {
-    test('live stream protection key is sent, but the channel is not yet registered in catalog -> channel is not updated', async () => {
+    test('live stream protection key is sent, but the channel is not yet registered in catalog -> error is thrown & channel is not created', async () => {
       // Arrange
       const message: LiveStreamProtectionKeyCreatedEvent = {
         channel_id: uuid(),
@@ -34,9 +35,13 @@ describe('LiveStreamProtectionKeyCreatedEventHandler', () => {
       };
 
       // Act
-      await handler.onMessage(message);
+      const error = await rejectionOf(handler.onMessage(message));
 
       // Assert
+      expect(error).toMatchObject({
+        message: `Channel with id ${message.channel_id} not found! Failed to add channel's DRM key id.`,
+        code: 'CHANNEL_NOT_FOUND',
+      });
       const channel = await selectOne('channel', {
         id: message.channel_id,
       }).run(ctx.ownerPool);

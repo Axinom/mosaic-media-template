@@ -186,6 +186,24 @@
               "x-queue-type": "quorum"
             }
           }
+        },
+        "catalog-service:channel:ensure_channel_live_ready": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:channel:protection_key_created": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
         }
       },
       "bindings": {
@@ -363,6 +381,26 @@
           "source": "event",
           "bindingKey": "ax-channel-service.*.*.channel.unpublished",
           "destination": "catalog-service:channel:unpublished"
+        },
+        "retry:catalog-service:channel:ensure_channel_live_ready": {
+          "source": "retry",
+          "bindingKey": "catalog-service:channel:ensure_channel_live_ready.#",
+          "destination": "catalog-service:channel:ensure_channel_live_ready"
+        },
+        "catalog-service:channel:ensure_channel_live_ready": {
+          "source": "event",
+          "bindingKey": "vod-to-live-service.channel.ensure_channel_live_ready",
+          "destination": "catalog-service:channel:ensure_channel_live_ready"
+        },
+        "retry:catalog-service:channel:protection_key_created": {
+          "source": "retry",
+          "bindingKey": "catalog-service:channel:protection_key_created.#",
+          "destination": "catalog-service:channel:protection_key_created"
+        },
+        "catalog-service:channel:protection_key_created": {
+          "source": "event",
+          "bindingKey": "vod-to-live-service.channel.protection_key_created",
+          "destination": "catalog-service:channel:protection_key_created"
         }
       },
       "publications": {
@@ -521,6 +559,24 @@
         },
         "ChannelUnpublished": {
           "queue": "catalog-service:channel:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EnsureChannelLiveReady": {
+          "queue": "catalog-service:channel:ensure_channel_live_ready",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "LiveStreamProtectionKeyCreated": {
+          "queue": "catalog-service:channel:protection_key_created",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {

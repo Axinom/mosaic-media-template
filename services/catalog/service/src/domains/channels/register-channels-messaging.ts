@@ -8,6 +8,7 @@ import {
   ChannelPublishedEventHandler,
   ChannelUnpublishedEventHandler,
   EnsureChannelLiveReadyEventHandler,
+  LiveStreamProtectionKeyCreatedEventHandler,
 } from './handlers';
 
 export const registerChannelsMessaging: ContentTypeRegistrant = function (
@@ -33,6 +34,12 @@ export const registerChannelsMessaging: ContentTypeRegistrant = function (
       config,
     ).subscribeForEvent(
       () => new EnsureChannelLiveReadyEventHandler(loginPool, config),
+    ),
+    new RascalConfigBuilder(
+      VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated,
+      config,
+    ).subscribeForEvent(
+      () => new LiveStreamProtectionKeyCreatedEventHandler(loginPool, config),
     ),
   ];
 };
