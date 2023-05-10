@@ -195,6 +195,15 @@
               "x-queue-type": "quorum"
             }
           }
+        },
+        "ax-encoding-service:cue_point_types:declare": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-encoding-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
         }
       },
       "bindings": {
@@ -367,6 +376,11 @@
           "source": "retry",
           "bindingKey": "ax-image-service:image_types:declare.#",
           "destination": "ax-image-service:image_types:declare"
+        },
+        "retry:ax-encoding-service:cue_point_types:declare": {
+          "source": "retry",
+          "bindingKey": "ax-encoding-service:cue_point_types:declare.#",
+          "destination": "ax-encoding-service:cue_point_types:declare"
         }
       },
       "publications": {
@@ -485,6 +499,10 @@
         "DeclareImageTypes": {
           "exchange": "command",
           "routingKey": "ax-image-service.*.*.image_types.declare"
+        },
+        "DeclareCuePointTypes": {
+          "exchange": "command",
+          "routingKey": "ax-encoding-service.*.*.cue_point_types.declare"
         },
         "EntityDeleted": {
           "exchange": "event",

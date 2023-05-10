@@ -8,6 +8,7 @@ import * as db from 'zapatos/db';
 import {
   movie_images,
   movie_licenses,
+  movie_video_cue_points,
   movie_video_streams,
 } from 'zapatos/schema';
 import { Config } from '../../../common';
@@ -49,7 +50,7 @@ export class MoviePublishedEventHandler extends MessageHandler<MoviePublishedEve
         if (payload.videos) {
           for (const video of payload.videos) {
             // Remove `video_streams` array from `video` object
-            const { video_streams, ...videoToInsert } = video;
+            const { video_streams, cue_points, ...videoToInsert } = video;
 
             const movieVideo = await db
               .insert('movie_videos', {
@@ -66,6 +67,20 @@ export class MoviePublishedEventHandler extends MessageHandler<MoviePublishedEve
                     (videoStream): movie_video_streams.Insertable => ({
                       movie_video_id: movieVideo.id,
                       ...videoStream,
+                    }),
+                  ),
+                )
+                .run(txnClient);
+            }
+
+            if (cue_points !== undefined) {
+              await db
+                .insert(
+                  'movie_video_cue_points',
+                  cue_points.map(
+                    (cuePoint): movie_video_cue_points.Insertable => ({
+                      movie_video_id: movieVideo.id,
+                      ...cuePoint,
                     }),
                   ),
                 )

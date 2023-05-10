@@ -1661,6 +1661,175 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
+  export namespace episode_video_cue_points {
+    export type Table = 'episode_video_cue_points';
+    export interface Selectable {
+      /**
+      * **episode_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **episode_video_cue_points.episode_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      episode_video_id: number | null;
+      /**
+      * **episode_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string;
+      /**
+      * **episode_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number;
+      /**
+      * **episode_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **episode_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **episode_video_cue_points.episode_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      episode_video_id: number | null;
+      /**
+      * **episode_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string;
+      /**
+      * **episode_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number;
+      /**
+      * **episode_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **episode_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_cue_points.episode_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      episode_video_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **episode_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_cue_points.episode_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      episode_video_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **episode_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **episode_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **episode_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_cue_points.episode_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      episode_video_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **episode_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **episode_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'episode_video_cue_points_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
   export namespace episode_video_streams {
     export type Table = 'episode_video_streams';
     export interface Selectable {
@@ -3564,6 +3733,175 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
+  export namespace movie_video_cue_points {
+    export type Table = 'movie_video_cue_points';
+    export interface Selectable {
+      /**
+      * **movie_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **movie_video_cue_points.movie_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      movie_video_id: number | null;
+      /**
+      * **movie_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string;
+      /**
+      * **movie_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number;
+      /**
+      * **movie_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **movie_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **movie_video_cue_points.movie_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      movie_video_id: number | null;
+      /**
+      * **movie_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string;
+      /**
+      * **movie_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number;
+      /**
+      * **movie_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **movie_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_cue_points.movie_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      movie_video_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **movie_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_cue_points.movie_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      movie_video_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **movie_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **movie_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **movie_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_cue_points.movie_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      movie_video_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **movie_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **movie_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'movie_video_cue_points_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
   export namespace movie_video_streams {
     export type Table = 'movie_video_streams';
     export interface Selectable {
@@ -5352,6 +5690,175 @@ declare module 'zapatos/schema' {
       end_time?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'season_licenses_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  export namespace season_video_cue_points {
+    export type Table = 'season_video_cue_points';
+    export interface Selectable {
+      /**
+      * **season_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **season_video_cue_points.season_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      season_video_id: number | null;
+      /**
+      * **season_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string;
+      /**
+      * **season_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number;
+      /**
+      * **season_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **season_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **season_video_cue_points.season_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      season_video_id: number | null;
+      /**
+      * **season_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string;
+      /**
+      * **season_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number;
+      /**
+      * **season_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **season_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_cue_points.season_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      season_video_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **season_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_cue_points.season_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      season_video_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **season_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **season_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **season_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_cue_points.season_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      season_video_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **season_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **season_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'season_video_cue_points_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -7261,6 +7768,175 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
+  export namespace tvshow_video_cue_points {
+    export type Table = 'tvshow_video_cue_points';
+    export interface Selectable {
+      /**
+      * **tvshow_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **tvshow_video_cue_points.tvshow_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      tvshow_video_id: number | null;
+      /**
+      * **tvshow_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string;
+      /**
+      * **tvshow_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number;
+      /**
+      * **tvshow_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **tvshow_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **tvshow_video_cue_points.tvshow_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      tvshow_video_id: number | null;
+      /**
+      * **tvshow_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string;
+      /**
+      * **tvshow_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number;
+      /**
+      * **tvshow_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **tvshow_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_cue_points.tvshow_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      tvshow_video_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **tvshow_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_cue_points.tvshow_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      tvshow_video_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **tvshow_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **tvshow_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **tvshow_video_cue_points.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_cue_points.tvshow_video_id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      tvshow_video_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_video_cue_points.cue_point_type_key**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      cue_point_type_key?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **tvshow_video_cue_points.time_in_seconds**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      time_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **tvshow_video_cue_points.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'tvshow_video_cue_points_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
   export namespace tvshow_video_streams {
     export type Table = 'tvshow_video_streams';
     export interface Selectable {
@@ -8328,15 +9004,15 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = collection.Table | collection_images.Table | collection_items_relation.Table | episode.Table | episode_genres_relation.Table | episode_images.Table | episode_licenses.Table | episode_video_streams.Table | episode_videos.Table | messaging_counter.Table | movie.Table | movie_genre.Table | movie_genres_relation.Table | movie_images.Table | movie_licenses.Table | movie_video_streams.Table | movie_videos.Table | season.Table | season_genres_relation.Table | season_images.Table | season_licenses.Table | season_video_streams.Table | season_videos.Table | tvshow.Table | tvshow_genre.Table | tvshow_genres_relation.Table | tvshow_images.Table | tvshow_licenses.Table | tvshow_video_streams.Table | tvshow_videos.Table | video_stream_type.Table;
-  export type Selectable = collection.Selectable | collection_images.Selectable | collection_items_relation.Selectable | episode.Selectable | episode_genres_relation.Selectable | episode_images.Selectable | episode_licenses.Selectable | episode_video_streams.Selectable | episode_videos.Selectable | messaging_counter.Selectable | movie.Selectable | movie_genre.Selectable | movie_genres_relation.Selectable | movie_images.Selectable | movie_licenses.Selectable | movie_video_streams.Selectable | movie_videos.Selectable | season.Selectable | season_genres_relation.Selectable | season_images.Selectable | season_licenses.Selectable | season_video_streams.Selectable | season_videos.Selectable | tvshow.Selectable | tvshow_genre.Selectable | tvshow_genres_relation.Selectable | tvshow_images.Selectable | tvshow_licenses.Selectable | tvshow_video_streams.Selectable | tvshow_videos.Selectable | video_stream_type.Selectable;
-  export type JSONSelectable = collection.JSONSelectable | collection_images.JSONSelectable | collection_items_relation.JSONSelectable | episode.JSONSelectable | episode_genres_relation.JSONSelectable | episode_images.JSONSelectable | episode_licenses.JSONSelectable | episode_video_streams.JSONSelectable | episode_videos.JSONSelectable | messaging_counter.JSONSelectable | movie.JSONSelectable | movie_genre.JSONSelectable | movie_genres_relation.JSONSelectable | movie_images.JSONSelectable | movie_licenses.JSONSelectable | movie_video_streams.JSONSelectable | movie_videos.JSONSelectable | season.JSONSelectable | season_genres_relation.JSONSelectable | season_images.JSONSelectable | season_licenses.JSONSelectable | season_video_streams.JSONSelectable | season_videos.JSONSelectable | tvshow.JSONSelectable | tvshow_genre.JSONSelectable | tvshow_genres_relation.JSONSelectable | tvshow_images.JSONSelectable | tvshow_licenses.JSONSelectable | tvshow_video_streams.JSONSelectable | tvshow_videos.JSONSelectable | video_stream_type.JSONSelectable;
-  export type Whereable = collection.Whereable | collection_images.Whereable | collection_items_relation.Whereable | episode.Whereable | episode_genres_relation.Whereable | episode_images.Whereable | episode_licenses.Whereable | episode_video_streams.Whereable | episode_videos.Whereable | messaging_counter.Whereable | movie.Whereable | movie_genre.Whereable | movie_genres_relation.Whereable | movie_images.Whereable | movie_licenses.Whereable | movie_video_streams.Whereable | movie_videos.Whereable | season.Whereable | season_genres_relation.Whereable | season_images.Whereable | season_licenses.Whereable | season_video_streams.Whereable | season_videos.Whereable | tvshow.Whereable | tvshow_genre.Whereable | tvshow_genres_relation.Whereable | tvshow_images.Whereable | tvshow_licenses.Whereable | tvshow_video_streams.Whereable | tvshow_videos.Whereable | video_stream_type.Whereable;
-  export type Insertable = collection.Insertable | collection_images.Insertable | collection_items_relation.Insertable | episode.Insertable | episode_genres_relation.Insertable | episode_images.Insertable | episode_licenses.Insertable | episode_video_streams.Insertable | episode_videos.Insertable | messaging_counter.Insertable | movie.Insertable | movie_genre.Insertable | movie_genres_relation.Insertable | movie_images.Insertable | movie_licenses.Insertable | movie_video_streams.Insertable | movie_videos.Insertable | season.Insertable | season_genres_relation.Insertable | season_images.Insertable | season_licenses.Insertable | season_video_streams.Insertable | season_videos.Insertable | tvshow.Insertable | tvshow_genre.Insertable | tvshow_genres_relation.Insertable | tvshow_images.Insertable | tvshow_licenses.Insertable | tvshow_video_streams.Insertable | tvshow_videos.Insertable | video_stream_type.Insertable;
-  export type Updatable = collection.Updatable | collection_images.Updatable | collection_items_relation.Updatable | episode.Updatable | episode_genres_relation.Updatable | episode_images.Updatable | episode_licenses.Updatable | episode_video_streams.Updatable | episode_videos.Updatable | messaging_counter.Updatable | movie.Updatable | movie_genre.Updatable | movie_genres_relation.Updatable | movie_images.Updatable | movie_licenses.Updatable | movie_video_streams.Updatable | movie_videos.Updatable | season.Updatable | season_genres_relation.Updatable | season_images.Updatable | season_licenses.Updatable | season_video_streams.Updatable | season_videos.Updatable | tvshow.Updatable | tvshow_genre.Updatable | tvshow_genres_relation.Updatable | tvshow_images.Updatable | tvshow_licenses.Updatable | tvshow_video_streams.Updatable | tvshow_videos.Updatable | video_stream_type.Updatable;
-  export type UniqueIndex = collection.UniqueIndex | collection_images.UniqueIndex | collection_items_relation.UniqueIndex | episode.UniqueIndex | episode_genres_relation.UniqueIndex | episode_images.UniqueIndex | episode_licenses.UniqueIndex | episode_video_streams.UniqueIndex | episode_videos.UniqueIndex | messaging_counter.UniqueIndex | movie.UniqueIndex | movie_genre.UniqueIndex | movie_genres_relation.UniqueIndex | movie_images.UniqueIndex | movie_licenses.UniqueIndex | movie_video_streams.UniqueIndex | movie_videos.UniqueIndex | season.UniqueIndex | season_genres_relation.UniqueIndex | season_images.UniqueIndex | season_licenses.UniqueIndex | season_video_streams.UniqueIndex | season_videos.UniqueIndex | tvshow.UniqueIndex | tvshow_genre.UniqueIndex | tvshow_genres_relation.UniqueIndex | tvshow_images.UniqueIndex | tvshow_licenses.UniqueIndex | tvshow_video_streams.UniqueIndex | tvshow_videos.UniqueIndex | video_stream_type.UniqueIndex;
-  export type Column = collection.Column | collection_images.Column | collection_items_relation.Column | episode.Column | episode_genres_relation.Column | episode_images.Column | episode_licenses.Column | episode_video_streams.Column | episode_videos.Column | messaging_counter.Column | movie.Column | movie_genre.Column | movie_genres_relation.Column | movie_images.Column | movie_licenses.Column | movie_video_streams.Column | movie_videos.Column | season.Column | season_genres_relation.Column | season_images.Column | season_licenses.Column | season_video_streams.Column | season_videos.Column | tvshow.Column | tvshow_genre.Column | tvshow_genres_relation.Column | tvshow_images.Column | tvshow_licenses.Column | tvshow_video_streams.Column | tvshow_videos.Column | video_stream_type.Column;
-  export type AllTables = [collection.Table, collection_images.Table, collection_items_relation.Table, episode.Table, episode_genres_relation.Table, episode_images.Table, episode_licenses.Table, episode_video_streams.Table, episode_videos.Table, messaging_counter.Table, movie.Table, movie_genre.Table, movie_genres_relation.Table, movie_images.Table, movie_licenses.Table, movie_video_streams.Table, movie_videos.Table, season.Table, season_genres_relation.Table, season_images.Table, season_licenses.Table, season_video_streams.Table, season_videos.Table, tvshow.Table, tvshow_genre.Table, tvshow_genres_relation.Table, tvshow_images.Table, tvshow_licenses.Table, tvshow_video_streams.Table, tvshow_videos.Table, video_stream_type.Table];
+  export type Table = collection.Table | collection_images.Table | collection_items_relation.Table | episode.Table | episode_genres_relation.Table | episode_images.Table | episode_licenses.Table | episode_video_cue_points.Table | episode_video_streams.Table | episode_videos.Table | messaging_counter.Table | movie.Table | movie_genre.Table | movie_genres_relation.Table | movie_images.Table | movie_licenses.Table | movie_video_cue_points.Table | movie_video_streams.Table | movie_videos.Table | season.Table | season_genres_relation.Table | season_images.Table | season_licenses.Table | season_video_cue_points.Table | season_video_streams.Table | season_videos.Table | tvshow.Table | tvshow_genre.Table | tvshow_genres_relation.Table | tvshow_images.Table | tvshow_licenses.Table | tvshow_video_cue_points.Table | tvshow_video_streams.Table | tvshow_videos.Table | video_stream_type.Table;
+  export type Selectable = collection.Selectable | collection_images.Selectable | collection_items_relation.Selectable | episode.Selectable | episode_genres_relation.Selectable | episode_images.Selectable | episode_licenses.Selectable | episode_video_cue_points.Selectable | episode_video_streams.Selectable | episode_videos.Selectable | messaging_counter.Selectable | movie.Selectable | movie_genre.Selectable | movie_genres_relation.Selectable | movie_images.Selectable | movie_licenses.Selectable | movie_video_cue_points.Selectable | movie_video_streams.Selectable | movie_videos.Selectable | season.Selectable | season_genres_relation.Selectable | season_images.Selectable | season_licenses.Selectable | season_video_cue_points.Selectable | season_video_streams.Selectable | season_videos.Selectable | tvshow.Selectable | tvshow_genre.Selectable | tvshow_genres_relation.Selectable | tvshow_images.Selectable | tvshow_licenses.Selectable | tvshow_video_cue_points.Selectable | tvshow_video_streams.Selectable | tvshow_videos.Selectable | video_stream_type.Selectable;
+  export type JSONSelectable = collection.JSONSelectable | collection_images.JSONSelectable | collection_items_relation.JSONSelectable | episode.JSONSelectable | episode_genres_relation.JSONSelectable | episode_images.JSONSelectable | episode_licenses.JSONSelectable | episode_video_cue_points.JSONSelectable | episode_video_streams.JSONSelectable | episode_videos.JSONSelectable | messaging_counter.JSONSelectable | movie.JSONSelectable | movie_genre.JSONSelectable | movie_genres_relation.JSONSelectable | movie_images.JSONSelectable | movie_licenses.JSONSelectable | movie_video_cue_points.JSONSelectable | movie_video_streams.JSONSelectable | movie_videos.JSONSelectable | season.JSONSelectable | season_genres_relation.JSONSelectable | season_images.JSONSelectable | season_licenses.JSONSelectable | season_video_cue_points.JSONSelectable | season_video_streams.JSONSelectable | season_videos.JSONSelectable | tvshow.JSONSelectable | tvshow_genre.JSONSelectable | tvshow_genres_relation.JSONSelectable | tvshow_images.JSONSelectable | tvshow_licenses.JSONSelectable | tvshow_video_cue_points.JSONSelectable | tvshow_video_streams.JSONSelectable | tvshow_videos.JSONSelectable | video_stream_type.JSONSelectable;
+  export type Whereable = collection.Whereable | collection_images.Whereable | collection_items_relation.Whereable | episode.Whereable | episode_genres_relation.Whereable | episode_images.Whereable | episode_licenses.Whereable | episode_video_cue_points.Whereable | episode_video_streams.Whereable | episode_videos.Whereable | messaging_counter.Whereable | movie.Whereable | movie_genre.Whereable | movie_genres_relation.Whereable | movie_images.Whereable | movie_licenses.Whereable | movie_video_cue_points.Whereable | movie_video_streams.Whereable | movie_videos.Whereable | season.Whereable | season_genres_relation.Whereable | season_images.Whereable | season_licenses.Whereable | season_video_cue_points.Whereable | season_video_streams.Whereable | season_videos.Whereable | tvshow.Whereable | tvshow_genre.Whereable | tvshow_genres_relation.Whereable | tvshow_images.Whereable | tvshow_licenses.Whereable | tvshow_video_cue_points.Whereable | tvshow_video_streams.Whereable | tvshow_videos.Whereable | video_stream_type.Whereable;
+  export type Insertable = collection.Insertable | collection_images.Insertable | collection_items_relation.Insertable | episode.Insertable | episode_genres_relation.Insertable | episode_images.Insertable | episode_licenses.Insertable | episode_video_cue_points.Insertable | episode_video_streams.Insertable | episode_videos.Insertable | messaging_counter.Insertable | movie.Insertable | movie_genre.Insertable | movie_genres_relation.Insertable | movie_images.Insertable | movie_licenses.Insertable | movie_video_cue_points.Insertable | movie_video_streams.Insertable | movie_videos.Insertable | season.Insertable | season_genres_relation.Insertable | season_images.Insertable | season_licenses.Insertable | season_video_cue_points.Insertable | season_video_streams.Insertable | season_videos.Insertable | tvshow.Insertable | tvshow_genre.Insertable | tvshow_genres_relation.Insertable | tvshow_images.Insertable | tvshow_licenses.Insertable | tvshow_video_cue_points.Insertable | tvshow_video_streams.Insertable | tvshow_videos.Insertable | video_stream_type.Insertable;
+  export type Updatable = collection.Updatable | collection_images.Updatable | collection_items_relation.Updatable | episode.Updatable | episode_genres_relation.Updatable | episode_images.Updatable | episode_licenses.Updatable | episode_video_cue_points.Updatable | episode_video_streams.Updatable | episode_videos.Updatable | messaging_counter.Updatable | movie.Updatable | movie_genre.Updatable | movie_genres_relation.Updatable | movie_images.Updatable | movie_licenses.Updatable | movie_video_cue_points.Updatable | movie_video_streams.Updatable | movie_videos.Updatable | season.Updatable | season_genres_relation.Updatable | season_images.Updatable | season_licenses.Updatable | season_video_cue_points.Updatable | season_video_streams.Updatable | season_videos.Updatable | tvshow.Updatable | tvshow_genre.Updatable | tvshow_genres_relation.Updatable | tvshow_images.Updatable | tvshow_licenses.Updatable | tvshow_video_cue_points.Updatable | tvshow_video_streams.Updatable | tvshow_videos.Updatable | video_stream_type.Updatable;
+  export type UniqueIndex = collection.UniqueIndex | collection_images.UniqueIndex | collection_items_relation.UniqueIndex | episode.UniqueIndex | episode_genres_relation.UniqueIndex | episode_images.UniqueIndex | episode_licenses.UniqueIndex | episode_video_cue_points.UniqueIndex | episode_video_streams.UniqueIndex | episode_videos.UniqueIndex | messaging_counter.UniqueIndex | movie.UniqueIndex | movie_genre.UniqueIndex | movie_genres_relation.UniqueIndex | movie_images.UniqueIndex | movie_licenses.UniqueIndex | movie_video_cue_points.UniqueIndex | movie_video_streams.UniqueIndex | movie_videos.UniqueIndex | season.UniqueIndex | season_genres_relation.UniqueIndex | season_images.UniqueIndex | season_licenses.UniqueIndex | season_video_cue_points.UniqueIndex | season_video_streams.UniqueIndex | season_videos.UniqueIndex | tvshow.UniqueIndex | tvshow_genre.UniqueIndex | tvshow_genres_relation.UniqueIndex | tvshow_images.UniqueIndex | tvshow_licenses.UniqueIndex | tvshow_video_cue_points.UniqueIndex | tvshow_video_streams.UniqueIndex | tvshow_videos.UniqueIndex | video_stream_type.UniqueIndex;
+  export type Column = collection.Column | collection_images.Column | collection_items_relation.Column | episode.Column | episode_genres_relation.Column | episode_images.Column | episode_licenses.Column | episode_video_cue_points.Column | episode_video_streams.Column | episode_videos.Column | messaging_counter.Column | movie.Column | movie_genre.Column | movie_genres_relation.Column | movie_images.Column | movie_licenses.Column | movie_video_cue_points.Column | movie_video_streams.Column | movie_videos.Column | season.Column | season_genres_relation.Column | season_images.Column | season_licenses.Column | season_video_cue_points.Column | season_video_streams.Column | season_videos.Column | tvshow.Column | tvshow_genre.Column | tvshow_genres_relation.Column | tvshow_images.Column | tvshow_licenses.Column | tvshow_video_cue_points.Column | tvshow_video_streams.Column | tvshow_videos.Column | video_stream_type.Column;
+  export type AllTables = [collection.Table, collection_images.Table, collection_items_relation.Table, episode.Table, episode_genres_relation.Table, episode_images.Table, episode_licenses.Table, episode_video_cue_points.Table, episode_video_streams.Table, episode_videos.Table, messaging_counter.Table, movie.Table, movie_genre.Table, movie_genres_relation.Table, movie_images.Table, movie_licenses.Table, movie_video_cue_points.Table, movie_video_streams.Table, movie_videos.Table, season.Table, season_genres_relation.Table, season_images.Table, season_licenses.Table, season_video_cue_points.Table, season_video_streams.Table, season_videos.Table, tvshow.Table, tvshow_genre.Table, tvshow_genres_relation.Table, tvshow_images.Table, tvshow_licenses.Table, tvshow_video_cue_points.Table, tvshow_video_streams.Table, tvshow_videos.Table, video_stream_type.Table];
   export type AllMaterializedViews = [];
 
 
@@ -8348,6 +9024,7 @@ declare module 'zapatos/schema' {
     episode_genres_relation: episode_genres_relation.Selectable;
     episode_images: episode_images.Selectable;
     episode_licenses: episode_licenses.Selectable;
+    episode_video_cue_points: episode_video_cue_points.Selectable;
     episode_video_streams: episode_video_streams.Selectable;
     episode_videos: episode_videos.Selectable;
     messaging_counter: messaging_counter.Selectable;
@@ -8356,12 +9033,14 @@ declare module 'zapatos/schema' {
     movie_genres_relation: movie_genres_relation.Selectable;
     movie_images: movie_images.Selectable;
     movie_licenses: movie_licenses.Selectable;
+    movie_video_cue_points: movie_video_cue_points.Selectable;
     movie_video_streams: movie_video_streams.Selectable;
     movie_videos: movie_videos.Selectable;
     season: season.Selectable;
     season_genres_relation: season_genres_relation.Selectable;
     season_images: season_images.Selectable;
     season_licenses: season_licenses.Selectable;
+    season_video_cue_points: season_video_cue_points.Selectable;
     season_video_streams: season_video_streams.Selectable;
     season_videos: season_videos.Selectable;
     tvshow: tvshow.Selectable;
@@ -8369,6 +9048,7 @@ declare module 'zapatos/schema' {
     tvshow_genres_relation: tvshow_genres_relation.Selectable;
     tvshow_images: tvshow_images.Selectable;
     tvshow_licenses: tvshow_licenses.Selectable;
+    tvshow_video_cue_points: tvshow_video_cue_points.Selectable;
     tvshow_video_streams: tvshow_video_streams.Selectable;
     tvshow_videos: tvshow_videos.Selectable;
     video_stream_type: video_stream_type.Selectable;
@@ -8382,6 +9062,7 @@ declare module 'zapatos/schema' {
     episode_genres_relation: episode_genres_relation.JSONSelectable;
     episode_images: episode_images.JSONSelectable;
     episode_licenses: episode_licenses.JSONSelectable;
+    episode_video_cue_points: episode_video_cue_points.JSONSelectable;
     episode_video_streams: episode_video_streams.JSONSelectable;
     episode_videos: episode_videos.JSONSelectable;
     messaging_counter: messaging_counter.JSONSelectable;
@@ -8390,12 +9071,14 @@ declare module 'zapatos/schema' {
     movie_genres_relation: movie_genres_relation.JSONSelectable;
     movie_images: movie_images.JSONSelectable;
     movie_licenses: movie_licenses.JSONSelectable;
+    movie_video_cue_points: movie_video_cue_points.JSONSelectable;
     movie_video_streams: movie_video_streams.JSONSelectable;
     movie_videos: movie_videos.JSONSelectable;
     season: season.JSONSelectable;
     season_genres_relation: season_genres_relation.JSONSelectable;
     season_images: season_images.JSONSelectable;
     season_licenses: season_licenses.JSONSelectable;
+    season_video_cue_points: season_video_cue_points.JSONSelectable;
     season_video_streams: season_video_streams.JSONSelectable;
     season_videos: season_videos.JSONSelectable;
     tvshow: tvshow.JSONSelectable;
@@ -8403,6 +9086,7 @@ declare module 'zapatos/schema' {
     tvshow_genres_relation: tvshow_genres_relation.JSONSelectable;
     tvshow_images: tvshow_images.JSONSelectable;
     tvshow_licenses: tvshow_licenses.JSONSelectable;
+    tvshow_video_cue_points: tvshow_video_cue_points.JSONSelectable;
     tvshow_video_streams: tvshow_video_streams.JSONSelectable;
     tvshow_videos: tvshow_videos.JSONSelectable;
     video_stream_type: video_stream_type.JSONSelectable;
@@ -8416,6 +9100,7 @@ declare module 'zapatos/schema' {
     episode_genres_relation: episode_genres_relation.Whereable;
     episode_images: episode_images.Whereable;
     episode_licenses: episode_licenses.Whereable;
+    episode_video_cue_points: episode_video_cue_points.Whereable;
     episode_video_streams: episode_video_streams.Whereable;
     episode_videos: episode_videos.Whereable;
     messaging_counter: messaging_counter.Whereable;
@@ -8424,12 +9109,14 @@ declare module 'zapatos/schema' {
     movie_genres_relation: movie_genres_relation.Whereable;
     movie_images: movie_images.Whereable;
     movie_licenses: movie_licenses.Whereable;
+    movie_video_cue_points: movie_video_cue_points.Whereable;
     movie_video_streams: movie_video_streams.Whereable;
     movie_videos: movie_videos.Whereable;
     season: season.Whereable;
     season_genres_relation: season_genres_relation.Whereable;
     season_images: season_images.Whereable;
     season_licenses: season_licenses.Whereable;
+    season_video_cue_points: season_video_cue_points.Whereable;
     season_video_streams: season_video_streams.Whereable;
     season_videos: season_videos.Whereable;
     tvshow: tvshow.Whereable;
@@ -8437,6 +9124,7 @@ declare module 'zapatos/schema' {
     tvshow_genres_relation: tvshow_genres_relation.Whereable;
     tvshow_images: tvshow_images.Whereable;
     tvshow_licenses: tvshow_licenses.Whereable;
+    tvshow_video_cue_points: tvshow_video_cue_points.Whereable;
     tvshow_video_streams: tvshow_video_streams.Whereable;
     tvshow_videos: tvshow_videos.Whereable;
     video_stream_type: video_stream_type.Whereable;
@@ -8450,6 +9138,7 @@ declare module 'zapatos/schema' {
     episode_genres_relation: episode_genres_relation.Insertable;
     episode_images: episode_images.Insertable;
     episode_licenses: episode_licenses.Insertable;
+    episode_video_cue_points: episode_video_cue_points.Insertable;
     episode_video_streams: episode_video_streams.Insertable;
     episode_videos: episode_videos.Insertable;
     messaging_counter: messaging_counter.Insertable;
@@ -8458,12 +9147,14 @@ declare module 'zapatos/schema' {
     movie_genres_relation: movie_genres_relation.Insertable;
     movie_images: movie_images.Insertable;
     movie_licenses: movie_licenses.Insertable;
+    movie_video_cue_points: movie_video_cue_points.Insertable;
     movie_video_streams: movie_video_streams.Insertable;
     movie_videos: movie_videos.Insertable;
     season: season.Insertable;
     season_genres_relation: season_genres_relation.Insertable;
     season_images: season_images.Insertable;
     season_licenses: season_licenses.Insertable;
+    season_video_cue_points: season_video_cue_points.Insertable;
     season_video_streams: season_video_streams.Insertable;
     season_videos: season_videos.Insertable;
     tvshow: tvshow.Insertable;
@@ -8471,6 +9162,7 @@ declare module 'zapatos/schema' {
     tvshow_genres_relation: tvshow_genres_relation.Insertable;
     tvshow_images: tvshow_images.Insertable;
     tvshow_licenses: tvshow_licenses.Insertable;
+    tvshow_video_cue_points: tvshow_video_cue_points.Insertable;
     tvshow_video_streams: tvshow_video_streams.Insertable;
     tvshow_videos: tvshow_videos.Insertable;
     video_stream_type: video_stream_type.Insertable;
@@ -8484,6 +9176,7 @@ declare module 'zapatos/schema' {
     episode_genres_relation: episode_genres_relation.Updatable;
     episode_images: episode_images.Updatable;
     episode_licenses: episode_licenses.Updatable;
+    episode_video_cue_points: episode_video_cue_points.Updatable;
     episode_video_streams: episode_video_streams.Updatable;
     episode_videos: episode_videos.Updatable;
     messaging_counter: messaging_counter.Updatable;
@@ -8492,12 +9185,14 @@ declare module 'zapatos/schema' {
     movie_genres_relation: movie_genres_relation.Updatable;
     movie_images: movie_images.Updatable;
     movie_licenses: movie_licenses.Updatable;
+    movie_video_cue_points: movie_video_cue_points.Updatable;
     movie_video_streams: movie_video_streams.Updatable;
     movie_videos: movie_videos.Updatable;
     season: season.Updatable;
     season_genres_relation: season_genres_relation.Updatable;
     season_images: season_images.Updatable;
     season_licenses: season_licenses.Updatable;
+    season_video_cue_points: season_video_cue_points.Updatable;
     season_video_streams: season_video_streams.Updatable;
     season_videos: season_videos.Updatable;
     tvshow: tvshow.Updatable;
@@ -8505,6 +9200,7 @@ declare module 'zapatos/schema' {
     tvshow_genres_relation: tvshow_genres_relation.Updatable;
     tvshow_images: tvshow_images.Updatable;
     tvshow_licenses: tvshow_licenses.Updatable;
+    tvshow_video_cue_points: tvshow_video_cue_points.Updatable;
     tvshow_video_streams: tvshow_video_streams.Updatable;
     tvshow_videos: tvshow_videos.Updatable;
     video_stream_type: video_stream_type.Updatable;
@@ -8518,6 +9214,7 @@ declare module 'zapatos/schema' {
     episode_genres_relation: episode_genres_relation.UniqueIndex;
     episode_images: episode_images.UniqueIndex;
     episode_licenses: episode_licenses.UniqueIndex;
+    episode_video_cue_points: episode_video_cue_points.UniqueIndex;
     episode_video_streams: episode_video_streams.UniqueIndex;
     episode_videos: episode_videos.UniqueIndex;
     messaging_counter: messaging_counter.UniqueIndex;
@@ -8526,12 +9223,14 @@ declare module 'zapatos/schema' {
     movie_genres_relation: movie_genres_relation.UniqueIndex;
     movie_images: movie_images.UniqueIndex;
     movie_licenses: movie_licenses.UniqueIndex;
+    movie_video_cue_points: movie_video_cue_points.UniqueIndex;
     movie_video_streams: movie_video_streams.UniqueIndex;
     movie_videos: movie_videos.UniqueIndex;
     season: season.UniqueIndex;
     season_genres_relation: season_genres_relation.UniqueIndex;
     season_images: season_images.UniqueIndex;
     season_licenses: season_licenses.UniqueIndex;
+    season_video_cue_points: season_video_cue_points.UniqueIndex;
     season_video_streams: season_video_streams.UniqueIndex;
     season_videos: season_videos.UniqueIndex;
     tvshow: tvshow.UniqueIndex;
@@ -8539,6 +9238,7 @@ declare module 'zapatos/schema' {
     tvshow_genres_relation: tvshow_genres_relation.UniqueIndex;
     tvshow_images: tvshow_images.UniqueIndex;
     tvshow_licenses: tvshow_licenses.UniqueIndex;
+    tvshow_video_cue_points: tvshow_video_cue_points.UniqueIndex;
     tvshow_video_streams: tvshow_video_streams.UniqueIndex;
     tvshow_videos: tvshow_videos.UniqueIndex;
     video_stream_type: video_stream_type.UniqueIndex;
@@ -8552,6 +9252,7 @@ declare module 'zapatos/schema' {
     episode_genres_relation: episode_genres_relation.Column;
     episode_images: episode_images.Column;
     episode_licenses: episode_licenses.Column;
+    episode_video_cue_points: episode_video_cue_points.Column;
     episode_video_streams: episode_video_streams.Column;
     episode_videos: episode_videos.Column;
     messaging_counter: messaging_counter.Column;
@@ -8560,12 +9261,14 @@ declare module 'zapatos/schema' {
     movie_genres_relation: movie_genres_relation.Column;
     movie_images: movie_images.Column;
     movie_licenses: movie_licenses.Column;
+    movie_video_cue_points: movie_video_cue_points.Column;
     movie_video_streams: movie_video_streams.Column;
     movie_videos: movie_videos.Column;
     season: season.Column;
     season_genres_relation: season_genres_relation.Column;
     season_images: season_images.Column;
     season_licenses: season_licenses.Column;
+    season_video_cue_points: season_video_cue_points.Column;
     season_video_streams: season_video_streams.Column;
     season_videos: season_videos.Column;
     tvshow: tvshow.Column;
@@ -8573,6 +9276,7 @@ declare module 'zapatos/schema' {
     tvshow_genres_relation: tvshow_genres_relation.Column;
     tvshow_images: tvshow_images.Column;
     tvshow_licenses: tvshow_licenses.Column;
+    tvshow_video_cue_points: tvshow_video_cue_points.Column;
     tvshow_video_streams: tvshow_video_streams.Column;
     tvshow_videos: tvshow_videos.Column;
     video_stream_type: video_stream_type.Column;
@@ -8586,6 +9290,7 @@ declare module 'zapatos/schema' {
     episode_genres_relation: episode_genres_relation.SQL;
     episode_images: episode_images.SQL;
     episode_licenses: episode_licenses.SQL;
+    episode_video_cue_points: episode_video_cue_points.SQL;
     episode_video_streams: episode_video_streams.SQL;
     episode_videos: episode_videos.SQL;
     messaging_counter: messaging_counter.SQL;
@@ -8594,12 +9299,14 @@ declare module 'zapatos/schema' {
     movie_genres_relation: movie_genres_relation.SQL;
     movie_images: movie_images.SQL;
     movie_licenses: movie_licenses.SQL;
+    movie_video_cue_points: movie_video_cue_points.SQL;
     movie_video_streams: movie_video_streams.SQL;
     movie_videos: movie_videos.SQL;
     season: season.SQL;
     season_genres_relation: season_genres_relation.SQL;
     season_images: season_images.SQL;
     season_licenses: season_licenses.SQL;
+    season_video_cue_points: season_video_cue_points.SQL;
     season_video_streams: season_video_streams.SQL;
     season_videos: season_videos.SQL;
     tvshow: tvshow.SQL;
@@ -8607,6 +9314,7 @@ declare module 'zapatos/schema' {
     tvshow_genres_relation: tvshow_genres_relation.SQL;
     tvshow_images: tvshow_images.SQL;
     tvshow_licenses: tvshow_licenses.SQL;
+    tvshow_video_cue_points: tvshow_video_cue_points.SQL;
     tvshow_video_streams: tvshow_video_streams.SQL;
     tvshow_videos: tvshow_videos.SQL;
     video_stream_type: video_stream_type.SQL;

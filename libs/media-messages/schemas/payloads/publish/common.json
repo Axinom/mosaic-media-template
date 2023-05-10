@@ -199,6 +199,27 @@
         }
       }
     },
+    "cue_point":{
+      "description":"Cue point metadata.",
+      "type": "object",
+      "title":"cue_point",
+      "additionalProperties": false,
+      "required":["cue_point_type_key", "time_in_seconds"],
+      "properties": {
+        "cue_point_type_key": {
+          "description": "Key of the cue point type.",
+          "type": "string"
+        },
+        "time_in_seconds": {
+          "description": "Time in seconds at which the cue point is triggered within the video.",
+          "type": "number"
+        },
+        "value": {
+          "description": "Additional data associated with the cue point.",
+          "type": ["string", "null"]
+        }
+      }
+    },
     "video": {
       "description": "Video metadata.",
       "type": "object",
@@ -252,6 +273,13 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/video_stream"
+          }
+        },
+        "cue_points": {
+          "description": "Cue points associated with video.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cue_point"
           }
         },
         "is_protected": {
@@ -328,6 +356,13 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/video_stream"
+          }
+        },
+        "cue_points": {
+          "description": "Cue points associated with video.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cue_point"
           }
         },
         "is_protected": {

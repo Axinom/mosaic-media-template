@@ -32,20 +32,20 @@ export enum AmazonS3Region {
   ApNortheast_2 = 'AP_NORTHEAST_2',
   /** Asia Pacific (Osaka) ap-northeast-3 */
   ApNortheast_3 = 'AP_NORTHEAST_3',
+  /** Asia Pacific (Mumbai) ap-south-1 */
+  ApSouth_1 = 'AP_SOUTH_1',
   /** Asia Pacific (Singapore) ap-southeast-1 */
   ApSoutheast_1 = 'AP_SOUTHEAST_1',
   /** Asia Pacific (Sydney) ap-southeast-2 */
   ApSoutheast_2 = 'AP_SOUTHEAST_2',
   /** Asia Pacific (Jakarta) ap-southeast-3 */
   ApSoutheast_3 = 'AP_SOUTHEAST_3',
-  /** Asia Pacific (Mumbai) ap-south-1 */
-  ApSouth_1 = 'AP_SOUTH_1',
   /** Canada (Central) ca-central-1 */
   CaCentral_1 = 'CA_CENTRAL_1',
-  /** China (Ningxia) cn-northwest-1 */
-  CnNorthwest_1 = 'CN_NORTHWEST_1',
   /** China (Beijing) cn-north-1 */
   CnNorth_1 = 'CN_NORTH_1',
+  /** China (Ningxia) cn-northwest-1 */
+  CnNorthwest_1 = 'CN_NORTHWEST_1',
   /** Europe (Frankfurt) eu-central-1 */
   EuCentral_1 = 'EU_CENTRAL_1',
   /** Europe (Stockholm) eu-north-1 */
@@ -439,6 +439,56 @@ export type CuePointPatch = {
   value?: InputMaybe<Scalars['String']>;
 };
 
+/**
+ * A connection to a list of `CuePoint` values.
+ * @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
+ */
+export type CuePointsConnection = {
+  __typename?: 'CuePointsConnection';
+  /** A list of edges which contains the `CuePoint` and cursor to aid in pagination. */
+  edges: Array<CuePointsEdge>;
+  /** A list of `CuePoint` objects. */
+  nodes: Array<CuePoint>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CuePoint` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `CuePoint` edge in the connection. */
+export type CuePointsEdge = {
+  __typename?: 'CuePointsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `CuePoint` at the end of the edge. */
+  node: CuePoint;
+};
+
+/** Methods to use when ordering `CuePoint`. */
+export enum CuePointsOrderBy {
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  CuePointTypeKeyAsc = 'CUE_POINT_TYPE_KEY_ASC',
+  CuePointTypeKeyDesc = 'CUE_POINT_TYPE_KEY_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TimeInSecondsAsc = 'TIME_IN_SECONDS_ASC',
+  TimeInSecondsDesc = 'TIME_IN_SECONDS_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC',
+  ValueAsc = 'VALUE_ASC',
+  ValueDesc = 'VALUE_DESC',
+  VideoIdAsc = 'VIDEO_ID_ASC',
+  VideoIdDesc = 'VIDEO_ID_DESC'
+}
+
 /** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUE_POINT_TYPES_DECLARE,ADMIN */
 export type CuePointType = {
   __typename?: 'CuePointType';
@@ -528,16 +578,6 @@ export type CuePointTypeFilter = {
   updatedUser?: InputMaybe<StringFilter>;
 };
 
-/** A filter to be used against many `CuePoint` object types. All fields are combined with a logical ‘and.’ */
-export type CuePointTypeToManyCuePointFilter = {
-  /** Every related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<CuePointFilter>;
-  /** No related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<CuePointFilter>;
-  /** Some related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<CuePointFilter>;
-};
-
 /**
  * A connection to a list of `CuePointType` values.
  * @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUE_POINT_TYPES_DECLARE,ADMIN
@@ -586,55 +626,15 @@ export enum CuePointTypesOrderBy {
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
 
-/**
- * A connection to a list of `CuePoint` values.
- * @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
- */
-export type CuePointsConnection = {
-  __typename?: 'CuePointsConnection';
-  /** A list of edges which contains the `CuePoint` and cursor to aid in pagination. */
-  edges: Array<CuePointsEdge>;
-  /** A list of `CuePoint` objects. */
-  nodes: Array<CuePoint>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `CuePoint` you could get from the connection. */
-  totalCount: Scalars['Int'];
+/** A filter to be used against many `CuePoint` object types. All fields are combined with a logical ‘and.’ */
+export type CuePointTypeToManyCuePointFilter = {
+  /** Every related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CuePointFilter>;
+  /** No related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CuePointFilter>;
+  /** Some related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CuePointFilter>;
 };
-
-/** A `CuePoint` edge in the connection. */
-export type CuePointsEdge = {
-  __typename?: 'CuePointsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `CuePoint` at the end of the edge. */
-  node: CuePoint;
-};
-
-/** Methods to use when ordering `CuePoint`. */
-export enum CuePointsOrderBy {
-  CreatedDateAsc = 'CREATED_DATE_ASC',
-  CreatedDateDesc = 'CREATED_DATE_DESC',
-  CreatedUserAsc = 'CREATED_USER_ASC',
-  CreatedUserDesc = 'CREATED_USER_DESC',
-  CuePointTypeKeyAsc = 'CUE_POINT_TYPE_KEY_ASC',
-  CuePointTypeKeyDesc = 'CUE_POINT_TYPE_KEY_DESC',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  TimeInSecondsAsc = 'TIME_IN_SECONDS_ASC',
-  TimeInSecondsDesc = 'TIME_IN_SECONDS_DESC',
-  UpdatedDateAsc = 'UPDATED_DATE_ASC',
-  UpdatedDateDesc = 'UPDATED_DATE_DESC',
-  UpdatedUserAsc = 'UPDATED_USER_ASC',
-  UpdatedUserDesc = 'UPDATED_USER_DESC',
-  ValueAsc = 'VALUE_ASC',
-  ValueDesc = 'VALUE_DESC',
-  VideoIdAsc = 'VIDEO_ID_ASC',
-  VideoIdDesc = 'VIDEO_ID_DESC'
-}
 
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
@@ -689,6 +689,7 @@ export type DeleteCuePointPayload = {
   cuePointEdge?: Maybe<CuePointsEdge>;
   /** Reads a single `CuePointType` that is related to this `CuePoint`. */
   cuePointType?: Maybe<CuePointType>;
+  /** @deprecated The field is obsolete. */
   deletedCuePointNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
@@ -723,6 +724,7 @@ export type DeleteEncodingProcessingProfilePayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
+  /** @deprecated The field is obsolete. */
   deletedEncodingProcessingProfileNodeId?: Maybe<Scalars['ID']>;
   /** The `EncodingProcessingProfile` that was deleted by this mutation. */
   encodingProcessingProfile?: Maybe<EncodingProcessingProfile>;
@@ -759,6 +761,7 @@ export type DeleteEncodingVideoRepresentationPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
+  /** @deprecated The field is obsolete. */
   deletedEncodingVideoRepresentationNodeId?: Maybe<Scalars['ID']>;
   /** Reads a single `EncodingProcessingProfile` that is related to this `EncodingVideoRepresentation`. */
   encodingProcessingProfile?: Maybe<EncodingProcessingProfile>;
@@ -774,6 +777,18 @@ export type DeleteEncodingVideoRepresentationPayload = {
 /** The output of our delete `EncodingVideoRepresentation` mutation. */
 export type DeleteEncodingVideoRepresentationPayloadEncodingVideoRepresentationEdgeArgs = {
   orderBy?: InputMaybe<Array<EncodingVideoRepresentationsOrderBy>>;
+};
+
+export type DeleteEntitlementWebhookConfigurationPayload = {
+  __typename?: 'DeleteEntitlementWebhookConfigurationPayload';
+  deleted: Scalars['Boolean'];
+  query?: Maybe<Query>;
+};
+
+export type DeleteManifestWebhookConfigurationPayload = {
+  __typename?: 'DeleteManifestWebhookConfigurationPayload';
+  deleted: Scalars['Boolean'];
+  query?: Maybe<Query>;
 };
 
 /**
@@ -799,6 +814,7 @@ export type DeleteVideosTagPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
+  /** @deprecated The field is obsolete. */
   deletedVideosTagNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
@@ -1366,6 +1382,39 @@ export type EncodingHistoryFilter = {
   videoId?: InputMaybe<UuidFilter>;
 };
 
+export enum EncodingMode {
+  /** Default */
+  Default = 'DEFAULT',
+  /** PerScene */
+  PerScene = 'PER_SCENE'
+}
+
+/** A filter to be used against EncodingMode fields. All fields are combined with a logical ‘and.’ */
+export type EncodingModeFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<EncodingMode>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<EncodingMode>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<EncodingMode>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<EncodingMode>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<EncodingMode>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<EncodingMode>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<EncodingMode>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<EncodingMode>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<EncodingMode>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<EncodingMode>>;
+};
+
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type EncodingProcessingProfile = {
   __typename?: 'EncodingProcessingProfile';
@@ -1375,6 +1424,7 @@ export type EncodingProcessingProfile = {
   createdUser: Scalars['String'];
   deleteFilesFromSourceWhenDone: Scalars['Boolean'];
   drmProtection: DrmProtection;
+  encodingMode: EncodingMode;
   /** Reads and enables pagination through a set of `EncodingVideoRepresentation`. */
   encodingVideoRepresentations: EncodingVideoRepresentationsConnection;
   forceAspectRatioToStandard: Scalars['Boolean'];
@@ -1427,6 +1477,8 @@ export type EncodingProcessingProfileCondition = {
   deleteFilesFromSourceWhenDone?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `drmProtection` field. */
   drmProtection?: InputMaybe<DrmProtection>;
+  /** Checks for equality with the object’s `encodingMode` field. */
+  encodingMode?: InputMaybe<EncodingMode>;
   /** Checks for equality with the object’s `forceAspectRatioToStandard` field. */
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `forcePixelAspectRatioTo1` field. */
@@ -1481,6 +1533,8 @@ export type EncodingProcessingProfileFilter = {
   deleteFilesFromSourceWhenDone?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `drmProtection` field. */
   drmProtection?: InputMaybe<DrmProtectionFilter>;
+  /** Filter by the object’s `encodingMode` field. */
+  encodingMode?: InputMaybe<EncodingModeFilter>;
   /** Filter by the object’s `encodingVideoRepresentations` relation. */
   encodingVideoRepresentations?: InputMaybe<EncodingProcessingProfileToManyEncodingVideoRepresentationFilter>;
   /** Some related `encodingVideoRepresentations` exist. */
@@ -1523,6 +1577,7 @@ export type EncodingProcessingProfileInput = {
   captionFileLanguageExpression?: InputMaybe<Scalars['String']>;
   deleteFilesFromSourceWhenDone?: InputMaybe<Scalars['Boolean']>;
   drmProtection?: InputMaybe<DrmProtection>;
+  encodingMode?: InputMaybe<EncodingMode>;
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
   outputFormat?: InputMaybe<OutputFormat>;
@@ -1552,6 +1607,7 @@ export type EncodingProcessingProfilePatch = {
   captionFileLanguageExpression?: InputMaybe<Scalars['String']>;
   deleteFilesFromSourceWhenDone?: InputMaybe<Scalars['Boolean']>;
   drmProtection?: InputMaybe<DrmProtection>;
+  encodingMode?: InputMaybe<EncodingMode>;
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
   outputFormat?: InputMaybe<OutputFormat>;
@@ -1571,16 +1627,6 @@ export type EncodingProcessingProfilePatch = {
    * @notEmpty()
    */
   videoStreamExpression?: InputMaybe<Scalars['String']>;
-};
-
-/** A filter to be used against many `EncodingVideoRepresentation` object types. All fields are combined with a logical ‘and.’ */
-export type EncodingProcessingProfileToManyEncodingVideoRepresentationFilter = {
-  /** Every related `EncodingVideoRepresentation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EncodingVideoRepresentationFilter>;
-  /** No related `EncodingVideoRepresentation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EncodingVideoRepresentationFilter>;
-  /** Some related `EncodingVideoRepresentation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EncodingVideoRepresentationFilter>;
 };
 
 /**
@@ -1622,6 +1668,8 @@ export enum EncodingProcessingProfilesOrderBy {
   DeleteFilesFromSourceWhenDoneDesc = 'DELETE_FILES_FROM_SOURCE_WHEN_DONE_DESC',
   DrmProtectionAsc = 'DRM_PROTECTION_ASC',
   DrmProtectionDesc = 'DRM_PROTECTION_DESC',
+  EncodingModeAsc = 'ENCODING_MODE_ASC',
+  EncodingModeDesc = 'ENCODING_MODE_DESC',
   ForceAspectRatioToStandardAsc = 'FORCE_ASPECT_RATIO_TO_STANDARD_ASC',
   ForceAspectRatioToStandardDesc = 'FORCE_ASPECT_RATIO_TO_STANDARD_DESC',
   ForcePixelAspectRatioTo_1Asc = 'FORCE_PIXEL_ASPECT_RATIO_TO_1_ASC',
@@ -1650,6 +1698,16 @@ export enum EncodingProcessingProfilesOrderBy {
   VideoStreamExpressionAsc = 'VIDEO_STREAM_EXPRESSION_ASC',
   VideoStreamExpressionDesc = 'VIDEO_STREAM_EXPRESSION_DESC'
 }
+
+/** A filter to be used against many `EncodingVideoRepresentation` object types. All fields are combined with a logical ‘and.’ */
+export type EncodingProcessingProfileToManyEncodingVideoRepresentationFilter = {
+  /** Every related `EncodingVideoRepresentation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EncodingVideoRepresentationFilter>;
+  /** No related `EncodingVideoRepresentation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EncodingVideoRepresentationFilter>;
+  /** Some related `EncodingVideoRepresentation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EncodingVideoRepresentationFilter>;
+};
 
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type EncodingPublishingAmazonS3Setting = {
@@ -1859,10 +1917,10 @@ export enum EncodingPublishingProfilesOrderBy {
 export enum EncodingState {
   /** Error */
   Error = 'ERROR',
-  /** Initializing */
-  Initializing = 'INITIALIZING',
   /** In progress */
   InProgress = 'IN_PROGRESS',
+  /** Initializing */
+  Initializing = 'INITIALIZING',
   /** Not started */
   NotStarted = 'NOT_STARTED',
   /** Ready */
@@ -2045,6 +2103,12 @@ export enum ErrorCodesEnum {
   AuthConfigInvalid = 'AUTH_CONFIG_INVALID',
   /** Could not extract the authentication token from the received message. */
   AuthTokenNotFound = 'AUTH_TOKEN_NOT_FOUND',
+  /** Authenticated End User not found. */
+  AuthenticatedEndUserNotFound = 'AUTHENTICATED_END_USER_NOT_FOUND',
+  /** Authenticated Management Subject not found. */
+  AuthenticatedManagementSubjectNotFound = 'AUTHENTICATED_MANAGEMENT_SUBJECT_NOT_FOUND',
+  /** A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue. */
+  AuthorizationOptionsMisconfigured = 'AUTHORIZATION_OPTIONS_MISCONFIGURED',
   /** Unable to generate Azure Blob URL for %s. Account name is empty. */
   AzureBlobAccountNameNotProvided = 'AZURE_BLOB_ACCOUNT_NAME_NOT_PROVIDED',
   /** Unable to authenticate access to the Azure Blob Storage. The SAS token from Acquisition Profile might be invalid. */
@@ -2081,11 +2145,13 @@ export enum ErrorCodesEnum {
   DatabasePermissionsCheckFailed = 'DATABASE_PERMISSIONS_CHECK_FAILED',
   /** An expected and handled database constraint error has occurred. The actual message will have more information. */
   DatabaseValidationFailed = 'DATABASE_VALIDATION_FAILED',
+  /** Unable to declare cue point types as at least one other cue point type is already used by a different service. Please check the error details for the list of already declared cue point types and their service IDs. */
+  DeclareCuePointTypesDuplicate = 'DECLARE_CUE_POINT_TYPES_DUPLICATE',
   /** The DRM settings profile was not found */
   DrmProfileNotFound = 'DRM_PROFILE_NOT_FOUND',
   /** An attempt to generate a webhook response has failed. If payload is empty, at least one error must be provided. */
   EmptyWebhookResponse = 'EMPTY_WEBHOOK_RESPONSE',
-  /** The webhook request has failed because the provided webhook secret is empty. */
+  /** The webhook request validation has failed because the provided webhook secret is empty. */
   EmptyWebhookSecret = 'EMPTY_WEBHOOK_SECRET',
   /** Encoder authorization failed. This might be an issue with service configuration. Please contact Axinom Support. */
   EncoderAuthorizationFailed = 'ENCODER_AUTHORIZATION_FAILED',
@@ -2153,12 +2219,6 @@ export enum ErrorCodesEnum {
   PublishingUpdateForNonAmazonS3Provider = 'PUBLISHING_UPDATE_FOR_NON_AMAZON_S3_PROVIDER',
   /** Unable to update Publishing Profile because the current storage provider is %s and not AZURE_BLOB. */
   PublishingUpdateForNonAzureBlobProvider = 'PUBLISHING_UPDATE_FOR_NON_AZURE_BLOB_PROVIDER',
-  /** The setup of secure storage for secrets has failed. Please contact Axinom Support. */
-  SecureStorageSetupFailed = 'SECURE_STORAGE_SETUP_FAILED',
-  /** Unable to validate the state of secure storage for secrets. Please contact Axinom Support. */
-  SecureStorageStateValidationFailed = 'SECURE_STORAGE_STATE_VALIDATION_FAILED',
-  /** The secure storage for secrets is still being set up. If this error is not resolved in the next minutes please contact Axinom Support. */
-  SecureStorageStillBeingSetUp = 'SECURE_STORAGE_STILL_BEING_SET_UP',
   /** Unable to set the general settings because no input values were provided. */
   SetSettingsInputIsEmpty = 'SET_SETTINGS_INPUT_IS_EMPTY',
   /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
@@ -2175,7 +2235,7 @@ export enum ErrorCodesEnum {
   UnableToPlaybackVideoWithFailedEncoding = 'UNABLE_TO_PLAYBACK_VIDEO_WITH_FAILED_ENCODING',
   /** Unable to set the %s secret. Please contact Axinom Support. */
   UnableToSetSecret = 'UNABLE_TO_SET_SECRET',
-  /** An unhandled database-related has occurred. Please contact the service support. */
+  /** An unhandled database-related error has occurred. Please contact the service support. */
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
@@ -2195,7 +2255,7 @@ export enum ErrorCodesEnum {
   VideoRelativePathEmpty = 'VIDEO_RELATIVE_PATH_EMPTY',
   /** The Video Representation must have width and/or height defined. */
   VideoRepresentationDimensionsNotSet = 'VIDEO_REPRESENTATION_DIMENSIONS_NOT_SET',
-  /** Unable to make a request to webhook url '%s'. Please make sure that the endpoint is reachable. */
+  /** Unable to make a request to the webhook URL '%s'. Please make sure that the endpoint is reachable. */
   WebhookEndpointNotReachable = 'WEBHOOK_ENDPOINT_NOT_REACHABLE',
   /** Validation of webhook payload has failed. */
   WebhookPayloadValidationFailed = 'WEBHOOK_PAYLOAD_VALIDATION_FAILED',
@@ -2203,12 +2263,16 @@ export enum ErrorCodesEnum {
   WebhookRequestFailure = 'WEBHOOK_REQUEST_FAILURE',
   /** Generation of a webhook request has failed. */
   WebhookRequestGenerationFailed = 'WEBHOOK_REQUEST_GENERATION_FAILED',
+  /** The webhook for the URL '%s' responded with error(s). Please check the details for more information. */
+  WebhookRespondedWithErrors = 'WEBHOOK_RESPONDED_WITH_ERRORS',
   /** The request to get the %s secret succeeded, but the secret was not found. Please contact Axinom Support. */
   WebhookSecretNotFound = 'WEBHOOK_SECRET_NOT_FOUND',
   /** The %s secret is not set. Please call an appropriate mutation to generate it. */
   WebhookSecretNotSet = 'WEBHOOK_SECRET_NOT_SET',
   /** Generation of a webhook signature has failed. */
-  WebhookSignatureGenerationFailed = 'WEBHOOK_SIGNATURE_GENERATION_FAILED'
+  WebhookSignatureGenerationFailed = 'WEBHOOK_SIGNATURE_GENERATION_FAILED',
+  /** Websocket not found in ExtendedGraphQLContext. This is a development time issue. A reference to the websocket must be included in Postgraphile build options. */
+  WebsocketNotFound = 'WEBSOCKET_NOT_FOUND'
 }
 
 /** A filter to be used against Float fields. All fields are combined with a logical ‘and.’ */
@@ -2242,10 +2306,13 @@ export type GeneralSetting = {
   __typename?: 'GeneralSetting';
   createdDate: Scalars['Datetime'];
   createdUser: Scalars['String'];
+  entitlementWebhookSecretIsSet: Scalars['Boolean'];
   entitlementWebhookUrl?: Maybe<Scalars['String']>;
+  manifestWebhookSecretIsSet: Scalars['Boolean'];
   manifestWebhookUrl?: Maybe<Scalars['String']>;
   updatedDate: Scalars['Datetime'];
   updatedUser: Scalars['String'];
+  videoPlaybackEnabled: Scalars['Boolean'];
 };
 
 export type GenerateEntitlementWebhookSecretPayload = {
@@ -2402,6 +2469,8 @@ export type Mutation = {
   deleteEncodingProcessingProfile?: Maybe<DeleteEncodingProcessingProfilePayload>;
   /** Deletes a single `EncodingVideoRepresentation` using a unique key. */
   deleteEncodingVideoRepresentation?: Maybe<DeleteEncodingVideoRepresentationPayload>;
+  deleteEntitlementWebhookConfiguration: DeleteEntitlementWebhookConfigurationPayload;
+  deleteManifestWebhookConfiguration: DeleteManifestWebhookConfigurationPayload;
   /** Deletes a single `VideosTag` using a unique key. */
   deleteVideosTag?: Maybe<DeleteVideosTagPayload>;
   encodeVideo?: Maybe<EncodeVideoPayload>;
@@ -2414,6 +2483,7 @@ export type Mutation = {
   setAzureBlobAcquisitionProfile: EncodingAcquisitionProfile;
   setAzureBlobPublishingProfile: EncodingPublishingProfile;
   setGeneralSettings: GeneralSetting;
+  truncateVideos?: Maybe<TruncateVideosPayload>;
   unarchiveVideos?: Maybe<BulkMutationUuidPayload>;
   updateAmazonS3AcquisitionProfile: EncodingAcquisitionProfile;
   updateAmazonS3PublishingProfile: EncodingPublishingProfile;
@@ -2675,8 +2745,11 @@ export type PlaybackVideoPayload = {
 };
 
 export type PopulateInput = {
-  clientMutationId?: InputMaybe<Scalars['String']>;
   count: Scalars['Int'];
+  includeCuePoints?: InputMaybe<Scalars['Boolean']>;
+  includeHistories?: InputMaybe<Scalars['Boolean']>;
+  includeStreams?: InputMaybe<Scalars['Boolean']>;
+  includeTags?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type PopulatePayload = {
@@ -2732,11 +2805,11 @@ export type QualityLevel = {
 export type Query = {
   __typename?: 'Query';
   cuePoint?: Maybe<CuePoint>;
+  /** Reads and enables pagination through a set of `CuePoint`. */
+  cuePoints?: Maybe<CuePointsConnection>;
   cuePointType?: Maybe<CuePointType>;
   /** Reads and enables pagination through a set of `CuePointType`. */
   cuePointTypes?: Maybe<CuePointTypesConnection>;
-  /** Reads and enables pagination through a set of `CuePoint`. */
-  cuePoints?: Maybe<CuePointsConnection>;
   encodingAcquisitionProfile?: Maybe<EncodingAcquisitionProfile>;
   /** Reads and enables pagination through a set of `EncodingAcquisitionProfile`. */
   encodingAcquisitionProfiles?: Maybe<EncodingAcquisitionProfilesConnection>;
@@ -2765,20 +2838,33 @@ export type Query = {
   query: Query;
   sourceVideos?: Maybe<SourceVideoPayload>;
   video?: Maybe<Video>;
-  videoStream?: Maybe<VideoStream>;
-  /** Reads and enables pagination through a set of `VideoStream`. */
-  videoStreams?: Maybe<VideoStreamsConnection>;
   /** Reads and enables pagination through a set of `Video`. */
   videos?: Maybe<VideosConnection>;
   videosTag?: Maybe<VideosTag>;
   /** Reads and enables pagination through a set of `VideosTag`. */
   videosTags?: Maybe<VideosTagsConnection>;
+  videoStream?: Maybe<VideoStream>;
+  /** Reads and enables pagination through a set of `VideoStream`. */
+  videoStreams?: Maybe<VideoStreamsConnection>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCuePointArgs = {
   id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCuePointsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<CuePointCondition>;
+  filter?: InputMaybe<CuePointFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<CuePointsOrderBy>>;
 };
 
 
@@ -2798,19 +2884,6 @@ export type QueryCuePointTypesArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<CuePointTypesOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryCuePointsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<CuePointCondition>;
-  filter?: InputMaybe<CuePointFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<CuePointsOrderBy>>;
 };
 
 
@@ -2958,25 +3031,6 @@ export type QueryVideoArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryVideoStreamArgs = {
-  id: Scalars['UUID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideoStreamsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<VideoStreamCondition>;
-  filter?: InputMaybe<VideoStreamFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<VideoStreamsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryVideosArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -3006,6 +3060,25 @@ export type QueryVideosTagsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<VideosTagsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVideoStreamArgs = {
+  id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVideoStreamsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<VideoStreamCondition>;
+  filter?: InputMaybe<VideoStreamFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<VideoStreamsOrderBy>>;
 };
 
 export type RetryEncodeVideoInput = {
@@ -3056,6 +3129,7 @@ export type SetAzureBlobPublishingProfileInput = {
 export type SetGeneralSettingsInput = {
   entitlementWebhookUrl?: InputMaybe<Scalars['String']>;
   manifestWebhookUrl?: InputMaybe<Scalars['String']>;
+  videoPlaybackEnabled?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type SourceVideo = {
@@ -3148,12 +3222,12 @@ export type StringFilter = {
   greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
   /** Included in the specified list. */
   in?: InputMaybe<Array<Scalars['String']>>;
-  /** Included in the specified list (case-insensitive). */
-  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Contains the specified string (case-sensitive). */
   includes?: InputMaybe<Scalars['String']>;
   /** Contains the specified string (case-insensitive). */
   includesInsensitive?: InputMaybe<Scalars['String']>;
+  /** Included in the specified list (case-insensitive). */
+  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
   isNull?: InputMaybe<Scalars['Boolean']>;
   /** Less than the specified value. */
@@ -3182,12 +3256,12 @@ export type StringFilter = {
   notEqualToInsensitive?: InputMaybe<Scalars['String']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['String']>>;
-  /** Not included in the specified list (case-insensitive). */
-  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Does not contain the specified string (case-sensitive). */
   notIncludes?: InputMaybe<Scalars['String']>;
   /** Does not contain the specified string (case-insensitive). */
   notIncludesInsensitive?: InputMaybe<Scalars['String']>;
+  /** Not included in the specified list (case-insensitive). */
+  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
   notLike?: InputMaybe<Scalars['String']>;
   /** Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
@@ -3288,30 +3362,9 @@ export type TarModeFilter = {
   notIn?: InputMaybe<Array<TarMode>>;
 };
 
-/** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
-export type UuidFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['UUID']>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['UUID']>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['UUID']>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['UUID']>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['UUID']>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['UUID']>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['UUID']>>;
+export type TruncateVideosPayload = {
+  __typename?: 'TruncateVideosPayload';
+  completed: Scalars['Boolean'];
 };
 
 export type UpdateAmazonS3AcquisitionProfileInput = {
@@ -3580,6 +3633,32 @@ export type UpdateVideosTagPayloadVideosTagEdgeArgs = {
   orderBy?: InputMaybe<Array<VideosTagsOrderBy>>;
 };
 
+/** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
+export type UuidFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Scalars['UUID']>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Scalars['UUID']>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Scalars['UUID']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<Scalars['UUID']>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Scalars['UUID']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Scalars['UUID']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<Scalars['UUID']>>;
+};
+
 /** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type Video = {
   __typename?: 'Video';
@@ -3627,10 +3706,10 @@ export type Video = {
   updatedDate: Scalars['Datetime'];
   updatedUser: Scalars['String'];
   videoBitrates: Array<Maybe<Scalars['Int']>>;
-  /** Reads and enables pagination through a set of `VideoStream`. */
-  videoStreams: VideoStreamsConnection;
   /** Reads and enables pagination through a set of `VideosTag`. */
   videosTags: VideosTagsConnection;
+  /** Reads and enables pagination through a set of `VideoStream`. */
+  videoStreams: VideoStreamsConnection;
 };
 
 
@@ -3661,19 +3740,6 @@ export type VideoEncodingHistoriesArgs = {
 
 
 /** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
-export type VideoVideoStreamsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<VideoStreamCondition>;
-  filter?: InputMaybe<VideoStreamFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<VideoStreamsOrderBy>>;
-};
-
-
-/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type VideoVideosTagsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -3683,6 +3749,19 @@ export type VideoVideosTagsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<VideosTagsOrderBy>>;
+};
+
+
+/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
+export type VideoVideoStreamsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<VideoStreamCondition>;
+  filter?: InputMaybe<VideoStreamFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<VideoStreamsOrderBy>>;
 };
 
 /** A condition to be used against `Video` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -3840,14 +3919,14 @@ export type VideoFilter = {
   updatedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `videoBitrates` field. */
   videoBitrates?: InputMaybe<IntListFilter>;
-  /** Filter by the object’s `videoStreams` relation. */
-  videoStreams?: InputMaybe<VideoToManyVideoStreamFilter>;
-  /** Some related `videoStreams` exist. */
-  videoStreamsExist?: InputMaybe<Scalars['Boolean']>;
   /** Filter by the object’s `videosTags` relation. */
   videosTags?: InputMaybe<VideoToManyVideosTagFilter>;
   /** Some related `videosTags` exist. */
   videosTagsExist?: InputMaybe<Scalars['Boolean']>;
+  /** Filter by the object’s `videoStreams` relation. */
+  videoStreams?: InputMaybe<VideoToManyVideoStreamFilter>;
+  /** Some related `videoStreams` exist. */
+  videoStreamsExist?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Represents an update to a `Video`. Fields that are set will be updated. */
@@ -3860,300 +3939,6 @@ export type VideoPatch = {
    * @notEmpty()
    */
   title?: InputMaybe<Scalars['String']>;
-};
-
-/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
-export type VideoStream = {
-  __typename?: 'VideoStream';
-  /** @deprecated Use `bitrateInKbps` instead */
-  bandwidthInBps?: Maybe<Scalars['Int']>;
-  bitrateInKbps?: Maybe<Scalars['Int']>;
-  codecs?: Maybe<Scalars['String']>;
-  displayAspectRatio?: Maybe<Scalars['String']>;
-  file?: Maybe<Scalars['String']>;
-  fileTemplate?: Maybe<Scalars['String']>;
-  format: OutputFormat;
-  frameRate?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Int']>;
-  id: Scalars['UUID'];
-  /** @deprecated Use `file` instead */
-  initialFile?: Maybe<Scalars['String']>;
-  iv?: Maybe<Scalars['String']>;
-  keyId?: Maybe<Scalars['String']>;
-  label: Scalars['String'];
-  languageCode?: Maybe<Scalars['String']>;
-  languageName?: Maybe<Scalars['String']>;
-  pixelAspectRatio?: Maybe<Scalars['String']>;
-  samplingRate?: Maybe<Scalars['Int']>;
-  type: VideoStreamType;
-  /** Reads a single `Video` that is related to this `VideoStream`. */
-  video?: Maybe<Video>;
-  videoId: Scalars['UUID'];
-  width?: Maybe<Scalars['Int']>;
-};
-
-/**
- * A condition to be used against `VideoStream` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type VideoStreamCondition = {
-  /** Checks for equality with the object’s `bandwidthInBps` field. */
-  bandwidthInBps?: InputMaybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `bitrateInKbps` field. */
-  bitrateInKbps?: InputMaybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `codecs` field. */
-  codecs?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `displayAspectRatio` field. */
-  displayAspectRatio?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `file` field. */
-  file?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `fileTemplate` field. */
-  fileTemplate?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `format` field. */
-  format?: InputMaybe<OutputFormat>;
-  /** Checks for equality with the object’s `frameRate` field. */
-  frameRate?: InputMaybe<Scalars['Float']>;
-  /** Checks for equality with the object’s `height` field. */
-  height?: InputMaybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
-  /** Checks for equality with the object’s `initialFile` field. */
-  initialFile?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `iv` field. */
-  iv?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `keyId` field. */
-  keyId?: InputMaybe<Scalars['String']>;
-  /**
-   * Checks for equality with the object’s `label` field.
-   * @notEmpty()
-   */
-  label?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `languageCode` field. */
-  languageCode?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `languageName` field. */
-  languageName?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `pixelAspectRatio` field. */
-  pixelAspectRatio?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `samplingRate` field. */
-  samplingRate?: InputMaybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `type` field. */
-  type?: InputMaybe<VideoStreamType>;
-  /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['UUID']>;
-  /** Checks for equality with the object’s `width` field. */
-  width?: InputMaybe<Scalars['Int']>;
-};
-
-/** A filter to be used against `VideoStream` object types. All fields are combined with a logical ‘and.’ */
-export type VideoStreamFilter = {
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<VideoStreamFilter>>;
-  /** Filter by the object’s `bandwidthInBps` field. */
-  bandwidthInBps?: InputMaybe<IntFilter>;
-  /** Filter by the object’s `bitrateInKbps` field. */
-  bitrateInKbps?: InputMaybe<IntFilter>;
-  /** Filter by the object’s `codecs` field. */
-  codecs?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `displayAspectRatio` field. */
-  displayAspectRatio?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `file` field. */
-  file?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `fileTemplate` field. */
-  fileTemplate?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `format` field. */
-  format?: InputMaybe<OutputFormatFilter>;
-  /** Filter by the object’s `frameRate` field. */
-  frameRate?: InputMaybe<FloatFilter>;
-  /** Filter by the object’s `height` field. */
-  height?: InputMaybe<IntFilter>;
-  /** Filter by the object’s `id` field. */
-  id?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `initialFile` field. */
-  initialFile?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `iv` field. */
-  iv?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `keyId` field. */
-  keyId?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `label` field. */
-  label?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `languageCode` field. */
-  languageCode?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `languageName` field. */
-  languageName?: InputMaybe<StringFilter>;
-  /** Negates the expression. */
-  not?: InputMaybe<VideoStreamFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<VideoStreamFilter>>;
-  /** Filter by the object’s `pixelAspectRatio` field. */
-  pixelAspectRatio?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `samplingRate` field. */
-  samplingRate?: InputMaybe<IntFilter>;
-  /** Filter by the object’s `type` field. */
-  type?: InputMaybe<VideoStreamTypeFilter>;
-  /** Filter by the object’s `video` relation. */
-  video?: InputMaybe<VideoFilter>;
-  /** Filter by the object’s `videoId` field. */
-  videoId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `width` field. */
-  width?: InputMaybe<IntFilter>;
-};
-
-export enum VideoStreamType {
-  /** Audio */
-  Audio = 'AUDIO',
-  /** Closed caption */
-  ClosedCaption = 'CLOSED_CAPTION',
-  /** Subtitle */
-  Subtitle = 'SUBTITLE',
-  /** Video */
-  Video = 'VIDEO'
-}
-
-/** A filter to be used against VideoStreamType fields. All fields are combined with a logical ‘and.’ */
-export type VideoStreamTypeFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<VideoStreamType>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<VideoStreamType>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<VideoStreamType>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<VideoStreamType>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<VideoStreamType>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<VideoStreamType>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<VideoStreamType>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<VideoStreamType>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<VideoStreamType>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<VideoStreamType>>;
-};
-
-/**
- * A connection to a list of `VideoStream` values.
- * @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
- */
-export type VideoStreamsConnection = {
-  __typename?: 'VideoStreamsConnection';
-  /** A list of edges which contains the `VideoStream` and cursor to aid in pagination. */
-  edges: Array<VideoStreamsEdge>;
-  /** A list of `VideoStream` objects. */
-  nodes: Array<VideoStream>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `VideoStream` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `VideoStream` edge in the connection. */
-export type VideoStreamsEdge = {
-  __typename?: 'VideoStreamsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `VideoStream` at the end of the edge. */
-  node: VideoStream;
-};
-
-/** Methods to use when ordering `VideoStream`. */
-export enum VideoStreamsOrderBy {
-  BandwidthInBpsAsc = 'BANDWIDTH_IN_BPS_ASC',
-  BandwidthInBpsDesc = 'BANDWIDTH_IN_BPS_DESC',
-  BitrateInKbpsAsc = 'BITRATE_IN_KBPS_ASC',
-  BitrateInKbpsDesc = 'BITRATE_IN_KBPS_DESC',
-  CodecsAsc = 'CODECS_ASC',
-  CodecsDesc = 'CODECS_DESC',
-  DisplayAspectRatioAsc = 'DISPLAY_ASPECT_RATIO_ASC',
-  DisplayAspectRatioDesc = 'DISPLAY_ASPECT_RATIO_DESC',
-  FileAsc = 'FILE_ASC',
-  FileDesc = 'FILE_DESC',
-  FileTemplateAsc = 'FILE_TEMPLATE_ASC',
-  FileTemplateDesc = 'FILE_TEMPLATE_DESC',
-  FormatAsc = 'FORMAT_ASC',
-  FormatDesc = 'FORMAT_DESC',
-  FrameRateAsc = 'FRAME_RATE_ASC',
-  FrameRateDesc = 'FRAME_RATE_DESC',
-  HeightAsc = 'HEIGHT_ASC',
-  HeightDesc = 'HEIGHT_DESC',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  InitialFileAsc = 'INITIAL_FILE_ASC',
-  InitialFileDesc = 'INITIAL_FILE_DESC',
-  IvAsc = 'IV_ASC',
-  IvDesc = 'IV_DESC',
-  KeyIdAsc = 'KEY_ID_ASC',
-  KeyIdDesc = 'KEY_ID_DESC',
-  LabelAsc = 'LABEL_ASC',
-  LabelDesc = 'LABEL_DESC',
-  LanguageCodeAsc = 'LANGUAGE_CODE_ASC',
-  LanguageCodeDesc = 'LANGUAGE_CODE_DESC',
-  LanguageNameAsc = 'LANGUAGE_NAME_ASC',
-  LanguageNameDesc = 'LANGUAGE_NAME_DESC',
-  Natural = 'NATURAL',
-  PixelAspectRatioAsc = 'PIXEL_ASPECT_RATIO_ASC',
-  PixelAspectRatioDesc = 'PIXEL_ASPECT_RATIO_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  SamplingRateAsc = 'SAMPLING_RATE_ASC',
-  SamplingRateDesc = 'SAMPLING_RATE_DESC',
-  TypeAsc = 'TYPE_ASC',
-  TypeDesc = 'TYPE_DESC',
-  VideoIdAsc = 'VIDEO_ID_ASC',
-  VideoIdDesc = 'VIDEO_ID_DESC',
-  WidthAsc = 'WIDTH_ASC',
-  WidthDesc = 'WIDTH_DESC'
-}
-
-export type VideoSubscriptionPayload = {
-  __typename?: 'VideoSubscriptionPayload';
-  event?: Maybe<Scalars['String']>;
-  id: Scalars['UUID'];
-  video?: Maybe<Video>;
-};
-
-/** A filter to be used against many `CuePoint` object types. All fields are combined with a logical ‘and.’ */
-export type VideoToManyCuePointFilter = {
-  /** Every related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<CuePointFilter>;
-  /** No related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<CuePointFilter>;
-  /** Some related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<CuePointFilter>;
-};
-
-/** A filter to be used against many `EncodingHistory` object types. All fields are combined with a logical ‘and.’ */
-export type VideoToManyEncodingHistoryFilter = {
-  /** Every related `EncodingHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EncodingHistoryFilter>;
-  /** No related `EncodingHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EncodingHistoryFilter>;
-  /** Some related `EncodingHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EncodingHistoryFilter>;
-};
-
-/** A filter to be used against many `VideoStream` object types. All fields are combined with a logical ‘and.’ */
-export type VideoToManyVideoStreamFilter = {
-  /** Every related `VideoStream` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<VideoStreamFilter>;
-  /** No related `VideoStream` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<VideoStreamFilter>;
-  /** Some related `VideoStream` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<VideoStreamFilter>;
-};
-
-/** A filter to be used against many `VideosTag` object types. All fields are combined with a logical ‘and.’ */
-export type VideoToManyVideosTagFilter = {
-  /** Every related `VideosTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<VideosTagFilter>;
-  /** No related `VideosTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<VideosTagFilter>;
-  /** Some related `VideosTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<VideosTagFilter>;
 };
 
 /**
@@ -4344,16 +4129,311 @@ export enum VideosTagsOrderBy {
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
 
+/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
+export type VideoStream = {
+  __typename?: 'VideoStream';
+  /** @deprecated Use `bitrateInKbps` instead */
+  bandwidthInBps?: Maybe<Scalars['Int']>;
+  bitrateInKbps?: Maybe<Scalars['Int']>;
+  codecs?: Maybe<Scalars['String']>;
+  displayAspectRatio?: Maybe<Scalars['String']>;
+  file?: Maybe<Scalars['String']>;
+  fileTemplate?: Maybe<Scalars['String']>;
+  format: OutputFormat;
+  frameRate?: Maybe<Scalars['Float']>;
+  height?: Maybe<Scalars['Int']>;
+  id: Scalars['UUID'];
+  /** @deprecated Use `file` instead */
+  initialFile?: Maybe<Scalars['String']>;
+  iv?: Maybe<Scalars['String']>;
+  keyId?: Maybe<Scalars['String']>;
+  label: Scalars['String'];
+  languageCode?: Maybe<Scalars['String']>;
+  languageName?: Maybe<Scalars['String']>;
+  pixelAspectRatio?: Maybe<Scalars['String']>;
+  samplingRate?: Maybe<Scalars['Int']>;
+  type: VideoStreamType;
+  /** Reads a single `Video` that is related to this `VideoStream`. */
+  video?: Maybe<Video>;
+  videoId: Scalars['UUID'];
+  width?: Maybe<Scalars['Int']>;
+};
+
+/**
+ * A condition to be used against `VideoStream` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type VideoStreamCondition = {
+  /** Checks for equality with the object’s `bandwidthInBps` field. */
+  bandwidthInBps?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `bitrateInKbps` field. */
+  bitrateInKbps?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `codecs` field. */
+  codecs?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `displayAspectRatio` field. */
+  displayAspectRatio?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `file` field. */
+  file?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `fileTemplate` field. */
+  fileTemplate?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `format` field. */
+  format?: InputMaybe<OutputFormat>;
+  /** Checks for equality with the object’s `frameRate` field. */
+  frameRate?: InputMaybe<Scalars['Float']>;
+  /** Checks for equality with the object’s `height` field. */
+  height?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `initialFile` field. */
+  initialFile?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `iv` field. */
+  iv?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `keyId` field. */
+  keyId?: InputMaybe<Scalars['String']>;
+  /**
+   * Checks for equality with the object’s `label` field.
+   * @notEmpty()
+   */
+  label?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `languageCode` field. */
+  languageCode?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `languageName` field. */
+  languageName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `pixelAspectRatio` field. */
+  pixelAspectRatio?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `samplingRate` field. */
+  samplingRate?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<VideoStreamType>;
+  /** Checks for equality with the object’s `videoId` field. */
+  videoId?: InputMaybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `width` field. */
+  width?: InputMaybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `VideoStream` object types. All fields are combined with a logical ‘and.’ */
+export type VideoStreamFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<VideoStreamFilter>>;
+  /** Filter by the object’s `bandwidthInBps` field. */
+  bandwidthInBps?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `bitrateInKbps` field. */
+  bitrateInKbps?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `codecs` field. */
+  codecs?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `displayAspectRatio` field. */
+  displayAspectRatio?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `file` field. */
+  file?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `fileTemplate` field. */
+  fileTemplate?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `format` field. */
+  format?: InputMaybe<OutputFormatFilter>;
+  /** Filter by the object’s `frameRate` field. */
+  frameRate?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `height` field. */
+  height?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `initialFile` field. */
+  initialFile?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `iv` field. */
+  iv?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `keyId` field. */
+  keyId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `label` field. */
+  label?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `languageCode` field. */
+  languageCode?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `languageName` field. */
+  languageName?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<VideoStreamFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<VideoStreamFilter>>;
+  /** Filter by the object’s `pixelAspectRatio` field. */
+  pixelAspectRatio?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `samplingRate` field. */
+  samplingRate?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `type` field. */
+  type?: InputMaybe<VideoStreamTypeFilter>;
+  /** Filter by the object’s `video` relation. */
+  video?: InputMaybe<VideoFilter>;
+  /** Filter by the object’s `videoId` field. */
+  videoId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `width` field. */
+  width?: InputMaybe<IntFilter>;
+};
+
+/**
+ * A connection to a list of `VideoStream` values.
+ * @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
+ */
+export type VideoStreamsConnection = {
+  __typename?: 'VideoStreamsConnection';
+  /** A list of edges which contains the `VideoStream` and cursor to aid in pagination. */
+  edges: Array<VideoStreamsEdge>;
+  /** A list of `VideoStream` objects. */
+  nodes: Array<VideoStream>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `VideoStream` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `VideoStream` edge in the connection. */
+export type VideoStreamsEdge = {
+  __typename?: 'VideoStreamsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `VideoStream` at the end of the edge. */
+  node: VideoStream;
+};
+
+/** Methods to use when ordering `VideoStream`. */
+export enum VideoStreamsOrderBy {
+  BandwidthInBpsAsc = 'BANDWIDTH_IN_BPS_ASC',
+  BandwidthInBpsDesc = 'BANDWIDTH_IN_BPS_DESC',
+  BitrateInKbpsAsc = 'BITRATE_IN_KBPS_ASC',
+  BitrateInKbpsDesc = 'BITRATE_IN_KBPS_DESC',
+  CodecsAsc = 'CODECS_ASC',
+  CodecsDesc = 'CODECS_DESC',
+  DisplayAspectRatioAsc = 'DISPLAY_ASPECT_RATIO_ASC',
+  DisplayAspectRatioDesc = 'DISPLAY_ASPECT_RATIO_DESC',
+  FileAsc = 'FILE_ASC',
+  FileDesc = 'FILE_DESC',
+  FileTemplateAsc = 'FILE_TEMPLATE_ASC',
+  FileTemplateDesc = 'FILE_TEMPLATE_DESC',
+  FormatAsc = 'FORMAT_ASC',
+  FormatDesc = 'FORMAT_DESC',
+  FrameRateAsc = 'FRAME_RATE_ASC',
+  FrameRateDesc = 'FRAME_RATE_DESC',
+  HeightAsc = 'HEIGHT_ASC',
+  HeightDesc = 'HEIGHT_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  InitialFileAsc = 'INITIAL_FILE_ASC',
+  InitialFileDesc = 'INITIAL_FILE_DESC',
+  IvAsc = 'IV_ASC',
+  IvDesc = 'IV_DESC',
+  KeyIdAsc = 'KEY_ID_ASC',
+  KeyIdDesc = 'KEY_ID_DESC',
+  LabelAsc = 'LABEL_ASC',
+  LabelDesc = 'LABEL_DESC',
+  LanguageCodeAsc = 'LANGUAGE_CODE_ASC',
+  LanguageCodeDesc = 'LANGUAGE_CODE_DESC',
+  LanguageNameAsc = 'LANGUAGE_NAME_ASC',
+  LanguageNameDesc = 'LANGUAGE_NAME_DESC',
+  Natural = 'NATURAL',
+  PixelAspectRatioAsc = 'PIXEL_ASPECT_RATIO_ASC',
+  PixelAspectRatioDesc = 'PIXEL_ASPECT_RATIO_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SamplingRateAsc = 'SAMPLING_RATE_ASC',
+  SamplingRateDesc = 'SAMPLING_RATE_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
+  VideoIdAsc = 'VIDEO_ID_ASC',
+  VideoIdDesc = 'VIDEO_ID_DESC',
+  WidthAsc = 'WIDTH_ASC',
+  WidthDesc = 'WIDTH_DESC'
+}
+
+export enum VideoStreamType {
+  /** Audio */
+  Audio = 'AUDIO',
+  /** Closed caption */
+  ClosedCaption = 'CLOSED_CAPTION',
+  /** Subtitle */
+  Subtitle = 'SUBTITLE',
+  /** Video */
+  Video = 'VIDEO'
+}
+
+/** A filter to be used against VideoStreamType fields. All fields are combined with a logical ‘and.’ */
+export type VideoStreamTypeFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<VideoStreamType>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<VideoStreamType>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<VideoStreamType>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<VideoStreamType>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<VideoStreamType>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<VideoStreamType>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<VideoStreamType>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<VideoStreamType>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<VideoStreamType>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<VideoStreamType>>;
+};
+
+export type VideoSubscriptionPayload = {
+  __typename?: 'VideoSubscriptionPayload';
+  event?: Maybe<Scalars['String']>;
+  id: Scalars['UUID'];
+  video?: Maybe<Video>;
+};
+
+/** A filter to be used against many `CuePoint` object types. All fields are combined with a logical ‘and.’ */
+export type VideoToManyCuePointFilter = {
+  /** Every related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CuePointFilter>;
+  /** No related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CuePointFilter>;
+  /** Some related `CuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CuePointFilter>;
+};
+
+/** A filter to be used against many `EncodingHistory` object types. All fields are combined with a logical ‘and.’ */
+export type VideoToManyEncodingHistoryFilter = {
+  /** Every related `EncodingHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EncodingHistoryFilter>;
+  /** No related `EncodingHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EncodingHistoryFilter>;
+  /** Some related `EncodingHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EncodingHistoryFilter>;
+};
+
+/** A filter to be used against many `VideosTag` object types. All fields are combined with a logical ‘and.’ */
+export type VideoToManyVideosTagFilter = {
+  /** Every related `VideosTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<VideosTagFilter>;
+  /** No related `VideosTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<VideosTagFilter>;
+  /** Some related `VideosTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<VideosTagFilter>;
+};
+
+/** A filter to be used against many `VideoStream` object types. All fields are combined with a logical ‘and.’ */
+export type VideoToManyVideoStreamFilter = {
+  /** Every related `VideoStream` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<VideoStreamFilter>;
+  /** No related `VideoStream` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<VideoStreamFilter>;
+  /** Some related `VideoStream` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<VideoStreamFilter>;
+};
+
 export type GetVideosQueryVariables = Exact<{
   filter?: InputMaybe<VideoFilter>;
+  cuePointFilter?: InputMaybe<CuePointFilter>;
 }>;
 
 
-export type GetVideosQuery = { __typename?: 'Query', videos?: { __typename?: 'VideosConnection', nodes: Array<{ __typename?: 'Video', id: any, title: string, lengthInSeconds?: number | null, audioLanguages: Array<string | null>, captionLanguages: Array<string | null>, subtitleLanguages: Array<string | null>, dashManifestPath?: string | null, hlsManifestPath?: string | null, isProtected: boolean, outputFormat: OutputFormat, previewStatus: PreviewStatus, encodingState: EncodingState, videosTags: { __typename?: 'VideosTagsConnection', nodes: Array<{ __typename?: 'VideosTag', name: string }> }, videoStreams: { __typename?: 'VideoStreamsConnection', nodes: Array<{ __typename?: 'VideoStream', keyId?: string | null, label: string, format: OutputFormat, file?: string | null, iv?: string | null, languageCode?: string | null, bitrateInKbps?: number | null, type: VideoStreamType, fileTemplate?: string | null, codecs?: string | null, frameRate?: number | null, height?: number | null, width?: number | null, displayAspectRatio?: string | null, pixelAspectRatio?: string | null, samplingRate?: number | null, languageName?: string | null }> } }> } | null };
+export type GetVideosQuery = { __typename?: 'Query', videos?: { __typename?: 'VideosConnection', nodes: Array<{ __typename?: 'Video', id: any, title: string, lengthInSeconds?: number | null, audioLanguages: Array<string | null>, captionLanguages: Array<string | null>, subtitleLanguages: Array<string | null>, dashManifestPath?: string | null, hlsManifestPath?: string | null, isProtected: boolean, outputFormat: OutputFormat, previewStatus: PreviewStatus, encodingState: EncodingState, videosTags: { __typename?: 'VideosTagsConnection', nodes: Array<{ __typename?: 'VideosTag', name: string }> }, videoStreams: { __typename?: 'VideoStreamsConnection', nodes: Array<{ __typename?: 'VideoStream', keyId?: string | null, label: string, format: OutputFormat, file?: string | null, iv?: string | null, languageCode?: string | null, bitrateInKbps?: number | null, type: VideoStreamType, fileTemplate?: string | null, codecs?: string | null, frameRate?: number | null, height?: number | null, width?: number | null, displayAspectRatio?: string | null, pixelAspectRatio?: string | null, samplingRate?: number | null, languageName?: string | null }> }, cuePoints: { __typename?: 'CuePointsConnection', nodes: Array<{ __typename?: 'CuePoint', timeInSeconds: number, cuePointTypeKey: string, value?: string | null }> } }> } | null };
 
 
 export const GetVideosDocument = gql`
-    query GetVideos($filter: VideoFilter) {
+    query GetVideos($filter: VideoFilter, $cuePointFilter: CuePointFilter) {
   videos(filter: $filter) {
     nodes {
       id
@@ -4392,6 +4472,13 @@ export const GetVideosDocument = gql`
           pixelAspectRatio
           samplingRate
           languageName
+        }
+      }
+      cuePoints(filter: $cuePointFilter) {
+        nodes {
+          timeInSeconds
+          cuePointTypeKey
+          value
         }
       }
     }

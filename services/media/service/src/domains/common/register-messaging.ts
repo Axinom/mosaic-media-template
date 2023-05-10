@@ -1,6 +1,9 @@
 import { getLoginPgPool } from '@axinom/mosaic-db-common';
 import { Broker, RascalConfigBuilder } from '@axinom/mosaic-message-bus';
-import { ImageServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
+import {
+  ImageServiceMultiTenantMessagingSettings,
+  VideoServiceMultiTenantMessagingSettings,
+} from '@axinom/mosaic-messages';
 import { Express } from 'express';
 import {
   DeleteEntityCommand,
@@ -23,6 +26,10 @@ export const registerCommonMessaging = (
       ),
     new RascalConfigBuilder(
       ImageServiceMultiTenantMessagingSettings.DeclareImageTypes,
+      config,
+    ).sendCommand(),
+    new RascalConfigBuilder(
+      VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes,
       config,
     ).sendCommand(),
     new RascalConfigBuilder(

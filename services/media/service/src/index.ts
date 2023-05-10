@@ -31,6 +31,7 @@ import { applyMigrations, getFullConfig } from './common';
 import { syncPermissions } from './domains/permission-definition';
 import { populateSeedData } from './domains/populate-seed-data';
 import { registerImageTypes } from './domains/register-image-types';
+import { registerVideoCuePointTypes } from './domains/register-video-cue-point-types';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
 import { registerMessaging } from './messaging/register-messaging';
 
@@ -110,6 +111,9 @@ async function bootstrap(): Promise<void> {
 
   // Register image types used in the media service.
   await registerImageTypes(broker, config);
+
+  // Register video cue point types used in media service.
+  await registerVideoCuePointTypes(broker, config);
 
   // Enable authentication middleware for all requests to /graphql.
   setupManagementAuthentication(app, ['/graphql'], authConfig);

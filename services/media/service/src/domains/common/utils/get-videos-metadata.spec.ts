@@ -191,6 +191,15 @@ describe('getVideosMetadata', () => {
           },
         ],
       },
+      cuePoints: {
+        nodes: [
+          {
+            timeInSeconds: 10,
+            cuePointTypeKey: 'OUTRO_IN',
+            value: '',
+          },
+        ],
+      },
     };
     result = () => {
       return createApiObject([video1]);
@@ -275,6 +284,13 @@ describe('getVideosMetadata', () => {
               width: video1.videoStreams.nodes[2].width,
             },
           ],
+          cue_points: [
+            {
+              time_in_seconds: 10,
+              cue_point_type_key: 'OUTRO_IN',
+              value: '',
+            },
+          ],
         },
       ],
       validation: [],
@@ -304,6 +320,15 @@ describe('getVideosMetadata', () => {
             label: 'HD',
             format: OutputFormat.Hls,
             type: VideoStreamType.Video,
+          },
+        ],
+      },
+      cuePoints: {
+        nodes: [
+          {
+            timeInSeconds: 10,
+            cuePointTypeKey: 'OUTRO_IN',
+            value: '',
           },
         ],
       },
@@ -350,6 +375,13 @@ describe('getVideosMetadata', () => {
               width: undefined,
             },
           ],
+          cue_points: [
+            {
+              time_in_seconds: 10,
+              cue_point_type_key: 'OUTRO_IN',
+              value: '',
+            },
+          ],
         },
       ],
       validation: [],
@@ -379,6 +411,15 @@ describe('getVideosMetadata', () => {
             label: 'HD',
             format: OutputFormat.Hls,
             type: VideoStreamType.Video,
+          },
+        ],
+      },
+      cuePoints: {
+        nodes: [
+          {
+            timeInSeconds: 10,
+            cuePointTypeKey: 'OUTRO_IN',
+            value: '',
           },
         ],
       },
@@ -427,6 +468,13 @@ describe('getVideosMetadata', () => {
               width: undefined,
             },
           ],
+          cue_points: [
+            {
+              time_in_seconds: 10,
+              cue_point_type_key: 'OUTRO_IN',
+              value: '',
+            },
+          ],
         },
       ],
       validation: [],
@@ -459,6 +507,15 @@ describe('getVideosMetadata', () => {
           },
         ],
       },
+      cuePoints: {
+        nodes: [
+          {
+            timeInSeconds: 10,
+            cuePointTypeKey: 'OUTRO_IN',
+            value: '',
+          },
+        ],
+      },
     };
     const video2: GqlVideo = {
       id: videoId2,
@@ -481,6 +538,15 @@ describe('getVideosMetadata', () => {
             label: 'HD',
             format: OutputFormat.Hls,
             type: VideoStreamType.Video,
+          },
+        ],
+      },
+      cuePoints: {
+        nodes: [
+          {
+            timeInSeconds: 10,
+            cuePointTypeKey: 'OUTRO_IN',
+            value: '',
           },
         ],
       },
@@ -531,6 +597,13 @@ describe('getVideosMetadata', () => {
               width: undefined,
             },
           ],
+          cue_points: [
+            {
+              time_in_seconds: 10,
+              cue_point_type_key: 'OUTRO_IN',
+              value: '',
+            },
+          ],
         },
         {
           type: 'TRAILER',
@@ -562,6 +635,13 @@ describe('getVideosMetadata', () => {
               pixel_aspect_ratio: undefined,
               sampling_rate: undefined,
               width: undefined,
+            },
+          ],
+          cue_points: [
+            {
+              time_in_seconds: 10,
+              cue_point_type_key: 'OUTRO_IN',
+              value: '',
             },
           ],
         },
@@ -602,6 +682,15 @@ describe('getVideosMetadata', () => {
           },
         ],
       },
+      cuePoints: {
+        nodes: [
+          {
+            timeInSeconds: 10,
+            cuePointTypeKey: 'OUTRO_IN',
+            value: '',
+          },
+        ],
+      },
     };
     result = () => {
       return createApiObject([video1]);
@@ -643,6 +732,13 @@ describe('getVideosMetadata', () => {
               pixel_aspect_ratio: undefined,
               sampling_rate: undefined,
               width: undefined,
+            },
+          ],
+          cue_points: [
+            {
+              time_in_seconds: 10,
+              cue_point_type_key: 'OUTRO_IN',
+              value: '',
             },
           ],
         },
@@ -683,6 +779,15 @@ describe('getVideosMetadata', () => {
           },
         ],
       },
+      cuePoints: {
+        nodes: [
+          {
+            timeInSeconds: 10,
+            cuePointTypeKey: 'OUTRO_IN',
+            value: '',
+          },
+        ],
+      },
     };
     result = () => {
       return createApiObject([video1]);
@@ -726,6 +831,13 @@ describe('getVideosMetadata', () => {
               pixel_aspect_ratio: undefined,
               sampling_rate: undefined,
               width: undefined,
+            },
+          ],
+          cue_points: [
+            {
+              time_in_seconds: 10,
+              cue_point_type_key: 'OUTRO_IN',
+              value: '',
             },
           ],
         },
@@ -766,6 +878,15 @@ describe('getVideosMetadata', () => {
           },
         ],
       },
+      cuePoints: {
+        nodes: [
+          {
+            timeInSeconds: 10,
+            cuePointTypeKey: 'OUTRO_IN',
+            value: '',
+          },
+        ],
+      },
     };
     result = () => {
       return createApiObject([video1]);
@@ -811,6 +932,13 @@ describe('getVideosMetadata', () => {
               width: undefined,
             },
           ],
+          cue_points: [
+            {
+              time_in_seconds: 10,
+              cue_point_type_key: 'OUTRO_IN',
+              value: '',
+            },
+          ],
         },
       ],
       validation: [
@@ -839,6 +967,9 @@ describe('getVideosMetadata', () => {
       videoStreams: {
         nodes: [],
       },
+      cuePoints: {
+        nodes: [],
+      },
     };
     result = () => {
       return createApiObject([video1]);
@@ -862,6 +993,7 @@ describe('getVideosMetadata', () => {
           hls_manifest: undefined,
           length_in_seconds: undefined,
           video_streams: [],
+          cue_points: [],
         },
       ],
       validation: [
@@ -890,6 +1022,9 @@ describe('getVideosMetadata', () => {
       videoStreams: {
         nodes: [],
       },
+      cuePoints: {
+        nodes: [],
+      },
     };
     result = () => {
       return createApiObject([video1]);
@@ -915,6 +1050,7 @@ describe('getVideosMetadata', () => {
           hls_manifest: undefined,
           length_in_seconds: undefined,
           video_streams: [],
+          cue_points: [],
         },
       ],
       validation: [
@@ -950,6 +1086,15 @@ describe('getVideosMetadata', () => {
             label: 'HD',
             format: OutputFormat.Hls,
             type: VideoStreamType.Video,
+          },
+        ],
+      },
+      cuePoints: {
+        nodes: [
+          {
+            timeInSeconds: 10,
+            cuePointTypeKey: 'OUTRO_IN',
+            value: '',
           },
         ],
       },
@@ -994,6 +1139,13 @@ describe('getVideosMetadata', () => {
               pixel_aspect_ratio: undefined,
               sampling_rate: undefined,
               width: undefined,
+            },
+          ],
+          cue_points: [
+            {
+              time_in_seconds: 10,
+              cue_point_type_key: 'OUTRO_IN',
+              value: '',
             },
           ],
         },
@@ -1034,6 +1186,15 @@ describe('getVideosMetadata', () => {
           },
         ],
       },
+      cuePoints: {
+        nodes: [
+          {
+            timeInSeconds: 10,
+            cuePointTypeKey: 'OUTRO_IN',
+            value: '',
+          },
+        ],
+      },
     };
     result = () => {
       return createApiObject([video1]);
@@ -1077,6 +1238,13 @@ describe('getVideosMetadata', () => {
               pixel_aspect_ratio: undefined,
               sampling_rate: undefined,
               width: undefined,
+            },
+          ],
+          cue_points: [
+            {
+              time_in_seconds: 10,
+              cue_point_type_key: 'OUTRO_IN',
+              value: '',
             },
           ],
         },
