@@ -2,66 +2,65 @@
 
 ## Overview
 
-The VOD-to-Live service is a customizable service that is part of the Media
-solution. The service implements custom logic and creates live streams using the
+The VOD-to-Live Service is a customizable component of the Media solution that
+enables custom logic implementation and creation of live streams utilizing the
 [Unified Virtual Channel](https://beta.docs.unified-streaming.com/documentation/virtual-channel/index.html).
 
-The managed Channel service provides the possibility to publish Channels and
-Playlists to the customizable VOD-to-Live service. The VOD-to-Live service uses
-the Channel service data to create a Synchronized Multimedia Integration
-Language (SMIL) file with the videos from the playlist and “empty” videos as
-placeholders for the advertisement pods. Unified Virtual Channel API is used to
-create advanced virtual FAST channels from the VOD sources with seamless
-transition from one source to another.
+The managed Channel Service provides a way to publish Channels and Playlists to
+the customizable VOD-to-Live Service. The VOD-to-Live Service uses the data from
+the Channel Service to generate a Synchronized Multimedia Integration Language
+(SMIL) file that incorporates the videos from the playlist along with
+placeholder videos acting as filler for advertisement pods. The Unified Virtual
+Channel API is used to create advanced virtual FAST channels from the VOD
+sources that seamlessly transition from one source to another.
 
 ## Features
 
 ### Validation via Pre-Publishing Webhook
 
-The VOD-to-Live service provides an API endpoint `/pre-publishing` that is
-compatible with the Channel service's pre-publishing webhook. This allows
-VOD-to-Live service to apply a set of custom validation rules to determine if a
-Channel or Playlist is eligible for publishing from Channel service.
+The VOD-to-Live Service exposes an API endpoint `/pre-publishing` which is
+compatible with the pre-publishing webhook of the Channel Service. This enables
+the VOD-to-Live Service to apply a custom set of validation rules to determine
+the eligibility of a Channel or Playlist for publishing from the Channel
+Service.
 
 #### Channel validation rules
 
-- The Channel should have placeholder video set.
+- A placeholder video must be set for the channel.
 
 #### Playlist validation rules
 
-- The Playlist should contain at least one program.
-- Warning is reported, if the Playlist duration exceeds 24 hours.
+- The Playlist must contain at least one program.
+- A warning is reported if the Playlist duration exceeds 24 hours.
 - The Playlist duration should not exceed 25 hours.
-- If playlist prolongation feature is enabled, the Playlist start date should
-  not be older than 24 hours.
+- The Playlist start date should not be older than 24 hours.
 - The Playlist scheduling should not start and end with an ad pod.
-- All videos associated with the Playlist should have at least one mutual stream
-  format (have matching resolution, frame rate and bitrate)
+- All videos associated with the Playlist should have at least one common stream
+  format (matching resolution, frame rate, and bitrate).
 
 #### Video validation rules
 
-```
-Every video that is assigned to a channel or playlist undergoes validation based on the following set of rules.
-```
+Every video assigned to a channel or playlist must pass the following validation
+rules:
 
-- The Video codec should be `H264`.
-- The Video should should have separate audio stream.
-- The Video should be encoded in `CMAF` format.
-- If DRM protection is enabled in service - DRM protected videos should have DRM
-  key ids defined.
-- If DRM protection is disabled in service - videos cannot be DRM protected.
+- Videos must use the H264 codec.
+- Videos must have a separate audio stream.
+- Videos must be encoded in the CMAF format.
+- If DRM protection is enabled, DRM-protected videos must have their DRM key
+  identifiers defined.
+- If DRM protection is disabled, videos cannot be DRM-protected.
 
 ### Live stream creation
 
-The primary responsibility of the VOD-to-Live service is to create a live stream
-based on the data published by the Managed Channel service. After the validation
-is successful and the Channel or Playlist is published, VOD-to-Live service
-receives a RabbitMQ message with object that represents the published entity.
-The service then generates a SMIL file that can be sent over to the Virtual
-Channel Management API API for live channel creation or update.
+The main responsibility of the VOD-to-Live Service is to create a live stream
+using the data published by the Managed Channel Service. Once validation is
+successful and the Channel or Playlist is published, the VOD-to-Live Service
+receives a RabbitMQ message containing an object representing the published
+entity. The service then generates a SMIL file that can be sent to the Virtual
+Channel Management API for live channel creation or update.
 
-Channel Published Event example, JSON object received by the VOD-to-Live
-service.
+Here is an example of the JSON object received by the VOD-to-Live Service for a
+Channel Published Event.
 
 ```json
 {
@@ -135,7 +134,7 @@ service.
 }
 ```
 
-SMIL example generated by the VOD-to-Live service to communicate with USP
+SMIL example generated by the VOD-to-Live Service to communicate with USP
 Virtual Channel API.
 
 ```xml
@@ -164,87 +163,88 @@ Virtual Channel API.
 
 #### DRM protection
 
-The Channel's live stream can be DRM protected. To enabled the DRM protection
-adjust the service configuration by setting the DRM variables.
+DRM protection can be enabled for the Channel's live stream by configuring the
+service and setting the appropriate DRM variables.
 
 ```
-Service supports only the Axinom DRM Key Service.
-DRM settings for the VOD-to-Live service should align with the DRM settings used for the encoding of the VODs.
+The service only supports the Axinom DRM Key Service.
+The DRM settings for the VOD-to-Live Service should be aligned with the DRM settings used for the encoding of the VODs.
 ```
 
-When DRM is enabled the DRM protected VODs can be used in playlists. A CPIX
-files will be created to decrypt protected content and to encrypt newly created
-live stream. All files will be stored in the Azure Storage. Access to the files
-will be provided to the USP using shared access signatures (SAS) with limitation
-by time.
+When DRM is enabled DRM-protected VODs can be included in playlists. To decrypt
+the protected content and encrypt the newly created live stream , CPIX files are
+created and stored in Azure Storage. Access to the files is granted to the USP
+using shared access signatures (SAS) with time-based limitations.
 
-For each Channel will be created new DRM key through the Axinom Key Service API.
-The key identifier of the channel will be send in RabbitMQ message
-`LiveStreamProtectionKeyCreatedEvent`, identifier is stored with the Channel's
-metadata in Azure Storage.
+A new DRM key will be created for each Channel through the Axinom Key Service
+API. The key identifier for the Channel will be sent in a RabbitMQ message of
+the type `LiveStreamProtectionKeyCreatedEvent`. This identifier will be stored
+with the Channel's metadata in Azure Storage.
 
 #### Playlist prolongation
 
-When the Playlist prolongation feature is enabled, X Service automatically
-extends the duration of any Playlist with a duration of less than 24 hours to
-exactly 24 hours. To accomplish this, a placeholder video is used to fill the
-remaining time.
+When the Playlist prolongation feature is enabled, the VOD-to-Live Service will
+automatically extend the duration of any playlist that has a duration of less
+than 24 hours, so that it is exactly 24 hours long. This is achieved by using a
+placeholder video to fill the remaining time.
 
 ## Setup
 
 - Prerequisites: The
   [Unified Virtual Channel](https://beta.docs.unified-streaming.com/documentation/virtual-channel/gettingstarted/index.html)
-  should be setup.
-- Follow the instructions from the `README.md` file in the Media solution root
+  should be set up.
+- Follow the instructions from the `README.md` file in the Media Solution root
   folder.
-- Open configuration file `.env` for the service and set missing values
+- Open the configuration file `.env` for the service and set missing values
   accordingly.
 
 ### Service configuration
 
 #### General settings
 
-`PRE_PUBLISHING_WEBHOOK_SECRET` - mandatory. Secret key used to sign the
-validation messages exchanged between Managed Channel service and VOD-to-Live
-service. Can be retrieved in the Admin portal when setting up Pre-Publishing
-webhook for the Channel service.
+`PRE_PUBLISHING_WEBHOOK_SECRET` - This is a mandatory setting. The secret key
+used to sign validation messages between the Managed Channel and VOD-to-Live
+services. It can be retrieved from the Admin portal when setting up the
+Pre-Publishing webhook for the Channel Service.
 
-`CATCH_UP_DURATION_IN_MINUTES` - defaults to 60 minutes. A duration in minutes
-used to add to the playlist duration for smoother playlist transitions.
+`CATCH_UP_DURATION_IN_MINUTES` - This setting defaults to 60 minutes and adds
+this duration to the playlist to create smoother transitions between playlists.
 
-`PROLONG_PLAYLIST_TO_24_HOURS` - defaults to TRUE. Enables service feature to
-prolongate the playlist duration to 24 hours.
+`PROLONG_PLAYLIST_TO_24_HOURS` - This feature is enabled by default and prolongs
+the playlist duration to 24 hours.
 
-`CHANNEL_PROCESSING_WAIT_TIME_IN_SECONDS` - defaults to 10 minutes. Wait time,
-that VOD-to-Live service will wait for the Channel to go live.
+`CHANNEL_PROCESSING_WAIT_TIME_IN_SECONDS` - By default, this setting is set to
+10 minutes and determines the amount of time the VOD-to-Live service waits
+before the channel goes live.
 
 #### USP Virtual Channel API settings
 
-`VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL` - mandatory. Base URL to the Unified
-Virtual Channel Management API.
+`VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL` - This is the mandatory setting for
+base URL of the Unified Virtual Channel Management API.
 
-`VIRTUAL_CHANNEL_MANAGEMENT_API_KEY` - optional. Used for authorization by API
-key with Virtual Channel Management API.
+`VIRTUAL_CHANNEL_MANAGEMENT_API_KEY` - This is an optional API key used for
+authorization with the Virtual Channel Management API.
 
-`VIRTUAL_CHANNEL_ORIGIN_BASE_URL` - mandatory. Base URL to the Unified Streaming
-Origin, or CDN for Origin.
+`VIRTUAL_CHANNEL_ORIGIN_BASE_URL` - This is the mandatory setting for base URL
+of the Unified Streaming Origin or the CDN for Origin.
 
-#### Azure storage settings
+#### Azure Storage settings
 
-`AZURE_STORAGE_CONNECTION` - mandatory. Connection string to the Azure storage.
+`AZURE_STORAGE_CONNECTION` - This is the mandatory setting for the connection
+string of the Azure storage.
 
-`AZURE_BLOB_CONTAINER_NAME` - mandatory. Azure storage container name, where
-service will store channel data.
+`AZURE_BLOB_CONTAINER_NAME` - This is the mandatory setting. Name of the
+container in Azure Storage where the service will store channel data.
 
 #### DRM settings
 
-To enable the DRM protection of live stream the configurations below should be
-filled. Values are available on the Axinom Portal.
+To enable DRM protection of the live stream, fill out the configurations below
+with the values available on the Axinom Portal.
 
-`KEY_SERVICE_API_BASE_URL` - optional.
+`KEY_SERVICE_API_BASE_URL` - This setting is optional.
 
-`KEY_SERVICE_TENANT_ID` - optional.
+`KEY_SERVICE_TENANT_ID` - This setting is optional.
 
-`KEY_SERVICE_MANAGEMENT_KEY` - optional.
+`KEY_SERVICE_MANAGEMENT_KEY` - This setting is optional.
 
-`DRM_KEY_SEED_ID` - optional.
+`DRM_KEY_SEED_ID` - This setting is optional.

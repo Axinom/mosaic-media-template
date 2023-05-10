@@ -17,7 +17,6 @@ export const getTestMutualStreamParams = (): StreamParams[] => {
  * @param isDrmProtected - is the video DRM protected, or not
  * @param id - id unique identifier, if not set - defaults to random UUID
  * @param duration - duration of the video in seconds, if not set - defaults to 60 sec
- * @returns
  */
 export const createTestVideo = (
   isDrmProtected: boolean,

@@ -1,7 +1,7 @@
 export const ValidationErrors = {
   // Channel validation messages
   ChannelMissingPlaceholderVideo: {
-    message: 'Channel must have placeholder video assigned.',
+    message: 'A placeholder video must be assigned to the channel.',
     code: 'CHANNEL_MISSING_PLACEHOLDER_VIDEO',
   },
   // Playlist validation messages
@@ -19,23 +19,23 @@ export const ValidationErrors = {
   },
   PlaylistProlongation: {
     message:
-      'Playlist duration is under 24 hours. Playlist will be prolonged with placeholder video to hit 24 hours duration.',
+      'The playlist duration is less than 24 hours. To reach a total duration of 24 hours, a placeholder video will be looped multiple times at the end of the playlist.',
     code: 'PLAYLIST_PROLONGATION',
   },
   PlaylistIsTooOld: {
-    message: 'Playlist start date is older than 24 hours.',
+    message: 'The playlist start date is more than 24 hours ago.',
     code: 'PLAYLIST_START_DATE_TOO_OLD',
   },
   PlaylistCannotStartAndEndWithAdPod: {
-    message: 'Playlist cannot start and end with "AD_POD".',
+    message: 'The playlist cannot begin and end with an "AD_POD".',
     code: 'PLAYLIST_CANNOT_START_AND_END_WITH_AD_POD',
   },
   PlaylistVideosHaveNoMutualStreams: {
-    message: 'Videos in the playlist have no mutual stream formats.',
+    message: 'The videos in the playlist do not share a common stream format.',
     code: 'PLAYLIST_VIDEOS_HAVE_NO_MUTUAL_STREAMS',
   },
   PlaylistPlaceholderVideoWasNotFound: {
-    message: 'Placeholder video for the playlist was not found.',
+    message: 'The placeholder video for the playlist could not be found.',
     code: 'PLAYLIST_PLACEHOLDER_VIDEO_WAS_NOT_FOUND',
   },
   // General validation messages
@@ -44,7 +44,7 @@ export const ValidationErrors = {
     code: `VALIDATION_FAILED`,
   },
   ValidationNotPossible: {
-    message: `Received message cannot be validated.`,
+    message: `The message received cannot be validated.`,
     code: `VALIDATION_NOT_POSSIBLE`,
   },
 };

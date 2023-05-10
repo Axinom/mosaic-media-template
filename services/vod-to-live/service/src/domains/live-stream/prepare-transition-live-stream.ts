@@ -5,7 +5,7 @@ import { isFutureDate, Transition } from './utils';
 const logger = new Logger({ context: 'prepare-transition-live-stream' });
 
 /**
- * Prepare live steam for the playlist.
+ * This function prepares a live stream for a playlist.
  * @param channelId - unique identifier of the channel.
  * @param playlistId - unique identifier of the playlist.
  * @param transitionDateTime - start date time for the transition.
@@ -36,7 +36,7 @@ export const prepareTransitionLiveStream = async (
             futureTransition.transitionDate,
           );
           logger.log({
-            message: `Previously planned playlist transition removal result:`,
+            message: `Result of removing previously planned playlist transition:`,
             details: {
               channelId,
               playlistId,
@@ -74,7 +74,7 @@ const createTransition = async (
     true,
   );
   logger.log({
-    message: `Transition for playlist ${playlistId} creation result:`,
+    message: `The result of creating a transition for playlist ${playlistId}:`,
     details: {
       channelId,
       playlistId,

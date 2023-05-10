@@ -34,9 +34,9 @@ export const generatePlaylistFilePath = (
 };
 
 /**
- * Checks if provided string date-time is in the future.
- * @param date - string containing date time.
- * @returns - true if the provided date is in future.
+ * Checks whether the provided date-time string is in the future.e.
+ * @param date - a string containing the date-time to be checked.
+ * @returns - true if the provided date-time is in the future.
  */
 export const isFutureDate = (date: string): boolean => {
   const today = new Date();
@@ -45,10 +45,12 @@ export const isFutureDate = (date: string): boolean => {
 };
 
 /**
- * Creates a ISO date time for the transition start.
- * If playlist start date is in future - the start date is used.
- * Otherwise, transition date time is calculated by formula Now + processing buffer in minutes.
- * @param startDateTime - start date time as string ISO for the transition.
+ * This function creates an ISO date time for the transition start.
+ * If the playlist start date is in the future, it uses that date.
+ * Otherwise, it calculates the transition date time using
+ * the formula "Now + processing buffer in minutes".
+ * @param startDateTime - start date time is passed as a string in ISO format.
+ * @param catchUpDurationInMinutes - a catch up duration, that would be added for smoother transition.
  */
 export const getTransitionDateTime = (
   startDateTime: string,

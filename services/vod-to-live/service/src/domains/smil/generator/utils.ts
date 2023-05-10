@@ -19,11 +19,11 @@ export interface PlaylistEventStream {
 }
 
 /**
- * Creates a unique event stream within the playlist.
- * @param outOfNetworkIndicator  out of network indicator of the playlist item.
- * @param previousOutOfNetworkIndicator out of network indicator of the previous playlist item.
- * @param previousSpliceEventId splice event id of the previous playlist item.
- * @returns An object containing calculated OONI indicator, splice identifier and EventStream, if required.
+ * Creates a new event stream within the playlist with a unique identifier.
+ * @param outOfNetworkIndicator: the out-of-network indicator of the playlist item.
+ * @param previousOutOfNetworkIndicator: the out-of-network indicator of the previous playlist item.
+ * @param previousSpliceEventId: the splice event ID of the previous playlist item.
+ * @return An object containing the calculated out-of-network indicator, splice identifier, and EventStream if required.
  */
 export const createPlaylistEventStream = (
   outOfNetworkIndicator: OutOfNetworkIndicator,
@@ -51,9 +51,9 @@ export const createPlaylistEventStream = (
 };
 
 /**
- * Fills the `AD_POD` schedule with placeholder video.
- * The placeholder video will be cut short,
- * or looped multiple times to fill the requested `AD_POD` duration.
+ * Populates the `AD_POD` schedule with a placeholder video
+ * that can be cut short or looped multiple times to fill
+ * the requested duration of the AD_POD.
  * @param schedule cue point schedule of the playlist's item.
  * @param parallel SMIL parallel for the Ad Placeholder video.
  * @param placeholderLength length of the Ad Placeholder video.
@@ -98,6 +98,12 @@ export const determineIntegerDivisionAndRemainder = (
   number: number,
   divisor: number,
 ): { quotient: number; remainder: number } => {
+  if (divisor === 0) {
+    return {
+      quotient: 0,
+      remainder: 0,
+    };
+  }
   return {
     quotient: Math.floor(number / divisor),
     remainder: number % divisor,

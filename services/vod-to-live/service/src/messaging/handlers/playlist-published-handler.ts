@@ -140,7 +140,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
       );
     } else {
       this.logger.error(
-        `Placeholder video for channel ${payload.channel_id} was not found. Playlist transition will not be created.`,
+        `The placeholder video for channel ${payload.channel_id} could not be found.The playlist transition cannot be created.`,
       );
     }
   }

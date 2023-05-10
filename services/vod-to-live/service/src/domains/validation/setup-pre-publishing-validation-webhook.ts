@@ -55,7 +55,7 @@ export const setupPrePublishingValidationWebhook = (
             generateWebhookResponse<PrePublishingPayload>(result);
         } catch (error) {
           logger.error({
-            message: `Failed to validate message of type ${requestBody.message_type}`,
+            message: `The message of type ${requestBody.message_type} could not be validated.`,
             details: {
               requestBody: requestBody,
               error: error,
@@ -69,7 +69,7 @@ export const setupPrePublishingValidationWebhook = (
         }
       } else {
         logger.warn({
-          message: `Received message cannot be handled ${requestBody.message_type}`,
+          message: `The received message cannot be handled. Its type is: ${requestBody.message_type}.`,
           details: { ...requestBody },
         });
         // generating response to the caller

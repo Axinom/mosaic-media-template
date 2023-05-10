@@ -35,7 +35,7 @@ export const deleteTransitionLiveStream = async (
         transitionDate,
       );
       logger.log({
-        message: `Transition with date ${transitionDate} deletion result:`,
+        message: `Deletion result for the transition with the date ${transitionDate}:`,
         details: {
           channelId,
           playlistId,
@@ -48,7 +48,7 @@ export const deleteTransitionLiveStream = async (
       `${channelId}/${playlistId}`,
     );
     logger.log({
-      message: 'Playlist deletion from Azure Storage result:',
+      message: 'Result of deleting the playlist from Azure Storage:',
       details: {
         channelId,
         deletedFiles: storageFileDeletion,
@@ -64,7 +64,7 @@ export const deleteTransitionLiveStream = async (
       const event: ChannelPublishedEvent = JSON.parse(channelLatestJson);
       if (!event) {
         logger.warn(
-          `Channel ${channelId} was not found in the Azure Storage. Cannot create channel transition.`,
+          `The metadata for channel ${channelId} was not found in Azure Storage. Therefore, a transition cannot be created for the channel.`,
         );
         return;
       }

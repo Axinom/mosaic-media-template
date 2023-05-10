@@ -48,6 +48,11 @@ export class KeyServiceApi {
     }
   }
 
+  /**
+   * Creates a new content key for DRM protection.
+   * @param contentKeyName - name of the content key.
+   * @returns - response from Key Service.
+   */
   public postContentKey = async (
     contentKeyName: string,
   ): Promise<ContentKeyResponse> => {
@@ -76,6 +81,10 @@ export class KeyServiceApi {
     }
   };
 
+  /**
+   * Deletes a content key for DRM protection.
+   * @param contentKeyId - content key unique identifier.
+   */
   public deleteContentKey = async (contentKeyId: string): Promise<void> => {
     if (!this.keyServiceApiUrl) {
       throw new MosaicError({
@@ -97,6 +106,10 @@ export class KeyServiceApi {
     }
   };
 
+  /**
+   * Generates CPIX according to the SPEKE CPIX key exchange protocol.
+   * @param request - CPIX request.
+   */
   public postSpekeRequest = async (request: string): Promise<string> => {
     if (!this.keyServiceApiUrl) {
       throw new MosaicError({

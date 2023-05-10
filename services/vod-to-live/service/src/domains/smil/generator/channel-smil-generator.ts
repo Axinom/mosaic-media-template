@@ -18,8 +18,8 @@ import {
 } from './utils';
 
 /**
- * Class to generate the SMIL Document from the channel published event.
- * Should be instantiated for each new document generation.
+ * This class generates an SMIL Document from a channel published event.
+ * It should be instantiated for each new document generation.
  */
 export class ChannelSmilGenerator extends SmilGenerator<ChannelPublishedEvent> {
   constructor(private drmSettings: CpixSettings) {

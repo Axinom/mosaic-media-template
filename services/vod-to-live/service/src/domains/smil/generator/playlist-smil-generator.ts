@@ -32,8 +32,8 @@ import {
 } from './utils';
 
 /**
- * Class to generate the SMIL Document from the playlist published event.
- * Should be instantiated for each new document generation.
+ * This class generates an SMIL Document from a playlist published event.
+ * It should be instantiated for each new document generation.
  */
 export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent> {
   // Playlist level variable: indicates if the last playlist item was in network, or out.
@@ -43,9 +43,8 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
 
   /**
    * Creates a unique event stream within the playlist.
-   * @param outOfNetworkIndicator out of network indicator of the playlist item.
-   * @param eventDuration duration of the event.
-   * @returns Event stream if it is required, or undefined if event is not needed.
+   * @param outOfNetworkIndicator - the out-of-network indicator of the playlist item.
+   * @returns an EventStream object if it is required, or undefined if an event is not needed.
    */
   private createEventStreamInPlaylist = (
     outOfNetworkIndicator: OutOfNetworkIndicator,
@@ -127,7 +126,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
       );
     }
 
-    // if first and last parallels are `out of network`
+    // if first and last parallels are `out-of-network`
     // come back 'in network' parallel should be added for proper looping in USP
     const firstParallel = parallels[0];
     const lastParallel = parallels.slice(-1)[0];
@@ -187,9 +186,9 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
   }
 
   /**
-   * Transform playlist program into SMIL parallels with the insertions of ads.
-   * @param program Playlist program (VOD video).
-   * @returns - SMIL parallels in order they should be played in.
+   * Transforms a playlist program into SMIL parallels with the insertion of ads.
+   * @param program the playlist program (VOD video).
+   * @returns -the SMIL parallels in the order they should be played.
    */
   private processProgram(program: Program): Parallel[] {
     const parallels: Parallel[] = [];
@@ -242,7 +241,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
             result.parallels.push(...this.processCuePoint(midCuePoint));
           } else {
             this.logger.warn({
-              message: `MID cue point '${midCuePoint.id}' is missing insertion time. Cue point is skipped! `,
+              message: `The MID cue point with ID '${midCuePoint.id}' is missing the insertion time. Therefore this cue point is skipped!`,
               details: {
                 programId: program.id,
                 programTitle: program.title,
@@ -281,8 +280,9 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
   }
 
   /**
-   * Transform playlist cue point schedules into SMIL parallels.
-   * @param cuePoint - Cue Point of the program.
+   * Transforms the cue point schedules of a program in the playlist
+   * into SMIL parallels in the order they should be played.
+   * @param cuePoint - cue point of the program.
    * @returns - SMIL parallels in order they should be played in.
    */
   private processCuePoint = (cuePoint: ProgramCuePoint): Parallel[] => {
@@ -340,10 +340,11 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
   };
 
   /**
-   * Creates additional parallels, if playlist duration is below 24 hours.
+   * This function creates additional SMIL parallels if the duration of the playlist is below 24 hours.
+   * It takes the start and end dates of the playlist as input parameters.
    * @param playlistStartDate - start date of the playlist.
    * @param playlistEndDate - end date of the playlist.
-   * @returns list of the parallels for playlist prolongation.
+   * @returns a list of parallels that can be used to prolong the playlist.
    */
   private tryProlongatePlaylist = (
     playlistStartDate: string,

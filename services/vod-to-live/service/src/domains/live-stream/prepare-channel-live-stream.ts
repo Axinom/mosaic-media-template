@@ -87,7 +87,7 @@ export const prepareChannelLiveStream = async (
         );
 
         logger.log({
-          message: `Virtual Channel ${channelId} cpix creation result:`,
+          message: `The result of creating a CPIX file for virtual channel ${channelId}:`,
           details: {
             encryptionFilesCreationResult: protectionCpixCreationResult,
           },
@@ -101,7 +101,7 @@ export const prepareChannelLiveStream = async (
       );
 
       logger.log({
-        message: `Virtual Channel ${channelId} creation result:`,
+        message: `The result of creating virtual channel ${channelId}:`,
         details: {
           virtualChannelCreationResult: channelCreationResult,
         },
@@ -122,7 +122,7 @@ export const prepareChannelLiveStream = async (
       JSON.stringify(newChannelMetadata),
     );
     logger.log({
-      message: `Channel ${channelId} metadata saving result:`,
+      message: `The result of saving the metadata for channel ${channelId}:`,
       details: {
         wasSaved: saveResult,
       },
@@ -133,10 +133,11 @@ export const prepareChannelLiveStream = async (
 };
 
 /**
- * Executed once per each new channel: creates in the Azure storage in directory {channelId}
- * CPIX files required for DASH and HLS live stream protection.
- * All Live Streams created for the specified channel will use files for protection
- * with Azure SAS token limited in time by the playlist duration.
+ * Creates CPIX files required for DASH and HLS live stream protection
+ * in the Azure storage directory {channelId}.
+ * This function is executed once for each new channel.
+ * All live streams created for the specified channel will use these files
+ * for protection with an Azure SAS token that is limited in time by the playlist duration.
  */
 const createProtectionCpix = async (
   keyId: string,

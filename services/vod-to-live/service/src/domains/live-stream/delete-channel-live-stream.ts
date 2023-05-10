@@ -27,7 +27,7 @@ export const deleteChannelLiveStream = async (
     }
     const storageFileDeletion = await storage.deleteFolder(channelId);
     logger.log({
-      message: 'Channel deletion result:',
+      message: 'The result of the channel deletion:',
       details: {
         channelId,
         virtualChannelDeletionResult: result,

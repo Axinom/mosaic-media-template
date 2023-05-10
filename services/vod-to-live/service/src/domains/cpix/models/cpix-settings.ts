@@ -1,5 +1,5 @@
 /**
- * Interface provides path to CPIX files for decryption of the Videos and encryption of live stream.
+ * This interface provides the path to the CPIX files required for video decryption and live stream encryption.
  */
 export interface CpixSettings {
   decryptionCpixFile: string | null | undefined;

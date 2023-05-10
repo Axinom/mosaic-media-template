@@ -73,6 +73,10 @@ export class AzureStorage {
     return containerClient;
   };
 
+  /**
+   * Delete files from Azure Storage.
+   * @param relativeFilePath - relative path to the file.
+   */
   public deleteFile = async (relativeFilePath: string): Promise<boolean> => {
     try {
       const normalizedPath = normalizeRelativePath(relativeFilePath);
@@ -85,6 +89,10 @@ export class AzureStorage {
     }
   };
 
+  /**
+   * Deletes files from Azure Storage that have a matching directory.
+   * @param relativeDirectoryPath - relative path to the directory.
+   */
   public deleteFolder = async (
     relativeDirectoryPath: string,
   ): Promise<{ filePath: string; wasDeleted: boolean }[]> => {
@@ -107,6 +115,11 @@ export class AzureStorage {
     }
   };
 
+  /**
+   * Retrieves content of the file in Azure Storage.
+   * @param relativeFilePath - relative path to the file.
+   * @returns file content as a string.
+   */
   public getFileContent = async (relativeFilePath: string): Promise<string> => {
     try {
       const normalizedPath = normalizeRelativePath(relativeFilePath);
@@ -139,6 +152,11 @@ export class AzureStorage {
     });
   };
 
+  /**
+   * Creates a new file in Azure Storage.
+   * @param relativeFilePath - relative path to the file.
+   * @param fileContent - content of the file.
+   */
   public createFile = async (
     relativeFilePath: string,
     fileContent: string,
@@ -157,6 +175,14 @@ export class AzureStorage {
     }
   };
 
+  /**
+   *
+   * Generates a Blob Service Shared Access Signature (SAS).
+   * The SAS is signed by the shared key credential of the client.
+   * @param relativeFilePath - relative path to the file in the Azure Storage.
+   * @param startDate - starting date for the SAS.
+   * @param endDate - ending date for the SAS.
+   */
   public getFileSasUrl = async (
     relativeFilePath: string,
     startDate: Date,
@@ -176,6 +202,11 @@ export class AzureStorage {
     }
   };
 
+  /**
+   * This function initializes a connection to an Azure Storage container.
+   * If the specified container doesn't exist, it will be created.
+   * @param containerName - name of the Azure Storage container.
+   */
   public createStorage = async (containerName: string): Promise<void> => {
     try {
       // Creates a container if it does not exist.

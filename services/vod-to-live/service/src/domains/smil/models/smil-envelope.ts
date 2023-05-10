@@ -6,9 +6,9 @@ export type SignalXmlns = 'http://www.scte.org/schemas/35/2016';
 export type OutOfNetworkIndicator = 0 | 1;
 
 /**
- * Interface model describing SMIL (Synchronized Multimedia Integration Language) format.
- * Allows to make playlists for different combinations of files with different bitrates.
- * This model can be used to create Live streams from VOD videos.
+ * This interface model describes the SMIL (Synchronized Multimedia Integration Language) format,
+ * which allows the creation of playlists for different combinations of files with varying bitrates.
+ * The model is used to create live streams from VOD (Video-On-Demand) videos.
  */
 export interface SMILEnvelope {
   smil: {
@@ -23,8 +23,9 @@ export interface SMILEnvelope {
 }
 
 /**
- * Describes element of the SMIL envelope header.
- * Header contains information of how the SMIL should be processed and any other additional information associated with SMIL.
+ * This describes an element of the SMIL envelope header.
+ * The header includes information about how the SMIL should be processed,
+ * as well as any other additional information associated with the SMIL.
  */
 export interface HeaderMetadata {
   '@name': string;
@@ -32,14 +33,15 @@ export interface HeaderMetadata {
 }
 
 /**
- * SMIL container defines a sequence of elements in which programs play one after the other.
+ * A SMIL container defines a sequence of timed media elements that play one after another.
+ * This allows for the creation of playlists with multiple media types and timed events.
  */
 export interface Sequence {
   par: Parallel[] | Parallel;
 }
 
 /**
- * SMIL parallel, defines a simple time grouping in which multiple audio and video(with different bitrates) may play back at the same time.
+ * SMIL parallel element defines a time grouping in which multiple audio and video files with different bitrates can be played back simultaneously.
  */
 export interface Parallel extends ParallelReference {
   '@clipEnd'?: string;
@@ -47,15 +49,15 @@ export interface Parallel extends ParallelReference {
   EventStream?: EventStream | undefined;
 }
 /**
- * SMIL reference to the video, or audio file.
+ * SMIL element that refers to a video or audio file.
  */
 export interface Reference {
   '@src': string;
 }
 
 /**
- * SMIL element allowing to add timed metadata events.
- * Allows insertions of ads in Live streams.
+ * The SMIL element enables the insertion of timed metadata events,
+ *  which can be used for ad insertions in live streams.
  */
 export interface EventStream {
   '@xmlns': EventStreamXmlns;

@@ -58,7 +58,7 @@ export class VirtualChannelApi {
   };
 
   /**
-   * Retrieve list of all transitions for the virtual channel.
+   * Retrieve the complete list of transitions associated with the virtual channel.
    * @param channelId - unique identifier for the Channel.
    */
   public getChannelTransitions = async (
@@ -95,7 +95,7 @@ export class VirtualChannelApi {
   };
 
   /**
-   * Submit a job to create a channel or to modify existing one.
+   * Initiate a job to create a channel or make changes to an existing one.
    * @param channelId - unique identifier for the Channel.
    * @param smil - SMIL for the Channel.
    * @param forceUpdate - forces an update on the active channel. USE WITH CAUTION: can break playout.
@@ -125,7 +125,7 @@ export class VirtualChannelApi {
     }
   };
   /**
-   * Submits a job to create a transition or to modify an existing one.
+   * Submits a job to create or modify an existing transition for a channel.
    * @param channelId - unique identifier for the Channel.
    * @param transition - transition - date time a ISO8601 format.
    * @param smil - SMIL for the Playlist.
@@ -174,7 +174,7 @@ export class VirtualChannelApi {
   };
 
   /**
-   * Delete virtual channel associated with the unique identifier.
+   * Delete virtual channel.
    * @param channelId - unique identifier for the Channel.
    * @returns - response from the Virtual Channel API.
    */
@@ -201,7 +201,7 @@ export class VirtualChannelApi {
   };
 
   /**
-   * Delete transition within channel.
+   * Delete a transition within a channel.
    * @param channelId  - unique identifier for the Channel.
    * @param transition - - transition - date time a ISO8601 format.
    * @returns - response from the Virtual Channel API.
@@ -229,6 +229,12 @@ export class VirtualChannelApi {
     }
   };
 
+  /**
+   * Retrieve a list of all transitions that have been created for a specific playlist within the virtual channel.
+   * @param channelId  - unique identifier for the Channel.
+   * @param playlistId - unique identifier for the PLaylist.
+   * @returns - response from the Virtual Channel API.
+   */
   public getPlaylistTransitions = async (
     channelId: string,
     playlistId: string,
@@ -243,6 +249,13 @@ export class VirtualChannelApi {
     return matchingTransitions;
   };
 
+  /**
+   * Retrieve the current status of a the virtual channel.
+   * Includes both the overall status ["Pending", "In Progress", "Success", "Failed"]
+   * and a detailed history.
+   * @param channelId  - unique identifier for the Channel.
+   * @returns - response from the Virtual Channel API.
+   */
   public getChannelStatus = async (
     channelId: string,
   ): Promise<ChannelStatusResponse> => {
@@ -277,6 +290,10 @@ export class VirtualChannelApi {
     }
   };
 
+  /**
+   * Verifies whether the virtual channel has any associated transitions.
+   * @param channelId   - unique identifier for the Channel.
+   */
   public channelHasPlaylistTransitions = async (
     channelId: string,
   ): Promise<boolean> => {

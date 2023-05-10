@@ -88,15 +88,15 @@ export class PlaylistPublishedValidationWebhookHandler
         if (diffInHours < 24) {
           validationResult.warnings.push(ValidationErrors.PlaylistProlongation);
         }
+      }
 
-        //determine if playlist start date is older than 24 hours in the past
-        const playlistStartTimeComparedToNow = getHoursDifference(
-          event.start_date_time,
-          new Date().toISOString(),
-        );
-        if (playlistStartTimeComparedToNow >= 24) {
-          validationResult.errors.push(ValidationErrors.PlaylistIsTooOld);
-        }
+      //determine if playlist start date is older than 24 hours in the past
+      const playlistStartTimeComparedToNow = getHoursDifference(
+        event.start_date_time,
+        new Date().toISOString(),
+      );
+      if (playlistStartTimeComparedToNow >= 24) {
+        validationResult.errors.push(ValidationErrors.PlaylistIsTooOld);
       }
 
       // Playlist cannot start and end with an AD_POD (integration with AIP breaks on playlist loop)
@@ -160,7 +160,7 @@ export class PlaylistPublishedValidationWebhookHandler
         }
       } else {
         validationResult.errors.push(
-          ValidationErrors.PlaylistVideosHaveNoMutualStreams,
+          ValidationErrors.PlaylistPlaceholderVideoWasNotFound,
         );
       }
     }

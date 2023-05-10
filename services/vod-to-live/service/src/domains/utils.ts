@@ -22,6 +22,12 @@ export const convertObjectToXml = (
   });
 };
 
+/**
+ * Calculates the duration of the playlist in seconds based on the start and end date/time.
+ * @param playlistStartDate - start date-time of the playlist.
+ * @param playlistEndDate - end date-time of the playlist.
+ * @returns - duration of the playlist in seconds.
+ */
 export const getPlaylistDurationInSeconds = (
   playlistStartDate: string,
   playlistEndDate: string,
