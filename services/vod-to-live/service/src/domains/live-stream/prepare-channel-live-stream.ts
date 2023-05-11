@@ -1,7 +1,7 @@
 import { Broker } from '@axinom/mosaic-message-bus';
 import { getMappedError, Logger } from '@axinom/mosaic-service-common';
 import {
-  EnsureChannelLiveCommand,
+  CheckChannelJobStatusCommand,
   LiveStreamProtectionKeyCreatedEvent,
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
@@ -106,8 +106,8 @@ export const prepareChannelLiveStream = async (
           virtualChannelCreationResult: channelCreationResult,
         },
       });
-      await broker.publish<EnsureChannelLiveCommand>(
-        VodToLiveServiceMessagingSettings.EnsureChannelLive.messageType,
+      await broker.publish<CheckChannelJobStatusCommand>(
+        VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
         {
           channel_id: channelId,
           seconds_elapsed_while_waiting: 0,

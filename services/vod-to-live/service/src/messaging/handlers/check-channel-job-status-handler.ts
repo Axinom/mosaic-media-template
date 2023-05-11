@@ -1,9 +1,9 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { Logger, sleep } from '@axinom/mosaic-service-common';
 import {
-  EnsureChannelLiveCommand,
-  EnsureChannelLiveFailedEvent,
-  EnsureChannelLiveReadyEvent,
+  CheckChannelJobStatusCommand,
+  CheckChannelJobStatusFailedEvent,
+  CheckChannelJobStatusSucceededEvent,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
 import { VirtualChannelApi } from 'src/domains';
@@ -11,7 +11,7 @@ import urljoin from 'url-join';
 import { Config } from '../../common';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
-export class EnsureChannelLiveHandler extends AuthenticatedMessageHandler<EnsureChannelLiveCommand> {
+export class CheckChannelJobStatusHandler extends AuthenticatedMessageHandler<CheckChannelJobStatusCommand> {
   private logger: Logger;
   constructor(
     config: Config,
@@ -19,16 +19,16 @@ export class EnsureChannelLiveHandler extends AuthenticatedMessageHandler<Ensure
     private broker: Broker,
   ) {
     super(
-      VodToLiveServiceMessagingSettings.EnsureChannelLive.messageType,
+      VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
       config,
     );
     this.logger = new Logger({
       config: this.config,
-      context: EnsureChannelLiveHandler.name,
+      context: CheckChannelJobStatusHandler.name,
     });
   }
   async onMessage(
-    { channel_id, seconds_elapsed_while_waiting }: EnsureChannelLiveCommand,
+    { channel_id, seconds_elapsed_while_waiting }: CheckChannelJobStatusCommand,
     message: MessageInfo,
   ): Promise<void> {
     // request status
@@ -54,8 +54,9 @@ export class EnsureChannelLiveHandler extends AuthenticatedMessageHandler<Ensure
           hlsUrl,
         },
       });
-      await this.broker.publish<EnsureChannelLiveReadyEvent>(
-        VodToLiveServiceMessagingSettings.EnsureChannelLiveReady.messageType,
+      await this.broker.publish<CheckChannelJobStatusSucceededEvent>(
+        VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded
+          .messageType,
         {
           channel_id,
           dash_stream_url: dashUrl,
@@ -78,8 +79,9 @@ export class EnsureChannelLiveHandler extends AuthenticatedMessageHandler<Ensure
         },
       });
 
-      await this.broker.publish<EnsureChannelLiveFailedEvent>(
-        VodToLiveServiceMessagingSettings.EnsureChannelLiveFailed.messageType,
+      await this.broker.publish<CheckChannelJobStatusFailedEvent>(
+        VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed
+          .messageType,
         { channel_id, message: uspErrors.toString() },
         { auth_token: message.envelope.auth_token },
       );
@@ -97,8 +99,9 @@ export class EnsureChannelLiveHandler extends AuthenticatedMessageHandler<Ensure
           },
         });
 
-        await this.broker.publish<EnsureChannelLiveFailedEvent>(
-          VodToLiveServiceMessagingSettings.EnsureChannelLiveFailed.messageType,
+        await this.broker.publish<CheckChannelJobStatusFailedEvent>(
+          VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed
+            .messageType,
           {
             channel_id,
             message: `The channel ${channel_id} has taken more than ${this.config.channelProcessingWaitTimeInSeconds} seconds to go live.`,
@@ -109,8 +112,8 @@ export class EnsureChannelLiveHandler extends AuthenticatedMessageHandler<Ensure
       }
 
       await sleep(5000);
-      await this.broker.publish<EnsureChannelLiveCommand>(
-        VodToLiveServiceMessagingSettings.EnsureChannelLive.messageType,
+      await this.broker.publish<CheckChannelJobStatusCommand>(
+        VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
         {
           seconds_elapsed_while_waiting,
           channel_id,

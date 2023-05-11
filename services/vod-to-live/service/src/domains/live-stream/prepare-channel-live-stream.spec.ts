@@ -192,7 +192,7 @@ describe('prepareChannelLiveStream', () => {
               seconds_elapsed_while_waiting: 0,
             },
             messageType:
-              VodToLiveServiceMessagingSettings.EnsureChannelLive.messageType,
+              VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
           },
         ]);
 
@@ -381,7 +381,7 @@ describe('prepareChannelLiveStream', () => {
               seconds_elapsed_while_waiting: 0,
             },
             messageType:
-              VodToLiveServiceMessagingSettings.EnsureChannelLive.messageType,
+              VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
           },
         ]);
         expect(createdContentKeys).toHaveLength(0);

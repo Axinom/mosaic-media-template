@@ -13,7 +13,9 @@ import { ChannelMetadataModel } from 'src/domains/models';
 import { Config, DAY_IN_SECONDS } from '../../common';
 import {
   AzureStorage,
-  generateCpixSettings,
+  CpixSettings,
+  createDecryptionCpix,
+  createEncryptionCpix,
   KeyServiceApi,
   PlaylistSmilGenerator,
 } from '../../domains';
@@ -103,23 +105,35 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
             durationInSeconds: encryptionDurationInSeconds,
           }
         : undefined;
-      const drmSettings = await generateCpixSettings(
-        channelPublishedEvent.id,
-        payload.id,
-        {
-          videos: [placeholderVideo, ...videos],
-          // decryption starts immediately
-          startDate: new Date(),
-          // decryption is allowed for 24h
-          durationInSeconds: DAY_IN_SECONDS,
-        },
-        encryptionParams,
-        this.storage,
-        this.keyServiceApi,
-      );
-
+      const cpixSettings: CpixSettings = {
+        decryptionCpixFile: await createDecryptionCpix(
+          channelPublishedEvent.id,
+          payload.id,
+          {
+            videos: [placeholderVideo, ...videos],
+            // decryption starts immediately
+            startDate: new Date(),
+            // decryption is allowed for 24h
+            durationInSeconds: DAY_IN_SECONDS,
+          },
+          this.storage,
+          this.keyServiceApi,
+        ),
+        encryptionDashCpixFile: await createEncryptionCpix(
+          channelPublishedEvent.id,
+          'DASH',
+          encryptionParams,
+          this.storage,
+        ),
+        encryptionHlsCpixFile: await createEncryptionCpix(
+          channelPublishedEvent.id,
+          'HLS',
+          encryptionParams,
+          this.storage,
+        ),
+      };
       const generator = new PlaylistSmilGenerator(
-        drmSettings,
+        cpixSettings,
         this.config,
         placeholderVideo,
       );

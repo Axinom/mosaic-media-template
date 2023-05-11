@@ -127,22 +127,24 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
 
     // if first and last parallels are `out-of-network`
     // come back 'in network' parallel should be added for proper looping in USP
-    const firstParallel = parallels[0];
-    const lastParallel = parallels.slice(-1)[0];
-    if (
-      lastParallel?.EventStream?.Event?.Signal?.SpliceInfoSection?.SpliceInsert?.slice(
-        -1,
-      )[0]?.['@outOfNetworkIndicator'] === 1 &&
-      firstParallel?.EventStream?.Event?.Signal?.SpliceInfoSection?.SpliceInsert?.slice(
-        -1,
-      )[0]?.['@outOfNetworkIndicator'] === 1
-    ) {
-      parallels.push(
-        createParallel(
-          { video: [], audio: [] },
-          this.createEventStreamInPlaylist(0),
-        ),
-      );
+    if (parallels.length >= 2) {
+      const firstParallel = parallels[0];
+      const lastParallel = parallels.slice(-1)[0];
+      if (
+        lastParallel?.EventStream?.Event?.Signal?.SpliceInfoSection?.SpliceInsert?.slice(
+          -1,
+        )[0]?.['@outOfNetworkIndicator'] === 1 &&
+        firstParallel?.EventStream?.Event?.Signal?.SpliceInfoSection?.SpliceInsert?.slice(
+          -1,
+        )[0]?.['@outOfNetworkIndicator'] === 1
+      ) {
+        parallels.push(
+          createParallel(
+            { video: [], audio: [] },
+            this.createEventStreamInPlaylist(0),
+          ),
+        );
+      }
     }
 
     return createSmilEnvelope(parallels, this.populateHeader(originalEvent));

@@ -3,13 +3,13 @@ import { ChannelPublishedEvent, DetailedVideo } from '@axinom/mosaic-messages';
 import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
 import { Config } from '../../common';
-import { AzureStorage, CpixSettings, KeyServiceApi } from '../../domains';
+import { AzureStorage, KeyServiceApi } from '../../domains';
 import * as cpixGeneration from '../../domains/cpix/generator/generate-cpix-settings';
 import { createTestVideo } from '../../tests';
 import { ChannelPublishedHandler } from './channel-published-handler';
 
 describe('ChannelPublishedHandler', () => {
-  let generateCpixSettings: jest.SpyInstance;
+  let createDecryptionCpix: jest.SpyInstance;
   let cpixSettingsVideos: DetailedVideo[] = [];
   let messages: { messageType: string; message: any }[] = [];
   const mockedKeyServiceApi = stub<KeyServiceApi>({});
@@ -23,8 +23,8 @@ describe('ChannelPublishedHandler', () => {
 
   const mockedConfig = stub<Config>({});
   beforeEach(async () => {
-    generateCpixSettings = jest
-      .spyOn(cpixGeneration, 'generateCpixSettings')
+    createDecryptionCpix = jest
+      .spyOn(cpixGeneration, 'createDecryptionCpix')
       .mockImplementation(
         async (
           _channelId: string,
@@ -37,32 +37,18 @@ describe('ChannelPublishedHandler', () => {
               }
             | null
             | undefined,
-          _encryptionParams:
-            | {
-                startDate: Date;
-                durationInSeconds: number;
-              }
-            | null
-            | undefined,
           _storage: AzureStorage,
           _keyServiceApi: KeyServiceApi,
-        ): Promise<CpixSettings> => {
+        ): Promise<string | undefined> => {
           cpixSettingsVideos = decryptionParams ? decryptionParams.videos : [];
-          if (cpixSettingsVideos.find((v) => v.video_encoding.is_protected)) {
-            return {
-              decryptionCpixFile:
-                'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...',
-              encryptionDashCpixFile:
-                'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...',
-              encryptionHlsCpixFile:
-                'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...',
-            };
+          if (decryptionParams) {
+            if (cpixSettingsVideos.find((v) => v.video_encoding.is_protected)) {
+              return 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...';
+            } else {
+              return undefined;
+            }
           }
-          return {
-            decryptionCpixFile: undefined,
-            encryptionDashCpixFile: undefined,
-            encryptionHlsCpixFile: undefined,
-          };
+          return undefined;
         },
       );
   });
@@ -96,7 +82,7 @@ describe('ChannelPublishedHandler', () => {
       await handler.onMessage(payload, messageInfo);
 
       // Assert
-      expect(generateCpixSettings).toHaveBeenCalledTimes(1);
+      expect(createDecryptionCpix).toHaveBeenCalledTimes(1);
       expect(cpixSettingsVideos).toHaveLength(1);
       expect(cpixSettingsVideos).toMatchObject([payload.placeholder_video]);
       expect(messages).toHaveLength(1);

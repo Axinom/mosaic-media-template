@@ -2,7 +2,7 @@ import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { sleep } from '@axinom/mosaic-service-common';
 import { stub } from 'jest-auto-stub';
 import {
-  EnsureChannelLiveCommand,
+  CheckChannelJobStatusCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
 import urljoin from 'url-join';
@@ -13,7 +13,7 @@ import {
   ChannelStatusResponse,
   VirtualChannelApi,
 } from '../../domains';
-import { EnsureChannelLiveHandler } from './ensure-channel-live-handler';
+import { CheckChannelJobStatusHandler } from './check-channel-job-status-handler';
 jest.mock('@axinom/mosaic-service-common', () => {
   const original = jest.requireActual('@axinom/mosaic-service-common');
   return {
@@ -21,7 +21,7 @@ jest.mock('@axinom/mosaic-service-common', () => {
     sleep: jest.fn(),
   };
 });
-describe('EnsureChannelLiveHandler', () => {
+describe('CheckChannelJobStatusHandler', () => {
   let messages: { messageType: string; message: any }[] = [];
 
   const mockedBroker = stub<Broker>({
@@ -49,7 +49,7 @@ describe('EnsureChannelLiveHandler', () => {
     getChannelStatus: async (): Promise<ChannelStatusResponse> =>
       getChannelStatusResult(),
   });
-  const handler = new EnsureChannelLiveHandler(
+  const handler = new CheckChannelJobStatusHandler(
     mockedConfig,
     mockedVirtualChannelApi,
     mockedBroker,
@@ -66,7 +66,7 @@ describe('EnsureChannelLiveHandler', () => {
   });
 
   it.each(['Pending', 'In Progress'])(
-    'if virtual channel status is "%s" -> EnsureChannelLiveCommand is sent',
+    'if virtual channel status is "%s" -> CheckChannelJobStatusCommand is sent',
     async (status) => {
       // Arrange
       getChannelStatusResult = () => {
@@ -76,11 +76,11 @@ describe('EnsureChannelLiveHandler', () => {
           details: [],
         };
       };
-      const payload: EnsureChannelLiveCommand = {
+      const payload: CheckChannelJobStatusCommand = {
         channel_id: uuid(),
         seconds_elapsed_while_waiting: 0,
       };
-      const messageInfo = stub<MessageInfo<EnsureChannelLiveCommand>>({
+      const messageInfo = stub<MessageInfo<CheckChannelJobStatusCommand>>({
         envelope: {
           auth_token: 'no-token',
           payload,
@@ -93,7 +93,7 @@ describe('EnsureChannelLiveHandler', () => {
       expect(messages).toMatchObject([
         {
           messageType:
-            VodToLiveServiceMessagingSettings.EnsureChannelLive.messageType,
+            VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
           message: {
             channel_id: payload.channel_id,
             seconds_elapsed_while_waiting: 5,
@@ -103,7 +103,7 @@ describe('EnsureChannelLiveHandler', () => {
     },
   );
 
-  it('if virtual channel status is "Success" -> EnsureChannelLiveReadyEvent is sent', async () => {
+  it('if virtual channel status is "Success" -> CheckChannelJobStatusSucceededEvent is sent', async () => {
     // Arrange
     getChannelStatusResult = () => {
       return {
@@ -112,11 +112,11 @@ describe('EnsureChannelLiveHandler', () => {
         details: [],
       };
     };
-    const payload: EnsureChannelLiveCommand = {
+    const payload: CheckChannelJobStatusCommand = {
       channel_id: uuid(),
       seconds_elapsed_while_waiting: 0,
     };
-    const messageInfo = stub<MessageInfo<EnsureChannelLiveCommand>>({
+    const messageInfo = stub<MessageInfo<CheckChannelJobStatusCommand>>({
       envelope: {
         auth_token: 'no-token',
         payload,
@@ -129,7 +129,8 @@ describe('EnsureChannelLiveHandler', () => {
     expect(messages).toMatchObject([
       {
         messageType:
-          VodToLiveServiceMessagingSettings.EnsureChannelLiveReady.messageType,
+          VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded
+            .messageType,
         message: {
           channel_id: payload.channel_id,
           dash_stream_url: urljoin(
@@ -147,7 +148,7 @@ describe('EnsureChannelLiveHandler', () => {
     ]);
   });
 
-  it('if virtual channel status is "Failed" -> EnsureChannelLiveFailedEvent is sent', async () => {
+  it('if virtual channel status is "Failed" -> CheckChannelJobStatusFailedEvent is sent', async () => {
     // Arrange
     getChannelStatusResult = () => {
       return {
@@ -169,11 +170,11 @@ describe('EnsureChannelLiveHandler', () => {
         ],
       };
     };
-    const payload: EnsureChannelLiveCommand = {
+    const payload: CheckChannelJobStatusCommand = {
       channel_id: uuid(),
       seconds_elapsed_while_waiting: 0,
     };
-    const messageInfo = stub<MessageInfo<EnsureChannelLiveCommand>>({
+    const messageInfo = stub<MessageInfo<CheckChannelJobStatusCommand>>({
       envelope: {
         auth_token: 'no-token',
         payload,
@@ -186,7 +187,8 @@ describe('EnsureChannelLiveHandler', () => {
     expect(messages).toMatchObject([
       {
         messageType:
-          VodToLiveServiceMessagingSettings.EnsureChannelLiveFailed.messageType,
+          VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed
+            .messageType,
         message: {
           channel_id: payload.channel_id,
           message:
@@ -197,7 +199,7 @@ describe('EnsureChannelLiveHandler', () => {
   });
 
   it.each([10, 25])(
-    'if "seconds_elapsed_while_waiting"(%s) is equal or larger than configured wait time -> EnsureChannelLiveFailedEvent is sent',
+    'if "seconds_elapsed_while_waiting"(%s) is equal or larger than configured wait time -> CheckChannelJobStatusFailedEvent is sent',
     async (secondsWithoutProgress) => {
       // Arrange
       getChannelStatusResult = () => {
@@ -207,11 +209,11 @@ describe('EnsureChannelLiveHandler', () => {
           details: [],
         };
       };
-      const payload: EnsureChannelLiveCommand = {
+      const payload: CheckChannelJobStatusCommand = {
         channel_id: uuid(),
         seconds_elapsed_while_waiting: secondsWithoutProgress,
       };
-      const messageInfo = stub<MessageInfo<EnsureChannelLiveCommand>>({
+      const messageInfo = stub<MessageInfo<CheckChannelJobStatusCommand>>({
         envelope: {
           auth_token: 'no-token',
           payload,
@@ -224,7 +226,7 @@ describe('EnsureChannelLiveHandler', () => {
       expect(messages).toMatchObject([
         {
           messageType:
-            VodToLiveServiceMessagingSettings.EnsureChannelLiveFailed
+            VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed
               .messageType,
           message: {
             channel_id: payload.channel_id,

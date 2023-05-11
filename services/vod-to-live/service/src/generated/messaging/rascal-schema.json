@@ -97,7 +97,7 @@
             }
           }
         },
-        "vod-to-live-service:channel:ensure_channel_live": {
+        "vod-to-live-service:channel:check_job_status": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
@@ -183,15 +183,15 @@
           "bindingKey": "vod-to-live-service.channel.prepare_live_stream",
           "destination": "vod-to-live-service:channel:prepare_live_stream"
         },
-        "retry:vod-to-live-service:channel:ensure_channel_live": {
+        "retry:vod-to-live-service:channel:check_job_status": {
           "source": "retry",
-          "bindingKey": "vod-to-live-service:channel:ensure_channel_live.#",
-          "destination": "vod-to-live-service:channel:ensure_channel_live"
+          "bindingKey": "vod-to-live-service:channel:check_job_status.#",
+          "destination": "vod-to-live-service:channel:check_job_status"
         },
-        "vod-to-live-service:channel:ensure_channel_live": {
+        "vod-to-live-service:channel:check_job_status": {
           "source": "command",
-          "bindingKey": "vod-to-live-service.channel.ensure_channel_live",
-          "destination": "vod-to-live-service:channel:ensure_channel_live"
+          "bindingKey": "vod-to-live-service.channel.check_job_status",
+          "destination": "vod-to-live-service:channel:check_job_status"
         }
       },
       "publications": {
@@ -219,17 +219,17 @@
           "exchange": "command",
           "routingKey": "vod-to-live-service.channel.prepare_live_stream"
         },
-        "EnsureChannelLive": {
+        "CheckChannelJobStatus": {
           "exchange": "command",
-          "routingKey": "vod-to-live-service.channel.ensure_channel_live"
+          "routingKey": "vod-to-live-service.channel.check_job_status"
         },
-        "EnsureChannelLiveFailed": {
+        "CheckChannelJobStatusFailed": {
           "exchange": "event",
-          "routingKey": "vod-to-live-service.channel.ensure_channel_live_failed"
+          "routingKey": "vod-to-live-service.channel.check_job_status_failed"
         },
-        "EnsureChannelLiveReady": {
+        "CheckChannelJobStatusSucceeded": {
           "exchange": "event",
-          "routingKey": "vod-to-live-service.channel.ensure_channel_live_ready"
+          "routingKey": "vod-to-live-service.channel.check_job_status_succeeded"
         },
         "LiveStreamProtectionKeyCreated": {
           "exchange": "event",
@@ -291,8 +291,8 @@
             "counter": "mosaic"
           }
         },
-        "EnsureChannelLive": {
-          "queue": "vod-to-live-service:channel:ensure_channel_live",
+        "CheckChannelJobStatus": {
+          "queue": "vod-to-live-service:channel:check_job_status",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {

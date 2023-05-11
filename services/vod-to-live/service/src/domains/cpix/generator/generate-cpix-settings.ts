@@ -10,25 +10,19 @@ import {
 import { AzureStorage } from '../../azure';
 import { KeyServiceApi } from '../../key-service';
 import { convertObjectToXml } from '../../utils';
-import {
-  CpixRequest,
-  CpixSettings,
-  createDecryptionCpixRequest,
-  DRMKey,
-} from '../models';
+import { CpixRequest, createDecryptionCpixRequest, DRMKey } from '../models';
 import { getDrmKeys } from './utils';
 
 /**
- * Generates a CpixSetting, containing paths to CPIX files required for videos decryption and Live Stream protection.
+ * Creates CPIX file for VODs decryption.
  * @param channelId - unique identifier of the Channel.
  * @param playlistId - playlist unique identifier, if applicable.
  * @param decryptionParams - parameters for decryption of DRM protected videos assigned to stream.
- * @param encryptionParams - parameters for protection of resulting Live Stream.
  * @param storage  - reference to Azure Storage class instance.
  * @param keyServiceApi - reference to Key Service API class instance.
- * @returns
+ * @returns the SAS url to the decryption CPIX file.
  */
-export const generateCpixSettings = async (
+export const createDecryptionCpix = async (
   channelId: string,
   playlistId: string | null | undefined,
   decryptionParams:
@@ -39,21 +33,12 @@ export const generateCpixSettings = async (
       }
     | null
     | undefined,
-  encryptionParams:
-    | {
-        startDate: Date;
-        durationInSeconds: number;
-      }
-    | null
-    | undefined,
   storage: AzureStorage,
   keyServiceApi: KeyServiceApi,
-): Promise<CpixSettings> => {
+): Promise<string | undefined> => {
   let decryptionCpixFile = undefined;
-  let encryptionDashCpixFile = undefined;
-  let encryptionHlsCpixFile = undefined;
   if (decryptionParams) {
-    const { videos } = decryptionParams;
+    const { videos, startDate, durationInSeconds } = decryptionParams;
     const drmProtectedVideos = videos.filter(
       (v) => v.video_encoding.is_protected,
     );
@@ -79,7 +64,6 @@ export const generateCpixSettings = async (
         decryptRequest,
         decryptCpixFilePath,
       );
-      const { startDate, durationInSeconds } = decryptionParams;
       const decryptionFileAccessEndDate = new Date(
         startDate.getTime() + durationInSeconds * SECOND_IN_MILLISECONDS,
       );
@@ -91,30 +75,53 @@ export const generateCpixSettings = async (
     }
   }
 
+  return decryptionCpixFile;
+};
+
+/**
+ * Creates links to the CPIX file, that should be used for the live stream protection.
+ * @param channelId - unique identifier of the Channel.
+ * @param encryptionParams - parameters for protection of resulting Live Stream.
+ * @param storage  - reference to Azure Storage class instance.
+ */
+export const createEncryptionCpix = async (
+  channelId: string,
+  encryptionType: 'DASH' | 'HLS',
+  encryptionParams:
+    | {
+        startDate: Date;
+        durationInSeconds: number;
+      }
+    | null
+    | undefined,
+  storage: AzureStorage,
+): Promise<string | undefined> => {
+  let encryptionCpixFile = undefined;
   if (encryptionParams) {
     const { startDate, durationInSeconds } = encryptionParams;
+    const protectionFileName =
+      encryptionType === 'DASH'
+        ? protectionDashCpixFileName
+        : protectionHlsCpixFileName;
     const encryptionAccessEndDate = new Date(
       startDate.getTime() + durationInSeconds * SECOND_IN_MILLISECONDS,
     );
-    encryptionDashCpixFile = await storage.getFileSasUrl(
-      generateChannelFilePath(channelId, protectionDashCpixFileName),
-      startDate,
-      encryptionAccessEndDate,
-    );
-    encryptionHlsCpixFile = await storage.getFileSasUrl(
-      generateChannelFilePath(channelId, protectionHlsCpixFileName),
+    encryptionCpixFile = await storage.getFileSasUrl(
+      generateChannelFilePath(channelId, protectionFileName),
       startDate,
       encryptionAccessEndDate,
     );
   }
 
-  return {
-    decryptionCpixFile,
-    encryptionDashCpixFile,
-    encryptionHlsCpixFile,
-  };
+  return encryptionCpixFile;
 };
-
+/**
+ * Post a SPEKE request to the key service and Stores response in Azure Storage.
+ * @param storage  - reference to Azure Storage class instance.
+ * @param keyServiceApi - reference to Key Service API class instance.
+ * @param request - SPEKEv2 Request to POST
+ * @param filePath - relative file path where the response should be saved to.
+ */
 export const storeSpekeResponse = async (
   storage: AzureStorage,
   keyServiceApi: KeyServiceApi,

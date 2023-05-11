@@ -11,7 +11,8 @@ import { Config, DAY_IN_SECONDS } from '../../common';
 import {
   AzureStorage,
   ChannelSmilGenerator,
-  generateCpixSettings,
+  CpixSettings,
+  createDecryptionCpix,
   KeyServiceApi,
 } from '../../domains';
 import { convertObjectToXml } from '../../domains/utils';
@@ -33,19 +34,23 @@ export class ChannelPublishedHandler extends AuthenticatedMessageHandler<Channel
     payload: ChannelPublishedEvent,
     message: MessageInfo,
   ): Promise<void> {
-    const drmSettings = await generateCpixSettings(
-      payload.id,
-      null,
-      {
-        videos: payload.placeholder_video ? [payload.placeholder_video] : [],
-        startDate: new Date(),
-        durationInSeconds: DAY_IN_SECONDS,
-      },
-      null,
-      this.azureStorage,
-      this.keyServiceApi,
-    );
-    const generator = new ChannelSmilGenerator(drmSettings);
+    const cpixSettings: CpixSettings = {
+      decryptionCpixFile: await createDecryptionCpix(
+        payload.id,
+        null,
+        {
+          videos: payload.placeholder_video ? [payload.placeholder_video] : [],
+          startDate: new Date(),
+          durationInSeconds: DAY_IN_SECONDS,
+        },
+        this.azureStorage,
+        this.keyServiceApi,
+      ),
+      // live stream with only Placeholder Video is never protected
+      encryptionDashCpixFile: undefined,
+      encryptionHlsCpixFile: undefined,
+    };
+    const generator = new ChannelSmilGenerator(cpixSettings);
     const smilEnvelope = generator.generate(payload);
     await this.broker.publish<PrepareChannelLiveStreamCommand>(
       VodToLiveServiceMessagingSettings.PrepareChannelLiveStream.messageType,

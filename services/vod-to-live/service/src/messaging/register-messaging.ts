@@ -2,7 +2,7 @@ import { Broker, RascalConfigBuilder } from '@axinom/mosaic-message-bus';
 import { ChannelServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import { Express } from 'express';
 import {
-  EnsureChannelLiveCommand,
+  CheckChannelJobStatusCommand,
   PrepareChannelLiveStreamCommand,
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
@@ -12,7 +12,7 @@ import { AzureStorage, KeyServiceApi, VirtualChannelApi } from '../domains';
 import {
   ChannelPublishedHandler,
   ChannelUnpublishedHandler,
-  EnsureChannelLiveHandler,
+  CheckChannelJobStatusHandler,
   PlaylistPublishedHandler,
   PlaylistUnpublishedHandler,
   PrepareChannelLiveStreamHandler,
@@ -96,20 +96,20 @@ export const registerMessaging = (
 
     // Ensure Channel is Live
     new RascalConfigBuilder(
-      VodToLiveServiceMessagingSettings.EnsureChannelLive,
+      VodToLiveServiceMessagingSettings.CheckChannelJobStatus,
       config,
     )
       .sendCommand()
-      .subscribeForCommand<EnsureChannelLiveCommand>(
+      .subscribeForCommand<CheckChannelJobStatusCommand>(
         (broker: Broker) =>
-          new EnsureChannelLiveHandler(config, virtualChannelApi, broker),
+          new CheckChannelJobStatusHandler(config, virtualChannelApi, broker),
       ),
     new RascalConfigBuilder(
-      VodToLiveServiceMessagingSettings.EnsureChannelLiveFailed,
+      VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed,
       config,
     ).publishEvent(),
     new RascalConfigBuilder(
-      VodToLiveServiceMessagingSettings.EnsureChannelLiveReady,
+      VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded,
       config,
     ).publishEvent(),
 

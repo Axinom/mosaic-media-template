@@ -7,7 +7,7 @@ import {
 } from 'media-messages';
 import { DAY_IN_SECONDS } from '../../common';
 import { AzureStorage } from '../azure';
-import { generateCpixSettings } from '../cpix';
+import { CpixSettings, createDecryptionCpix } from '../cpix';
 import { KeyServiceApi } from '../key-service';
 import { ChannelSmilGenerator } from '../smil';
 import { convertObjectToXml } from '../utils';
@@ -69,19 +69,23 @@ export const deleteTransitionLiveStream = async (
         return;
       }
 
-      const drmSettings = await generateCpixSettings(
-        event.id,
-        null,
-        {
-          videos: event.placeholder_video ? [event.placeholder_video] : [],
-          startDate: new Date(),
-          durationInSeconds: DAY_IN_SECONDS,
-        },
-        null,
-        storage,
-        keyServiceApi,
-      );
-      const generator = new ChannelSmilGenerator(drmSettings);
+      const cpixSettings: CpixSettings = {
+        decryptionCpixFile: await createDecryptionCpix(
+          event.id,
+          null,
+          {
+            videos: event.placeholder_video ? [event.placeholder_video] : [],
+            startDate: new Date(),
+            durationInSeconds: DAY_IN_SECONDS,
+          },
+          storage,
+          keyServiceApi,
+        ),
+        // live stream with only Placeholder Video is never protected
+        encryptionDashCpixFile: undefined,
+        encryptionHlsCpixFile: undefined,
+      };
+      const generator = new ChannelSmilGenerator(cpixSettings);
       const smil = generator.generate(event);
       await broker.publish<PrepareTransitionLiveStreamCommand>(
         VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream

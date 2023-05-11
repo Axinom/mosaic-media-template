@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "title": "ensure_channel_live_command",
-  "description": "Ensure Channel live stream is live.",
+  "title": "check_channel_job_status_command",
+  "description": "Check channel creation job status.",
   "additionalProperties": false,
   "required": [
     "seconds_elapsed_while_waiting",

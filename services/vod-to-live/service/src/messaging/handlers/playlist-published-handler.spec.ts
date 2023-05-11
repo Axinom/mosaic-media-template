@@ -3,13 +3,14 @@ import { DetailedVideo, PlaylistPublishedEvent } from '@axinom/mosaic-messages';
 import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
 import { Config, DAY_IN_SECONDS, SECOND_IN_MILLISECONDS } from '../../common';
-import { AzureStorage, CpixSettings, KeyServiceApi } from '../../domains';
+import { AzureStorage, KeyServiceApi } from '../../domains';
 import * as cpixGeneration from '../../domains/cpix/generator/generate-cpix-settings';
 import { createTestVideo } from '../../tests';
 import { PlaylistPublishedHandler } from './playlist-published-handler';
 
 describe('PlaylistPublishedHandler', () => {
-  let generateCpixSettings: jest.SpyInstance;
+  let createEncryptionCpix: jest.SpyInstance;
+  let createDecryptionCpix: jest.SpyInstance;
   let cpixSettingsVideos: DetailedVideo[] = [];
   let messages: { messageType: string; message: any }[] = [];
   const mockedKeyServiceApi = stub<KeyServiceApi>({});
@@ -32,8 +33,30 @@ describe('PlaylistPublishedHandler', () => {
     isDrmEnabled: false,
   });
   beforeEach(async () => {
-    generateCpixSettings = jest
-      .spyOn(cpixGeneration, 'generateCpixSettings')
+    createEncryptionCpix = jest
+      .spyOn(cpixGeneration, 'createEncryptionCpix')
+      .mockImplementation(
+        async (
+          _channelId: string,
+          _encryptionType: 'DASH' | 'HLS',
+          encryptionParams:
+            | {
+                startDate: Date;
+                durationInSeconds: number;
+              }
+            | null
+            | undefined,
+          _storage: AzureStorage,
+        ): Promise<string | undefined> => {
+          if (encryptionParams) {
+            return 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...';
+          }
+          return undefined;
+        },
+      );
+
+    createDecryptionCpix = jest
+      .spyOn(cpixGeneration, 'createDecryptionCpix')
       .mockImplementation(
         async (
           _channelId: string,
@@ -46,35 +69,18 @@ describe('PlaylistPublishedHandler', () => {
               }
             | null
             | undefined,
-          encryptionParams:
-            | {
-                startDate: Date;
-                durationInSeconds: number;
-              }
-            | null
-            | undefined,
           _storage: AzureStorage,
           _keyServiceApi: KeyServiceApi,
-        ): Promise<CpixSettings> => {
+        ): Promise<string | undefined> => {
           cpixSettingsVideos = decryptionParams ? decryptionParams.videos : [];
-          if (cpixSettingsVideos.find((v) => v.video_encoding.is_protected)) {
-            return {
-              decryptionCpixFile: decryptionParams
-                ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-                : undefined,
-              encryptionDashCpixFile: encryptionParams
-                ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-                : undefined,
-              encryptionHlsCpixFile: encryptionParams
-                ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
-                : undefined,
-            };
+          if (decryptionParams) {
+            if (cpixSettingsVideos.find((v) => v.video_encoding.is_protected)) {
+              return 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...';
+            } else {
+              return undefined;
+            }
           }
-          return {
-            decryptionCpixFile: undefined,
-            encryptionDashCpixFile: undefined,
-            encryptionHlsCpixFile: undefined,
-          };
+          return undefined;
         },
       );
   });
@@ -149,7 +155,8 @@ describe('PlaylistPublishedHandler', () => {
       await handler.onMessage(payload, messageInfo);
 
       // Assert
-      expect(generateCpixSettings).toHaveBeenCalledTimes(1);
+      expect(createDecryptionCpix).toHaveBeenCalledTimes(1);
+      expect(createEncryptionCpix).toHaveBeenCalledTimes(2);
       expect(cpixSettingsVideos).toHaveLength(3);
       expect(cpixSettingsVideos).toMatchObject([
         placeholderVideo,

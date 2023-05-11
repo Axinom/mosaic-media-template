@@ -1,7 +1,7 @@
 /**
- * Ensure Channel live stream is live.
+ * Check channel creation job status.
  */
-export interface EnsureChannelLiveCommand {
+export interface CheckChannelJobStatusCommand {
   /**
    * Unique identifier of the channel.
    */

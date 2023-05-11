@@ -1,7 +1,7 @@
 /**
  * Channel live stream is live.
  */
-export interface EnsureChannelLiveReadyEvent {
+export interface CheckChannelJobStatusSucceededEvent {
   /**
    * Unique identifier of the channel.
    */
