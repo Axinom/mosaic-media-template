@@ -5,7 +5,7 @@ import {
   ProgramCuePoint,
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
-import { Config, DAY_IN_SECONDS } from '../../../common';
+import { Config, DAY_IN_SECONDS, ValidationErrors } from '../../../common';
 import { CpixSettings } from '../../cpix';
 import { getPlaylistDurationInSeconds } from '../../utils';
 import {
@@ -78,10 +78,9 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
         channelPlaceholderVideo.video_encoding.length_in_seconds;
       this.placeholderVideo = channelPlaceholderVideo;
     } else {
-      throw new MosaicError({
-        message: 'Placeholder video is not provided.',
-        code: 'PLACEHOLDER_VIDEO_IS_MISSING',
-      });
+      throw new MosaicError(
+        ValidationErrors.PlaylistPlaceholderVideoWasNotFound,
+      );
     }
   }
   generate(originalEvent: PlaylistPublishedEvent): SMILEnvelope {

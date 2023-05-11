@@ -4,7 +4,7 @@ export const AzureBlobErrors = {
     code: 'AZURE_BLOB_AUTHENTICATION_FAILED',
   },
   ContainerNotFound: {
-    message: 'The configured container does not exist.',
+    message: 'The configured Azure Storage container does not exist.',
     code: 'AZURE_BLOB_CONTAINER_NOT_FOUND',
   },
   ContainerCreationFailed: {
@@ -16,7 +16,7 @@ export const AzureBlobErrors = {
     code: 'AZURE_BLOB_BLOB_NOT_FOUND',
   },
   OperationAborted: {
-    message: 'Operation was aborted.',
+    message: 'Azure Storage operation was aborted.',
     code: 'AZURE_BLOB_OPERATION_ABORTED',
   },
 } as const;

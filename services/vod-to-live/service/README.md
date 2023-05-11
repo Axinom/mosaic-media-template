@@ -43,9 +43,9 @@ Service.
 Every video assigned to a channel or playlist must pass the following validation
 rules:
 
-- Videos must use the H264 codec.
+- Videos must use be encoded as `H264`.
 - Videos must have a separate audio stream.
-- Videos must be encoded in the CMAF format.
+- Videos must be packaged in the `CMAF` format.
 - If DRM protection is enabled, DRM-protected videos must have their DRM key
   identifiers defined.
 - If DRM protection is disabled, videos cannot be DRM-protected.
@@ -167,8 +167,8 @@ DRM protection can be enabled for the Channel's live stream by configuring the
 service and setting the appropriate DRM variables.
 
 ```
-The service only supports the Axinom DRM Key Service.
-The DRM settings for the VOD-to-Live Service should be aligned with the DRM settings used for the encoding of the VODs.
+The service uses the Axinom DRM Key Service to request the DRM encryption key.
+The DRM settings for the VOD-to-Live Service should be aligned with the DRM settings used for the encryption of the used VOD assets.
 ```
 
 When DRM is enabled DRM-protected VODs can be included in playlists. To decrypt
