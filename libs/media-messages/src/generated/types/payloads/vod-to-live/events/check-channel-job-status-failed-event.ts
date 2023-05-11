@@ -1,7 +1,7 @@
 /**
  * Channel has failed processing. The live stream was not created.
  */
-export interface EnsureChannelLiveFailedEvent {
+export interface CheckChannelJobStatusFailedEvent {
   /**
    * Unique identifier of the channel.
    */

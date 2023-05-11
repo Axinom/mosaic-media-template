@@ -6,15 +6,15 @@ export class VodToLiveServiceMessagingSettings implements MessagingSettings {
     'channel:protection_key_created', 
     'channel.protection_key_created'
     );
-  public static EnsureChannelLiveFailed = new VodToLiveServiceMessagingSettings(
-    'EnsureChannelLiveFailed', 
-    'channel:ensure_channel_live_failed', 
-    'channel.ensure_channel_live_failed'
+  public static CheckChannelJobStatusFailed = new VodToLiveServiceMessagingSettings(
+    'CheckChannelJobStatusFailed', 
+    'channel:check_job_status_failed', 
+    'channel.check_job_status_failed'
     );
-  public static EnsureChannelLiveReady = new VodToLiveServiceMessagingSettings(
-    'EnsureChannelLiveReady', 
-    'channel:ensure_channel_live_ready', 
-    'channel.ensure_channel_live_ready'
+  public static CheckChannelJobStatusSucceeded = new VodToLiveServiceMessagingSettings(
+    'CheckChannelJobStatusSucceeded', 
+    'channel:check_job_status_succeeded', 
+    'channel.check_job_status_succeeded'
     );
   
   public readonly serviceId = 'vod-to-live-service';

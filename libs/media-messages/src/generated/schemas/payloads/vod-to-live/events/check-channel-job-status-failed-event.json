@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "title": "ensure_channel_live_failed_event",
+  "title": "check_channel_job_status_failed_event",
   "description": "Channel has failed processing. The live stream was not created.",
   "additionalProperties": true,
   "required": [

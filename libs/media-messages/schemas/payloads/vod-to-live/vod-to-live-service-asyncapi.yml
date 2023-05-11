@@ -17,22 +17,22 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/channel-protection-key-created-event'
-  'channel.ensure_channel_live_failed':
+  'channel.check_job_status_failed':
     bindings:
       amqp:
         queue:
-          name: channel:ensure_channel_live_failed
+          name: channel:check_job_status_failed
     subscribe:
       message:
-        $ref: '#/components/messages/ensure-channel-live-failed-event'
-  'channel.ensure_channel_live_ready':
+        $ref: '#/components/messages/check-channel-job-status-failed-event'
+  'channel.check_job_status_succeeded':
     bindings:
       amqp:
         queue:
-          name: channel:ensure_channel_live_ready
+          name: channel:check_job_status_succeeded
     subscribe:
       message:
-        $ref: '#/components/messages/ensure-channel-live-ready-event'
+        $ref: '#/components/messages/check-channel-job-status-succeeded-event'
 
 components:
   messages:
@@ -41,11 +41,11 @@ components:
       contentType: application/json
       payload:
         $ref: 'events/live-stream-protection-key-created-event.json'
-    ensure-channel-live-failed-event:
+    check-channel-job-status-failed-event:
       contentType: application/json
       payload:
-        $ref: 'events/ensure-channel-live-failed-event.json'
-    ensure-channel-live-ready-event:
+        $ref: 'events/check-channel-job-status-failed-event.json'
+    check-channel-job-status-succeeded-event:
       contentType: application/json
       payload:
-        $ref: 'events/ensure-channel-live-ready-event.json'
+        $ref: 'events/check-channel-job-status-succeeded-event.json'

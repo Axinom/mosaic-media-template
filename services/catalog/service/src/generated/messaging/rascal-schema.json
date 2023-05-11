@@ -187,7 +187,7 @@
             }
           }
         },
-        "catalog-service:channel:ensure_channel_live_ready": {
+        "catalog-service:channel:check_job_status_succeeded": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
@@ -382,15 +382,15 @@
           "bindingKey": "ax-channel-service.*.*.channel.unpublished",
           "destination": "catalog-service:channel:unpublished"
         },
-        "retry:catalog-service:channel:ensure_channel_live_ready": {
+        "retry:catalog-service:channel:check_job_status_succeeded": {
           "source": "retry",
-          "bindingKey": "catalog-service:channel:ensure_channel_live_ready.#",
-          "destination": "catalog-service:channel:ensure_channel_live_ready"
+          "bindingKey": "catalog-service:channel:check_job_status_succeeded.#",
+          "destination": "catalog-service:channel:check_job_status_succeeded"
         },
-        "catalog-service:channel:ensure_channel_live_ready": {
+        "catalog-service:channel:check_job_status_succeeded": {
           "source": "event",
-          "bindingKey": "vod-to-live-service.channel.ensure_channel_live_ready",
-          "destination": "catalog-service:channel:ensure_channel_live_ready"
+          "bindingKey": "vod-to-live-service.channel.check_job_status_succeeded",
+          "destination": "catalog-service:channel:check_job_status_succeeded"
         },
         "retry:catalog-service:channel:protection_key_created": {
           "source": "retry",
@@ -566,8 +566,8 @@
             "counter": "mosaic"
           }
         },
-        "EnsureChannelLiveReady": {
-          "queue": "catalog-service:channel:ensure_channel_live_ready",
+        "CheckChannelJobStatusSucceeded": {
+          "queue": "catalog-service:channel:check_job_status_succeeded",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {
