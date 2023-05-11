@@ -1,25 +1,25 @@
 import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import {
-  EnsureChannelLiveReadyEvent,
+  CheckChannelJobStatusSucceededEvent,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
 import { IsolationLevel, selectOne, update } from 'zapatos/db';
 import { Config } from '../../../common';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
-export class EnsureChannelLiveReadyEventHandler extends AuthenticatedMessageHandler<EnsureChannelLiveReadyEvent> {
+export class CheckChannelJobStatusSucceededEventHandler extends AuthenticatedMessageHandler<CheckChannelJobStatusSucceededEvent> {
   constructor(
     private readonly loginPool: LoginPgPool,
     protected readonly config: Config,
   ) {
     super(
-      VodToLiveServiceMessagingSettings.EnsureChannelLiveReady.messageType,
+      VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded.messageType,
       config,
     );
   }
 
-  async onMessage(payload: EnsureChannelLiveReadyEvent): Promise<void> {
+  async onMessage(payload: CheckChannelJobStatusSucceededEvent): Promise<void> {
     await transactionWithContext(
       this.loginPool,
       IsolationLevel.Serializable,
