@@ -25,16 +25,6 @@
   "files": [
     "dist"
   ],
-  "importmap": {
-    "imports": {
-      "@axinom/mosaic-ui": ".",
-      "formik": ".",
-      "graphql": ".",
-      "yup": ".",
-      "lodash": ".",
-      "graphql-tag": "."
-    }
-  },
   "dependencies": {
     "@apollo/client": "^3.7.9",
     "@axinom/mosaic-ui": "0.30.0-rc.0",
