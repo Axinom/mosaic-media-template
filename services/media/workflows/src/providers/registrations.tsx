@@ -20,6 +20,13 @@ export function register(app: PiletApi): void {
         }}
         actions={[
           {
+            label: 'New',
+            icon: IconName.External,
+            onClick: () => {
+              window.open('/movies/create', '_blank');
+            },
+          },
+          {
             label: 'Cancel',
             icon: IconName.X,
             onClick: onClose,
@@ -56,6 +63,13 @@ export function register(app: PiletApi): void {
           mainVideoId: true,
         }}
         actions={[
+          {
+            label: 'New',
+            icon: IconName.External,
+            onClick: () => {
+              window.open('/episodes/create', '_blank');
+            },
+          },
           {
             label: 'Cancel',
             icon: IconName.X,
