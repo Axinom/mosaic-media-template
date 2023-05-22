@@ -10,7 +10,11 @@ import {
   MediaServiceMessagingSettings,
 } from 'media-messages';
 import { Config } from '../../common';
-import { DeleteEntityCommandHandler } from './handlers';
+import {
+  CuePointTypesDeclaredHandler,
+  CuePointTypesDeclareFailedHandler,
+  DeleteEntityCommandHandler,
+} from './handlers';
 
 export const registerCommonMessaging = (
   app: Express,
@@ -29,12 +33,22 @@ export const registerCommonMessaging = (
       config,
     ).sendCommand(),
     new RascalConfigBuilder(
+      MediaServiceMessagingSettings.EntityDeleted,
+      config,
+    ).publishEvent(),
+
+    // Video Cue Point types
+    new RascalConfigBuilder(
       VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes,
       config,
     ).sendCommand(),
     new RascalConfigBuilder(
-      MediaServiceMessagingSettings.EntityDeleted,
+      VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclared,
       config,
-    ).publishEvent(),
+    ).subscribeForEvent(() => new CuePointTypesDeclaredHandler(config)),
+    new RascalConfigBuilder(
+      VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclareFailed,
+      config,
+    ).subscribeForEvent(() => new CuePointTypesDeclareFailedHandler(config)),
   ];
 };

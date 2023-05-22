@@ -204,6 +204,24 @@
               "x-queue-type": "quorum"
             }
           }
+        },
+        "media-service:cue_point_types:declared": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:cue_point_types:declare_failed": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
         }
       },
       "bindings": {
@@ -381,6 +399,26 @@
           "source": "retry",
           "bindingKey": "ax-encoding-service:cue_point_types:declare.#",
           "destination": "ax-encoding-service:cue_point_types:declare"
+        },
+        "retry:media-service:cue_point_types:declared": {
+          "source": "retry",
+          "bindingKey": "media-service:cue_point_types:declared.#",
+          "destination": "media-service:cue_point_types:declared"
+        },
+        "media-service:cue_point_types:declared": {
+          "source": "event",
+          "bindingKey": "ax-encoding-service.*.*.cue_point_types.declared",
+          "destination": "media-service:cue_point_types:declared"
+        },
+        "retry:media-service:cue_point_types:declare_failed": {
+          "source": "retry",
+          "bindingKey": "media-service:cue_point_types:declare_failed.#",
+          "destination": "media-service:cue_point_types:declare_failed"
+        },
+        "media-service:cue_point_types:declare_failed": {
+          "source": "event",
+          "bindingKey": "ax-encoding-service.*.*.cue_point_types.declare_failed",
+          "destination": "media-service:cue_point_types:declare_failed"
         }
       },
       "publications": {
@@ -500,13 +538,13 @@
           "exchange": "command",
           "routingKey": "ax-image-service.*.*.image_types.declare"
         },
-        "DeclareCuePointTypes": {
-          "exchange": "command",
-          "routingKey": "ax-encoding-service.*.*.cue_point_types.declare"
-        },
         "EntityDeleted": {
           "exchange": "event",
           "routingKey": "media-service.entity.deleted"
+        },
+        "DeclareCuePointTypes": {
+          "exchange": "command",
+          "routingKey": "ax-encoding-service.*.*.cue_point_types.declare"
         }
       },
       "subscriptions": {
@@ -629,6 +667,24 @@
         },
         "DeleteEntity": {
           "queue": "media-service:entity:delete",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "CuePointTypesDeclared": {
+          "queue": "media-service:cue_point_types:declared",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "CuePointTypesDeclareFailed": {
+          "queue": "media-service:cue_point_types:declare_failed",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {
