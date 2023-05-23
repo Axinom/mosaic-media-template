@@ -20,6 +20,13 @@ export const useSeasonSelectExplorerModal = ({
       excludeItems={excludeItems}
       actions={[
         {
+          label: 'New',
+          icon: IconName.External,
+          onClick: () => {
+            window.open('/seasons/create', '_blank');
+          },
+        },
+        {
           label: 'Cancel',
           icon: IconName.X,
           onClick: closeModal,
