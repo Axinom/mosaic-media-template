@@ -1,4 +1,4 @@
-import { ActionData, ActionType, IconName } from '@axinom/mosaic-ui';
+import { ActionData, IconName } from '@axinom/mosaic-ui';
 import { useMemo } from 'react';
 import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
@@ -8,9 +8,7 @@ import {
   useUnpublishCollectionMutation,
 } from '../../../generated/graphql';
 
-export function useCollectionDetailsActions(
-  id: number,
-): {
+export function useCollectionDetailsActions(id: number): {
   readonly actions: ActionData[];
 } {
   const history = useHistory();
@@ -39,28 +37,26 @@ export function useCollectionDetailsActions(
     const actions: ActionData[] = [
       {
         label: 'Manage Entities',
-        onActionSelected: () => history.push(`/collections/${id}/entities`),
+        path: `/collections/${id}/entities`,
       },
       {
         label: 'Manage Cover Image',
-        onActionSelected: () => history.push(`/collections/${id}/images`),
+        path: `/collections/${id}/images`,
       },
       {
         label: 'Publish Now',
         confirmationMode: 'Simple',
-        actionType: ActionType.Context,
         onActionSelected: async () => {
           await publishCollectionMutation({ variables: { id } });
         },
       },
       {
         label: 'Publishing Snapshots',
-        onActionSelected: () => history.push(`/collections/${id}/snapshots`),
+        path: `/collections/${id}/snapshots`,
       },
       {
         label: 'Unpublish',
         confirmationMode: 'Simple',
-        actionType: ActionType.Context,
         onActionSelected: async () => {
           await unpublishCollectionMutation({ variables: { id } });
         },

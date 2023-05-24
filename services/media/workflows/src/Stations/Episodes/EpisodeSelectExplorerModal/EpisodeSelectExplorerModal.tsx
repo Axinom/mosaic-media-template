@@ -20,6 +20,13 @@ export const useEpisodeSelectExplorerModal = ({
       excludeItems={excludeItems}
       actions={[
         {
+          label: 'New',
+          icon: IconName.External,
+          onClick: () => {
+            window.open('/episodes/create', '_blank');
+          },
+        },
+        {
           label: 'Cancel',
           icon: IconName.X,
           onClick: closeModal,
