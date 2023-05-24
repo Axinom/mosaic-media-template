@@ -14,7 +14,7 @@ pool:
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   continueBuild: true
-  dockerfilePath: '.adops/docker/Dockerfile.backend'
+  dockerfilePath: 'Dockerfile'
   tag: '$(Build.BuildNumber)'
   ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.Reason'], 'Schedule')) }}:
     additionalBuildNameSuffix: 'cb-'
