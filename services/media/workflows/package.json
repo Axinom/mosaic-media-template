@@ -38,7 +38,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@axinom/mosaic-portal": "0.14.2-rc.0",
+    "@axinom/mosaic-portal": "0.15.0",
     "@dbeining/react-atom": "^4.1.21",
     "@graphql-codegen/cli": "^2.13.4",
     "@graphql-codegen/typescript": "^2.7.3",
