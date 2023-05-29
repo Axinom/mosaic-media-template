@@ -3,7 +3,6 @@
 import {
   getBasicConfigDefinitions,
   getBasicCustomizableConfigDefinitions,
-  getBasicDbConfigDefinitions,
   getBasicGraphQlConfigDefinitions,
   getBasicMetricsEndpointDefinitions,
   getBasicRabbitMqConfigDefinitions,
@@ -32,7 +31,7 @@ export const getConfigDefinitions = (
   return {
     ...getBasicConfigDefinitions(variables),
     ...getBasicMetricsEndpointDefinitions(variables),
-    ...getBasicGraphQlConfigDefinitions(10200, variables),
+    ...getBasicGraphQlConfigDefinitions(11900, variables),
     ...getBasicRabbitMqConfigDefinitions(variables),
     ...basicCustomizableConfigs,
     // secret
@@ -135,9 +134,3 @@ const config = getConfigType(getConfigDefinitions());
  * The full Configuration type
  */
 export type Config = typeof config;
-
-const dbConfig = getConfigType(getBasicDbConfigDefinitions());
-/**
- * The Database related Configuration type
- */
-export type DbConfig = typeof dbConfig;
