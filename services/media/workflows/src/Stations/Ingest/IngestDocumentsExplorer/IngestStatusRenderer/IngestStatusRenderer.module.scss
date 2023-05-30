@@ -1,0 +1,16 @@
+.statusContainer { 
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  .icon {
+    width: 25px;
+  }
+  .label {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 0 5px;
+  }
+}

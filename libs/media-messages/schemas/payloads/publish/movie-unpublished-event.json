@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "movie_unpublished_event",
+  "description": "Movie unpublished event.",
+  "properties": {
+    "content_id": {
+      "$ref": "common.json#/definitions/movie_id"
+    }
+  },
+  "required": [
+    "content_id"
+  ],
+  "additionalProperties": false
+}

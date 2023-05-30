@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type":"object",
+  "title": "start_ingest_item_command",
+  "description": "Start ingest item command schema.",
+  "additionalProperties": false,
+  "required": ["ingest_item_id", "entity_id", "item"],
+  "properties": {
+    "ingest_item_id": {
+      "type": "integer",
+      "description": "Id of an ingest item stored in the database."
+    },
+    "entity_id": {
+      "type": "integer",
+      "description": "Id of a media item stored in the database that is associated with specific ingest item."
+    },
+    "item": {
+      "$ref": "../common.json#/definitions/ingest_item"
+    }
+  }
+}

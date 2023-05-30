@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "collection_unpublished_event",
+  "description": "Collection unpublished event.",
+  "properties": {
+    "content_id": {
+      "description": "Content ID of a collection. Must match the pattern `^(collection)-([a-zA-Z0-9_-]+)$`.",
+      "type": "string",
+      "pattern": "^(collection)-([a-zA-Z0-9_-]+)$"
+    }
+  },
+  "required": [
+    "content_id"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "serviceId": "media-service",
+    "permissions": ["ADMIN"]
+  },
+  {
+    "serviceId": "ax-image-service",
+    "permissions": ["IMAGES_EDIT"]
+  },
+  {
+    "serviceId": "ax-encoding-service",
+    "permissions": ["VIDEOS_ENCODE"]
+  }
+]

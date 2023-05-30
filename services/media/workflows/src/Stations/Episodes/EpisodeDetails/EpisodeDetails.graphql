@@ -1,0 +1,112 @@
+query Episode($id: Int!) {
+  episode(id: $id) {
+    title
+    originalTitle
+    index
+    synopsis
+    description
+    externalId
+    episodesTags {
+      nodes {
+        name
+      }
+    }
+    episodesTvshowGenres {
+      nodes {
+        tvshowGenres {
+          title
+        }
+      }
+    }
+    episodesCasts {
+      nodes {
+        name
+      }
+    }
+    studio
+    episodesProductionCountries {
+      nodes {
+        name
+      }
+    }
+    released
+    id
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+    mainVideoId
+    episodesTrailers {
+      totalCount
+    }
+    episodesImages {
+      nodes {
+        imageType
+        imageId
+      }
+    }
+    publishStatus
+    publishedDate
+    publishedUser
+  }
+
+  tvshowGenres {
+    nodes {
+      title
+      id
+    }
+  }
+}
+
+mutation UpdateEpisode($input: UpdateEpisodeInput!) {
+  updateEpisode(input: $input) {
+    clientMutationId
+    episode {
+      id
+      title
+    }
+  }
+}
+
+mutation DeleteEpisode($input: DeleteEpisodeInput!) {
+  deleteEpisode(input: $input) {
+    clientMutationId
+  }
+}
+
+mutation PublishEpisode($id: Int!) {
+  publishEpisode(episodeId: $id) {
+    id
+  }
+}
+
+mutation UnpublishEpisode($id: Int!) {
+  unpublishEpisode(episodeId: $id) {
+    id
+  }
+}
+
+query EpisodeTitle($id: Int!) {
+  episode(id: $id) {
+    id
+    title
+  }
+}
+
+query SearchEpisodeTags($searchKey: String!, $limit: Int!) {
+  getEpisodesTagsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}
+
+query SearchEpisodeCast($searchKey: String!, $limit: Int!) {
+  getEpisodesCastsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}
+
+query SearchEpisodeProductionCountries($searchKey: String!, $limit: Int!) {
+  getEpisodesProductionCountriesValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+    nodes
+  }
+}

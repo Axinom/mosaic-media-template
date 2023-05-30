@@ -1,0 +1,12 @@
+schema: '${MEDIA_MANAGEMENT_HTTP_PROTOCOL}://${MEDIA_MANAGEMENT_HOST}/graphql'
+documents: 'src/**/*.graphql'
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+    config:
+      withHOC: false
+      withComponent: false
+      withHooks: true

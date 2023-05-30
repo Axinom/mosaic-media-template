@@ -1,0 +1,105 @@
+{
+  "parser": "@typescript-eslint/parser", // Specifies the ESLint parser
+  "plugins": ["@typescript-eslint", "react-hooks", "prettier", "jest"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended", // Uses the recommended rules from @typescript-eslint/eslint-plugin
+    "prettier/@typescript-eslint", // Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
+    "plugin:prettier/recommended", // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
+    "prettier/react",
+    "plugin:react/recommended", // Uses the recommended rules from @eslint-plugin-react
+    "plugin:react-hooks/recommended",
+    "plugin:jest/recommended",
+    "plugin:jest/style"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
+    "sourceType": "module", // Allows for the use of imports
+    "ecmaFeatures": {
+      "jsx": true // Allows for the parsing of JSX
+    }
+    //"project": ["./tsconfig.eslint.json"]
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true,
+    "es6": true
+  },
+  "rules": {
+    "@typescript-eslint/ban-ts-comment": "error",
+
+    "prettier/prettier": "warn",
+    "react/prop-types": "off", // We use TypeScript to document our Components.
+    "react/display-name": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/array-type": ["error", { "default": "array" }],
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "types": {
+          "Array": null
+        }
+      }
+    ],
+    "no-return-await": "warn",
+    "no-trailing-spaces": [
+      "error",
+      {
+        "ignoreComments": true
+      }
+    ],
+    "no-fallthrough": "error",
+    "jest/valid-expect": ["error", { "maxArgs": 2 }],
+    "jest/require-top-level-describe": "error",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "ignoreRestSiblings": true }], // Allow unused vars when prefixed with underscore
+
+    "jest/no-commented-out-tests": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "no-console": "warn",
+    "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "@typescript-eslint/explicit-function-return-type": [
+      "warn",
+      {
+        "allowExpressions": true
+      }
+    ],
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+    "curly": ["warn", "all"],
+    "eqeqeq": ["error", "allow-null"]
+  },
+  "overrides": [
+    {
+      // Unit tests
+      "files": ["*.{spec,test}.{ts,tsx}", "**/tests/**"],
+      "rules": {
+        "no-console": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
+    },
+    {
+      // Libraries
+      "files": ["libs/**"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "error"
+      }
+    },
+    { 
+      "files": ["*.js"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
+    }
+  ],
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect" // Tells eslint-plugin-react to automatically detect the version of React to use
+    }
+  }
+}

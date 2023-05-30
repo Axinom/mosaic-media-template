@@ -1,0 +1,28 @@
+query EpisodesLicenses(
+  $filter: EpisodesLicenseFilter
+  $orderBy: [EpisodesLicensesOrderBy!]
+  $after: Cursor
+) {
+  episodesLicenses(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      episodesLicensesCountries {
+        nodes {
+          code
+        }
+      }
+      licenseEnd
+      licenseStart
+    }
+  }
+}

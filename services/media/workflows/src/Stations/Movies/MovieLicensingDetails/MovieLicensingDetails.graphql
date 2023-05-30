@@ -1,0 +1,24 @@
+query MoviesLicense($id: Int!) {
+  moviesLicense(id: $id) {
+    moviesLicensesCountries {
+      nodes {
+        code
+      }
+    }
+    licenseEnd
+    licenseStart
+    movieId
+  }
+}
+
+mutation UpdateMoviesLicense($input: UpdateMoviesLicenseInput!) {
+  updateMoviesLicense(input: $input) {
+    clientMutationId
+  }
+}
+
+mutation DeleteMoviesLicense($input: DeleteMoviesLicenseInput!) {
+  deleteMoviesLicense(input: $input) {
+    clientMutationId
+  }
+}

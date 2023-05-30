@@ -1,0 +1,1 @@
+export type RelationType = "MOVIE" | "TVSHOW" | "SEASON" | "EPISODE";

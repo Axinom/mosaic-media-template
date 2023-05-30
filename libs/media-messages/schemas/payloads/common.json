@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "common",
+  "description": "Common definitions.",
+  "definitions": {
+    "non_empty_string": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*",
+      "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+    },
+    "non_empty_uuid": {
+      "type": "string",
+      "minLength": 32,
+      "maxLength": 36,
+      "format": "uuid",
+      "description": "A UUID."
+    }
+  }
+}

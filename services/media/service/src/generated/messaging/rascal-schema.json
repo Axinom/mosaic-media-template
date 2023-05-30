@@ -1,0 +1,662 @@
+{
+  "vhosts": {
+    "vhost-name": {
+      "assert": false,
+      "exchanges": {
+        "command": {
+          "type": "topic"
+        },
+        "event": {
+          "type": "topic"
+        },
+        "delay": {
+          "type": "topic"
+        },
+        "retry": {
+          "type": "topic"
+        },
+        "dead_letter": {
+          "type": "topic"
+        }
+      },
+      "queues": {
+        "delay:10sec": {
+          "options": {
+            "arguments": {
+              "x-message-ttl": 10000,
+              "x-dead-letter-exchange": "retry"
+            }
+          }
+        },
+        "delay:30sec": {
+          "options": {
+            "arguments": {
+              "x-message-ttl": 30000,
+              "x-dead-letter-exchange": "retry"
+            }
+          }
+        },
+        "media-service:dead_letter": {
+          "options": {
+            "arguments": {
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:ingest:start": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:ingest:start_item": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:ingest:update_metadata": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:ingest:check_finish_item": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:ingest:check_finish_document": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-encoding-service:video:ensure_exists": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-encoding-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:video:ensure_exists_already_existed": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:video:ensure_exists_creation_started": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:video:ensure_exists_failed": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-image-service:image:ensure_exists": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-image-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:image:ensure_exists_already_existed": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:image:ensure_exists_created": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:image:ensure_exists_failed": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:entity:publish_entity": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:entity:unpublish_entity": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:entity:delete": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-image-service:image_types:declare": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-image-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        }
+      },
+      "bindings": {
+        "media-service:dead_letter": {
+          "source": "dead_letter",
+          "bindingKey": "media-service.dead_letter",
+          "destination": "media-service:dead_letter"
+        },
+        "delay:10sec": {
+          "source": "delay",
+          "bindingKey": "delay.10sec",
+          "destination": "delay:10sec"
+        },
+        "delay:30sec": {
+          "source": "delay",
+          "bindingKey": "delay.30sec",
+          "destination": "delay:30sec"
+        },
+        "retry:media-service:ingest:start": {
+          "source": "retry",
+          "bindingKey": "media-service:ingest:start.#",
+          "destination": "media-service:ingest:start"
+        },
+        "media-service:ingest:start": {
+          "source": "command",
+          "bindingKey": "media-service.ingest.start",
+          "destination": "media-service:ingest:start"
+        },
+        "retry:media-service:ingest:start_item": {
+          "source": "retry",
+          "bindingKey": "media-service:ingest:start_item.#",
+          "destination": "media-service:ingest:start_item"
+        },
+        "media-service:ingest:start_item": {
+          "source": "command",
+          "bindingKey": "media-service.ingest.start_item",
+          "destination": "media-service:ingest:start_item"
+        },
+        "retry:media-service:ingest:update_metadata": {
+          "source": "retry",
+          "bindingKey": "media-service:ingest:update_metadata.#",
+          "destination": "media-service:ingest:update_metadata"
+        },
+        "media-service:ingest:update_metadata": {
+          "source": "command",
+          "bindingKey": "media-service.ingest.update_metadata",
+          "destination": "media-service:ingest:update_metadata"
+        },
+        "retry:media-service:ingest:check_finish_item": {
+          "source": "retry",
+          "bindingKey": "media-service:ingest:check_finish_item.#",
+          "destination": "media-service:ingest:check_finish_item"
+        },
+        "media-service:ingest:check_finish_item": {
+          "source": "command",
+          "bindingKey": "media-service.ingest.check_finish_item",
+          "destination": "media-service:ingest:check_finish_item"
+        },
+        "retry:media-service:ingest:check_finish_document": {
+          "source": "retry",
+          "bindingKey": "media-service:ingest:check_finish_document.#",
+          "destination": "media-service:ingest:check_finish_document"
+        },
+        "media-service:ingest:check_finish_document": {
+          "source": "command",
+          "bindingKey": "media-service.ingest.check_finish_document",
+          "destination": "media-service:ingest:check_finish_document"
+        },
+        "retry:ax-encoding-service:video:ensure_exists": {
+          "source": "retry",
+          "bindingKey": "ax-encoding-service:video:ensure_exists.#",
+          "destination": "ax-encoding-service:video:ensure_exists"
+        },
+        "retry:media-service:video:ensure_exists_already_existed": {
+          "source": "retry",
+          "bindingKey": "media-service:video:ensure_exists_already_existed.#",
+          "destination": "media-service:video:ensure_exists_already_existed"
+        },
+        "media-service:video:ensure_exists_already_existed": {
+          "source": "event",
+          "bindingKey": "ax-encoding-service.*.*.video.ensure_exists_already_existed",
+          "destination": "media-service:video:ensure_exists_already_existed"
+        },
+        "retry:media-service:video:ensure_exists_creation_started": {
+          "source": "retry",
+          "bindingKey": "media-service:video:ensure_exists_creation_started.#",
+          "destination": "media-service:video:ensure_exists_creation_started"
+        },
+        "media-service:video:ensure_exists_creation_started": {
+          "source": "event",
+          "bindingKey": "ax-encoding-service.*.*.video.ensure_exists_creation_started",
+          "destination": "media-service:video:ensure_exists_creation_started"
+        },
+        "retry:media-service:video:ensure_exists_failed": {
+          "source": "retry",
+          "bindingKey": "media-service:video:ensure_exists_failed.#",
+          "destination": "media-service:video:ensure_exists_failed"
+        },
+        "media-service:video:ensure_exists_failed": {
+          "source": "event",
+          "bindingKey": "ax-encoding-service.*.*.video.ensure_exists_failed",
+          "destination": "media-service:video:ensure_exists_failed"
+        },
+        "retry:ax-image-service:image:ensure_exists": {
+          "source": "retry",
+          "bindingKey": "ax-image-service:image:ensure_exists.#",
+          "destination": "ax-image-service:image:ensure_exists"
+        },
+        "retry:media-service:image:ensure_exists_already_existed": {
+          "source": "retry",
+          "bindingKey": "media-service:image:ensure_exists_already_existed.#",
+          "destination": "media-service:image:ensure_exists_already_existed"
+        },
+        "media-service:image:ensure_exists_already_existed": {
+          "source": "event",
+          "bindingKey": "ax-image-service.*.*.image.ensure_exists_already_existed",
+          "destination": "media-service:image:ensure_exists_already_existed"
+        },
+        "retry:media-service:image:ensure_exists_created": {
+          "source": "retry",
+          "bindingKey": "media-service:image:ensure_exists_created.#",
+          "destination": "media-service:image:ensure_exists_created"
+        },
+        "media-service:image:ensure_exists_created": {
+          "source": "event",
+          "bindingKey": "ax-image-service.*.*.image.ensure_exists_created",
+          "destination": "media-service:image:ensure_exists_created"
+        },
+        "retry:media-service:image:ensure_exists_failed": {
+          "source": "retry",
+          "bindingKey": "media-service:image:ensure_exists_failed.#",
+          "destination": "media-service:image:ensure_exists_failed"
+        },
+        "media-service:image:ensure_exists_failed": {
+          "source": "event",
+          "bindingKey": "ax-image-service.*.*.image.ensure_exists_failed",
+          "destination": "media-service:image:ensure_exists_failed"
+        },
+        "retry:media-service:entity:publish_entity": {
+          "source": "retry",
+          "bindingKey": "media-service:entity:publish_entity.#",
+          "destination": "media-service:entity:publish_entity"
+        },
+        "media-service:entity:publish_entity": {
+          "source": "command",
+          "bindingKey": "media-service.entity.publish_entity",
+          "destination": "media-service:entity:publish_entity"
+        },
+        "retry:media-service:entity:unpublish_entity": {
+          "source": "retry",
+          "bindingKey": "media-service:entity:unpublish_entity.#",
+          "destination": "media-service:entity:unpublish_entity"
+        },
+        "media-service:entity:unpublish_entity": {
+          "source": "command",
+          "bindingKey": "media-service.entity.unpublish_entity",
+          "destination": "media-service:entity:unpublish_entity"
+        },
+        "retry:media-service:entity:delete": {
+          "source": "retry",
+          "bindingKey": "media-service:entity:delete.#",
+          "destination": "media-service:entity:delete"
+        },
+        "media-service:entity:delete": {
+          "source": "command",
+          "bindingKey": "media-service.entity.delete",
+          "destination": "media-service:entity:delete"
+        },
+        "retry:ax-image-service:image_types:declare": {
+          "source": "retry",
+          "bindingKey": "ax-image-service:image_types:declare.#",
+          "destination": "ax-image-service:image_types:declare"
+        }
+      },
+      "publications": {
+        "retry_in_10sec": {
+          "exchange": "delay",
+          "options": {
+            "CC": [
+              "delay.10sec"
+            ]
+          }
+        },
+        "retry_in_30sec": {
+          "exchange": "delay",
+          "options": {
+            "CC": [
+              "delay.30sec"
+            ]
+          }
+        },
+        "StartIngest": {
+          "exchange": "command",
+          "routingKey": "media-service.ingest.start"
+        },
+        "StartIngestItem": {
+          "exchange": "command",
+          "routingKey": "media-service.ingest.start_item"
+        },
+        "UpdateMetadata": {
+          "exchange": "command",
+          "routingKey": "media-service.ingest.update_metadata"
+        },
+        "CheckFinishIngestItem": {
+          "exchange": "command",
+          "routingKey": "media-service.ingest.check_finish_item"
+        },
+        "CheckFinishIngestDocument": {
+          "exchange": "command",
+          "routingKey": "media-service.ingest.check_finish_document"
+        },
+        "EnsureVideoExists": {
+          "exchange": "command",
+          "routingKey": "ax-encoding-service.*.*.video.ensure_exists"
+        },
+        "EnsureImageExists": {
+          "exchange": "command",
+          "routingKey": "ax-image-service.*.*.image.ensure_exists"
+        },
+        "PublishEntity": {
+          "exchange": "command",
+          "routingKey": "media-service.entity.publish_entity"
+        },
+        "UnpublishEntity": {
+          "exchange": "command",
+          "routingKey": "media-service.entity.unpublish_entity"
+        },
+        "MoviePublished": {
+          "exchange": "event",
+          "routingKey": "media-service.movie.published"
+        },
+        "MovieUnpublished": {
+          "exchange": "event",
+          "routingKey": "media-service.movie.unpublished"
+        },
+        "MovieGenresPublished": {
+          "exchange": "event",
+          "routingKey": "media-service.movie-genres.published"
+        },
+        "MovieGenresUnpublished": {
+          "exchange": "event",
+          "routingKey": "media-service.movie-genres.unpublished"
+        },
+        "TvshowGenresPublished": {
+          "exchange": "event",
+          "routingKey": "media-service.tvshow-genres.published"
+        },
+        "TvshowGenresUnpublished": {
+          "exchange": "event",
+          "routingKey": "media-service.tvshow-genres.unpublished"
+        },
+        "TvshowPublished": {
+          "exchange": "event",
+          "routingKey": "media-service.tvshow.published"
+        },
+        "TvshowUnpublished": {
+          "exchange": "event",
+          "routingKey": "media-service.tvshow.unpublished"
+        },
+        "SeasonPublished": {
+          "exchange": "event",
+          "routingKey": "media-service.season.published"
+        },
+        "SeasonUnpublished": {
+          "exchange": "event",
+          "routingKey": "media-service.season.unpublished"
+        },
+        "EpisodePublished": {
+          "exchange": "event",
+          "routingKey": "media-service.episode.published"
+        },
+        "EpisodeUnpublished": {
+          "exchange": "event",
+          "routingKey": "media-service.episode.unpublished"
+        },
+        "CollectionPublished": {
+          "exchange": "event",
+          "routingKey": "media-service.collection.published"
+        },
+        "CollectionUnpublished": {
+          "exchange": "event",
+          "routingKey": "media-service.collection.unpublished"
+        },
+        "DeleteEntity": {
+          "exchange": "command",
+          "routingKey": "media-service.entity.delete"
+        },
+        "DeclareImageTypes": {
+          "exchange": "command",
+          "routingKey": "ax-image-service.*.*.image_types.declare"
+        },
+        "EntityDeleted": {
+          "exchange": "event",
+          "routingKey": "media-service.entity.deleted"
+        }
+      },
+      "subscriptions": {
+        "StartIngest": {
+          "queue": "media-service:ingest:start",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "StartIngestItem": {
+          "queue": "media-service:ingest:start_item",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "UpdateMetadata": {
+          "queue": "media-service:ingest:update_metadata",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "CheckFinishIngestItem": {
+          "queue": "media-service:ingest:check_finish_item",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "CheckFinishIngestDocument": {
+          "queue": "media-service:ingest:check_finish_document",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EnsureVideoExistsAlreadyExisted": {
+          "queue": "media-service:video:ensure_exists_already_existed",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EnsureVideoExistsCreationStarted": {
+          "queue": "media-service:video:ensure_exists_creation_started",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EnsureVideoExistsFailed": {
+          "queue": "media-service:video:ensure_exists_failed",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EnsureImageExistsAlreadyExisted": {
+          "queue": "media-service:image:ensure_exists_already_existed",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EnsureImageExistsImageCreated": {
+          "queue": "media-service:image:ensure_exists_created",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EnsureImageExistsFailed": {
+          "queue": "media-service:image:ensure_exists_failed",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "PublishEntity": {
+          "queue": "media-service:entity:publish_entity",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "UnpublishEntity": {
+          "queue": "media-service:entity:unpublish_entity",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "DeleteEntity": {
+          "queue": "media-service:entity:delete",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        }
+      }
+    }
+  },
+  "recovery": {
+    "deferred_retry": [
+      {
+        "strategy": "forward",
+        "attempts": 4,
+        "publication": "retry_in_10sec",
+        "xDeathFix": true
+      },
+      {
+        "strategy": "forward",
+        "attempts": 8,
+        "publication": "retry_in_30sec",
+        "xDeathFix": true
+      },
+      {
+        "strategy": "forward",
+        "attempts": 9,
+        "publication": "retry_in_30sec",
+        "options": {
+          "options": {
+            "headers": {
+              "mosaic_final_error": true
+            }
+          }
+        }
+      },
+      {
+        "strategy": "nack"
+      }
+    ]
+  },
+  "redeliveries": {
+    "counters": {
+      "mosaic": {
+        "type": "postgresCounter"
+      }
+    }
+  }
+}

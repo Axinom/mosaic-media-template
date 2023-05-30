@@ -1,0 +1,48 @@
+fragment PublishingSnapshotExplorerProperties on Snapshot {
+  id
+  createdDate
+  createdUser
+  snapshotValidationResults {
+    nodes {
+      severity
+    }
+  }
+  snapshotNo
+  snapshotState
+  updatedDate
+  updatedUser
+  validationStatus
+}
+
+query PublishingSnapshots($entityType: EntityType!, $entityId: Int, $filter: SnapshotFilter, $orderBy: [SnapshotsOrderBy!], $after: Cursor) {
+  filtered: snapshots(
+    condition: {entityType: $entityType, entityId: $entityId}
+    filter: $filter
+    orderBy: $orderBy
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...PublishingSnapshotExplorerProperties
+    }
+  }
+  nonFiltered: snapshots(condition: {entityType: $entityType, entityId: $entityId}) {
+    totalCount
+  }
+}
+
+subscription PublishingSnapshotMutated {
+  snapshotMutated {
+    id
+    event
+    snapshot {
+      entityType
+      entityId
+      ...PublishingSnapshotExplorerProperties
+    }
+  }
+}

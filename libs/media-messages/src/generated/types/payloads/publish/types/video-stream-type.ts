@@ -1,0 +1,1 @@
+export type VideoStreamType = "VIDEO" | "AUDIO" | "SUBTITLE" | "CLOSED_CAPTION";

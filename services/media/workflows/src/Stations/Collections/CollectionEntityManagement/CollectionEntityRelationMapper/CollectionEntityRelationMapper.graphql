@@ -1,0 +1,54 @@
+query CollectionRelatedEntities($id: Int!) {
+  collection(id: $id) {
+    collectionRelations {
+      nodes {
+        movie {
+          entityId: id
+          title
+          publishStatus
+          entityImages: moviesImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+
+        tvshow {
+          entityId: id
+          title
+          publishStatus
+          entityImages: tvshowsImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+
+        season {
+          entityId: id
+          index
+          publishStatus
+          entityImages: seasonsImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+
+        episode {
+          entityId: id
+          title
+          publishStatus
+          entityImages: episodesImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+
+        id
+        sortOrder
+      }
+    }
+  }
+}

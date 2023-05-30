@@ -1,0 +1,21 @@
+.datalist {
+  display: grid;
+  grid-template-columns: 1fr 100px;
+
+  .rightAlignment
+  {
+    text-align: right;
+  }
+}
+
+.externalId {
+  input {
+    width: 320px;
+  }
+}
+
+.episodeIndex {
+  input {
+    width: 320px;
+  }
+}

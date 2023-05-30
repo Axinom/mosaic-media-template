@@ -1,0 +1,254 @@
+{
+  "vhosts": {
+    "vhost-name": {
+      "assert": false,
+      "exchanges": {
+        "command": {
+          "type": "topic"
+        },
+        "event": {
+          "type": "topic"
+        },
+        "delay": {
+          "type": "topic"
+        },
+        "retry": {
+          "type": "topic"
+        },
+        "dead_letter": {
+          "type": "topic"
+        }
+      },
+      "queues": {
+        "delay:10sec": {
+          "options": {
+            "arguments": {
+              "x-message-ttl": 10000,
+              "x-dead-letter-exchange": "retry"
+            }
+          }
+        },
+        "delay:30sec": {
+          "options": {
+            "arguments": {
+              "x-message-ttl": 30000,
+              "x-dead-letter-exchange": "retry"
+            }
+          }
+        },
+        "entitlement-service:dead_letter": {
+          "options": {
+            "arguments": {
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-monetization-grants-service:claim_definitions:synchronize": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-monetization-grants-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "entitlement-service:claim_definitions:synchronize_finished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "entitlement-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "entitlement-service:claim_definitions:synchronize_failed": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "entitlement-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "entitlement-service:claim_set:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "entitlement-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "entitlement-service:subscription_plan:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "entitlement-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        }
+      },
+      "bindings": {
+        "entitlement-service:dead_letter": {
+          "source": "dead_letter",
+          "bindingKey": "entitlement-service.dead_letter",
+          "destination": "entitlement-service:dead_letter"
+        },
+        "delay:10sec": {
+          "source": "delay",
+          "bindingKey": "delay.10sec",
+          "destination": "delay:10sec"
+        },
+        "delay:30sec": {
+          "source": "delay",
+          "bindingKey": "delay.30sec",
+          "destination": "delay:30sec"
+        },
+        "retry:ax-monetization-grants-service:claim_definitions:synchronize": {
+          "source": "retry",
+          "bindingKey": "ax-monetization-grants-service:claim_definitions:synchronize.#",
+          "destination": "ax-monetization-grants-service:claim_definitions:synchronize"
+        },
+        "retry:entitlement-service:claim_definitions:synchronize_finished": {
+          "source": "retry",
+          "bindingKey": "entitlement-service:claim_definitions:synchronize_finished.#",
+          "destination": "entitlement-service:claim_definitions:synchronize_finished"
+        },
+        "entitlement-service:claim_definitions:synchronize_finished": {
+          "source": "event",
+          "bindingKey": "ax-monetization-grants-service.*.*.claim_definitions.synchronize_finished",
+          "destination": "entitlement-service:claim_definitions:synchronize_finished"
+        },
+        "retry:entitlement-service:claim_definitions:synchronize_failed": {
+          "source": "retry",
+          "bindingKey": "entitlement-service:claim_definitions:synchronize_failed.#",
+          "destination": "entitlement-service:claim_definitions:synchronize_failed"
+        },
+        "entitlement-service:claim_definitions:synchronize_failed": {
+          "source": "event",
+          "bindingKey": "ax-monetization-grants-service.*.*.claim_definitions.synchronize_failed",
+          "destination": "entitlement-service:claim_definitions:synchronize_failed"
+        },
+        "retry:entitlement-service:claim_set:published": {
+          "source": "retry",
+          "bindingKey": "entitlement-service:claim_set:published.#",
+          "destination": "entitlement-service:claim_set:published"
+        },
+        "entitlement-service:claim_set:published": {
+          "source": "event",
+          "bindingKey": "ax-monetization-grants-service.*.*.claim_set.published",
+          "destination": "entitlement-service:claim_set:published"
+        },
+        "retry:entitlement-service:subscription_plan:published": {
+          "source": "retry",
+          "bindingKey": "entitlement-service:subscription_plan:published.#",
+          "destination": "entitlement-service:subscription_plan:published"
+        },
+        "entitlement-service:subscription_plan:published": {
+          "source": "event",
+          "bindingKey": "ax-subscription-monetization-service.*.*.subscription_plan.published",
+          "destination": "entitlement-service:subscription_plan:published"
+        }
+      },
+      "publications": {
+        "retry_in_10sec": {
+          "exchange": "delay",
+          "options": {
+            "CC": [
+              "delay.10sec"
+            ]
+          }
+        },
+        "retry_in_30sec": {
+          "exchange": "delay",
+          "options": {
+            "CC": [
+              "delay.30sec"
+            ]
+          }
+        },
+        "SynchronizeClaimDefinitions": {
+          "exchange": "command",
+          "routingKey": "ax-monetization-grants-service.*.*.claim_definitions.synchronize"
+        }
+      },
+      "subscriptions": {
+        "SynchronizeClaimDefinitionsFinished": {
+          "queue": "entitlement-service:claim_definitions:synchronize_finished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "SynchronizeClaimDefinitionsFailed": {
+          "queue": "entitlement-service:claim_definitions:synchronize_failed",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "ClaimSetPublished": {
+          "queue": "entitlement-service:claim_set:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "SubscriptionPlanPublished": {
+          "queue": "entitlement-service:subscription_plan:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        }
+      }
+    }
+  },
+  "recovery": {
+    "deferred_retry": [
+      {
+        "strategy": "forward",
+        "attempts": 4,
+        "publication": "retry_in_10sec",
+        "xDeathFix": true
+      },
+      {
+        "strategy": "forward",
+        "attempts": 8,
+        "publication": "retry_in_30sec",
+        "xDeathFix": true
+      },
+      {
+        "strategy": "forward",
+        "attempts": 9,
+        "publication": "retry_in_30sec",
+        "options": {
+          "options": {
+            "headers": {
+              "mosaic_final_error": true
+            }
+          }
+        }
+      },
+      {
+        "strategy": "nack"
+      }
+    ]
+  },
+  "redeliveries": {
+    "counters": {
+      "mosaic": {
+        "type": "postgresCounter"
+      }
+    }
+  }
+}

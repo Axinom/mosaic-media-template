@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "publish_entity_command",
+  "description": "Command to publish an entity.",
+  "additionalProperties": false,
+  "required": [
+    "table_name",
+    "entity_id",
+    "publish_options"
+  ],
+  "properties": {
+    "table_name": {
+      "description": "The name of the database table to use.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*"
+    },
+    "entity_id": {
+      "type": "integer",
+      "description": "Id of the selected entity."
+    },
+    "job_id": {
+      "type": "string",
+      "description": "Publish job ID, bulk published items will share the same ID."
+    },
+    "publish_options": {
+      "type": "object",
+      "title": "publish_options",
+      "description": "Snapshot publish options.",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "title": "publish_action_type",
+          "description": "Publish action type.",
+          "enum": [
+            "PUBLISH_NOW",
+            "NO_PUBLISH",
+            "SCHEDULE"
+          ],
+          "default": [
+            "NO_PUBLISH"
+          ]
+        },
+        "schedule_time": {
+          "type": "string",
+          "description": "When to publish in case of scheduled publication.",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

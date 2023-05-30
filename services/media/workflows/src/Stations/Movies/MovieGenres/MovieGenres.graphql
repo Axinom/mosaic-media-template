@@ -1,0 +1,37 @@
+query MovieGenres {
+  movieGenres(orderBy: UPDATED_DATE_DESC) {
+    nodes {
+      sortOrder
+      title
+      id
+      updatedDate
+      updatedUser
+    }
+    totalCount
+  }
+  
+  snapshots(
+    filter: {
+      entityType: { equalTo: MOVIE_GENRE }
+      snapshotState: { equalTo: PUBLISHED }
+    }
+  ) {
+    nodes {
+      updatedUser
+      publishedDate
+      snapshotState
+    }
+  }
+}
+
+mutation PublishMovieGenres {
+  publishMovieGenres {
+    id
+  }
+}
+
+mutation UnpublishMovieGenres {
+  unpublishMovieGenres {
+    id
+  }
+}

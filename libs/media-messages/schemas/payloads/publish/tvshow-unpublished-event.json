@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "tvshow_unpublished_event",
+  "description": "TV show unpublished event.",
+  "properties": {
+    "content_id": {
+      "$ref": "common.json#/definitions/tvshow_id"
+    }
+  },
+  "required": [
+    "content_id"
+  ],
+  "additionalProperties": false
+}

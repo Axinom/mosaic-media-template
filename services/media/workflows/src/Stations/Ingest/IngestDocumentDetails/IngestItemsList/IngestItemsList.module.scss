@@ -1,0 +1,34 @@
+.header {
+  display: grid;
+  align-items: center;
+  white-space: nowrap;
+  // column-gap: 10px;
+  grid-template-columns: repeat(2, min-content) auto min-content;
+  font-weight: bold;
+
+  .externalID {
+    padding: 10px;
+  }
+
+  .status {
+    padding: 10px;
+  }
+}
+
+.rowWrapper {
+  & > div:nth-child(even) {
+    background-color: white;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 50px 100px 100px 100px 1fr;
+  grid-auto-rows: 50px;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.icon {
+  width: 24px;
+}

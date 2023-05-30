@@ -1,0 +1,28 @@
+query TvshowsLicenses(
+  $filter: TvshowsLicenseFilter
+  $orderBy: [TvshowsLicensesOrderBy!]
+  $after: Cursor
+) {
+  tvshowsLicenses(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      tvshowsLicensesCountries {
+        nodes {
+          code
+        }
+      }
+      licenseEnd
+      licenseStart
+    }
+  }
+}

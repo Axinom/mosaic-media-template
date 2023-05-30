@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "collection_published_event",
+  "description": "Definition of the collection publish format.",
+  "properties": {
+    "content_id": {
+      "$ref": "./common.json#/definitions/collection_id"
+    },
+    "title": {
+      "description": "Title of the collection.",
+      "$ref": "../common.json#/definitions/non_empty_string"
+    },
+    "synopsis": {
+      "description": "Short description.",
+      "type": "string"
+    },
+    "description": {
+      "description": "Longer description.",
+      "type": "string"
+    },
+    "tags": {
+      "$ref": "./common.json#/definitions/tags"
+    },
+    "images": {
+      "$ref": "./common.json#/definitions/images"
+    },
+    "related_items": {
+      "description": "Array of content related items metadata.",
+      "type": "array",
+      "items": {
+        "description": "Related item metadata.",
+        "type": "object",
+        "title": "related_item",
+        "properties": {
+          "movie_id": {
+            "$ref": "./common.json#/definitions/movie_id"
+          },
+          "tvshow_id": {
+            "$ref": "./common.json#/definitions/tvshow_id"
+          },
+          "season_id": {
+            "$ref": "./common.json#/definitions/season_id"
+          },
+          "episode_id": {
+            "$ref": "./common.json#/definitions/episode_id"
+          },
+          "order_no": {
+            "description": "Ordering number for the genre.",
+            "type": "integer"
+          },
+          "relation_type": {
+            "description": "Textual representation of relation type.",
+            "type": "string",
+            "title": "relation_type",
+            "enum": ["MOVIE", "TVSHOW", "SEASON", "EPISODE"]
+          }
+        },
+        "required": ["order_no", "relation_type"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["content_id", "title", "related_items"],
+  "additionalProperties": false
+}

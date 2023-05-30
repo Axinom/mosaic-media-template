@@ -1,0 +1,24 @@
+query MoviesLicenses(
+  $filter: MoviesLicenseFilter
+  $orderBy: [MoviesLicensesOrderBy!]
+  $after: Cursor
+) {
+  moviesLicenses(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+
+      moviesLicensesCountries {
+        nodes {
+          code
+        }
+      }
+      licenseEnd
+      licenseStart
+    }
+  }
+}

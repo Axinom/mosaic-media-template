@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "unpublish_entity_command",
+  "description": "Unpublish a single entity command schema.",
+  "additionalProperties": false,
+  "required": [
+    "table_name",
+    "entity_id"
+  ],
+  "properties": {
+    "table_name": {
+      "description": "The name of the database table to use.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*"
+    },
+    "entity_id": {
+      "type": "integer",
+      "description": "Id of the selected entity."
+    }
+  }
+}

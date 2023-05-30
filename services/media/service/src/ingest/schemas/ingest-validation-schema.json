@@ -1,0 +1,658 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "required": ["name", "items"],
+  "definitions": {
+    "non-empty-string": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*"
+    },
+    "index": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Season or episode number."
+    },
+    "parent_external_id": {
+      "$ref": "#/definitions/non-empty-string",
+      "description": "A unique identifier of a parent TV show or season."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^$|.*\\S.*",
+      "description": "Non-unique user-friendly identifier of a media item. Although it will not be as convenient to search by title if there are duplicates."
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "Description of a media item."
+    },
+    "synopsis": {
+      "type": ["string", "null"],
+      "description": "Brief summary of a media item, usually shorter than description."
+    },
+    "original_title": {
+      "type": ["string", "null"],
+      "description": "Original title of a media item."
+    },
+    "released": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "Date of media item release. Should only include year, month and day in a format like yyyy-mm-dd."
+    },
+    "studio": {
+      "type": ["string", "null"],
+      "description": "Studio which released a media item."
+    },
+    "tags": {
+      "type": ["array", "null"],
+      "description": "An array of tags for media item.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/non-empty-string",
+        "description": "Tag that describes some aspect of media item in one or two words."
+      }
+    },
+    "genres": {
+      "type": ["array", "null"],
+      "description": "An array of genres of media item.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/non-empty-string",
+        "description": "Media genre value."
+      }
+    },
+    "cast": {
+      "type": ["array", "null"],
+      "description": "An array of actor and actress names.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/non-empty-string",
+        "description": "Name of an actor or actress."
+      }
+    },
+    "production_countries": {
+      "type": ["array", "null"],
+      "description": "An array of production countries",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/non-empty-string",
+        "description": "Production country code. Free-text value."
+      }
+    },
+    "licenses": {
+      "type": ["array", "null"],
+      "description": "An array of media license objects. Each object must have at least one of 3 possible properties: start, end and countries.",
+      "items": {
+        "type": "object",
+        "description": "A single license object.",
+        "anyOf": [
+          { "required": ["start"] },
+          { "required": ["end"] },
+          { "required": ["countries"] }
+        ],
+        "properties": {
+          "start": {
+            "type": ["string", "null"],
+            "format": "date-time",
+            "description": "Start date of a license. If not specified, starting boundary is not set and period is valid all time until end date. ISO8601 format."
+          },
+          "end": {
+            "type": ["string", "null"],
+            "format": "date-time",
+            "description": "End date of a license. If not specified, ending boundary is not set and period is valid indefinitely, starting from start date. ISO8601 format."
+          },
+          "countries": {
+            "type": "array",
+            "description": "An array of country codes for which current license applies.",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$",
+              "description": "License country code. Must be a 2-letter value with all letters in CAPS and correspond to an existing ISO-3166 alpha-2 country code value."
+            }
+          }
+        }
+      }
+    },
+    "main_video": {
+      "type": ["object", "null"],
+      "description": "An object describing a path to main video files and a way to process it. If empty object is defined - main video will be unassigned on media item update. If profile is defined - then source must be defined as well.",
+      "required": [],
+      "dependencies": {
+        "profile": { "required": ["source"] }
+      },
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/non-empty-string",
+          "description": "Path to video files in file storage, including video itself, audio, subtitle and closed caption files."
+        },
+        "profile": {
+          "$ref": "#/definitions/non-empty-string",
+          "description": "Name of processing profile to be used to encode video files. If not specified - default profile will be used."
+        }
+      }
+    },
+    "trailers": {
+      "type": ["array", "null"],
+      "description": "An array of objects describing a path to trailer video files and a way to process them.",
+      "items": {
+        "type": "object",
+        "description": "An object describing a path to trailer video files.",
+        "required": ["source"],
+        "properties": {
+          "source": {
+            "$ref": "#/definitions/non-empty-string",
+            "description": "Path to video files in file storage, including video itself, audio, subtitle and closed caption files."
+          },
+          "profile": {
+            "$ref": "#/definitions/non-empty-string",
+            "description": "Name of processing profile to be used to encode video files."
+          }
+        }
+      }
+    },
+    "images": {
+      "type": ["array", "null"],
+      "description": "An array of objects describing a path to image files and image types.",
+      "items": {
+        "type": "object",
+        "description": "An object describing a path to image file and image type.",
+        "required": ["path", "type"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^.*(.jpg|.jpeg|.png|.webp|.gif|.svg|.tiff|.avif|.heif)$",
+            "description": "Path to image file in file storage. Shall include filename with extension."
+          },
+          "type": {
+            "type": "string",
+            "enum": ["COVER", "TEASER"],
+            "description": "Type that an image shall be associated with."
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^$|.*\\S.*",
+      "minLength": 1,
+      "maxLength": 50,
+      "description": "Defines a name for ingest document."
+    },
+    "document_created": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Optional date of document."
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "Description of a media item."
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "description": "An array of items of different types to be ingested.",
+      "items": {
+        "type": "object",
+        "description": "Each item represents an entity that will be created or updated inside of the media service.",
+        "required": ["type", "external_id", "data"],
+        "properties": {
+          "type": {
+            "enum": ["MOVIE", "TVSHOW", "SEASON", "EPISODE"],
+            "description": "Must be one of supported type values that represents an entity type in media service.",
+            "examples": ["MOVIE"]
+          },
+          "external_id": {
+            "$ref": "#/definitions/non-empty-string",
+            "description": "A unique identifier of an ingest item.",
+            "examples": ["avatar67A23"]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": { "const": "MOVIE" }
+              }
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "description": "Object containing metadata of a specific media item.",
+                  "required": ["title"],
+                  "properties": {
+                    "title": {
+                      "$ref": "#/definitions/title",
+                      "examples": ["Avatar"]
+                    },
+                    "original_title": {
+                      "$ref": "#/definitions/original_title",
+                      "examples": ["James Cameron's Avatar"]
+                    },
+                    "description": {
+                      "$ref": "#/definitions/description",
+                      "examples": [
+                        "Avatar is a 2009 American epic science fiction film..."
+                      ]
+                    },
+                    "synopsis": {
+                      "$ref": "#/definitions/synopsis",
+                      "examples": [
+                        "In 2154, humans have depleted Earth's natural resources..."
+                      ]
+                    },
+                    "released": {
+                      "$ref": "#/definitions/released",
+                      "examples": ["2009-12-10"]
+                    },
+                    "studio": {
+                      "$ref": "#/definitions/studio",
+                      "examples": ["20th Century Fox"]
+                    },
+                    "tags": {
+                      "$ref": "#/definitions/tags",
+                      "examples": [["3D", "Sci-Fi"]]
+                    },
+                    "genres": {
+                      "$ref": "#/definitions/genres",
+                      "examples": [["Sci-Fi", "Animation"]]
+                    },
+                    "cast": {
+                      "$ref": "#/definitions/cast",
+                      "examples": [["Sam Worthington", "Zoe Saldana"]]
+                    },
+                    "production_countries": {
+                      "$ref": "#/definitions/production_countries",
+                      "examples": [["EST", "DEU"]]
+                    },
+                    "licenses": {
+                      "$ref": "#/definitions/licenses",
+                      "examples": [
+                        {
+                          "start": "2020-08-01T00:00:00.000+00:00",
+                          "end": "2020-08-30T23:59:59.999+00:00",
+                          "countries": ["AT", "AW", "FI"]
+                        }
+                      ]
+                    },
+                    "main_video": {
+                      "$ref": "#/definitions/main_video",
+                      "examples": [
+                        {
+                          "source": "test-videos/videos/avatar",
+                          "profile": "DEFAULT"
+                        }
+                      ]
+                    },
+                    "trailers": {
+                      "$ref": "#/definitions/trailers",
+                      "examples": [
+                        [
+                          { "source": "test-videos/trailers/avatar_1" },
+                          {
+                            "source": "test-videos/trailers/avatar_2",
+                            "profile": "DEFAULT"
+                          }
+                        ]
+                      ]
+                    },
+                    "images": {
+                      "$ref": "#/definitions/images",
+                      "examples": [
+                        [
+                          {
+                            "path": "test-images/covers/avatar_1.jpg",
+                            "type": "COVER"
+                          },
+                          {
+                            "path": "test-images/teasers/avatar_1.jpg",
+                            "type": "TEASER"
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": { "const": "TVSHOW" }
+              }
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "description": "Object containing metadata of a specific media item.",
+                  "required": ["title"],
+                  "properties": {
+                    "title": {
+                      "$ref": "#/definitions/title",
+                      "examples": ["Mandalorian"]
+                    },
+                    "description": {
+                      "$ref": "#/definitions/description",
+                      "examples": [
+                        "After the stories of Jango and Boba Fett, another warrior emerges in the Star Wars universe..."
+                      ]
+                    },
+                    "synopsis": {
+                      "$ref": "#/definitions/synopsis",
+                      "examples": [
+                        "The travels of a lone bounty hunter in the outer reaches of the galaxy, far from the authority of the New Republic."
+                      ]
+                    },
+                    "original_title": {
+                      "$ref": "#/definitions/original_title",
+                      "examples": ["The Mandalorian"]
+                    },
+                    "released": {
+                      "$ref": "#/definitions/released",
+                      "examples": ["2019-11-12"]
+                    },
+                    "studio": {
+                      "$ref": "#/definitions/studio",
+                      "examples": ["Lucasfilm"]
+                    },
+                    "tags": {
+                      "$ref": "#/definitions/tags",
+                      "examples": [
+                        ["star wars", "mandalorian", "bounty hunter"]
+                      ]
+                    },
+                    "genres": {
+                      "$ref": "#/definitions/genres",
+                      "examples": [["Action", "Adventure", "Sci-Fi"]]
+                    },
+                    "cast": {
+                      "$ref": "#/definitions/cast",
+                      "examples": [
+                        ["Pedro Pascal", "Carl Weathers", "Gina Carano"]
+                      ]
+                    },
+                    "production_countries": {
+                      "$ref": "#/definitions/production_countries",
+                      "examples": [["USA"]]
+                    },
+                    "licenses": {
+                      "$ref": "#/definitions/licenses",
+                      "examples": [
+                        {
+                          "start": "2020-08-01T00:00:00.000+00:00",
+                          "end": "2020-08-30T23:59:59.999+00:00",
+                          "countries": ["AT", "AW", "FI"]
+                        }
+                      ]
+                    },
+                    "trailers": {
+                      "$ref": "#/definitions/trailers",
+                      "examples": [
+                        [
+                          { "source": "test-videos/trailers/mandalorian_1" },
+                          {
+                            "source": "test-videos/trailers/mandalorian_2",
+                            "profile": "DEFAULT"
+                          }
+                        ]
+                      ]
+                    },
+                    "images": {
+                      "$ref": "#/definitions/images",
+                      "examples": [
+                        [
+                          {
+                            "path": "test-images/covers/mandalorian_1.png",
+                            "type": "COVER"
+                          },
+                          {
+                            "path": "test-images/teasers/mandalorian_1.png",
+                            "type": "TEASER"
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": { "const": "SEASON" }
+              }
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "description": "Object containing metadata of a specific media item.",
+                  "required": ["index", "parent_external_id"],
+                  "properties": {
+                    "index": {
+                      "$ref": "#/definitions/index",
+                      "examples": [2]
+                    },
+                    "parent_external_id": {
+                      "$ref": "#/definitions/parent_external_id",
+                      "examples": ["mandalorian"]
+                    },
+                    "description": {
+                      "$ref": "#/definitions/description",
+                      "examples": [
+                        "After the stories of Jango and Boba Fett, another warrior emerges in the Star Wars universe..."
+                      ]
+                    },
+                    "synopsis": {
+                      "$ref": "#/definitions/synopsis",
+                      "examples": [
+                        "A Mandalorian bounty hunter tracks a target for a well-paying, mysterious client."
+                      ]
+                    },
+                    "released": {
+                      "$ref": "#/definitions/released",
+                      "examples": ["2020-10-30"]
+                    },
+                    "studio": {
+                      "$ref": "#/definitions/studio",
+                      "examples": ["Lucasfilm"]
+                    },
+                    "tags": {
+                      "$ref": "#/definitions/tags",
+                      "examples": [
+                        ["star wars", "mandalorian", "bounty hunter"]
+                      ]
+                    },
+                    "genres": {
+                      "$ref": "#/definitions/genres",
+                      "examples": [["Action", "Adventure", "Sci-Fi"]]
+                    },
+                    "cast": {
+                      "$ref": "#/definitions/cast",
+                      "examples": [
+                        ["Pedro Pascal", "Carl Weathers", "Gina Carano"]
+                      ]
+                    },
+                    "production_countries": {
+                      "$ref": "#/definitions/production_countries",
+                      "examples": [["USA"]]
+                    },
+                    "licenses": {
+                      "$ref": "#/definitions/licenses",
+                      "examples": [
+                        {
+                          "start": "2020-08-01T00:00:00.000+00:00",
+                          "end": "2020-08-30T23:59:59.999+00:00",
+                          "countries": ["AT", "AW", "FI"]
+                        }
+                      ]
+                    },
+                    "trailers": {
+                      "$ref": "#/definitions/trailers",
+                      "examples": [
+                        [
+                          { "source": "test-videos/trailers/mandalorian_s1" },
+                          {
+                            "source": "test-videos/trailers/mandalorian_s2",
+                            "profile": "DEFAULT"
+                          }
+                        ]
+                      ]
+                    },
+                    "images": {
+                      "$ref": "#/definitions/images",
+                      "examples": [
+                        [
+                          {
+                            "path": "test-images/covers/mandalorian_s1.png",
+                            "type": "COVER"
+                          },
+                          {
+                            "path": "test-images/teasers/mandalorian_s1.png",
+                            "type": "TEASER"
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": { "const": "EPISODE" }
+              }
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "description": "Object containing metadata of a specific media item.",
+                  "required": ["title", "index", "parent_external_id"],
+                  "properties": {
+                    "title": {
+                      "$ref": "#/definitions/title",
+                      "examples": ["The Marshal"]
+                    },
+                    "original_title": {
+                      "$ref": "#/definitions/original_title",
+                      "examples": ["Chapter 9: The Marshal"]
+                    },
+                    "index": {
+                      "$ref": "#/definitions/index",
+                      "examples": [1]
+                    },
+                    "parent_external_id": {
+                      "$ref": "#/definitions/parent_external_id",
+                      "examples": ["mandalorian_s2"]
+                    },
+                    "description": {
+                      "$ref": "#/definitions/description",
+                      "examples": [
+                        "After the stories of Jango and Boba Fett, another warrior emerges in the Star Wars universe..."
+                      ]
+                    },
+                    "synopsis": {
+                      "$ref": "#/definitions/synopsis",
+                      "examples": [
+                        "The Mandalorian is drawn to the Outer Rim in search of others of his kind."
+                      ]
+                    },
+                    "released": {
+                      "$ref": "#/definitions/released",
+                      "examples": ["2020-10-30"]
+                    },
+                    "studio": {
+                      "$ref": "#/definitions/studio",
+                      "examples": ["Lucasfilm"]
+                    },
+                    "tags": {
+                      "$ref": "#/definitions/tags",
+                      "examples": [
+                        ["star wars", "mandalorian", "bounty hunter"]
+                      ]
+                    },
+                    "genres": {
+                      "$ref": "#/definitions/genres",
+                      "examples": [["Action", "Adventure", "Sci-Fi"]]
+                    },
+                    "cast": {
+                      "$ref": "#/definitions/cast",
+                      "examples": [
+                        ["Pedro Pascal", "Carl Weathers", "Gina Carano"]
+                      ]
+                    },
+                    "production_countries": {
+                      "$ref": "#/definitions/production_countries",
+                      "examples": [["USA"]]
+                    },
+                    "licenses": {
+                      "$ref": "#/definitions/licenses",
+                      "examples": [
+                        {
+                          "start": "2020-08-01T00:00:00.000+00:00",
+                          "end": "2020-08-30T23:59:59.999+00:00",
+                          "countries": ["AT", "AW", "FI"]
+                        }
+                      ]
+                    },
+                    "main_video": {
+                      "$ref": "#/definitions/main_video",
+                      "examples": [
+                        {
+                          "source": "test-videos/videos/mandalorian_s2_e1",
+                          "profile": "DEFAULT"
+                        }
+                      ]
+                    },
+                    "trailers": {
+                      "$ref": "#/definitions/trailers",
+                      "examples": [
+                        [
+                          {
+                            "source": "test-videos/trailers/mandalorian_s2_e1_t1"
+                          },
+                          {
+                            "source": "test-videos/trailers/mandalorian_s2_e1_t2",
+                            "profile": "DEFAULT"
+                          }
+                        ]
+                      ]
+                    },
+                    "images": {
+                      "$ref": "#/definitions/images",
+                      "examples": [
+                        [
+                          {
+                            "path": "test-images/covers/mandalorian_s2_e1_t1.png",
+                            "type": "COVER"
+                          },
+                          {
+                            "path": "test-images/teasers/mandalorian_s2_e1_t1.png",
+                            "type": "TEASER"
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

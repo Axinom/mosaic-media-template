@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "movie_genres_published_event",
+  "description": "Definition of the movie genre publish format.",
+  "properties": {
+    "genres": {
+      "description": "List of movie genres.",
+      "type": "array",
+      "items": {
+        "description": "An individual movie genre object.",
+        "type": "object",
+        "title": "genre",
+        "properties": {
+          "content_id": {
+            "description": "Content ID of a movie genre. Must match the pattern `^(movie_genre)-([a-zA-Z0-9_-]+)$`.",
+            "type": "string",
+            "pattern": "^(movie_genre)-([a-zA-Z0-9_-]+)$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^$|.*\\S.*",
+            "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+          },
+          "order_no": {
+            "description": "Global ordering number for the genre.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "content_id",
+          "title",
+          "order_no"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "genres"
+  ],
+  "additionalProperties": false
+}

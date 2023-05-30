@@ -1,0 +1,8 @@
+mutation CreateCollection($input: CreateCollectionInput!) {
+  createCollection(input: $input) {
+    collection {
+      id
+      title
+    }
+  }
+}

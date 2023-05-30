@@ -1,0 +1,516 @@
+{
+  "vhosts": {
+    "vhost-name": {
+      "assert": false,
+      "exchanges": {
+        "command": {
+          "type": "topic"
+        },
+        "event": {
+          "type": "topic"
+        },
+        "delay": {
+          "type": "topic"
+        },
+        "retry": {
+          "type": "topic"
+        },
+        "dead_letter": {
+          "type": "topic"
+        }
+      },
+      "queues": {
+        "delay:10sec": {
+          "options": {
+            "arguments": {
+              "x-message-ttl": 10000,
+              "x-dead-letter-exchange": "retry"
+            }
+          }
+        },
+        "delay:30sec": {
+          "options": {
+            "arguments": {
+              "x-message-ttl": 30000,
+              "x-dead-letter-exchange": "retry"
+            }
+          }
+        },
+        "catalog-service:dead_letter": {
+          "options": {
+            "arguments": {
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:movie:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:movie:unpublished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:movie-genres:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:movie-genres:unpublished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:tvshow-genres:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:tvshow-genres:unpublished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:tvshow:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:tvshow:unpublished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:season:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:season:unpublished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:episode:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:episode:unpublished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:collection:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:collection:unpublished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        }
+      },
+      "bindings": {
+        "catalog-service:dead_letter": {
+          "source": "dead_letter",
+          "bindingKey": "catalog-service.dead_letter",
+          "destination": "catalog-service:dead_letter"
+        },
+        "delay:10sec": {
+          "source": "delay",
+          "bindingKey": "delay.10sec",
+          "destination": "delay:10sec"
+        },
+        "delay:30sec": {
+          "source": "delay",
+          "bindingKey": "delay.30sec",
+          "destination": "delay:30sec"
+        },
+        "retry:catalog-service:movie:published": {
+          "source": "retry",
+          "bindingKey": "catalog-service:movie:published.#",
+          "destination": "catalog-service:movie:published"
+        },
+        "catalog-service:movie:published": {
+          "source": "event",
+          "bindingKey": "media-service.movie.published",
+          "destination": "catalog-service:movie:published"
+        },
+        "retry:catalog-service:movie:unpublished": {
+          "source": "retry",
+          "bindingKey": "catalog-service:movie:unpublished.#",
+          "destination": "catalog-service:movie:unpublished"
+        },
+        "catalog-service:movie:unpublished": {
+          "source": "event",
+          "bindingKey": "media-service.movie.unpublished",
+          "destination": "catalog-service:movie:unpublished"
+        },
+        "retry:catalog-service:movie-genres:published": {
+          "source": "retry",
+          "bindingKey": "catalog-service:movie-genres:published.#",
+          "destination": "catalog-service:movie-genres:published"
+        },
+        "catalog-service:movie-genres:published": {
+          "source": "event",
+          "bindingKey": "media-service.movie-genres.published",
+          "destination": "catalog-service:movie-genres:published"
+        },
+        "retry:catalog-service:movie-genres:unpublished": {
+          "source": "retry",
+          "bindingKey": "catalog-service:movie-genres:unpublished.#",
+          "destination": "catalog-service:movie-genres:unpublished"
+        },
+        "catalog-service:movie-genres:unpublished": {
+          "source": "event",
+          "bindingKey": "media-service.movie-genres.unpublished",
+          "destination": "catalog-service:movie-genres:unpublished"
+        },
+        "retry:catalog-service:tvshow-genres:published": {
+          "source": "retry",
+          "bindingKey": "catalog-service:tvshow-genres:published.#",
+          "destination": "catalog-service:tvshow-genres:published"
+        },
+        "catalog-service:tvshow-genres:published": {
+          "source": "event",
+          "bindingKey": "media-service.tvshow-genres.published",
+          "destination": "catalog-service:tvshow-genres:published"
+        },
+        "retry:catalog-service:tvshow-genres:unpublished": {
+          "source": "retry",
+          "bindingKey": "catalog-service:tvshow-genres:unpublished.#",
+          "destination": "catalog-service:tvshow-genres:unpublished"
+        },
+        "catalog-service:tvshow-genres:unpublished": {
+          "source": "event",
+          "bindingKey": "media-service.tvshow-genres.unpublished",
+          "destination": "catalog-service:tvshow-genres:unpublished"
+        },
+        "retry:catalog-service:tvshow:published": {
+          "source": "retry",
+          "bindingKey": "catalog-service:tvshow:published.#",
+          "destination": "catalog-service:tvshow:published"
+        },
+        "catalog-service:tvshow:published": {
+          "source": "event",
+          "bindingKey": "media-service.tvshow.published",
+          "destination": "catalog-service:tvshow:published"
+        },
+        "retry:catalog-service:tvshow:unpublished": {
+          "source": "retry",
+          "bindingKey": "catalog-service:tvshow:unpublished.#",
+          "destination": "catalog-service:tvshow:unpublished"
+        },
+        "catalog-service:tvshow:unpublished": {
+          "source": "event",
+          "bindingKey": "media-service.tvshow.unpublished",
+          "destination": "catalog-service:tvshow:unpublished"
+        },
+        "retry:catalog-service:season:published": {
+          "source": "retry",
+          "bindingKey": "catalog-service:season:published.#",
+          "destination": "catalog-service:season:published"
+        },
+        "catalog-service:season:published": {
+          "source": "event",
+          "bindingKey": "media-service.season.published",
+          "destination": "catalog-service:season:published"
+        },
+        "retry:catalog-service:season:unpublished": {
+          "source": "retry",
+          "bindingKey": "catalog-service:season:unpublished.#",
+          "destination": "catalog-service:season:unpublished"
+        },
+        "catalog-service:season:unpublished": {
+          "source": "event",
+          "bindingKey": "media-service.season.unpublished",
+          "destination": "catalog-service:season:unpublished"
+        },
+        "retry:catalog-service:episode:published": {
+          "source": "retry",
+          "bindingKey": "catalog-service:episode:published.#",
+          "destination": "catalog-service:episode:published"
+        },
+        "catalog-service:episode:published": {
+          "source": "event",
+          "bindingKey": "media-service.episode.published",
+          "destination": "catalog-service:episode:published"
+        },
+        "retry:catalog-service:episode:unpublished": {
+          "source": "retry",
+          "bindingKey": "catalog-service:episode:unpublished.#",
+          "destination": "catalog-service:episode:unpublished"
+        },
+        "catalog-service:episode:unpublished": {
+          "source": "event",
+          "bindingKey": "media-service.episode.unpublished",
+          "destination": "catalog-service:episode:unpublished"
+        },
+        "retry:catalog-service:collection:published": {
+          "source": "retry",
+          "bindingKey": "catalog-service:collection:published.#",
+          "destination": "catalog-service:collection:published"
+        },
+        "catalog-service:collection:published": {
+          "source": "event",
+          "bindingKey": "media-service.collection.published",
+          "destination": "catalog-service:collection:published"
+        },
+        "retry:catalog-service:collection:unpublished": {
+          "source": "retry",
+          "bindingKey": "catalog-service:collection:unpublished.#",
+          "destination": "catalog-service:collection:unpublished"
+        },
+        "catalog-service:collection:unpublished": {
+          "source": "event",
+          "bindingKey": "media-service.collection.unpublished",
+          "destination": "catalog-service:collection:unpublished"
+        }
+      },
+      "publications": {
+        "retry_in_10sec": {
+          "exchange": "delay",
+          "options": {
+            "CC": [
+              "delay.10sec"
+            ]
+          }
+        },
+        "retry_in_30sec": {
+          "exchange": "delay",
+          "options": {
+            "CC": [
+              "delay.30sec"
+            ]
+          }
+        }
+      },
+      "subscriptions": {
+        "MoviePublished": {
+          "queue": "catalog-service:movie:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "MovieUnpublished": {
+          "queue": "catalog-service:movie:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "MovieGenresPublished": {
+          "queue": "catalog-service:movie-genres:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "MovieGenresUnpublished": {
+          "queue": "catalog-service:movie-genres:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "TvshowGenresPublished": {
+          "queue": "catalog-service:tvshow-genres:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "TvshowGenresUnpublished": {
+          "queue": "catalog-service:tvshow-genres:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "TvshowPublished": {
+          "queue": "catalog-service:tvshow:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "TvshowUnpublished": {
+          "queue": "catalog-service:tvshow:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "SeasonPublished": {
+          "queue": "catalog-service:season:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "SeasonUnpublished": {
+          "queue": "catalog-service:season:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EpisodePublished": {
+          "queue": "catalog-service:episode:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EpisodeUnpublished": {
+          "queue": "catalog-service:episode:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "CollectionPublished": {
+          "queue": "catalog-service:collection:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "CollectionUnpublished": {
+          "queue": "catalog-service:collection:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        }
+      }
+    }
+  },
+  "recovery": {
+    "deferred_retry": [
+      {
+        "strategy": "forward",
+        "attempts": 4,
+        "publication": "retry_in_10sec",
+        "xDeathFix": true
+      },
+      {
+        "strategy": "forward",
+        "attempts": 8,
+        "publication": "retry_in_30sec",
+        "xDeathFix": true
+      },
+      {
+        "strategy": "forward",
+        "attempts": 9,
+        "publication": "retry_in_30sec",
+        "options": {
+          "options": {
+            "headers": {
+              "mosaic_final_error": true
+            }
+          }
+        }
+      },
+      {
+        "strategy": "nack"
+      }
+    ]
+  },
+  "redeliveries": {
+    "counters": {
+      "mosaic": {
+        "type": "postgresCounter"
+      }
+    }
+  }
+}

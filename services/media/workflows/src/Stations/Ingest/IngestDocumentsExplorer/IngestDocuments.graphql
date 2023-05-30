@@ -1,0 +1,37 @@
+fragment IngestDocumentExplorerProperties on IngestDocument {
+  id
+  title
+  status
+  itemsCount
+  errorCount
+  successCount
+  inProgressCount
+  createdDate
+  updatedDate
+}
+
+query IngestDocuments($orderBy: [IngestDocumentsOrderBy!], $after: Cursor) {
+  filtered: ingestDocuments(orderBy: $orderBy, first: 30, after: $after) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...IngestDocumentExplorerProperties
+    }
+  }
+  nonFiltered: ingestDocuments {
+    totalCount
+  }
+}
+
+subscription IngestDocumentsMutated {
+  ingestDocumentMutated {
+    id
+    event
+    ingestDocument {
+      ...IngestDocumentExplorerProperties
+    }
+  }
+}

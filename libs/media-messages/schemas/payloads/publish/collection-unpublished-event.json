@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "collection_unpublished_event",
+  "description": "Collection unpublished event.",
+  "properties": {
+    "content_id": {
+      "$ref": "common.json#/definitions/collection_id"
+    }
+  },
+  "required": [
+    "content_id"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,18 @@
+overwrite: true
+schema: "./src/generated/schema.graphql"
+generates:
+  # Creates the TypeScript types from the schema and any .graphql file
+  src/generated/types.ts:
+    # documents: "src/**/*.graphql"
+    plugins:
+      - typescript
+      - typescript-operations
+      #  - typescript-urql
+    config:
+      withHOC: false
+      withComponent: false
+      withMutationFn: false
+config:
+  scalars:
+    DateTime: "string"
+    JSON: "{ [key: string]: any }"

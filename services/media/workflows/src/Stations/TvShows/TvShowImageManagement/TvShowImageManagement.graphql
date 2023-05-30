@@ -1,0 +1,10 @@
+query TvshowImages($id: Int!) {
+  tvshow(id: $id) {
+    tvshowsImages {
+      nodes {
+        imageId
+        imageType
+      }
+    }
+  }
+}
