@@ -1,0 +1,92 @@
+# fragment MovieExplorerProperties on Movie {
+#   id
+#   title
+#   originalTitle
+#   externalId
+#   moviesImages(condition: { imageType: COVER }) {
+#     nodes {
+#       imageId
+#     }
+#   }
+#   moviesTags {
+#     nodes {
+#       name
+#     }
+#   }
+#   moviesMovieGenres {
+#     nodes {
+#       movieGenres {
+#         title
+#       }
+#     }
+#   }
+#   moviesCasts {
+#     nodes {
+#       name
+#     }
+#   }
+#   released
+#   moviesProductionCountries {
+#     nodes {
+#       name
+#     }
+#   }
+#   studio
+#   publishedDate
+#   createdDate
+#   updatedDate
+#   publishStatus
+# }
+
+# query Movies($filter: MovieFilter, $orderBy: [MoviesOrderBy!], $after: Cursor) {
+#   filtered: movies(after: $after) {
+#     totalCount
+#     pageInfo {
+#       hasNextPage
+#       endCursor
+#     }
+#     nodes {
+#       ...MovieExplorerProperties
+#     }
+#   }
+#   nonFiltered: movies {
+#     totalCount
+#   }
+# }
+
+
+query Customer($input: CustomerInput) {
+  filtered: getCustomers(input: $input) {
+    total
+    page_size
+    page
+    customers {
+      id
+      system
+      email
+      email_verified
+      mobile
+      mobile_verified
+      facebook_handle
+      google_handle
+      twitter_handle
+      amazon_handle
+      b2b_handle
+      apple_handle
+      first_name
+      last_name
+      mac_address
+      birthday
+      gender
+      create_date
+      activation_date
+      activated
+      last_login
+      last_ip_address
+      last_user_agent
+      registration_country
+      registration_region
+      state
+    }
+  }
+}
