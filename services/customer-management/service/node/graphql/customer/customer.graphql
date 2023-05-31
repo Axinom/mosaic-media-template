@@ -1,0 +1,108 @@
+directive @checkPermission on FIELD_DEFINITION
+
+enum SystemType {
+  Internal
+  External
+}
+
+enum SortDirection {
+  asc
+  desc
+}
+
+input CustomerFilters {
+  email: String
+  system: SystemType
+  id: String
+  firstName: String
+  lastName: String
+  mobile: String
+  registrationCountry: String
+}
+
+input CustomerSortOrder {
+  column: String
+  columnSortKey: String
+  direction: SortDirection
+}
+
+input CustomerInput {
+  filter: CustomerFilters
+  after: String
+  sort: CustomerSortOrder
+}
+
+input UpdateCustomerInput {
+  id: String!
+  system: SystemType
+  email: String
+  email_verified: Boolean
+  mobile: String
+  mobile_verified: Boolean
+  facebook_handle: String
+  google_handle: String
+  twitter_handle: String
+  amazon_handle: String
+  b2b_handle: String
+  apple_handle: String
+  first_name: String
+  last_name: String
+  mac_address: String
+  birthday: String
+  gender: String
+  create_date: String
+  activation_date: String
+  activated: Boolean
+  last_login: String
+  last_ip_address: String
+  last_user_agent: String
+  registration_country: String
+  registration_region: String
+  state: String
+}
+
+type Customer {
+    id: String!
+    system: SystemType
+    email: String
+    email_verified: Boolean
+    mobile: String
+    mobile_verified: Boolean
+    facebook_handle: String
+    google_handle: String
+    twitter_handle: String
+    amazon_handle: String
+    b2b_handle: String
+    apple_handle: String
+    first_name: String
+    last_name: String
+    mac_address: String
+    birthday: String
+    gender: String
+    create_date: String
+    activation_date: String
+    activated: Boolean
+    last_login: String
+    last_ip_address: String
+    last_user_agent: String
+    registration_country: String
+    registration_region: String
+    state: String 
+  } 
+  
+type PagedCustomers {
+    total: Int!
+    page: Int!
+    page_size: Int!
+    customers: [Customer!]! 
+  } 
+
+type Query {
+  getCustomers(input: CustomerInput ): PagedCustomers @checkPermission
+  getCustomer(id: String): Customer @checkPermission
+}
+
+type Mutation {
+  updateCustomer(input: UpdateCustomerInput): Customer @checkPermission
+  deleteCustomer(id: String): String @checkPermission
+}
