@@ -1,6 +1,5 @@
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -150,7 +149,6 @@ export const Collections: React.FC = () => {
           });
           history.push('/collections');
         },
-        actionType: ActionType.Context,
         icon: IconName.Snapshot,
       },
       {
@@ -159,7 +157,6 @@ export const Collections: React.FC = () => {
           await publishCollectionMutation({ variables: { id } });
           history.push('/collections');
         },
-        actionType: ActionType.Context,
         icon: IconName.Publish,
         confirmationMode: 'Simple',
       },
@@ -169,7 +166,6 @@ export const Collections: React.FC = () => {
           await unpublishCollectionMutation({ variables: { id } });
           history.push('/collections');
         },
-        actionType: ActionType.Context,
         icon: IconName.Unpublish,
         confirmationMode: 'Simple',
       },
@@ -179,15 +175,12 @@ export const Collections: React.FC = () => {
           await deleteCollectionMutation({ variables: { input: { id } } });
           history.push('/collections');
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(`/collections/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/collections/${id}`,
       },
     ];
   };
@@ -199,7 +192,7 @@ export const Collections: React.FC = () => {
       columns={explorerColumns}
       dataProvider={dataProvider}
       calculateNavigateUrl={(item) => `/collections/${item.id}`}
-      onCreateAction={() => history.push(`/collections/create`)}
+      onCreateAction="/collections/create"
       bulkActions={bulkActions}
       filterOptions={filterOptions}
       defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}

@@ -173,10 +173,10 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.3.tgz#f8c418204e1f86cb3316e12676207caa89175084"
   integrity sha512-ArNSF36J10Tyr40xxV+z5EmWkrKP0/2F6uChPFUm9t/gIzIHIgpSWHLH/JCokXxMv0hxt6HzJ0VEfZ3Jxzux5w==
 
-"@axinom/mosaic-core@^0.4.4-rc.1":
-  version "0.4.4-rc.1"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.4-rc.1.tgz#2c9d1281a92d3af9b5aa3c157fa92408a37e4dcd"
-  integrity sha512-CaN06agU+QsAs4d+lQUredSlLz0/qdxpItEYV8Q4UR1qTC7M11U832vdW8p5Ay0Egx7uyOLf9orc+eNuRgfWoQ==
+"@axinom/mosaic-core@^0.4.5-rc.6":
+  version "0.4.5-rc.6"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.5-rc.6.tgz#ae3ec9bb8918495f372cc4981a8defe7e7146b64"
+  integrity sha512-V4AtTzkGvKtf0dTQ/TNthpccgasCBipLm2My23sR+a5uMimIZQSJDVbsJi1JFXthzYTIrUXCsHPR2tRLhStOZQ==
 
 "@axinom/mosaic-db-common@0.24.2":
   version "0.24.2"
@@ -294,12 +294,12 @@
     uuid-encoder "^1.2.0"
     verror "^1.10.1"
 
-"@axinom/mosaic-ui@0.31.0-rc.1":
-  version "0.31.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.31.0-rc.1.tgz#52c101e30b77af236ec8d2dc75bcb24f2106ac80"
-  integrity sha512-BAy0n2gN1pE3Y9cYrOVTbtjYglpJdJ2036oPmrIkOWHtBY66OsAHZ7xEBZ520PylyfTjVGyucra/84cKHhgUpQ==
+"@axinom/mosaic-ui@0.32.0-rc.6":
+  version "0.32.0-rc.6"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.32.0-rc.6.tgz#c0ae5b074e788d11cf157f7106144f713dc05079"
+  integrity sha512-/rIPGDkl0pxT2Tni8cheMuk111jAgMMrmUVDrJw3PJ9nSit5ktCmekztO848x4/8lr9fKUf7wtC5B8SAp3ynOw==
   dependencies:
-    "@axinom/mosaic-core" "^0.4.4-rc.1"
+    "@axinom/mosaic-core" "^0.4.5-rc.6"
     "@faker-js/faker" "^7.4.0"
     "@popperjs/core" "^2.9.2"
     clsx "^1.1.0"
@@ -307,6 +307,7 @@
     luxon "^3.3.0"
     react-calendar "^3.3.1"
     react-content-loader "^6.0.3"
+    react-imask "^6.4.3"
     react-popper "^2.2.5"
     react-transition-group "^4.3.0"
     yup "^0.32.11"
@@ -7300,6 +7301,11 @@ image-size@~0.5.0:
   resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.5.5.tgz#09dfd4ab9d20e29eb1c3e80b8990378df9e3cb9c"
   integrity sha1-Cd/Uq50g4p6xw+gLiZA3jfnjy5w=
 
+imask@^6.6.1:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/imask/-/imask-6.6.1.tgz#06987afaf72c1d9f6ca4fdddd0e04a174466a8c9"
+  integrity sha512-3JfLZVYABpNUGZpObu92/+3ptwwNIHXWNYqCfS+OaHBmMhLKBAAnGa2oNJWLbx5r3EyWxnkFNb2bX5Dz4wLkuA==
+
 immer@^8.0.1:
   version "8.0.4"
   resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.4.tgz#3a21605a4e2dded852fb2afd208ad50969737b7a"
@@ -10773,6 +10779,14 @@ react-fast-compare@^3.0.1:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
   integrity sha1-ZBqdqBtqYyDycOiXJPtFoLOeQ7s=
+
+react-imask@^6.4.3:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/react-imask/-/react-imask-6.6.1.tgz#c406695ea487dd421ee76c76af9710b0b9fa6784"
+  integrity sha512-j0zjUqjm2974c2sS59pwIDzdCDkXG94SXJtfihEozHi8m6Gf5xTJQvQG198znV/NpTcrKWhMR+M5ngtRImLXFQ==
+  dependencies:
+    imask "^6.6.1"
+    prop-types "^15.8.1"
 
 react-is@^16.13.1, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"

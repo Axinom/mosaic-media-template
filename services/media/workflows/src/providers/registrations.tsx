@@ -21,10 +21,8 @@ export function register(app: PiletApi): void {
         actions={[
           {
             label: 'New',
-            icon: IconName.External,
-            onClick: () => {
-              window.open('/movies/create', '_blank');
-            },
+            openInNewTab: true,
+            path: '/movies/create',
           },
           {
             label: 'Cancel',
@@ -65,10 +63,8 @@ export function register(app: PiletApi): void {
         actions={[
           {
             label: 'New',
-            icon: IconName.External,
-            onClick: () => {
-              window.open('/episodes/create', '_blank');
-            },
+            openInNewTab: true,
+            path: '/episodes/create',
           },
           {
             label: 'Cancel',

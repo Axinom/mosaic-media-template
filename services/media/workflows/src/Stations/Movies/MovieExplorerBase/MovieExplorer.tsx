@@ -1,6 +1,5 @@
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -157,7 +156,6 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           });
           history.push('/movies');
         },
-        actionType: ActionType.Context,
         icon: IconName.Snapshot,
       },
       {
@@ -166,7 +164,6 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           await publishMovieMutation({ variables: { id } });
           history.push('/movies');
         },
-        actionType: ActionType.Context,
         icon: IconName.Publish,
         confirmationMode: 'Simple',
       },
@@ -176,7 +173,6 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           await unpublishMovieMutation({ variables: { id } });
           history.push('/movies');
         },
-        actionType: ActionType.Context,
         icon: IconName.Unpublish,
         confirmationMode: 'Simple',
       },
@@ -186,15 +182,12 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           await deleteMovieMutation({ variables: { input: { id } } });
           history.push('/movies');
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(`/movies/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/movies/${id}`,
       },
     ];
   };

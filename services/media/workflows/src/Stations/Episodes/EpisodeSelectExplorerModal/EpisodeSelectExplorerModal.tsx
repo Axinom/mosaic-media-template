@@ -21,10 +21,8 @@ export const useEpisodeSelectExplorerModal = ({
       actions={[
         {
           label: 'New',
-          icon: IconName.External,
-          onClick: () => {
-            window.open('/episodes/create', '_blank');
-          },
+          openInNewTab: true,
+          path: '/episodes/create',
         },
         {
           label: 'Cancel',

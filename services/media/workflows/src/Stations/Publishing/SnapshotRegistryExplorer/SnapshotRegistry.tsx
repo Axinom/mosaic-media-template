@@ -1,6 +1,5 @@
 import {
   ActionData,
-  ActionType,
   Column,
   DateRenderer,
   ExplorerDataProvider,
@@ -160,7 +159,6 @@ export const SnapshotRegistry: React.FC = () => {
           });
           history.push('/snapshots');
         },
-        actionType: ActionType.Context,
         icon: IconName.Snapshot,
       },
       {
@@ -169,7 +167,6 @@ export const SnapshotRegistry: React.FC = () => {
           await publishSnapshotMutation({ variables: { id: data.id } });
           history.push('/snapshots');
         },
-        actionType: ActionType.Context,
         icon: IconName.Publish,
         confirmationMode: 'Simple',
       },
@@ -179,7 +176,6 @@ export const SnapshotRegistry: React.FC = () => {
           await unpublishSnapshotMutation({ variables: { id: data.id } });
           history.push('/snapshots');
         },
-        actionType: ActionType.Context,
         icon: IconName.Unpublish,
         confirmationMode: 'Simple',
       },
@@ -191,15 +187,12 @@ export const SnapshotRegistry: React.FC = () => {
           });
           history.push('/snapshots');
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(calculateNavigateUrl(data)),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: calculateNavigateUrl(data),
       },
     ];
   };

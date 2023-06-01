@@ -1,6 +1,5 @@
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -99,16 +98,12 @@ export const SeasonLicensing: React.FC = () => {
           await deleteSeasonsLicenseMutation({ variables: { input: { id } } });
           history.push(`/seasons/${seasonId}/licenses`);
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () =>
-          history.push(`/seasons/${seasonId}/licenses/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/seasons/${seasonId}/licenses/${id}`,
       },
     ];
   };
@@ -122,9 +117,7 @@ export const SeasonLicensing: React.FC = () => {
       calculateNavigateUrl={(item) =>
         `/seasons/${seasonId}/licenses/${item.id}`
       }
-      onCreateAction={() =>
-        history.push(`/seasons/${seasonId}/licenses/create`)
-      }
+      onCreateAction={`/seasons/${seasonId}/licenses/create`}
       inlineMenuActions={generateInlineMenuActions}
     />
   );
