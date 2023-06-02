@@ -46,6 +46,10 @@ async function main(): Promise<void> {
         serviceId: 'ax-image-service',
         permissions: ['IMAGE_TYPES_DECLARE'],
       },
+      {
+        serviceId: 'ax-encoding-service',
+        permissions: ['CUE_POINT_TYPES_DECLARE'],
+      },
     ],
   );
 }

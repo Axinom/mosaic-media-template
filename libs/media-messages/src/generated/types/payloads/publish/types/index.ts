@@ -1,3 +1,4 @@
+export * from './cue-point';
 export * from './format';
 export * from './genre';
 export * from './image';

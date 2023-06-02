@@ -1,5 +1,6 @@
 import {
   CollectionPublishedEvent,
+  CuePoint,
   EpisodePublishedEvent,
   MovieGenresPublishedEvent,
   MoviePublishedEvent,
@@ -155,7 +156,23 @@ function createVideo(): Video {
     output_format: 'DASH',
     is_protected: false,
     video_streams: createVideoStreams(),
+    cue_points: createCuePoints(),
   };
+}
+
+function createCuePoints(): CuePoint[] {
+  return [
+    {
+      cue_point_type_key: 'TEST_MARKER_IN',
+      time_in_seconds: 0,
+      value: 'Test Marker 1',
+    },
+    {
+      cue_point_type_key: 'TEST_MARKER_OUT',
+      time_in_seconds: 10,
+      value: 'Test Marker 2',
+    },
+  ];
 }
 
 function createVideoStreams(): VideoStream[] {
