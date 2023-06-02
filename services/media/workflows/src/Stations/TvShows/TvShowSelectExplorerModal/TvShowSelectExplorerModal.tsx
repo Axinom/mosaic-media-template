@@ -21,10 +21,8 @@ export const useTvShowSelectExplorerModal = ({
       actions={[
         {
           label: 'New',
-          icon: IconName.External,
-          onClick: () => {
-            window.open('/tvshows/create', '_blank');
-          },
+          openInNewTab: true,
+          path: '/tvshows/create',
         },
         {
           label: 'Cancel',

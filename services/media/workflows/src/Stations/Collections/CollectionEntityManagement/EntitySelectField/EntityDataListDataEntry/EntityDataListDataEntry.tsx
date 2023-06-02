@@ -1,5 +1,4 @@
 import {
-  ActionType,
   ButtonContext,
   DynamicListDataEntry,
   DynamicListDataEntryProps,
@@ -17,9 +16,9 @@ import {
 export const useEntityDataListDataEntry = (
   options: UseEntityDataListDataEntryOptions,
 ): UseEntityDataListDataEntryResult => {
-  const EntityDataListDataEntry: React.FC<DynamicListDataEntryProps<
-    CollectionRelatedEntity
-  >> = (props) => {
+  const EntityDataListDataEntry: React.FC<
+    DynamicListDataEntryProps<CollectionRelatedEntity>
+  > = (props) => {
     const [sortOrder, setSortOrder] = useState<number>(-1);
     const { onActionClicked, ...rest } = props;
 
@@ -51,7 +50,6 @@ export const useEntityDataListDataEntry = (
                 label: o.title,
                 onActionSelected: o.openModal,
                 icon: IconName.Plus,
-                actionType: ActionType.Context,
               }))}
               placement="bottom-end"
               showArrow={false}

@@ -1,6 +1,5 @@
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -152,7 +151,6 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           });
           history.push('/episodes');
         },
-        actionType: ActionType.Context,
         icon: IconName.Snapshot,
       },
       {
@@ -161,7 +159,6 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           await publishEpisodeMutation({ variables: { id } });
           history.push('/episodes');
         },
-        actionType: ActionType.Context,
         icon: IconName.Publish,
         confirmationMode: 'Simple',
       },
@@ -171,7 +168,6 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           await unpublishEpisodeMutation({ variables: { id } });
           history.push('/episodes');
         },
-        actionType: ActionType.Context,
         icon: IconName.Unpublish,
         confirmationMode: 'Simple',
       },
@@ -181,15 +177,12 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           await deleteEpisodeMutation({ variables: { input: { id } } });
           history.push('/episodes');
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(`/episodes/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/episodes/${id}`,
       },
     ];
   };
