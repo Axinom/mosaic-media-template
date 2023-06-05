@@ -14,6 +14,7 @@ import {
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
+import clsx from 'clsx';
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
@@ -21,6 +22,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
+import { InfoPanelParent } from '../../../components';
 import { ExtensionsContext, ImageID } from '../../../externals';
 import {
   Episode,
@@ -252,7 +254,7 @@ export const EpisodeDetails: React.FC = () => {
 };
 
 const Panel: React.FC = () => {
-  const { ImageCover } = useContext(ExtensionsContext);
+  const { ImageCover, ImagePreview } = useContext(ExtensionsContext);
   const { values } = useFormikContext<Episode>();
 
   return useMemo(() => {
@@ -288,23 +290,41 @@ const Panel: React.FC = () => {
             {formatDateTime(values.updatedDate)} by {values.updatedUser}
           </Paragraph>
         </Section>
-        <Section title="Assigned Items">
-          <Paragraph title="Videos">
+        <Section title="Assignments">
+          <Paragraph title="Parent Entity">
+            {values?.season ? (
+              <InfoPanelParent
+                Thumbnail={ImagePreview}
+                imageId={values.season?.seasonsImages?.nodes?.[0]?.imageId}
+                path={`/seasons/${values.season?.id}`}
+                label="Open Details"
+                title={
+                  typeof values.season?.index === 'number'
+                    ? `S${values.season?.index}`
+                    : ''
+                }
+              />
+            ) : (
+              <div>not assigned</div>
+            )}
+          </Paragraph>
+          <Paragraph title="Assigned items">
             <div className={classes.datalist}>
               <div>Main Video</div>
               <div className={classes.rightAlignment}>
                 {values.mainVideoId ? 1 : 0}/1
               </div>
-              <div>Trailers</div>{' '}
+              <div>Trailers</div>
               <div className={classes.rightAlignment}>
                 {values.episodesTrailers?.totalCount}/many
               </div>
-            </div>
-          </Paragraph>
-          <Paragraph title="Images">
-            <div className={classes.datalist}>
-              <div>Cover</div>
-              <div className={classes.rightAlignment}>
+              <div className={classes.assignedItemsSpacing}>Cover</div>
+              <div
+                className={clsx(
+                  classes.rightAlignment,
+                  classes.assignedItemsSpacing,
+                )}
+              >
                 {coverImageCount} / 1
               </div>
               <div>Teaser</div>
@@ -328,6 +348,7 @@ const Panel: React.FC = () => {
     );
   }, [
     ImageCover,
+    ImagePreview,
     values.createdDate,
     values.createdUser,
     values.episodesImages?.nodes,
@@ -337,6 +358,7 @@ const Panel: React.FC = () => {
     values.publishStatus,
     values.publishedDate,
     values.publishedUser,
+    values.season,
     values.updatedDate,
     values.updatedUser,
   ]);

@@ -19,8 +19,8 @@ export type Scalars = {
   IngestDocumentObject: any;
   IngestItemObject: any;
   JSON: any;
-  UUID: any;
   Upload: any;
+  UUID: any;
 };
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
@@ -92,9 +92,9 @@ export type Collection = {
   description?: Maybe<Scalars['String']>;
   externalId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
-  publishStatus: PublishStatus;
   publishedDate?: Maybe<Scalars['Datetime']>;
   publishedUser?: Maybe<Scalars['String']>;
+  publishStatus: PublishStatus;
   synopsis?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   updatedDate: Scalars['Datetime'];
@@ -168,12 +168,12 @@ export type CollectionCondition = {
   externalId?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `publishStatus` field. */
-  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `synopsis` field. */
   synopsis?: InputMaybe<Scalars['String']>;
   /**
@@ -222,12 +222,12 @@ export type CollectionFilter = {
   not?: InputMaybe<CollectionFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<CollectionFilter>>;
-  /** Filter by the object’s `publishStatus` field. */
-  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `synopsis` field. */
   synopsis?: InputMaybe<StringFilter>;
   /** Filter by the object’s `title` field. */
@@ -445,53 +445,6 @@ export enum CollectionRelationsOrderBy {
   TvshowIdDesc = 'TVSHOW_ID_DESC'
 }
 
-export type CollectionSubscriptionPayload = {
-  __typename?: 'CollectionSubscriptionPayload';
-  collection?: Maybe<Collection>;
-  event?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
-/** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
-export type CollectionToManyCollectionRelationFilter = {
-  /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<CollectionRelationFilter>;
-  /** No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<CollectionRelationFilter>;
-  /** Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<CollectionRelationFilter>;
-};
-
-/** A filter to be used against many `CollectionsImage` object types. All fields are combined with a logical ‘and.’ */
-export type CollectionToManyCollectionsImageFilter = {
-  /** Every related `CollectionsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<CollectionsImageFilter>;
-  /** No related `CollectionsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<CollectionsImageFilter>;
-  /** Some related `CollectionsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<CollectionsImageFilter>;
-};
-
-/** A filter to be used against many `CollectionsSnapshot` object types. All fields are combined with a logical ‘and.’ */
-export type CollectionToManyCollectionsSnapshotFilter = {
-  /** Every related `CollectionsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<CollectionsSnapshotFilter>;
-  /** No related `CollectionsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<CollectionsSnapshotFilter>;
-  /** Some related `CollectionsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<CollectionsSnapshotFilter>;
-};
-
-/** A filter to be used against many `CollectionsTag` object types. All fields are combined with a logical ‘and.’ */
-export type CollectionToManyCollectionsTagFilter = {
-  /** Every related `CollectionsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<CollectionsTagFilter>;
-  /** No related `CollectionsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<CollectionsTagFilter>;
-  /** Some related `CollectionsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<CollectionsTagFilter>;
-};
-
 /**
  * A connection to a list of `Collection` values.
  * @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
@@ -625,12 +578,12 @@ export enum CollectionsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
+  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
   PublishedDateAsc = 'PUBLISHED_DATE_ASC',
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
-  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
-  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
   SynopsisAsc = 'SYNOPSIS_ASC',
   SynopsisDesc = 'SYNOPSIS_DESC',
   TitleAsc = 'TITLE_ASC',
@@ -804,6 +757,53 @@ export enum CollectionsTagsOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+export type CollectionSubscriptionPayload = {
+  __typename?: 'CollectionSubscriptionPayload';
+  collection?: Maybe<Collection>;
+  event?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
+export type CollectionToManyCollectionRelationFilter = {
+  /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CollectionRelationFilter>;
+  /** No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CollectionRelationFilter>;
+  /** Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CollectionRelationFilter>;
+};
+
+/** A filter to be used against many `CollectionsImage` object types. All fields are combined with a logical ‘and.’ */
+export type CollectionToManyCollectionsImageFilter = {
+  /** Every related `CollectionsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CollectionsImageFilter>;
+  /** No related `CollectionsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CollectionsImageFilter>;
+  /** Some related `CollectionsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CollectionsImageFilter>;
+};
+
+/** A filter to be used against many `CollectionsSnapshot` object types. All fields are combined with a logical ‘and.’ */
+export type CollectionToManyCollectionsSnapshotFilter = {
+  /** Every related `CollectionsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CollectionsSnapshotFilter>;
+  /** No related `CollectionsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CollectionsSnapshotFilter>;
+  /** Some related `CollectionsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CollectionsSnapshotFilter>;
+};
+
+/** A filter to be used against many `CollectionsTag` object types. All fields are combined with a logical ‘and.’ */
+export type CollectionToManyCollectionsTagFilter = {
+  /** Every related `CollectionsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CollectionsTagFilter>;
+  /** No related `CollectionsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CollectionsTagFilter>;
+  /** Some related `CollectionsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CollectionsTagFilter>;
+};
 
 /**
  * All input for the create `Collection` mutation.
@@ -4280,9 +4280,9 @@ export type Episode = {
   index: Scalars['Int'];
   mainVideoId?: Maybe<Scalars['UUID']>;
   originalTitle?: Maybe<Scalars['String']>;
-  publishStatus: PublishStatus;
   publishedDate?: Maybe<Scalars['Datetime']>;
   publishedUser?: Maybe<Scalars['String']>;
+  publishStatus: PublishStatus;
   released?: Maybe<Scalars['Date']>;
   /** Reads a single `Season` that is related to this `Episode`. */
   season?: Maybe<Season>;
@@ -4429,12 +4429,12 @@ export type EpisodeCondition = {
   mainVideoId?: InputMaybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `originalTitle` field. */
   originalTitle?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `publishStatus` field. */
-  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `released` field. */
   released?: InputMaybe<Scalars['Date']>;
   /** Checks for equality with the object’s `seasonId` field. */
@@ -4515,12 +4515,12 @@ export type EpisodeFilter = {
   or?: InputMaybe<Array<EpisodeFilter>>;
   /** Filter by the object’s `originalTitle` field. */
   originalTitle?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `publishStatus` field. */
-  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `season` relation. */
@@ -4608,103 +4608,6 @@ export type EpisodePatch = {
    * @notEmpty()
    */
   title?: InputMaybe<Scalars['String']>;
-};
-
-export type EpisodeSubscriptionPayload = {
-  __typename?: 'EpisodeSubscriptionPayload';
-  episode?: Maybe<Episode>;
-  event?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
-/** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
-export type EpisodeToManyCollectionRelationFilter = {
-  /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<CollectionRelationFilter>;
-  /** No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<CollectionRelationFilter>;
-  /** Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<CollectionRelationFilter>;
-};
-
-/** A filter to be used against many `EpisodesCast` object types. All fields are combined with a logical ‘and.’ */
-export type EpisodeToManyEpisodesCastFilter = {
-  /** Every related `EpisodesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodesCastFilter>;
-  /** No related `EpisodesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodesCastFilter>;
-  /** Some related `EpisodesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodesCastFilter>;
-};
-
-/** A filter to be used against many `EpisodesImage` object types. All fields are combined with a logical ‘and.’ */
-export type EpisodeToManyEpisodesImageFilter = {
-  /** Every related `EpisodesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodesImageFilter>;
-  /** No related `EpisodesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodesImageFilter>;
-  /** Some related `EpisodesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodesImageFilter>;
-};
-
-/** A filter to be used against many `EpisodesLicense` object types. All fields are combined with a logical ‘and.’ */
-export type EpisodeToManyEpisodesLicenseFilter = {
-  /** Every related `EpisodesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodesLicenseFilter>;
-  /** No related `EpisodesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodesLicenseFilter>;
-  /** Some related `EpisodesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodesLicenseFilter>;
-};
-
-/** A filter to be used against many `EpisodesProductionCountry` object types. All fields are combined with a logical ‘and.’ */
-export type EpisodeToManyEpisodesProductionCountryFilter = {
-  /** Every related `EpisodesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodesProductionCountryFilter>;
-  /** No related `EpisodesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodesProductionCountryFilter>;
-  /** Some related `EpisodesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodesProductionCountryFilter>;
-};
-
-/** A filter to be used against many `EpisodesSnapshot` object types. All fields are combined with a logical ‘and.’ */
-export type EpisodeToManyEpisodesSnapshotFilter = {
-  /** Every related `EpisodesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodesSnapshotFilter>;
-  /** No related `EpisodesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodesSnapshotFilter>;
-  /** Some related `EpisodesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodesSnapshotFilter>;
-};
-
-/** A filter to be used against many `EpisodesTag` object types. All fields are combined with a logical ‘and.’ */
-export type EpisodeToManyEpisodesTagFilter = {
-  /** Every related `EpisodesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodesTagFilter>;
-  /** No related `EpisodesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodesTagFilter>;
-  /** Some related `EpisodesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodesTagFilter>;
-};
-
-/** A filter to be used against many `EpisodesTrailer` object types. All fields are combined with a logical ‘and.’ */
-export type EpisodeToManyEpisodesTrailerFilter = {
-  /** Every related `EpisodesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodesTrailerFilter>;
-  /** No related `EpisodesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodesTrailerFilter>;
-  /** Some related `EpisodesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodesTrailerFilter>;
-};
-
-/** A filter to be used against many `EpisodesTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
-export type EpisodeToManyEpisodesTvshowGenreFilter = {
-  /** Every related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodesTvshowGenreFilter>;
-  /** No related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodesTvshowGenreFilter>;
-  /** Some related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodesTvshowGenreFilter>;
 };
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
@@ -5002,16 +4905,6 @@ export type EpisodesLicensePatch = {
   licenseStart?: InputMaybe<Scalars['Datetime']>;
 };
 
-/** A filter to be used against many `EpisodesLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
-export type EpisodesLicenseToManyEpisodesLicensesCountryFilter = {
-  /** Every related `EpisodesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodesLicensesCountryFilter>;
-  /** No related `EpisodesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodesLicensesCountryFilter>;
-  /** Some related `EpisodesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodesLicensesCountryFilter>;
-};
-
 /**
  * A connection to a list of `EpisodesLicense` values.
  * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
@@ -5139,6 +5032,16 @@ export enum EpisodesLicensesOrderBy {
   UpdatedDateDesc = 'UPDATED_DATE_DESC'
 }
 
+/** A filter to be used against many `EpisodesLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodesLicenseToManyEpisodesLicensesCountryFilter = {
+  /** Every related `EpisodesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesLicensesCountryFilter>;
+  /** No related `EpisodesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesLicensesCountryFilter>;
+  /** Some related `EpisodesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesLicensesCountryFilter>;
+};
+
 /** Methods to use when ordering `Episode`. */
 export enum EpisodesOrderBy {
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -5160,12 +5063,12 @@ export enum EpisodesOrderBy {
   OriginalTitleDesc = 'ORIGINAL_TITLE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
+  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
   PublishedDateAsc = 'PUBLISHED_DATE_ASC',
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
-  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
-  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   SeasonIdAsc = 'SEASON_ID_ASC',
@@ -5594,6 +5497,103 @@ export enum EpisodesTvshowGenresOrderBy {
   TvshowGenresIdDesc = 'TVSHOW_GENRES_ID_DESC'
 }
 
+export type EpisodeSubscriptionPayload = {
+  __typename?: 'EpisodeSubscriptionPayload';
+  episode?: Maybe<Episode>;
+  event?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyCollectionRelationFilter = {
+  /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CollectionRelationFilter>;
+  /** No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CollectionRelationFilter>;
+  /** Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CollectionRelationFilter>;
+};
+
+/** A filter to be used against many `EpisodesCast` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyEpisodesCastFilter = {
+  /** Every related `EpisodesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesCastFilter>;
+  /** No related `EpisodesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesCastFilter>;
+  /** Some related `EpisodesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesCastFilter>;
+};
+
+/** A filter to be used against many `EpisodesImage` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyEpisodesImageFilter = {
+  /** Every related `EpisodesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesImageFilter>;
+  /** No related `EpisodesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesImageFilter>;
+  /** Some related `EpisodesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesImageFilter>;
+};
+
+/** A filter to be used against many `EpisodesLicense` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyEpisodesLicenseFilter = {
+  /** Every related `EpisodesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesLicenseFilter>;
+  /** No related `EpisodesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesLicenseFilter>;
+  /** Some related `EpisodesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesLicenseFilter>;
+};
+
+/** A filter to be used against many `EpisodesProductionCountry` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyEpisodesProductionCountryFilter = {
+  /** Every related `EpisodesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesProductionCountryFilter>;
+  /** No related `EpisodesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesProductionCountryFilter>;
+  /** Some related `EpisodesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesProductionCountryFilter>;
+};
+
+/** A filter to be used against many `EpisodesSnapshot` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyEpisodesSnapshotFilter = {
+  /** Every related `EpisodesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesSnapshotFilter>;
+  /** No related `EpisodesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesSnapshotFilter>;
+  /** Some related `EpisodesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesSnapshotFilter>;
+};
+
+/** A filter to be used against many `EpisodesTag` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyEpisodesTagFilter = {
+  /** Every related `EpisodesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesTagFilter>;
+  /** No related `EpisodesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesTagFilter>;
+  /** Some related `EpisodesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesTagFilter>;
+};
+
+/** A filter to be used against many `EpisodesTrailer` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyEpisodesTrailerFilter = {
+  /** Every related `EpisodesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesTrailerFilter>;
+  /** No related `EpisodesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesTrailerFilter>;
+  /** Some related `EpisodesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesTrailerFilter>;
+};
+
+/** A filter to be used against many `EpisodesTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyEpisodesTvshowGenreFilter = {
+  /** Every related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesTvshowGenreFilter>;
+  /** No related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesTvshowGenreFilter>;
+  /** Some related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesTvshowGenreFilter>;
+};
+
 /** Exposes all error codes and messages for errors that a service requests can throw. In some cases, messages that are actually thrown can be different, since they can include more details or a single code can used for different errors of the same type. */
 export enum ErrorCodesEnum {
   /** Access Token has expired. */
@@ -5608,6 +5608,12 @@ export enum ErrorCodesEnum {
   AssertionFailed = 'ASSERTION_FAILED',
   /** Auth config is invalid. */
   AuthConfigInvalid = 'AUTH_CONFIG_INVALID',
+  /** Authenticated End User not found. */
+  AuthenticatedEndUserNotFound = 'AUTHENTICATED_END_USER_NOT_FOUND',
+  /** Authenticated Management Subject not found. */
+  AuthenticatedManagementSubjectNotFound = 'AUTHENTICATED_MANAGEMENT_SUBJECT_NOT_FOUND',
+  /** A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue. */
+  AuthorizationOptionsMisconfigured = 'AUTHORIZATION_OPTIONS_MISCONFIGURED',
   /** Attempt to create a media snapshot has failed. */
   CreateSnapshotError = 'CREATE_SNAPSHOT_ERROR',
   /** An authorization database error has occurred. The user might not have enough permissions. */
@@ -5662,7 +5668,7 @@ export enum ErrorCodesEnum {
   SnapshotNotFound = 'SNAPSHOT_NOT_FOUND',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
-  /** An unhandled database-related has occurred. Please contact the service support. */
+  /** An unhandled database-related error has occurred. Please contact the service support. */
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
@@ -5673,7 +5679,9 @@ export enum ErrorCodesEnum {
   /** User is not authorized to access the operation. */
   UserNotAuthorized = 'USER_NOT_AUTHORIZED',
   /** The User service is not accessible. Please contact Axinom support. */
-  UserServiceNotAccessible = 'USER_SERVICE_NOT_ACCESSIBLE'
+  UserServiceNotAccessible = 'USER_SERVICE_NOT_ACCESSIBLE',
+  /** Websocket not found in ExtendedGraphQLContext. This is a development time issue. A reference to the websocket must be included in Postgraphile build options. */
+  WebsocketNotFound = 'WEBSOCKET_NOT_FOUND'
 }
 
 /** A `String` edge in the connection. */
@@ -5946,9 +5954,9 @@ export type IngestDocument = {
   errorCount: Scalars['Int'];
   errors: Array<Maybe<Scalars['JSON']>>;
   id: Scalars['Int'];
-  inProgressCount: Scalars['Int'];
   /** Reads and enables pagination through a set of `IngestItem`. */
   ingestItems: IngestItemsConnection;
+  inProgressCount: Scalars['Int'];
   itemsCount: Scalars['Int'];
   name: Scalars['String'];
   status: IngestStatus;
@@ -6030,12 +6038,12 @@ export type IngestDocumentFilter = {
   errors?: InputMaybe<JsonListFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
-  /** Filter by the object’s `inProgressCount` field. */
-  inProgressCount?: InputMaybe<IntFilter>;
   /** Filter by the object’s `ingestItems` relation. */
   ingestItems?: InputMaybe<IngestDocumentToManyIngestItemFilter>;
   /** Some related `ingestItems` exist. */
   ingestItemsExist?: InputMaybe<Scalars['Boolean']>;
+  /** Filter by the object’s `inProgressCount` field. */
+  inProgressCount?: InputMaybe<IntFilter>;
   /** Filter by the object’s `itemsCount` field. */
   itemsCount?: InputMaybe<IntFilter>;
   /** Filter by the object’s `name` field. */
@@ -6101,23 +6109,6 @@ export type IngestDocumentPatch = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type IngestDocumentSubscriptionPayload = {
-  __typename?: 'IngestDocumentSubscriptionPayload';
-  event?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  ingestDocument?: Maybe<IngestDocument>;
-};
-
-/** A filter to be used against many `IngestItem` object types. All fields are combined with a logical ‘and.’ */
-export type IngestDocumentToManyIngestItemFilter = {
-  /** Every related `IngestItem` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<IngestItemFilter>;
-  /** No related `IngestItem` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<IngestItemFilter>;
-  /** Some related `IngestItem` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<IngestItemFilter>;
-};
-
 /**
  * A connection to a list of `IngestDocument` values.
  * @permissions: INGESTS_VIEW,INGESTS_EDIT,ADMIN
@@ -6153,10 +6144,10 @@ export enum IngestDocumentsOrderBy {
   DocumentCreatedAsc = 'DOCUMENT_CREATED_ASC',
   DocumentCreatedDesc = 'DOCUMENT_CREATED_DESC',
   DocumentDesc = 'DOCUMENT_DESC',
-  ErrorsAsc = 'ERRORS_ASC',
-  ErrorsDesc = 'ERRORS_DESC',
   ErrorCountAsc = 'ERROR_COUNT_ASC',
   ErrorCountDesc = 'ERROR_COUNT_DESC',
+  ErrorsAsc = 'ERRORS_ASC',
+  ErrorsDesc = 'ERRORS_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   InProgressCountAsc = 'IN_PROGRESS_COUNT_ASC',
@@ -6179,6 +6170,23 @@ export enum IngestDocumentsOrderBy {
   UpdatedUserAsc = 'UPDATED_USER_ASC',
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
+
+export type IngestDocumentSubscriptionPayload = {
+  __typename?: 'IngestDocumentSubscriptionPayload';
+  event?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  ingestDocument?: Maybe<IngestDocument>;
+};
+
+/** A filter to be used against many `IngestItem` object types. All fields are combined with a logical ‘and.’ */
+export type IngestDocumentToManyIngestItemFilter = {
+  /** Every related `IngestItem` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<IngestItemFilter>;
+  /** No related `IngestItem` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<IngestItemFilter>;
+  /** Some related `IngestItem` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<IngestItemFilter>;
+};
 
 export enum IngestEntityExistsStatus {
   /** Created */
@@ -6371,6 +6379,68 @@ export type IngestItemObjectFilter = {
   notIn?: InputMaybe<Array<Scalars['IngestItemObject']>>;
 };
 
+/**
+ * A connection to a list of `IngestItem` values.
+ * @permissions: INGESTS_VIEW,INGESTS_EDIT,ADMIN
+ */
+export type IngestItemsConnection = {
+  __typename?: 'IngestItemsConnection';
+  /** A list of edges which contains the `IngestItem` and cursor to aid in pagination. */
+  edges: Array<IngestItemsEdge>;
+  /** A list of `IngestItem` objects. */
+  nodes: Array<IngestItem>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `IngestItem` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `IngestItem` edge in the connection. */
+export type IngestItemsEdge = {
+  __typename?: 'IngestItemsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `IngestItem` at the end of the edge. */
+  node: IngestItem;
+};
+
+/** Methods to use when ordering `IngestItem`. */
+export enum IngestItemsOrderBy {
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  DisplayTitleAsc = 'DISPLAY_TITLE_ASC',
+  DisplayTitleDesc = 'DISPLAY_TITLE_DESC',
+  EntityIdAsc = 'ENTITY_ID_ASC',
+  EntityIdDesc = 'ENTITY_ID_DESC',
+  ErrorsAsc = 'ERRORS_ASC',
+  ErrorsDesc = 'ERRORS_DESC',
+  ExistsStatusAsc = 'EXISTS_STATUS_ASC',
+  ExistsStatusDesc = 'EXISTS_STATUS_DESC',
+  ExternalIdAsc = 'EXTERNAL_ID_ASC',
+  ExternalIdDesc = 'EXTERNAL_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IngestDocumentIdAsc = 'INGEST_DOCUMENT_ID_ASC',
+  IngestDocumentIdDesc = 'INGEST_DOCUMENT_ID_DESC',
+  ItemAsc = 'ITEM_ASC',
+  ItemDesc = 'ITEM_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ProcessedTrailerIdsAsc = 'PROCESSED_TRAILER_IDS_ASC',
+  ProcessedTrailerIdsDesc = 'PROCESSED_TRAILER_IDS_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
+
 export enum IngestItemStatus {
   /** Error */
   Error = 'ERROR',
@@ -6487,6 +6557,60 @@ export type IngestItemStepFilter = {
   updatedUser?: InputMaybe<StringFilter>;
 };
 
+/**
+ * A connection to a list of `IngestItemStep` values.
+ * @permissions: INGESTS_VIEW,INGESTS_EDIT,ADMIN
+ */
+export type IngestItemStepsConnection = {
+  __typename?: 'IngestItemStepsConnection';
+  /** A list of edges which contains the `IngestItemStep` and cursor to aid in pagination. */
+  edges: Array<IngestItemStepsEdge>;
+  /** A list of `IngestItemStep` objects. */
+  nodes: Array<IngestItemStep>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `IngestItemStep` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `IngestItemStep` edge in the connection. */
+export type IngestItemStepsEdge = {
+  __typename?: 'IngestItemStepsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `IngestItemStep` at the end of the edge. */
+  node: IngestItemStep;
+};
+
+/** Methods to use when ordering `IngestItemStep`. */
+export enum IngestItemStepsOrderBy {
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  EntityIdAsc = 'ENTITY_ID_ASC',
+  EntityIdDesc = 'ENTITY_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IngestItemIdAsc = 'INGEST_ITEM_ID_ASC',
+  IngestItemIdDesc = 'INGEST_ITEM_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ResponseMessageAsc = 'RESPONSE_MESSAGE_ASC',
+  ResponseMessageDesc = 'RESPONSE_MESSAGE_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  SubTypeAsc = 'SUB_TYPE_ASC',
+  SubTypeDesc = 'SUB_TYPE_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
+
 export enum IngestItemStepStatus {
   /** Error */
   Error = 'ERROR',
@@ -6557,60 +6681,6 @@ export type IngestItemStepTypeFilter = {
   notIn?: InputMaybe<Array<IngestItemStepType>>;
 };
 
-/**
- * A connection to a list of `IngestItemStep` values.
- * @permissions: INGESTS_VIEW,INGESTS_EDIT,ADMIN
- */
-export type IngestItemStepsConnection = {
-  __typename?: 'IngestItemStepsConnection';
-  /** A list of edges which contains the `IngestItemStep` and cursor to aid in pagination. */
-  edges: Array<IngestItemStepsEdge>;
-  /** A list of `IngestItemStep` objects. */
-  nodes: Array<IngestItemStep>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `IngestItemStep` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `IngestItemStep` edge in the connection. */
-export type IngestItemStepsEdge = {
-  __typename?: 'IngestItemStepsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `IngestItemStep` at the end of the edge. */
-  node: IngestItemStep;
-};
-
-/** Methods to use when ordering `IngestItemStep`. */
-export enum IngestItemStepsOrderBy {
-  CreatedDateAsc = 'CREATED_DATE_ASC',
-  CreatedDateDesc = 'CREATED_DATE_DESC',
-  CreatedUserAsc = 'CREATED_USER_ASC',
-  CreatedUserDesc = 'CREATED_USER_DESC',
-  EntityIdAsc = 'ENTITY_ID_ASC',
-  EntityIdDesc = 'ENTITY_ID_DESC',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  IngestItemIdAsc = 'INGEST_ITEM_ID_ASC',
-  IngestItemIdDesc = 'INGEST_ITEM_ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  ResponseMessageAsc = 'RESPONSE_MESSAGE_ASC',
-  ResponseMessageDesc = 'RESPONSE_MESSAGE_DESC',
-  StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC',
-  SubTypeAsc = 'SUB_TYPE_ASC',
-  SubTypeDesc = 'SUB_TYPE_DESC',
-  TypeAsc = 'TYPE_ASC',
-  TypeDesc = 'TYPE_DESC',
-  UpdatedDateAsc = 'UPDATED_DATE_ASC',
-  UpdatedDateDesc = 'UPDATED_DATE_DESC',
-  UpdatedUserAsc = 'UPDATED_USER_ASC',
-  UpdatedUserDesc = 'UPDATED_USER_DESC'
-}
-
 /** A filter to be used against many `IngestItemStep` object types. All fields are combined with a logical ‘and.’ */
 export type IngestItemToManyIngestItemStepFilter = {
   /** Every related `IngestItemStep` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -6657,68 +6727,6 @@ export type IngestItemTypeFilter = {
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<IngestItemType>>;
 };
-
-/**
- * A connection to a list of `IngestItem` values.
- * @permissions: INGESTS_VIEW,INGESTS_EDIT,ADMIN
- */
-export type IngestItemsConnection = {
-  __typename?: 'IngestItemsConnection';
-  /** A list of edges which contains the `IngestItem` and cursor to aid in pagination. */
-  edges: Array<IngestItemsEdge>;
-  /** A list of `IngestItem` objects. */
-  nodes: Array<IngestItem>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `IngestItem` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `IngestItem` edge in the connection. */
-export type IngestItemsEdge = {
-  __typename?: 'IngestItemsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `IngestItem` at the end of the edge. */
-  node: IngestItem;
-};
-
-/** Methods to use when ordering `IngestItem`. */
-export enum IngestItemsOrderBy {
-  CreatedDateAsc = 'CREATED_DATE_ASC',
-  CreatedDateDesc = 'CREATED_DATE_DESC',
-  CreatedUserAsc = 'CREATED_USER_ASC',
-  CreatedUserDesc = 'CREATED_USER_DESC',
-  DisplayTitleAsc = 'DISPLAY_TITLE_ASC',
-  DisplayTitleDesc = 'DISPLAY_TITLE_DESC',
-  EntityIdAsc = 'ENTITY_ID_ASC',
-  EntityIdDesc = 'ENTITY_ID_DESC',
-  ErrorsAsc = 'ERRORS_ASC',
-  ErrorsDesc = 'ERRORS_DESC',
-  ExistsStatusAsc = 'EXISTS_STATUS_ASC',
-  ExistsStatusDesc = 'EXISTS_STATUS_DESC',
-  ExternalIdAsc = 'EXTERNAL_ID_ASC',
-  ExternalIdDesc = 'EXTERNAL_ID_DESC',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  IngestDocumentIdAsc = 'INGEST_DOCUMENT_ID_ASC',
-  IngestDocumentIdDesc = 'INGEST_DOCUMENT_ID_DESC',
-  ItemAsc = 'ITEM_ASC',
-  ItemDesc = 'ITEM_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  ProcessedTrailerIdsAsc = 'PROCESSED_TRAILER_IDS_ASC',
-  ProcessedTrailerIdsDesc = 'PROCESSED_TRAILER_IDS_DESC',
-  StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC',
-  TypeAsc = 'TYPE_ASC',
-  TypeDesc = 'TYPE_DESC',
-  UpdatedDateAsc = 'UPDATED_DATE_ASC',
-  UpdatedDateDesc = 'UPDATED_DATE_DESC',
-  UpdatedUserAsc = 'UPDATED_USER_ASC',
-  UpdatedUserDesc = 'UPDATED_USER_DESC'
-}
 
 export enum IngestStatus {
   /** Error */
@@ -7129,9 +7137,9 @@ export type Movie = {
   /** Reads and enables pagination through a set of `MoviesTrailer`. */
   moviesTrailers: MoviesTrailersConnection;
   originalTitle?: Maybe<Scalars['String']>;
-  publishStatus: PublishStatus;
   publishedDate?: Maybe<Scalars['Datetime']>;
   publishedUser?: Maybe<Scalars['String']>;
+  publishStatus: PublishStatus;
   released?: Maybe<Scalars['Date']>;
   studio?: Maybe<Scalars['String']>;
   synopsis?: Maybe<Scalars['String']>;
@@ -7273,12 +7281,12 @@ export type MovieCondition = {
   mainVideoId?: InputMaybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `originalTitle` field. */
   originalTitle?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `publishStatus` field. */
-  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `released` field. */
   released?: InputMaybe<Scalars['Date']>;
   /** Checks for equality with the object’s `studio` field. */
@@ -7355,12 +7363,12 @@ export type MovieFilter = {
   or?: InputMaybe<Array<MovieFilter>>;
   /** Filter by the object’s `originalTitle` field. */
   originalTitle?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `publishStatus` field. */
-  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `studio` field. */
@@ -7478,23 +7486,6 @@ export type MovieGenrePatch = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type MovieGenreSubscriptionPayload = {
-  __typename?: 'MovieGenreSubscriptionPayload';
-  event?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  movieGenre?: Maybe<MovieGenre>;
-};
-
-/** A filter to be used against many `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’ */
-export type MovieGenreToManyMoviesMovieGenreFilter = {
-  /** Every related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<MoviesMovieGenreFilter>;
-  /** No related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<MoviesMovieGenreFilter>;
-  /** Some related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<MoviesMovieGenreFilter>;
-};
-
 /**
  * A connection to a list of `MovieGenre` values.
  * @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
@@ -7540,6 +7531,23 @@ export enum MovieGenresOrderBy {
   UpdatedUserAsc = 'UPDATED_USER_ASC',
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
+
+export type MovieGenreSubscriptionPayload = {
+  __typename?: 'MovieGenreSubscriptionPayload';
+  event?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  movieGenre?: Maybe<MovieGenre>;
+};
+
+/** A filter to be used against many `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’ */
+export type MovieGenreToManyMoviesMovieGenreFilter = {
+  /** Every related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesMovieGenreFilter>;
+  /** No related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesMovieGenreFilter>;
+  /** Some related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesMovieGenreFilter>;
+};
 
 export enum MovieImageType {
   /** Cover */
@@ -7604,103 +7612,6 @@ export type MoviePatch = {
    * @notEmpty()
    */
   title?: InputMaybe<Scalars['String']>;
-};
-
-export type MovieSubscriptionPayload = {
-  __typename?: 'MovieSubscriptionPayload';
-  event?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  movie?: Maybe<Movie>;
-};
-
-/** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
-export type MovieToManyCollectionRelationFilter = {
-  /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<CollectionRelationFilter>;
-  /** No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<CollectionRelationFilter>;
-  /** Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<CollectionRelationFilter>;
-};
-
-/** A filter to be used against many `MoviesCast` object types. All fields are combined with a logical ‘and.’ */
-export type MovieToManyMoviesCastFilter = {
-  /** Every related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<MoviesCastFilter>;
-  /** No related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<MoviesCastFilter>;
-  /** Some related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<MoviesCastFilter>;
-};
-
-/** A filter to be used against many `MoviesImage` object types. All fields are combined with a logical ‘and.’ */
-export type MovieToManyMoviesImageFilter = {
-  /** Every related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<MoviesImageFilter>;
-  /** No related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<MoviesImageFilter>;
-  /** Some related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<MoviesImageFilter>;
-};
-
-/** A filter to be used against many `MoviesLicense` object types. All fields are combined with a logical ‘and.’ */
-export type MovieToManyMoviesLicenseFilter = {
-  /** Every related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<MoviesLicenseFilter>;
-  /** No related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<MoviesLicenseFilter>;
-  /** Some related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<MoviesLicenseFilter>;
-};
-
-/** A filter to be used against many `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’ */
-export type MovieToManyMoviesMovieGenreFilter = {
-  /** Every related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<MoviesMovieGenreFilter>;
-  /** No related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<MoviesMovieGenreFilter>;
-  /** Some related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<MoviesMovieGenreFilter>;
-};
-
-/** A filter to be used against many `MoviesProductionCountry` object types. All fields are combined with a logical ‘and.’ */
-export type MovieToManyMoviesProductionCountryFilter = {
-  /** Every related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<MoviesProductionCountryFilter>;
-  /** No related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<MoviesProductionCountryFilter>;
-  /** Some related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<MoviesProductionCountryFilter>;
-};
-
-/** A filter to be used against many `MoviesSnapshot` object types. All fields are combined with a logical ‘and.’ */
-export type MovieToManyMoviesSnapshotFilter = {
-  /** Every related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<MoviesSnapshotFilter>;
-  /** No related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<MoviesSnapshotFilter>;
-  /** Some related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<MoviesSnapshotFilter>;
-};
-
-/** A filter to be used against many `MoviesTag` object types. All fields are combined with a logical ‘and.’ */
-export type MovieToManyMoviesTagFilter = {
-  /** Every related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<MoviesTagFilter>;
-  /** No related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<MoviesTagFilter>;
-  /** Some related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<MoviesTagFilter>;
-};
-
-/** A filter to be used against many `MoviesTrailer` object types. All fields are combined with a logical ‘and.’ */
-export type MovieToManyMoviesTrailerFilter = {
-  /** Every related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<MoviesTrailerFilter>;
-  /** No related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<MoviesTrailerFilter>;
-  /** Some related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<MoviesTrailerFilter>;
 };
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
@@ -7998,16 +7909,6 @@ export type MoviesLicensePatch = {
   movieId?: InputMaybe<Scalars['Int']>;
 };
 
-/** A filter to be used against many `MoviesLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
-export type MoviesLicenseToManyMoviesLicensesCountryFilter = {
-  /** Every related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<MoviesLicensesCountryFilter>;
-  /** No related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<MoviesLicensesCountryFilter>;
-  /** Some related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<MoviesLicensesCountryFilter>;
-};
-
 /**
  * A connection to a list of `MoviesLicense` values.
  * @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN
@@ -8135,6 +8036,16 @@ export enum MoviesLicensesOrderBy {
   UpdatedDateDesc = 'UPDATED_DATE_DESC'
 }
 
+/** A filter to be used against many `MoviesLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
+export type MoviesLicenseToManyMoviesLicensesCountryFilter = {
+  /** Every related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesLicensesCountryFilter>;
+  /** No related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesLicensesCountryFilter>;
+  /** Some related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesLicensesCountryFilter>;
+};
+
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MoviesMovieGenre = {
   __typename?: 'MoviesMovieGenre';
@@ -8236,12 +8147,12 @@ export enum MoviesOrderBy {
   OriginalTitleDesc = 'ORIGINAL_TITLE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
+  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
   PublishedDateAsc = 'PUBLISHED_DATE_ASC',
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
-  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
-  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
@@ -8586,6 +8497,103 @@ export enum MoviesTrailersOrderBy {
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
 
+export type MovieSubscriptionPayload = {
+  __typename?: 'MovieSubscriptionPayload';
+  event?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  movie?: Maybe<Movie>;
+};
+
+/** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyCollectionRelationFilter = {
+  /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CollectionRelationFilter>;
+  /** No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CollectionRelationFilter>;
+  /** Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CollectionRelationFilter>;
+};
+
+/** A filter to be used against many `MoviesCast` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyMoviesCastFilter = {
+  /** Every related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesCastFilter>;
+  /** No related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesCastFilter>;
+  /** Some related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesCastFilter>;
+};
+
+/** A filter to be used against many `MoviesImage` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyMoviesImageFilter = {
+  /** Every related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesImageFilter>;
+  /** No related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesImageFilter>;
+  /** Some related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesImageFilter>;
+};
+
+/** A filter to be used against many `MoviesLicense` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyMoviesLicenseFilter = {
+  /** Every related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesLicenseFilter>;
+  /** No related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesLicenseFilter>;
+  /** Some related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesLicenseFilter>;
+};
+
+/** A filter to be used against many `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyMoviesMovieGenreFilter = {
+  /** Every related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesMovieGenreFilter>;
+  /** No related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesMovieGenreFilter>;
+  /** Some related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesMovieGenreFilter>;
+};
+
+/** A filter to be used against many `MoviesProductionCountry` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyMoviesProductionCountryFilter = {
+  /** Every related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesProductionCountryFilter>;
+  /** No related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesProductionCountryFilter>;
+  /** Some related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesProductionCountryFilter>;
+};
+
+/** A filter to be used against many `MoviesSnapshot` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyMoviesSnapshotFilter = {
+  /** Every related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesSnapshotFilter>;
+  /** No related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesSnapshotFilter>;
+  /** Some related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesSnapshotFilter>;
+};
+
+/** A filter to be used against many `MoviesTag` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyMoviesTagFilter = {
+  /** Every related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesTagFilter>;
+  /** No related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesTagFilter>;
+  /** Some related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesTagFilter>;
+};
+
+/** A filter to be used against many `MoviesTrailer` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyMoviesTrailerFilter = {
+  /** Every related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesTrailerFilter>;
+  /** No related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesTrailerFilter>;
+  /** Some related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesTrailerFilter>;
+};
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -8593,18 +8601,15 @@ export type Mutation = {
   createCollection?: Maybe<CreateCollectionPayload>;
   /** Creates a single `CollectionRelation`. */
   createCollectionRelation?: Maybe<CreateCollectionRelationPayload>;
+  /** Creates a single `CollectionsImage`. */
+  createCollectionsImage?: Maybe<CreateCollectionsImagePayload>;
   /** Creates a new Collection snapshot. */
   createCollectionSnapshot?: Maybe<Snapshot>;
   createCollectionSnapshots?: Maybe<BulkPublishingPayload>;
-  /** Creates a single `CollectionsImage`. */
-  createCollectionsImage?: Maybe<CreateCollectionsImagePayload>;
   /** Creates a single `CollectionsTag`. */
   createCollectionsTag?: Maybe<CreateCollectionsTagPayload>;
   /** Creates a single `Episode`. */
   createEpisode?: Maybe<CreateEpisodePayload>;
-  /** Creates a new Episode snapshot. */
-  createEpisodeSnapshot?: Maybe<Snapshot>;
-  createEpisodeSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `EpisodesCast`. */
   createEpisodesCast?: Maybe<CreateEpisodesCastPayload>;
   /** Creates a single `EpisodesImage`. */
@@ -8613,6 +8618,9 @@ export type Mutation = {
   createEpisodesLicense?: Maybe<CreateEpisodesLicensePayload>;
   /** Creates a single `EpisodesLicensesCountry`. */
   createEpisodesLicensesCountry?: Maybe<CreateEpisodesLicensesCountryPayload>;
+  /** Creates a new Episode snapshot. */
+  createEpisodeSnapshot?: Maybe<Snapshot>;
+  createEpisodeSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `EpisodesProductionCountry`. */
   createEpisodesProductionCountry?: Maybe<CreateEpisodesProductionCountryPayload>;
   /** Creates a single `EpisodesTag`. */
@@ -8627,9 +8635,6 @@ export type Mutation = {
   createMovieGenre?: Maybe<CreateMovieGenrePayload>;
   /** Creates a new Movie genres snapshot. */
   createMovieGenresSnapshot?: Maybe<Snapshot>;
-  /** Creates a new Movie snapshot. */
-  createMovieSnapshot?: Maybe<Snapshot>;
-  createMovieSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `MoviesCast`. */
   createMoviesCast?: Maybe<CreateMoviesCastPayload>;
   /** Creates a single `MoviesImage`. */
@@ -8640,6 +8645,9 @@ export type Mutation = {
   createMoviesLicensesCountry?: Maybe<CreateMoviesLicensesCountryPayload>;
   /** Creates a single `MoviesMovieGenre`. */
   createMoviesMovieGenre?: Maybe<CreateMoviesMovieGenrePayload>;
+  /** Creates a new Movie snapshot. */
+  createMovieSnapshot?: Maybe<Snapshot>;
+  createMovieSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `MoviesProductionCountry`. */
   createMoviesProductionCountry?: Maybe<CreateMoviesProductionCountryPayload>;
   /** Creates a single `MoviesTag`. */
@@ -8648,9 +8656,6 @@ export type Mutation = {
   createMoviesTrailer?: Maybe<CreateMoviesTrailerPayload>;
   /** Creates a single `Season`. */
   createSeason?: Maybe<CreateSeasonPayload>;
-  /** Creates a new Season snapshot. */
-  createSeasonSnapshot?: Maybe<Snapshot>;
-  createSeasonSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `SeasonsCast`. */
   createSeasonsCast?: Maybe<CreateSeasonsCastPayload>;
   /** Creates a single `SeasonsImage`. */
@@ -8659,6 +8664,9 @@ export type Mutation = {
   createSeasonsLicense?: Maybe<CreateSeasonsLicensePayload>;
   /** Creates a single `SeasonsLicensesCountry`. */
   createSeasonsLicensesCountry?: Maybe<CreateSeasonsLicensesCountryPayload>;
+  /** Creates a new Season snapshot. */
+  createSeasonSnapshot?: Maybe<Snapshot>;
+  createSeasonSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `SeasonsProductionCountry`. */
   createSeasonsProductionCountry?: Maybe<CreateSeasonsProductionCountryPayload>;
   /** Creates a single `SeasonsTag`. */
@@ -8673,9 +8681,6 @@ export type Mutation = {
   createTvshowGenre?: Maybe<CreateTvshowGenrePayload>;
   /** Creates a new Tvshow genres snapshot. */
   createTvshowGenresSnapshot?: Maybe<Snapshot>;
-  /** Creates a new Tvshow snapshot. */
-  createTvshowSnapshot?: Maybe<Snapshot>;
-  createTvshowSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `TvshowsCast`. */
   createTvshowsCast?: Maybe<CreateTvshowsCastPayload>;
   /** Creates a single `TvshowsImage`. */
@@ -8684,6 +8689,9 @@ export type Mutation = {
   createTvshowsLicense?: Maybe<CreateTvshowsLicensePayload>;
   /** Creates a single `TvshowsLicensesCountry`. */
   createTvshowsLicensesCountry?: Maybe<CreateTvshowsLicensesCountryPayload>;
+  /** Creates a new Tvshow snapshot. */
+  createTvshowSnapshot?: Maybe<Snapshot>;
+  createTvshowSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `TvshowsProductionCountry`. */
   createTvshowsProductionCountry?: Maybe<CreateTvshowsProductionCountryPayload>;
   /** Creates a single `TvshowsTag`. */
@@ -8944,6 +8952,12 @@ export type MutationCreateCollectionRelationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCollectionsImageArgs = {
+  input: CreateCollectionsImageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCollectionSnapshotArgs = {
   collectionId: Scalars['Int'];
 };
@@ -8956,12 +8970,6 @@ export type MutationCreateCollectionSnapshotsArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateCollectionsImageArgs = {
-  input: CreateCollectionsImageInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCollectionsTagArgs = {
   input: CreateCollectionsTagInput;
 };
@@ -8970,18 +8978,6 @@ export type MutationCreateCollectionsTagArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateEpisodeArgs = {
   input: CreateEpisodeInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateEpisodeSnapshotArgs = {
-  episodeId: Scalars['Int'];
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateEpisodeSnapshotsArgs = {
-  filter?: InputMaybe<EpisodeFilter>;
 };
 
 
@@ -9006,6 +9002,18 @@ export type MutationCreateEpisodesLicenseArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateEpisodesLicensesCountryArgs = {
   input: CreateEpisodesLicensesCountryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateEpisodeSnapshotArgs = {
+  episodeId: Scalars['Int'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateEpisodeSnapshotsArgs = {
+  filter?: InputMaybe<EpisodeFilter>;
 };
 
 
@@ -9046,18 +9054,6 @@ export type MutationCreateMovieGenreArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateMovieSnapshotArgs = {
-  movieId: Scalars['Int'];
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateMovieSnapshotsArgs = {
-  filter?: InputMaybe<MovieFilter>;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateMoviesCastArgs = {
   input: CreateMoviesCastInput;
 };
@@ -9088,6 +9084,18 @@ export type MutationCreateMoviesMovieGenreArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateMovieSnapshotArgs = {
+  movieId: Scalars['Int'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateMovieSnapshotsArgs = {
+  filter?: InputMaybe<MovieFilter>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateMoviesProductionCountryArgs = {
   input: CreateMoviesProductionCountryInput;
 };
@@ -9112,18 +9120,6 @@ export type MutationCreateSeasonArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateSeasonSnapshotArgs = {
-  seasonId: Scalars['Int'];
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateSeasonSnapshotsArgs = {
-  filter?: InputMaybe<SeasonFilter>;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateSeasonsCastArgs = {
   input: CreateSeasonsCastInput;
 };
@@ -9144,6 +9140,18 @@ export type MutationCreateSeasonsLicenseArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateSeasonsLicensesCountryArgs = {
   input: CreateSeasonsLicensesCountryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateSeasonSnapshotArgs = {
+  seasonId: Scalars['Int'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateSeasonSnapshotsArgs = {
+  filter?: InputMaybe<SeasonFilter>;
 };
 
 
@@ -9184,18 +9192,6 @@ export type MutationCreateTvshowGenreArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateTvshowSnapshotArgs = {
-  tvshowId: Scalars['Int'];
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateTvshowSnapshotsArgs = {
-  filter?: InputMaybe<TvshowFilter>;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateTvshowsCastArgs = {
   input: CreateTvshowsCastInput;
 };
@@ -9216,6 +9212,18 @@ export type MutationCreateTvshowsLicenseArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateTvshowsLicensesCountryArgs = {
   input: CreateTvshowsLicensesCountryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateTvshowSnapshotArgs = {
+  tvshowId: Scalars['Int'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateTvshowSnapshotsArgs = {
+  filter?: InputMaybe<TvshowFilter>;
 };
 
 
@@ -10140,11 +10148,11 @@ export type Query = {
   /** Reads and enables pagination through a set of `IngestDocument`. */
   ingestDocuments?: Maybe<IngestDocumentsConnection>;
   ingestItem?: Maybe<IngestItem>;
+  /** Reads and enables pagination through a set of `IngestItem`. */
+  ingestItems?: Maybe<IngestItemsConnection>;
   ingestItemStep?: Maybe<IngestItemStep>;
   /** Reads and enables pagination through a set of `IngestItemStep`. */
   ingestItemSteps?: Maybe<IngestItemStepsConnection>;
-  /** Reads and enables pagination through a set of `IngestItem`. */
-  ingestItems?: Maybe<IngestItemsConnection>;
   movie?: Maybe<Movie>;
   movieByExternalId?: Maybe<Movie>;
   movieGenre?: Maybe<MovieGenre>;
@@ -10666,6 +10674,19 @@ export type QueryIngestItemArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryIngestItemsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<IngestItemCondition>;
+  filter?: InputMaybe<IngestItemFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<IngestItemsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryIngestItemStepArgs = {
   id: Scalars['UUID'];
 };
@@ -10681,19 +10702,6 @@ export type QueryIngestItemStepsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<IngestItemStepsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryIngestItemsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<IngestItemCondition>;
-  filter?: InputMaybe<IngestItemFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<IngestItemsOrderBy>>;
 };
 
 
@@ -11297,9 +11305,9 @@ export type Season = {
   externalId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   index: Scalars['Int'];
-  publishStatus: PublishStatus;
   publishedDate?: Maybe<Scalars['Datetime']>;
   publishedUser?: Maybe<Scalars['String']>;
+  publishStatus: PublishStatus;
   released?: Maybe<Scalars['Date']>;
   /** Reads and enables pagination through a set of `SeasonsCast`. */
   seasonsCasts: SeasonsCastsConnection;
@@ -11470,12 +11478,12 @@ export type SeasonCondition = {
   id?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `index` field. */
   index?: InputMaybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `publishStatus` field. */
-  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `released` field. */
   released?: InputMaybe<Scalars['Date']>;
   /** Checks for equality with the object’s `studio` field. */
@@ -11518,12 +11526,12 @@ export type SeasonFilter = {
   not?: InputMaybe<SeasonFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<SeasonFilter>>;
-  /** Filter by the object’s `publishStatus` field. */
-  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `seasonsCasts` relation. */
@@ -11627,113 +11635,6 @@ export type SeasonPatch = {
   studio?: InputMaybe<Scalars['String']>;
   synopsis?: InputMaybe<Scalars['String']>;
   tvshowId?: InputMaybe<Scalars['Int']>;
-};
-
-export type SeasonSubscriptionPayload = {
-  __typename?: 'SeasonSubscriptionPayload';
-  event?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  season?: Maybe<Season>;
-};
-
-/** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonToManyCollectionRelationFilter = {
-  /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<CollectionRelationFilter>;
-  /** No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<CollectionRelationFilter>;
-  /** Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<CollectionRelationFilter>;
-};
-
-/** A filter to be used against many `Episode` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonToManyEpisodeFilter = {
-  /** Every related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodeFilter>;
-  /** No related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodeFilter>;
-  /** Some related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodeFilter>;
-};
-
-/** A filter to be used against many `SeasonsCast` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonToManySeasonsCastFilter = {
-  /** Every related `SeasonsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonsCastFilter>;
-  /** No related `SeasonsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonsCastFilter>;
-  /** Some related `SeasonsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonsCastFilter>;
-};
-
-/** A filter to be used against many `SeasonsImage` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonToManySeasonsImageFilter = {
-  /** Every related `SeasonsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonsImageFilter>;
-  /** No related `SeasonsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonsImageFilter>;
-  /** Some related `SeasonsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonsImageFilter>;
-};
-
-/** A filter to be used against many `SeasonsLicense` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonToManySeasonsLicenseFilter = {
-  /** Every related `SeasonsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonsLicenseFilter>;
-  /** No related `SeasonsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonsLicenseFilter>;
-  /** Some related `SeasonsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonsLicenseFilter>;
-};
-
-/** A filter to be used against many `SeasonsProductionCountry` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonToManySeasonsProductionCountryFilter = {
-  /** Every related `SeasonsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonsProductionCountryFilter>;
-  /** No related `SeasonsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonsProductionCountryFilter>;
-  /** Some related `SeasonsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonsProductionCountryFilter>;
-};
-
-/** A filter to be used against many `SeasonsSnapshot` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonToManySeasonsSnapshotFilter = {
-  /** Every related `SeasonsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonsSnapshotFilter>;
-  /** No related `SeasonsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonsSnapshotFilter>;
-  /** Some related `SeasonsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonsSnapshotFilter>;
-};
-
-/** A filter to be used against many `SeasonsTag` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonToManySeasonsTagFilter = {
-  /** Every related `SeasonsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonsTagFilter>;
-  /** No related `SeasonsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonsTagFilter>;
-  /** Some related `SeasonsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonsTagFilter>;
-};
-
-/** A filter to be used against many `SeasonsTrailer` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonToManySeasonsTrailerFilter = {
-  /** Every related `SeasonsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonsTrailerFilter>;
-  /** No related `SeasonsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonsTrailerFilter>;
-  /** Some related `SeasonsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonsTrailerFilter>;
-};
-
-/** A filter to be used against many `SeasonsTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonToManySeasonsTvshowGenreFilter = {
-  /** Every related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonsTvshowGenreFilter>;
-  /** No related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonsTvshowGenreFilter>;
-  /** Some related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonsTvshowGenreFilter>;
 };
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
@@ -12031,16 +11932,6 @@ export type SeasonsLicensePatch = {
   seasonId?: InputMaybe<Scalars['Int']>;
 };
 
-/** A filter to be used against many `SeasonsLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
-export type SeasonsLicenseToManySeasonsLicensesCountryFilter = {
-  /** Every related `SeasonsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonsLicensesCountryFilter>;
-  /** No related `SeasonsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonsLicensesCountryFilter>;
-  /** Some related `SeasonsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonsLicensesCountryFilter>;
-};
-
 /**
  * A connection to a list of `SeasonsLicense` values.
  * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
@@ -12168,6 +12059,16 @@ export enum SeasonsLicensesOrderBy {
   UpdatedDateDesc = 'UPDATED_DATE_DESC'
 }
 
+/** A filter to be used against many `SeasonsLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonsLicenseToManySeasonsLicensesCountryFilter = {
+  /** Every related `SeasonsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsLicensesCountryFilter>;
+  /** No related `SeasonsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsLicensesCountryFilter>;
+  /** Some related `SeasonsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsLicensesCountryFilter>;
+};
+
 /** Methods to use when ordering `Season`. */
 export enum SeasonsOrderBy {
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -12185,12 +12086,12 @@ export enum SeasonsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
+  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
   PublishedDateAsc = 'PUBLISHED_DATE_ASC',
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
-  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
-  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
@@ -12617,6 +12518,113 @@ export enum SeasonsTvshowGenresOrderBy {
   TvshowGenresIdDesc = 'TVSHOW_GENRES_ID_DESC'
 }
 
+export type SeasonSubscriptionPayload = {
+  __typename?: 'SeasonSubscriptionPayload';
+  event?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  season?: Maybe<Season>;
+};
+
+/** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManyCollectionRelationFilter = {
+  /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CollectionRelationFilter>;
+  /** No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CollectionRelationFilter>;
+  /** Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CollectionRelationFilter>;
+};
+
+/** A filter to be used against many `Episode` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManyEpisodeFilter = {
+  /** Every related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodeFilter>;
+  /** No related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodeFilter>;
+  /** Some related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodeFilter>;
+};
+
+/** A filter to be used against many `SeasonsCast` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManySeasonsCastFilter = {
+  /** Every related `SeasonsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsCastFilter>;
+  /** No related `SeasonsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsCastFilter>;
+  /** Some related `SeasonsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsCastFilter>;
+};
+
+/** A filter to be used against many `SeasonsImage` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManySeasonsImageFilter = {
+  /** Every related `SeasonsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsImageFilter>;
+  /** No related `SeasonsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsImageFilter>;
+  /** Some related `SeasonsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsImageFilter>;
+};
+
+/** A filter to be used against many `SeasonsLicense` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManySeasonsLicenseFilter = {
+  /** Every related `SeasonsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsLicenseFilter>;
+  /** No related `SeasonsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsLicenseFilter>;
+  /** Some related `SeasonsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsLicenseFilter>;
+};
+
+/** A filter to be used against many `SeasonsProductionCountry` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManySeasonsProductionCountryFilter = {
+  /** Every related `SeasonsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsProductionCountryFilter>;
+  /** No related `SeasonsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsProductionCountryFilter>;
+  /** Some related `SeasonsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsProductionCountryFilter>;
+};
+
+/** A filter to be used against many `SeasonsSnapshot` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManySeasonsSnapshotFilter = {
+  /** Every related `SeasonsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsSnapshotFilter>;
+  /** No related `SeasonsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsSnapshotFilter>;
+  /** Some related `SeasonsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsSnapshotFilter>;
+};
+
+/** A filter to be used against many `SeasonsTag` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManySeasonsTagFilter = {
+  /** Every related `SeasonsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsTagFilter>;
+  /** No related `SeasonsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsTagFilter>;
+  /** Some related `SeasonsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsTagFilter>;
+};
+
+/** A filter to be used against many `SeasonsTrailer` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManySeasonsTrailerFilter = {
+  /** Every related `SeasonsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsTrailerFilter>;
+  /** No related `SeasonsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsTrailerFilter>;
+  /** Some related `SeasonsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsTrailerFilter>;
+};
+
+/** A filter to be used against many `SeasonsTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManySeasonsTvshowGenreFilter = {
+  /** Every related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsTvshowGenreFilter>;
+  /** No related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsTvshowGenreFilter>;
+  /** Some related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsTvshowGenreFilter>;
+};
+
 /**
  * Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
  * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
@@ -12637,8 +12645,8 @@ export type Snapshot = {
   jobId: Scalars['String'];
   /** Reads and enables pagination through a set of `MoviesSnapshot`. */
   moviesSnapshots: MoviesSnapshotsConnection;
-  publishId: Scalars['String'];
   publishedDate?: Maybe<Scalars['Datetime']>;
+  publishId: Scalars['String'];
   scheduledDate?: Maybe<Scalars['Datetime']>;
   /** Reads and enables pagination through a set of `SeasonsSnapshot`. */
   seasonsSnapshots: SeasonsSnapshotsConnection;
@@ -12772,10 +12780,10 @@ export type SnapshotCondition = {
   isListSnapshot?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `jobId` field. */
   jobId?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `publishId` field. */
-  publishId?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `publishId` field. */
+  publishId?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `scheduledDate` field. */
   scheduledDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `snapshotJson` field. */
@@ -12830,10 +12838,10 @@ export type SnapshotFilter = {
   not?: InputMaybe<SnapshotFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<SnapshotFilter>>;
-  /** Filter by the object’s `publishId` field. */
-  publishId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `publishId` field. */
+  publishId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `scheduledDate` field. */
   scheduledDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `seasonsSnapshots` relation. */
@@ -12861,6 +12869,74 @@ export type SnapshotFilter = {
   /** Filter by the object’s `validationStatus` field. */
   validationStatus?: InputMaybe<SnapshotValidationStatusFilter>;
 };
+
+/**
+ * A connection to a list of `Snapshot` values.
+ * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ */
+export type SnapshotsConnection = {
+  __typename?: 'SnapshotsConnection';
+  /** A list of edges which contains the `Snapshot` and cursor to aid in pagination. */
+  edges: Array<SnapshotsEdge>;
+  /** A list of `Snapshot` objects. */
+  nodes: Array<Snapshot>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Snapshot` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Snapshot` edge in the connection. */
+export type SnapshotsEdge = {
+  __typename?: 'SnapshotsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Snapshot` at the end of the edge. */
+  node: Snapshot;
+};
+
+/** Methods to use when ordering `Snapshot`. */
+export enum SnapshotsOrderBy {
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  EntityIdAsc = 'ENTITY_ID_ASC',
+  EntityIdDesc = 'ENTITY_ID_DESC',
+  EntityTitleAsc = 'ENTITY_TITLE_ASC',
+  EntityTitleDesc = 'ENTITY_TITLE_DESC',
+  EntityTypeAsc = 'ENTITY_TYPE_ASC',
+  EntityTypeDesc = 'ENTITY_TYPE_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IsListSnapshotAsc = 'IS_LIST_SNAPSHOT_ASC',
+  IsListSnapshotDesc = 'IS_LIST_SNAPSHOT_DESC',
+  JobIdAsc = 'JOB_ID_ASC',
+  JobIdDesc = 'JOB_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PublishIdAsc = 'PUBLISH_ID_ASC',
+  PublishIdDesc = 'PUBLISH_ID_DESC',
+  PublishedDateAsc = 'PUBLISHED_DATE_ASC',
+  PublishedDateDesc = 'PUBLISHED_DATE_DESC',
+  ScheduledDateAsc = 'SCHEDULED_DATE_ASC',
+  ScheduledDateDesc = 'SCHEDULED_DATE_DESC',
+  SnapshotJsonAsc = 'SNAPSHOT_JSON_ASC',
+  SnapshotJsonDesc = 'SNAPSHOT_JSON_DESC',
+  SnapshotNoAsc = 'SNAPSHOT_NO_ASC',
+  SnapshotNoDesc = 'SNAPSHOT_NO_DESC',
+  SnapshotStateAsc = 'SNAPSHOT_STATE_ASC',
+  SnapshotStateDesc = 'SNAPSHOT_STATE_DESC',
+  UnpublishedDateAsc = 'UNPUBLISHED_DATE_ASC',
+  UnpublishedDateDesc = 'UNPUBLISHED_DATE_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC',
+  ValidationStatusAsc = 'VALIDATION_STATUS_ASC',
+  ValidationStatusDesc = 'VALIDATION_STATUS_DESC'
+}
 
 export enum SnapshotState {
   /** Error */
@@ -13181,74 +13257,6 @@ export type SnapshotValidationStatusFilter = {
   notIn?: InputMaybe<Array<SnapshotValidationStatus>>;
 };
 
-/**
- * A connection to a list of `Snapshot` values.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
- */
-export type SnapshotsConnection = {
-  __typename?: 'SnapshotsConnection';
-  /** A list of edges which contains the `Snapshot` and cursor to aid in pagination. */
-  edges: Array<SnapshotsEdge>;
-  /** A list of `Snapshot` objects. */
-  nodes: Array<Snapshot>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Snapshot` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Snapshot` edge in the connection. */
-export type SnapshotsEdge = {
-  __typename?: 'SnapshotsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Snapshot` at the end of the edge. */
-  node: Snapshot;
-};
-
-/** Methods to use when ordering `Snapshot`. */
-export enum SnapshotsOrderBy {
-  CreatedDateAsc = 'CREATED_DATE_ASC',
-  CreatedDateDesc = 'CREATED_DATE_DESC',
-  CreatedUserAsc = 'CREATED_USER_ASC',
-  CreatedUserDesc = 'CREATED_USER_DESC',
-  EntityIdAsc = 'ENTITY_ID_ASC',
-  EntityIdDesc = 'ENTITY_ID_DESC',
-  EntityTitleAsc = 'ENTITY_TITLE_ASC',
-  EntityTitleDesc = 'ENTITY_TITLE_DESC',
-  EntityTypeAsc = 'ENTITY_TYPE_ASC',
-  EntityTypeDesc = 'ENTITY_TYPE_DESC',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  IsListSnapshotAsc = 'IS_LIST_SNAPSHOT_ASC',
-  IsListSnapshotDesc = 'IS_LIST_SNAPSHOT_DESC',
-  JobIdAsc = 'JOB_ID_ASC',
-  JobIdDesc = 'JOB_ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  PublishedDateAsc = 'PUBLISHED_DATE_ASC',
-  PublishedDateDesc = 'PUBLISHED_DATE_DESC',
-  PublishIdAsc = 'PUBLISH_ID_ASC',
-  PublishIdDesc = 'PUBLISH_ID_DESC',
-  ScheduledDateAsc = 'SCHEDULED_DATE_ASC',
-  ScheduledDateDesc = 'SCHEDULED_DATE_DESC',
-  SnapshotJsonAsc = 'SNAPSHOT_JSON_ASC',
-  SnapshotJsonDesc = 'SNAPSHOT_JSON_DESC',
-  SnapshotNoAsc = 'SNAPSHOT_NO_ASC',
-  SnapshotNoDesc = 'SNAPSHOT_NO_DESC',
-  SnapshotStateAsc = 'SNAPSHOT_STATE_ASC',
-  SnapshotStateDesc = 'SNAPSHOT_STATE_DESC',
-  UnpublishedDateAsc = 'UNPUBLISHED_DATE_ASC',
-  UnpublishedDateDesc = 'UNPUBLISHED_DATE_DESC',
-  UpdatedDateAsc = 'UPDATED_DATE_ASC',
-  UpdatedDateDesc = 'UPDATED_DATE_DESC',
-  UpdatedUserAsc = 'UPDATED_USER_ASC',
-  UpdatedUserDesc = 'UPDATED_USER_DESC',
-  ValidationStatusAsc = 'VALIDATION_STATUS_ASC',
-  ValidationStatusDesc = 'VALIDATION_STATUS_DESC'
-}
-
 export type StartIngestInput = {
   file: Scalars['Upload'];
 };
@@ -13283,12 +13291,12 @@ export type StringFilter = {
   greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
   /** Included in the specified list. */
   in?: InputMaybe<Array<Scalars['String']>>;
-  /** Included in the specified list (case-insensitive). */
-  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Contains the specified string (case-sensitive). */
   includes?: InputMaybe<Scalars['String']>;
   /** Contains the specified string (case-insensitive). */
   includesInsensitive?: InputMaybe<Scalars['String']>;
+  /** Included in the specified list (case-insensitive). */
+  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
   isNull?: InputMaybe<Scalars['Boolean']>;
   /** Less than the specified value. */
@@ -13317,12 +13325,12 @@ export type StringFilter = {
   notEqualToInsensitive?: InputMaybe<Scalars['String']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['String']>>;
-  /** Not included in the specified list (case-insensitive). */
-  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Does not contain the specified string (case-sensitive). */
   notIncludes?: InputMaybe<Scalars['String']>;
   /** Does not contain the specified string (case-insensitive). */
   notIncludesInsensitive?: InputMaybe<Scalars['String']>;
+  /** Not included in the specified list (case-insensitive). */
+  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
   notLike?: InputMaybe<Scalars['String']>;
   /** Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
@@ -13371,9 +13379,9 @@ export type Tvshow = {
   externalId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   originalTitle?: Maybe<Scalars['String']>;
-  publishStatus: PublishStatus;
   publishedDate?: Maybe<Scalars['Datetime']>;
   publishedUser?: Maybe<Scalars['String']>;
+  publishStatus: PublishStatus;
   released?: Maybe<Scalars['Date']>;
   /** Reads and enables pagination through a set of `Season`. */
   seasons: SeasonsConnection;
@@ -13544,12 +13552,12 @@ export type TvshowCondition = {
   id?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `originalTitle` field. */
   originalTitle?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `publishStatus` field. */
-  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `released` field. */
   released?: InputMaybe<Scalars['Date']>;
   /** Checks for equality with the object’s `studio` field. */
@@ -13592,12 +13600,12 @@ export type TvshowFilter = {
   or?: InputMaybe<Array<TvshowFilter>>;
   /** Filter by the object’s `originalTitle` field. */
   originalTitle?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `publishStatus` field. */
-  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `seasons` relation. */
@@ -13789,43 +13797,6 @@ export type TvshowGenrePatch = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type TvshowGenreSubscriptionPayload = {
-  __typename?: 'TvshowGenreSubscriptionPayload';
-  event?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  tvshowGenre?: Maybe<TvshowGenre>;
-};
-
-/** A filter to be used against many `EpisodesTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowGenreToManyEpisodesTvshowGenreFilter = {
-  /** Every related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<EpisodesTvshowGenreFilter>;
-  /** No related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<EpisodesTvshowGenreFilter>;
-  /** Some related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<EpisodesTvshowGenreFilter>;
-};
-
-/** A filter to be used against many `SeasonsTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowGenreToManySeasonsTvshowGenreFilter = {
-  /** Every related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonsTvshowGenreFilter>;
-  /** No related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonsTvshowGenreFilter>;
-  /** Some related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonsTvshowGenreFilter>;
-};
-
-/** A filter to be used against many `TvshowsTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowGenreToManyTvshowsTvshowGenreFilter = {
-  /** Every related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<TvshowsTvshowGenreFilter>;
-  /** No related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<TvshowsTvshowGenreFilter>;
-  /** Some related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<TvshowsTvshowGenreFilter>;
-};
-
 /**
  * A connection to a list of `TvshowGenre` values.
  * @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
@@ -13871,6 +13842,43 @@ export enum TvshowGenresOrderBy {
   UpdatedUserAsc = 'UPDATED_USER_ASC',
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
+
+export type TvshowGenreSubscriptionPayload = {
+  __typename?: 'TvshowGenreSubscriptionPayload';
+  event?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  tvshowGenre?: Maybe<TvshowGenre>;
+};
+
+/** A filter to be used against many `EpisodesTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowGenreToManyEpisodesTvshowGenreFilter = {
+  /** Every related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesTvshowGenreFilter>;
+  /** No related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesTvshowGenreFilter>;
+  /** Some related `EpisodesTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesTvshowGenreFilter>;
+};
+
+/** A filter to be used against many `SeasonsTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowGenreToManySeasonsTvshowGenreFilter = {
+  /** Every related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsTvshowGenreFilter>;
+  /** No related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsTvshowGenreFilter>;
+  /** Some related `SeasonsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsTvshowGenreFilter>;
+};
+
+/** A filter to be used against many `TvshowsTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowGenreToManyTvshowsTvshowGenreFilter = {
+  /** Every related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsTvshowGenreFilter>;
+  /** No related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsTvshowGenreFilter>;
+  /** Some related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsTvshowGenreFilter>;
+};
 
 export enum TvshowImageType {
   /** Cover */
@@ -13933,113 +13941,6 @@ export type TvshowPatch = {
    * @notEmpty()
    */
   title?: InputMaybe<Scalars['String']>;
-};
-
-export type TvshowSubscriptionPayload = {
-  __typename?: 'TvshowSubscriptionPayload';
-  event?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  tvshow?: Maybe<Tvshow>;
-};
-
-/** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowToManyCollectionRelationFilter = {
-  /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<CollectionRelationFilter>;
-  /** No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<CollectionRelationFilter>;
-  /** Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<CollectionRelationFilter>;
-};
-
-/** A filter to be used against many `Season` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowToManySeasonFilter = {
-  /** Every related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SeasonFilter>;
-  /** No related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SeasonFilter>;
-  /** Some related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SeasonFilter>;
-};
-
-/** A filter to be used against many `TvshowsCast` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowToManyTvshowsCastFilter = {
-  /** Every related `TvshowsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<TvshowsCastFilter>;
-  /** No related `TvshowsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<TvshowsCastFilter>;
-  /** Some related `TvshowsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<TvshowsCastFilter>;
-};
-
-/** A filter to be used against many `TvshowsImage` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowToManyTvshowsImageFilter = {
-  /** Every related `TvshowsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<TvshowsImageFilter>;
-  /** No related `TvshowsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<TvshowsImageFilter>;
-  /** Some related `TvshowsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<TvshowsImageFilter>;
-};
-
-/** A filter to be used against many `TvshowsLicense` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowToManyTvshowsLicenseFilter = {
-  /** Every related `TvshowsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<TvshowsLicenseFilter>;
-  /** No related `TvshowsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<TvshowsLicenseFilter>;
-  /** Some related `TvshowsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<TvshowsLicenseFilter>;
-};
-
-/** A filter to be used against many `TvshowsProductionCountry` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowToManyTvshowsProductionCountryFilter = {
-  /** Every related `TvshowsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<TvshowsProductionCountryFilter>;
-  /** No related `TvshowsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<TvshowsProductionCountryFilter>;
-  /** Some related `TvshowsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<TvshowsProductionCountryFilter>;
-};
-
-/** A filter to be used against many `TvshowsSnapshot` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowToManyTvshowsSnapshotFilter = {
-  /** Every related `TvshowsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<TvshowsSnapshotFilter>;
-  /** No related `TvshowsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<TvshowsSnapshotFilter>;
-  /** Some related `TvshowsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<TvshowsSnapshotFilter>;
-};
-
-/** A filter to be used against many `TvshowsTag` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowToManyTvshowsTagFilter = {
-  /** Every related `TvshowsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<TvshowsTagFilter>;
-  /** No related `TvshowsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<TvshowsTagFilter>;
-  /** Some related `TvshowsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<TvshowsTagFilter>;
-};
-
-/** A filter to be used against many `TvshowsTrailer` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowToManyTvshowsTrailerFilter = {
-  /** Every related `TvshowsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<TvshowsTrailerFilter>;
-  /** No related `TvshowsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<TvshowsTrailerFilter>;
-  /** Some related `TvshowsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<TvshowsTrailerFilter>;
-};
-
-/** A filter to be used against many `TvshowsTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowToManyTvshowsTvshowGenreFilter = {
-  /** Every related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<TvshowsTvshowGenreFilter>;
-  /** No related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<TvshowsTvshowGenreFilter>;
-  /** Some related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<TvshowsTvshowGenreFilter>;
 };
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
@@ -14337,16 +14238,6 @@ export type TvshowsLicensePatch = {
   tvshowId?: InputMaybe<Scalars['Int']>;
 };
 
-/** A filter to be used against many `TvshowsLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
-export type TvshowsLicenseToManyTvshowsLicensesCountryFilter = {
-  /** Every related `TvshowsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<TvshowsLicensesCountryFilter>;
-  /** No related `TvshowsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<TvshowsLicensesCountryFilter>;
-  /** Some related `TvshowsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<TvshowsLicensesCountryFilter>;
-};
-
 /**
  * A connection to a list of `TvshowsLicense` values.
  * @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN
@@ -14474,6 +14365,16 @@ export enum TvshowsLicensesOrderBy {
   UpdatedDateDesc = 'UPDATED_DATE_DESC'
 }
 
+/** A filter to be used against many `TvshowsLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowsLicenseToManyTvshowsLicensesCountryFilter = {
+  /** Every related `TvshowsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsLicensesCountryFilter>;
+  /** No related `TvshowsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsLicensesCountryFilter>;
+  /** Some related `TvshowsLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsLicensesCountryFilter>;
+};
+
 /** Methods to use when ordering `Tvshow`. */
 export enum TvshowsOrderBy {
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -14491,12 +14392,12 @@ export enum TvshowsOrderBy {
   OriginalTitleDesc = 'ORIGINAL_TITLE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
+  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
   PublishedDateAsc = 'PUBLISHED_DATE_ASC',
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
-  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
-  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
@@ -14923,70 +14824,111 @@ export enum TvshowsTvshowGenresOrderBy {
   TvshowIdDesc = 'TVSHOW_ID_DESC'
 }
 
-/** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
-export type UuidFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['UUID']>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['UUID']>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['UUID']>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['UUID']>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['UUID']>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['UUID']>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['UUID']>>;
+export type TvshowSubscriptionPayload = {
+  __typename?: 'TvshowSubscriptionPayload';
+  event?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  tvshow?: Maybe<Tvshow>;
 };
 
-/** A filter to be used against UUID List fields. All fields are combined with a logical ‘and.’ */
-export type UuidListFilter = {
-  /** Any array item is equal to the specified value. */
-  anyEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Any array item is greater than the specified value. */
-  anyGreaterThan?: InputMaybe<Scalars['UUID']>;
-  /** Any array item is greater than or equal to the specified value. */
-  anyGreaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Any array item is less than the specified value. */
-  anyLessThan?: InputMaybe<Scalars['UUID']>;
-  /** Any array item is less than or equal to the specified value. */
-  anyLessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Any array item is not equal to the specified value. */
-  anyNotEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Contained by the specified list of values. */
-  containedBy?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
-  /** Contains the specified list of values. */
-  contains?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
-  /** Overlaps the specified list of values. */
-  overlaps?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+/** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyCollectionRelationFilter = {
+  /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CollectionRelationFilter>;
+  /** No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CollectionRelationFilter>;
+  /** Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CollectionRelationFilter>;
+};
+
+/** A filter to be used against many `Season` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManySeasonFilter = {
+  /** Every related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonFilter>;
+  /** No related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonFilter>;
+  /** Some related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonFilter>;
+};
+
+/** A filter to be used against many `TvshowsCast` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyTvshowsCastFilter = {
+  /** Every related `TvshowsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsCastFilter>;
+  /** No related `TvshowsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsCastFilter>;
+  /** Some related `TvshowsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsCastFilter>;
+};
+
+/** A filter to be used against many `TvshowsImage` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyTvshowsImageFilter = {
+  /** Every related `TvshowsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsImageFilter>;
+  /** No related `TvshowsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsImageFilter>;
+  /** Some related `TvshowsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsImageFilter>;
+};
+
+/** A filter to be used against many `TvshowsLicense` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyTvshowsLicenseFilter = {
+  /** Every related `TvshowsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsLicenseFilter>;
+  /** No related `TvshowsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsLicenseFilter>;
+  /** Some related `TvshowsLicense` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsLicenseFilter>;
+};
+
+/** A filter to be used against many `TvshowsProductionCountry` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyTvshowsProductionCountryFilter = {
+  /** Every related `TvshowsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsProductionCountryFilter>;
+  /** No related `TvshowsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsProductionCountryFilter>;
+  /** Some related `TvshowsProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsProductionCountryFilter>;
+};
+
+/** A filter to be used against many `TvshowsSnapshot` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyTvshowsSnapshotFilter = {
+  /** Every related `TvshowsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsSnapshotFilter>;
+  /** No related `TvshowsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsSnapshotFilter>;
+  /** Some related `TvshowsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsSnapshotFilter>;
+};
+
+/** A filter to be used against many `TvshowsTag` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyTvshowsTagFilter = {
+  /** Every related `TvshowsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsTagFilter>;
+  /** No related `TvshowsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsTagFilter>;
+  /** Some related `TvshowsTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsTagFilter>;
+};
+
+/** A filter to be used against many `TvshowsTrailer` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyTvshowsTrailerFilter = {
+  /** Every related `TvshowsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsTrailerFilter>;
+  /** No related `TvshowsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsTrailerFilter>;
+  /** Some related `TvshowsTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsTrailerFilter>;
+};
+
+/** A filter to be used against many `TvshowsTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyTvshowsTvshowGenreFilter = {
+  /** Every related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsTvshowGenreFilter>;
+  /** No related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsTvshowGenreFilter>;
+  /** Some related `TvshowsTvshowGenre` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsTvshowGenreFilter>;
 };
 
 /**
@@ -16460,6 +16402,72 @@ export type UpdateTvshowsTagPayloadTvshowsTagEdgeArgs = {
   orderBy?: InputMaybe<Array<TvshowsTagsOrderBy>>;
 };
 
+/** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
+export type UuidFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Scalars['UUID']>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Scalars['UUID']>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Scalars['UUID']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<Scalars['UUID']>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Scalars['UUID']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Scalars['UUID']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<Scalars['UUID']>>;
+};
+
+/** A filter to be used against UUID List fields. All fields are combined with a logical ‘and.’ */
+export type UuidListFilter = {
+  /** Any array item is equal to the specified value. */
+  anyEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Any array item is greater than the specified value. */
+  anyGreaterThan?: InputMaybe<Scalars['UUID']>;
+  /** Any array item is greater than or equal to the specified value. */
+  anyGreaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Any array item is less than the specified value. */
+  anyLessThan?: InputMaybe<Scalars['UUID']>;
+  /** Any array item is less than or equal to the specified value. */
+  anyLessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Any array item is not equal to the specified value. */
+  anyNotEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Contained by the specified list of values. */
+  containedBy?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  /** Contains the specified list of values. */
+  contains?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  /** Overlaps the specified list of values. */
+  overlaps?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+};
+
 export type CreateCollectionMutationVariables = Exact<{
   input: CreateCollectionInput;
 }>;
@@ -16587,7 +16595,7 @@ export type EpisodeQueryVariables = Exact<{
 }>;
 
 
-export type EpisodeQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', title: string, originalTitle?: string | null, index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, mainVideoId?: any | null, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesTrailers: { __typename?: 'EpisodesTrailersConnection', totalCount: number }, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageType: EpisodeImageType, imageId: any }> } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null };
+export type EpisodeQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', title: string, originalTitle?: string | null, index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, mainVideoId?: any | null, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesTrailers: { __typename?: 'EpisodesTrailersConnection', totalCount: number }, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageType: EpisodeImageType, imageId: any }> }, season?: { __typename?: 'Season', id: number, index: number, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> } } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null };
 
 export type UpdateEpisodeMutationVariables = Exact<{
   input: UpdateEpisodeInput;
@@ -17090,7 +17098,7 @@ export type SeasonQueryVariables = Exact<{
 }>;
 
 
-export type SeasonQuery = { __typename?: 'Query', season?: { __typename?: 'Season', index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, episodes: { __typename?: 'EpisodesConnection', totalCount: number }, seasonsTrailers: { __typename?: 'SeasonsTrailersConnection', totalCount: number }, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageType: SeasonImageType, imageId: any }> } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null };
+export type SeasonQuery = { __typename?: 'Query', season?: { __typename?: 'Season', index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, episodes: { __typename?: 'EpisodesConnection', totalCount: number }, seasonsTrailers: { __typename?: 'SeasonsTrailersConnection', totalCount: number }, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageType: SeasonImageType, imageId: any }> }, tvshow?: { __typename?: 'Tvshow', id: number, title: string, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null };
 
 export type DeleteSeasonMutationVariables = Exact<{
   input: DeleteSeasonInput;
@@ -18426,6 +18434,15 @@ export const EpisodeDocument = gql`
     publishStatus
     publishedDate
     publishedUser
+    season {
+      id
+      index
+      seasonsImages(condition: {imageType: COVER}, first: 1) {
+        nodes {
+          imageId
+        }
+      }
+    }
   }
   tvshowGenres {
     nodes {
@@ -21132,6 +21149,15 @@ export const SeasonDocument = gql`
     publishStatus
     publishedDate
     publishedUser
+    tvshow {
+      id
+      title
+      tvshowsImages(condition: {imageType: COVER}, first: 1) {
+        nodes {
+          imageId
+        }
+      }
+    }
   }
   tvshowGenres {
     nodes {
