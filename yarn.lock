@@ -282,6 +282,11 @@
   dependencies:
     "@axinom/mosaic-core" "^0.4.6"
 
+"@axinom/mosaic-managed-workflow-integration@^0.1.0-rc.0":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.1.3.tgz#cee60791d6e620e61b3a30ff7fab28f9f3b09064"
+  integrity sha512-ttbxaoggzALkiQT/utjheBfXiEL1dvVZCDQlYQjBt6UW/+KvKo86LtUmOqhX3HSmZf7FS7rS8C2PF2olLBLKHg==
+
 "@axinom/mosaic-message-bus-abstractions@0.5.6", "@axinom/mosaic-message-bus-abstractions@^0.5.6":
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus-abstractions/-/mosaic-message-bus-abstractions-0.5.6.tgz#a1cbe055b0a2509259960ee384dd5f29c438cf82"
@@ -4696,6 +4701,11 @@ cliui@^8.0.1:
     strip-ansi "^6.0.1"
     wrap-ansi "^7.0.0"
 
+clone@2.x:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
+  integrity sha512-3Pe/CF1Nn94hyhIYpjtiLhdCoEoz0DqQ+988E9gmeEdQZlojxnOb74wctFyuwWQHzqyf9X7C7MG8juUpqBJT8w==
+
 clone@^1.0.2:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
@@ -9067,6 +9077,13 @@ node-addon-api@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-5.0.0.tgz#7d7e6f9ef89043befdb20c1989c905ebde18c501"
   integrity sha512-CvkDw2OEnme7ybCykJpVcKH+uAOLV2qLqiyla128dN9TkEWfrYmxG6C2boDe5KcNQqZF3orkqzGgOMvZ/JNekA==
+
+node-cache@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/node-cache/-/node-cache-5.1.2.tgz#f264dc2ccad0a780e76253a694e9fd0ed19c398d"
+  integrity sha512-t1QzWwnk4sjLWaQAS8CHgOJ+RAfmHpxFWmc36IWTiWHQfs0w5JDMBS1b1ZxQteo0vVVuWJvIUKHDkkeK7vIGCg==
+  dependencies:
+    clone "2.x"
 
 node-cleanup@^2.1.2:
   version "2.1.2"

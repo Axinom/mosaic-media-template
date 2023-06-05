@@ -5,6 +5,10 @@ import {
 } from '@axinom/mosaic-db-common';
 import { Logger as MigrateLogger, Settings } from 'graphile-migrate';
 import { DbConfig } from '../config';
+import {
+  PG_LOCALIZATION_PUBLICATION,
+  PG_LOCALIZATION_SLOT,
+} from '../constants';
 
 export const getMigrationSettings = async (
   config: DbConfig,
@@ -26,6 +30,9 @@ export const getMigrationSettings = async (
       ':DATABASE_LOGIN': config.dbLogin,
       ':DATABASE_GQL_ROLE': config.dbGqlRole,
       ':DEFAULT_USERNAME': DEFAULT_DB_USERNAME,
+
+      ':PG_LOCALIZATION_PUBLICATION': PG_LOCALIZATION_PUBLICATION,
+      ':PG_LOCALIZATION_SLOT': PG_LOCALIZATION_SLOT,
     },
     afterReset: [
       {

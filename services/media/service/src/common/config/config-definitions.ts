@@ -35,6 +35,9 @@ export const getConfigDefinitions = (
     imageServiceBaseUrl: () =>
       env.get('IMAGE_SERVICE_BASE_URL').required().asUrlString(),
 
+    isLocalizationEnabled: () =>
+      env.get('IS_LOCALIZATION_ENABLED').default('FALSE').asBoolStrict(),
+
     /**
      * Optional Service Account Client ID, used to get ID service token during development
      */
