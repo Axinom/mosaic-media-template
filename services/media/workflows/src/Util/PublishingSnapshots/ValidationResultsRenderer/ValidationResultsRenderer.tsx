@@ -58,7 +58,7 @@ export const ValidationResultsRenderer: ColumnRenderer<ValidationData> = (
 
     return (
       <div className={classes.container}>
-        {image}
+        <div>{image}</div>
         <p title={message}>{message}</p>
       </div>
     );

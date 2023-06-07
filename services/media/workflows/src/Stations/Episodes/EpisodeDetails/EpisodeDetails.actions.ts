@@ -1,4 +1,4 @@
-import { ActionType, FormActionData, IconName } from '@axinom/mosaic-ui';
+import { FormActionData, IconName } from '@axinom/mosaic-ui';
 import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
 import {
@@ -8,9 +8,7 @@ import {
 } from '../../../generated/graphql';
 import { EpisodeDetailsFormData } from './EpisodeDetails.types';
 
-export function useEpisodeDetailsActions(
-  id: number,
-): {
+export function useEpisodeDetailsActions(id: number): {
   readonly actions: FormActionData<EpisodeDetailsFormData>[];
 } {
   const history = useHistory();
@@ -38,32 +36,30 @@ export function useEpisodeDetailsActions(
   const actions: FormActionData<EpisodeDetailsFormData>[] = [
     {
       label: 'Manage Videos',
-      onActionSelected: () => history.push(`/episodes/${id}/videos`),
+      path: `/episodes/${id}/videos`,
     },
     {
       label: 'Manage Images',
-      onActionSelected: () => history.push(`/episodes/${id}/images`),
+      path: `/episodes/${id}/images`,
     },
     {
       label: 'Licensing',
-      onActionSelected: () => history.push(`/episodes/${id}/licenses`),
+      path: `/episodes/${id}/licenses`,
     },
     {
       label: 'Publish Now',
       confirmationMode: 'Simple',
-      actionType: ActionType.Context,
       onActionSelected: async () => {
         await publishEpisodeMutation({ variables: { id } });
       },
     },
     {
       label: 'Publishing Snapshots',
-      onActionSelected: () => history.push(`/episodes/${id}/snapshots`),
+      path: `/episodes/${id}/snapshots`,
     },
     {
       label: 'Unpublish',
       confirmationMode: 'Simple',
-      actionType: ActionType.Context,
       onActionSelected: async () => {
         await unpublishEpisodeMutation({ variables: { id } });
       },
