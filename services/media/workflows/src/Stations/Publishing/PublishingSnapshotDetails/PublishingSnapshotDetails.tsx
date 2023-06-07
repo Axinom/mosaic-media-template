@@ -1,6 +1,5 @@
 import { Breadcrumb } from '@axinom/mosaic-portal';
 import {
-  ActionType,
   FormActionData,
   formatDateTime,
   formatTitleCase,
@@ -228,13 +227,11 @@ function useActions(snapshotId: number): {
     {
       label: 'Publish',
       confirmationMode: 'Simple',
-      actionType: ActionType.Context,
       onActionSelected: publishSnapshot,
     },
     {
       label: 'Unpublish',
       confirmationMode: 'Simple',
-      actionType: ActionType.Context,
       onActionSelected: unpublishSnapshot,
     },
     {

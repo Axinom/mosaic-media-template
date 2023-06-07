@@ -173,6 +173,11 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.4.tgz#34e30538f350c26d43d769e0b50e5257b3a42950"
   integrity sha512-fGf6YvofQ5jXFPBHzA5jUE1gw98ZER4nQHQTUrqEQnyG+H8BIncdJ2H9gtXyADQZhkxg4nia83SIGKPRjOHorA==
 
+"@axinom/mosaic-core@^0.4.5-rc.6":
+  version "0.4.5-rc.6"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.5-rc.6.tgz#ae3ec9bb8918495f372cc4981a8defe7e7146b64"
+  integrity sha512-V4AtTzkGvKtf0dTQ/TNthpccgasCBipLm2My23sR+a5uMimIZQSJDVbsJi1JFXthzYTIrUXCsHPR2tRLhStOZQ==
+
 "@axinom/mosaic-db-common@0.24.3":
   version "0.24.3"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-db-common/-/mosaic-db-common-0.24.3.tgz#a9d7fa98169e85e4ba64bbf76248ab94ca4445fd"
@@ -289,12 +294,12 @@
     uuid-encoder "^1.2.0"
     verror "^1.10.1"
 
-"@axinom/mosaic-ui@0.31.0":
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.31.0.tgz#955c4c198a0a0c754202f261d764e657cade3dbe"
-  integrity sha512-odOGEAd86mPJz88STCeg3+DU2FgZpGTeBcXxGYbrjK2vegcKRZWQmvT/6Lh3ejfX7fkTG/GtNHK4FJjQNnLoWA==
+"@axinom/mosaic-ui@0.32.0-rc.6":
+  version "0.32.0-rc.6"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.32.0-rc.6.tgz#c0ae5b074e788d11cf157f7106144f713dc05079"
+  integrity sha512-/rIPGDkl0pxT2Tni8cheMuk111jAgMMrmUVDrJw3PJ9nSit5ktCmekztO848x4/8lr9fKUf7wtC5B8SAp3ynOw==
   dependencies:
-    "@axinom/mosaic-core" "^0.4.4"
+    "@axinom/mosaic-core" "^0.4.5-rc.6"
     "@faker-js/faker" "^7.4.0"
     "@popperjs/core" "^2.9.2"
     clsx "^1.1.0"

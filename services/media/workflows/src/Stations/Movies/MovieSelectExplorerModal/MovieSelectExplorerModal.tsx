@@ -21,10 +21,8 @@ export const useMovieSelectExplorerModal = ({
       actions={[
         {
           label: 'New',
-          icon: IconName.External,
-          onClick: () => {
-            window.open('/movies/create', '_blank');
-          },
+          openInNewTab: true,
+          path: '/movies/create',
         },
         {
           label: 'Cancel',
