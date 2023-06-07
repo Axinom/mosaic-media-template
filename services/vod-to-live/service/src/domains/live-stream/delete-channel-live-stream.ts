@@ -1,8 +1,8 @@
 import { getMappedError, Logger } from '@axinom/mosaic-service-common';
-import { Config } from 'src/common';
+import { Config } from '../../common';
 import { AzureStorage } from '../azure';
+import { ChannelMetadataModel } from '../common';
 import { KeyServiceApi } from '../key-service';
-import { ChannelMetadataModel } from '../models';
 import { VirtualChannelApi } from '../virtual-channel';
 import { generateChannelFilePath, metadataFileName } from './utils';
 

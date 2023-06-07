@@ -35,10 +35,10 @@ const getKeyServiceApiMappedError = mosaicErrorMappingFactory(
 );
 
 export class KeyServiceApi {
-  private keyServiceApiUrl: string | undefined;
-  private keyServiceTenantId: string | undefined;
-  private keyServiceManagementKey: string | undefined;
-  private drmKeySeedId: string | undefined;
+  private keyServiceApiUrl?: string;
+  private keyServiceTenantId?: string;
+  private keyServiceManagementKey?: string;
+  private drmKeySeedId?: string;
   constructor(config: Config) {
     if (config.isDrmEnabled) {
       this.keyServiceApiUrl = config.keyServiceApiBaseUrl;

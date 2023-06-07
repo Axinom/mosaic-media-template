@@ -70,8 +70,8 @@ export interface ContentKeyUsageRuleList {
 }
 
 export interface ContentKeyUsageRule {
-  'cpix:VideoFilter': any;
-  'cpix:AudioFilter': any;
+  'cpix:VideoFilter': unknown;
+  'cpix:AudioFilter': unknown;
   '@kid': string;
   '@intendedTrackType': IntendedTrackType | undefined;
 }
@@ -81,10 +81,10 @@ export interface DRMSystemList {
 }
 
 export interface DRMSystem {
-  'cpix:PSSH': any;
-  'cpix:ContentProtectionData': any;
+  'cpix:PSSH': unknown;
+  'cpix:ContentProtectionData': unknown;
   'cpix:HLSSignalingData': HLSSignalingDatum[] | undefined;
-  'cpix:SmoothStreamingProtectionHeaderData': any;
+  'cpix:SmoothStreamingProtectionHeaderData': unknown;
   '@kid': string;
   '@systemId': DRMSystemIds;
 }

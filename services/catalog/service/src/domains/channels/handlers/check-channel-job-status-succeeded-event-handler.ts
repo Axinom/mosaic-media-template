@@ -14,7 +14,8 @@ export class CheckChannelJobStatusSucceededEventHandler extends AuthenticatedMes
     protected readonly config: Config,
   ) {
     super(
-      VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded.messageType,
+      VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded
+        .messageType,
       config,
     );
   }

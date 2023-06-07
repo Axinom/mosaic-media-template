@@ -9,7 +9,6 @@ import {
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
-import { ChannelMetadataModel } from 'src/domains/models';
 import { Config, DAY_IN_SECONDS } from '../../common';
 import {
   AzureStorage,
@@ -20,14 +19,15 @@ import {
   PlaylistSmilGenerator,
 } from '../../domains';
 import {
+  ChannelMetadataModel,
+  convertObjectToXml,
+  getPlaylistDurationInSeconds,
+} from '../../domains/common';
+import {
   generateChannelFilePath,
   getTransitionDateTime,
   metadataFileName,
 } from '../../domains/live-stream/utils';
-import {
-  convertObjectToXml,
-  getPlaylistDurationInSeconds,
-} from '../../domains/utils';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
 export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<PlaylistPublishedEvent> {

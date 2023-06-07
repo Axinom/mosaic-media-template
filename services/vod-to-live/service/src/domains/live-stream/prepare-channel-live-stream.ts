@@ -8,13 +8,13 @@ import {
 } from 'media-messages';
 import { Config } from '../../common';
 import { AzureStorage } from '../azure';
+import { ChannelMetadataModel } from '../common';
 import {
   createDashCpixRequest,
   createHlsCpixRequest,
   storeSpekeResponse,
 } from '../cpix';
 import { KeyServiceApi } from '../key-service';
-import { ChannelMetadataModel } from '../models';
 import { VirtualChannelApi } from '../virtual-channel';
 import {
   generateChannelFilePath,

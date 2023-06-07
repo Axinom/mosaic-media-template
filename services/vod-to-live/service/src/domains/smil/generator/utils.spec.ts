@@ -192,17 +192,15 @@ describe('smil-utils', () => {
         );
         // Assert
         expect(result).not.toBeNull();
-        expect(result.audio).toHaveLength(
-          testVideo.video_encoding.video_streams.filter(
-            (s) => s.type === 'AUDIO',
-          ).length,
+        const testAudios = testVideo.video_encoding.video_streams.filter(
+          (s) => s.type === 'AUDIO',
         );
-        expect(result.video).toHaveLength(
-          testVideo.video_encoding.video_streams.filter(
-            (s) => s.type === 'VIDEO',
-          ).length,
+        expect(result.audio).toHaveLength(testAudios.length);
+        const testVideos = testVideo.video_encoding.video_streams.filter(
+          (s) => s.type === 'VIDEO',
         );
-        const expectedReferences = testVideo.video_encoding.video_streams
+        expect(result.video).toHaveLength(testVideos.length);
+        const expectedReferences = [...testAudios, ...testVideos]
           .map((s) =>
             new URL(
               s.file!,

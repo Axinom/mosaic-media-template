@@ -76,18 +76,15 @@ async function main(): Promise<void> {
       config.idServiceAuthBaseUrl,
     );
     const endpointUrl = urljoin(config.devChannelServiceBaseUrl, 'graphql');
-    const result = await axios.post(
+    await axios.post(
       endpointUrl,
       {
         query: print(gql`
-          mutation SetupWebhook($input: SetGeneralSettingsInput!) {
+          mutation SetWebhookUrl($input: SetGeneralSettingsInput!) {
             setGeneralSettings(input: $input) {
               generalSetting {
                 prePublishingWebhookUrl
               }
-            }
-            generatePrePublishingWebhookSecret {
-              secret
             }
           }
         `),
@@ -96,6 +93,19 @@ async function main(): Promise<void> {
             prePublishingWebhookUrlVal: `http://localhost:${config.port}/pre-publishing`,
           },
         },
+      },
+      { headers: { Authorization: `Bearer ${idJwt}` } },
+    );
+    const result = await axios.post(
+      endpointUrl,
+      {
+        query: print(gql`
+          mutation SetupWebhookSecret {
+            generatePrePublishingWebhookSecret {
+              secret
+            }
+          }
+        `),
       },
       { headers: { Authorization: `Bearer ${idJwt}` } },
     );

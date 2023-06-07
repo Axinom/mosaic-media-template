@@ -1,13 +1,13 @@
 import { Broker } from '@axinom/mosaic-message-bus';
 import { stub } from 'jest-auto-stub';
 import { VodToLiveServiceMessagingSettings } from 'media-messages';
-import { Config } from 'src/common';
 import { v4 as uuid } from 'uuid';
+import { Config } from '../../common';
 import { createTestVideo } from '../../tests';
 import { AzureStorage } from '../azure';
+import { convertObjectToXml } from '../common';
 import { ContentKeyResponse, KeyServiceApi } from '../key-service';
 import { ChannelSmilGenerator } from '../smil';
-import { convertObjectToXml } from '../utils';
 import { VirtualChannelApi } from '../virtual-channel';
 import { prepareChannelLiveStream } from './prepare-channel-live-stream';
 import {
@@ -192,7 +192,8 @@ describe('prepareChannelLiveStream', () => {
               seconds_elapsed_while_waiting: 0,
             },
             messageType:
-              VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
+              VodToLiveServiceMessagingSettings.CheckChannelJobStatus
+                .messageType,
           },
         ]);
 
@@ -381,7 +382,8 @@ describe('prepareChannelLiveStream', () => {
               seconds_elapsed_while_waiting: 0,
             },
             messageType:
-              VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
+              VodToLiveServiceMessagingSettings.CheckChannelJobStatus
+                .messageType,
           },
         ]);
         expect(createdContentKeys).toHaveLength(0);

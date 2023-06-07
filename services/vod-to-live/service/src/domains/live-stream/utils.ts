@@ -34,7 +34,7 @@ export const generatePlaylistFilePath = (
 };
 
 /**
- * Checks whether the provided date-time string is in the future.e.
+ * Checks whether the provided date-time string is in the future.
  * @param date - a string containing the date-time to be checked.
  * @returns - true if the provided date-time is in the future.
  */

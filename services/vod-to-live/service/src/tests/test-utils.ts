@@ -1,6 +1,6 @@
 import { DetailedVideo } from '@axinom/mosaic-messages';
-import { StreamParams } from 'src/domains';
 import { v4 as uuid } from 'uuid';
+import { StreamParams } from '../domains';
 
 export const getTestMutualStreamParams = (): StreamParams[] => {
   return [
@@ -91,6 +91,44 @@ export const createTestVideo = (
           pixel_aspect_ratio: null,
           sampling_rate: 48000,
           type: 'AUDIO',
+          width: null,
+        },
+        {
+          bitrate_in_kbps: 0,
+          codecs: null,
+          display_aspect_ratio: null,
+          file: 'cmaf/caption-en.vtt',
+          file_template: null,
+          format: 'CMAF',
+          frame_rate: null,
+          height: null,
+          iv: null,
+          key_id: null,
+          label: 'closed-caption',
+          language_code: 'en',
+          language_name: 'English',
+          pixel_aspect_ratio: null,
+          sampling_rate: null,
+          type: 'CLOSED_CAPTION',
+          width: null,
+        },
+        {
+          bitrate_in_kbps: 0,
+          codecs: null,
+          display_aspect_ratio: null,
+          file: 'cmaf/subtitle-de.vtt',
+          file_template: null,
+          format: 'CMAF',
+          frame_rate: null,
+          height: null,
+          iv: null,
+          key_id: null,
+          label: 'subtitle',
+          language_code: 'de',
+          language_name: 'German',
+          pixel_aspect_ratio: null,
+          sampling_rate: null,
+          type: 'SUBTITLE',
           width: null,
         },
       ],

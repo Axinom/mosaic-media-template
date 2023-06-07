@@ -6,9 +6,9 @@ import {
   CheckChannelJobStatusSucceededEvent,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
-import { VirtualChannelApi } from 'src/domains';
 import urljoin from 'url-join';
 import { Config } from '../../common';
+import { VirtualChannelApi } from '../../domains';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
 export class CheckChannelJobStatusHandler extends AuthenticatedMessageHandler<CheckChannelJobStatusCommand> {

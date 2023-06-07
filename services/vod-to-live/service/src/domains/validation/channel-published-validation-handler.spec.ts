@@ -323,7 +323,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
         {
           message: `Video ${
             message.payload.placeholder_video!.id
-          } is missing AUDIO stream.`,
+          } is missing AUDIO stream(s).`,
           code: 'MISSING_AUDIO_STREAM',
         },
       ]);

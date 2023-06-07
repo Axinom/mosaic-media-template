@@ -47,8 +47,8 @@ const getAzureStorageMappedError = mosaicErrorMappingFactory(
 );
 
 export class AzureStorage {
-  protected blobServiceClient!: BlobServiceClient;
-  protected logger!: Logger;
+  protected blobServiceClient: BlobServiceClient;
+  protected logger: Logger;
 
   constructor(connection: string, private containerName: string) {
     try {

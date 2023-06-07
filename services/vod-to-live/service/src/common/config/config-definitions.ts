@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
+  asOptionalUrlString,
   getBasicConfigDefinitions,
   getBasicCustomizableConfigDefinitions,
   getBasicGraphQlConfigDefinitions,
@@ -21,7 +22,7 @@ import { from } from 'env-var';
 export const getConfigDefinitions = (
   variables: NodeJS.ProcessEnv = process.env,
 ) => {
-  const env = from(variables);
+  const env = from(variables, { asOptionalUrlString });
   const basicCustomizableConfigs = pick(
     getBasicCustomizableConfigDefinitions(variables),
     'tenantId',
@@ -55,7 +56,7 @@ export const getConfigDefinitions = (
 
     //Key Service Management API
     keyServiceApiBaseUrl: () =>
-      env.get('KEY_SERVICE_API_BASE_URL').asUrlString(),
+      env.get('KEY_SERVICE_API_BASE_URL').asOptionalUrlString(),
     keyServiceTenantId: () => env.get('KEY_SERVICE_TENANT_ID').asString(),
     keyServiceManagementKey: () =>
       env.get('KEY_SERVICE_MANAGEMENT_KEY').asString(),
@@ -106,7 +107,7 @@ export const getConfigDefinitions = (
      * Defaults to TRUE
      */
     prolongPlaylistTo24Hours: () =>
-      env.get('PROLONG_PLAYLIST_TO_24_HOURS').default('true').asBoolStrict(),
+      env.get('PROLONG_PLAYLIST_TO_24_HOURS').default('FALSE').asBoolStrict(),
 
     /**
      * Defines the amount of time service will wait for Virtual Channel to finish processing the channel SMIL.
@@ -117,6 +118,13 @@ export const getConfigDefinitions = (
         .get('CHANNEL_PROCESSING_WAIT_TIME_IN_SECONDS')
         .default('600')
         .asIntPositive(),
+
+    /**
+     * Sets the body size limit for the webhook requests, since playlists can be
+     * quite large. Default is 50mb. Examples: https://github.com/visionmedia/bytes.js#bytesparsestringnumber-value-numbernull
+     */
+    webhookBodySizeLimit: () =>
+      env.get('WEBHOOK_BODY_SIZE_LIMIT').default('50mb').asString(),
   };
 };
 

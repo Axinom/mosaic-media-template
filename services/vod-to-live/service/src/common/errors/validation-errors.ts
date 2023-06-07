@@ -47,4 +47,4 @@ export const ValidationErrors = {
     message: `The message received cannot be validated.`,
     code: `VALIDATION_NOT_POSSIBLE`,
   },
-};
+} as const;

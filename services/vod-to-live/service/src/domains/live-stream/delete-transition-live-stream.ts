@@ -7,10 +7,10 @@ import {
 } from 'media-messages';
 import { DAY_IN_SECONDS } from '../../common';
 import { AzureStorage } from '../azure';
+import { convertObjectToXml } from '../common';
 import { CpixSettings, createDecryptionCpix } from '../cpix';
 import { KeyServiceApi } from '../key-service';
 import { ChannelSmilGenerator } from '../smil';
-import { convertObjectToXml } from '../utils';
 import { VirtualChannelApi } from '../virtual-channel';
 import { generateChannelFilePath, metadataFileName } from './utils';
 

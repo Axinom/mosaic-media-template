@@ -8,8 +8,8 @@ import {
   protectionHlsCpixFileName,
 } from '../../../domains/live-stream';
 import { AzureStorage } from '../../azure';
+import { convertObjectToXml } from '../../common';
 import { KeyServiceApi } from '../../key-service';
-import { convertObjectToXml } from '../../utils';
 import { CpixRequest, createDecryptionCpixRequest, DRMKey } from '../models';
 import { getDrmKeys } from './utils';
 

@@ -867,11 +867,11 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       expect(validationResult.errors).toHaveLength(2);
       expect(validationResult.errors).toMatchObject([
         {
-          message: `Video ${programVideoId} is missing AUDIO stream.`,
+          message: `Video ${programVideoId} is missing AUDIO stream(s).`,
           code: 'MISSING_AUDIO_STREAM',
         },
         {
-          message: `Video ${scheduleVideoId} is missing AUDIO stream.`,
+          message: `Video ${scheduleVideoId} is missing AUDIO stream(s).`,
           code: 'MISSING_AUDIO_STREAM',
         },
       ]);

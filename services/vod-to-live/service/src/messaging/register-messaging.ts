@@ -1,6 +1,5 @@
 import { Broker, RascalConfigBuilder } from '@axinom/mosaic-message-bus';
 import { ChannelServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
-import { Express } from 'express';
 import {
   CheckChannelJobStatusCommand,
   PrepareChannelLiveStreamCommand,
@@ -20,7 +19,6 @@ import {
 } from './handlers';
 
 export const registerMessaging = (
-  app: Express,
   config: Config,
   storage: AzureStorage,
   virtualChannelApi: VirtualChannelApi,

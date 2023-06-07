@@ -7,6 +7,7 @@ import { ContentTypeRegistrant } from '../../messaging';
 import {
   ChannelPublishedEventHandler,
   ChannelUnpublishedEventHandler,
+  CheckChannelJobStatusFailedEventHandler,
   CheckChannelJobStatusSucceededEventHandler,
   LiveStreamProtectionKeyCreatedEventHandler,
 } from './handlers';
@@ -35,6 +36,13 @@ export const registerChannelsMessaging: ContentTypeRegistrant = function (
     ).subscribeForEvent(
       () => new CheckChannelJobStatusSucceededEventHandler(loginPool, config),
     ),
+    new RascalConfigBuilder(
+      VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed,
+      config,
+    ).subscribeForEvent(
+      () => new CheckChannelJobStatusFailedEventHandler(config),
+    ),
+
     new RascalConfigBuilder(
       VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated,
       config,

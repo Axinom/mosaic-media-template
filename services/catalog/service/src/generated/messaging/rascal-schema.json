@@ -196,6 +196,15 @@
             }
           }
         },
+        "catalog-service:channel:check_job_status_failed": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
         "catalog-service:channel:protection_key_created": {
           "options": {
             "arguments": {
@@ -392,6 +401,16 @@
           "bindingKey": "vod-to-live-service.channel.check_job_status_succeeded",
           "destination": "catalog-service:channel:check_job_status_succeeded"
         },
+        "retry:catalog-service:channel:check_job_status_failed": {
+          "source": "retry",
+          "bindingKey": "catalog-service:channel:check_job_status_failed.#",
+          "destination": "catalog-service:channel:check_job_status_failed"
+        },
+        "catalog-service:channel:check_job_status_failed": {
+          "source": "event",
+          "bindingKey": "vod-to-live-service.channel.check_job_status_failed",
+          "destination": "catalog-service:channel:check_job_status_failed"
+        },
         "retry:catalog-service:channel:protection_key_created": {
           "source": "retry",
           "bindingKey": "catalog-service:channel:protection_key_created.#",
@@ -568,6 +587,15 @@
         },
         "CheckChannelJobStatusSucceeded": {
           "queue": "catalog-service:channel:check_job_status_succeeded",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "CheckChannelJobStatusFailed": {
+          "queue": "catalog-service:channel:check_job_status_failed",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {

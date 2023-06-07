@@ -17,8 +17,7 @@ import {
   tenantEnvironmentIdsLogMiddleware,
   trimErrorsSkipMaskMiddleware,
 } from '@axinom/mosaic-service-common';
-import bodyParser from 'body-parser';
-import express from 'express';
+import express, { json } from 'express';
 import { getFullConfig } from './common';
 import {
   AzureStorage,
@@ -35,13 +34,9 @@ async function bootstrap(): Promise<void> {
   handleGlobalErrors(logger);
   setupGlobalSkipMaskMiddleware(trimErrorsSkipMaskMiddleware);
   setupGlobalConsoleOverride(logger);
-  const app = express();
-  app.use(
-    bodyParser.json({
-      limit: '50mb',
-    }),
-  );
   const config = getFullConfig();
+  const app = express();
+  app.use(json({ limit: config.webhookBodySizeLimit }));
   setupGlobalLogMiddleware([tenantEnvironmentIdsLogMiddleware(config)]);
 
   const { readiness } = setupLivenessAndReadiness(config);
@@ -63,7 +58,6 @@ async function bootstrap(): Promise<void> {
     app,
     config,
     builders: registerMessaging(
-      app,
       config,
       storage,
       virtualChannelApi,

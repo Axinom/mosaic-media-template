@@ -15,7 +15,7 @@ import {
   createDecryptionCpix,
   KeyServiceApi,
 } from '../../domains';
-import { convertObjectToXml } from '../../domains/utils';
+import { convertObjectToXml } from '../../domains/common';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
 export class ChannelPublishedHandler extends AuthenticatedMessageHandler<ChannelPublishedEvent> {

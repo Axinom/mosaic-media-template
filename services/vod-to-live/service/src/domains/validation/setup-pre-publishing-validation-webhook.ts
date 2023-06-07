@@ -45,8 +45,7 @@ export const setupPrePublishingValidationWebhook = (
       res: Response,
     ) => {
       const requestBody = req.body;
-      let validationResponse: WebhookResponse<PrePublishingPayload> | null =
-        null;
+      let validationResponse: WebhookResponse<PrePublishingPayload>;
       const handler = handlers.find((h) => h.canHandle(requestBody));
       if (handler) {
         try {

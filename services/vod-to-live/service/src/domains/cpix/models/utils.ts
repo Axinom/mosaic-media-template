@@ -217,9 +217,9 @@ const createDRMSystem = (
   drmKeyId: string,
   drmSystemId: DRMSystemIds,
   hlsSignalingData?: HLSSignalingDatum[],
-  pssh?: any,
-  contentProtectionData?: any,
-  smoothStreamingProtectionHeaderData?: any,
+  pssh?: unknown,
+  contentProtectionData?: unknown,
+  smoothStreamingProtectionHeaderData?: unknown,
 ): DRMSystem => {
   return {
     'cpix:PSSH': pssh ?? undefined,
@@ -235,8 +235,8 @@ const createDRMSystem = (
 const createContentKeyUsageRule = (
   keyId: string,
   keyType?: 'VIDEO' | 'AUDIO',
-  videoFilter?: any,
-  audioFilter?: any,
+  videoFilter?: unknown,
+  audioFilter?: unknown,
 ): ContentKeyUsageRule => {
   return {
     '@kid': keyId,

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { stub } from 'jest-auto-stub';
-import { Config } from 'src/common';
 import { v4 as uuid } from 'uuid';
+import { Config } from '../../common';
 import { createTestVideo } from '../../tests';
 import { AzureStorage } from '../azure';
 import { KeyServiceApi } from '../key-service';

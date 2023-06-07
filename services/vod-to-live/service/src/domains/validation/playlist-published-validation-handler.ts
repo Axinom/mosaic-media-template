@@ -9,8 +9,8 @@ import {
 } from '@axinom/mosaic-service-common';
 import { Config, ValidationErrors } from '../../common';
 import { AzureStorage } from '../azure';
+import { ChannelMetadataModel } from '../common';
 import { generateChannelFilePath, metadataFileName } from '../live-stream';
-import { ChannelMetadataModel } from '../models';
 import { extractSharedVideoStreamFormats } from '../smil';
 import { getHoursDifference, validateVideo, ValidationResult } from './utils';
 import { ValidationWebhookHandler } from './validation-webhook-model';

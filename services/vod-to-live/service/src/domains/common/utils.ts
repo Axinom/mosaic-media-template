@@ -1,5 +1,6 @@
 import { create } from 'xmlbuilder2';
-import { SECOND_IN_MILLISECONDS } from '../common';
+import { ExpandObject } from 'xmlbuilder2/lib/interfaces';
+import { SECOND_IN_MILLISECONDS } from '../../common';
 
 /**
  * Converts any object to string XML representation.
@@ -7,14 +8,7 @@ import { SECOND_IN_MILLISECONDS } from '../common';
  * @returns- string containing XML of the object.
  */
 export const convertObjectToXml = (
-  expandedObject:
-    | {
-        [key: string]: any;
-      }
-    | Map<string, any>
-    | any[]
-    | Set<any>
-    | ((...args: any) => any),
+  expandedObject: string | ExpandObject,
 ): string => {
   return create({ version: '1.0', encoding: 'UTF-8' }, expandedObject).end({
     prettyPrint: true,

@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { create } from 'xmlbuilder2';
-import { convertObjectToXml } from '../../utils';
+import { convertObjectToXml } from '../../common';
 import {
   createDashCpixRequest,
   createDecryptionCpixRequest,

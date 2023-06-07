@@ -6,8 +6,8 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import { Config, DAY_IN_SECONDS, ValidationErrors } from '../../../common';
+import { getPlaylistDurationInSeconds } from '../../common';
 import { CpixSettings } from '../../cpix';
-import { getPlaylistDurationInSeconds } from '../../utils';
 import {
   createHeaderMetadata,
   createParallel,
