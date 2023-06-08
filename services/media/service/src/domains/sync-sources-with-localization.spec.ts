@@ -59,7 +59,7 @@ describe('syncSourcesWithLocalization', () => {
 
   afterEach(async () => {
     messages = [];
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   // More detailed tests are written for specific handlers, these ones do not
