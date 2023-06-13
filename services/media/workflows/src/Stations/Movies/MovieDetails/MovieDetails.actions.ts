@@ -52,9 +52,7 @@ export function useMovieDetailsActions(id: number): {
       ? [
           {
             label: 'Localizations',
-            onActionSelected: async () => {
-              history.push(localizationPath.replace(':movieId', id.toString()));
-            },
+            path: localizationPath.replace(':movieId', id.toString()),
           },
         ]
       : []),

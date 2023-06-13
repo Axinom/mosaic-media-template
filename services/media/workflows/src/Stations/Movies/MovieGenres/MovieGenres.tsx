@@ -1,7 +1,6 @@
 import { getTranslationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
-  ActionType,
   createInputRenderer,
   createUpdateGQLFragmentGenerator,
   Details,
@@ -16,7 +15,6 @@ import {
 import { useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import React, { useCallback, useMemo } from 'react';
-import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
 import { Constants } from '../../../constants';
 import {
@@ -108,7 +106,6 @@ export const MovieGenres: React.FC = () => {
 const Form: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<MovieGenresFormData>();
   const localizationPath = getTranslationEntryPoint('movie_genre');
-  const history = useHistory();
 
   const generateInlineMenuActions: ((data) => ActionData[]) | undefined =
     localizationPath
@@ -116,12 +113,10 @@ const Form: React.FC = () => {
           return [
             {
               label: 'Localizations',
-              onActionSelected: () =>
-                history.push(localizationPath.replace(':genreId', genreId)),
+              path: localizationPath.replace(':genreId', genreId),
             },
             {
               label: 'Delete',
-              actionType: ActionType.Context,
               onActionSelected: () => {
                 const removeIndex: number = (values.genres || []).findIndex(
                   (item) => item.id === genreId,
