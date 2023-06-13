@@ -32,7 +32,6 @@ import {
   applyMigrations,
   getFullConfig,
   PG_LOCALIZATION_PUBLICATION,
-  PG_LOCALIZATION_SLOT,
 } from './common';
 import { syncPermissions } from './domains/permission-definition';
 import { populateSeedData } from './domains/populate-seed-data';
@@ -130,7 +129,7 @@ async function bootstrap(): Promise<void> {
     const shutdown = await createLogicalReplicationService({
       connectionString: config.dbOwnerConnectionString,
       publicationNames: [PG_LOCALIZATION_PUBLICATION],
-      replicationSlotName: PG_LOCALIZATION_SLOT,
+      replicationSlotName: config.dbLocalizationReplicationSlot,
       messageHandler: syncSourcesWithLocalization(ownerPool, broker, config),
       logger: new Logger({ context: 'LocalizationLogicalReplication' }),
     });

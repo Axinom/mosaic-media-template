@@ -4,14 +4,11 @@ import {
   getGraphileBuildPgWatchFixturesPath,
 } from '@axinom/mosaic-db-common';
 import { Logger as MigrateLogger, Settings } from 'graphile-migrate';
-import { DbConfig } from '../config';
-import {
-  PG_LOCALIZATION_PUBLICATION,
-  PG_LOCALIZATION_SLOT,
-} from '../constants';
+import { Config } from '../config';
+import { PG_LOCALIZATION_PUBLICATION } from '../constants';
 
 export const getMigrationSettings = async (
-  config: DbConfig,
+  config: Config,
   logger?: MigrateLogger,
 ): Promise<Settings> => {
   const beforeAllMigrationsAndCurrent = await getBeforeMigrationScripts();
@@ -32,7 +29,7 @@ export const getMigrationSettings = async (
       ':DEFAULT_USERNAME': DEFAULT_DB_USERNAME,
 
       ':PG_LOCALIZATION_PUBLICATION': PG_LOCALIZATION_PUBLICATION,
-      ':PG_LOCALIZATION_SLOT': PG_LOCALIZATION_SLOT,
+      ':PG_LOCALIZATION_SLOT': config.dbLocalizationReplicationSlot,
     },
     afterReset: [
       {
