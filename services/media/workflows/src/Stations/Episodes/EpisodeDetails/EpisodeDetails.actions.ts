@@ -52,11 +52,7 @@ export function useEpisodeDetailsActions(id: number): {
       ? [
           {
             label: 'Localizations',
-            onActionSelected: async () => {
-              history.push(
-                localizationPath.replace(':episodeId', id.toString()),
-              );
-            },
+            path: localizationPath.replace(':episodeId', id.toString()),
           },
         ]
       : []),

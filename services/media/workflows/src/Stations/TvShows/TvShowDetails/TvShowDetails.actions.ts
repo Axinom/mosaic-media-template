@@ -56,11 +56,7 @@ export function useTvShowDetailsActions(id: number): {
       ? [
           {
             label: 'Localizations',
-            onActionSelected: async () => {
-              history.push(
-                localizationPath.replace(':tvshowId', id.toString()),
-              );
-            },
+            path: localizationPath.replace(':tvshowId', id.toString()),
           },
         ]
       : []),

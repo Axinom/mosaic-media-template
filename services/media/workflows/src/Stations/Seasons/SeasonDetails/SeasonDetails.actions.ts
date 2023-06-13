@@ -56,11 +56,7 @@ export function useSeasonDetailsActions(id: number): {
       ? [
           {
             label: 'Localizations',
-            onActionSelected: async () => {
-              history.push(
-                localizationPath.replace(':seasonId', id.toString()),
-              );
-            },
+            path: localizationPath.replace(':seasonId', id.toString()),
           },
         ]
       : []),
