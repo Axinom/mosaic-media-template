@@ -27,6 +27,8 @@ import {
   useUnpublishSeasonMutation,
 } from '../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
+import { SeasonIndexRenderer } from './renderers/SeasonIndexRenderer';
+import { SeasonParentRenderer } from './renderers/SeasonParentRenderer';
 import { useSeasonsFilters } from './SeasonExplorer.filters';
 import { SeasonData, SeasonExplorerProps } from './SeasonExplorer.types';
 
@@ -61,7 +63,13 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
       ),
       size: '80px',
     },
-    { label: 'Season Index', propertyName: 'index' },
+    { label: 'Index', propertyName: 'index', render: SeasonIndexRenderer },
+    {
+      label: 'Parent Entity',
+      propertyName: 'tvshow',
+      render: SeasonParentRenderer,
+      sortable: false,
+    },
     { label: 'External ID', propertyName: 'externalId' },
     {
       label: 'Genres',
@@ -139,6 +147,7 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
 
   const generateInlineMenuActions: (data: SeasonData) => ActionData[] = ({
     id,
+    tvshow,
   }) => {
     return [
       {
@@ -182,6 +191,15 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
         label: 'Open Details',
         path: `/seasons/${id}`,
       },
+      ...(tvshow
+        ? [
+            {
+              label: 'Open Parent Entity',
+              path: `/tvshows/${tvshow?.id}`,
+              openInNewTab: true,
+            },
+          ]
+        : []),
     ];
   };
 
