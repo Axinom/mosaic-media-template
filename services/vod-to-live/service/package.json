@@ -1,0 +1,59 @@
+{
+  "name": "vod-to-live-service",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "author": "Axinom",
+  "license": "MIT",
+  "keywords": [
+    "axinom",
+    "mosaic",
+    "axinom mosaic"
+  ],
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "yarn clean && tsc --project tsconfig.build.json",
+    "start": "yarn util:load-vars node dist/index",
+    "dev": "yarn util:load-vars tsc-watch --project tsconfig.build.json --onSuccess \"node dist/index.js\"",
+    "debug": "yarn util:load-vars tsc-watch --project tsconfig.build.json --onSuccess \"node --inspect dist/index.js\"",
+    "test": "yarn util:load-vars jest --silent",
+    "test:watch": "yarn test --watch",
+    "test:debug": "yarn util:load-vars node --inspect -r tsconfig-paths/register -r ts-node/register ../../../node_modules/jest/bin/jest --runInBand --silent",
+    "test:cov": "yarn util:load-vars jest --coverage --silent && ts-node ../../../scripts/open-test-coverage.ts -- services/vod-to-live/service",
+    "util:load-vars": "env-cmd -f .env env-cmd -f ../../../.env",
+    "setup:webhook": "yarn util:load-vars ts-node --files scripts/setup-webhook.ts"
+  },
+  "dependencies": {
+    "@axinom/mosaic-id-guard": "0.20.4-rc.9",
+    "@axinom/mosaic-message-bus": "0.14.5-rc.9",
+    "@axinom/mosaic-messages": "0.28.0-rc.9",
+    "@axinom/mosaic-service-common": "0.33.0-rc.9",
+    "@azure/storage-blob": "^12.12.0",
+    "amqplib": "^0.6.0",
+    "axios": "^0.24.0",
+    "env-cmd": "^10.1.0",
+    "env-var": "^6.3.0",
+    "express": "^4.18.1",
+    "media-messages": "^0.0.1",
+    "rascal": "^14.4.5",
+    "xmlbuilder2": "^3.0.2",
+    "url-join": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29",
+    "graphql": "^15.4.0",
+    "graphql-tag": "^2.12.6",
+    "jest": "^29",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^29",
+    "jest-auto-stub": "^1.0.8",
+    "ts-node": "^10.9.1",
+    "tsc-watch": "^4.6.2",
+    "typescript": "^4.8.4",
+    "uuid": "^8.3.2"
+  }
+}
