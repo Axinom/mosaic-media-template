@@ -10,7 +10,7 @@ import {
   generateEntitlementMessageJwt,
   getEntityType,
   getSubscriptionPlanId,
-  getVideo,
+  getVideoKeyIds,
   validateUserClaims,
 } from './entitlement-endpoint';
 import { getValidatedExtendedContext } from './extended-graphql-context';
@@ -59,7 +59,7 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
             }
 
             const type = getEntityType(args.input.entityId);
-            const video = await getVideo(
+            const keyIds = await getVideoKeyIds(
               type,
               args.input.entityId,
               config.catalogServiceBaseUrl,
@@ -77,7 +77,7 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
               ownerPool,
             );
             const entitlementMessageJwt = generateEntitlementMessageJwt(
-              video.videoStreams?.nodes?.map((stream) => stream.keyId),
+              keyIds,
               claims,
               config,
               config.isDev ? 'DEV' : 'DEFAULT',

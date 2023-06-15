@@ -1026,36 +1026,6 @@ export enum PaymentPlanProviderConfigsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A filter to be used against many `PaymentPlanPrice` object types. All fields are combined with a logical ‘and.’ */
-export type PaymentPlanToManyPaymentPlanPriceFilter = {
-  /** Every related `PaymentPlanPrice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<PaymentPlanPriceFilter>;
-  /** No related `PaymentPlanPrice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<PaymentPlanPriceFilter>;
-  /** Some related `PaymentPlanPrice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<PaymentPlanPriceFilter>;
-};
-
-/** A filter to be used against many `PaymentPlanProviderConfig` object types. All fields are combined with a logical ‘and.’ */
-export type PaymentPlanToManyPaymentPlanProviderConfigFilter = {
-  /** Every related `PaymentPlanProviderConfig` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<PaymentPlanProviderConfigFilter>;
-  /** No related `PaymentPlanProviderConfig` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<PaymentPlanProviderConfigFilter>;
-  /** Some related `PaymentPlanProviderConfig` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<PaymentPlanProviderConfigFilter>;
-};
-
-/** A filter to be used against many `SubscriptionType` object types. All fields are combined with a logical ‘and.’ */
-export type PaymentPlanToManySubscriptionTypeFilter = {
-  /** Every related `SubscriptionType` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SubscriptionTypeFilter>;
-  /** No related `SubscriptionType` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SubscriptionTypeFilter>;
-  /** Some related `SubscriptionType` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SubscriptionTypeFilter>;
-};
-
 /** A connection to a list of `PaymentPlan` values. */
 export type PaymentPlansConnection = {
   __typename?: 'PaymentPlansConnection';
@@ -1099,17 +1069,49 @@ export enum PaymentPlansOrderBy {
   TitleDesc = 'TITLE_DESC'
 }
 
+/** A filter to be used against many `PaymentPlanPrice` object types. All fields are combined with a logical ‘and.’ */
+export type PaymentPlanToManyPaymentPlanPriceFilter = {
+  /** Every related `PaymentPlanPrice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<PaymentPlanPriceFilter>;
+  /** No related `PaymentPlanPrice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<PaymentPlanPriceFilter>;
+  /** Some related `PaymentPlanPrice` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<PaymentPlanPriceFilter>;
+};
+
+/** A filter to be used against many `PaymentPlanProviderConfig` object types. All fields are combined with a logical ‘and.’ */
+export type PaymentPlanToManyPaymentPlanProviderConfigFilter = {
+  /** Every related `PaymentPlanProviderConfig` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<PaymentPlanProviderConfigFilter>;
+  /** No related `PaymentPlanProviderConfig` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<PaymentPlanProviderConfigFilter>;
+  /** Some related `PaymentPlanProviderConfig` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<PaymentPlanProviderConfigFilter>;
+};
+
+/** A filter to be used against many `SubscriptionType` object types. All fields are combined with a logical ‘and.’ */
+export type PaymentPlanToManySubscriptionTypeFilter = {
+  /** Every related `SubscriptionType` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SubscriptionTypeFilter>;
+  /** No related `SubscriptionType` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SubscriptionTypeFilter>;
+  /** Some related `SubscriptionType` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SubscriptionTypeFilter>;
+};
+
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
   key: Scalars['String'];
   /** Reads and enables pagination through a set of `PaymentPlanProviderConfig`. */
   paymentPlanProviderConfigs: PaymentPlanProviderConfigsConnection;
+  /** Reads a single `PaypalSetting` that is related to this `PaymentProvider`. */
+  paypalSettings?: Maybe<PaypalSetting>;
   /** Reads and enables pagination through a set of `SubscriptionPlanProviderConfig`. */
   subscriptionPlanProviderConfigs: SubscriptionPlanProviderConfigsConnection;
-  /** Reads and enables pagination through a set of `SubscriptionTransaction`. */
-  subscriptionTransactions: SubscriptionTransactionsConnection;
   /** Reads and enables pagination through a set of `SubscriptionType`. */
   subscriptions: SubscriptionTypesConnection;
+  /** Reads and enables pagination through a set of `SubscriptionTransaction`. */
+  subscriptionTransactions: SubscriptionTransactionsConnection;
   title: Scalars['String'];
 };
 
@@ -1138,18 +1140,6 @@ export type PaymentProviderSubscriptionPlanProviderConfigsArgs = {
 };
 
 
-export type PaymentProviderSubscriptionTransactionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<SubscriptionTransactionCondition>;
-  filter?: InputMaybe<SubscriptionTransactionFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<SubscriptionTransactionsOrderBy>>;
-};
-
-
 export type PaymentProviderSubscriptionsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -1159,6 +1149,18 @@ export type PaymentProviderSubscriptionsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<SubscriptionTypesOrderBy>>;
+};
+
+
+export type PaymentProviderSubscriptionTransactionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<SubscriptionTransactionCondition>;
+  filter?: InputMaybe<SubscriptionTransactionFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<SubscriptionTransactionsOrderBy>>;
 };
 
 /**
@@ -1189,21 +1191,58 @@ export type PaymentProviderFilter = {
   paymentPlanProviderConfigs?: InputMaybe<PaymentProviderToManyPaymentPlanProviderConfigFilter>;
   /** Some related `paymentPlanProviderConfigs` exist. */
   paymentPlanProviderConfigsExist?: InputMaybe<Scalars['Boolean']>;
+  /** Filter by the object’s `paypalSettings` relation. */
+  paypalSettings?: InputMaybe<PaypalSettingFilter>;
+  /** A related `paypalSettings` exists. */
+  paypalSettingsExists?: InputMaybe<Scalars['Boolean']>;
   /** Filter by the object’s `subscriptionPlanProviderConfigs` relation. */
   subscriptionPlanProviderConfigs?: InputMaybe<PaymentProviderToManySubscriptionPlanProviderConfigFilter>;
   /** Some related `subscriptionPlanProviderConfigs` exist. */
   subscriptionPlanProviderConfigsExist?: InputMaybe<Scalars['Boolean']>;
-  /** Filter by the object’s `subscriptionTransactions` relation. */
-  subscriptionTransactions?: InputMaybe<PaymentProviderToManySubscriptionTransactionFilter>;
-  /** Some related `subscriptionTransactions` exist. */
-  subscriptionTransactionsExist?: InputMaybe<Scalars['Boolean']>;
   /** Filter by the object’s `subscriptions` relation. */
   subscriptions?: InputMaybe<PaymentProviderToManySubscriptionTypeFilter>;
   /** Some related `subscriptions` exist. */
   subscriptionsExist?: InputMaybe<Scalars['Boolean']>;
+  /** Filter by the object’s `subscriptionTransactions` relation. */
+  subscriptionTransactions?: InputMaybe<PaymentProviderToManySubscriptionTransactionFilter>;
+  /** Some related `subscriptionTransactions` exist. */
+  subscriptionTransactionsExist?: InputMaybe<Scalars['Boolean']>;
   /** Filter by the object’s `title` field. */
   title?: InputMaybe<StringFilter>;
 };
+
+/** A connection to a list of `PaymentProvider` values. */
+export type PaymentProvidersConnection = {
+  __typename?: 'PaymentProvidersConnection';
+  /** A list of edges which contains the `PaymentProvider` and cursor to aid in pagination. */
+  edges: Array<PaymentProvidersEdge>;
+  /** A list of `PaymentProvider` objects. */
+  nodes: Array<PaymentProvider>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PaymentProvider` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PaymentProvider` edge in the connection. */
+export type PaymentProvidersEdge = {
+  __typename?: 'PaymentProvidersEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PaymentProvider` at the end of the edge. */
+  node: PaymentProvider;
+};
+
+/** Methods to use when ordering `PaymentProvider`. */
+export enum PaymentProvidersOrderBy {
+  KeyAsc = 'KEY_ASC',
+  KeyDesc = 'KEY_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC'
+}
 
 /** A filter to be used against many `PaymentPlanProviderConfig` object types. All fields are combined with a logical ‘and.’ */
 export type PaymentProviderToManyPaymentPlanProviderConfigFilter = {
@@ -1245,39 +1284,6 @@ export type PaymentProviderToManySubscriptionTypeFilter = {
   some?: InputMaybe<SubscriptionTypeFilter>;
 };
 
-/** A connection to a list of `PaymentProvider` values. */
-export type PaymentProvidersConnection = {
-  __typename?: 'PaymentProvidersConnection';
-  /** A list of edges which contains the `PaymentProvider` and cursor to aid in pagination. */
-  edges: Array<PaymentProvidersEdge>;
-  /** A list of `PaymentProvider` objects. */
-  nodes: Array<PaymentProvider>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `PaymentProvider` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `PaymentProvider` edge in the connection. */
-export type PaymentProvidersEdge = {
-  __typename?: 'PaymentProvidersEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `PaymentProvider` at the end of the edge. */
-  node: PaymentProvider;
-};
-
-/** Methods to use when ordering `PaymentProvider`. */
-export enum PaymentProvidersOrderBy {
-  KeyAsc = 'KEY_ASC',
-  KeyDesc = 'KEY_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  TitleAsc = 'TITLE_ASC',
-  TitleDesc = 'TITLE_DESC'
-}
-
 export type PaypalActivateSubscriptionInput = {
   paypalSubscriptionId: Scalars['String'];
 };
@@ -1301,6 +1307,84 @@ export enum PaypalPurchaseFlow {
   Popup = 'POPUP',
   /** Use the redirect based purchase flow */
   Redirect = 'REDIRECT'
+}
+
+export type PaypalSetting = {
+  __typename?: 'PaypalSetting';
+  clientId?: Maybe<Scalars['String']>;
+  isSandbox?: Maybe<Scalars['Boolean']>;
+  /** Reads a single `PaymentProvider` that is related to this `PaypalSetting`. */
+  paymentProvider?: Maybe<PaymentProvider>;
+  paymentProviderKey: Scalars['String'];
+};
+
+/**
+ * A condition to be used against `PaypalSetting` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type PaypalSettingCondition = {
+  /** Checks for equality with the object’s `clientId` field. */
+  clientId?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isSandbox` field. */
+  isSandbox?: InputMaybe<Scalars['Boolean']>;
+  /**
+   * Checks for equality with the object’s `paymentProviderKey` field.
+   * @hasAllowedValue()
+   */
+  paymentProviderKey?: InputMaybe<Scalars['String']>;
+};
+
+/** A filter to be used against `PaypalSetting` object types. All fields are combined with a logical ‘and.’ */
+export type PaypalSettingFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<PaypalSettingFilter>>;
+  /** Filter by the object’s `clientId` field. */
+  clientId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `isSandbox` field. */
+  isSandbox?: InputMaybe<BooleanFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<PaypalSettingFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<PaypalSettingFilter>>;
+  /** Filter by the object’s `paymentProvider` relation. */
+  paymentProvider?: InputMaybe<PaymentProviderFilter>;
+  /** Filter by the object’s `paymentProviderKey` field. */
+  paymentProviderKey?: InputMaybe<StringFilter>;
+};
+
+/** A connection to a list of `PaypalSetting` values. */
+export type PaypalSettingsConnection = {
+  __typename?: 'PaypalSettingsConnection';
+  /** A list of edges which contains the `PaypalSetting` and cursor to aid in pagination. */
+  edges: Array<PaypalSettingsEdge>;
+  /** A list of `PaypalSetting` objects. */
+  nodes: Array<PaypalSetting>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PaypalSetting` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PaypalSetting` edge in the connection. */
+export type PaypalSettingsEdge = {
+  __typename?: 'PaypalSettingsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PaypalSetting` at the end of the edge. */
+  node: PaypalSetting;
+};
+
+/** Methods to use when ordering `PaypalSetting`. */
+export enum PaypalSettingsOrderBy {
+  ClientIdAsc = 'CLIENT_ID_ASC',
+  ClientIdDesc = 'CLIENT_ID_DESC',
+  IsSandboxAsc = 'IS_SANDBOX_ASC',
+  IsSandboxDesc = 'IS_SANDBOX_DESC',
+  Natural = 'NATURAL',
+  PaymentProviderKeyAsc = 'PAYMENT_PROVIDER_KEY_ASC',
+  PaymentProviderKeyDesc = 'PAYMENT_PROVIDER_KEY_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
 /** The input details for subscribing via PayPal. */
@@ -1384,6 +1468,9 @@ export type Query = {
   paymentProvider?: Maybe<PaymentProvider>;
   /** Reads and enables pagination through a set of `PaymentProvider`. */
   paymentProviders?: Maybe<PaymentProvidersConnection>;
+  paypalSetting?: Maybe<PaypalSetting>;
+  /** Reads and enables pagination through a set of `PaypalSetting`. */
+  paypalSettings?: Maybe<PaypalSettingsConnection>;
   /**
    * Exposes the root query type nested one level down. This is helpful for Relay 1
    * which can only query top level fields if they are in a particular form.
@@ -1393,11 +1480,11 @@ export type Query = {
   subscriptionPlan?: Maybe<SubscriptionPlan>;
   /** Reads and enables pagination through a set of `SubscriptionPlan`. */
   subscriptionPlans?: Maybe<SubscriptionPlansConnection>;
+  /** Reads and enables pagination through a set of `SubscriptionType`. */
+  subscriptions?: Maybe<SubscriptionTypesConnection>;
   subscriptionTransaction?: Maybe<SubscriptionTransaction>;
   /** Reads and enables pagination through a set of `SubscriptionTransaction`. */
   subscriptionTransactions?: Maybe<SubscriptionTransactionsConnection>;
-  /** Reads and enables pagination through a set of `SubscriptionType`. */
-  subscriptions?: Maybe<SubscriptionTypesConnection>;
 };
 
 
@@ -1440,6 +1527,25 @@ export type QueryPaymentProvidersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPaypalSettingArgs = {
+  paymentProviderKey: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPaypalSettingsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PaypalSettingCondition>;
+  filter?: InputMaybe<PaypalSettingFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PaypalSettingsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QuerySubscriptionArgs = {
   id: Scalars['UUID'];
 };
@@ -1465,6 +1571,19 @@ export type QuerySubscriptionPlansArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QuerySubscriptionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<SubscriptionTypeCondition>;
+  filter?: InputMaybe<SubscriptionTypeFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<SubscriptionTypesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QuerySubscriptionTransactionArgs = {
   id: Scalars['UUID'];
 };
@@ -1480,19 +1599,6 @@ export type QuerySubscriptionTransactionsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<SubscriptionTransactionsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QuerySubscriptionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<SubscriptionTypeCondition>;
-  filter?: InputMaybe<SubscriptionTypeFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<SubscriptionTypesOrderBy>>;
 };
 
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
@@ -1519,12 +1625,12 @@ export type StringFilter = {
   greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
   /** Included in the specified list. */
   in?: InputMaybe<Array<Scalars['String']>>;
-  /** Included in the specified list (case-insensitive). */
-  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Contains the specified string (case-sensitive). */
   includes?: InputMaybe<Scalars['String']>;
   /** Contains the specified string (case-insensitive). */
   includesInsensitive?: InputMaybe<Scalars['String']>;
+  /** Included in the specified list (case-insensitive). */
+  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
   isNull?: InputMaybe<Scalars['Boolean']>;
   /** Less than the specified value. */
@@ -1553,12 +1659,12 @@ export type StringFilter = {
   notEqualToInsensitive?: InputMaybe<Scalars['String']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['String']>>;
-  /** Not included in the specified list (case-insensitive). */
-  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Does not contain the specified string (case-sensitive). */
   notIncludes?: InputMaybe<Scalars['String']>;
   /** Does not contain the specified string (case-insensitive). */
   notIncludesInsensitive?: InputMaybe<Scalars['String']>;
+  /** Not included in the specified list (case-insensitive). */
+  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
   notLike?: InputMaybe<Scalars['String']>;
   /** Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
@@ -1938,6 +2044,45 @@ export enum SubscriptionPlanProviderConfigsOrderBy {
   SubscriptionPlanIdDesc = 'SUBSCRIPTION_PLAN_ID_DESC'
 }
 
+/** A connection to a list of `SubscriptionPlan` values. */
+export type SubscriptionPlansConnection = {
+  __typename?: 'SubscriptionPlansConnection';
+  /** A list of edges which contains the `SubscriptionPlan` and cursor to aid in pagination. */
+  edges: Array<SubscriptionPlansEdge>;
+  /** A list of `SubscriptionPlan` objects. */
+  nodes: Array<SubscriptionPlan>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SubscriptionPlan` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `SubscriptionPlan` edge in the connection. */
+export type SubscriptionPlansEdge = {
+  __typename?: 'SubscriptionPlansEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `SubscriptionPlan` at the end of the edge. */
+  node: SubscriptionPlan;
+};
+
+/** Methods to use when ordering `SubscriptionPlan`. */
+export enum SubscriptionPlansOrderBy {
+  CoverImagePathAsc = 'COVER_IMAGE_PATH_ASC',
+  CoverImagePathDesc = 'COVER_IMAGE_PATH_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IsActiveAsc = 'IS_ACTIVE_ASC',
+  IsActiveDesc = 'IS_ACTIVE_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC'
+}
+
 /** A filter to be used against many `PaymentPlan` object types. All fields are combined with a logical ‘and.’ */
 export type SubscriptionPlanToManyPaymentPlanFilter = {
   /** Every related `PaymentPlan` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -1977,45 +2122,6 @@ export type SubscriptionPlanToManySubscriptionTypeFilter = {
   /** Some related `SubscriptionType` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<SubscriptionTypeFilter>;
 };
-
-/** A connection to a list of `SubscriptionPlan` values. */
-export type SubscriptionPlansConnection = {
-  __typename?: 'SubscriptionPlansConnection';
-  /** A list of edges which contains the `SubscriptionPlan` and cursor to aid in pagination. */
-  edges: Array<SubscriptionPlansEdge>;
-  /** A list of `SubscriptionPlan` objects. */
-  nodes: Array<SubscriptionPlan>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `SubscriptionPlan` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `SubscriptionPlan` edge in the connection. */
-export type SubscriptionPlansEdge = {
-  __typename?: 'SubscriptionPlansEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `SubscriptionPlan` at the end of the edge. */
-  node: SubscriptionPlan;
-};
-
-/** Methods to use when ordering `SubscriptionPlan`. */
-export enum SubscriptionPlansOrderBy {
-  CoverImagePathAsc = 'COVER_IMAGE_PATH_ASC',
-  CoverImagePathDesc = 'COVER_IMAGE_PATH_DESC',
-  DescriptionAsc = 'DESCRIPTION_ASC',
-  DescriptionDesc = 'DESCRIPTION_DESC',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  IsActiveAsc = 'IS_ACTIVE_ASC',
-  IsActiveDesc = 'IS_ACTIVE_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  TitleAsc = 'TITLE_ASC',
-  TitleDesc = 'TITLE_DESC'
-}
 
 export type SubscriptionStatusChange = {
   __typename?: 'SubscriptionStatusChange';
@@ -2391,26 +2497,6 @@ export type SubscriptionTypeFilter = {
   userId?: InputMaybe<UuidFilter>;
 };
 
-/** A filter to be used against many `SubscriptionStatusChange` object types. All fields are combined with a logical ‘and.’ */
-export type SubscriptionTypeToManySubscriptionStatusChangeFilter = {
-  /** Every related `SubscriptionStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SubscriptionStatusChangeFilter>;
-  /** No related `SubscriptionStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SubscriptionStatusChangeFilter>;
-  /** Some related `SubscriptionStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SubscriptionStatusChangeFilter>;
-};
-
-/** A filter to be used against many `SubscriptionTransaction` object types. All fields are combined with a logical ‘and.’ */
-export type SubscriptionTypeToManySubscriptionTransactionFilter = {
-  /** Every related `SubscriptionTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<SubscriptionTransactionFilter>;
-  /** No related `SubscriptionTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<SubscriptionTransactionFilter>;
-  /** Some related `SubscriptionTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<SubscriptionTransactionFilter>;
-};
-
 /** A connection to a list of `SubscriptionType` values. */
 export type SubscriptionTypesConnection = {
   __typename?: 'SubscriptionTypesConnection';
@@ -2463,6 +2549,26 @@ export enum SubscriptionTypesOrderBy {
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC'
 }
+
+/** A filter to be used against many `SubscriptionStatusChange` object types. All fields are combined with a logical ‘and.’ */
+export type SubscriptionTypeToManySubscriptionStatusChangeFilter = {
+  /** Every related `SubscriptionStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SubscriptionStatusChangeFilter>;
+  /** No related `SubscriptionStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SubscriptionStatusChangeFilter>;
+  /** Some related `SubscriptionStatusChange` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SubscriptionStatusChangeFilter>;
+};
+
+/** A filter to be used against many `SubscriptionTransaction` object types. All fields are combined with a logical ‘and.’ */
+export type SubscriptionTypeToManySubscriptionTransactionFilter = {
+  /** Every related `SubscriptionTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SubscriptionTransactionFilter>;
+  /** No related `SubscriptionTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SubscriptionTransactionFilter>;
+  /** Some related `SubscriptionTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SubscriptionTransactionFilter>;
+};
 
 export enum TransactionType {
   /** Payment */

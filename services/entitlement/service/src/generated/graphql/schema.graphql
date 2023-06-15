@@ -231,7 +231,7 @@ enum ErrorCodesEnum {
   EMPTY_ENTITY_ID
 
   """
-  The provided entity ID '%s' is invalid. It must start with 'movie-' or 'episode-' followed by a number.
+  The provided entity ID '%s' is invalid. It must be either a UUID, or start with 'movie-' or 'episode-' followed by a number.
   """
   INVALID_ENTITY_ID
 
@@ -244,6 +244,11 @@ enum ErrorCodesEnum {
   The requested video for the %s is not protected. An entitlement message to receive a DRM license is therefore not required.
   """
   VIDEO_NOT_PROTECTED
+
+  """
+  The requested data for the %s does not have the required stream URLs. It is possible that the channel is still being processed.
+  """
+  CHANNEL_STREAM_UNAVAILABLE
 
   """
   The user either does not have an active subscription, or subscription does not allow the playback of specific video.

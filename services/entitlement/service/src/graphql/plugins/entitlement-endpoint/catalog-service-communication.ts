@@ -2,18 +2,20 @@ import {
   isNullOrWhitespace,
   MosaicError,
   mosaicErrorMappingFactory,
+  UnreachableCaseError,
 } from '@axinom/mosaic-service-common';
 import { GraphQLClient } from 'graphql-request';
 import { ClientError, GraphQLError } from 'graphql-request/dist/types';
 import urljoin from 'url-join';
-import { CommonErrors } from '../../../common';
+import { CommonErrors, sanitizeStringArray } from '../../../common';
 import {
+  GetChannelVideoQuery,
   GetEpisodeMainVideoQuery,
   GetMovieMainVideoQuery,
   getSdk,
 } from '../../../generated/graphql/catalog';
 
-export type EntityWithVideoType = 'movie' | 'episode';
+export type EntityWithVideoType = 'movie' | 'episode' | 'channel';
 
 type MovieVideo = NonNullable<
   GetMovieMainVideoQuery['movie']
@@ -21,6 +23,7 @@ type MovieVideo = NonNullable<
 type EpisodeVideo = NonNullable<
   GetEpisodeMainVideoQuery['episode']
 >['videos']['nodes'][0];
+type ChannelVideo = NonNullable<GetChannelVideoQuery['channel']>;
 
 const getCatalogMappedError = mosaicErrorMappingFactory<{
   type: EntityWithVideoType;
@@ -58,11 +61,11 @@ const getCatalogMappedError = mosaicErrorMappingFactory<{
   return undefined;
 });
 
-const getCatalogResponseVideo = (
+const getValidatedKeyIds = (
   type: EntityWithVideoType,
   id: string,
-  videos: MovieVideo[] | EpisodeVideo[] | undefined,
-): MovieVideo | EpisodeVideo => {
+  videos: MovieVideo[] | EpisodeVideo[] | ChannelVideo | null | undefined,
+): string[] => {
   const identifier = `${type} with ID '${id}'`;
 
   if (!videos) {
@@ -70,6 +73,25 @@ const getCatalogResponseVideo = (
       ...CommonErrors.EntityNotFound,
       messageParams: [identifier, type],
     });
+  }
+
+  if (!Array.isArray(videos)) {
+    if (isNullOrWhitespace(videos.keyId)) {
+      throw new MosaicError({
+        ...CommonErrors.VideoNotProtected,
+        messageParams: [identifier],
+      });
+    }
+    if (
+      isNullOrWhitespace(videos.dashStreamUrl) ||
+      isNullOrWhitespace(videos.hlsStreamUrl)
+    ) {
+      throw new MosaicError({
+        ...CommonErrors.ChannelStreamUnavailable,
+        messageParams: [identifier],
+      });
+    }
+    return [videos.keyId];
   }
 
   if (videos.length === 0) {
@@ -87,25 +109,30 @@ const getCatalogResponseVideo = (
   }
 
   const [video] = videos;
-  if (
-    !video.isProtected ||
-    !video.videoStreams?.nodes?.length ||
-    video.videoStreams.nodes // A protected video will always have at least one stream with non-empty Key ID
-      .map((videoStream) => videoStream.keyId)
-      .filter((keyId) => !isNullOrWhitespace(keyId)).length === 0
-  ) {
+  const keyIds = sanitizeStringArray(
+    video?.videoStreams?.nodes?.map((videoStream) => videoStream.keyId),
+  );
+
+  // A protected video will always have at least one stream with non-empty Key ID
+  if (!video.isProtected || keyIds.length === 0) {
     throw new MosaicError({
       ...CommonErrors.VideoNotProtected,
       messageParams: [identifier],
     });
   }
 
-  return video;
+  return keyIds;
 };
 
 export const getEntityType = (id: string): EntityWithVideoType => {
   if (isNullOrWhitespace(id)) {
     throw new MosaicError(CommonErrors.EmptyEntityId);
+  }
+
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if (uuidRegex.test(id)) {
+    return 'channel';
   }
 
   if (!id.match(/^(movie-|episode-)\d{1,10}$/)) {
@@ -122,29 +149,31 @@ export const getEntityType = (id: string): EntityWithVideoType => {
   }
 };
 
-export const getVideo = async (
+export const getVideoKeyIds = async (
   type: EntityWithVideoType,
   id: string,
   catalogUrl: string,
   countryCode?: string,
-): Promise<MovieVideo | EpisodeVideo> => {
+): Promise<string[]> => {
   try {
     const client = new GraphQLClient(urljoin(catalogUrl, 'graphql'));
-    const { GetMovieMainVideo, GetEpisodeMainVideo } = getSdk(client);
-    if (type === 'movie') {
-      const result = await GetMovieMainVideo({ id, countryCode });
-      return getCatalogResponseVideo(
-        type,
-        id,
-        result.data?.movie?.videos.nodes,
-      );
-    } else {
-      const result = await GetEpisodeMainVideo({ id, countryCode });
-      return getCatalogResponseVideo(
-        type,
-        id,
-        result.data?.episode?.videos.nodes,
-      );
+    const { GetMovieMainVideo, GetEpisodeMainVideo, GetChannelVideo } =
+      getSdk(client);
+    switch (type) {
+      case 'movie': {
+        const result = await GetMovieMainVideo({ id, countryCode });
+        return getValidatedKeyIds(type, id, result.data?.movie?.videos.nodes);
+      }
+      case 'episode': {
+        const result = await GetEpisodeMainVideo({ id, countryCode });
+        return getValidatedKeyIds(type, id, result.data?.episode?.videos.nodes);
+      }
+      case 'channel': {
+        const result = await GetChannelVideo({ id });
+        return getValidatedKeyIds(type, id, result.data.channel);
+      }
+      default:
+        throw new UnreachableCaseError(type);
     }
   } catch (error) {
     throw getCatalogMappedError(error, { id, type });
