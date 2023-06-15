@@ -302,10 +302,10 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.16.0.tgz#00b6d46860bbf21567447061dbc9fca2b9f5c571"
   integrity sha512-AOdhjpMy1z1DnfHsxqNOZTtA/LjWqtx3cpOjpf/0JvSyjeHufR6LDTTgaHUOuNMW3rkxk39weXDRv4yAeBIx0Q==
 
-"@axinom/mosaic-service-common@0.33.0", "@axinom/mosaic-service-common@^0.33.0", "@axinom/mosaic-service-common@^0.33.0-rc.9":
-  version "0.33.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.33.0.tgz#d19d1fa56404cfa13175a6d16c24393ab8c4dc30"
-  integrity sha512-Btrg+/VDpX38jOAtERsm3qIFQp7RifQ3BVmT0snq1jP44OAf3y3YwV1GSJ98oq+wU6bjgyQW9UN13xOLdNQbTw==
+"@axinom/mosaic-service-common@0.33.0-rc.17":
+  version "0.33.0-rc.17"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.33.0-rc.17.tgz#81d0713596a2e5cd6e704818f8b56725ae05ee5f"
+  integrity sha512-FUpqkQwnR40WWwFq3Wrf8X4Iv3914WZFR1HEUpWW/sQBtYLMwwiSwWPu6HwLypmqUx8G/lwkxEU91UoFDRSCTw==
   dependencies:
     "@graphile/pg-pubsub" "^4.12.3"
     ajv "^7.0.3"
@@ -332,10 +332,10 @@
     uuid-encoder "^1.2.0"
     verror "^1.10.1"
 
-"@axinom/mosaic-service-common@0.33.0-rc.9":
-  version "0.33.0-rc.9"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.33.0-rc.9.tgz#e35ac75aec7e94945e955dddf0e0993b3c0c786b"
-  integrity sha512-6sM70ndWO00f+1+5BJQe+Dge1eYCFduky9K5SJzvSGKJD0j/F8SScmAFdS6096bRop+JynJBM+mS0kDZMCz9Dw==
+"@axinom/mosaic-service-common@^0.33.0", "@axinom/mosaic-service-common@^0.33.0-rc.9":
+  version "0.33.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.33.0.tgz#d19d1fa56404cfa13175a6d16c24393ab8c4dc30"
+  integrity sha512-Btrg+/VDpX38jOAtERsm3qIFQp7RifQ3BVmT0snq1jP44OAf3y3YwV1GSJ98oq+wU6bjgyQW9UN13xOLdNQbTw==
   dependencies:
     "@graphile/pg-pubsub" "^4.12.3"
     ajv "^7.0.3"

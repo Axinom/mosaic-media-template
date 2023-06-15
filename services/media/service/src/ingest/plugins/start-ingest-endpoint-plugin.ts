@@ -24,7 +24,7 @@ import {
   transformAjvErrors,
 } from '../../common';
 import { ingestPermissionMappings } from '../../domains/permission-definition';
-import { ExtendedGraphQLContext } from '../../graphql';
+import { getValidatedExtendedContext } from '../../graphql';
 import * as ingestSchema from '../schemas/ingest-validation-schema.json';
 import { customIngestValidation } from '../utils';
 
@@ -96,27 +96,22 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
     `,
     resolvers: {
       Mutation: {
-        startIngest: async (
-          _query,
-          args,
-          context: ExtendedGraphQLContext,
-          { graphile },
-        ) => {
+        startIngest: async (_query, args, context, { graphile }) => {
           try {
+            const { subject, config, jwtToken, ownerPool, messagingBroker } =
+              getValidatedExtendedContext(context);
+
             const file = await args.input.file;
             const stream: ReadStream = file.createReadStream();
             const documentString = await streamToString(stream);
             const document: IngestDocument = JSON.parse(documentString);
 
-            checkPermissions(
-              document,
-              context.subject?.permissions[context.config.serviceId],
-            );
+            checkPermissions(document, subject?.permissions[config.serviceId]);
 
             const pgSettings = buildPgSettings(
-              context.subject,
-              context.config.dbGqlRole ?? 'undefined',
-              context.config.serviceId,
+              subject,
+              config.dbGqlRole ?? 'undefined',
+              config.serviceId,
             );
 
             const ajv = new Ajv({ allErrors: true });
@@ -137,15 +132,12 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
             }
 
             // Token retrieved here to make sure that if error is thrown - document is not created
-            const token = await getLongLivedToken(
-              context.jwtToken ?? '',
-              context.config,
-            );
+            const token = await getLongLivedToken(jwtToken, config);
 
             // A new transaction is started and committed to make sure the ingest
             // document exists before the 'StartIngestCommand' message is published.
             const doc = await transactionWithContext(
-              context.ownerPool,
+              ownerPool,
               IsolationLevel.Serializable,
               pgSettings,
               async (ctx) => {
@@ -163,7 +155,7 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
             // Sending only a database ID in a scenario of detached services is an anti-pattern
             // Ideally the whole doc should have been sent and message should be self-contained,
             // but because the document can be quite big we save it to DB and pass only it's ID.
-            await context.messagingBroker.publish<StartIngestCommand>(
+            await messagingBroker.publish<StartIngestCommand>(
               MediaServiceMessagingSettings.StartIngest.messageType,
               { doc_id: doc.id },
               { auth_token: token },

@@ -11,6 +11,7 @@ import {
   transaction,
 } from 'zapatos/db';
 import { episodes, seasons, tvshows } from 'zapatos/schema';
+import { getValidatedExtendedContext } from '../../../graphql';
 import {
   insertCasts,
   insertGenres,
@@ -166,7 +167,8 @@ export const PopulateEndpointPlugin = makeExtendSchemaPlugin((build) => {
     `,
     resolvers: {
       Mutation: {
-        populateTvshows: async (_query, args, { ownerPool }) => {
+        populateTvshows: async (_query, args, context) => {
+          const { ownerPool } = getValidatedExtendedContext(context);
           const genreIdsResult = await select('tvshow_genres', all, {
             columns: ['id'],
           }).run(ownerPool);

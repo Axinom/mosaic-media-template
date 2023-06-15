@@ -13,7 +13,7 @@ import {
   getVideo,
   validateUserClaims,
 } from './entitlement-endpoint';
-import { ExtendedGraphQLContext } from './extended-graphql-context';
+import { getValidatedExtendedContext } from './extended-graphql-context';
 
 /**
  * Plugin that adds a custom graphql endpoint `entitlement` which checks if
@@ -41,17 +41,11 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
     `,
     resolvers: {
       Query: {
-        entitlement: async (
-          _query,
-          args,
-          {
-            config,
-            clientIpAddress,
-            ownerPool,
-            jwtToken,
-          }: ExtendedGraphQLContext,
-        ) => {
+        entitlement: async (_query, args, context) => {
           try {
+            const { config, clientIpAddress, ownerPool, jwtToken } =
+              getValidatedExtendedContext(context);
+
             const countryCode = lookup(clientIpAddress)?.country;
 
             if (isNullOrWhitespace(countryCode)) {

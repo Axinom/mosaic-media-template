@@ -141,6 +141,7 @@ describe('EntitlementEndpointPlugin', () => {
       authContext: {
         subject: createTestEndUser(),
       },
+      token: 'mock_token',
     };
 
     const policy = getPolicy('DEFAULT');
@@ -204,7 +205,7 @@ describe('EntitlementEndpointPlugin', () => {
 
   afterEach(async () => {
     await ctx.truncate('claim_sets');
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   afterAll(async () => {
@@ -882,6 +883,7 @@ describe('EntitlementEndpointPlugin', () => {
           authContext: {
             subject: createTestEndUser(),
           },
+          token: 'mock_token',
         },
       );
 
@@ -946,6 +948,7 @@ describe('EntitlementEndpointPlugin', () => {
           authContext: {
             subject: createTestEndUser(),
           },
+          token: 'mock_token',
         },
       );
 
@@ -1003,6 +1006,7 @@ describe('EntitlementEndpointPlugin', () => {
           authContext: {
             subject: createTestEndUser(),
           },
+          token: 'mock_token',
         },
       );
 
@@ -1030,6 +1034,7 @@ describe('EntitlementEndpointPlugin', () => {
         authContext: {
           subject: createTestEndUser(),
         },
+        token: 'mock_token',
       };
       countryCode = 'HR';
 
