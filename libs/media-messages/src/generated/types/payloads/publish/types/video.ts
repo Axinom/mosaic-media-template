@@ -1,3 +1,4 @@
+import { CuePoint } from './cue-point';
 import { Format } from './format';
 import { VideoStream } from './video-stream';
 import { VideoUsageType } from './video-usage-type';
@@ -41,6 +42,10 @@ export interface Video {
    * Video Streams
    */
   video_streams?: Array<VideoStream>;
+  /**
+   * Cue points associated with video.
+   */
+  cue_points?: Array<CuePoint>;
   /**
    * Indicates whether a stream is protected with DRM.
    */

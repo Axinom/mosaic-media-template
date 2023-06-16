@@ -21,10 +21,8 @@ export const useSeasonSelectExplorerModal = ({
       actions={[
         {
           label: 'New',
-          icon: IconName.External,
-          onClick: () => {
-            window.open('/seasons/create', '_blank');
-          },
+          openInNewTab: true,
+          path: '/seasons/create',
         },
         {
           label: 'Cancel',

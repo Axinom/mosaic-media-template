@@ -172,6 +172,41 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
       },
+      movie_video_cue_points: {
+        description: 'Video cue point metadata',
+        attribute: {
+          cue_point_type_key: {
+            description: 'Type of the cue point',
+            ...disableFilterAndOrder,
+          },
+          time_in_seconds: {
+            description:
+              'Time in seconds at which the cue point is set within the video',
+            ...disableFilterAndOrder,
+          },
+          value: {
+            description: 'Additional information associated with the cue point',
+            ...disableFilterAndOrder,
+          },
+          movie_video_id: {
+            tags: {
+              name: 'videoId',
+            },
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          movie_video_cue_points_movie_video_id_fkey: {
+            tags: {
+              foreignFieldName: 'cuePoints',
+              fieldName: 'video',
+            },
+          },
+        },
+      },
       movie_video_streams: {
         description: 'Video stream DRM metadata',
         attribute: {
@@ -451,6 +486,41 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           tvshow_videos_tvshow_id_fkey: {
             tags: {
               foreignFieldName: 'videos',
+            },
+          },
+        },
+      },
+      tvshow_video_cue_points: {
+        description: 'Video cue point metadata',
+        attribute: {
+          cue_point_type_key: {
+            description: 'Type of the cue point',
+            ...disableFilterAndOrder,
+          },
+          time_in_seconds: {
+            description:
+              'Time in seconds at which the cue point is set within the video',
+            ...disableFilterAndOrder,
+          },
+          value: {
+            description: 'Additional information associated with the cue point',
+            ...disableFilterAndOrder,
+          },
+          tvshow_video_id: {
+            tags: {
+              name: 'videoId',
+            },
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          tvshow_video_cue_points_tvshow_video_id_fkey: {
+            tags: {
+              foreignFieldName: 'cuePoints',
+              fieldName: 'video',
             },
           },
         },
@@ -736,6 +806,41 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
       },
+      season_video_cue_points: {
+        description: 'Video cue point metadata',
+        attribute: {
+          cue_point_type_key: {
+            description: 'Type of the cue point',
+            ...disableFilterAndOrder,
+          },
+          time_in_seconds: {
+            description:
+              'Time in seconds at which the cue point is set within the video',
+            ...disableFilterAndOrder,
+          },
+          value: {
+            description: 'Additional information associated with the cue point',
+            ...disableFilterAndOrder,
+          },
+          season_video_id: {
+            tags: {
+              name: 'videoId',
+            },
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          season_video_cue_points_season_video_id_fkey: {
+            tags: {
+              foreignFieldName: 'cuePoints',
+              fieldName: 'video',
+            },
+          },
+        },
+      },
       season_video_streams: {
         description: 'Video stream DRM metadata',
         attribute: {
@@ -1005,6 +1110,41 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           episode_videos_episode_id_fkey: {
             tags: {
               foreignFieldName: 'videos',
+            },
+          },
+        },
+      },
+      episode_video_cue_points: {
+        description: 'Video cue point metadata',
+        attribute: {
+          cue_point_type_key: {
+            description: 'Type of the cue point',
+            ...disableFilterAndOrder,
+          },
+          time_in_seconds: {
+            description:
+              'Time in seconds at which the cue point is set within the video',
+            ...disableFilterAndOrder,
+          },
+          value: {
+            description: 'Additional information associated with the cue point',
+            ...disableFilterAndOrder,
+          },
+          episode_video_id: {
+            tags: {
+              name: 'videoId',
+            },
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          episode_video_cue_points_episode_video_id_fkey: {
+            tags: {
+              foreignFieldName: 'cuePoints',
+              fieldName: 'video',
             },
           },
         },

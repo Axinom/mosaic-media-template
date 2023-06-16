@@ -1,6 +1,5 @@
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -150,7 +149,6 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           });
           history.push('/seasons');
         },
-        actionType: ActionType.Context,
         icon: IconName.Snapshot,
       },
       {
@@ -159,7 +157,6 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           await publishSeasonMutation({ variables: { id } });
           history.push('/seasons');
         },
-        actionType: ActionType.Context,
         icon: IconName.Publish,
         confirmationMode: 'Simple',
       },
@@ -169,7 +166,6 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           await unpublishSeasonMutation({ variables: { id } });
           history.push('/seasons');
         },
-        actionType: ActionType.Context,
         icon: IconName.Unpublish,
         confirmationMode: 'Simple',
       },
@@ -179,15 +175,12 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           await deleteSeasonMutation({ variables: { input: { id } } });
           history.push('/seasons');
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(`/seasons/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/seasons/${id}`,
       },
     ];
   };

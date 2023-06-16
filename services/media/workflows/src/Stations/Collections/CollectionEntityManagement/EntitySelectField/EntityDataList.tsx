@@ -1,12 +1,10 @@
 import {
   ActionData,
-  ActionType,
   DynamicDataList,
   DynamicListColumn,
   IconName,
 } from '@axinom/mosaic-ui';
 import React, { ReactNode, useCallback, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
 import { getThumbnailAndStateRenderer } from '../../../../externals';
 import { EntityType } from '../../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../../Util/PublishStatusStateMap/PublishStatusStateMap';
@@ -29,7 +27,6 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
   onChange,
   value,
 }) => {
-  const history = useHistory();
   const { EntityDataListDataEntry } = useEntityDataListDataEntry({
     excludeItems: value,
   });
@@ -75,15 +72,13 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
     return [
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(createEntityUrl(data)),
-        actionType: ActionType.Navigation,
+        path: createEntityUrl(data),
         icon: IconName.NavigateRight,
       },
       {
         label: 'Unassign',
         onActionSelected: () =>
           handleUnassign(`${data.entityId}_${data.entityType}`),
-        actionType: ActionType.Context,
         icon: IconName.X,
       },
     ];

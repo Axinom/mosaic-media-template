@@ -1,6 +1,5 @@
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -99,16 +98,12 @@ export const TvShowLicensing: React.FC = () => {
           await deleteTvShowsLicenseMutation({ variables: { input: { id } } });
           history.push(`/tvshows/${tvshowId}/licenses`);
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () =>
-          history.push(`/tvshows/${tvshowId}/licenses/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/tvshows/${tvshowId}/licenses/${id}`,
       },
     ];
   };
@@ -122,9 +117,7 @@ export const TvShowLicensing: React.FC = () => {
       calculateNavigateUrl={(item) =>
         `/tvshows/${tvshowId}/licenses/${item.id}`
       }
-      onCreateAction={() =>
-        history.push(`/tvshows/${tvshowId}/licenses/create`)
-      }
+      onCreateAction={`/tvshows/${tvshowId}/licenses/create`}
       inlineMenuActions={generateInlineMenuActions}
     />
   );

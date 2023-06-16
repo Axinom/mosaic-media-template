@@ -1,4 +1,4 @@
-query GetVideos($filter: VideoFilter) {
+query GetVideos($filter: VideoFilter, $cuePointFilter: CuePointFilter) {
   videos(filter: $filter) {
     nodes {
       id
@@ -37,6 +37,13 @@ query GetVideos($filter: VideoFilter) {
           pixelAspectRatio
           samplingRate
           languageName
+        }
+      }
+      cuePoints(filter: $cuePointFilter){
+        nodes {
+          timeInSeconds
+          cuePointTypeKey
+          value
         }
       }
     }
