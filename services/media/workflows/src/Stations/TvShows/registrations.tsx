@@ -26,6 +26,7 @@ import { TvShowVideoManagement } from './TvShowVideoManagement/TvShowVideoManage
 
 export function register(app: PiletApi, extensions: Extensions): void {
   const tvshowNav = {
+    name: 'tvshows',
     path: '/tvshows',
     label: 'TV Shows',
     icon: <MediaIcons icon={MediaIconName.TV} />,
@@ -133,6 +134,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
   });
 
   const tvshowSettingsNav = {
+    name: 'tvshow-genres',
     path: '/settings/media/tvshowgenres',
     label: 'TV Show Genres',
     icon: <MediaIcons icon={MediaIconName.TvShowGenres} />,
