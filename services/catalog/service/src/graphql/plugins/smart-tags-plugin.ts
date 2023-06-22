@@ -1334,6 +1334,66 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
       },
+      channel: {
+        description: 'Definition of the channel publish format.',
+        attribute: {
+          title: {
+            description: 'Title of the channel.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Description of the channel.',
+            ...disableFilterAndOrder,
+          },
+          hls_stream_url: {
+            description: 'HLS stream URL of the channel.',
+            ...disableFilterAndOrder,
+          },
+          dash_stream_url: {
+            description: 'DASH stream URL of the channel.',
+            ...disableFilterAndOrder,
+          },
+          key_id: {
+            description: 'Key identifier for DRM protected streams.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omit: 'create,update,delete',
+        },
+      },
+      channel_images: {
+        description: 'Asset image metadata.',
+        attribute: {
+          type: {
+            description: 'Type of the image.',
+            ...disableFilterAndOrder,
+          },
+          path: {
+            description: 'URI to the image file.',
+            ...disableFilterAndOrder,
+          },
+          width: {
+            description: 'Width of the image in pixels.',
+            ...disableFilterAndOrder,
+          },
+          height: {
+            description: 'Height of the image in pixels.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          channel_images_channel_id_fkey: {
+            tags: {
+              foreignFieldName: 'images',
+            },
+          },
+        },
+      },
     },
   },
 });

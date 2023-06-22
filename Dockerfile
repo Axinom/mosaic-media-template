@@ -27,6 +27,7 @@ RUN cp -rL node_modules node_modules_full
 RUN rm -rf node_modules
 RUN mv node_modules_full node_modules
 RUN mkdir -p "$PACKAGE_ROOT/node_modules"
+RUN if [ ! -d /checkout/$PACKAGE_ROOT/migrations ]; then mkdir -p /checkout/$PACKAGE_ROOT/migrations; fi
 
 # RELEASE
 FROM node:18-buster-slim

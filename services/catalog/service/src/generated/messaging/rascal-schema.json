@@ -168,6 +168,51 @@
               "x-queue-type": "quorum"
             }
           }
+        },
+        "catalog-service:channel:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:channel:unpublished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:channel:check_job_status_succeeded": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:channel:check_job_status_failed": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "catalog-service:channel:protection_key_created": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "catalog-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
         }
       },
       "bindings": {
@@ -325,6 +370,56 @@
           "source": "event",
           "bindingKey": "media-service.collection.unpublished",
           "destination": "catalog-service:collection:unpublished"
+        },
+        "retry:catalog-service:channel:published": {
+          "source": "retry",
+          "bindingKey": "catalog-service:channel:published.#",
+          "destination": "catalog-service:channel:published"
+        },
+        "catalog-service:channel:published": {
+          "source": "event",
+          "bindingKey": "ax-channel-service.*.*.channel.published",
+          "destination": "catalog-service:channel:published"
+        },
+        "retry:catalog-service:channel:unpublished": {
+          "source": "retry",
+          "bindingKey": "catalog-service:channel:unpublished.#",
+          "destination": "catalog-service:channel:unpublished"
+        },
+        "catalog-service:channel:unpublished": {
+          "source": "event",
+          "bindingKey": "ax-channel-service.*.*.channel.unpublished",
+          "destination": "catalog-service:channel:unpublished"
+        },
+        "retry:catalog-service:channel:check_job_status_succeeded": {
+          "source": "retry",
+          "bindingKey": "catalog-service:channel:check_job_status_succeeded.#",
+          "destination": "catalog-service:channel:check_job_status_succeeded"
+        },
+        "catalog-service:channel:check_job_status_succeeded": {
+          "source": "event",
+          "bindingKey": "vod-to-live-service.channel.check_job_status_succeeded",
+          "destination": "catalog-service:channel:check_job_status_succeeded"
+        },
+        "retry:catalog-service:channel:check_job_status_failed": {
+          "source": "retry",
+          "bindingKey": "catalog-service:channel:check_job_status_failed.#",
+          "destination": "catalog-service:channel:check_job_status_failed"
+        },
+        "catalog-service:channel:check_job_status_failed": {
+          "source": "event",
+          "bindingKey": "vod-to-live-service.channel.check_job_status_failed",
+          "destination": "catalog-service:channel:check_job_status_failed"
+        },
+        "retry:catalog-service:channel:protection_key_created": {
+          "source": "retry",
+          "bindingKey": "catalog-service:channel:protection_key_created.#",
+          "destination": "catalog-service:channel:protection_key_created"
+        },
+        "catalog-service:channel:protection_key_created": {
+          "source": "event",
+          "bindingKey": "vod-to-live-service.channel.protection_key_created",
+          "destination": "catalog-service:channel:protection_key_created"
         }
       },
       "publications": {
@@ -465,6 +560,51 @@
         },
         "CollectionUnpublished": {
           "queue": "catalog-service:collection:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "ChannelPublished": {
+          "queue": "catalog-service:channel:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "ChannelUnpublished": {
+          "queue": "catalog-service:channel:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "CheckChannelJobStatusSucceeded": {
+          "queue": "catalog-service:channel:check_job_status_succeeded",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "CheckChannelJobStatusFailed": {
+          "queue": "catalog-service:channel:check_job_status_failed",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "LiveStreamProtectionKeyCreated": {
+          "queue": "catalog-service:channel:protection_key_created",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {

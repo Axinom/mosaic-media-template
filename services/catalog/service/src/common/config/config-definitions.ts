@@ -15,10 +15,11 @@ import {
 export const getConfigDefinitions = (
   variables: NodeJS.ProcessEnv = process.env,
 ) => {
-  const { tenantId, environmentId } = pick(
+  const { tenantId, environmentId, idServiceAuthBaseUrl } = pick(
     getBasicCustomizableConfigDefinitions(variables),
     'tenantId',
     'environmentId',
+    'idServiceAuthBaseUrl',
   );
   return {
     ...getBasicConfigDefinitions(variables),
@@ -28,6 +29,7 @@ export const getConfigDefinitions = (
     ...getBasicRabbitMqConfigDefinitions(variables),
     tenantId,
     environmentId,
+    idServiceAuthBaseUrl,
   };
 };
 

@@ -2,6 +2,7 @@ import { getLoginPgPool } from '@axinom/mosaic-db-common';
 import { RascalConfigBuilder } from '@axinom/mosaic-message-bus';
 import { Express } from 'express';
 import { Config } from '../common';
+import { registerChannelsMessaging } from './channels/register-channels-messaging';
 import { registerCollectionsMessaging } from './collections/register-collections-messaging';
 import { registerMoviesMessaging } from './movies/register-movies-messaging';
 import { registerTvshowsMessaging } from './tvshows/register-tvshows-messaging';
@@ -16,5 +17,6 @@ export function registerMessaging(
     ...registerMoviesMessaging(config, loginPool),
     ...registerTvshowsMessaging(config, loginPool),
     ...registerCollectionsMessaging(config, loginPool),
+    ...registerChannelsMessaging(config, loginPool),
   ];
 }
