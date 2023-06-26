@@ -1055,12 +1055,13 @@ describe('EntitlementEndpointPlugin', () => {
         // Act
         const resp = await ctx.runGqlQuery(
           ENTITLEMENT_REQUEST,
-          { input: { entityId: 'movie-1' } },
+          { input: { entityId: `${type}-1` } },
           {
             ip: '89.219.153.70', // EE
             authContext: {
               subject: createTestEndUser(),
             },
+            token: 'mock_token',
           },
         );
 
@@ -1104,6 +1105,7 @@ describe('EntitlementEndpointPlugin', () => {
             authContext: {
               subject: createTestEndUser(),
             },
+            token: 'mock_token',
           },
         );
 
