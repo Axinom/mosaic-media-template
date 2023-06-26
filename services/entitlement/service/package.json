@@ -51,7 +51,7 @@
     "@axinom/mosaic-id-utils": "0.15.2",
     "@axinom/mosaic-message-bus": "0.14.5",
     "@axinom/mosaic-messages": "0.28.0",
-    "@axinom/mosaic-service-common": "0.33.0",
+    "@axinom/mosaic-service-common": "0.33.0-rc.17",
     "ajv": "^7.2.4",
     "ajv-formats": "^1.6.1",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
