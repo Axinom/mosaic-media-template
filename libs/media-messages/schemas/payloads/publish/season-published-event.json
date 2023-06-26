@@ -34,6 +34,7 @@
     "cast": {
       "description": "Cast of the season.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "string"
       }
@@ -53,6 +54,7 @@
     "genre_ids": {
       "description": "Sorted array of genre IDs assigned to a season.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "$ref": "./common.json#/definitions/tvshow_genre_id"
       }

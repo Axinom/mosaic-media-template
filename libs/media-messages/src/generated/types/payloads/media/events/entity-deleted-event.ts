@@ -3,11 +3,11 @@
  */
 export interface EntityDeletedEvent {
   /**
-   * The name of the table from which the entity was deleted.
+   * String of minimum length of 1 character, which is also cannot consist of only whitespace characters.
    */
   table_name: string;
   /**
-   * The name of the primary key column for the table from which the entity was deleted.
+   * String of minimum length of 1 character, which is also cannot consist of only whitespace characters.
    */
   primary_key_name: string;
   /**

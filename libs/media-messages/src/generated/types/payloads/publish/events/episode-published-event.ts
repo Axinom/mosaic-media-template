@@ -38,35 +38,35 @@ export interface EpisodePublishedEvent {
    */
   studio?: string;
   /**
-   * Date of first release.
+   * Release date of an item.
    */
   released?: string;
   /**
    * Cast of the episode.
    */
-  cast?: Array<string>;
+  cast?: string[];
   /**
    * Array of production countries
    */
-  production_countries?: Array<string>;
+  production_countries?: string[];
   /**
    * Array of tags associated with the content.
    */
-  tags?: Array<string>;
+  tags?: string[];
   /**
    * Array of images associated with the content.
    */
-  images: Array<Image>;
+  images: Image[];
   /**
    * Array of licenses assigned to the content.
    */
-  licenses: Array<License>;
+  licenses: License[];
   /**
    * Sorted array of genre IDs assigned to an episode.
    */
-  genre_ids: Array<string>;
+  genre_ids: string[];
   /**
    * Array of video streams associated with movie or episode.
    */
-  videos: Array<Video>;
+  videos: Video[];
 }

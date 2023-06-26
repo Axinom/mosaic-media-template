@@ -23,13 +23,13 @@ export interface CollectionPublishedEvent {
   /**
    * Array of tags associated with the content.
    */
-  tags?: Array<string>;
+  tags?: string[];
   /**
    * Array of images associated with the content.
    */
-  images?: Array<Image>;
+  images?: Image[];
   /**
    * Array of content related items metadata.
    */
-  related_items: Array<RelatedItem>;
+  related_items: RelatedItem[];
 }

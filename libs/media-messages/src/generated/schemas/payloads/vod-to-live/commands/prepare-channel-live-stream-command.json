@@ -11,10 +11,10 @@
   ],
   "properties": {
     "channel_id": {
-      "description": "Unique identifier of the channel.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^$|.*\\S.*"
+      "pattern": "^$|.*\\S.*",
+      "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
     },
     "smil": {
       "type": "string",

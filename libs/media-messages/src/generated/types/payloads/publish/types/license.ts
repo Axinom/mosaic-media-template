@@ -5,7 +5,7 @@ export interface License {
   /**
    * Array of countries where the license applies.
    */
-  countries?: Array<string>;
+  countries?: string[];
   /**
    * Time when license becomes valid.
    */

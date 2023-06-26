@@ -42,7 +42,7 @@ export function getAjv(): Ajv {
 
   ajv = new Ajv({
     allErrors: true,
-    strict: true,
+    strict: 'log', // disable throwing on strict errors https://ajv.js.org/strict-mode.html#ignored-additionalitems-keyword
   });
   addFormats(ajv);
   return ajv;

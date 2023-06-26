@@ -3,7 +3,7 @@
  */
 export interface UnpublishEntityCommand {
   /**
-   * The name of the database table to use.
+   * String of minimum length of 1 character, which is also cannot consist of only whitespace characters.
    */
   table_name: string;
   /**

@@ -7,6 +7,7 @@
     "genres": {
       "description": "List of TV show genres.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "description": "An individual TV show genre object.",
         "type": "object",

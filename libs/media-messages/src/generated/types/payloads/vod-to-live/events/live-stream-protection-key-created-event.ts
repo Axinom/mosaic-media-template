@@ -3,11 +3,11 @@
  */
 export interface LiveStreamProtectionKeyCreatedEvent {
   /**
-   * Unique identifier of the channel.
+   * String of minimum length of 1 character, which is also cannot consist of only whitespace characters.
    */
   channel_id: string;
   /**
-   * Unique identifier of the protection key.
+   * A UUID.
    */
   key_id: string;
 }

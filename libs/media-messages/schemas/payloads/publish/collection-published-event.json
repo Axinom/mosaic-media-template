@@ -28,6 +28,7 @@
     "related_items": {
       "description": "Array of content related items metadata.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "description": "Related item metadata.",
         "type": "object",

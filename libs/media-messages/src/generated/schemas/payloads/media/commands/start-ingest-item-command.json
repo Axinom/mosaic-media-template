@@ -41,10 +41,10 @@
           "description": "Type that specifies type of media item to be created or updated using this ingest item data."
         },
         "external_id": {
-          "description": "Type that specifies type of media item to be created or updated using this ingest item data.",
           "type": "string",
           "minLength": 1,
-          "pattern": "^$|.*\\S.*"
+          "pattern": "^$|.*\\S.*",
+          "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
         },
         "data": {
           "type": "object",

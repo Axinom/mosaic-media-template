@@ -1,4 +1,3 @@
-import { IngestItemData } from './ingest-item-data';
 import { IngestItemType } from './ingest-item-type';
 /**
  * Contents of a specific ingest item.
@@ -9,11 +8,8 @@ export interface Item {
    */
   type: IngestItemType;
   /**
-   * Type that specifies type of media item to be created or updated using this ingest item data.
+   * String of minimum length of 1 character, which is also cannot consist of only whitespace characters.
    */
   external_id: string;
-  /**
-   * Metadata of a specific ingest item.
-   */
-  data: IngestItemData;
+  data: { [name: string]: unknown };
 }
