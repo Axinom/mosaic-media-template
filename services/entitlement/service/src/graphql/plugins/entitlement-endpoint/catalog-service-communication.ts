@@ -61,39 +61,51 @@ const getCatalogMappedError = mosaicErrorMappingFactory<{
   return undefined;
 });
 
-const getValidatedKeyIds = (
+const assertEntityIsFound: <T>(
+  value: T | undefined | null,
   type: EntityWithVideoType,
-  id: string,
-  videos: MovieVideo[] | EpisodeVideo[] | ChannelVideo | null | undefined,
-): string[] => {
-  const identifier = `${type} with ID '${id}'`;
-
-  if (!videos) {
+  identifier: string,
+) => asserts value = <TType>(
+  value: TType | undefined | null,
+  type: EntityWithVideoType,
+  identifier: string,
+): asserts value is TType => {
+  if (!value) {
     throw new MosaicError({
       ...CommonErrors.EntityNotFound,
       messageParams: [identifier, type],
     });
   }
+};
 
-  if (!Array.isArray(videos)) {
-    if (isNullOrWhitespace(videos.keyId)) {
-      throw new MosaicError({
-        ...CommonErrors.VideoNotProtected,
-        messageParams: [identifier],
-      });
-    }
-    if (
-      isNullOrWhitespace(videos.dashStreamUrl) ||
-      isNullOrWhitespace(videos.hlsStreamUrl)
-    ) {
-      throw new MosaicError({
-        ...CommonErrors.ChannelStreamUnavailable,
-        messageParams: [identifier],
-      });
-    }
-    return [videos.keyId];
+const getValidatedChannelKeyId = (
+  video: ChannelVideo,
+  identifier: string,
+): string[] => {
+  if (isNullOrWhitespace(video.keyId)) {
+    throw new MosaicError({
+      ...CommonErrors.VideoNotProtected,
+      messageParams: [identifier],
+    });
   }
 
+  if (
+    isNullOrWhitespace(video.dashStreamUrl) ||
+    isNullOrWhitespace(video.hlsStreamUrl)
+  ) {
+    throw new MosaicError({
+      ...CommonErrors.ChannelStreamUnavailable,
+      messageParams: [identifier],
+    });
+  }
+
+  return [video.keyId];
+};
+
+const getValidatedMediaKeyIds = (
+  videos: MovieVideo[] | EpisodeVideo[],
+  identifier: string,
+): string[] => {
   if (videos.length === 0) {
     throw new MosaicError({
       ...CommonErrors.NoMainVideo,
@@ -113,7 +125,7 @@ const getValidatedKeyIds = (
     video?.videoStreams?.nodes?.map((videoStream) => videoStream.keyId),
   );
 
-  // A protected video will always have at least one stream with non-empty Key ID
+  // A protected video must always have at least one stream with non-empty Key ID
   if (!video.isProtected || keyIds.length === 0) {
     throw new MosaicError({
       ...CommonErrors.VideoNotProtected,
@@ -156,21 +168,28 @@ export const getVideoKeyIds = async (
   countryCode?: string,
 ): Promise<string[]> => {
   try {
+    const identifier = `${type} with ID '${id}'`;
     const client = new GraphQLClient(urljoin(catalogUrl, 'graphql'));
     const { GetMovieMainVideo, GetEpisodeMainVideo, GetChannelVideo } =
       getSdk(client);
     switch (type) {
       case 'movie': {
         const result = await GetMovieMainVideo({ id, countryCode });
-        return getValidatedKeyIds(type, id, result.data?.movie?.videos.nodes);
+        const videos = result.data?.movie?.videos.nodes;
+        assertEntityIsFound(videos, type, identifier);
+        return getValidatedMediaKeyIds(videos, identifier);
       }
       case 'episode': {
         const result = await GetEpisodeMainVideo({ id, countryCode });
-        return getValidatedKeyIds(type, id, result.data?.episode?.videos.nodes);
+        const videos = result.data?.episode?.videos.nodes;
+        assertEntityIsFound(videos, type, identifier);
+        return getValidatedMediaKeyIds(videos, identifier);
       }
       case 'channel': {
         const result = await GetChannelVideo({ id });
-        return getValidatedKeyIds(type, id, result.data.channel);
+        const video = result.data.channel;
+        assertEntityIsFound(video, type, identifier);
+        return getValidatedChannelKeyId(video, identifier);
       }
       default:
         throw new UnreachableCaseError(type);
