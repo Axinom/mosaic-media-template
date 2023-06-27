@@ -3,11 +3,11 @@
  */
 export interface PrepareTransitionLiveStreamCommand {
   /**
-   * Unique identifier of the channel.
+   * A string with at least one character and not only whitespace characters.
    */
   channel_id: string;
   /**
-   * Unique identifier of the playlist.
+   * A string with at least one character and not only whitespace characters.
    */
   playlist_id: string;
   /**

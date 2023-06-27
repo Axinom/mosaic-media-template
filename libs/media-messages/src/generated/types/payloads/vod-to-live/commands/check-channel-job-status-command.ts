@@ -3,7 +3,7 @@
  */
 export interface CheckChannelJobStatusCommand {
   /**
-   * Unique identifier of the channel.
+   * A string with at least one character and not only whitespace characters.
    */
   channel_id: string;
   /**

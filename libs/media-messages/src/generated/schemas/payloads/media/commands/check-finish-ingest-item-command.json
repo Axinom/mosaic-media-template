@@ -10,10 +10,10 @@
   ],
   "properties": {
     "ingest_item_step_id": {
-      "description": "A unique identifier that is used to track ingest messages for a single document to keep ingest document status up-to-date.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^$|.*\\S.*"
+      "pattern": "^$|.*\\S.*",
+      "description": "A string with at least one character and not only whitespace characters."
     },
     "ingest_item_id": {
       "type": "integer",

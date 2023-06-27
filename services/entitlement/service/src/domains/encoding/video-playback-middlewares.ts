@@ -60,7 +60,7 @@ const verifyDemoWebhookRequestMiddleware = (
         typeof requestBody === 'string' ? JSON.parse(requestBody) : requestBody;
       if (payloadJsonSchema) {
         const ajv = new Ajv({
-          strict: true,
+          strict: 'log', // disable throwing on strict errors https://ajv.js.org/strict-mode.html#ignored-additionalitems-keyword
           allErrors: true,
         });
         addFormats(ajv);

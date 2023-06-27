@@ -1,7 +1,31 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "type":"object",
+  "type": "object",
   "title": "delete_entity_command",
   "description": "Delete a single entity command schema.",
-  "$ref": "../../common/commands/bulk-entity-command.json"
+  "additionalProperties": false,
+  "required": ["table_name", "primary_key_name", "entity_id"],
+  "properties": {
+    "table_name": {
+      "$ref": "../../common.json#/definitions/non_empty_string",
+      "description": "The name of the database table to use."
+    },
+    "primary_key_name": {
+      "$ref": "../../common.json#/definitions/non_empty_string",
+      "description": "The name of the primary key column for the database table to use."
+    },
+    "entity_id": {
+      "type": "integer",
+      "description": "Id of the selected entity."
+    },
+    "entity_type": {
+      "type": "string",
+      "description": "The name of the entity type."
+    },
+    "input": {
+      "type": "object",
+      "title": "bulk_entity_input",
+      "description": "Additional input data."
+    }
+  }
 }

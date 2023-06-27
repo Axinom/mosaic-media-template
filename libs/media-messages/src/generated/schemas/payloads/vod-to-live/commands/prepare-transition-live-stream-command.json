@@ -12,16 +12,16 @@
   ],
   "properties": {
     "channel_id": {
-      "description": "Unique identifier of the channel.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^$|.*\\S.*"
+      "pattern": "^$|.*\\S.*",
+      "description": "A string with at least one character and not only whitespace characters."
     },
     "playlist_id": {
-      "description": "Unique identifier of the playlist.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^$|.*\\S.*"
+      "pattern": "^$|.*\\S.*",
+      "description": "A string with at least one character and not only whitespace characters."
     },
     "transition_start_date_time": {
       "description": "Start date and time of the transition.",
