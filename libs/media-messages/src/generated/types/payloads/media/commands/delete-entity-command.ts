@@ -3,11 +3,11 @@
  */
 export interface DeleteEntityCommand {
   /**
-   * String of minimum length of 1 character, which is also cannot consist of only whitespace characters.
+   * A string with at least one character and not only whitespace characters.
    */
   table_name: string;
   /**
-   * String of minimum length of 1 character, which is also cannot consist of only whitespace characters.
+   * A string with at least one character and not only whitespace characters.
    */
   primary_key_name: string;
   /**

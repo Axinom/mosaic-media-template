@@ -5121,6 +5121,12 @@ enum ErrorCodesEnum {
   """
   ERROR_WRAPPER
 
+  """The %s is not an object."""
+  VALUE_IS_NOT_OBJECT
+
+  """The %s is missing required properties: %s."""
+  OBJECT_IS_MISSING_PROPERTIES
+
   """The %s does not have a license."""
   LICENSE_NOT_FOUND
 

@@ -23,7 +23,7 @@
       "type": "string",
       "minLength": 1,
       "pattern": "^$|.*\\S.*",
-      "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+      "description": "A string with at least one character and not only whitespace characters."
     },
     "original_title": {
       "description": "Original title of the episode.",
@@ -33,7 +33,7 @@
       "type": "string",
       "minLength": 1,
       "pattern": "^$|.*\\S.*",
-      "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+      "description": "A string with at least one character and not only whitespace characters."
     },
     "description": {
       "description": "Extended synopsis.",
@@ -135,7 +135,7 @@
               "type": "string",
               "minLength": 1,
               "pattern": "^$|.*\\S.*",
-              "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+              "description": "A string with at least one character and not only whitespace characters."
             }
           },
           "start_time": {
@@ -184,7 +184,7 @@
             "type": "string",
             "minLength": 1,
             "pattern": "^$|.*\\S.*",
-            "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+            "description": "A string with at least one character and not only whitespace characters."
           },
           "length_in_seconds": {
             "description": "Video length in seconds",

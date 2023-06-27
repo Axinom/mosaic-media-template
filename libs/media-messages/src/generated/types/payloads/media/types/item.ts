@@ -8,7 +8,7 @@ export interface Item {
    */
   type: IngestItemType;
   /**
-   * String of minimum length of 1 character, which is also cannot consist of only whitespace characters.
+   * A string with at least one character and not only whitespace characters.
    */
   external_id: string;
   data: { [name: string]: unknown };
