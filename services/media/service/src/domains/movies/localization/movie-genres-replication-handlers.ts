@@ -4,7 +4,9 @@ import { Config } from '../../../common';
 import {
   assertLocalizationColumn,
   assertLocalizationData,
+  getChangedFields,
   getDeleteMessageData,
+  getInsertedFields,
   getUpsertMessageData,
   ReplicationOperationHandlers,
 } from '../../common';
@@ -36,10 +38,8 @@ export const movieGenresReplicationHandlers = (
   return {
     insertHandler: async (newData: Dict<unknown> | undefined) => {
       assertMovieGenre(newData);
-      const fields: Dict<unknown> = {};
-      for (const { field_name } of fieldDefinitions) {
-        fields[field_name] = newData[field_name];
-      }
+
+      const fields = getInsertedFields(newData, fieldDefinitions);
 
       return getUpsertMessageData(
         config.serviceId,
@@ -57,12 +57,7 @@ export const movieGenresReplicationHandlers = (
       assertMovieGenre(newData);
       assertMovieGenre(oldData);
 
-      const fields: Dict<unknown> = {};
-      for (const { field_name } of fieldDefinitions) {
-        if (newData[field_name] !== oldData[field_name]) {
-          fields[field_name] = newData[field_name];
-        }
-      }
+      const fields = getChangedFields(newData, oldData, fieldDefinitions);
       if (isEmptyObject(fields)) {
         return undefined; // Do not send a message if no localizable fields have changed
       }
