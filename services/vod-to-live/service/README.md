@@ -15,6 +15,10 @@ integrated with our Mosaic Channel Management Service. Please keep in mind that
 as an experimental service, some refinements and improvements are likely still
 needed.
 
+The root `package.json` excludes the VOD-to-Live Service from the global
+`build`, `clean`, and `dev:services` scripts. And the Jest tests are not run
+from the root either.
+
 ## Overview
 
 The VOD-to-Live Service is a customizable component of the Media solution that
