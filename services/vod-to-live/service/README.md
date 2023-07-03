@@ -1,5 +1,24 @@
 # VOD-to-Live Service
 
+## N.B. Experimental
+
+This service is designed to facilitate the transition from Video-on-Demand (VOD)
+content to live channels, providing a seamless experience for our users. It is
+based on the beta version of the Unified Streaming Virtual Channels solution.
+Although in its experimental phase, the main flows of the service have been
+implemented, offering a solid foundation for further development or integrating
+with other streaming providers.
+
+The purpose of this service is to serve as a source for developers interested in
+understanding the inner workings of a VOD-to-Live Service and how it can be
+integrated with our Mosaic Channel Management Service. Please keep in mind that
+as an experimental service, some refinements and improvements are likely still
+needed.
+
+The root `package.json` excludes the VOD-to-Live Service from the global
+`build`, `clean`, and `dev:services` scripts. And the Jest tests are not run
+from the root either.
+
 ## Overview
 
 The VOD-to-Live Service is a customizable component of the Media solution that
