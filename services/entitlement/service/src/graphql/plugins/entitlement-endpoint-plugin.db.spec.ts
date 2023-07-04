@@ -10,9 +10,14 @@ import {
 import gql from 'graphql-tag';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
+import { v4 as uuid } from 'uuid';
 import { insert } from 'zapatos/db';
 import { CommonErrors } from '../../common';
-import { ENTITY_TYPE_MOVIES } from '../../domains';
+import {
+  ENTITY_TYPE_CHANNELS,
+  ENTITY_TYPE_EPISODES,
+  ENTITY_TYPE_MOVIES,
+} from '../../domains';
 import {
   getSdk as getBillingSdk,
   Sdk as BillingSdk,
@@ -35,6 +40,7 @@ jest.mock('../../generated/graphql/catalog');
 const catalogStub = stub<CatalogSdk>({
   GetEpisodeMainVideo: () => catalogCall(),
   GetMovieMainVideo: () => catalogCall(),
+  GetChannelVideo: () => catalogCall(),
 });
 const catalogMock = getCatalogSdk as jest.MockedFunction<typeof getCatalogSdk>;
 catalogMock.mockReturnValue(catalogStub);
@@ -70,7 +76,7 @@ describe('EntitlementEndpointPlugin', () => {
   let errorOverride: jest.SpyInstance;
   let warnOverride: jest.SpyInstance;
   let debugOverride: jest.SpyInstance;
-  let expectedJwtPayload: (persistence: boolean) => unknown;
+  let expectedJwtPayload: (persistence: boolean, keyIds?: string[]) => unknown;
   const jwtRegex =
     /([A-Za-z0-9]{36,})\.([A-Za-z0-9]{100,})\.([A-Za-z0-9-_]{40,})/gi;
   let defaultRequestContext: TestRequestContext;
@@ -126,6 +132,7 @@ describe('EntitlementEndpointPlugin', () => {
       },
     ],
   };
+  const channelId = uuid();
 
   beforeAll(async () => {
     ctx = await createTestContext({
@@ -141,10 +148,11 @@ describe('EntitlementEndpointPlugin', () => {
       authContext: {
         subject: createTestEndUser(),
       },
+      token: 'mock_token',
     };
 
     const policy = getPolicy('DEFAULT');
-    expectedJwtPayload = (persistence: boolean) => ({
+    expectedJwtPayload = (persistence: boolean, keyIds = [keyId1, keyId2]) => ({
       version: 1,
       com_key_id: ctx.config.drmLicenseCommunicationKeyId,
       message: {
@@ -154,16 +162,10 @@ describe('EntitlementEndpointPlugin', () => {
           allow_persistence: persistence,
         },
         content_keys_source: {
-          inline: [
-            {
-              id: keyId1,
-              usage_policy: 'Policy A',
-            },
-            {
-              id: keyId2,
-              usage_policy: 'Policy A',
-            },
-          ],
+          inline: keyIds.map((keyId) => ({
+            id: keyId,
+            usage_policy: 'Policy A',
+          })),
         },
         content_key_usage_policies: [
           {
@@ -182,13 +184,13 @@ describe('EntitlementEndpointPlugin', () => {
   });
 
   beforeEach(async () => {
-    errorOverride = await jest
+    errorOverride = jest
       .spyOn(console, 'error')
       .mockImplementation((obj) => JSON.parse(obj));
-    warnOverride = await jest
+    warnOverride = jest
       .spyOn(console, 'warn')
       .mockImplementation((obj) => JSON.parse(obj));
-    debugOverride = await jest
+    debugOverride = jest
       .spyOn(console, 'debug')
       .mockImplementation((obj) => JSON.parse(obj));
     catalogCall = () => undefined;
@@ -198,13 +200,13 @@ describe('EntitlementEndpointPlugin', () => {
     await insert('claim_sets', {
       key: 'TEST',
       title: 'test',
-      claims: [ENTITY_TYPE_MOVIES],
+      claims: [ENTITY_TYPE_MOVIES, ENTITY_TYPE_CHANNELS, ENTITY_TYPE_EPISODES],
     }).run(ctx.ownerPool);
   });
 
   afterEach(async () => {
     await ctx.truncate('claim_sets');
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   afterAll(async () => {
@@ -243,8 +245,14 @@ describe('EntitlementEndpointPlugin', () => {
       },
     );
 
-    // Maximum numeric value is 2147483647, from SQL int4 type, which is 10 digits long. Checking 11 digits here as well.
-    it.each(['season-1', 'movie-', 'episode-', '-234', 'movie-21474836470'])(
+    it.each([
+      'season-1',
+      'movie-',
+      'episode-',
+      '-234',
+      'movie-21474836470', // Maximum numeric value is 2147483647, from SQL int4 type, which is 10 digits long. Checking 11 digits here.
+      '68945fc1-237-4685-8dac-31cb808dc74d', // invalid uuid
+    ])(
       'Request with invalid id -> error thrown and logged as WARN',
       async (entityId) => {
         // Act
@@ -258,7 +266,7 @@ describe('EntitlementEndpointPlugin', () => {
         expect(resp.data?.entitlement).toBeFalsy();
         expect(resp.errors).toMatchObject([
           {
-            message: `The provided entity ID '${entityId}' is invalid. It must start with 'movie-' or 'episode-' followed by a number.`,
+            message: `The provided entity ID '${entityId}' is invalid. It must be either a UUID, or start with 'movie-' or 'episode-' followed by a number.`,
             code: CommonErrors.InvalidEntityId.code,
             path: ['entitlement'],
             details: undefined,
@@ -267,7 +275,7 @@ describe('EntitlementEndpointPlugin', () => {
 
         const loggedObject = getFirstMockResult<any>(warnOverride);
         expect(loggedObject).toMatchObject({
-          message: `The provided entity ID '${entityId}' is invalid. It must start with 'movie-' or 'episode-' followed by a number.`,
+          message: `The provided entity ID '${entityId}' is invalid. It must be either a UUID, or start with 'movie-' or 'episode-' followed by a number.`,
           loglevel: 'WARN',
         });
       },
@@ -419,6 +427,37 @@ describe('EntitlementEndpointPlugin', () => {
       });
     });
 
+    it('Response with null channel -> error thrown and logged as WARN', async () => {
+      // Arrange
+      catalogCall = () => ({
+        data: { channel: null },
+      });
+
+      // Act
+      const resp = await ctx.runGqlQuery(
+        ENTITLEMENT_REQUEST,
+        { input: { entityId: channelId } },
+        defaultRequestContext,
+      );
+
+      // Assert
+      expect(resp.data?.entitlement).toBeFalsy();
+      expect(resp.errors).toMatchObject([
+        {
+          message: `The channel with ID '${channelId}' cannot be retrieved. Please make sure that the channel is successfully published.`,
+          code: CommonErrors.EntityNotFound.code,
+          path: ['entitlement'],
+          details: undefined,
+        },
+      ]);
+
+      const loggedObject = getFirstMockResult<any>(warnOverride);
+      expect(loggedObject).toMatchObject({
+        message: `The channel with ID '${channelId}' cannot be retrieved. Please make sure that the channel is successfully published.`,
+        loglevel: 'WARN',
+      });
+    });
+
     it('Response with movie without videos -> error thrown and logged as ERROR', async () => {
       // Arrange
       catalogCall = () => ({
@@ -451,6 +490,79 @@ describe('EntitlementEndpointPlugin', () => {
         loglevel: 'ERROR',
       });
     });
+
+    it.each([{}, { keyId: null }])(
+      'Response with channel with missing keyId -> error thrown and logged as WARN',
+      async (channel) => {
+        // Arrange
+        catalogCall = () => ({
+          data: { channel },
+        });
+
+        // Act
+        const resp = await ctx.runGqlQuery(
+          ENTITLEMENT_REQUEST,
+          { input: { entityId: channelId } },
+          defaultRequestContext,
+        );
+
+        // Assert
+        expect(resp.data?.entitlement).toBeFalsy();
+        expect(resp.errors).toMatchObject([
+          {
+            message: `The requested video for the channel with ID '${channelId}' is not protected. An entitlement message to receive a DRM license is therefore not required.`,
+            code: CommonErrors.VideoNotProtected.code,
+            path: ['entitlement'],
+            details: undefined,
+          },
+        ]);
+
+        const loggedObject = getFirstMockResult<any>(warnOverride);
+        expect(loggedObject).toMatchObject({
+          message: `The requested video for the channel with ID '${channelId}' is not protected. An entitlement message to receive a DRM license is therefore not required.`,
+          loglevel: 'WARN',
+        });
+      },
+    );
+
+    it.each([
+      { keyId: 'test-value' },
+      { keyId: 'test-value', dashStreamUrl: 'test-value' },
+      { keyId: 'test-value', hlsStreamUrl: 'test-value' },
+      { keyId: 'test-value', dashStreamUrl: 'test-value', hlsStreamUrl: null },
+    ])(
+      'Response with channel with missing stream urls -> error thrown and logged as WARN',
+      async (channel) => {
+        // Arrange
+        catalogCall = () => ({
+          data: { channel },
+        });
+
+        // Act
+        const resp = await ctx.runGqlQuery(
+          ENTITLEMENT_REQUEST,
+          { input: { entityId: channelId } },
+          defaultRequestContext,
+        );
+
+        // Assert
+        expect(resp.data?.entitlement).toBeFalsy();
+        expect(resp.errors).toMatchObject([
+          {
+            message: `The requested data for the channel with ID '${channelId}' does not have the required stream URLs. It is possible that the channel is still being processed.`,
+            code: CommonErrors.ChannelStreamUnavailable.code,
+            path: ['entitlement'],
+            details: undefined,
+          },
+        ]);
+
+        const loggedObject = getFirstMockResult<any>(warnOverride);
+        expect(loggedObject).toMatchObject({
+          message: `The requested data for the channel with ID '${channelId}' does not have the required stream URLs. It is possible that the channel is still being processed.`,
+          loglevel: 'WARN',
+        });
+      },
+    );
 
     it('Response with no billing subscriptions -> error thrown and logged as ERROR', async () => {
       // Arrange
@@ -882,6 +994,7 @@ describe('EntitlementEndpointPlugin', () => {
           authContext: {
             subject: createTestEndUser(),
           },
+          token: 'mock_token',
         },
       );
 
@@ -924,44 +1037,94 @@ describe('EntitlementEndpointPlugin', () => {
   });
 
   describe('Success cases', () => {
-    it('valid response received from catalog in prod mode - no error, expected jwt returned', async () => {
-      // Arrange
-      catalogCall = () => ({
-        data: {
-          movie: {
-            videos: {
-              nodes: [{ isProtected: true, videoStreams }],
+    it.each(['movie', 'episode'])(
+      'valid response received from catalog in prod mode for %p - no error, expected jwt returned',
+      async (type) => {
+        // Arrange
+        catalogCall = () => ({
+          data: {
+            [type]: {
+              videos: {
+                nodes: [{ isProtected: true, videoStreams }],
+              },
             },
           },
-        },
-      });
-      countryCode = 'EE';
+        });
+        countryCode = 'EE';
 
-      // Act
-      const resp = await ctx.runGqlQuery(
-        ENTITLEMENT_REQUEST,
-        { input: { entityId: 'movie-1' } },
-        {
-          ip: '89.219.153.70', // EE
-          authContext: {
-            subject: createTestEndUser(),
+        // Act
+        const resp = await ctx.runGqlQuery(
+          ENTITLEMENT_REQUEST,
+          { input: { entityId: `${type}-1` } },
+          {
+            ip: '89.219.153.70', // EE
+            authContext: {
+              subject: createTestEndUser(),
+            },
+            token: 'mock_token',
           },
-        },
-      );
+        );
 
-      // Assert
-      expect(resp.errors).toBeFalsy();
+        // Assert
+        expect(resp.errors).toBeFalsy();
 
-      expect(resp?.data?.entitlement.entitlementMessageJwt).toMatch(jwtRegex);
-      const jwtParts = resp?.data?.entitlement.entitlementMessageJwt
-        .split('.')
-        .map((part: string) => Buffer.from(part, 'base64').toString());
-      expect(JSON.parse(jwtParts[0])).toEqual({
-        alg: 'HS256',
-        typ: 'JWT',
-      });
-      expect(JSON.parse(jwtParts[1])).toEqual(expectedJwtPayload(false));
-    });
+        expect(resp?.data?.entitlement.entitlementMessageJwt).toMatch(jwtRegex);
+        const jwtParts = resp?.data?.entitlement.entitlementMessageJwt
+          .split('.')
+          .map((part: string) => Buffer.from(part, 'base64').toString());
+        expect(JSON.parse(jwtParts[0])).toEqual({
+          alg: 'HS256',
+          typ: 'JWT',
+        });
+        expect(JSON.parse(jwtParts[1])).toEqual(expectedJwtPayload(false));
+      },
+    );
+
+    it.each([true, false])(
+      'valid response received from catalog in prod mode for channel - no error, expected jwt returned',
+      async (allowPersistence) => {
+        // Arrange
+        catalogCall = () => ({
+          data: {
+            channel: {
+              keyId: keyId1,
+              dashStreamUrl: 'test-value',
+              hlsStreamUrl: 'test-value',
+            },
+          },
+        });
+        countryCode = 'EE';
+
+        // Act
+        const resp = await ctx.runGqlQuery(
+          ENTITLEMENT_REQUEST,
+          // allowPersistance is ignored for channels
+          { input: { entityId: channelId, allowPersistence } },
+          {
+            ip: '89.219.153.70', // EE
+            authContext: {
+              subject: createTestEndUser(),
+            },
+            token: 'mock_token',
+          },
+        );
+
+        // Assert
+        expect(resp.errors).toBeFalsy();
+
+        expect(resp?.data?.entitlement.entitlementMessageJwt).toMatch(jwtRegex);
+        const jwtParts = resp?.data?.entitlement.entitlementMessageJwt
+          .split('.')
+          .map((part: string) => Buffer.from(part, 'base64').toString());
+        expect(JSON.parse(jwtParts[0])).toEqual({
+          alg: 'HS256',
+          typ: 'JWT',
+        });
+        expect(JSON.parse(jwtParts[1])).toEqual(
+          expectedJwtPayload(false, [keyId1]),
+        );
+      },
+    );
 
     it('valid response received from catalog in prod mode - with duplicate drm key ids, no error, expected jwt returned with de-duplicated drm key ids', async () => {
       // Arrange
@@ -1003,6 +1166,7 @@ describe('EntitlementEndpointPlugin', () => {
           authContext: {
             subject: createTestEndUser(),
           },
+          token: 'mock_token',
         },
       );
 
@@ -1030,6 +1194,7 @@ describe('EntitlementEndpointPlugin', () => {
         authContext: {
           subject: createTestEndUser(),
         },
+        token: 'mock_token',
       };
       countryCode = 'HR';
 

@@ -121,6 +121,7 @@ export interface ITestContext {
 
 export interface TestRequestContext {
   authContext: ManagementAuthenticationContext;
+  token?: string;
 }
 
 export const createTestRequestContext = (
@@ -131,6 +132,7 @@ export const createTestRequestContext = (
     authContext: {
       subject: subject ?? createTestUser(serviceId),
     },
+    token: 'mock_token',
   };
 };
 

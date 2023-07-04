@@ -5,6 +5,7 @@ import { CommonErrors } from '../../../common';
 import {
   COUNTRY_CLAIM_PREFIX,
   ENABLE_VIDEOS_DOWNLOAD,
+  ENTITY_TYPE_CHANNELS,
   ENTITY_TYPE_EPISODES,
   ENTITY_TYPE_MOVIES,
   QUALITY_HD,
@@ -69,7 +70,7 @@ describe('validateUserClaims', () => {
       expect(error.code).toEqual(CommonErrors.SubscriptionValidationError.code);
     });
 
-    it.each(['movie', 'episode'])(
+    it.each(['movie', 'episode', 'channel'])(
       'Subscription Plan without claims for %p',
       async (type) => {
         // Act
@@ -95,7 +96,8 @@ describe('validateUserClaims', () => {
 
     it.each([
       [ENTITY_TYPE_EPISODES, 'movie'],
-      [ENTITY_TYPE_MOVIES, 'episode'],
+      [ENTITY_TYPE_CHANNELS, 'episode'],
+      [ENTITY_TYPE_MOVIES, 'channel'],
     ])(
       'Subscription Plan with a mismatched entity claim for %p',
       async (claim, type) => {
@@ -191,6 +193,7 @@ describe('validateUserClaims', () => {
     it.each([
       ['movie', ENTITY_TYPE_MOVIES],
       ['episode', ENTITY_TYPE_EPISODES],
+      ['channel', ENTITY_TYPE_CHANNELS],
     ])(
       'Just %p entity type claim is enough for validation to pass without persistence or countries',
       async (type, claim) => {
@@ -244,7 +247,7 @@ describe('validateUserClaims', () => {
       expect(claims).toEqual([ENTITY_TYPE_MOVIES, `${COUNTRY_CLAIM_PREFIX}NL`]);
     });
 
-    it('Enable videos download claim is returned when allowPersistance is set to true', async () => {
+    it('Enable videos download claim is returned when allowPersistance is set to true for movies', async () => {
       // Arrange
       await update(
         'claim_sets',
@@ -263,6 +266,27 @@ describe('validateUserClaims', () => {
 
       // Assert
       expect(claims).toEqual([ENTITY_TYPE_MOVIES, ENABLE_VIDEOS_DOWNLOAD]);
+    });
+
+    it('Enable videos download claim is not returned when allowPersistance is set to true for channels', async () => {
+      // Arrange
+      await update(
+        'claim_sets',
+        { claims: [ENTITY_TYPE_CHANNELS, ENABLE_VIDEOS_DOWNLOAD] },
+        { key: claimSetKey },
+      ).run(ctx.ownerPool);
+
+      // Act
+      const claims = await validateUserClaims(
+        subscriptionPlanId,
+        'channel',
+        'NL',
+        true,
+        ctx.ownerPool,
+      );
+
+      // Assert
+      expect(claims).toEqual([ENTITY_TYPE_CHANNELS]);
     });
 
     it('Enable videos download claim is not returned when allowPersistance is set to false', async () => {

@@ -2,10 +2,6 @@ import { Dict, UnreachableCaseError } from '@axinom/mosaic-service-common';
 import jwt from 'jsonwebtoken';
 import { Config } from '../../../common';
 import { ENABLE_VIDEOS_DOWNLOAD } from '../../../domains';
-import {
-  EpisodeVideoStream,
-  MovieVideoStream,
-} from '../../../generated/graphql/catalog';
 
 type PolicyMode = 'DEFAULT' | 'DEV' | 'STRICT';
 
@@ -68,7 +64,7 @@ export const getPolicy = (mode: PolicyMode): Dict<unknown> => {
 };
 
 export const generateEntitlementMessageJwt = (
-  keyIds: (MovieVideoStream | EpisodeVideoStream)['keyId'][] | undefined,
+  keyIds: string[],
   claims: string[],
   config: Config,
   policyMode: PolicyMode,
@@ -84,7 +80,7 @@ export const generateEntitlementMessageJwt = (
         allow_persistence: claims.includes(ENABLE_VIDEOS_DOWNLOAD), // Allows to specify whether the license can be persisted on the playback device.
       },
       content_keys_source: {
-        inline: [...new Set(keyIds?.filter(Boolean) ?? [])].map((id) => ({
+        inline: keyIds.map((id) => ({
           id,
           usage_policy: 'Policy A',
         })),

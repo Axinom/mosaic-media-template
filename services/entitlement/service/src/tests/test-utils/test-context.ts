@@ -96,6 +96,7 @@ export interface TestRequestContext {
   headers?: Dict<string>;
   ip?: string;
   authContext: EndUserAuthenticationContext;
+  token?: string;
 }
 
 export interface ITestContext {

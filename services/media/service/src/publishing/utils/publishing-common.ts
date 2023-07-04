@@ -1,5 +1,5 @@
-import Ajv from 'ajv-v6';
-import * as draft04 from 'ajv-v6/lib/refs/json-schema-draft-04.json';
+import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
 import { singularize } from 'graphile-build';
 import { PublishEntityCommand } from 'media-messages';
 import { v4 as uuidv4 } from 'uuid';
@@ -31,22 +31,20 @@ export function buildPublishingId(
   return `${singularize(table)}-${entityId}`;
 }
 
-let ajv: Ajv.Ajv;
+let ajv: Ajv;
 /**
- * Returns an Ajv (v6) instance that's configured to use draft-04 meta schema.
+ * Returns an Ajv instance.
  */
-export function getAjv(): Ajv.Ajv {
+export function getAjv(): Ajv {
   if (ajv) {
     return ajv;
   }
 
   ajv = new Ajv({
-    schemaId: 'id',
     allErrors: true,
-    jsonPointers: true,
+    strict: 'log', // disable throwing on strict errors https://ajv.js.org/strict-mode.html#ignored-additionalitems-keyword
   });
-  ajv.addMetaSchema(draft04);
-
+  addFormats(ajv);
   return ajv;
 }
 

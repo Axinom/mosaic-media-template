@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "check_channel_job_status_command",
+  "description": "Check channel creation job status.",
+  "additionalProperties": false,
+  "required": [
+    "seconds_elapsed_while_waiting",
+    "channel_id"
+  ],
+  "properties": {
+    "channel_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*",
+      "description": "A string with at least one character and not only whitespace characters."
+    },
+    "seconds_elapsed_while_waiting": {
+      "type": "integer",
+      "description": "Seconds counter to track the amount of time waiting for channel to go live. If this counter reaches configurable amount of minutes - live stream processing is considered as failed for an unknown reason, e.g. somehow the whole process froze."
+    }
+  }
+}

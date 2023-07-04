@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "title": "collection_published_event",
   "description": "Definition of the collection publish format.",
@@ -13,7 +13,7 @@
       "type": "string",
       "minLength": 1,
       "pattern": "^$|.*\\S.*",
-      "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+      "description": "A string with at least one character and not only whitespace characters."
     },
     "synopsis": {
       "description": "Short description.",
@@ -26,6 +26,7 @@
     "tags": {
       "description": "Array of tags associated with the content.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "string"
       }
@@ -33,6 +34,7 @@
     "images": {
       "description": "Array of images associated with the content.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "description": "Asset image metadata.",
         "type": "object",
@@ -77,6 +79,7 @@
     "related_items": {
       "description": "Array of content related items metadata.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "description": "Related item metadata.",
         "type": "object",

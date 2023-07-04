@@ -1,11 +1,15 @@
 import { OwnerPgPool } from '@axinom/mosaic-db-common';
-import { MosaicError } from '@axinom/mosaic-service-common';
+import {
+  MosaicError,
+  UnreachableCaseError,
+} from '@axinom/mosaic-service-common';
 import { pluralize } from 'inflection';
 import { parent, select, selectOne, self as value, SQL, sql } from 'zapatos/db';
 import { CommonErrors } from '../../../common';
 import {
   COUNTRY_CLAIM_PREFIX,
   ENABLE_VIDEOS_DOWNLOAD,
+  ENTITY_TYPE_CHANNELS,
   ENTITY_TYPE_EPISODES,
   ENTITY_TYPE_MOVIES,
   QUALITY_HD,
@@ -59,9 +63,9 @@ export const validateUserClaims = async (
   const appliedClaims = await getAppliedClaims(subscriptionPlanId, ownerPool);
 
   if (appliedClaims.length === 0) {
-    const moviesOrEpisodes = pluralize(type);
+    const pluralIdentifier = pluralize(type);
     throw new MosaicError({
-      message: `The users subscription does not allow playback of ${moviesOrEpisodes} as it does not define any claims.`,
+      message: `The users subscription does not allow playback of ${pluralIdentifier} as it does not define any claims.`,
       code: CommonErrors.SubscriptionValidationError.code,
     });
   }
@@ -81,7 +85,18 @@ export const validateUserClaims = async (
     });
   }
 
-  if (allowPersistence && !appliedClaims.includes(ENABLE_VIDEOS_DOWNLOAD)) {
+  if (type === 'channel' && !appliedClaims.includes(ENTITY_TYPE_CHANNELS)) {
+    throw new MosaicError({
+      message: `Users subscription does not allow playback of channels.`,
+      code: CommonErrors.SubscriptionValidationError.code,
+    });
+  }
+
+  if (
+    type !== 'channel' &&
+    allowPersistence &&
+    !appliedClaims.includes(ENABLE_VIDEOS_DOWNLOAD)
+  ) {
     throw new MosaicError({
       message: `License persistence was requested, but Enable Videos Download claim was not found.`,
       code: CommonErrors.SubscriptionValidationError.code,
@@ -103,10 +118,19 @@ export const validateUserClaims = async (
 
   // Claims selection
   const claimsToReturn = [];
-  if (type === 'movie') {
-    claimsToReturn.push(ENTITY_TYPE_MOVIES);
-  } else {
-    claimsToReturn.push(ENTITY_TYPE_EPISODES);
+
+  switch (type) {
+    case 'movie':
+      claimsToReturn.push(ENTITY_TYPE_MOVIES);
+      break;
+    case 'episode':
+      claimsToReturn.push(ENTITY_TYPE_EPISODES);
+      break;
+    case 'channel':
+      claimsToReturn.push(ENTITY_TYPE_CHANNELS);
+      break;
+    default:
+      throw new UnreachableCaseError(type);
   }
 
   if (countryClaims.length > 0) {
@@ -114,7 +138,11 @@ export const validateUserClaims = async (
   }
 
   // double-checking the claim inclusion to be extra sure
-  if (allowPersistence && appliedClaims.includes(ENABLE_VIDEOS_DOWNLOAD)) {
+  if (
+    type !== 'channel' &&
+    allowPersistence &&
+    appliedClaims.includes(ENABLE_VIDEOS_DOWNLOAD)
+  ) {
     claimsToReturn.push(ENABLE_VIDEOS_DOWNLOAD);
   }
 

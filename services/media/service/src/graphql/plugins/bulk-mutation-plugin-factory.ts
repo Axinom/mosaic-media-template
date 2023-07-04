@@ -22,7 +22,10 @@ import {
 import { Table } from 'zapatos/schema';
 import { getLongLivedToken } from '../../common';
 import { getPkName } from '../postgraphile-utils';
-import { ExtendedGraphQLContext } from './extended-graphql-context';
+import {
+  ExtendedGraphQLContext,
+  getValidatedExtendedContext,
+} from './extended-graphql-context';
 
 /**
  * Additional metadata about a GraphQL filter type used in a bulk action.
@@ -297,6 +300,7 @@ export const BulkMutationPluginFactory = (
               context: ExtendedGraphQLContext,
               resolveInfo: GraphQLResolveInfo,
             ) {
+              const { jwtToken, config } = getValidatedExtendedContext(context);
               const ids = await getEntityIds(
                 filter,
                 input,
@@ -304,10 +308,7 @@ export const BulkMutationPluginFactory = (
                 resolveInfo.schema,
               );
 
-              const token = await getLongLivedToken(
-                context.jwtToken ?? '',
-                context.config,
-              );
+              const token = await getLongLivedToken(jwtToken, config);
 
               return settings.resolverBodyBuilder(
                 ids,

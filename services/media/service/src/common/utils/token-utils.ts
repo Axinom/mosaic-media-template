@@ -32,7 +32,7 @@ export const getLongLivedToken = async (
   const token = await generateLongLivedToken(
     config.idServiceAuthBaseUrl,
     serviceAccountToken.accessToken,
-    subjectToken ?? '',
+    subjectToken,
     604800,
   );
   return token.accessToken;

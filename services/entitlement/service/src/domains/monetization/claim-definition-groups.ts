@@ -13,6 +13,10 @@ export const ENTITY_TYPE_MOVIES = 'ENTITY_TYPE_MOVIES';
  */
 export const ENTITY_TYPE_EPISODES = 'ENTITY_TYPE_EPISODES';
 /**
+ * A claim that is responsible for allowing playback of all Channel streams.
+ */
+export const ENTITY_TYPE_CHANNELS = 'ENTITY_TYPE_CHANNELS';
+/**
  * A prefix to easily find country-specific claims, after which a 2-letter country code is added.
  */
 export const COUNTRY_CLAIM_PREFIX = 'COUNTRY_';
@@ -58,6 +62,10 @@ export const claimDefinitionGroups: ClaimDefinitionGroup[] = [
       {
         claim: ENTITY_TYPE_EPISODES,
         title: 'All Episodes',
+      },
+      {
+        claim: ENTITY_TYPE_CHANNELS,
+        title: 'All Channels',
       },
     ],
   },

@@ -1,5 +1,4 @@
 import {
-  assertDictionary,
   BulkIdParameters,
   DefinePlugin,
   GenericBulkPluginFactory,
@@ -7,6 +6,7 @@ import {
 import { Plugin } from 'graphile-build';
 import * as GraphQL from 'graphql';
 import { getLongLivedToken } from '../../common';
+import { getValidatedExtendedContext } from './extended-graphql-context';
 
 export const MediaBulkPluginFactory = (
   messageType: string,
@@ -21,15 +21,13 @@ export const MediaBulkPluginFactory = (
     tableName,
     graphQLAdditionalInput,
   }: BulkIdParameters): Promise<void> => {
-    assertDictionary(graphQLContext);
+    const { jwtToken, config, messagingBroker } =
+      getValidatedExtendedContext(graphQLContext);
 
     if (entityIds.length > 0) {
-      const token = await getLongLivedToken(
-        graphQLContext.jwtToken ?? '',
-        graphQLContext.config,
-      );
+      const token = await getLongLivedToken(jwtToken, config);
       for (const id of entityIds) {
-        await graphQLContext.messagingBroker.publish(
+        await messagingBroker.publish(
           messageType,
           {
             entity_id: id,

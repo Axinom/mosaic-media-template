@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "title": "episode_published_event",
   "description": "Definition of the TV show episode publish format.",
@@ -42,6 +42,7 @@
     "cast": {
       "description": "Cast of the episode.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "string"
       }
@@ -61,6 +62,7 @@
     "genre_ids": {
       "description": "Sorted array of genre IDs assigned to an episode.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "$ref": "./common.json#/definitions/tvshow_genre_id"
       }

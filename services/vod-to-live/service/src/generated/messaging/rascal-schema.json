@@ -1,0 +1,344 @@
+{
+  "vhosts": {
+    "vhost-name": {
+      "assert": false,
+      "exchanges": {
+        "command": {
+          "type": "topic"
+        },
+        "event": {
+          "type": "topic"
+        },
+        "delay": {
+          "type": "topic"
+        },
+        "retry": {
+          "type": "topic"
+        },
+        "dead_letter": {
+          "type": "topic"
+        }
+      },
+      "queues": {
+        "delay:10sec": {
+          "options": {
+            "arguments": {
+              "x-message-ttl": 10000,
+              "x-dead-letter-exchange": "retry"
+            }
+          }
+        },
+        "delay:30sec": {
+          "options": {
+            "arguments": {
+              "x-message-ttl": 30000,
+              "x-dead-letter-exchange": "retry"
+            }
+          }
+        },
+        "vod-to-live-service:dead_letter": {
+          "options": {
+            "arguments": {
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "vod-to-live-service:channel:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "vod-to-live-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "vod-to-live-service:channel:unpublished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "vod-to-live-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "vod-to-live-service:playlist:published": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "vod-to-live-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "vod-to-live-service:playlist:unpublished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "vod-to-live-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "vod-to-live-service:transition:prepare_live_stream": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "vod-to-live-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "vod-to-live-service:channel:prepare_live_stream": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "vod-to-live-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "vod-to-live-service:channel:check_job_status": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "vod-to-live-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        }
+      },
+      "bindings": {
+        "vod-to-live-service:dead_letter": {
+          "source": "dead_letter",
+          "bindingKey": "vod-to-live-service.dead_letter",
+          "destination": "vod-to-live-service:dead_letter"
+        },
+        "delay:10sec": {
+          "source": "delay",
+          "bindingKey": "delay.10sec",
+          "destination": "delay:10sec"
+        },
+        "delay:30sec": {
+          "source": "delay",
+          "bindingKey": "delay.30sec",
+          "destination": "delay:30sec"
+        },
+        "retry:vod-to-live-service:channel:published": {
+          "source": "retry",
+          "bindingKey": "vod-to-live-service:channel:published.#",
+          "destination": "vod-to-live-service:channel:published"
+        },
+        "vod-to-live-service:channel:published": {
+          "source": "event",
+          "bindingKey": "ax-channel-service.*.*.channel.published",
+          "destination": "vod-to-live-service:channel:published"
+        },
+        "retry:vod-to-live-service:channel:unpublished": {
+          "source": "retry",
+          "bindingKey": "vod-to-live-service:channel:unpublished.#",
+          "destination": "vod-to-live-service:channel:unpublished"
+        },
+        "vod-to-live-service:channel:unpublished": {
+          "source": "event",
+          "bindingKey": "ax-channel-service.*.*.channel.unpublished",
+          "destination": "vod-to-live-service:channel:unpublished"
+        },
+        "retry:vod-to-live-service:playlist:published": {
+          "source": "retry",
+          "bindingKey": "vod-to-live-service:playlist:published.#",
+          "destination": "vod-to-live-service:playlist:published"
+        },
+        "vod-to-live-service:playlist:published": {
+          "source": "event",
+          "bindingKey": "ax-channel-service.*.*.playlist.published",
+          "destination": "vod-to-live-service:playlist:published"
+        },
+        "retry:vod-to-live-service:playlist:unpublished": {
+          "source": "retry",
+          "bindingKey": "vod-to-live-service:playlist:unpublished.#",
+          "destination": "vod-to-live-service:playlist:unpublished"
+        },
+        "vod-to-live-service:playlist:unpublished": {
+          "source": "event",
+          "bindingKey": "ax-channel-service.*.*.playlist.unpublished",
+          "destination": "vod-to-live-service:playlist:unpublished"
+        },
+        "retry:vod-to-live-service:transition:prepare_live_stream": {
+          "source": "retry",
+          "bindingKey": "vod-to-live-service:transition:prepare_live_stream.#",
+          "destination": "vod-to-live-service:transition:prepare_live_stream"
+        },
+        "vod-to-live-service:transition:prepare_live_stream": {
+          "source": "command",
+          "bindingKey": "vod-to-live-service.transition.prepare_live_stream",
+          "destination": "vod-to-live-service:transition:prepare_live_stream"
+        },
+        "retry:vod-to-live-service:channel:prepare_live_stream": {
+          "source": "retry",
+          "bindingKey": "vod-to-live-service:channel:prepare_live_stream.#",
+          "destination": "vod-to-live-service:channel:prepare_live_stream"
+        },
+        "vod-to-live-service:channel:prepare_live_stream": {
+          "source": "command",
+          "bindingKey": "vod-to-live-service.channel.prepare_live_stream",
+          "destination": "vod-to-live-service:channel:prepare_live_stream"
+        },
+        "retry:vod-to-live-service:channel:check_job_status": {
+          "source": "retry",
+          "bindingKey": "vod-to-live-service:channel:check_job_status.#",
+          "destination": "vod-to-live-service:channel:check_job_status"
+        },
+        "vod-to-live-service:channel:check_job_status": {
+          "source": "command",
+          "bindingKey": "vod-to-live-service.channel.check_job_status",
+          "destination": "vod-to-live-service:channel:check_job_status"
+        }
+      },
+      "publications": {
+        "retry_in_10sec": {
+          "exchange": "delay",
+          "options": {
+            "CC": [
+              "delay.10sec"
+            ]
+          }
+        },
+        "retry_in_30sec": {
+          "exchange": "delay",
+          "options": {
+            "CC": [
+              "delay.30sec"
+            ]
+          }
+        },
+        "PrepareTransitionLiveStream": {
+          "exchange": "command",
+          "routingKey": "vod-to-live-service.transition.prepare_live_stream"
+        },
+        "PrepareChannelLiveStream": {
+          "exchange": "command",
+          "routingKey": "vod-to-live-service.channel.prepare_live_stream"
+        },
+        "CheckChannelJobStatus": {
+          "exchange": "command",
+          "routingKey": "vod-to-live-service.channel.check_job_status"
+        },
+        "CheckChannelJobStatusFailed": {
+          "exchange": "event",
+          "routingKey": "vod-to-live-service.channel.check_job_status_failed"
+        },
+        "CheckChannelJobStatusSucceeded": {
+          "exchange": "event",
+          "routingKey": "vod-to-live-service.channel.check_job_status_succeeded"
+        },
+        "LiveStreamProtectionKeyCreated": {
+          "exchange": "event",
+          "routingKey": "vod-to-live-service.channel.protection_key_created"
+        }
+      },
+      "subscriptions": {
+        "ChannelPublished": {
+          "queue": "vod-to-live-service:channel:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "ChannelUnpublished": {
+          "queue": "vod-to-live-service:channel:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "PlaylistPublished": {
+          "queue": "vod-to-live-service:playlist:published",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "PlaylistUnpublished": {
+          "queue": "vod-to-live-service:playlist:unpublished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "PrepareTransitionLiveStream": {
+          "queue": "vod-to-live-service:transition:prepare_live_stream",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "PrepareChannelLiveStream": {
+          "queue": "vod-to-live-service:channel:prepare_live_stream",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "CheckChannelJobStatus": {
+          "queue": "vod-to-live-service:channel:check_job_status",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        }
+      }
+    }
+  },
+  "recovery": {
+    "deferred_retry": [
+      {
+        "strategy": "forward",
+        "attempts": 4,
+        "publication": "retry_in_10sec",
+        "xDeathFix": true
+      },
+      {
+        "strategy": "forward",
+        "attempts": 8,
+        "publication": "retry_in_30sec",
+        "xDeathFix": true
+      },
+      {
+        "strategy": "forward",
+        "attempts": 9,
+        "publication": "retry_in_30sec",
+        "options": {
+          "options": {
+            "headers": {
+              "mosaic_final_error": true
+            }
+          }
+        }
+      },
+      {
+        "strategy": "nack"
+      }
+    ]
+  },
+  "redeliveries": {
+    "counters": {
+      "mosaic": {
+        "type": "inMemory"
+      }
+    }
+  }
+}
