@@ -1,3 +1,4 @@
+import { ImageLoaderProps } from '@axinom/mosaic-ui';
 import { Maybe, Scalars } from '../generated/graphql';
 
 export type VideoID = Scalars['UUID'];
@@ -34,6 +35,13 @@ export interface VideoSelectExplorerProps {
 export interface ImageCoverProps {
   /** Image Id */
   id: string;
+}
+
+export interface ImagePreviewProps extends Omit<ImageLoaderProps, 'imgSrc'> {
+  /** Image Id */
+  id: string;
+  /** Whether to render a full size preview image or a thumbnail. default('preview') */
+  type?: 'preview' | 'thumbnail';
 }
 
 export interface ImageSelectExplorerProps {

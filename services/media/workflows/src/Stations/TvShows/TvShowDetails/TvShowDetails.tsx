@@ -14,6 +14,7 @@ import {
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
+import clsx from 'clsx';
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
@@ -56,9 +57,7 @@ import { TvShowDetailsFormData } from './TvShowDetails.types';
 const tvShowDetailSchema = Yup.object().shape<
   ObjectSchemaDefinition<TvShowDetailsFormData>
 >({
-  title: Yup.string()
-    .required('Title is a required field')
-    .max(100),
+  title: Yup.string().required('Title is a required field').max(100),
 });
 
 export const TvShowDetails: React.FC = () => {
@@ -102,9 +101,8 @@ export const TvShowDetails: React.FC = () => {
       formData: TvShowDetailsFormData,
       initialData: DetailsProps<TvShowDetailsFormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const tagAssignmentMutations = generateArrayMutations({
         current: formData.tags,
@@ -129,16 +127,17 @@ export const TvShowDetails: React.FC = () => {
           const tvshowGenresId = allGenres[name].id;
 
           if (tvshowGenresId) {
-            return generateUpdateGQLFragment<
-              MutationCreateTvshowsTvshowGenreArgs
-            >('createTvshowsTvshowGenre', {
-              input: {
-                tvshowsTvshowGenre: {
-                  tvshowId,
-                  tvshowGenresId,
+            return generateUpdateGQLFragment<MutationCreateTvshowsTvshowGenreArgs>(
+              'createTvshowsTvshowGenre',
+              {
+                input: {
+                  tvshowsTvshowGenre: {
+                    tvshowId,
+                    tvshowGenresId,
+                  },
                 },
               },
-            });
+            );
           } else {
             return '';
           }
@@ -146,11 +145,12 @@ export const TvShowDetails: React.FC = () => {
         generateDeleteMutation: (name) => {
           const tvshowGenresId = allGenres[name].id;
           if (tvshowGenresId) {
-            return generateUpdateGQLFragment<
-              MutationDeleteTvshowsTvshowGenreArgs
-            >('deleteTvshowsTvshowGenre', {
-              input: { tvshowId, tvshowGenresId },
-            });
+            return generateUpdateGQLFragment<MutationDeleteTvshowsTvshowGenreArgs>(
+              'deleteTvshowsTvshowGenre',
+              {
+                input: { tvshowId, tvshowGenresId },
+              },
+            );
           } else {
             return '';
           }
@@ -281,8 +281,8 @@ const Panel: React.FC = () => {
             {formatDateTime(values.updatedDate)} by {values.updatedUser}
           </Paragraph>
         </Section>
-        <Section title="Assigned Items">
-          <Paragraph title="Videos">
+        <Section title="Assignments">
+          <Paragraph title="Assigned items">
             <div className={classes.datalist}>
               <div>Seasons</div>
               <div className={classes.rightAlignment}>
@@ -292,12 +292,13 @@ const Panel: React.FC = () => {
               <div className={classes.rightAlignment}>
                 {values.tvshowsTrailers?.totalCount}/many
               </div>
-            </div>
-          </Paragraph>
-          <Paragraph title="Images">
-            <div className={classes.datalist}>
-              <div>Cover</div>
-              <div className={classes.rightAlignment}>
+              <div className={classes.assignedItemsSpacing}>Cover</div>
+              <div
+                className={clsx(
+                  classes.rightAlignment,
+                  classes.assignedItemsSpacing,
+                )}
+              >
                 {coverImageCount} / 1
               </div>
               <div>Teaser</div>

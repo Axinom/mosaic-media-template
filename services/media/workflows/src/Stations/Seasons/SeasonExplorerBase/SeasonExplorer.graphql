@@ -3,6 +3,10 @@ fragment SeasonExplorerProperties on Season {
   publishStatus
   index
   externalId
+  tvshow {
+    id
+    title
+  }
   seasonsImages(condition: { imageType: COVER }) {
     nodes {
       imageId
