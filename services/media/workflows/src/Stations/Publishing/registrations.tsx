@@ -7,6 +7,7 @@ import { SnapshotRegistry } from './SnapshotRegistryExplorer/SnapshotRegistry';
 
 export function register(app: PiletApi, _extensions: Extensions): void {
   const snapshotsNav = {
+    name: 'snapshots',
     path: '/snapshots',
     label: 'Snapshot Registry',
     icon: <MediaIcons icon={MediaIconName.Snapshots} />,

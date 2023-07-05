@@ -25,6 +25,7 @@ import { MovieVideoManagement } from './MovieVideoManagement/MovieVideoManagemen
 
 export function register(app: PiletApi, extensions: Extensions): void {
   const moviesNav = {
+    name: 'movies',
     path: '/movies',
     label: 'Movies',
     icon: <MediaIcons icon={MediaIconName.Movie} />,
@@ -126,6 +127,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
   );
 
   const movieSettingsNav = {
+    name: 'movie-genres',
     path: '/settings/media/moviegenres',
     label: 'Movie Genres',
     icon: <MediaIcons icon={MediaIconName.MovieGenres} />,
