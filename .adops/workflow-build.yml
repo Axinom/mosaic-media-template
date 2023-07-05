@@ -12,9 +12,8 @@ variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   continueBuild: true
   tag: '$(Build.BuildNumber)'
-  ? ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'),
-    eq(variables['Build.Reason'], 'Schedule')) }}
-  : additionalBuildNameSuffix: 'cb-'
+  ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.Reason'], 'Schedule')) }}:
+    additionalBuildNameSuffix: 'cb-'
   ${{ else }}:
     additionalBuildNameSuffix: ''
 
@@ -35,9 +34,8 @@ stages:
           # If not, skip the rest of the steps.
           # By default, the value of `continueBuild` will be true, this allowing all the steps in the pipeline to run from
           # non-dev branches.
-          - ? ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'),
-              eq(variables['Build.Reason'], 'Schedule')) }}
-            : - task: AzureCLI@2
+          - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.Reason'], 'Schedule')) }}:
+              - task: AzureCLI@2
                 displayName: Generate Changelist
                 env:
                   AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
@@ -48,14 +46,14 @@ stages:
                   inlineScript: |
                     echo "Skip Change List Check: $(skipChangeList)"
                     [[ "$(skipChangeList)" == "true" ]] && exit 0
-
+                    
                     echo "Variable cbContinuousDeploymentEnabled is set to $(cbContinuousDeploymentEnabled)"
                     previousSuccessfulCommitId=$(az pipelines build list --definition-ids $(System.DefinitionId) --result succeeded --reason schedule --top 1 --organization $(System.CollectionUri) --project $(System.TeamProject) --query "[0].sourceVersion" --output tsv)
-
+                    
                     echo "Current Commit ID                 : $(Build.SourceVersion)"
                     echo "Previous Scheduled Build Commit ID: $previousSuccessfulCommitId"
                     echo "Generating file delta between $(Build.SourceVersion) and $previousSuccessfulCommitId"
-
+                    
                     DIFFS="$(git diff $(Build.SourceVersion) $previousSuccessfulCommitId --name-only)"
                     echo "Changed File List: $DIFFS"
                     [[ "$(cbContinuousDeploymentEnabled)" == "true" && "${DIFFS[@]}" =~ "$(packageRoot)" ]] || echo "##vso[task.setvariable variable=continueBuild;]false"
@@ -78,12 +76,12 @@ stages:
               - script: |
                   ORIGINAL_PKG_VER=`npx -q json -f "$(packageRoot)/package.json" version`
                   NEW_PKG_VER="${ORIGINAL_PKG_VER}-$(tag)"
-
+                  
                   echo "Current package.json version is: [${ORIGINAL_PKG_VER}]"
                   echo "Updating package.json version to: [${NEW_PKG_VER}]"
-
+                  
                   npx -q json -I -f "$(packageRoot)/package.json" -e "this.version = '${NEW_PKG_VER}'"
-
+                  
                   echo "Updated package.json version is: [`npx -q json -f \"$(packageRoot)/package.json\" version`]"
                 displayName:
                   'Updating package.json version to reflect the build number'
@@ -110,7 +108,7 @@ stages:
                 inputs:
                   targetType: 'inline'
                   script: |
-                    $buildType = if ("$(Build.SourceBranch)" -like "refs/heads/release*") { "stable" } else { "prerelease" }
+                    $buildType = if ("$(Build.SourceBranch)" -like "*refs/heads/release*" ) { "stable" } else { "prerelease" }
                     Write-Host "##vso[build.addbuildtag]$buildType"
                     Write-Host "##vso[build.addbuildtag]complete-build"
 
