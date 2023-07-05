@@ -49,12 +49,15 @@ query Episode($id: Int!) {
     publishedDate
     publishedUser
     season {
-    id
-    index
-    seasonsImages(condition: {imageType: COVER}, first: 1) {
+      id
+      index
+      seasonsImages(condition: {imageType: COVER}, first: 1) {
         nodes {
             imageId
         }
+      }
+      tvshow {
+        title
       }
     }
   }

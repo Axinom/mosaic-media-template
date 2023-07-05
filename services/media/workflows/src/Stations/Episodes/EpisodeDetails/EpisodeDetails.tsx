@@ -300,7 +300,10 @@ const Panel: React.FC = () => {
                 label="Open Details"
                 title={
                   typeof values.season?.index === 'number'
-                    ? `S${values.season?.index}`
+                    ? `S${values.season?.index}` +
+                      (values.season?.tvshow?.title
+                        ? `: ${values.season?.tvshow?.title}`
+                        : '')
                     : ''
                 }
               />
