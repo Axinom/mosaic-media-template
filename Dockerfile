@@ -43,4 +43,7 @@ COPY --from=build ["/checkout/$PACKAGE_ROOT/node_modules", "./node_modules/"]
 COPY --from=build ["/checkout/$PACKAGE_ROOT/dist", "./dist/"]
 COPY --from=build ["/checkout/$PACKAGE_ROOT/migrations", "./migrations/"]
 
+RUN chown -R node:node /app
+USER node
+
 CMD ["node", "dist/index.js"]
