@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": " -- internal scripts, do not change -- ",
+			"path": "services/catalog/service",
+			"problemMatcher": [],
+			"label": "npm:  -- internal scripts, do not change --  - services/catalog/service",
+			"detail": ""
+		}
+	]
+}

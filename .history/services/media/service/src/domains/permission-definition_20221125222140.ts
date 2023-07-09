@@ -1,8 +1,3 @@
-import {
-  ReviewsMutateOperations,
-  ReviewsReadOperations,
-} from './reviews/operation-groups';
-
 import { PermissionDefinition } from '@axinom/mosaic-id-guard';
 import { synchronizePermissions } from '@axinom/mosaic-id-link-be';
 import { Logger } from '@axinom/mosaic-service-common';
@@ -60,8 +55,6 @@ const permissions = [
     key: 'ADMIN',
     title: 'Admin',
     gqlOperations: [
-      ...ReviewsReadOperations,
-      ...ReviewsMutateOperations,
       ...MovieGenresReadOperations,
       ...MovieGenresMutateOperations,
       ...TvShowGenresReadOperations,
@@ -84,16 +77,6 @@ const permissions = [
       ...TvshowsDevOperations,
       ...CollectionDevOperations,
     ],
-  },
-  {
-    key: 'REVIEWS_VIEW',
-    title: 'Reviews: View',
-    gqlOperations: [...ReviewsReadOperations],
-  },
-  {
-    key: 'REVIEWS_EDIT',
-    title: 'Reviews: Edit',
-    gqlOperations: [...ReviewsReadOperations, ...ReviewsMutateOperations],
   },
   {
     key: 'SETTINGS_VIEW',

@@ -48,7 +48,7 @@ declare module 'zapatos/schema' {
       /**
       * **messaging_counter.expiration_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
+      * - `NOT NULL`, default: `((now() + '1 day'::interval) AT TIME ZONE 'utc'::text)`
       */
       expiration_date: Date;
     }
@@ -68,7 +68,7 @@ declare module 'zapatos/schema' {
       /**
       * **messaging_counter.expiration_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
+      * - `NOT NULL`, default: `((now() + '1 day'::interval) AT TIME ZONE 'utc'::text)`
       */
       expiration_date: db.DateString;
     }
@@ -88,7 +88,7 @@ declare module 'zapatos/schema' {
       /**
       * **messaging_counter.expiration_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
+      * - `NOT NULL`, default: `((now() + '1 day'::interval) AT TIME ZONE 'utc'::text)`
       */
       expiration_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
     }
@@ -108,7 +108,7 @@ declare module 'zapatos/schema' {
       /**
       * **messaging_counter.expiration_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
+      * - `NOT NULL`, default: `((now() + '1 day'::interval) AT TIME ZONE 'utc'::text)`
       */
       expiration_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
     }
@@ -128,7 +128,7 @@ declare module 'zapatos/schema' {
       /**
       * **messaging_counter.expiration_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
+      * - `NOT NULL`, default: `((now() + '1 day'::interval) AT TIME ZONE 'utc'::text)`
       */
       expiration_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
     }
