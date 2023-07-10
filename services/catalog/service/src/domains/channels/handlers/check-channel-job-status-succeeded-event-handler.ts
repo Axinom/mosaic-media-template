@@ -6,6 +6,7 @@ import {
 } from 'media-messages';
 import { IsolationLevel, selectOne, update } from 'zapatos/db';
 import { Config } from '../../../common';
+import { getChannelId } from '../common';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
 export class CheckChannelJobStatusSucceededEventHandler extends AuthenticatedMessageHandler<CheckChannelJobStatusSucceededEvent> {
@@ -21,17 +22,18 @@ export class CheckChannelJobStatusSucceededEventHandler extends AuthenticatedMes
   }
 
   async onMessage(payload: CheckChannelJobStatusSucceededEvent): Promise<void> {
+    const channelId = getChannelId(payload.channel_id);
     await transactionWithContext(
       this.loginPool,
       IsolationLevel.Serializable,
       { role: this.config.dbGqlRole },
       async (txnClient) => {
         const dbChannel = await selectOne('channel', {
-          id: payload.channel_id,
+          id: channelId,
         }).run(txnClient);
         if (!dbChannel) {
           throw new MosaicError({
-            message: `Channel with id ${payload.channel_id} not found! Failed to add links to channel's live stream.`,
+            message: `Channel with id ${channelId} not found! Failed to add links to channel's live stream.`,
             code: 'CHANNEL_NOT_FOUND',
           });
         }
@@ -41,7 +43,7 @@ export class CheckChannelJobStatusSucceededEventHandler extends AuthenticatedMes
             dash_stream_url: payload.dash_stream_url,
             hls_stream_url: payload.hls_stream_url,
           },
-          { id: payload.channel_id },
+          { id: channelId },
         ).run(txnClient);
       },
     );
