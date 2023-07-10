@@ -6,6 +6,7 @@ import {
 import { deletes, insert, IsolationLevel, upsert } from 'zapatos/db';
 import { channel_images } from 'zapatos/schema';
 import { Config } from '../../../common';
+import { getChannelId } from '../common';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
 export class ChannelPublishedEventHandler extends AuthenticatedMessageHandler<ChannelPublishedEvent> {
@@ -20,22 +21,23 @@ export class ChannelPublishedEventHandler extends AuthenticatedMessageHandler<Ch
   }
 
   async onMessage(payload: ChannelPublishedEvent): Promise<void> {
+    const channelId = getChannelId(payload.id);
     await transactionWithContext(
       this.loginPool,
       IsolationLevel.Serializable,
       { role: this.config.dbGqlRole },
       async (txnClient) => {
-        const dbChannel = await upsert(
+        await upsert(
           'channel',
           {
-            id: payload.id,
+            id: channelId,
             title: payload.title,
             description: payload.description,
           },
           ['id'],
         ).run(txnClient);
 
-        await deletes('channel_images', { channel_id: payload.id }).run(
+        await deletes('channel_images', { channel_id: channelId }).run(
           txnClient,
         );
         if (payload.images) {
@@ -43,7 +45,7 @@ export class ChannelPublishedEventHandler extends AuthenticatedMessageHandler<Ch
             'channel_images',
             payload.images.map(
               (image): channel_images.Insertable => ({
-                channel_id: dbChannel.id,
+                channel_id: channelId,
                 type: image.type,
                 path: image.path,
                 width: image.width,

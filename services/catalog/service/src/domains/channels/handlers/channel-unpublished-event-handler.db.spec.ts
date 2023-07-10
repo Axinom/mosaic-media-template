@@ -4,6 +4,7 @@ import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
+import { getChannelId } from '../common';
 import { ChannelUnpublishedEventHandler } from './channel-unpublished-event-handler';
 
 describe('ChannelPublishEventHandler', () => {
@@ -27,7 +28,8 @@ describe('ChannelPublishEventHandler', () => {
   describe('onMessage', () => {
     test('An existing channel is unpublished', async () => {
       // Arrange
-      const channelId = uuid();
+      const originalId = uuid();
+      const channelId = getChannelId(originalId);
       const insertedChannel = await insert('channel', {
         id: channelId,
         title: 'Some title',
@@ -42,7 +44,7 @@ describe('ChannelPublishEventHandler', () => {
       }).run(ctx.ownerPool);
 
       const message: ChannelUnpublishedEvent = {
-        id: channelId,
+        id: originalId,
       };
       const messageInfo = stub<MessageInfo<ChannelUnpublishedEvent>>({
         envelope: {
@@ -56,12 +58,12 @@ describe('ChannelPublishEventHandler', () => {
 
       // Assert
       const channel = await selectOne('channel', {
-        id: message.id,
+        id: channelId,
       }).run(ctx.ownerPool);
 
       expect(channel).toBeUndefined();
       const channelImage = await selectOne('channel_images', {
-        channel_id: message.id,
+        channel_id: channelId,
       }).run(ctx.ownerPool);
 
       expect(channelImage).toBeUndefined();

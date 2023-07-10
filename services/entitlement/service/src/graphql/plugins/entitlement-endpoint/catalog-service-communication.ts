@@ -141,9 +141,9 @@ export const getEntityType = (id: string): EntityWithVideoType => {
     throw new MosaicError(CommonErrors.EmptyEntityId);
   }
 
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  if (uuidRegex.test(id)) {
+  const channelUuidRegex =
+    /^channel-[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if (channelUuidRegex.test(id)) {
     return 'channel';
   }
 

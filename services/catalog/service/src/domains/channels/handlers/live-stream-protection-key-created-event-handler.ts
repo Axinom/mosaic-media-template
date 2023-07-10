@@ -6,6 +6,7 @@ import {
 } from 'media-messages';
 import { IsolationLevel, selectOne, update } from 'zapatos/db';
 import { Config } from '../../../common';
+import { getChannelId } from '../common';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
 export class LiveStreamProtectionKeyCreatedEventHandler extends AuthenticatedMessageHandler<LiveStreamProtectionKeyCreatedEvent> {
@@ -21,26 +22,25 @@ export class LiveStreamProtectionKeyCreatedEventHandler extends AuthenticatedMes
   }
 
   async onMessage(payload: LiveStreamProtectionKeyCreatedEvent): Promise<void> {
+    const channelId = getChannelId(payload.channel_id);
     await transactionWithContext(
       this.loginPool,
       IsolationLevel.Serializable,
       { role: this.config.dbGqlRole },
       async (txnClient) => {
         const dbChannel = await selectOne('channel', {
-          id: payload.channel_id,
+          id: channelId,
         }).run(txnClient);
         if (!dbChannel) {
           throw new MosaicError({
-            message: `Channel with id ${payload.channel_id} not found! Failed to add channel's DRM key id.`,
+            message: `Channel with id ${channelId} not found! Failed to add channel's DRM key id.`,
             code: 'CHANNEL_NOT_FOUND',
           });
         }
         await update(
           'channel',
-          {
-            key_id: payload.key_id,
-          },
-          { id: payload.channel_id },
+          { key_id: payload.key_id },
+          { id: channelId },
         ).run(txnClient);
       },
     );

@@ -121,7 +121,12 @@ export const setupEntitlementWebhookEndpoint = (
             (s) => s.key_id,
           ),
         );
-        const jwt = generateEntitlementMessageJwt(keyIds, [], config, 'STRICT');
+        const jwt = generateEntitlementMessageJwt(
+          keyIds,
+          [],
+          config,
+          config.isDev ? 'DEV' : 'STRICT',
+        );
         const response =
           generateWebhookResponse<EntitlementWebhookResponsePayload>({
             payload: {

@@ -6,6 +6,7 @@ import {
 } from '@axinom/mosaic-messages';
 import * as db from 'zapatos/db';
 import { Config } from '../../../common';
+import { getChannelId } from '../common';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
 export class ChannelUnpublishedEventHandler extends AuthenticatedMessageHandler<ChannelUnpublishedEvent> {
@@ -23,12 +24,13 @@ export class ChannelUnpublishedEventHandler extends AuthenticatedMessageHandler<
     payload: ChannelUnpublishedEvent,
     _message: MessageInfo<ChannelUnpublishedEvent>,
   ): Promise<void> {
+    const channelId = getChannelId(payload.id);
     await transactionWithContext(
       this.loginPool,
       db.IsolationLevel.Serializable,
       { role: this.config.dbGqlRole },
       async (txnClient) => {
-        await db.deletes('channel', { id: payload.id }).run(txnClient);
+        await db.deletes('channel', { id: channelId }).run(txnClient);
       },
     );
   }
