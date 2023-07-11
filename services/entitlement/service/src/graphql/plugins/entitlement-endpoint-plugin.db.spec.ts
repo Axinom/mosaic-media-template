@@ -132,7 +132,7 @@ describe('EntitlementEndpointPlugin', () => {
       },
     ],
   };
-  const channelId = uuid();
+  const channelId = `channel-${uuid()}`;
 
   beforeAll(async () => {
     ctx = await createTestContext({
@@ -249,9 +249,10 @@ describe('EntitlementEndpointPlugin', () => {
       'season-1',
       'movie-',
       'episode-',
+      'channel-',
       '-234',
       'movie-21474836470', // Maximum numeric value is 2147483647, from SQL int4 type, which is 10 digits long. Checking 11 digits here.
-      '68945fc1-237-4685-8dac-31cb808dc74d', // invalid uuid
+      '92b27f89-ac27-4e50-8fe7-e4cd75a5855e', // uuid without channel- prefix
     ])(
       'Request with invalid id -> error thrown and logged as WARN',
       async (entityId) => {
@@ -266,7 +267,7 @@ describe('EntitlementEndpointPlugin', () => {
         expect(resp.data?.entitlement).toBeFalsy();
         expect(resp.errors).toMatchObject([
           {
-            message: `The provided entity ID '${entityId}' is invalid. It must be either a UUID, or start with 'movie-' or 'episode-' followed by a number.`,
+            message: `The provided entity ID '${entityId}' is invalid. It must start with 'movie-' or 'episode-' followed by a number, or start with 'channel-' followed by UUID.`,
             code: CommonErrors.InvalidEntityId.code,
             path: ['entitlement'],
             details: undefined,
@@ -275,7 +276,7 @@ describe('EntitlementEndpointPlugin', () => {
 
         const loggedObject = getFirstMockResult<any>(warnOverride);
         expect(loggedObject).toMatchObject({
-          message: `The provided entity ID '${entityId}' is invalid. It must be either a UUID, or start with 'movie-' or 'episode-' followed by a number.`,
+          message: `The provided entity ID '${entityId}' is invalid. It must start with 'movie-' or 'episode-' followed by a number, or start with 'channel-' followed by UUID.`,
           loglevel: 'WARN',
         });
       },

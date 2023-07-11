@@ -6,6 +6,7 @@ import {
   createTestContext,
   ITestContext,
 } from '../../../tests/test-utils';
+import { getChannelId } from '../common';
 import { ChannelPublishedEventHandler } from './channel-published-event-handler';
 
 describe('ChannelPublishEventHandler', () => {
@@ -30,16 +31,17 @@ describe('ChannelPublishEventHandler', () => {
     test('A new channel is published', async () => {
       // Arrange
       const message = createChannelPublishedEvent(uuid());
+      const channelId = getChannelId(message.id);
 
       // Act
       await handler.onMessage(message);
 
       // Assert
       const channel = await selectOne('channel', {
-        id: message.id,
+        id: channelId,
       }).run(ctx.ownerPool);
       expect(channel).toEqual<channel.JSONSelectable>({
-        id: message.id,
+        id: channelId,
         title: message.title,
         description: message.description ?? null,
         dash_stream_url: null,
@@ -50,7 +52,7 @@ describe('ChannelPublishEventHandler', () => {
       const image = await selectOne(
         'channel_images',
         {
-          channel_id: message.id,
+          channel_id: channelId,
         },
         { columns: ['height', 'width', 'path', 'type'] },
       ).run(ctx.ownerPool);
@@ -60,13 +62,14 @@ describe('ChannelPublishEventHandler', () => {
 
     test('An existing channel is republished', async () => {
       // Arrange
+      const message = createChannelPublishedEvent(uuid());
+      const channelId = getChannelId(message.id);
       await insert('channel', {
-        id: 'channel-1',
+        id: channelId,
         title: 'Old title',
         dash_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.mpd',
         hls_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.m3u8',
       }).run(ctx.ownerPool);
-      const message = createChannelPublishedEvent('channel-1');
       message.title = 'New title';
 
       // Act
@@ -74,7 +77,7 @@ describe('ChannelPublishEventHandler', () => {
 
       // Assert
       const channel = await selectOne('channel', {
-        id: message.id,
+        id: channelId,
       }).run(ctx.ownerPool);
 
       expect(channel?.title).toEqual('New title');

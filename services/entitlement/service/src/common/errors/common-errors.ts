@@ -63,7 +63,7 @@ export const CommonErrors = {
   },
   InvalidEntityId: {
     message:
-      "The provided entity ID '%s' is invalid. It must be either a UUID, or start with 'movie-' or 'episode-' followed by a number.",
+      "The provided entity ID '%s' is invalid. It must start with 'movie-' or 'episode-' followed by a number, or start with 'channel-' followed by UUID.",
     code: 'INVALID_ENTITY_ID',
   },
   EntityNotFound: {
