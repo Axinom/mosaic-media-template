@@ -314,10 +314,10 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-messages/-/mosaic-messages-0.29.0.tgz#da8828cc21e04699bfaeb495c763fd3843a9b787"
   integrity sha512-iMoVHV3DqLvG++1gWsb/23tmryJTLWtkCnphbb2h0ZfYTzRj5ZGuOTo0qm9dsRFOZFSQG6o1/rVWVaF6ThHwIw==
 
-"@axinom/mosaic-portal@0.17.0":
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.17.0.tgz#1498e8beac6414978f9d28ca44547ea213bb7b87"
-  integrity sha512-gyr3NnfIYaleWZ0ZnQOSASgbKnSiQ8qRYrCllTXbfhIfj2ZTUwtX1Vi4CfpHb0HlKvJ/vbx+DUBCJtJN/jie/A==
+"@axinom/mosaic-portal@0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.17.1.tgz#407442634f20d358cd8cf3bfedad0ea4b17a1dd4"
+  integrity sha512-s5T5vf+vZ7ild1K9ec1hprjn+rXC7iyffFqOi4SMqnQ/fx9paht+jBD2yjDAAPBehF1mWEV7aQLFPqe6IiSIcg==
 
 "@axinom/mosaic-service-common@0.34.0", "@axinom/mosaic-service-common@^0.34.0":
   version "0.34.0"
@@ -349,10 +349,10 @@
     uuid-encoder "^1.2.0"
     verror "^1.10.1"
 
-"@axinom/mosaic-ui@0.33.0":
-  version "0.33.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.33.0.tgz#be1554b48bb63a297f92766b54a1641653153352"
-  integrity sha512-7oljY1ALvQZebsr3ajTWQDJpSZFnvRAN1gTK+x8spRa9iF0DGi63coRN45p9KmuN2tuj0iwW5FXJUiPoZNxl7Q==
+"@axinom/mosaic-ui@0.33.1":
+  version "0.33.1"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.33.1.tgz#031138ee7fe05193850ee963bd063cc3595710d3"
+  integrity sha512-qwpmF85RTj+gL0uIak1BjKxLfbBIJBqXEXANzRa1zET3IaAaXLOpDOaWyWkhm0fpFCWW11Ef6atRAZShhSWd4Q==
   dependencies:
     "@axinom/mosaic-core" "^0.4.6"
     "@faker-js/faker" "^7.4.0"
