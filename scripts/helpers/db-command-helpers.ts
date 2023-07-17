@@ -85,13 +85,10 @@ export const runResetQueries = async (
   dbLoginPassword: string,
   dbOwner: string,
   dbOwnerPassword: string,
-  dbEnvOwner?: string,
-  dbEnvOwnerPassword?: string,
   pgRoot?: string,
 ): Promise<void> => {
   const client = await pgPool.connect();
   try {
-    const createEnvOwner = dbEnvOwner && dbEnvOwnerPassword;
     const commands: string[] = [
       // Drop existing connections to database
       `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='${dbName}';`,
@@ -102,18 +99,12 @@ export const runResetQueries = async (
       `DROP ROLE IF EXISTS ${dbGqlRole};`,
       `DROP ROLE IF EXISTS ${dbLogin};`,
       `DROP ROLE IF EXISTS ${dbOwner};`,
-      createEnvOwner ? `DROP ROLE IF EXISTS ${dbEnvOwner};` : '',
 
       // Create a non-superuser user (unlike PostGraphile suggests) because we want to make the development database behave as close to the deployment database as possible. E.g. when deploying to Azure or AWS owner user will never be a superuser.
       `CREATE ROLE ${dbOwner} WITH LOGIN PASSWORD '${dbOwnerPassword}';`,
 
       // This is the no-access role that PostGraphile will run as by default
       `CREATE ROLE ${dbLogin} WITH LOGIN PASSWORD '${dbLoginPassword}' NOINHERIT;`,
-
-      // A second role similar to owner but without the permission to bypass row level security
-      createEnvOwner
-        ? `CREATE ROLE ${dbEnvOwner} WITH LOGIN PASSWORD '${dbEnvOwnerPassword}' NOINHERIT;`
-        : '',
 
       // This is the role that PostGraphile will switch to (from ${DATABASE_LOGIN}) during a GraphQL request
       // Basically, this is a group role
@@ -126,7 +117,6 @@ export const runResetQueries = async (
       // This is needed because in some cases we are using owner pool and switch into gql role, and even if we remove such occasions it can still happen in specific cases.
       // When owner is superuser - this is not needed, but in deployed environments and for test databases owner is a regular user and also needs such grant.
       `GRANT ${dbGqlRole} TO ${dbOwner};`,
-      createEnvOwner ? `GRANT ${dbGqlRole} TO ${dbEnvOwner};` : '',
 
       // Trying to create a database with a different owner than the user/role that is running the create db query will,
       // fail in Flexible Servers for Postgres servers in Azure. Therefore we grant the `dbOwner` role to the user that runs,
