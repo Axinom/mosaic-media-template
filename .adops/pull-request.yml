@@ -42,6 +42,11 @@ steps:
       sed -i 's/^\(RABBITMQ_PASSWORD=\)$/\1fake/' .env
       sed -i 's/^\(DEV_SERVICE_ACCOUNT_CLIENT_ID=\)$/\1fake/' .env
       sed -i 's/^\(DEV_SERVICE_ACCOUNT_CLIENT_SECRET=\)$/\1fake/' .env
+      sed -i '/POSTGRESQL_HOST/d' .env
+      sed -i '/POSTGRESQL_ROOT/d' .env
+      echo -e "\nPOSTGRESQL_HOST=$(DATABASE_HOST)" >> .env
+      echo "POSTGRESQL_ROOT=$(DATABASE_USERNAME)" >> .env
+      echo "POSTGRESQL_ROOT_PASSWORD=$(DATABASE_PASSWORD)" >> .env
     displayName: Add fake values to .env to keep config loader happy
 
   - script: cat .env
