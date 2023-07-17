@@ -15,7 +15,7 @@ const packageJsonGlob = process.argv[4] || '**/workflows/package.json';
 
 const message = chalk.red(`A newer version %s of ${packageName} is available!
 Your current version is: %s
-Please run "pilet upgrade" in "%s" to update.`);
+Please run "yarn pilet upgrade" in "%s" to update.`);
 
 /**
  * Compares latest version of package from npm registry with package.json files.
