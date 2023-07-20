@@ -6,7 +6,7 @@ This service is designed to facilitate the transition from Video-on-Demand (VOD)
 content to live channels, providing a seamless experience for our users. It is
 based on the beta version of the Unified Streaming Virtual Channels solution.
 Although in its experimental phase, the main flows of the service have been
-implemented, offering a solid foundation for further development or integrating
+implemented, offering a solid foundation for further development or integration
 with other streaming providers.
 
 The purpose of this service is to serve as a source for developers interested in
@@ -14,6 +14,12 @@ understanding the inner workings of a VOD-to-Live Service and how it can be
 integrated with our Mosaic Channel Management Service. Please keep in mind that
 as an experimental service, some refinements and improvements are likely still
 needed.
+
+If you want to learn more about the responsibilities of VOD-to-Live Services in
+a
+[FAST solution](https://portal.axinom.com/mosaic/documentation/media/fast-channels),
+please refer to the
+[VOD-to-Live Service documentation](https://portal.axinom.com/mosaic/documentation/media/vod-to-live-service).
 
 The root `package.json` excludes the VOD-to-Live Service from the global
 `build`, `clean`, and `dev:services` scripts. And the Jest tests are not run
@@ -29,9 +35,12 @@ The managed Channel Service provides a way to publish Channels and Playlists to
 the customizable VOD-to-Live Service. The VOD-to-Live Service uses the data from
 the Channel Service to generate a Synchronized Multimedia Integration Language
 (SMIL) file that incorporates the videos from the playlist along with
-placeholder videos acting as filler for advertisement pods. The Unified Virtual
+placeholder videos acting as fillers for advertisement pods. The Unified Virtual
 Channel API is used to create advanced virtual FAST channels from the VOD
 sources that seamlessly transition from one source to another.
+
+This diagram visualizes the flow that the VOD-to-Live service is performing:
+![flow](https://github.com/Axinom/mosaic-media-template/assets/10724090/e6149c7d-db87-4328-a57c-fc9f6eb7cba2)
 
 ## Features
 
@@ -191,7 +200,7 @@ The DRM settings for the VOD-to-Live Service should be aligned with the DRM sett
 ```
 
 When DRM is enabled DRM-protected VODs can be included in playlists. To decrypt
-the protected content and encrypt the newly created live stream , CPIX files are
+the protected content and encrypt the newly created live stream, CPIX files are
 created and stored in Azure Storage. Access to the files is granted to the USP
 using shared access signatures (SAS) with time-based limitations.
 
@@ -221,7 +230,7 @@ placeholder video to fill the remaining time.
 
 #### General settings
 
-`PRE_PUBLISHING_WEBHOOK_SECRET` - This is a mandatory setting. The secret key
+`PRE_PUBLISHING_WEBHOOK_SECRET` - This is a mandatory setting. The secret key is
 used to sign validation messages between the Managed Channel and VOD-to-Live
 services. It can be retrieved from the Admin portal when setting up the
 Pre-Publishing webhook for the Channel Service.
@@ -239,13 +248,13 @@ before the channel goes live.
 #### USP Virtual Channel API settings
 
 `VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL` - This is the mandatory setting for
-base URL of the Unified Virtual Channel Management API.
+the base URL of the Unified Virtual Channel Management API.
 
 `VIRTUAL_CHANNEL_MANAGEMENT_API_KEY` - This is an optional API key used for
 authorization with the Virtual Channel Management API.
 
-`VIRTUAL_CHANNEL_ORIGIN_BASE_URL` - This is the mandatory setting for base URL
-of the Unified Streaming Origin or the CDN for Origin.
+`VIRTUAL_CHANNEL_ORIGIN_BASE_URL` - This is the mandatory setting for the base
+URL of the Unified Streaming Origin or the CDN for Origin.
 
 #### Azure Storage settings
 
