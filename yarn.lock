@@ -187,10 +187,10 @@
   dependencies:
     "@types/json-schema" "^7.0.11"
 
-"@axinom/mosaic-cli@0.19.0":
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-cli/-/mosaic-cli-0.19.0.tgz#c5b4306afb9d6e661a00a835dcf084250ecece72"
-  integrity sha512-zKs6d1GJYCxKJMeHHeUjyJ3CRb0/55Yr52EQa1NGYY98Xzmo1j9DXB0eBIVEDaDU+2cQonXTpeiQ7Z+yVRdSBA==
+"@axinom/mosaic-cli@0.19.1":
+  version "0.19.1"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-cli/-/mosaic-cli-0.19.1.tgz#f130a6a405164b0a6cfb55ae9de1ed7f69643635"
+  integrity sha512-DZSH9+wtvFVt72l4mR85Pd6efORX6jbPOxGNLr/F/umbvZVLRKbkVRd7OlMqjGDFO7JQ6z8lKZryBX7uLe6xYg==
   dependencies:
     "@asyncapi/diff" "^0.4.1"
     "@asyncapi/modelina" "^1.8.4"
