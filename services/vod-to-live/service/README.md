@@ -42,7 +42,6 @@ sources that seamlessly transition from one source to another.
 This diagram visualizes the flow that the VOD-to-Live service is performing:
 ![flow](https://github.com/Axinom/mosaic-media-template/assets/10724090/f615b6fc-b740-4dcf-b680-f652174d9270)
 
-
 ## Features
 
 ### Validation via Pre-Publishing Webhook
