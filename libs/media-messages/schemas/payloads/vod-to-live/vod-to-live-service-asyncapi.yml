@@ -1,0 +1,89 @@
+asyncapi: 2.0.0
+info:
+  title: VOD-to-Live Service
+  version: '1.0.0'
+  description: |
+    VOD-to-Live Service
+# AsyncAPI extension, used to define service id. If not defined, as service id will be used info.title in lower-kebab-case
+x-service-id: vod-to-live-service
+
+channels:
+  # commands
+  'transition.prepare_live_stream':
+    bindings:
+      amqp:
+        queue:
+          name: transition:prepare_live_stream
+    publish:
+      message:
+        $ref: '#/components/messages/prepare-transition-live-stream-command'
+  'channel.prepare_live_stream':
+    bindings:
+      amqp:
+        queue:
+          name: channel:prepare_live_stream
+    publish:
+      message:
+        $ref: '#/components/messages/prepare-channel-live-stream-command'
+  'channel.check_job_status':
+    bindings:
+      amqp:
+        queue:
+          name: channel:check_job_status
+    publish:
+      message:
+        $ref: '#/components/messages/check-channel-job-status-command'
+  # events
+  'channel.protection_key_created':
+    bindings:
+      amqp:
+        queue:
+          name: channel:protection_key_created
+    subscribe:
+      message:
+        $ref: '#/components/messages/channel-protection-key-created-event'
+  'channel.check_job_status_failed':
+    bindings:
+      amqp:
+        queue:
+          name: channel:check_job_status_failed
+    subscribe:
+      message:
+        $ref: '#/components/messages/check-channel-job-status-failed-event'
+  'channel.check_job_status_succeeded':
+    bindings:
+      amqp:
+        queue:
+          name: channel:check_job_status_succeeded
+    subscribe:
+      message:
+        $ref: '#/components/messages/check-channel-job-status-succeeded-event'
+
+components:
+  messages:
+    # commands
+    prepare-transition-live-stream-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/prepare-transition-live-stream-command.json'
+    prepare-channel-live-stream-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/prepare-channel-live-stream-command.json'
+    check-channel-job-status-command:
+      contentType: application/json
+      payload:
+        $ref: 'commands/check-channel-job-status-command.json'
+    # events
+    channel-protection-key-created-event:
+      contentType: application/json
+      payload:
+        $ref: 'events/live-stream-protection-key-created-event.json'
+    check-channel-job-status-failed-event:
+      contentType: application/json
+      payload:
+        $ref: 'events/check-channel-job-status-failed-event.json'
+    check-channel-job-status-succeeded-event:
+      contentType: application/json
+      payload:
+        $ref: 'events/check-channel-job-status-succeeded-event.json'

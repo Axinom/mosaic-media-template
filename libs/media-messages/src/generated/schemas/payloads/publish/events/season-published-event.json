@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "title": "season_published_event",
   "description": "Definition of the TV show season publish format.",
@@ -23,7 +23,7 @@
       "type": "string",
       "minLength": 1,
       "pattern": "^$|.*\\S.*",
-      "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+      "description": "A string with at least one character and not only whitespace characters."
     },
     "description": {
       "description": "Extended synopsis.",
@@ -34,7 +34,7 @@
       "type": "string"
     },
     "released": {
-      "description": "Date of first release.",
+      "description": "Release date of an item.",
       "type": "string",
       "format": "regex",
       "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
@@ -42,6 +42,7 @@
     "cast": {
       "description": "Cast of the season.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "string"
       }
@@ -49,6 +50,7 @@
     "production_countries": {
       "description": "Array of production countries",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "string"
       }
@@ -56,6 +58,7 @@
     "tags": {
       "description": "Array of tags associated with the content.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "string"
       }
@@ -63,6 +66,7 @@
     "images": {
       "description": "Array of images associated with the content.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "description": "Asset image metadata.",
         "type": "object",
@@ -107,6 +111,7 @@
     "licenses": {
       "description": "Array of licenses assigned to the content.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "description": "Content metadata license that defines the content availability regions and time frame.",
         "type": "object",
@@ -115,11 +120,12 @@
           "countries": {
             "description": "Array of countries where the license applies.",
             "type": "array",
+            "additionalItems": false,
             "items": {
               "type": "string",
               "minLength": 1,
               "pattern": "^$|.*\\S.*",
-              "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+              "description": "A string with at least one character and not only whitespace characters."
             }
           },
           "start_time": {
@@ -139,6 +145,7 @@
     "genre_ids": {
       "description": "Sorted array of genre IDs assigned to a season.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "description": "Content ID of a TV show genre. Must match the pattern `^(tvshow_genre)-([a-zA-Z0-9_-]+)$`.",
         "type": "string",
@@ -148,6 +155,7 @@
     "videos": {
       "description": "Array of video streams associated with tv show or season.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "description": "Video stream metadata.",
         "type": "object",
@@ -165,7 +173,7 @@
             "type": "string",
             "minLength": 1,
             "pattern": "^$|.*\\S.*",
-            "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+            "description": "A string with at least one character and not only whitespace characters."
           },
           "length_in_seconds": {
             "description": "Video length in seconds",
@@ -177,6 +185,7 @@
           "audio_languages": {
             "description": "Array of audio languages available in the stream.",
             "type": "array",
+            "additionalItems": false,
             "items": {
               "type": "string"
             }
@@ -184,6 +193,7 @@
           "subtitle_languages": {
             "description": "Array of subtitle languages available in the stream.",
             "type": "array",
+            "additionalItems": false,
             "items": {
               "type": "string"
             }
@@ -191,6 +201,7 @@
           "caption_languages": {
             "description": "Array of caption languages available in the stream.",
             "type": "array",
+            "additionalItems": false,
             "items": {
               "type": "string"
             }
@@ -212,6 +223,7 @@
           "video_streams": {
             "description": "Video Streams",
             "type": "array",
+            "additionalItems": false,
             "items": {
               "description": "Video stream metadata",
               "type": "object",
@@ -349,6 +361,7 @@
           "cue_points": {
             "description": "Cue points associated with video.",
             "type": "array",
+            "additionalItems": false,
             "items": {
               "description": "Cue point metadata.",
               "type": "object",

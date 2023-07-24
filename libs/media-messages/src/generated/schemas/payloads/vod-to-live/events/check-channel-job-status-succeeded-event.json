@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "check_channel_job_status_succeeded_event",
+  "description": "Channel live stream is live.",
+  "additionalProperties": true,
+  "required": [
+    "channel_id",
+    "dash_stream_url",
+    "hls_stream_url"
+  ],
+  "properties": {
+    "channel_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*",
+      "description": "A string with at least one character and not only whitespace characters."
+    },
+    "dash_stream_url": {
+      "type": "string",
+      "description": "URL pointing to DASH live stream."
+    },
+    "hls_stream_url": {
+      "type": "string",
+      "description": "URL pointing to HLS live stream."
+    }
+  }
+}

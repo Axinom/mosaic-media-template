@@ -28,3 +28,8 @@ declare module 'ObjectSchemaDefinition' {
     [field in keyof T]: any;
   };
 }
+
+declare module '*.svg' {
+  const content: any;
+  export default content;
+}

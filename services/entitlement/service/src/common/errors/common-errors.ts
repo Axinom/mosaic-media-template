@@ -63,7 +63,7 @@ export const CommonErrors = {
   },
   InvalidEntityId: {
     message:
-      "The provided entity ID '%s' is invalid. It must start with 'movie-' or 'episode-' followed by a number.",
+      "The provided entity ID '%s' is invalid. It must start with 'movie-' or 'episode-' followed by a number, or start with 'channel-' followed by UUID.",
     code: 'INVALID_ENTITY_ID',
   },
   EntityNotFound: {
@@ -75,6 +75,11 @@ export const CommonErrors = {
     message:
       'The requested video for the %s is not protected. An entitlement message to receive a DRM license is therefore not required.',
     code: 'VIDEO_NOT_PROTECTED',
+  },
+  ChannelStreamUnavailable: {
+    message:
+      'The requested data for the %s does not have the required stream URLs. It is possible that the channel is still being processed.',
+    code: 'CHANNEL_STREAM_UNAVAILABLE',
   },
   SubscriptionValidationError: {
     message:

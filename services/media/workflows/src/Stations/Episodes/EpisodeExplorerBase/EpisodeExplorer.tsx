@@ -29,6 +29,8 @@ import {
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
 import { useEpisodesFilters } from './EpisodeExplorer.filters';
 import { EpisodeData, EpisodeExplorerProps } from './EpisodeExplorer.types';
+import { ExplorerIndexRenderer } from './renderers/ExplorerIndexRenderer';
+import { ExplorerParentRenderer } from './renderers/ExplorerParentRenderer';
 
 export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
   const { filterOptions, transformFilters } = useEpisodesFilters();
@@ -62,7 +64,13 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
       size: '80px',
     },
     { label: 'Title', propertyName: 'title', size: '2fr' },
-    { label: 'Episode Index', propertyName: 'index' },
+    { label: 'Index', propertyName: 'index', render: ExplorerIndexRenderer },
+    {
+      label: 'Parent Entity',
+      propertyName: 'season',
+      render: ExplorerParentRenderer,
+      sortable: false,
+    },
     { label: 'External ID', propertyName: 'externalId' },
     {
       label: 'Genres',
@@ -141,6 +149,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
 
   const generateInlineMenuActions: (data: EpisodeData) => ActionData[] = ({
     id,
+    season,
   }) => {
     return [
       {
@@ -184,6 +193,15 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
         label: 'Open Details',
         path: `/episodes/${id}`,
       },
+      ...(season
+        ? [
+            {
+              label: 'Open Parent Entity',
+              path: `/seasons/${season?.id}`,
+              openInNewTab: true,
+            },
+          ]
+        : []),
     ];
   };
 

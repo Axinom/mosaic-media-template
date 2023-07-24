@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "description": "Definition of the movie publish format.",
   "title": "movie_published_event",
@@ -34,6 +34,7 @@
     "cast": {
       "description": "Cast of the movie.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "string"
       }
@@ -53,6 +54,7 @@
     "genre_ids": {
       "description": "Sorted array of genre IDs assigned to a movie.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "$ref": "./common.json#/definitions/movie_genre_id"
       }

@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "title": "start_ingest_item_command",
   "description": "Start ingest item command schema.",
@@ -41,10 +41,10 @@
           "description": "Type that specifies type of media item to be created or updated using this ingest item data."
         },
         "external_id": {
-          "description": "Type that specifies type of media item to be created or updated using this ingest item data.",
           "type": "string",
           "minLength": 1,
-          "pattern": "^$|.*\\S.*"
+          "pattern": "^$|.*\\S.*",
+          "description": "A string with at least one character and not only whitespace characters."
         },
         "data": {
           "type": "object",

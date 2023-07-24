@@ -1,6 +1,7 @@
 import { OwnerPgPool } from '@axinom/mosaic-db-common';
 import { ManagementAuthenticationContext } from '@axinom/mosaic-id-guard';
 import { Broker } from '@axinom/mosaic-message-bus';
+import { assertObjectHasProperties } from '@axinom/mosaic-service-common';
 import { WebSocket } from 'graphql-ws';
 import { Client } from 'pg';
 import {
@@ -20,4 +21,23 @@ export interface ExtendedGraphQLContext
   pgRole?: string; // set from PostGraphile
   pgClient?: Client; // set from PostGraphile
   websocket?: WebSocket;
+}
+
+export function getValidatedExtendedContext(
+  value: unknown,
+): Required<ExtendedGraphQLContext> {
+  assertObjectHasProperties<Required<ExtendedGraphQLContext>>(
+    value,
+    [
+      'config',
+      'messagingBroker',
+      'ownerPool',
+      'jwtToken',
+      'pgRole',
+      'pgClient',
+      'subject',
+    ],
+    'GraphQL context',
+  );
+  return value;
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import {
   ExtensionParams,
   ImageCoverProps,
+  ImagePreviewProps,
   ImageSelectExplorerProps,
   VideoSelectExplorerProps,
 } from './externalTypes';
@@ -11,6 +12,7 @@ import { setGetThumbnailAndStateRenderer } from './thumbnails';
 export interface Extensions {
   VideoSelectExplorer: React.FC<ExtensionParams<VideoSelectExplorerProps>>;
   ImageCover: React.FC<ExtensionParams<ImageCoverProps>>;
+  ImagePreview: React.FC<ExtensionParams<ImagePreviewProps>>;
   ImageSelectExplorer: React.FC<ExtensionParams<ImageSelectExplorerProps>>;
   ImageSelectField: React.FC<ExtensionParams<unknown>>;
   VideoSelectField: React.FC<ExtensionParams<unknown>>;
@@ -21,6 +23,7 @@ const defaultValue = (): JSX.Element => <div>Extension not Loaded</div>;
 export const ExtensionsContext = React.createContext<Extensions>({
   VideoSelectExplorer: defaultValue,
   ImageCover: defaultValue,
+  ImagePreview: defaultValue,
   ImageSelectExplorer: defaultValue,
   ImageSelectField: defaultValue,
   VideoSelectField: defaultValue,
@@ -47,6 +50,10 @@ export const bindExtensions = (app: PiletApi): Extensions => {
 
   const ImageCover: React.FC = (props) => (
     <app.Extension name="image-cover" empty={defaultValue} {...props} />
+  );
+
+  const ImagePreview: React.FC = (props) => (
+    <app.Extension name="image-preview" empty={defaultValue} {...props} />
   );
 
   const ImageSelectExplorer: React.FC = (props) => (
@@ -76,6 +83,7 @@ export const bindExtensions = (app: PiletApi): Extensions => {
   return {
     VideoSelectExplorer,
     ImageCover,
+    ImagePreview,
     ImageSelectExplorer,
     ImageSelectField,
     VideoSelectField,

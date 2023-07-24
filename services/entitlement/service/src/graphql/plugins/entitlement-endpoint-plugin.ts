@@ -10,10 +10,10 @@ import {
   generateEntitlementMessageJwt,
   getEntityType,
   getSubscriptionPlanId,
-  getVideo,
+  getVideoKeyIds,
   validateUserClaims,
 } from './entitlement-endpoint';
-import { ExtendedGraphQLContext } from './extended-graphql-context';
+import { getValidatedExtendedContext } from './extended-graphql-context';
 
 /**
  * Plugin that adds a custom graphql endpoint `entitlement` which checks if
@@ -41,17 +41,11 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
     `,
     resolvers: {
       Query: {
-        entitlement: async (
-          _query,
-          args,
-          {
-            config,
-            clientIpAddress,
-            ownerPool,
-            jwtToken,
-          }: ExtendedGraphQLContext,
-        ) => {
+        entitlement: async (_query, args, context) => {
           try {
+            const { config, clientIpAddress, ownerPool, jwtToken } =
+              getValidatedExtendedContext(context);
+
             const countryCode = lookup(clientIpAddress)?.country;
 
             if (isNullOrWhitespace(countryCode)) {
@@ -65,7 +59,7 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
             }
 
             const type = getEntityType(args.input.entityId);
-            const video = await getVideo(
+            const keyIds = await getVideoKeyIds(
               type,
               args.input.entityId,
               config.catalogServiceBaseUrl,
@@ -83,7 +77,7 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
               ownerPool,
             );
             const entitlementMessageJwt = generateEntitlementMessageJwt(
-              video.videoStreams?.nodes?.map((stream) => stream.keyId),
+              keyIds,
               claims,
               config,
               config.isDev ? 'DEV' : 'DEFAULT',

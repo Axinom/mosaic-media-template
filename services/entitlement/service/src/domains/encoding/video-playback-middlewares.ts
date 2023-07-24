@@ -18,7 +18,7 @@ import {
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { Express, json, NextFunction, Request, Response } from 'express';
-import { CommonErrors, Config } from '../../common';
+import { CommonErrors, Config, sanitizeStringArray } from '../../common';
 import { generateEntitlementMessageJwt } from '../../graphql/plugins/entitlement-endpoint/entitlement-message-generation';
 
 // Feel free to adjust the implementation of this middleware to something more
@@ -60,7 +60,7 @@ const verifyDemoWebhookRequestMiddleware = (
         typeof requestBody === 'string' ? JSON.parse(requestBody) : requestBody;
       if (payloadJsonSchema) {
         const ajv = new Ajv({
-          strict: true,
+          strict: 'log', // disable throwing on strict errors https://ajv.js.org/strict-mode.html#ignored-additionalitems-keyword
           allErrors: true,
         });
         addFormats(ajv);
@@ -116,11 +116,17 @@ export const setupEntitlementWebhookEndpoint = (
       next: NextFunction,
     ) => {
       try {
-        const keyIds =
+        const keyIds = sanitizeStringArray(
           req.body?.payload?.video?.video_encoding?.video_streams?.map(
             (s) => s.key_id,
-          );
-        const jwt = generateEntitlementMessageJwt(keyIds, [], config, 'STRICT');
+          ),
+        );
+        const jwt = generateEntitlementMessageJwt(
+          keyIds,
+          [],
+          config,
+          config.isDev ? 'DEV' : 'STRICT',
+        );
         const response =
           generateWebhookResponse<EntitlementWebhookResponsePayload>({
             payload: {

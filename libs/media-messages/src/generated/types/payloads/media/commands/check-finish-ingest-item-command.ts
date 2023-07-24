@@ -3,7 +3,7 @@
  */
 export interface CheckFinishIngestItemCommand {
   /**
-   * A unique identifier that is used to track ingest messages for a single document to keep ingest document status up-to-date.
+   * A string with at least one character and not only whitespace characters.
    */
   ingest_item_step_id: string;
   /**

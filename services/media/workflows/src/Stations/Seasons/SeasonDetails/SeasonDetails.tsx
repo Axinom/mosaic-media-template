@@ -14,6 +14,7 @@ import {
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
+import clsx from 'clsx';
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
@@ -21,6 +22,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
+import { InfoPanelParent } from '../../../components';
 import { ExtensionsContext, ImageID } from '../../../externals';
 import {
   Mutation,
@@ -103,9 +105,8 @@ export const SeasonDetails: React.FC = () => {
       formData: SeasonDetailsFormData,
       initialData: DetailsProps<SeasonDetailsFormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const tagAssignmentMutations = generateArrayMutations({
         current: formData.tags,
@@ -130,16 +131,17 @@ export const SeasonDetails: React.FC = () => {
           const tvshowGenresId = allGenres[name].id;
 
           if (tvshowGenresId) {
-            return generateUpdateGQLFragment<
-              MutationCreateSeasonsTvshowGenreArgs
-            >('createSeasonsTvshowGenre', {
-              input: {
-                seasonsTvshowGenre: {
-                  seasonId,
-                  tvshowGenresId,
+            return generateUpdateGQLFragment<MutationCreateSeasonsTvshowGenreArgs>(
+              'createSeasonsTvshowGenre',
+              {
+                input: {
+                  seasonsTvshowGenre: {
+                    seasonId,
+                    tvshowGenresId,
+                  },
                 },
               },
-            });
+            );
           } else {
             return '';
           }
@@ -147,11 +149,12 @@ export const SeasonDetails: React.FC = () => {
         generateDeleteMutation: (name) => {
           const tvshowGenresId = allGenres[name].id;
           if (tvshowGenresId) {
-            return generateUpdateGQLFragment<
-              MutationDeleteSeasonsTvshowGenreArgs
-            >('deleteSeasonsTvshowGenre', {
-              input: { seasonId, tvshowGenresId },
-            });
+            return generateUpdateGQLFragment<MutationDeleteSeasonsTvshowGenreArgs>(
+              'deleteSeasonsTvshowGenre',
+              {
+                input: { seasonId, tvshowGenresId },
+              },
+            );
           } else {
             return '';
           }
@@ -245,7 +248,7 @@ export const SeasonDetails: React.FC = () => {
 };
 
 const Panel: React.FC = () => {
-  const { ImageCover } = useContext(ExtensionsContext);
+  const { ImageCover, ImagePreview } = useContext(ExtensionsContext);
   const { values } = useFormikContext<Season>();
 
   return useMemo(() => {
@@ -281,8 +284,21 @@ const Panel: React.FC = () => {
             {formatDateTime(values.updatedDate)} by {values.updatedUser}
           </Paragraph>
         </Section>
-        <Section title="Assigned Items">
-          <Paragraph title="Videos">
+        <Section title="Assignments">
+          <Paragraph title="Parent Entity">
+            {values?.tvshow ? (
+              <InfoPanelParent
+                Thumbnail={ImagePreview}
+                imageId={values.tvshow?.tvshowsImages?.nodes?.[0]?.imageId}
+                path={`/tvshows/${values.tvshow?.id}`}
+                label="Open Details"
+                title={values.tvshow?.title}
+              />
+            ) : (
+              <div>not assigned</div>
+            )}
+          </Paragraph>
+          <Paragraph title="Assigned items">
             <div className={classes.datalist}>
               <div>Episodes</div>
               <div className={classes.rightAlignment}>
@@ -292,12 +308,13 @@ const Panel: React.FC = () => {
               <div className={classes.rightAlignment}>
                 {values.seasonsTrailers?.totalCount}/many
               </div>
-            </div>
-          </Paragraph>
-          <Paragraph title="Images">
-            <div className={classes.datalist}>
-              <div>Cover</div>
-              <div className={classes.rightAlignment}>
+              <div className={classes.assignedItemsSpacing}>Cover</div>
+              <div
+                className={clsx(
+                  classes.rightAlignment,
+                  classes.assignedItemsSpacing,
+                )}
+              >
                 {coverImageCount} / 1
               </div>
               <div>Teaser</div>
@@ -321,6 +338,7 @@ const Panel: React.FC = () => {
     );
   }, [
     ImageCover,
+    ImagePreview,
     values.createdDate,
     values.createdUser,
     values.episodes?.totalCount,
@@ -330,6 +348,7 @@ const Panel: React.FC = () => {
     values.publishedUser,
     values.seasonsImages?.nodes,
     values.seasonsTrailers?.totalCount,
+    values.tvshow,
     values.updatedDate,
     values.updatedUser,
   ]);

@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "title": "tvshow_genres_published_event",
   "description": "Definition of the TV show genre publish format.",
@@ -7,6 +7,7 @@
     "genres": {
       "description": "List of TV show genres.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "description": "An individual TV show genre object.",
         "type": "object",
@@ -21,7 +22,7 @@
             "type": "string",
             "minLength": 1,
             "pattern": "^$|.*\\S.*",
-            "description": "String of minimum length of 1 character, which is also cannot consist of only whitespace characters."
+            "description": "A string with at least one character and not only whitespace characters."
           },
           "order_no": {
             "description": "Global ordering number for the genre.",

@@ -20,7 +20,11 @@ export function useEpisodesFilters(): {
   const [createFromDateFilterValidator, createToDateFilterValidator] =
     createDateRangeFilterValidators<EpisodeData>();
 
-  const filterOptions: FilterType<EpisodeData>[] = [
+  const filterOptions: FilterType<
+    EpisodeData & {
+      seasonExists?: boolean;
+    }
+  >[] = [
     {
       label: 'Title',
       property: 'title',
@@ -30,6 +34,21 @@ export function useEpisodesFilters(): {
       label: 'Episode Index',
       property: 'index',
       type: FilterTypes.Numeric,
+    },
+    {
+      label: 'Parent Entity',
+      property: 'seasonExists',
+      type: FilterTypes.Options,
+      options: [
+        {
+          label: 'true',
+          value: true,
+        },
+        {
+          label: 'false',
+          value: false,
+        },
+      ],
     },
     {
       label: 'Original Title',
@@ -173,6 +192,7 @@ export function useEpisodesFilters(): {
       mainVideoId: (value) => ({
         isNull: !value,
       }),
+      seasonExists: (value) => value as boolean,
     });
   };
 

@@ -10,7 +10,7 @@ export interface MoviePublishedEvent {
    */
   content_id: string;
   /**
-   * Title of the movie.
+   * A string with at least one character and not only whitespace characters.
    */
   title: string;
   /**
@@ -18,7 +18,7 @@ export interface MoviePublishedEvent {
    */
   original_title?: string;
   /**
-   * Short description of the main plot elements.
+   * A string with at least one character and not only whitespace characters.
    */
   synopsis?: string;
   /**
@@ -30,35 +30,35 @@ export interface MoviePublishedEvent {
    */
   studio?: string;
   /**
-   * Date of first release.
+   * Release date of an item.
    */
   released?: string;
   /**
    * Cast of the movie.
    */
-  cast?: Array<string>;
+  cast?: string[];
   /**
    * Array of production countries
    */
-  production_countries?: Array<string>;
+  production_countries?: string[];
   /**
    * Array of tags associated with the content.
    */
-  tags?: Array<string>;
+  tags?: string[];
   /**
    * Array of images associated with the content.
    */
-  images: Array<Image>;
+  images: Image[];
   /**
    * Array of licenses assigned to the content.
    */
-  licenses: Array<License>;
+  licenses: License[];
   /**
    * Sorted array of genre IDs assigned to a movie.
    */
-  genre_ids: Array<string>;
+  genre_ids: string[];
   /**
    * Array of video streams associated with movie or episode.
    */
-  videos: Array<Video>;
+  videos: Video[];
 }

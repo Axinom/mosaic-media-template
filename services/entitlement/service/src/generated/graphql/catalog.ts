@@ -18,6 +18,161 @@ export type Scalars = {
   Datetime: any;
 };
 
+/** Definition of the channel publish format. */
+export type Channel = {
+  __typename?: 'Channel';
+  /** DASH stream URL of the channel. */
+  dashStreamUrl?: Maybe<Scalars['String']>;
+  /** Description of the channel. */
+  description?: Maybe<Scalars['String']>;
+  /** HLS stream URL of the channel. */
+  hlsStreamUrl?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  /** Reads and enables pagination through a set of `ChannelImage`. */
+  images: ChannelImagesConnection;
+  /** Key identifier for DRM protected streams. */
+  keyId?: Maybe<Scalars['String']>;
+  /** Title of the channel. */
+  title: Scalars['String'];
+};
+
+
+/** Definition of the channel publish format. */
+export type ChannelImagesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ChannelImageCondition>;
+  filter?: InputMaybe<ChannelImageFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ChannelImagesOrderBy>>;
+};
+
+/** A condition to be used against `Channel` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ChannelCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['String']>;
+};
+
+/** A filter to be used against `Channel` object types. All fields are combined with a logical ‘and.’ */
+export type ChannelFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ChannelFilter>>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<ChannelFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ChannelFilter>>;
+};
+
+/** Asset image metadata. */
+export type ChannelImage = {
+  __typename?: 'ChannelImage';
+  /** Reads a single `Channel` that is related to this `ChannelImage`. */
+  channel?: Maybe<Channel>;
+  channelId?: Maybe<Scalars['String']>;
+  /** Height of the image in pixels. */
+  height?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
+  /** URI to the image file. */
+  path?: Maybe<Scalars['String']>;
+  /** Type of the image. */
+  type?: Maybe<Scalars['String']>;
+  /** Width of the image in pixels. */
+  width?: Maybe<Scalars['Int']>;
+};
+
+/**
+ * A condition to be used against `ChannelImage` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type ChannelImageCondition = {
+  /** Checks for equality with the object’s `channelId` field. */
+  channelId?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `ChannelImage` object types. All fields are combined with a logical ‘and.’ */
+export type ChannelImageFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ChannelImageFilter>>;
+  /** Filter by the object’s `channelId` field. */
+  channelId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<ChannelImageFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ChannelImageFilter>>;
+};
+
+/** A connection to a list of `ChannelImage` values. */
+export type ChannelImagesConnection = {
+  __typename?: 'ChannelImagesConnection';
+  /** A list of edges which contains the `ChannelImage` and cursor to aid in pagination. */
+  edges: Array<ChannelImagesEdge>;
+  /** A list of `ChannelImage` objects. */
+  nodes: Array<ChannelImage>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ChannelImage` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ChannelImage` edge in the connection. */
+export type ChannelImagesEdge = {
+  __typename?: 'ChannelImagesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ChannelImage` at the end of the edge. */
+  node: ChannelImage;
+};
+
+/** Methods to use when ordering `ChannelImage`. */
+export enum ChannelImagesOrderBy {
+  ChannelIdAsc = 'CHANNEL_ID_ASC',
+  ChannelIdDesc = 'CHANNEL_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A connection to a list of `Channel` values. */
+export type ChannelsConnection = {
+  __typename?: 'ChannelsConnection';
+  /** A list of edges which contains the `Channel` and cursor to aid in pagination. */
+  edges: Array<ChannelsEdge>;
+  /** A list of `Channel` objects. */
+  nodes: Array<Channel>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Channel` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Channel` edge in the connection. */
+export type ChannelsEdge = {
+  __typename?: 'ChannelsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Channel` at the end of the edge. */
+  node: Channel;
+};
+
+/** Methods to use when ordering `Channel`. */
+export enum ChannelsOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 /** Definition of the collection publish format. */
 export type Collection = {
   __typename?: 'Collection';
@@ -171,6 +326,7 @@ export type CollectionItemsRelation = {
   movie?: Maybe<Movie>;
   movieId?: Maybe<Scalars['String']>;
   orderNo: Scalars['Int'];
+  /** Type of the relation. */
   relationType?: Maybe<Scalars['String']>;
   /** Reads a single `Season` that is related to this `CollectionItemsRelation`. */
   season?: Maybe<Season>;
@@ -317,6 +473,7 @@ export type Episode = {
   licenses: EpisodeLicensesConnection;
   /** Original title of the episode. */
   originalTitle?: Maybe<Scalars['String']>;
+  /** Array of production countries */
   productionCountries?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Date of first release. */
   released?: Maybe<Scalars['Datetime']>;
@@ -639,6 +796,39 @@ export enum EpisodeLicensesOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+/** A connection to a list of `Episode` values. */
+export type EpisodesConnection = {
+  __typename?: 'EpisodesConnection';
+  /** A list of edges which contains the `Episode` and cursor to aid in pagination. */
+  edges: Array<EpisodesEdge>;
+  /** A list of `Episode` objects. */
+  nodes: Array<Episode>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Episode` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Episode` edge in the connection. */
+export type EpisodesEdge = {
+  __typename?: 'EpisodesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Episode` at the end of the edge. */
+  node: Episode;
+};
+
+/** Methods to use when ordering `Episode`. */
+export enum EpisodesOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SeasonIdAsc = 'SEASON_ID_ASC',
+  SeasonIdDesc = 'SEASON_ID_DESC'
+}
+
 /** Video stream metadata. */
 export type EpisodeVideo = {
   __typename?: 'EpisodeVideo';
@@ -646,6 +836,8 @@ export type EpisodeVideo = {
   audioLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Array of caption languages available in the stream. */
   captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Reads and enables pagination through a set of `EpisodeVideoCuePoint`. */
+  cuePoints: EpisodeVideoCuePointsConnection;
   /** URI to a DASH manifest. */
   dashManifest?: Maybe<Scalars['String']>;
   /** Reads a single `Episode` that is related to this `EpisodeVideo`. */
@@ -668,6 +860,19 @@ export type EpisodeVideo = {
   type?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `EpisodeVideoStream`. */
   videoStreams: EpisodeVideoStreamsConnection;
+};
+
+
+/** Video stream metadata. */
+export type EpisodeVideoCuePointsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<EpisodeVideoCuePointCondition>;
+  filter?: InputMaybe<EpisodeVideoCuePointFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<EpisodeVideoCuePointsOrderBy>>;
 };
 
 
@@ -696,6 +901,79 @@ export type EpisodeVideoCondition = {
   type?: InputMaybe<Scalars['String']>;
 };
 
+/** Video cue point metadata */
+export type EpisodeVideoCuePoint = {
+  __typename?: 'EpisodeVideoCuePoint';
+  /** Type of the cue point */
+  cuePointTypeKey: Scalars['String'];
+  id: Scalars['Int'];
+  /** Time in seconds at which the cue point is set within the video */
+  timeInSeconds: Scalars['Float'];
+  /** Additional information associated with the cue point */
+  value?: Maybe<Scalars['String']>;
+  /** Reads a single `EpisodeVideo` that is related to this `EpisodeVideoCuePoint`. */
+  video?: Maybe<EpisodeVideo>;
+  videoId?: Maybe<Scalars['Int']>;
+};
+
+/**
+ * A condition to be used against `EpisodeVideoCuePoint` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type EpisodeVideoCuePointCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `videoId` field. */
+  videoId?: InputMaybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `EpisodeVideoCuePoint` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeVideoCuePointFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EpisodeVideoCuePointFilter>>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EpisodeVideoCuePointFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EpisodeVideoCuePointFilter>>;
+  /** Filter by the object’s `videoId` field. */
+  videoId?: InputMaybe<IntFilter>;
+};
+
+/** A connection to a list of `EpisodeVideoCuePoint` values. */
+export type EpisodeVideoCuePointsConnection = {
+  __typename?: 'EpisodeVideoCuePointsConnection';
+  /** A list of edges which contains the `EpisodeVideoCuePoint` and cursor to aid in pagination. */
+  edges: Array<EpisodeVideoCuePointsEdge>;
+  /** A list of `EpisodeVideoCuePoint` objects. */
+  nodes: Array<EpisodeVideoCuePoint>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EpisodeVideoCuePoint` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `EpisodeVideoCuePoint` edge in the connection. */
+export type EpisodeVideoCuePointsEdge = {
+  __typename?: 'EpisodeVideoCuePointsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `EpisodeVideoCuePoint` at the end of the edge. */
+  node: EpisodeVideoCuePoint;
+};
+
+/** Methods to use when ordering `EpisodeVideoCuePoint`. */
+export enum EpisodeVideoCuePointsOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  VideoIdAsc = 'VIDEO_ID_ASC',
+  VideoIdDesc = 'VIDEO_ID_DESC'
+}
+
 /** A filter to be used against `EpisodeVideo` object types. All fields are combined with a logical ‘and.’ */
 export type EpisodeVideoFilter = {
   /** Checks for all expressions in this list. */
@@ -711,6 +989,41 @@ export type EpisodeVideoFilter = {
   /** Filter by the object’s `type` field. */
   type?: InputMaybe<StringFilter>;
 };
+
+/** A connection to a list of `EpisodeVideo` values. */
+export type EpisodeVideosConnection = {
+  __typename?: 'EpisodeVideosConnection';
+  /** A list of edges which contains the `EpisodeVideo` and cursor to aid in pagination. */
+  edges: Array<EpisodeVideosEdge>;
+  /** A list of `EpisodeVideo` objects. */
+  nodes: Array<EpisodeVideo>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EpisodeVideo` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `EpisodeVideo` edge in the connection. */
+export type EpisodeVideosEdge = {
+  __typename?: 'EpisodeVideosEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `EpisodeVideo` at the end of the edge. */
+  node: EpisodeVideo;
+};
+
+/** Methods to use when ordering `EpisodeVideo`. */
+export enum EpisodeVideosOrderBy {
+  EpisodeIdAsc = 'EPISODE_ID_ASC',
+  EpisodeIdDesc = 'EPISODE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC'
+}
 
 /** Video stream DRM metadata */
 export type EpisodeVideoStream = {
@@ -819,74 +1132,6 @@ export enum EpisodeVideoStreamsOrderBy {
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
 
-/** A connection to a list of `EpisodeVideo` values. */
-export type EpisodeVideosConnection = {
-  __typename?: 'EpisodeVideosConnection';
-  /** A list of edges which contains the `EpisodeVideo` and cursor to aid in pagination. */
-  edges: Array<EpisodeVideosEdge>;
-  /** A list of `EpisodeVideo` objects. */
-  nodes: Array<EpisodeVideo>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `EpisodeVideo` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `EpisodeVideo` edge in the connection. */
-export type EpisodeVideosEdge = {
-  __typename?: 'EpisodeVideosEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `EpisodeVideo` at the end of the edge. */
-  node: EpisodeVideo;
-};
-
-/** Methods to use when ordering `EpisodeVideo`. */
-export enum EpisodeVideosOrderBy {
-  EpisodeIdAsc = 'EPISODE_ID_ASC',
-  EpisodeIdDesc = 'EPISODE_ID_DESC',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  TypeAsc = 'TYPE_ASC',
-  TypeDesc = 'TYPE_DESC'
-}
-
-/** A connection to a list of `Episode` values. */
-export type EpisodesConnection = {
-  __typename?: 'EpisodesConnection';
-  /** A list of edges which contains the `Episode` and cursor to aid in pagination. */
-  edges: Array<EpisodesEdge>;
-  /** A list of `Episode` objects. */
-  nodes: Array<Episode>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Episode` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Episode` edge in the connection. */
-export type EpisodesEdge = {
-  __typename?: 'EpisodesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Episode` at the end of the edge. */
-  node: Episode;
-};
-
-/** Methods to use when ordering `Episode`. */
-export enum EpisodesOrderBy {
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  SeasonIdAsc = 'SEASON_ID_ASC',
-  SeasonIdDesc = 'SEASON_ID_DESC'
-}
-
 /** Exposes all error codes and messages for errors that a service requests can throw. In some cases, messages that are actually thrown can be different, since they can include more details or a single code can used for different errors of the same type. */
 export enum ErrorCodesEnum {
   /** The assertion check for the identifier %s failed. */
@@ -907,7 +1152,7 @@ export enum ErrorCodesEnum {
   LicenseNotFound = 'LICENSE_NOT_FOUND',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
-  /** An unhandled database-related has occurred. Please contact the service support. */
+  /** An unhandled database-related error has occurred. Please contact the service support. */
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR'
@@ -1339,6 +1584,37 @@ export enum MovieLicensesOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+/** A connection to a list of `Movie` values. */
+export type MoviesConnection = {
+  __typename?: 'MoviesConnection';
+  /** A list of edges which contains the `Movie` and cursor to aid in pagination. */
+  edges: Array<MoviesEdge>;
+  /** A list of `Movie` objects. */
+  nodes: Array<Movie>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Movie` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Movie` edge in the connection. */
+export type MoviesEdge = {
+  __typename?: 'MoviesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Movie` at the end of the edge. */
+  node: Movie;
+};
+
+/** Methods to use when ordering `Movie`. */
+export enum MoviesOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 /** Video stream metadata. */
 export type MovieVideo = {
   __typename?: 'MovieVideo';
@@ -1346,6 +1622,8 @@ export type MovieVideo = {
   audioLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Array of caption languages available in the stream. */
   captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Reads and enables pagination through a set of `MovieVideoCuePoint`. */
+  cuePoints: MovieVideoCuePointsConnection;
   /** URI to a DASH manifest. */
   dashManifest?: Maybe<Scalars['String']>;
   /** URI to an HLS manifest. */
@@ -1368,6 +1646,19 @@ export type MovieVideo = {
   type?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `MovieVideoStream`. */
   videoStreams: MovieVideoStreamsConnection;
+};
+
+
+/** Video stream metadata. */
+export type MovieVideoCuePointsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<MovieVideoCuePointCondition>;
+  filter?: InputMaybe<MovieVideoCuePointFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<MovieVideoCuePointsOrderBy>>;
 };
 
 
@@ -1396,6 +1687,79 @@ export type MovieVideoCondition = {
   type?: InputMaybe<Scalars['String']>;
 };
 
+/** Video cue point metadata */
+export type MovieVideoCuePoint = {
+  __typename?: 'MovieVideoCuePoint';
+  /** Type of the cue point */
+  cuePointTypeKey: Scalars['String'];
+  id: Scalars['Int'];
+  /** Time in seconds at which the cue point is set within the video */
+  timeInSeconds: Scalars['Float'];
+  /** Additional information associated with the cue point */
+  value?: Maybe<Scalars['String']>;
+  /** Reads a single `MovieVideo` that is related to this `MovieVideoCuePoint`. */
+  video?: Maybe<MovieVideo>;
+  videoId?: Maybe<Scalars['Int']>;
+};
+
+/**
+ * A condition to be used against `MovieVideoCuePoint` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type MovieVideoCuePointCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `videoId` field. */
+  videoId?: InputMaybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `MovieVideoCuePoint` object types. All fields are combined with a logical ‘and.’ */
+export type MovieVideoCuePointFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<MovieVideoCuePointFilter>>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<MovieVideoCuePointFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<MovieVideoCuePointFilter>>;
+  /** Filter by the object’s `videoId` field. */
+  videoId?: InputMaybe<IntFilter>;
+};
+
+/** A connection to a list of `MovieVideoCuePoint` values. */
+export type MovieVideoCuePointsConnection = {
+  __typename?: 'MovieVideoCuePointsConnection';
+  /** A list of edges which contains the `MovieVideoCuePoint` and cursor to aid in pagination. */
+  edges: Array<MovieVideoCuePointsEdge>;
+  /** A list of `MovieVideoCuePoint` objects. */
+  nodes: Array<MovieVideoCuePoint>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `MovieVideoCuePoint` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `MovieVideoCuePoint` edge in the connection. */
+export type MovieVideoCuePointsEdge = {
+  __typename?: 'MovieVideoCuePointsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `MovieVideoCuePoint` at the end of the edge. */
+  node: MovieVideoCuePoint;
+};
+
+/** Methods to use when ordering `MovieVideoCuePoint`. */
+export enum MovieVideoCuePointsOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  VideoIdAsc = 'VIDEO_ID_ASC',
+  VideoIdDesc = 'VIDEO_ID_DESC'
+}
+
 /** A filter to be used against `MovieVideo` object types. All fields are combined with a logical ‘and.’ */
 export type MovieVideoFilter = {
   /** Checks for all expressions in this list. */
@@ -1411,6 +1775,41 @@ export type MovieVideoFilter = {
   /** Filter by the object’s `type` field. */
   type?: InputMaybe<StringFilter>;
 };
+
+/** A connection to a list of `MovieVideo` values. */
+export type MovieVideosConnection = {
+  __typename?: 'MovieVideosConnection';
+  /** A list of edges which contains the `MovieVideo` and cursor to aid in pagination. */
+  edges: Array<MovieVideosEdge>;
+  /** A list of `MovieVideo` objects. */
+  nodes: Array<MovieVideo>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `MovieVideo` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `MovieVideo` edge in the connection. */
+export type MovieVideosEdge = {
+  __typename?: 'MovieVideosEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `MovieVideo` at the end of the edge. */
+  node: MovieVideo;
+};
+
+/** Methods to use when ordering `MovieVideo`. */
+export enum MovieVideosOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  MovieIdAsc = 'MOVIE_ID_ASC',
+  MovieIdDesc = 'MOVIE_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC'
+}
 
 /** Video stream DRM metadata */
 export type MovieVideoStream = {
@@ -1519,72 +1918,6 @@ export enum MovieVideoStreamsOrderBy {
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
 
-/** A connection to a list of `MovieVideo` values. */
-export type MovieVideosConnection = {
-  __typename?: 'MovieVideosConnection';
-  /** A list of edges which contains the `MovieVideo` and cursor to aid in pagination. */
-  edges: Array<MovieVideosEdge>;
-  /** A list of `MovieVideo` objects. */
-  nodes: Array<MovieVideo>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `MovieVideo` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `MovieVideo` edge in the connection. */
-export type MovieVideosEdge = {
-  __typename?: 'MovieVideosEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `MovieVideo` at the end of the edge. */
-  node: MovieVideo;
-};
-
-/** Methods to use when ordering `MovieVideo`. */
-export enum MovieVideosOrderBy {
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  MovieIdAsc = 'MOVIE_ID_ASC',
-  MovieIdDesc = 'MOVIE_ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  TypeAsc = 'TYPE_ASC',
-  TypeDesc = 'TYPE_DESC'
-}
-
-/** A connection to a list of `Movie` values. */
-export type MoviesConnection = {
-  __typename?: 'MoviesConnection';
-  /** A list of edges which contains the `Movie` and cursor to aid in pagination. */
-  edges: Array<MoviesEdge>;
-  /** A list of `Movie` objects. */
-  nodes: Array<Movie>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Movie` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Movie` edge in the connection. */
-export type MoviesEdge = {
-  __typename?: 'MoviesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Movie` at the end of the edge. */
-  node: Movie;
-};
-
-/** Methods to use when ordering `Movie`. */
-export enum MoviesOrderBy {
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
 /** Information about pagination in a connection. */
 export type PageInfo = {
   __typename?: 'PageInfo';
@@ -1601,6 +1934,9 @@ export type PageInfo = {
 /** The root query type which gives access points into the data universe. */
 export type Query = {
   __typename?: 'Query';
+  channel?: Maybe<Channel>;
+  /** Reads and enables pagination through a set of `Channel`. */
+  channels?: Maybe<ChannelsConnection>;
   collection?: Maybe<Collection>;
   /** Reads and enables pagination through a set of `Collection`. */
   collections?: Maybe<CollectionsConnection>;
@@ -1627,6 +1963,25 @@ export type Query = {
   tvshowGenres?: Maybe<TvshowGenresConnection>;
   /** Reads and enables pagination through a set of `Tvshow`. */
   tvshows?: Maybe<TvshowsConnection>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryChannelArgs = {
+  id: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryChannelsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ChannelCondition>;
+  filter?: InputMaybe<ChannelFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ChannelsOrderBy>>;
 };
 
 
@@ -2116,6 +2471,39 @@ export enum SeasonLicensesOrderBy {
   SeasonIdDesc = 'SEASON_ID_DESC'
 }
 
+/** A connection to a list of `Season` values. */
+export type SeasonsConnection = {
+  __typename?: 'SeasonsConnection';
+  /** A list of edges which contains the `Season` and cursor to aid in pagination. */
+  edges: Array<SeasonsEdge>;
+  /** A list of `Season` objects. */
+  nodes: Array<Season>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Season` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Season` edge in the connection. */
+export type SeasonsEdge = {
+  __typename?: 'SeasonsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Season` at the end of the edge. */
+  node: Season;
+};
+
+/** Methods to use when ordering `Season`. */
+export enum SeasonsOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TvshowIdAsc = 'TVSHOW_ID_ASC',
+  TvshowIdDesc = 'TVSHOW_ID_DESC'
+}
+
 /** Video stream metadata. */
 export type SeasonVideo = {
   __typename?: 'SeasonVideo';
@@ -2123,6 +2511,8 @@ export type SeasonVideo = {
   audioLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Array of caption languages available in the stream. */
   captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Reads and enables pagination through a set of `SeasonVideoCuePoint`. */
+  cuePoints: SeasonVideoCuePointsConnection;
   /** URI to a DASH manifest. */
   dashManifest?: Maybe<Scalars['String']>;
   /** URI to an HLS manifest. */
@@ -2149,6 +2539,19 @@ export type SeasonVideo = {
 
 
 /** Video stream metadata. */
+export type SeasonVideoCuePointsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<SeasonVideoCuePointCondition>;
+  filter?: InputMaybe<SeasonVideoCuePointFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<SeasonVideoCuePointsOrderBy>>;
+};
+
+
+/** Video stream metadata. */
 export type SeasonVideoVideoStreamsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -2171,6 +2574,79 @@ export type SeasonVideoCondition = {
   seasonId?: InputMaybe<Scalars['String']>;
 };
 
+/** Video cue point metadata */
+export type SeasonVideoCuePoint = {
+  __typename?: 'SeasonVideoCuePoint';
+  /** Type of the cue point */
+  cuePointTypeKey: Scalars['String'];
+  id: Scalars['Int'];
+  /** Time in seconds at which the cue point is set within the video */
+  timeInSeconds: Scalars['Float'];
+  /** Additional information associated with the cue point */
+  value?: Maybe<Scalars['String']>;
+  /** Reads a single `SeasonVideo` that is related to this `SeasonVideoCuePoint`. */
+  video?: Maybe<SeasonVideo>;
+  videoId?: Maybe<Scalars['Int']>;
+};
+
+/**
+ * A condition to be used against `SeasonVideoCuePoint` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type SeasonVideoCuePointCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `videoId` field. */
+  videoId?: InputMaybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `SeasonVideoCuePoint` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonVideoCuePointFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<SeasonVideoCuePointFilter>>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<SeasonVideoCuePointFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<SeasonVideoCuePointFilter>>;
+  /** Filter by the object’s `videoId` field. */
+  videoId?: InputMaybe<IntFilter>;
+};
+
+/** A connection to a list of `SeasonVideoCuePoint` values. */
+export type SeasonVideoCuePointsConnection = {
+  __typename?: 'SeasonVideoCuePointsConnection';
+  /** A list of edges which contains the `SeasonVideoCuePoint` and cursor to aid in pagination. */
+  edges: Array<SeasonVideoCuePointsEdge>;
+  /** A list of `SeasonVideoCuePoint` objects. */
+  nodes: Array<SeasonVideoCuePoint>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SeasonVideoCuePoint` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `SeasonVideoCuePoint` edge in the connection. */
+export type SeasonVideoCuePointsEdge = {
+  __typename?: 'SeasonVideoCuePointsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `SeasonVideoCuePoint` at the end of the edge. */
+  node: SeasonVideoCuePoint;
+};
+
+/** Methods to use when ordering `SeasonVideoCuePoint`. */
+export enum SeasonVideoCuePointsOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  VideoIdAsc = 'VIDEO_ID_ASC',
+  VideoIdDesc = 'VIDEO_ID_DESC'
+}
+
 /** A filter to be used against `SeasonVideo` object types. All fields are combined with a logical ‘and.’ */
 export type SeasonVideoFilter = {
   /** Checks for all expressions in this list. */
@@ -2184,6 +2660,39 @@ export type SeasonVideoFilter = {
   /** Filter by the object’s `seasonId` field. */
   seasonId?: InputMaybe<StringFilter>;
 };
+
+/** A connection to a list of `SeasonVideo` values. */
+export type SeasonVideosConnection = {
+  __typename?: 'SeasonVideosConnection';
+  /** A list of edges which contains the `SeasonVideo` and cursor to aid in pagination. */
+  edges: Array<SeasonVideosEdge>;
+  /** A list of `SeasonVideo` objects. */
+  nodes: Array<SeasonVideo>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SeasonVideo` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `SeasonVideo` edge in the connection. */
+export type SeasonVideosEdge = {
+  __typename?: 'SeasonVideosEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `SeasonVideo` at the end of the edge. */
+  node: SeasonVideo;
+};
+
+/** Methods to use when ordering `SeasonVideo`. */
+export enum SeasonVideosOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SeasonIdAsc = 'SEASON_ID_ASC',
+  SeasonIdDesc = 'SEASON_ID_DESC'
+}
 
 /** Video stream DRM metadata */
 export type SeasonVideoStream = {
@@ -2292,72 +2801,6 @@ export enum SeasonVideoStreamsOrderBy {
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
 
-/** A connection to a list of `SeasonVideo` values. */
-export type SeasonVideosConnection = {
-  __typename?: 'SeasonVideosConnection';
-  /** A list of edges which contains the `SeasonVideo` and cursor to aid in pagination. */
-  edges: Array<SeasonVideosEdge>;
-  /** A list of `SeasonVideo` objects. */
-  nodes: Array<SeasonVideo>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `SeasonVideo` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `SeasonVideo` edge in the connection. */
-export type SeasonVideosEdge = {
-  __typename?: 'SeasonVideosEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `SeasonVideo` at the end of the edge. */
-  node: SeasonVideo;
-};
-
-/** Methods to use when ordering `SeasonVideo`. */
-export enum SeasonVideosOrderBy {
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  SeasonIdAsc = 'SEASON_ID_ASC',
-  SeasonIdDesc = 'SEASON_ID_DESC'
-}
-
-/** A connection to a list of `Season` values. */
-export type SeasonsConnection = {
-  __typename?: 'SeasonsConnection';
-  /** A list of edges which contains the `Season` and cursor to aid in pagination. */
-  edges: Array<SeasonsEdge>;
-  /** A list of `Season` objects. */
-  nodes: Array<Season>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Season` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Season` edge in the connection. */
-export type SeasonsEdge = {
-  __typename?: 'SeasonsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Season` at the end of the edge. */
-  node: Season;
-};
-
-/** Methods to use when ordering `Season`. */
-export enum SeasonsOrderBy {
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  TvshowIdAsc = 'TVSHOW_ID_ASC',
-  TvshowIdDesc = 'TVSHOW_ID_DESC'
-}
-
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
 export type StringFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -2382,12 +2825,12 @@ export type StringFilter = {
   greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
   /** Included in the specified list. */
   in?: InputMaybe<Array<Scalars['String']>>;
-  /** Included in the specified list (case-insensitive). */
-  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Contains the specified string (case-sensitive). */
   includes?: InputMaybe<Scalars['String']>;
   /** Contains the specified string (case-insensitive). */
   includesInsensitive?: InputMaybe<Scalars['String']>;
+  /** Included in the specified list (case-insensitive). */
+  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
   isNull?: InputMaybe<Scalars['Boolean']>;
   /** Less than the specified value. */
@@ -2416,12 +2859,12 @@ export type StringFilter = {
   notEqualToInsensitive?: InputMaybe<Scalars['String']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['String']>>;
-  /** Not included in the specified list (case-insensitive). */
-  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Does not contain the specified string (case-sensitive). */
   notIncludes?: InputMaybe<Scalars['String']>;
   /** Does not contain the specified string (case-insensitive). */
   notIncludesInsensitive?: InputMaybe<Scalars['String']>;
+  /** Not included in the specified list (case-insensitive). */
+  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
   notLike?: InputMaybe<Scalars['String']>;
   /** Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
@@ -2851,6 +3294,37 @@ export enum TvshowLicensesOrderBy {
   TvshowIdDesc = 'TVSHOW_ID_DESC'
 }
 
+/** A connection to a list of `Tvshow` values. */
+export type TvshowsConnection = {
+  __typename?: 'TvshowsConnection';
+  /** A list of edges which contains the `Tvshow` and cursor to aid in pagination. */
+  edges: Array<TvshowsEdge>;
+  /** A list of `Tvshow` objects. */
+  nodes: Array<Tvshow>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Tvshow` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Tvshow` edge in the connection. */
+export type TvshowsEdge = {
+  __typename?: 'TvshowsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Tvshow` at the end of the edge. */
+  node: Tvshow;
+};
+
+/** Methods to use when ordering `Tvshow`. */
+export enum TvshowsOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 /** Video stream metadata. */
 export type TvshowVideo = {
   __typename?: 'TvshowVideo';
@@ -2858,6 +3332,8 @@ export type TvshowVideo = {
   audioLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Array of caption languages available in the stream. */
   captionLanguages?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Reads and enables pagination through a set of `TvshowVideoCuePoint`. */
+  cuePoints: TvshowVideoCuePointsConnection;
   /** URI to a DASH manifest. */
   dashManifest?: Maybe<Scalars['String']>;
   /** URI to an HLS manifest. */
@@ -2884,6 +3360,19 @@ export type TvshowVideo = {
 
 
 /** Video stream metadata. */
+export type TvshowVideoCuePointsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<TvshowVideoCuePointCondition>;
+  filter?: InputMaybe<TvshowVideoCuePointFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<TvshowVideoCuePointsOrderBy>>;
+};
+
+
+/** Video stream metadata. */
 export type TvshowVideoVideoStreamsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -2906,6 +3395,79 @@ export type TvshowVideoCondition = {
   tvshowId?: InputMaybe<Scalars['String']>;
 };
 
+/** Video cue point metadata */
+export type TvshowVideoCuePoint = {
+  __typename?: 'TvshowVideoCuePoint';
+  /** Type of the cue point */
+  cuePointTypeKey: Scalars['String'];
+  id: Scalars['Int'];
+  /** Time in seconds at which the cue point is set within the video */
+  timeInSeconds: Scalars['Float'];
+  /** Additional information associated with the cue point */
+  value?: Maybe<Scalars['String']>;
+  /** Reads a single `TvshowVideo` that is related to this `TvshowVideoCuePoint`. */
+  video?: Maybe<TvshowVideo>;
+  videoId?: Maybe<Scalars['Int']>;
+};
+
+/**
+ * A condition to be used against `TvshowVideoCuePoint` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type TvshowVideoCuePointCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `videoId` field. */
+  videoId?: InputMaybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `TvshowVideoCuePoint` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowVideoCuePointFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<TvshowVideoCuePointFilter>>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<TvshowVideoCuePointFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<TvshowVideoCuePointFilter>>;
+  /** Filter by the object’s `videoId` field. */
+  videoId?: InputMaybe<IntFilter>;
+};
+
+/** A connection to a list of `TvshowVideoCuePoint` values. */
+export type TvshowVideoCuePointsConnection = {
+  __typename?: 'TvshowVideoCuePointsConnection';
+  /** A list of edges which contains the `TvshowVideoCuePoint` and cursor to aid in pagination. */
+  edges: Array<TvshowVideoCuePointsEdge>;
+  /** A list of `TvshowVideoCuePoint` objects. */
+  nodes: Array<TvshowVideoCuePoint>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TvshowVideoCuePoint` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `TvshowVideoCuePoint` edge in the connection. */
+export type TvshowVideoCuePointsEdge = {
+  __typename?: 'TvshowVideoCuePointsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `TvshowVideoCuePoint` at the end of the edge. */
+  node: TvshowVideoCuePoint;
+};
+
+/** Methods to use when ordering `TvshowVideoCuePoint`. */
+export enum TvshowVideoCuePointsOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  VideoIdAsc = 'VIDEO_ID_ASC',
+  VideoIdDesc = 'VIDEO_ID_DESC'
+}
+
 /** A filter to be used against `TvshowVideo` object types. All fields are combined with a logical ‘and.’ */
 export type TvshowVideoFilter = {
   /** Checks for all expressions in this list. */
@@ -2919,6 +3481,39 @@ export type TvshowVideoFilter = {
   /** Filter by the object’s `tvshowId` field. */
   tvshowId?: InputMaybe<StringFilter>;
 };
+
+/** A connection to a list of `TvshowVideo` values. */
+export type TvshowVideosConnection = {
+  __typename?: 'TvshowVideosConnection';
+  /** A list of edges which contains the `TvshowVideo` and cursor to aid in pagination. */
+  edges: Array<TvshowVideosEdge>;
+  /** A list of `TvshowVideo` objects. */
+  nodes: Array<TvshowVideo>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TvshowVideo` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `TvshowVideo` edge in the connection. */
+export type TvshowVideosEdge = {
+  __typename?: 'TvshowVideosEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `TvshowVideo` at the end of the edge. */
+  node: TvshowVideo;
+};
+
+/** Methods to use when ordering `TvshowVideo`. */
+export enum TvshowVideosOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TvshowIdAsc = 'TVSHOW_ID_ASC',
+  TvshowIdDesc = 'TVSHOW_ID_DESC'
+}
 
 /** Video stream DRM metadata */
 export type TvshowVideoStream = {
@@ -3027,70 +3622,6 @@ export enum TvshowVideoStreamsOrderBy {
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
 
-/** A connection to a list of `TvshowVideo` values. */
-export type TvshowVideosConnection = {
-  __typename?: 'TvshowVideosConnection';
-  /** A list of edges which contains the `TvshowVideo` and cursor to aid in pagination. */
-  edges: Array<TvshowVideosEdge>;
-  /** A list of `TvshowVideo` objects. */
-  nodes: Array<TvshowVideo>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `TvshowVideo` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `TvshowVideo` edge in the connection. */
-export type TvshowVideosEdge = {
-  __typename?: 'TvshowVideosEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `TvshowVideo` at the end of the edge. */
-  node: TvshowVideo;
-};
-
-/** Methods to use when ordering `TvshowVideo`. */
-export enum TvshowVideosOrderBy {
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  TvshowIdAsc = 'TVSHOW_ID_ASC',
-  TvshowIdDesc = 'TVSHOW_ID_DESC'
-}
-
-/** A connection to a list of `Tvshow` values. */
-export type TvshowsConnection = {
-  __typename?: 'TvshowsConnection';
-  /** A list of edges which contains the `Tvshow` and cursor to aid in pagination. */
-  edges: Array<TvshowsEdge>;
-  /** A list of `Tvshow` objects. */
-  nodes: Array<Tvshow>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Tvshow` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Tvshow` edge in the connection. */
-export type TvshowsEdge = {
-  __typename?: 'TvshowsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `Tvshow` at the end of the edge. */
-  node: Tvshow;
-};
-
-/** Methods to use when ordering `Tvshow`. */
-export enum TvshowsOrderBy {
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
 export enum VideoStreamType {
   /** Audio */
   Audio = 'AUDIO',
@@ -3128,6 +3659,13 @@ export type VideoStreamTypeFilter = {
   notIn?: InputMaybe<Array<VideoStreamType>>;
 };
 
+export type GetChannelVideoQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetChannelVideoQuery = { __typename?: 'Query', channel?: { __typename?: 'Channel', dashStreamUrl?: string | null, hlsStreamUrl?: string | null, keyId?: string | null } | null };
+
 export type GetEpisodeMainVideoQueryVariables = Exact<{
   id: Scalars['String'];
   countryCode?: InputMaybe<Scalars['String']>;
@@ -3145,6 +3683,15 @@ export type GetMovieMainVideoQueryVariables = Exact<{
 export type GetMovieMainVideoQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', videos: { __typename?: 'MovieVideosConnection', nodes: Array<{ __typename?: 'MovieVideo', id: number, isProtected?: boolean | null, videoStreams: { __typename?: 'MovieVideoStreamsConnection', nodes: Array<{ __typename?: 'MovieVideoStream', keyId?: string | null }> } }> } } | null };
 
 
+export const GetChannelVideoDocument = gql`
+    query GetChannelVideo($id: String!) {
+  channel(id: $id) {
+    dashStreamUrl
+    hlsStreamUrl
+    keyId
+  }
+}
+    `;
 export const GetEpisodeMainVideoDocument = gql`
     query GetEpisodeMainVideo($id: String!, $countryCode: String) {
   episode(id: $id, countryCode: $countryCode) {
@@ -3184,10 +3731,14 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
+const GetChannelVideoDocumentString = print(GetChannelVideoDocument);
 const GetEpisodeMainVideoDocumentString = print(GetEpisodeMainVideoDocument);
 const GetMovieMainVideoDocumentString = print(GetMovieMainVideoDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    GetChannelVideo(variables: GetChannelVideoQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetChannelVideoQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetChannelVideoQuery>(GetChannelVideoDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetChannelVideo', 'query');
+    },
     GetEpisodeMainVideo(variables: GetEpisodeMainVideoQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: GetEpisodeMainVideoQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetEpisodeMainVideoQuery>(GetEpisodeMainVideoDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetEpisodeMainVideo', 'query');
     },
