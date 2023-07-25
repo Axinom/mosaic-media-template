@@ -42,7 +42,7 @@ describe('Channel Localization Graphql Requests', () => {
 
   afterAll(async () => {
     await ctx?.truncate('channel');
-    await ctx.dispose();
+    await ctx?.dispose();
   });
 
   it('Channel with only default localization and empty filter -> default localization returned', async () => {
@@ -64,7 +64,7 @@ describe('Channel Localization Graphql Requests', () => {
     ]);
   });
 
-  it('Channel with only 2 localizations and empty filter -> default localization returned', async () => {
+  it('Channel with 2 localizations and empty filter -> default localization returned', async () => {
     // Arrange
     await insert('channel_localizations', {
       channel_id: channelId,
@@ -92,7 +92,7 @@ describe('Channel Localization Graphql Requests', () => {
     ]);
   });
 
-  it('Channel with only 2 localizations and no filter -> default localization returned', async () => {
+  it('Channel with 2 localizations and no filter -> default localization returned', async () => {
     // Arrange
     await insert('channel_localizations', {
       channel_id: channelId,
@@ -131,7 +131,7 @@ describe('Channel Localization Graphql Requests', () => {
     ]);
   });
 
-  it('Channel with only 3 localizations and valid filter -> selected non-default localization returned', async () => {
+  it('Channel with 3 localizations and valid filter -> selected non-default localization returned', async () => {
     // Arrange
     await insert('channel_localizations', [
       {
@@ -168,7 +168,7 @@ describe('Channel Localization Graphql Requests', () => {
     ]);
   });
 
-  it('Channel with only 3 localizations and non-existent locale filter -> default localization returned', async () => {
+  it('Channel with 3 localizations and non-existent locale filter -> default localization returned', async () => {
     // Arrange
     await insert('channel_localizations', [
       {

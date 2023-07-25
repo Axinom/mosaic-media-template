@@ -1,5 +1,5 @@
 --! Previous: sha1:c9457b917399b9a43ac0fc04d0e130cf728bfcb7
---! Hash: sha1:7afd39916d603525b3b67b5a836d90b445e8bf2b
+--! Hash: sha1:8d220af7b90bc280a9165f8bcef3ccc38dd0c204
 --! Message: channel-localizations-added
 
 CREATE TABLE IF NOT EXISTS app_public.channel_localizations(
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS app_public.channel_localizations(
   channel_id TEXT REFERENCES channel ON DELETE CASCADE,
   locale TEXT NOT NULL,
   is_default_locale BOOLEAN NOT NULL,
-  title TEXT,
+  title TEXT NOT NULL,
   description TEXT
 );
 

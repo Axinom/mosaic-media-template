@@ -1674,7 +1674,7 @@ CREATE TABLE app_public.channel_localizations (
     channel_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text,
+    title text NOT NULL,
     description text
 );
 

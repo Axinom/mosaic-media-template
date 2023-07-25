@@ -516,9 +516,9 @@ declare module 'zapatos/schema' {
       /**
       * **channel_localizations.title**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      title: string | null;
+      title: string;
       /**
       * **channel_localizations.description**
       * - `text` in database
@@ -554,9 +554,9 @@ declare module 'zapatos/schema' {
       /**
       * **channel_localizations.title**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      title: string | null;
+      title: string;
       /**
       * **channel_localizations.description**
       * - `text` in database
@@ -592,7 +592,7 @@ declare module 'zapatos/schema' {
       /**
       * **channel_localizations.title**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -630,9 +630,9 @@ declare module 'zapatos/schema' {
       /**
       * **channel_localizations.title**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      title: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **channel_localizations.description**
       * - `text` in database
@@ -668,9 +668,9 @@ declare module 'zapatos/schema' {
       /**
       * **channel_localizations.title**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **channel_localizations.description**
       * - `text` in database

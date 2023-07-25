@@ -354,7 +354,7 @@ type Channel {
   """The localized channel metadata."""
   localization(
     """
-    The localization is returned for the specified locale. If not defined, the default locale will be used instead.
+    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
     """
     locale: String
   ): ChannelLocalization!
@@ -643,7 +643,7 @@ input StringFilter {
 }
 
 type ChannelLocalization {
-  title: String
+  title: String!
   description: String
 }
 
