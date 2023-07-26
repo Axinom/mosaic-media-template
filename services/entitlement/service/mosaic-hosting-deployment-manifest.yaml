@@ -1,0 +1,58 @@
+# This YAML contains the Deployment Configuration template
+# for Entitlement Service.
+# This configuration file is required when deploying the service via
+# Mosaic Hosting Service.
+# Make sure to replace the license key values for DRM and Geo Lite.
+# You can upload this to Mosaic Hosting Service using the following Mosaic CLI command:
+# mosaic hosting manifest upload
+
+pilets: []
+version: '1.0'
+serviceId: 'entitlement-service'
+dnsMappedPorts:
+  - name: 'api'
+    port: 11600
+secureVariables:
+  PGSSLMODE: 'prefer'
+  DATABASE_NAME: '${__ax_hosted__.pg.database_name}'
+  RABBITMQ_HOST: '${__ax_hosted__.rmq.host}'
+  RABBITMQ_PORT: '${__ax_hosted__.rmq.port}'
+  RABBITMQ_USER: '${__ax_hosted__.rmq.username}'
+  DATABASE_LOGIN: '${__ax_hosted__.pg.db_login_role}'
+  DATABASE_OWNER: '${__ax_hosted__.pg.db_owner_role}'
+  RABBITMQ_VHOST: '${__ax_hosted__.rmq.vhost}'
+  POSTGRESQL_HOST: '${__ax_hosted__.pg.host}'
+  POSTGRESQL_PORT: '${__ax_hosted__.pg.port}'
+  DATABASE_GQL_ROLE: '${__ax_hosted__.pg.db_gql_role}'
+  RABBITMQ_PASSWORD: '${__ax_hosted__.rmq.password}'
+  RABBITMQ_PROTOCOL: '${__ax_hosted__.rmq.protocol}'
+  RABBITMQ_MGMT_HOST: '${__ax_hosted__.rmq.mgmt_host}'
+  RABBITMQ_MGMT_PORT: '${__ax_hosted__.rmq.mgmt_port}'
+  GEOLITE2_LICENSE_KEY: [REPLACE_WITH_VALID_LICENSE_KEY]
+  POSTGRESQL_USER_SUFFIX: '${__ax_hosted__.pg.user_suffix}'
+  RABBITMQ_MGMT_PROTOCOL: '${__ax_hosted__.rmq.mgmt_protocol}'
+  DATABASE_LOGIN_PASSWORD: '${__ax_hosted__.pg.db_login_password}'
+  DATABASE_OWNER_PASSWORD: '${__ax_hosted__.pg.db_owner_password}'
+  SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
+  DRM_LICENSE_COMMUNICATION_KEY: [REPLACE_WITH_VALID_LICENSE_KEY]
+  SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
+  DRM_LICENSE_COMMUNICATION_KEY_ID: [REPLACE_WITH_VALID_COMMUNICATION_KEY]
+serviceAccounts:
+  - name: 'primary'
+    permissionStructure:
+      - serviceId: 'ax-monetization-grants-service'
+        permissions:
+          - 'CLAIM_DEFINITIONS_SYNCHRONIZE'
+regularVariables:
+  PORT: '${__ax_hosted__.port.api}'
+  NODE_ENV: 'production'
+  DEMO_MODE: true
+  LOG_LEVEL: 'DEBUG'
+  TENANT_ID: '${__ax_hosted__.env.tenant_id}'
+  SERVICE_ID: 'entitlement-service'
+  ENVIRONMENT_ID: '${__ax_hosted__.env.environment_id}'
+  GRAPHQL_GUI_ENABLED: true
+  BILLING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-billing-service.end_user_base_url}'
+  CATALOG_SERVICE_BASE_URL: '${__ax_hosted__.dns.catalog-service.api}'
+  ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
+  USER_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-user-service.auth_base_url}'
