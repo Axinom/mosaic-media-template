@@ -4,7 +4,6 @@ import {
   EntityFieldDefinition,
   LocalizationServiceMultiTenantMessagingSettings,
   UpsertLocalizationSourceEntityCommand,
-  UpsertLocalizationSourceEntityFields,
 } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { Table } from 'zapatos/schema';
@@ -15,7 +14,7 @@ export const getUpsertMessageData = (
   serviceId: string,
   entityType: string,
   entityId: number,
-  fields: UpsertLocalizationSourceEntityFields,
+  fields: Record<string, unknown>,
   entityTitle: string | undefined,
   imageId: string | null | undefined,
 ): LocalizationMessageData => {
