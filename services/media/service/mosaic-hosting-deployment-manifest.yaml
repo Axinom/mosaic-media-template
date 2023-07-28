@@ -45,7 +45,6 @@ regularVariables:
   TENANT_ID: '${__ax_hosted__.env.tenant_id}'
   ENVIRONMENT_ID: '${__ax_hosted__.env.environment_id}'
   IMAGE_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-image-service.management_base_url}'
-  CATALOG_SERVICE_BASE_URL: '${__ax_hosted__.dns.ax-catalog-service.api}'
   ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
   ENCODING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-encoding-service.management_base_url}'
 secureVariables:
