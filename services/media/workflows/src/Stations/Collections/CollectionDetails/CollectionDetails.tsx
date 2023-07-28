@@ -41,9 +41,7 @@ import { CollectionDetailsFormData } from './CollectionDetails.types';
 const collectionDetailSchema = Yup.object().shape<
   ObjectSchemaDefinition<CollectionDetailsFormData>
 >({
-  title: Yup.string()
-    .required('Title is a required field')
-    .max(100),
+  title: Yup.string().required('Title is a required field').max(100),
   description: Yup.string().nullable(),
   synopsis: Yup.string().nullable(),
   externalId: Yup.string().nullable(),
@@ -76,9 +74,8 @@ export const CollectionDetails: React.FC = () => {
       formData: CollectionDetailsFormData,
       initialData: DetailsProps<CollectionDetailsFormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const tagAssignmentMutations = generateArrayMutations({
         current: formData.tags,
@@ -144,9 +141,8 @@ export const CollectionDetails: React.FC = () => {
 
 const Panel: React.FC = () => {
   const { ImageCover } = useContext(ExtensionsContext);
-  const { values } = useFormikContext<
-    NonNullable<CollectionQuery['collection']>
-  >();
+  const { values } =
+    useFormikContext<NonNullable<CollectionQuery['collection']>>();
 
   return useMemo(() => {
     let coverImageId: ImageID;
@@ -168,7 +164,7 @@ const Panel: React.FC = () => {
         <Section>
           <ImageCover params={{ id: coverImageId }} />
         </Section>
-        <Section title="Collection Entity">
+        <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
@@ -176,6 +172,14 @@ const Panel: React.FC = () => {
           <Paragraph title="Last Modified">
             {formatDateTime(values.updatedDate)} by {values.updatedUser}
           </Paragraph>
+          <Paragraph title="Publishing Status">
+            {getEnumLabel(values.publishStatus)}
+          </Paragraph>
+          {values.publishStatus === PublishStatus.Published ? (
+            <Paragraph title="Last Published">
+              {formatDateTime(values.publishedDate)} by {values.publishedUser}
+            </Paragraph>
+          ) : null}
         </Section>
         <Section title="Assigned Items">
           <Paragraph title="Entities">
@@ -206,16 +210,6 @@ const Panel: React.FC = () => {
               </div>
             </div>
           </Paragraph>
-        </Section>
-        <Section title="Additional Information">
-          <Paragraph title="Publishing Status">
-            {getEnumLabel(values.publishStatus)}
-          </Paragraph>
-          {values.publishStatus === PublishStatus.Published ? (
-            <Paragraph title="Last Published">
-              {formatDateTime(values.publishedDate)} by {values.publishedUser}
-            </Paragraph>
-          ) : null}
         </Section>
       </InfoPanel>
     );

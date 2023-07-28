@@ -281,7 +281,7 @@ const Panel: React.FC = () => {
         <Section>
           <ImageCover params={{ id: coverImageId }} />
         </Section>
-        <Section title="Episode Entity">
+        <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
@@ -289,6 +289,14 @@ const Panel: React.FC = () => {
           <Paragraph title="Last Modified">
             {formatDateTime(values.updatedDate)} by {values.updatedUser}
           </Paragraph>
+          <Paragraph title="Publishing Status">
+            {getEnumLabel(values.publishStatus)}
+          </Paragraph>
+          {values.publishStatus === PublishStatus.Published ? (
+            <Paragraph title="Last Published">
+              {formatDateTime(values.publishedDate)} by {values.publishedUser}
+            </Paragraph>
+          ) : null}
         </Section>
         <Section title="Assignments">
           <Paragraph title="Parent Entity">
@@ -336,16 +344,6 @@ const Panel: React.FC = () => {
               </div>
             </div>
           </Paragraph>
-        </Section>
-        <Section title="Additional Information">
-          <Paragraph title="Publishing Status">
-            {getEnumLabel(values.publishStatus)}
-          </Paragraph>
-          {values.publishStatus === PublishStatus.Published ? (
-            <Paragraph title="Last Published">
-              {formatDateTime(values.publishedDate)} by {values.publishedUser}
-            </Paragraph>
-          ) : null}
         </Section>
       </InfoPanel>
     );
