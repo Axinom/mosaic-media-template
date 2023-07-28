@@ -54,6 +54,7 @@ async function main(): Promise<void> {
           'SERVICE_DEFINITIONS_VIEW',
           'SERVICE_PILET_ARTIFACTS_EDIT',
           'SERVICE_DEPLOYMENT_CONFIG_EDIT',
+          'SERVICE_DEPLOYMENTS_EDIT',
         ],
       },
       {
