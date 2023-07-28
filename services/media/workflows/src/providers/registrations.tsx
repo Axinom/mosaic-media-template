@@ -14,6 +14,7 @@ export function register(app: PiletApi): void {
         title="Select Movie"
         stationKey="FASTMovieSelection"
         allowBulkSelect={true}
+        enableSelectAll={false}
         defaultFilterValues={{
           mainVideoId: true,
         }}
@@ -55,6 +56,7 @@ export function register(app: PiletApi): void {
         title="Select Episode"
         stationKey="FASTEpisodeSelection"
         allowBulkSelect={true}
+        enableSelectAll={false}
         defaultFilterValues={{
           mainVideoId: true,
         }}
