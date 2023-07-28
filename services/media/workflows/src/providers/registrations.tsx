@@ -13,8 +13,7 @@ export function register(app: PiletApi): void {
         kind="SelectionExplorer"
         title="Select Movie"
         stationKey="FASTMovieSelection"
-        allowBulkSelect={false}
-        enableSelectAll={false}
+        allowBulkSelect={true}
         defaultFilterValues={{
           mainVideoId: true,
         }}
@@ -55,8 +54,7 @@ export function register(app: PiletApi): void {
         kind="SelectionExplorer"
         title="Select Episode"
         stationKey="FASTEpisodeSelection"
-        allowBulkSelect={false}
-        enableSelectAll={false}
+        allowBulkSelect={true}
         defaultFilterValues={{
           mainVideoId: true,
         }}
