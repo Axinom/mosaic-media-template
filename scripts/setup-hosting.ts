@@ -78,7 +78,7 @@ const serviceAccountSetup = async (
     devServiceAccountClientSecret,
   );
 
-  const serviceAccountName = `hosting-service-account`;
+  const serviceAccountName = `hosting-CLI-service-account`;
   const serviceAccount = await devSetupServiceAccountWithPermissions(
     idServiceAuthBaseUrl,
     tokenResult.accessToken,
