@@ -80,11 +80,11 @@ export const getConfigDefinitions = (
       env.get('DEV_USER_SERVICE_MANAGEMENT_BASE_URL').asUrlString(),
 
     /**
-     * Optional Encoding Service GraphQL Endpoint, used to setup webhook urls and
+     * Optional Video Service GraphQL Endpoint, used to setup webhook urls and
      * secrets during development
      */
-    devEncodingServiceBaseUrl: () =>
-      env.get('DEV_ENCODING_SERVICE_BASE_URL').asUrlString(),
+    devVideoServiceBaseUrl: () =>
+      env.get('DEV_VIDEO_SERVICE_BASE_URL').asUrlString(),
 
     /**
      * Optional User Service Application name, used to create an Application

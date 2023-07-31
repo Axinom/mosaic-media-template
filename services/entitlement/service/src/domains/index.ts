@@ -1,2 +1,2 @@
-export * from './encoding';
 export * from './monetization';
+export * from './video';

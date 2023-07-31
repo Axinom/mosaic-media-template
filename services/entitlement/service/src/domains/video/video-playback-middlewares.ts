@@ -173,9 +173,9 @@ export const setupManifestWebhookEndpoint = (
     ) => {
       try {
         // This can be adjusted to return some CDN URL or some other stream URL.
-        // These 2 values are already used by default in the Encoding Service, so
+        // These 2 values are already used by default in the Video Service, so
         // if no changes are done to this webhook - it is not required to
-        // configure it in the Encoding Settings in Portal Admin.
+        // configure it in the Video Settings in Portal Admin.
         const response =
           generateWebhookResponse<ManifestWebhookResponsePayload>({
             payload: {

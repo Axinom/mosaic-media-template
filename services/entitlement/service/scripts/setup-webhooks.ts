@@ -66,13 +66,13 @@ async function main(): Promise<void> {
       'devServiceAccountClientId',
       'devServiceAccountClientSecret',
       'idServiceAuthBaseUrl',
-      'devEncodingServiceBaseUrl',
+      'devVideoServiceBaseUrl',
       'port',
     ),
   );
-  if (!config.devEncodingServiceBaseUrl) {
+  if (!config.devVideoServiceBaseUrl) {
     console.log(
-      `Please define 'DEV_ENCODING_SERVICE_BASE_URL' env variable in .env file.`,
+      `Please define 'DEV_VIDEO_SERVICE_BASE_URL' env variable in .env file.`,
     );
     process.exit(-1);
   }
@@ -83,7 +83,7 @@ async function main(): Promise<void> {
       config.devServiceAccountClientSecret,
       config.idServiceAuthBaseUrl,
     );
-    const endpointUrl = urljoin(config.devEncodingServiceBaseUrl, 'graphql');
+    const endpointUrl = urljoin(config.devVideoServiceBaseUrl, 'graphql');
     const result = await axios.post(
       endpointUrl,
       {
