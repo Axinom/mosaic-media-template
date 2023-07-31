@@ -2,6 +2,7 @@ trigger: none
 pr:
   - main
   - dev
+  - feature/localization #TODO: Remove when it is time to merge this branch into dev
 pool:
   vmImage: 'ubuntu-latest'
   demands: project_navy
