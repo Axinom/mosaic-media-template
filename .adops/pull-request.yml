@@ -4,11 +4,12 @@ pr:
   - dev
   - feature/localization #TODO: Remove when it is time to merge this branch into dev
 pool:
-  name: 'Mosaic Performance Tests'
+  vmImage: 'ubuntu-latest'
+  demands: project_navy
 
 variables:
-  YARN_CACHE_FOLDER: /home/tester/.yarn/berry/cache
-  NODE_OPTIONS: --max-old-space-size=15000
+  YARN_CACHE_FOLDER: /home/vsts/.yarn/berry/cache
+  NODE_OPTIONS: --max-old-space-size=8192
 
 steps:
   - task: NodeTool@0
@@ -52,8 +53,19 @@ steps:
   - script: cat .env
     displayName: Show .env
 
-  - script: yarn infra:up
-    displayName: Create testing infra
+  - task: Docker@0
+    inputs:
+      action: 'Run an image'
+      imageName: 'postgres:11.12-alpine'
+      containerName: 'test-postgres'
+      ports: '5432:5432'
+      volumes: '$(Agent.TempDirectory):/var/lib/postgresql/data'
+      envVars: |
+        PGDATA=/var/lib/postgresql/data/pgdata
+        POSTGRES_USER=postgres
+        POSTGRES_PASSWORD=postgres
+      restartPolicy: 'no'
+    displayName: Spin up temporary Postgres DB
 
   - script: yarn test:reset:dbs
     displayName: Reset test DBs
@@ -76,7 +88,16 @@ steps:
     condition: always()
     displayName: 'Publish coverage reports'
 
-  - script: yarn infra:down
+  - task: Docker@0
+    inputs:
+      action: 'Run a Docker command'
+      customCommand: 'stop test-postgres'
     condition: always()
-    displayName: Tear down testing infra
+    displayName: 'Stop temp Postgres container'
 
+  - task: Docker@0
+    inputs:
+      action: 'Run a Docker command'
+      customCommand: 'container rm test-postgres'
+    condition: always()
+    displayName: 'Delete temp Postgres container'
