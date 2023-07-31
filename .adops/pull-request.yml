@@ -56,8 +56,10 @@ steps:
   - script: yarn test:reset:dbs
     displayName: Reset test DBs
 
-  - script: yarn test:ci
+  - script: env && yarn test:ci
     displayName: Run tests
+    env:
+      NODE_OPTIONS: $(NODE_OPTIONS)
 
   - task: PublishTestResults@2
     inputs:
