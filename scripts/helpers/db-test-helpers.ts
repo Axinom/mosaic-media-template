@@ -47,6 +47,9 @@ export async function recreateTestDbTemplate(
 ): Promise<void> {
   const rootPgPool = await initializePgPool(dbConfig.pgRootConnectionString);
 
+  // Temporary change to fix the pipelines
+  await rootPgPool.query(`GRANT ${dbConfig.dbOwner} TO ${dbConfig.pgRoot}`);
+
   //Drop all existing test databases and related roles
   await dropDatabasesAndRoles(
     rootPgPool,
