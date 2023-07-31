@@ -9,7 +9,7 @@ pool:
 
 variables:
   YARN_CACHE_FOLDER: /home/vsts/.yarn/berry/cache
-  NODE_OPTIONS: --max-old-space-size=8192
+  NODE_OPTIONS: --max-old-space-size=15000
 
 steps:
   - task: NodeTool@0
