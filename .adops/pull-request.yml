@@ -2,6 +2,7 @@ trigger: none
 pr:
   - main
   - dev
+  - feature/localization # Added as part of Task 40820: Add long-running branch to PR checks in media-template:
 pool:
   vmImage: 'ubuntu-latest'
   demands: project_navy
