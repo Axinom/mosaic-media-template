@@ -23,6 +23,7 @@ async function main(): Promise<void> {
     config.dbLoginPassword,
     config.dbOwner,
     config.dbOwnerPassword,
+    true,
   );
 
   console.log('4. Closing ROOT Database Connection...');
