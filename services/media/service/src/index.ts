@@ -1,4 +1,5 @@
 import {
+  createLogicalReplicationService,
   createPostgresPoolConnectivityMetric,
   setupLoginPgPool,
   setupOwnerPgPool,
@@ -31,10 +32,16 @@ import {
 import express from 'express';
 import { graphqlUploadExpress } from 'graphql-upload';
 import { PoolConfig } from 'pg';
-import { applyMigrations, getFullConfig } from './common';
+import {
+  applyMigrations,
+  getFullConfig,
+  PG_LOCALIZATION_PUBLICATION,
+} from './common';
 import { syncPermissions } from './domains/permission-definition';
 import { populateSeedData } from './domains/populate-seed-data';
 import { registerTypes } from './domains/register-types';
+import { registerLocalizationEntityDefinitions } from './domains/register-localization-entity-definitions';
+import { syncSourcesWithLocalization } from './domains/sync-sources-with-localization';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
 import { registerMessaging } from './messaging/register-messaging';
 
@@ -106,11 +113,8 @@ async function bootstrap(): Promise<void> {
     poolConfig,
   );
 
-  // Populate the DB with some initial seed data and sync defined permissions to the ID service.
-  await Promise.all([
-    populateSeedData(ownerPgPool, logger),
-    syncPermissions(config, logger),
-  ]);
+  // Sync defined permissions to the ID service.
+  await syncPermissions(config, logger);
 
   // Configure messaging: subscribe to topics, create queues, register handlers, start transactional outbox/inbox listeners
   const { broker, storeOutboxMessage } = await registerMessaging(
@@ -129,6 +133,25 @@ async function bootstrap(): Promise<void> {
   });
 
   await registerTypes(storeOutboxMessage, loginPgPool, config);
+
+  if (config.isLocalizationEnabled) {
+    // Register localization entity definitions for the media service localizable entities.
+    await registerLocalizationEntityDefinitions(broker, config);
+
+    // Starting up the logical replication service to monitor and handle changes
+    // on tables related to passed publications
+    const shutdown = await createLogicalReplicationService({
+      connectionString: config.dbOwnerConnectionString,
+      publicationNames: [PG_LOCALIZATION_PUBLICATION],
+      replicationSlotName: config.dbLocalizationReplicationSlot,
+      messageHandler: syncSourcesWithLocalization(ownerPgPool, broker, config),
+      logger: new Logger({ context: 'LocalizationLogicalReplication' }),
+    });
+    shutdownActions.push(shutdown);
+  }
+
+  // Populate the DB with some initial seed data
+  await populateSeedData(ownerPgPool, logger);
 
   // Enable authentication middleware for all requests to /graphql.
   setupManagementAuthentication(app, ['/graphql'], authConfig);
