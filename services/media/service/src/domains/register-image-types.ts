@@ -12,7 +12,7 @@ export const registerImageTypes = async (
   broker: Broker,
   config: Config,
 ): Promise<void> => {
-  const serviceAccountToken = await requestServiceAccountToken(config);
+  const accessToken = await requestServiceAccountToken(config);
   await broker.publish<DeclareImageTypesCommand>(
     config.environmentId,
     ImageServiceMultiTenantMessagingSettings.DeclareImageTypes,
@@ -25,7 +25,7 @@ export const registerImageTypes = async (
       ],
     },
     {
-      auth_token: serviceAccountToken.accessToken,
+      auth_token: accessToken,
     },
     {
       routingKey:
