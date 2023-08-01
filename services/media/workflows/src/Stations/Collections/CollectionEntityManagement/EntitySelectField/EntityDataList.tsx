@@ -1,3 +1,4 @@
+import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
   DynamicDataList,
@@ -5,7 +6,6 @@ import {
   IconName,
 } from '@axinom/mosaic-ui';
 import React, { ReactNode, useCallback, useMemo } from 'react';
-import { getThumbnailAndStateRenderer } from '../../../../externals';
 import { EntityType } from '../../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../../Util/PublishStatusStateMap/PublishStatusStateMap';
 import { StringEnumRenderer } from '../../../../Util/StringEnumRenderer/StringEnumRenderer';
