@@ -308,12 +308,6 @@ type ChannelsConnection {
 type Channel {
   id: String!
 
-  """Title of the channel."""
-  title: String!
-
-  """Description of the channel."""
-  description: String
-
   """DASH stream URL of the channel."""
   dashStreamUrl: String
 
@@ -356,6 +350,14 @@ type Channel {
     """
     filter: ChannelImageFilter
   ): ChannelImagesConnection!
+
+  """The localized channel metadata."""
+  localization(
+    """
+    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
+    """
+    locale: String
+  ): ChannelLocalization!
 }
 
 """A connection to a list of `ChannelImage` values."""
@@ -638,6 +640,11 @@ input StringFilter {
 
   """Greater than or equal to the specified value (case-insensitive)."""
   greaterThanOrEqualToInsensitive: String
+}
+
+type ChannelLocalization {
+  title: String!
+  description: String
 }
 
 """A `Channel` edge in the connection."""
