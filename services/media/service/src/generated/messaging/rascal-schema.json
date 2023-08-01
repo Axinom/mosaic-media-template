@@ -317,11 +317,63 @@
         "DeclareCuePointTypes": {
           "exchange": "command",
           "routingKey": "ax-video-service.*.*.cue_point_types.declare"
+        },
+        "DeclareEntityDefinition": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.entity_definition.declare"
+        },
+        "DeleteEntityDefinition": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.entity_definition.delete"
+        },
+        "UpsertLocalizationSourceEntity": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.localization_source_entity.upsert"
+        },
+        "DeleteLocalizationSourceEntity": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.localization_source_entity.delete"
         }
       },
       "subscriptions": {
         "Inbox": {
           "queue": "media-service:inbox",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EntityDefinitionDeclareFailed": {
+          "queue": "media-service:entity_definition:declare_failed",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EntityDefinitionDeclareFinished": {
+          "queue": "media-service:entity_definition:declare_finished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EntityDefinitionDeleteFailed": {
+          "queue": "media-service:entity_definition:delete_failed",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "EntityDefinitionDeleteFinished": {
+          "queue": "media-service:entity_definition:delete_finished",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {
