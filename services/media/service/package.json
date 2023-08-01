@@ -76,6 +76,7 @@
     "inflection": "^1.13.4",
     "json-source-map": "^0.6.1",
     "media-messages": "^0.0.1",
+    "node-cache": "^5.1.2",
     "node-fetch": "^2.6.7",
     "pg": "^8.8.0",
     "pluralize": "^7.0.0",

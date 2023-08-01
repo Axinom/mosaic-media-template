@@ -189,10 +189,10 @@ export const syncPermissions = async (
   config: Config,
   logger: Logger,
 ): Promise<void> => {
-  const token = await requestServiceAccountToken(config);
+  const accessToken = await requestServiceAccountToken(config);
   const result = await synchronizePermissions(
     config.idServiceAuthBaseUrl,
-    token.accessToken,
+    accessToken,
     config.serviceId,
     permissionDefinition,
   );
