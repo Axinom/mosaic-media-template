@@ -56,7 +56,7 @@ regularVariables:
   USER_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-user-service.auth_base_url}'
 
   # Custom Service URLs
-  CATALOG_SERVICE_BASE_URL: '${__ax_hosted__.dns.catalog-service.api}'
+  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.catalog-service.api}'
 
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
