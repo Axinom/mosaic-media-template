@@ -4,11 +4,10 @@ pr:
   - dev
   - feature/localization #TODO: Remove when it is time to merge this branch into dev
 pool:
-  vmImage: 'ubuntu-latest'
-  demands: project_navy
+  name: 'Mosaic Performance Tests'
 
 variables:
-  YARN_CACHE_FOLDER: /home/vsts/.yarn/berry/cache
+  YARN_CACHE_FOLDER: /home/tester/.yarn/berry/cache
   NODE_OPTIONS: --max-old-space-size=15000
 
 steps:
@@ -43,23 +42,19 @@ steps:
       sed -i 's/^\(RABBITMQ_PASSWORD=\)$/\1fake/' .env
       sed -i 's/^\(DEV_SERVICE_ACCOUNT_CLIENT_ID=\)$/\1fake/' .env
       sed -i 's/^\(DEV_SERVICE_ACCOUNT_CLIENT_SECRET=\)$/\1fake/' .env
-      sed -i '/POSTGRESQL_HOST/d' .env
-      sed -i '/POSTGRESQL_ROOT/d' .env
-      echo -e "\nPOSTGRESQL_HOST=$(DATABASE_HOST)" >> .env
-      echo "POSTGRESQL_ROOT=$(DATABASE_USERNAME)" >> .env
-      echo "POSTGRESQL_ROOT_PASSWORD=$(DATABASE_PASSWORD)" >> .env
     displayName: Add fake values to .env to keep config loader happy
 
   - script: cat .env
     displayName: Show .env
 
+  - script: yarn infra:up
+    displayName: Create testing infra
+
   - script: yarn test:reset:dbs
     displayName: Reset test DBs
 
-  - script: env && yarn test:ci
+  - script: yarn test:ci
     displayName: Run tests
-    env:
-      NODE_OPTIONS: $(NODE_OPTIONS)
 
   - task: PublishTestResults@2
     inputs:
@@ -75,3 +70,7 @@ steps:
       summaryFileLocation: '**/coverage/cobertura-coverage.xml'
     condition: always()
     displayName: 'Publish coverage reports'
+
+  - script: yarn infra:down
+    condition: always()
+    displayName: Tear down testing infra
