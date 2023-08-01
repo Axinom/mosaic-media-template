@@ -2235,6 +2235,51 @@ $$;
 
 
 --
+-- Name: define_logical_replication_publication(text, text[], text, text); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.define_logical_replication_publication(publicationname text, tablenames text[], schemaname text, publicationoperations text DEFAULT 'insert,update,delete'::text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  i integer;
+  tableName text;
+BEGIN
+  EXECUTE 'DROP PUBLICATION IF EXISTS ' || publicationName;
+  EXECUTE 'CREATE PUBLICATION ' || publicationName || ' WITH (publish = "' || publicationOperations || '");';
+  FOR i IN 1..array_length(tableNames, 1) LOOP
+    tableName := tableNames[i];
+    EXECUTE 'ALTER PUBLICATION ' || publicationName || ' ADD TABLE ' || schemaName || '.' ||  tableName || ';';
+    EXECUTE 'ALTER TABLE ' || schemaName || '.' ||  tableName || ' REPLICA IDENTITY full;';
+  END LOOP;
+END;
+$$;
+
+
+--
+-- Name: define_logical_replication_slot(text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.define_logical_replication_slot(slotname text, skipifmatches text, pluginname text DEFAULT 'pgoutput'::text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  databaseName TEXT;
+BEGIN
+  SELECT current_database() INTO databaseName;
+  IF ax_utils.validation_not_empty(skipIfMatches) AND databaseName ~* skipIfMatches THEN
+    RETURN;
+  END IF;
+
+  PERFORM pg_drop_replication_slot(slot_name) FROM pg_replication_slots WHERE slot_name = slotName AND database = databaseName;
+  PERFORM pg_create_logical_replication_slot(slotName, pluginName);
+  EXCEPTION
+    WHEN object_in_use THEN RAISE NOTICE 'The replication slot "%" is in use and cannot be deleted.', slotName;
+END;
+$$;
+
+
+--
 -- Name: define_multiple_field_index(text[], text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
 --
 
@@ -4196,6 +4241,8 @@ CREATE TABLE app_public.movie_genres (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
+ALTER TABLE ONLY app_public.movie_genres REPLICA IDENTITY FULL;
+
 
 --
 -- Name: TABLE movie_genres; Type: COMMENT; Schema: app_public; Owner: -
@@ -4260,6 +4307,8 @@ CREATE TABLE app_public.movies (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
+ALTER TABLE ONLY app_public.movies REPLICA IDENTITY FULL;
+
 
 --
 -- Name: TABLE movies; Type: COMMENT; Schema: app_public; Owner: -
@@ -4309,6 +4358,8 @@ CREATE TABLE app_public.movies_images (
     image_id uuid NOT NULL,
     image_type app_public.movie_image_type_enum NOT NULL
 );
+
+ALTER TABLE ONLY app_public.movies_images REPLICA IDENTITY FULL;
 
 
 --
@@ -10970,6 +11021,34 @@ CREATE POLICY tvshows_tvshow_genres_authorization_delete ON app_public.tvshows_t
 
 
 --
+-- Name: pg_localization_publication; Type: PUBLICATION; Schema: -; Owner: -
+--
+
+CREATE PUBLICATION pg_localization_publication WITH (publish = 'insert, update, delete');
+
+
+--
+-- Name: pg_localization_publication movie_genres; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.movie_genres;
+
+
+--
+-- Name: pg_localization_publication movies; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.movies;
+
+
+--
+-- Name: pg_localization_publication movies_images; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.movies_images;
+
+
+--
 -- Name: SCHEMA app_hidden; Type: ACL; Schema: -; Owner: -
 --
 
@@ -11594,6 +11673,20 @@ REVOKE ALL ON FUNCTION ax_define.define_indexes_with_id(fieldname text, tablenam
 --
 
 REVOKE ALL ON FUNCTION ax_define.define_like_index(fieldname text, tablename text, schemaname text, indexname text) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION define_logical_replication_publication(publicationname text, tablenames text[], schemaname text, publicationoperations text); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.define_logical_replication_publication(publicationname text, tablenames text[], schemaname text, publicationoperations text) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION define_logical_replication_slot(slotname text, skipifmatches text, pluginname text); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.define_logical_replication_slot(slotname text, skipifmatches text, pluginname text) FROM PUBLIC;
 
 
 --

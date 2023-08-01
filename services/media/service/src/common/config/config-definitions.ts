@@ -35,6 +35,20 @@ export const getConfigDefinitions = (
     imageServiceBaseUrl: () =>
       env.get('IMAGE_SERVICE_BASE_URL').required().asUrlString(),
 
+    isLocalizationEnabled: () =>
+      env.get('IS_LOCALIZATION_ENABLED').default('FALSE').asBoolStrict(),
+
+    /**
+     * **N.B!** If this value ever changes -
+     * Replication slot must be re-created in db migrations to continue working as before.
+     * See `000020-replication-on-localizable-tables-added.sql` for example.
+     *
+     * The replication slot is created on Postgres Server level and has a unique
+     * name, meaning it can conflict with replication slots for other databases.
+     */
+    dbLocalizationReplicationSlot: () =>
+      env.get('DATABASE_LOCALIZATION_REPLICATION_SLOT').required().asString(),
+
     /**
      * Optional Service Account Client ID, used to get ID service token during development
      */
