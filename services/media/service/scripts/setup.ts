@@ -50,6 +50,10 @@ async function main(): Promise<void> {
         serviceId: 'ax-encoding-service',
         permissions: ['CUE_POINT_TYPES_DECLARE'],
       },
+      {
+        serviceId: 'ax-localization-service',
+        permissions: ['SOURCE_ENTITIES_EDIT', 'ENTITY_DEFINITIONS_EDIT'],
+      },
     ],
   );
 }
