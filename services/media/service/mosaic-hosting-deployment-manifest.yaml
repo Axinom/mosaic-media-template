@@ -1,0 +1,79 @@
+# This YAML contains the Deployment Manifest for the Media Service.
+# It is required when deploying the service via the Mosaic Hosting Service.
+# Refer to the README.md file for instructions on how to use this.
+
+version: '1.0'
+serviceId: 'media-service'
+
+regularVariables:
+  # Service General Variables
+  SERVICE_ID: 'media-service'
+  NODE_ENV: 'production'
+  LOG_LEVEL: 'DEBUG'
+  GRAPHQL_GUI_ENABLED: true
+  PORT: '${__ax_hosted__.port.api}'
+
+  # Mosaic Environment Info
+  TENANT_ID: '${__ax_hosted__.env.tenant_id}'
+  ENVIRONMENT_ID: '${__ax_hosted__.env.environment_id}'
+
+  # Database Server Variables
+  PGSSLMODE: '${__ax_hosted__.pg.sslmode}'
+  POSTGRESQL_HOST: '${__ax_hosted__.pg.host}'
+  POSTGRESQL_PORT: '${__ax_hosted__.pg.port}'
+  POSTGRESQL_USER_SUFFIX: '${__ax_hosted__.pg.user_suffix}'
+
+  # Database Variables
+  DATABASE_NAME: '${__ax_hosted__.pg.database_name}'
+  DATABASE_OWNER: '${__ax_hosted__.pg.db_owner_role}'
+  DATABASE_OWNER_PASSWORD: '${__ax_hosted__.pg.db_owner_password}'
+  DATABASE_LOGIN: '${__ax_hosted__.pg.db_login_role}'
+  DATABASE_LOGIN_PASSWORD: '${__ax_hosted__.pg.db_login_password}'
+  DATABASE_GQL_ROLE: '${__ax_hosted__.pg.db_gql_role}'
+
+  # RabbitMQ Variables
+  RABBITMQ_PROTOCOL: '${__ax_hosted__.rmq.protocol}'
+  RABBITMQ_HOST: '${__ax_hosted__.rmq.host}'
+  RABBITMQ_PORT: '${__ax_hosted__.rmq.port}'
+  RABBITMQ_MGMT_PROTOCOL: '${__ax_hosted__.rmq.mgmt_protocol}'
+  RABBITMQ_MGMT_HOST: '${__ax_hosted__.rmq.mgmt_host}'
+  RABBITMQ_MGMT_PORT: '${__ax_hosted__.rmq.mgmt_port}'
+  RABBITMQ_VHOST: '${__ax_hosted__.rmq.vhost}'
+  RABBITMQ_USER: '${__ax_hosted__.rmq.username}'
+  RABBITMQ_PASSWORD: '${__ax_hosted__.rmq.password}'
+
+  # Managed Service URLs
+  ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
+  IMAGE_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-image-service.management_base_url}'
+  ENCODING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-encoding-service.management_base_url}'
+
+secureVariables:
+  # Use this section to store any custom environment variables which contain sensitive data.
+
+  # Service Account Variables
+  SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
+  SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
+
+serviceAccounts:
+  # Defines the service accounts that will be provisioned for this service.
+  - name: 'primary'
+    permissionStructure:
+      - serviceId: 'ax-id-service'
+        permissions:
+          - 'PERMISSIONS_SYNCHRONIZE'
+          - 'ACCESS_TOKENS_GENERATE_LONG_LIVED_TOKEN'
+
+      - serviceId: 'ax-image-service'
+        permissions:
+          - 'IMAGE_TYPES_DECLARE'
+
+pilets:
+  # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.
+  - name: 'media_workflows'
+    args:
+      MEDIA_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.self.api}'
+
+dnsMappedPorts:
+  # Defines the DNS subdomains that will provisioned and be mapped to the ports exposed by the service
+  - name: 'api'
+    port: 10200
