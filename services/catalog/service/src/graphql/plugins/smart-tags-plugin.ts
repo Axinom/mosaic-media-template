@@ -1337,14 +1337,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       channel: {
         description: 'Definition of the channel publish format.',
         attribute: {
-          title: {
-            description: 'Title of the channel.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Description of the channel.',
-            ...disableFilterAndOrder,
-          },
           hls_stream_url: {
             description: 'HLS stream URL of the channel.',
             ...disableFilterAndOrder,
