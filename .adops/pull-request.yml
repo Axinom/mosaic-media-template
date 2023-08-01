@@ -67,7 +67,8 @@ stages:
                     echo -e "\nPOSTGRESQL_HOST=$(DATABASE_HOST)" >> .env
                     echo "POSTGRESQL_ROOT=$(DATABASE_USERNAME)" >> .env
                     echo "POSTGRESQL_ROOT_PASSWORD=$(DATABASE_PASSWORD)" >> .env
-                  displayName: Add fake values to .env to keep config loader happy
+                  displayName:
+                    Add fake values to .env to keep config loader happy
 
                 - script: cat .env
                   displayName: Show .env

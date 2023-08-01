@@ -1,0 +1,88 @@
+import {
+  LogicalReplicationMessageHandler,
+  OwnerPgPool,
+  PgOutputScopedMessage,
+} from '@axinom/mosaic-db-common';
+import { Broker } from '@axinom/mosaic-message-bus';
+import { MosaicError } from '@axinom/mosaic-service-common';
+import { Config, InternalErrors, requestServiceAccountToken } from '../common';
+import {
+  LocalizationMessageData,
+  ReplicationOperationHandlers,
+} from './common';
+import {
+  movieGenresReplicationHandlers,
+  moviesImagesReplicationHandlers,
+  moviesReplicationHandlers,
+} from './movies/localization';
+
+const getTableSpecificHandlers = (
+  scopedMessage: PgOutputScopedMessage,
+  config: Config,
+  ownerPool: OwnerPgPool,
+): ReplicationOperationHandlers => {
+  switch (scopedMessage.tableName) {
+    case 'movies':
+      return moviesReplicationHandlers(config);
+    case 'movie_genres':
+      return movieGenresReplicationHandlers(config);
+    case 'movies_images':
+      return moviesImagesReplicationHandlers(config, ownerPool);
+    default:
+      throw new MosaicError({
+        ...InternalErrors.UnsupportedReplicationTable,
+        messageParams: [scopedMessage.tableName],
+      });
+  }
+};
+
+const getMessageData = async (
+  scopedMessage: PgOutputScopedMessage,
+  { insertHandler, updateHandler, deleteHandler }: ReplicationOperationHandlers,
+): Promise<LocalizationMessageData | undefined> => {
+  switch (scopedMessage.operation) {
+    case 'insert':
+      return insertHandler(scopedMessage.new);
+
+    case 'update':
+      return updateHandler(scopedMessage.new, scopedMessage.old);
+
+    case 'delete':
+      return deleteHandler(scopedMessage.old);
+
+    default:
+      throw new MosaicError({
+        ...InternalErrors.UnsupportedReplicationOperation,
+        messageParams: [scopedMessage.operation],
+      });
+  }
+};
+
+export const syncSourcesWithLocalization: (
+  ownerPool: OwnerPgPool,
+  broker: Broker,
+  config: Config,
+) => LogicalReplicationMessageHandler =
+  (ownerPool: OwnerPgPool, broker: Broker, config: Config) =>
+  async ({ scopedMessage }): Promise<void> => {
+    const handlers = getTableSpecificHandlers(scopedMessage, config, ownerPool);
+    const data = await getMessageData(scopedMessage, handlers);
+    if (!data) {
+      return;
+    }
+
+    const { settings, payload } = data;
+    const accessToken = await requestServiceAccountToken(config);
+
+    await broker.publish(
+      settings.messageType,
+      payload,
+      { auth_token: accessToken },
+      {
+        routingKey: settings.getEnvironmentRoutingKey({
+          tenantId: config.tenantId,
+          environmentId: config.environmentId,
+        }),
+      },
+    );
+  };

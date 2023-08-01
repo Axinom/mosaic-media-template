@@ -5,6 +5,18 @@ version: '3.7'
 services:
   postgres:
     image: postgres:11.12-alpine
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+      - "-c"
+      - "max_wal_senders=5"
+      - "-c"
+      - "max_replication_slots=100"
+      - "-c"
+      - "max_wal_size=1GB"
+      - "-c"
+      - "min_wal_size=80MB"
     environment:
       POSTGRES_USER: '${POSTGRESQL_ROOT}'
       POSTGRES_PASSWORD: '${POSTGRESQL_ROOT_PASSWORD}'
