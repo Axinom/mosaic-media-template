@@ -14,6 +14,7 @@ import { Request, Response } from 'express';
 import { PostGraphileOptions } from 'postgraphile';
 import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
 import { catalogLogMapper, CommonErrors, Config } from '../common';
+import { AllChannelPlugins } from '../domains/channels/plugins/all-channel-plugins';
 import { AllMoviePlugins } from '../domains/movies/plugins/all-movie-plugins';
 import { AllTvshowPlugins } from '../domains/tvshows/plugins/all-tvshow-plugins';
 import {
@@ -45,6 +46,7 @@ export function buildPostgraphileOptions(
       OmitFromQueryRootPlugin,
       AllMoviePlugins,
       AllTvshowPlugins,
+      AllChannelPlugins,
       AddErrorCodesEnumPluginFactory([MosaicErrors, CommonErrors]),
     )
     .addGraphileBuildOptions({ pgSkipInstallingWatchFixtures: true })
