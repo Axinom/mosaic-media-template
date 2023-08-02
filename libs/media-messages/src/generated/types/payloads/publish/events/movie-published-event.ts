@@ -1,5 +1,6 @@
 import { Image } from '../types/image';
 import { License } from '../types/license';
+import { MovieLocalization } from '../types/movie-localization';
 import { Video } from '../types/video';
 /**
  * Definition of the movie publish format.
@@ -61,4 +62,8 @@ export interface MoviePublishedEvent {
    * Array of video streams associated with movie or episode.
    */
   videos: Video[];
+  /**
+   * Localizations for every defined locale.
+   */
+  localizations?: MovieLocalization[];
 }

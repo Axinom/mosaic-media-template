@@ -1,8 +1,13 @@
 import 'jest-extended';
+import { MovieGenreLocalization } from 'media-messages';
 import { insert } from 'zapatos/db';
 import { movie_genres } from 'zapatos/schema';
-import { commonPublishValidator } from '../../../publishing';
+import {
+  commonPublishValidator,
+  SnapshotValidationResult,
+} from '../../../publishing';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
+import * as localizationMetadata from '../localization/get-movie-genre-localizations-metadata';
 import { publishingMovieGenresProcessor } from './publishing-movie-genres-processor';
 
 describe('publishingMovieGenresProcessor', () => {
@@ -24,6 +29,7 @@ describe('publishingMovieGenresProcessor', () => {
 
   afterEach(async () => {
     await ctx.truncate('movie_genres');
+    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -31,6 +37,17 @@ describe('publishingMovieGenresProcessor', () => {
   });
 
   describe('aggregator', () => {
+    let localizationsSpy: jest.SpyInstance;
+
+    beforeEach(async () => {
+      localizationsSpy = jest
+        .spyOn(localizationMetadata, 'getMovieGenreLocalizationsMetadata')
+        .mockImplementation(async () => ({
+          result: [],
+          validation: [],
+        }));
+    });
+
     it('no genres -> valid result with error', async () => {
       // Arrange
       await ctx.truncate('movie_genres');
@@ -57,6 +74,34 @@ describe('publishingMovieGenresProcessor', () => {
     });
 
     it('one genre -> valid result', async () => {
+      // Arrange
+      const localizationWarning: SnapshotValidationResult = {
+        context: 'LOCALIZATION',
+        message: `test localization warning`,
+        severity: 'WARNING',
+      };
+      const localizations: MovieGenreLocalization[] = [
+        {
+          title: 'source title',
+          language_tag: 'en-US',
+          is_default_locale: true,
+        },
+        {
+          title: 'localized title 1',
+          language_tag: 'de-DE',
+          is_default_locale: false,
+        },
+        {
+          title: 'localized title 2',
+          language_tag: 'et-EE',
+          is_default_locale: false,
+        },
+      ];
+      localizationsSpy.mockImplementation(async () => ({
+        result: localizations,
+        validation: [localizationWarning],
+      }));
+
       // Act
       const result = await publishingMovieGenresProcessor.aggregator(
         entityId,
@@ -73,10 +118,11 @@ describe('publishingMovieGenresProcessor', () => {
               content_id: `movie_genre-${genre1.id}`,
               order_no: genre1.sort_order,
               title: genre1.title,
+              localizations,
             },
           ],
         },
-        validation: [],
+        validation: [localizationWarning],
       });
     });
 
@@ -86,6 +132,33 @@ describe('publishingMovieGenresProcessor', () => {
         title: 'Genre2',
         sort_order: 1,
       }).run(ctx.ownerPool);
+      // Arrange
+      const localizations: MovieGenreLocalization[] = [
+        {
+          title: 'source title',
+          language_tag: 'en-US',
+          is_default_locale: true,
+        },
+        {
+          title: 'localized title 1',
+          language_tag: 'de-DE',
+          is_default_locale: false,
+        },
+        {
+          title: 'localized title 2',
+          language_tag: 'et-EE',
+          is_default_locale: false,
+        },
+      ];
+      localizationsSpy.mockImplementation(async (_config, _token, genreId) => {
+        return {
+          result: localizations.map((l) => ({
+            ...l,
+            is_default_locale: genreId === genre1.id.toString(),
+          })),
+          validation: [],
+        };
+      });
 
       // Act
       const result = await publishingMovieGenresProcessor.aggregator(
@@ -103,11 +176,19 @@ describe('publishingMovieGenresProcessor', () => {
               content_id: `movie_genre-${genre2.id}`,
               order_no: genre2.sort_order,
               title: genre2.title,
+              localizations: localizations.map((l) => ({
+                ...l,
+                is_default_locale: false,
+              })),
             },
             {
               content_id: `movie_genre-${genre1.id}`,
               order_no: genre1.sort_order,
               title: genre1.title,
+              localizations: localizations.map((l) => ({
+                ...l,
+                is_default_locale: true,
+              })),
             },
           ],
         },

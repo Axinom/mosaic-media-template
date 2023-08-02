@@ -1,4 +1,5 @@
 import 'jest-extended';
+import { MovieLocalization } from 'media-messages';
 import { insert, update } from 'zapatos/db';
 import { movies } from 'zapatos/schema';
 import {
@@ -9,6 +10,7 @@ import { createTestContext, ITestContext } from '../../../tests/test-utils';
 import { PublishImage, PublishVideo } from '../../common';
 import * as imageMetadata from '../../common/utils/get-images-metadata';
 import * as videoMetadata from '../../common/utils/get-videos-metadata';
+import * as localizationMetadata from '../localization/get-movie-localizations-metadata';
 import { publishingMovieProcessor } from './publishing-movie-processor';
 
 describe('publishingMovieProcessor', () => {
@@ -52,6 +54,12 @@ describe('publishingMovieProcessor', () => {
           result: [],
           validation: [],
         }));
+      jest
+        .spyOn(localizationMetadata, 'getMovieLocalizationsMetadata')
+        .mockImplementation(async () => ({
+          result: [],
+          validation: [],
+        }));
 
       // Act
       const result = await publishingMovieProcessor.aggregator(
@@ -78,6 +86,7 @@ describe('publishingMovieProcessor', () => {
           synopsis: undefined,
           title: 'Entity1',
           videos: [],
+          localizations: [],
         },
         validation: [],
       });
@@ -217,6 +226,40 @@ describe('publishingMovieProcessor', () => {
           result: [image],
           validation: [imageError, imageWarning],
         }));
+      const localizationWarning: SnapshotValidationResult = {
+        context: 'LOCALIZATION',
+        message: `test localization warning`,
+        severity: 'WARNING',
+      };
+      const localizations: MovieLocalization[] = [
+        {
+          title: 'source title',
+          synopsis: 'source synopsis',
+          description: 'source description',
+          language_tag: 'en-US',
+          is_default_locale: true,
+        },
+        {
+          title: 'localized title 1',
+          synopsis: 'localized synopsis',
+          description: 'localized description',
+          language_tag: 'de-DE',
+          is_default_locale: false,
+        },
+        {
+          title: 'localized title 2',
+          synopsis: null,
+          description: null,
+          language_tag: 'et-EE',
+          is_default_locale: false,
+        },
+      ];
+      jest
+        .spyOn(localizationMetadata, 'getMovieLocalizationsMetadata')
+        .mockImplementation(async () => ({
+          result: localizations,
+          validation: [localizationWarning],
+        }));
 
       // Act
       const result = await publishingMovieProcessor.aggregator(
@@ -254,8 +297,15 @@ describe('publishingMovieProcessor', () => {
           synopsis: updateValues.synopsis,
           title: 'Entity1',
           videos: [video],
+          localizations,
         },
-        validation: [imageError, imageWarning, videoError, videoWarning],
+        validation: [
+          imageError,
+          imageWarning,
+          videoError,
+          videoWarning,
+          localizationWarning,
+        ],
       });
     });
   });

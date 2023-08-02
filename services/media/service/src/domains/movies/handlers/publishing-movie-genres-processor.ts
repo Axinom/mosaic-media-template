@@ -1,4 +1,5 @@
 import {
+  MovieGenre,
   MovieGenresPublishedEvent,
   MovieGenresPublishedEventSchema,
   PublishServiceMessagingSettings,
@@ -9,12 +10,14 @@ import {
   buildPublishingId,
   EntityPublishingProcessor,
   SnapshotDataAggregator,
+  SnapshotValidationResult,
 } from '../../../publishing';
+import { getMovieGenreLocalizationsMetadata } from '../localization/get-movie-genre-localizations-metadata';
 
 const movieGenresDataAggregator: SnapshotDataAggregator = async (
   _entityId: number,
-  _authToken: string,
-  _config: Config,
+  authToken: string,
+  config: Config,
   queryable: Queryable,
 ) => {
   const genres = await select('movie_genres', all, {
@@ -22,19 +25,34 @@ const movieGenresDataAggregator: SnapshotDataAggregator = async (
     order: { by: 'sort_order', direction: 'ASC' },
   }).run(queryable);
 
-  const snapshotJson: MovieGenresPublishedEvent = {
-    genres: genres.map((genre) => ({
+  const validations: SnapshotValidationResult[] = [];
+  const mappedGenres: MovieGenre[] = [];
+  for (const genre of genres) {
+    const { result: localizations, validation: localizationsValidation } =
+      await getMovieGenreLocalizationsMetadata(
+        config,
+        authToken,
+        genre.id.toString(),
+        genre.title,
+      );
+    mappedGenres.push({
       title: genre.title,
       order_no: genre.sort_order,
       content_id: buildPublishingId('movie_genres', genre.id),
-    })),
+      localizations,
+    });
+    validations.push(...localizationsValidation);
+  }
+
+  const snapshotJson: MovieGenresPublishedEvent = {
+    genres: mappedGenres,
   };
 
   return {
     result: snapshotJson,
     validation:
       genres.length > 0
-        ? []
+        ? validations
         : [
             {
               message: 'At least one genre must exist.',

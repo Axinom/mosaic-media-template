@@ -416,6 +416,49 @@
         ],
         "additionalProperties": false
       }
+    },
+    "localizations": {
+      "description": "Localizations for every defined locale.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "title": "movie_localization",
+        "required": [
+          "is_default_locale",
+          "language_tag",
+          "title"
+        ],
+        "properties": {
+          "is_default_locale": {
+            "type": "boolean",
+            "description": "Boolean flag to indicate if locale is default or not."
+          },
+          "language_tag": {
+            "type": "string",
+            "description": "The locale for which the values are localized."
+          },
+          "title": {
+            "type": "string",
+            "description": "The localized title of this movie."
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The localized description of this movie."
+          },
+          "synopsis": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The localized synopsis of this movie."
+          }
+        }
+      }
     }
   },
   "required": [

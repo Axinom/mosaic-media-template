@@ -382,6 +382,8 @@ export enum ErrorCodesEnum {
   NotGenericAuthenticatedSubject = 'NOT_GENERIC_AUTHENTICATED_SUBJECT',
   /** The object is not a ManagementAuthenticationContext */
   NotManagementAuthenticationContext = 'NOT_MANAGEMENT_AUTHENTICATION_CONTEXT',
+  /** The %s is missing required properties: %s. */
+  ObjectIsMissingProperties = 'OBJECT_IS_MISSING_PROPERTIES',
   /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
   SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
   /** An application startup error has occurred. The actual message will have more information. */
@@ -398,6 +400,8 @@ export enum ErrorCodesEnum {
   UserNotAuthorized = 'USER_NOT_AUTHORIZED',
   /** The User service is not accessible. Please contact Axinom support. */
   UserServiceNotAccessible = 'USER_SERVICE_NOT_ACCESSIBLE',
+  /** The %s is not an object. */
+  ValueIsNotObject = 'VALUE_IS_NOT_OBJECT',
   /** Websocket not found in ExtendedGraphQLContext. This is a development time issue. A reference to the websocket must be included in Postgraphile build options. */
   WebsocketNotFound = 'WEBSOCKET_NOT_FOUND'
 }

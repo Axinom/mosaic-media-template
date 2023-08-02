@@ -18,6 +18,7 @@ import {
   videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
+import { getMovieLocalizationsMetadata } from '../localization';
 
 const movieDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -59,20 +60,20 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     },
   ).run(queryable);
 
-  const { result: videos, validation: videosValidation } =
-    await getVideosMetadata(
+  const [
+    { result: videos, validation: videosValidation },
+    { result: images, validation: imagesValidation },
+    { result: localizations, validation: localizationsValidation },
+  ] = await Promise.all([
+    getVideosMetadata(
       config.videoServiceBaseUrl,
       authToken,
       movie.main_video_id,
       movie.trailers,
-    );
-
-  const { result: images, validation: imagesValidation } =
-    await getImagesMetadata(
-      config.imageServiceBaseUrl,
-      authToken,
-      movie.images,
-    );
+    ),
+    getImagesMetadata(config.imageServiceBaseUrl, authToken, movie.images),
+    getMovieLocalizationsMetadata(config, authToken, movie.id.toString()),
+  ]);
 
   const snapshotJson: MoviePublishedEvent = {
     content_id: buildPublishingId('movies', movie.id),
@@ -95,11 +96,16 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     })),
     images,
     videos,
+    localizations,
   };
 
   return {
     result: snapshotJson,
-    validation: [...imagesValidation, ...videosValidation],
+    validation: [
+      ...imagesValidation,
+      ...videosValidation,
+      ...localizationsValidation,
+    ],
   };
 };
 

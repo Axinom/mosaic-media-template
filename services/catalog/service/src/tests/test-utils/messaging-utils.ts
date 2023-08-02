@@ -4,6 +4,7 @@ import {
   CuePoint,
   EpisodePublishedEvent,
   MovieGenresPublishedEvent,
+  MovieLocalization,
   MoviePublishedEvent,
   SeasonPublishedEvent,
   TvshowGenresPublishedEvent,
@@ -30,6 +31,7 @@ export function createMoviePublishedEvent(
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
+    localizations: createMovieLocalizations(),
   };
 }
 
@@ -98,10 +100,26 @@ export function createEpisodePublishedEvent(
   };
 }
 
+export function createMovieGenrePublishedEvent(
+  contentId: string,
+  title = 'Generic genre',
+): MovieGenresPublishedEvent {
+  return {
+    genres: [
+      {
+        content_id: contentId,
+        title: title,
+        order_no: 0,
+        localizations: createMovieGenreLocalizations(),
+      },
+    ],
+  };
+}
+
 export function createGenrePublishedEvent(
   contentId: string,
   title = 'Generic genre',
-): MovieGenresPublishedEvent | TvshowGenresPublishedEvent {
+): TvshowGenresPublishedEvent {
   return {
     genres: [
       {
@@ -327,4 +345,50 @@ function createLicense(): License {
     start_time: '2019-11-13T20:20:39+00:00',
     end_time: '2021-11-13T20:20:39+00:00',
   };
+}
+
+function createMovieLocalizations(): MovieLocalization[] {
+  return [
+    {
+      title: 'source title',
+      synopsis: 'source synopsis',
+      description: 'source description',
+      language_tag: 'en-US',
+      is_default_locale: true,
+    },
+    {
+      title: 'localized title 1',
+      synopsis: 'localized synopsis',
+      description: 'localized description',
+      language_tag: 'de-DE',
+      is_default_locale: false,
+    },
+    {
+      title: 'localized title 2',
+      synopsis: null,
+      description: null,
+      language_tag: 'et-EE',
+      is_default_locale: false,
+    },
+  ];
+}
+
+function createMovieGenreLocalizations(): MovieLocalization[] {
+  return [
+    {
+      title: 'source title',
+      language_tag: 'en-US',
+      is_default_locale: true,
+    },
+    {
+      title: 'localized title 1',
+      language_tag: 'de-DE',
+      is_default_locale: false,
+    },
+    {
+      title: 'localized title 2',
+      language_tag: 'et-EE',
+      is_default_locale: false,
+    },
+  ];
 }

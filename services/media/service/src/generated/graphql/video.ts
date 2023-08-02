@@ -201,6 +201,23 @@ export type CreateCuePointPayloadCuePointEdgeArgs = {
   orderBy?: InputMaybe<Array<CuePointsOrderBy>>;
 };
 
+export type CreateCustomVideoInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The custom `Video` to be created by this mutation. */
+  video: CustomVideoInput;
+};
+
+export type CreateCustomVideoPayload = {
+  __typename?: 'CreateCustomVideoPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The custom `Video` that was created by this mutation. */
+  video?: Maybe<Video>;
+};
+
 /**
  * All input for the create `EncodingDrmProfile` mutation.
  * @permissions: SETTINGS_EDIT,ADMIN
@@ -347,6 +364,44 @@ export type CreateVideosTagPayload = {
 /** The output of our create `VideosTag` mutation. */
 export type CreateVideosTagPayloadVideosTagEdgeArgs = {
   orderBy?: InputMaybe<Array<VideosTagsOrderBy>>;
+};
+
+/**
+ * All input for the create `VideoStream` mutation.
+ * @permissions: CUSTOM_VIDEOS_EDIT,ADMIN
+ */
+export type CreateVideoStreamInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `VideoStream` to be created by this mutation. */
+  videoStream: VideoStreamInput;
+};
+
+/** The output of our create `VideoStream` mutation. */
+export type CreateVideoStreamPayload = {
+  __typename?: 'CreateVideoStreamPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Video` that is related to this `VideoStream`. */
+  video?: Maybe<Video>;
+  /** The `VideoStream` that was created by this mutation. */
+  videoStream?: Maybe<VideoStream>;
+  /** An edge for our `VideoStream`. May be used by Relay 1. */
+  videoStreamEdge?: Maybe<VideoStreamsEdge>;
+};
+
+
+/** The output of our create `VideoStream` mutation. */
+export type CreateVideoStreamPayloadVideoStreamEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideoStreamsOrderBy>>;
 };
 
 /** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
@@ -636,6 +691,51 @@ export type CuePointTypeToManyCuePointFilter = {
   some?: InputMaybe<CuePointFilter>;
 };
 
+export type CustomVideoInput = {
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  cmafSizeInBytes?: InputMaybe<Scalars['BigInt']>;
+  customId?: InputMaybe<Scalars['String']>;
+  dashManifestPath?: InputMaybe<Scalars['String']>;
+  dashSizeInBytes?: InputMaybe<Scalars['BigInt']>;
+  finishedDate?: InputMaybe<Scalars['Datetime']>;
+  hlsManifestPath?: InputMaybe<Scalars['String']>;
+  hlsSizeInBytes?: InputMaybe<Scalars['BigInt']>;
+  isProtected?: InputMaybe<Scalars['Boolean']>;
+  lengthInSeconds?: InputMaybe<Scalars['Float']>;
+  outputFormat?: InputMaybe<OutputFormat>;
+  sourceFileExtension?: InputMaybe<Scalars['String']>;
+  sourceFileName?: InputMaybe<Scalars['String']>;
+  sourceLocation: Scalars['String'];
+  sourceSizeInBytes?: InputMaybe<Scalars['BigInt']>;
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title: Scalars['String'];
+  videoBitrates?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+export type CustomVideoPatch = {
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  cmafSizeInBytes?: InputMaybe<Scalars['BigInt']>;
+  customId?: InputMaybe<Scalars['String']>;
+  dashManifestPath?: InputMaybe<Scalars['String']>;
+  dashSizeInBytes?: InputMaybe<Scalars['BigInt']>;
+  encodingState?: InputMaybe<EncodingState>;
+  finishedDate?: InputMaybe<Scalars['Datetime']>;
+  hlsManifestPath?: InputMaybe<Scalars['String']>;
+  hlsSizeInBytes?: InputMaybe<Scalars['BigInt']>;
+  isProtected?: InputMaybe<Scalars['Boolean']>;
+  lengthInSeconds?: InputMaybe<Scalars['Float']>;
+  outputFormat?: InputMaybe<OutputFormat>;
+  sourceFileExtension?: InputMaybe<Scalars['String']>;
+  sourceFileName?: InputMaybe<Scalars['String']>;
+  sourceLocation?: InputMaybe<Scalars['String']>;
+  sourceSizeInBytes?: InputMaybe<Scalars['BigInt']>;
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title?: InputMaybe<Scalars['String']>;
+  videoBitrates?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -830,6 +930,45 @@ export type DeleteVideosTagPayload = {
 /** The output of our delete `VideosTag` mutation. */
 export type DeleteVideosTagPayloadVideosTagEdgeArgs = {
   orderBy?: InputMaybe<Array<VideosTagsOrderBy>>;
+};
+
+/**
+ * All input for the `deleteCustomVideoStream` mutation.
+ * @permissions: CUSTOM_VIDEOS_EDIT,ADMIN
+ */
+export type DeleteVideoStreamInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `VideoStream` mutation. */
+export type DeleteVideoStreamPayload = {
+  __typename?: 'DeleteVideoStreamPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** @deprecated The field is obsolete. */
+  deletedVideoStreamNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Video` that is related to this `VideoStream`. */
+  video?: Maybe<Video>;
+  /** The `VideoStream` that was deleted by this mutation. */
+  videoStream?: Maybe<VideoStream>;
+  /** An edge for our `VideoStream`. May be used by Relay 1. */
+  videoStreamEdge?: Maybe<VideoStreamsEdge>;
+};
+
+
+/** The output of our delete `VideoStream` mutation. */
+export type DeleteVideoStreamPayloadVideoStreamEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideoStreamsOrderBy>>;
 };
 
 export enum DrmProtection {
@@ -2137,6 +2276,8 @@ export enum ErrorCodesEnum {
   AzureBlobPathOrSasTokenNotProvided = 'AZURE_BLOB_PATH_OR_SAS_TOKEN_NOT_PROVIDED',
   /** Archived videos cannot be re-encoded. */
   CannotReEncodeArchivedVideos = 'CANNOT_RE_ENCODE_ARCHIVED_VIDEOS',
+  /** Custom videos cannot be re-encoded. */
+  CannotReEncodeCustomVideos = 'CANNOT_RE_ENCODE_CUSTOM_VIDEOS',
   /** The previous encoding attempt is (likely) still in progress. */
   CannotReEncodeProcessingVideos = 'CANNOT_RE_ENCODE_PROCESSING_VIDEOS',
   /** Encoding already succeeded. */
@@ -2207,6 +2348,8 @@ export enum ErrorCodesEnum {
   NotGenericAuthenticatedSubject = 'NOT_GENERIC_AUTHENTICATED_SUBJECT',
   /** The object is not a ManagementAuthenticationContext */
   NotManagementAuthenticationContext = 'NOT_MANAGEMENT_AUTHENTICATION_CONTEXT',
+  /** The %s is missing required properties: %s. */
+  ObjectIsMissingProperties = 'OBJECT_IS_MISSING_PROPERTIES',
   /** The webhook message was generated too long ago (%s seconds) and should not be accepted anymore for security reasons. */
   OutdatedWebhookRequest = 'OUTDATED_WEBHOOK_REQUEST',
   /** The following profiles are not set up: %s */
@@ -2227,6 +2370,8 @@ export enum ErrorCodesEnum {
   StartupError = 'STARTUP_ERROR',
   /** User is authenticated, but subject information was not found. Please contact Axinom Support. */
   SubjectInformationNotFound = 'SUBJECT_INFORMATION_NOT_FOUND',
+  /** An unexpected error has happened. Please try again. */
+  TransientError = 'TRANSIENT_ERROR',
   /** Unable to get the %s secret. Please contact Axinom Support. */
   UnableToGetSecret = 'UNABLE_TO_GET_SECRET',
   /** Unable to playback video because encoding is still in progress. */
@@ -2247,6 +2392,8 @@ export enum ErrorCodesEnum {
   UserNotAuthorized = 'USER_NOT_AUTHORIZED',
   /** The User service is not accessible. Please contact Axinom support. */
   UserServiceNotAccessible = 'USER_SERVICE_NOT_ACCESSIBLE',
+  /** The %s is not an object. */
+  ValueIsNotObject = 'VALUE_IS_NOT_OBJECT',
   /** The selected source video was already processed. */
   VideoAlreadyProcessed = 'VIDEO_ALREADY_PROCESSED',
   /** The video was not found. */
@@ -2455,6 +2602,10 @@ export type Mutation = {
   archiveVideos?: Maybe<BulkMutationUuidPayload>;
   /** Creates a single `CuePoint`. */
   createCuePoint?: Maybe<CreateCuePointPayload>;
+  /** Creates a single custom `Video`. */
+  createCustomVideo?: Maybe<CreateCustomVideoPayload>;
+  /** Creates a single `VideoStream`. */
+  createCustomVideoStream?: Maybe<CreateVideoStreamPayload>;
   /** Creates a single `EncodingDrmProfile`. */
   createEncodingDrmProfile?: Maybe<CreateEncodingDrmProfilePayload>;
   /** Creates a single `EncodingProcessingProfile`. */
@@ -2465,6 +2616,8 @@ export type Mutation = {
   createVideosTag?: Maybe<CreateVideosTagPayload>;
   /** Deletes a single `CuePoint` using a unique key. */
   deleteCuePoint?: Maybe<DeleteCuePointPayload>;
+  /** Deletes a single `VideoStream` using a unique key. */
+  deleteCustomVideoStream?: Maybe<DeleteVideoStreamPayload>;
   /** Deletes a single `EncodingProcessingProfile` using a unique key. */
   deleteEncodingProcessingProfile?: Maybe<DeleteEncodingProcessingProfilePayload>;
   /** Deletes a single `EncodingVideoRepresentation` using a unique key. */
@@ -2491,6 +2644,10 @@ export type Mutation = {
   updateAzureBlobPublishingProfile: EncodingPublishingProfile;
   /** Updates a single `CuePoint` using a unique key and a patch. */
   updateCuePoint?: Maybe<UpdateCuePointPayload>;
+  /** Updates a single custom `Video` using a unique key and a patch. */
+  updateCustomVideo?: Maybe<UpdateCustomVideoPayload>;
+  /** Updates a single `VideoStream` using a unique key and a patch. */
+  updateCustomVideoStream?: Maybe<UpdateVideoStreamPayload>;
   /** Updates a single `EncodingDrmProfile` using a unique key and a patch. */
   updateEncodingDrmProfile?: Maybe<UpdateEncodingDrmProfilePayload>;
   /** Updates a single `EncodingProcessingProfile` using a unique key and a patch. */
@@ -2513,6 +2670,18 @@ export type MutationArchiveVideosArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCuePointArgs = {
   input: CreateCuePointInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCustomVideoArgs = {
+  input: CreateCustomVideoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCustomVideoStreamArgs = {
+  input: CreateVideoStreamInput;
 };
 
 
@@ -2543,6 +2712,12 @@ export type MutationCreateVideosTagArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteCuePointArgs = {
   input: DeleteCuePointInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCustomVideoStreamArgs = {
+  input: DeleteVideoStreamInput;
 };
 
 
@@ -2645,6 +2820,18 @@ export type MutationUpdateAzureBlobPublishingProfileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateCuePointArgs = {
   input: UpdateCuePointInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCustomVideoArgs = {
+  input: UpdateCustomVideoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCustomVideoStreamArgs = {
+  input: UpdateVideoStreamInput;
 };
 
 
@@ -3442,6 +3629,24 @@ export type UpdateCuePointPayloadCuePointEdgeArgs = {
   orderBy?: InputMaybe<Array<CuePointsOrderBy>>;
 };
 
+export type UpdateCustomVideoInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+  /** An object where the defined keys will be set on the custom `Video` being updated. */
+  patch: CustomVideoPatch;
+};
+
+export type UpdateCustomVideoPayload = {
+  __typename?: 'UpdateCustomVideoPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The custom `Video` that was updated by this mutation. */
+  video?: Maybe<Video>;
+};
+
 /**
  * All input for the `updateEncodingDrmProfile` mutation.
  * @permissions: SETTINGS_EDIT,ADMIN
@@ -3557,7 +3762,7 @@ export type UpdateEncodingVideoRepresentationPayloadEncodingVideoRepresentationE
 
 /**
  * All input for the `updateVideo` mutation.
- * @permissions: VIDEOS_ENCODE,VIDEOS_EDIT,ADMIN
+ * @permissions: VIDEOS_ENCODE,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,ADMIN
  */
 export type UpdateVideoInput = {
   /**
@@ -3633,6 +3838,45 @@ export type UpdateVideosTagPayloadVideosTagEdgeArgs = {
   orderBy?: InputMaybe<Array<VideosTagsOrderBy>>;
 };
 
+/**
+ * All input for the `updateCustomVideoStream` mutation.
+ * @permissions: CUSTOM_VIDEOS_EDIT,ADMIN
+ */
+export type UpdateVideoStreamInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+  /** An object where the defined keys will be set on the `VideoStream` being updated. */
+  patch: VideoStreamPatch;
+};
+
+/** The output of our update `VideoStream` mutation. */
+export type UpdateVideoStreamPayload = {
+  __typename?: 'UpdateVideoStreamPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Video` that is related to this `VideoStream`. */
+  video?: Maybe<Video>;
+  /** The `VideoStream` that was updated by this mutation. */
+  videoStream?: Maybe<VideoStream>;
+  /** An edge for our `VideoStream`. May be used by Relay 1. */
+  videoStreamEdge?: Maybe<VideoStreamsEdge>;
+};
+
+
+/** The output of our update `VideoStream` mutation. */
+export type UpdateVideoStreamPayloadVideoStreamEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideoStreamsOrderBy>>;
+};
+
 /** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
 export type UuidFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -3672,6 +3916,7 @@ export type Video = {
   createdUser: Scalars['String'];
   /** Reads and enables pagination through a set of `CuePoint`. */
   cuePoints: CuePointsConnection;
+  customId?: Maybe<Scalars['String']>;
   dashManifestPath?: Maybe<Scalars['String']>;
   dashSizeInBytes?: Maybe<Scalars['BigInt']>;
   /** @deprecated Use `keyId` in `VideoStreams` instead */
@@ -3706,6 +3951,7 @@ export type Video = {
   updatedDate: Scalars['Datetime'];
   updatedUser: Scalars['String'];
   videoBitrates: Array<Maybe<Scalars['Int']>>;
+  videoEncoder: VideoEncoder;
   /** Reads and enables pagination through a set of `VideosTag`. */
   videosTags: VideosTagsConnection;
   /** Reads and enables pagination through a set of `VideoStream`. */
@@ -3778,6 +4024,8 @@ export type VideoCondition = {
   createdDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `createdUser` field. */
   createdUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `customId` field. */
+  customId?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `dashManifestPath` field. */
   dashManifestPath?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `dashSizeInBytes` field. */
@@ -3835,6 +4083,41 @@ export type VideoCondition = {
   updatedUser?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `videoBitrates` field. */
   videoBitrates?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  /** Checks for equality with the object’s `videoEncoder` field. */
+  videoEncoder?: InputMaybe<VideoEncoder>;
+};
+
+export enum VideoEncoder {
+  /** Custom */
+  Custom = 'CUSTOM',
+  /** Default */
+  Default = 'DEFAULT'
+}
+
+/** A filter to be used against VideoEncoder fields. All fields are combined with a logical ‘and.’ */
+export type VideoEncoderFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<VideoEncoder>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<VideoEncoder>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<VideoEncoder>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<VideoEncoder>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<VideoEncoder>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<VideoEncoder>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<VideoEncoder>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<VideoEncoder>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<VideoEncoder>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<VideoEncoder>>;
 };
 
 /** A filter to be used against `Video` object types. All fields are combined with a logical ‘and.’ */
@@ -3857,6 +4140,8 @@ export type VideoFilter = {
   cuePoints?: InputMaybe<VideoToManyCuePointFilter>;
   /** Some related `cuePoints` exist. */
   cuePointsExist?: InputMaybe<Scalars['Boolean']>;
+  /** Filter by the object’s `customId` field. */
+  customId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `dashManifestPath` field. */
   dashManifestPath?: InputMaybe<StringFilter>;
   /** Filter by the object’s `dashSizeInBytes` field. */
@@ -3919,6 +4204,8 @@ export type VideoFilter = {
   updatedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `videoBitrates` field. */
   videoBitrates?: InputMaybe<IntListFilter>;
+  /** Filter by the object’s `videoEncoder` field. */
+  videoEncoder?: InputMaybe<VideoEncoderFilter>;
   /** Filter by the object’s `videosTags` relation. */
   videosTags?: InputMaybe<VideoToManyVideosTagFilter>;
   /** Some related `videosTags` exist. */
@@ -3980,6 +4267,8 @@ export enum VideosOrderBy {
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
+  CustomIdAsc = 'CUSTOM_ID_ASC',
+  CustomIdDesc = 'CUSTOM_ID_DESC',
   DashManifestPathAsc = 'DASH_MANIFEST_PATH_ASC',
   DashManifestPathDesc = 'DASH_MANIFEST_PATH_DESC',
   DashSizeInBytesAsc = 'DASH_SIZE_IN_BYTES_ASC',
@@ -4038,7 +4327,9 @@ export enum VideosOrderBy {
   UpdatedUserAsc = 'UPDATED_USER_ASC',
   UpdatedUserDesc = 'UPDATED_USER_DESC',
   VideoBitratesAsc = 'VIDEO_BITRATES_ASC',
-  VideoBitratesDesc = 'VIDEO_BITRATES_DESC'
+  VideoBitratesDesc = 'VIDEO_BITRATES_DESC',
+  VideoEncoderAsc = 'VIDEO_ENCODER_ASC',
+  VideoEncoderDesc = 'VIDEO_ENCODER_DESC'
 }
 
 /** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
@@ -4263,6 +4554,51 @@ export type VideoStreamFilter = {
   videoId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `width` field. */
   width?: InputMaybe<IntFilter>;
+};
+
+/** An input for mutations affecting `VideoStream` */
+export type VideoStreamInput = {
+  bitrateInKbps?: InputMaybe<Scalars['Int']>;
+  codecs?: InputMaybe<Scalars['String']>;
+  displayAspectRatio?: InputMaybe<Scalars['String']>;
+  file?: InputMaybe<Scalars['String']>;
+  fileTemplate?: InputMaybe<Scalars['String']>;
+  format: OutputFormat;
+  frameRate?: InputMaybe<Scalars['Float']>;
+  height?: InputMaybe<Scalars['Int']>;
+  iv?: InputMaybe<Scalars['String']>;
+  keyId?: InputMaybe<Scalars['String']>;
+  /** @notEmpty() */
+  label: Scalars['String'];
+  languageCode?: InputMaybe<Scalars['String']>;
+  languageName?: InputMaybe<Scalars['String']>;
+  pixelAspectRatio?: InputMaybe<Scalars['String']>;
+  samplingRate?: InputMaybe<Scalars['Int']>;
+  type: VideoStreamType;
+  videoId: Scalars['UUID'];
+  width?: InputMaybe<Scalars['Int']>;
+};
+
+/** Represents an update to a `VideoStream`. Fields that are set will be updated. */
+export type VideoStreamPatch = {
+  bitrateInKbps?: InputMaybe<Scalars['Int']>;
+  codecs?: InputMaybe<Scalars['String']>;
+  displayAspectRatio?: InputMaybe<Scalars['String']>;
+  file?: InputMaybe<Scalars['String']>;
+  fileTemplate?: InputMaybe<Scalars['String']>;
+  format?: InputMaybe<OutputFormat>;
+  frameRate?: InputMaybe<Scalars['Float']>;
+  height?: InputMaybe<Scalars['Int']>;
+  iv?: InputMaybe<Scalars['String']>;
+  keyId?: InputMaybe<Scalars['String']>;
+  /** @notEmpty() */
+  label?: InputMaybe<Scalars['String']>;
+  languageCode?: InputMaybe<Scalars['String']>;
+  languageName?: InputMaybe<Scalars['String']>;
+  pixelAspectRatio?: InputMaybe<Scalars['String']>;
+  samplingRate?: InputMaybe<Scalars['Int']>;
+  type?: InputMaybe<VideoStreamType>;
+  width?: InputMaybe<Scalars['Int']>;
 };
 
 /**

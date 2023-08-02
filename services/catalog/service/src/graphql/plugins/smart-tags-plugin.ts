@@ -12,20 +12,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       movie: {
         description: 'Definition of the movie publish format.',
         attribute: {
-          title: {
-            description: 'Title of the movie.',
-            ...disableFilterAndOrder,
-          },
           original_title: {
             description: 'Original title of the movie.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
             ...disableFilterAndOrder,
           },
           studio: {
@@ -314,10 +302,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       movie_genre: {
         description: 'Definition of the movie genre publish format.',
         attribute: {
-          title: {
-            description: 'Title of the genre.',
-            ...disableFilterAndOrder,
-          },
           order_no: {
             description: 'Global ordering number for the genre.',
           },
