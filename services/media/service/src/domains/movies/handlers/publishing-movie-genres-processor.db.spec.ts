@@ -2,6 +2,7 @@ import 'jest-extended';
 import { MovieGenreLocalization } from 'media-messages';
 import { insert } from 'zapatos/db';
 import { movie_genres } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   commonPublishValidator,
   SnapshotValidationResult,
@@ -73,33 +74,16 @@ describe('publishingMovieGenresProcessor', () => {
       });
     });
 
-    it('one genre -> valid result', async () => {
+    it('one genre without explicit localizations -> valid result', async () => {
       // Arrange
-      const localizationWarning: SnapshotValidationResult = {
+      const localizationError: SnapshotValidationResult = {
         context: 'LOCALIZATION',
-        message: `test localization warning`,
-        severity: 'WARNING',
+        message: `test localization error`,
+        severity: 'ERROR',
       };
-      const localizations: MovieGenreLocalization[] = [
-        {
-          title: 'source title',
-          language_tag: 'en-US',
-          is_default_locale: true,
-        },
-        {
-          title: 'localized title 1',
-          language_tag: 'de-DE',
-          is_default_locale: false,
-        },
-        {
-          title: 'localized title 2',
-          language_tag: 'et-EE',
-          is_default_locale: false,
-        },
-      ];
       localizationsSpy.mockImplementation(async () => ({
-        result: localizations,
-        validation: [localizationWarning],
+        result: undefined,
+        validation: [localizationError],
       }));
 
       // Act
@@ -117,16 +101,21 @@ describe('publishingMovieGenresProcessor', () => {
             {
               content_id: `movie_genre-${genre1.id}`,
               order_no: genre1.sort_order,
-              title: genre1.title,
-              localizations,
+              localizations: [
+                {
+                  is_default_locale: true,
+                  language_tag: DEFAULT_LOCALE_TAG,
+                  title: genre1.title,
+                },
+              ],
             },
           ],
         },
-        validation: [localizationWarning],
+        validation: [localizationError],
       });
     });
 
-    it('two genres -> valid result sorted by order_no', async () => {
+    it('two genres with explicit localizations -> valid result sorted by order_no', async () => {
       // Arrange
       const genre2 = await insert('movie_genres', {
         title: 'Genre2',
@@ -175,7 +164,6 @@ describe('publishingMovieGenresProcessor', () => {
             {
               content_id: `movie_genre-${genre2.id}`,
               order_no: genre2.sort_order,
-              title: genre2.title,
               localizations: localizations.map((l) => ({
                 ...l,
                 is_default_locale: false,
@@ -184,7 +172,6 @@ describe('publishingMovieGenresProcessor', () => {
             {
               content_id: `movie_genre-${genre1.id}`,
               order_no: genre1.sort_order,
-              title: genre1.title,
               localizations: localizations.map((l) => ({
                 ...l,
                 is_default_locale: true,
@@ -252,7 +239,7 @@ describe('publishingMovieGenresProcessor', () => {
               {
                 content_id: null,
                 order_no: null,
-                title: null,
+                localizations: null,
               },
             ],
           },
@@ -271,12 +258,12 @@ describe('publishingMovieGenresProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'title' of the first genre should be of type 'string'.`,
+          message: `Property 'order_no' of the first genre should be of type 'integer'.`,
           severity: 'ERROR',
         },
         {
           context: 'METADATA',
-          message: `Property 'order_no' of the first genre should be of type 'integer'.`,
+          message: `Property 'localizations' of the first genre should be of type 'array'.`,
           severity: 'ERROR',
         },
       ]);
@@ -291,7 +278,9 @@ describe('publishingMovieGenresProcessor', () => {
               {
                 content_id: '',
                 order_no: 0,
-                title: '',
+                localizations: [
+                  { title: 123, is_default_locale: 'no', language_tag: null },
+                ],
               },
             ],
           },
@@ -310,7 +299,20 @@ describe('publishingMovieGenresProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'title' of the first genre should not be empty.`,
+          message:
+            "Property 'is_default_locale' of the first localization of the first genre should be of type 'boolean'.",
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'language_tag' of the first localization of the first genre should be of type 'string'.",
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'title' of the first localization of the first genre should be of type 'string'.",
           severity: 'ERROR',
         },
       ]);
@@ -325,12 +327,44 @@ describe('publishingMovieGenresProcessor', () => {
               {
                 content_id: 'movie_genre-1',
                 order_no: 1,
-                title: 'Action',
+                localizations: [
+                  {
+                    title: 'Action',
+                    is_default_locale: true,
+                    language_tag: 'en-US',
+                  },
+                  {
+                    title: 'localized title 1',
+                    is_default_locale: false,
+                    language_tag: 'et-EE',
+                  },
+                  {
+                    title: 'localized title 2',
+                    is_default_locale: false,
+                    language_tag: 'de-DE',
+                  },
+                ],
               },
               {
                 content_id: 'movie_genre-2',
                 order_no: 2,
-                title: 'Adventure',
+                localizations: [
+                  {
+                    title: 'Adventure',
+                    is_default_locale: true,
+                    language_tag: 'en-US',
+                  },
+                  {
+                    title: 'localized title 1',
+                    is_default_locale: false,
+                    language_tag: 'et-EE',
+                  },
+                  {
+                    title: 'localized title 2',
+                    is_default_locale: false,
+                    language_tag: 'de-DE',
+                  },
+                ],
               },
             ],
           },

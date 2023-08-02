@@ -1817,7 +1817,9 @@ type MovieGenre {
   ): MovieGenreLocalization!
 }
 
+"""Localized values of the movie genre."""
 type MovieGenreLocalization {
+  """Title of the movie genre."""
   title: String!
 }
 
@@ -1889,9 +1891,15 @@ input MovieGenresRelationFilter {
   not: MovieGenresRelationFilter
 }
 
+"""Localized values of the movie."""
 type MovieLocalization {
+  """Title of the movie."""
   title: String!
+
+  """Extended synopsis."""
   description: String
+
+  """Short description of the main plot elements."""
   synopsis: String
 }
 

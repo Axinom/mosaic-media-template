@@ -31,115 +31,7 @@ describe('MoviePublishEventHandler', () => {
   });
 
   describe('onMessage', () => {
-    test('A new movie is published without localizations', async () => {
-      // Arrange
-      const message = createMoviePublishedEvent('movie-1');
-      message.localizations = undefined;
-      const messageInfo = stub<MessageInfo<MoviePublishedEvent>>({
-        envelope: {
-          auth_token: 'no-token',
-          payload: message,
-        },
-      });
-
-      // Act
-      await handler.onMessage(message, messageInfo);
-
-      // Assert
-      const movie = await selectOne('movie', { id: message.content_id }).run(
-        ctx.ownerPool,
-      );
-      expect(movie).toEqual<movie.JSONSelectable>({
-        id: message.content_id,
-        movie_cast: message.cast ?? null,
-        original_title: message.original_title ?? null,
-        production_countries: message.production_countries ?? null,
-        released: message.released ?? null,
-        studio: message.studio ?? null,
-        tags: message.tags ?? null,
-      });
-
-      const images = await select('movie_images', {
-        movie_id: message.content_id,
-      }).run(ctx.ownerPool);
-      expect(images).toMatchObject(message.images!);
-
-      // Remove `video_streams` array from `video` object
-      const expectedVideos = message.videos.map((video) => {
-        return Object.fromEntries(
-          Object.entries(video).filter(
-            ([key, _value]) => key !== 'video_streams' && key !== 'cue_points',
-          ),
-        );
-      });
-      const videos = await select('movie_videos', {
-        movie_id: message.content_id,
-      }).run(ctx.ownerPool);
-      expect(videos).toMatchObject(expectedVideos);
-
-      const movieVideoStreams = (
-        await select('movie_video_streams', {
-          movie_video_id: videos[0].id,
-        }).run(ctx.ownerPool)
-      ).map(({ id, movie_video_id, ...stream }) => stream);
-      expect(movieVideoStreams).toIncludeSameMembers(
-        message.videos[0].video_streams!,
-      );
-
-      const videoCuePoints = (
-        await select('movie_video_cue_points', {
-          movie_video_id: videos[0].id,
-        }).run(ctx.ownerPool)
-      ).map(({ id, movie_video_id, ...cuePoint }) => cuePoint);
-      expect(videoCuePoints).toIncludeSameMembers(
-        message.videos[0].cue_points!,
-      );
-
-      const licenses = await select('movie_licenses', {
-        movie_id: message.content_id,
-      }).run(ctx.ownerPool);
-      expect(licenses).toMatchObject(licenses);
-
-      const genreRelations = await select(
-        'movie_genres_relation',
-        {
-          movie_id: message.content_id,
-        },
-        {
-          order: {
-            by: 'order_no',
-            direction: 'ASC',
-          },
-        },
-      ).run(ctx.ownerPool);
-      expect(genreRelations.map((g) => g.movie_genre_id)).toEqual(
-        message.genre_ids,
-      );
-      const localizations = await select(
-        'movie_localizations',
-        { movie_id: message.content_id },
-        {
-          columns: [
-            'title',
-            'description',
-            'synopsis',
-            'locale',
-            'is_default_locale',
-          ],
-        },
-      ).run(ctx.ownerPool);
-      expect(localizations).toEqual([
-        {
-          title: message.title,
-          description: message.description ?? null,
-          synopsis: message.synopsis ?? null,
-          locale: DEFAULT_LOCALE_TAG,
-          is_default_locale: true,
-        },
-      ]);
-    });
-
-    test('A new movie is published with localizations', async () => {
+    test('A new movie is published', async () => {
       // Arrange
       const message = createMoviePublishedEvent('movie-1');
       const messageInfo = stub<MessageInfo<MoviePublishedEvent>>({
@@ -236,7 +128,7 @@ describe('MoviePublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.localizations!.map(({ language_tag, ...other }) => ({
+        message.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),
@@ -286,7 +178,7 @@ describe('MoviePublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.localizations!.map(({ language_tag, ...other }) => ({
+        message.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),

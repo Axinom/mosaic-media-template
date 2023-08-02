@@ -5,7 +5,7 @@ import {
 } from 'media-messages';
 import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config } from '../../../common';
+import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   atLeastOneString,
   buildPublishingId,
@@ -77,9 +77,6 @@ const movieDataAggregator: SnapshotDataAggregator = async (
 
   const snapshotJson: MoviePublishedEvent = {
     content_id: buildPublishingId('movies', movie.id),
-    title: movie.title,
-    synopsis: movie.synopsis ?? undefined,
-    description: movie.description ?? undefined,
     original_title: movie.original_title ?? undefined,
     released: movie.released ?? undefined,
     studio: movie.studio ?? undefined,
@@ -96,7 +93,15 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     })),
     images,
     videos,
-    localizations,
+    localizations: localizations ?? [
+      {
+        is_default_locale: true,
+        language_tag: DEFAULT_LOCALE_TAG,
+        title: movie.title,
+        synopsis: movie.synopsis ?? undefined,
+        description: movie.description ?? undefined,
+      },
+    ],
   };
 
   return {

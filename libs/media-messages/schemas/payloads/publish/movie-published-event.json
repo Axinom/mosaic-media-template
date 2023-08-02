@@ -7,20 +7,8 @@
     "content_id": {
       "$ref": "./common.json#/definitions/movie_id"
     },
-    "title": {
-      "description": "Title of the movie.",
-      "$ref": "../common.json#/definitions/non_empty_string"
-    },
     "original_title": {
       "description": "Original title of the movie.",
-      "type": "string"
-    },
-    "synopsis": {
-      "description": "Short description of the main plot elements.",
-      "$ref": "../common.json#/definitions/non_empty_string"
-    },
-    "description": {
-      "description": "Extended synopsis.",
       "type": "string"
     },
     "studio": {
@@ -98,11 +86,11 @@
   },
   "required": [
     "content_id",
-    "title",
     "licenses",
     "genre_ids",
     "images",
-    "videos"
+    "videos",
+    "localizations"
   ],
   "additionalProperties": false
 }

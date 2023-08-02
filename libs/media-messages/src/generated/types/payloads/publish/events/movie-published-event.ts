@@ -11,21 +11,9 @@ export interface MoviePublishedEvent {
    */
   content_id: string;
   /**
-   * A string with at least one character and not only whitespace characters.
-   */
-  title: string;
-  /**
    * Original title of the movie.
    */
   original_title?: string;
-  /**
-   * A string with at least one character and not only whitespace characters.
-   */
-  synopsis?: string;
-  /**
-   * Extended synopsis.
-   */
-  description?: string;
   /**
    * Name of the producing studio.
    */
@@ -65,5 +53,5 @@ export interface MoviePublishedEvent {
   /**
    * Localizations for every defined locale.
    */
-  localizations?: MovieLocalization[];
+  localizations: MovieLocalization[];
 }

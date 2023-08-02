@@ -8,15 +8,11 @@ export interface MovieGenre {
    */
   content_id: string;
   /**
-   * A string with at least one character and not only whitespace characters.
-   */
-  title: string;
-  /**
    * Global ordering number for the genre.
    */
   order_no: number;
   /**
    * Localizations for every defined locale.
    */
-  localizations?: MovieGenreLocalization[];
+  localizations: MovieGenreLocalization[];
 }

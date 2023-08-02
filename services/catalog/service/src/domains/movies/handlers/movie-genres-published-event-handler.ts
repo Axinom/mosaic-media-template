@@ -12,7 +12,7 @@ import {
   upsert,
 } from 'zapatos/db';
 import { movie_genre_localizations } from 'zapatos/schema';
-import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
+import { Config } from '../../../common';
 
 export class MovieGenresPublishedEventHandler extends MessageHandler<MovieGenresPublishedEvent> {
   constructor(
@@ -42,25 +42,14 @@ export class MovieGenresPublishedEventHandler extends MessageHandler<MovieGenres
         ).run(txnClient);
 
         const localizations = payload.genres.flatMap((genre) => {
-          if (genre.localizations) {
-            return genre.localizations.map(
-              (l): movie_genre_localizations.Insertable => ({
-                movie_genre_id: genre.content_id,
-                is_default_locale: l.is_default_locale,
-                locale: l.language_tag,
-                title: l.title,
-              }),
-            );
-          } else {
-            return [
-              {
-                movie_genre_id: genre.content_id,
-                is_default_locale: true,
-                locale: DEFAULT_LOCALE_TAG,
-                title: genre.title,
-              },
-            ];
-          }
+          return genre.localizations.map(
+            (l): movie_genre_localizations.Insertable => ({
+              movie_genre_id: genre.content_id,
+              is_default_locale: l.is_default_locale,
+              locale: l.language_tag,
+              title: l.title,
+            }),
+          );
         });
 
         await deletes('movie_genre_localizations', {}).run(txnClient);

@@ -5,7 +5,7 @@ import {
   PublishServiceMessagingSettings,
 } from 'media-messages';
 import { all, Queryable, select } from 'zapatos/db';
-import { Config } from '../../../common';
+import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   buildPublishingId,
   EntityPublishingProcessor,
@@ -36,10 +36,15 @@ const movieGenresDataAggregator: SnapshotDataAggregator = async (
         genre.title,
       );
     mappedGenres.push({
-      title: genre.title,
       order_no: genre.sort_order,
       content_id: buildPublishingId('movie_genres', genre.id),
-      localizations,
+      localizations: localizations ?? [
+        {
+          is_default_locale: true,
+          language_tag: DEFAULT_LOCALE_TAG,
+          title: genre.title,
+        },
+      ],
     });
     validations.push(...localizationsValidation);
   }

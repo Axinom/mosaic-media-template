@@ -18,9 +18,6 @@ export function createMoviePublishedEvent(
 ): MoviePublishedEvent {
   return {
     content_id: contentId,
-    title: 'Movie title',
-    description: 'A pretty long description.',
-    synopsis: 'A bit shorter description.',
     original_title: 'Movie title',
     tags: ['tag1', 'tag2'],
     cast: ['Actor One', 'Actor Two'],
@@ -100,15 +97,13 @@ export function createEpisodePublishedEvent(
   };
 }
 
-export function createMovieGenrePublishedEvent(
+export function createMovieGenresPublishedEvent(
   contentId: string,
-  title = 'Generic genre',
 ): MovieGenresPublishedEvent {
   return {
     genres: [
       {
         content_id: contentId,
-        title: title,
         order_no: 0,
         localizations: createMovieGenreLocalizations(),
       },

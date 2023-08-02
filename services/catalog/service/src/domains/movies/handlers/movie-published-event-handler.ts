@@ -12,7 +12,7 @@ import {
   movie_video_cue_points,
   movie_video_streams,
 } from 'zapatos/schema';
-import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
+import { Config } from '../../../common';
 
 export class MoviePublishedEventHandler extends MessageHandler<MoviePublishedEvent> {
   constructor(
@@ -126,15 +126,6 @@ export class MoviePublishedEventHandler extends MessageHandler<MoviePublishedEve
               }),
             ),
           ).run(txnClient);
-        } else {
-          await insert('movie_localizations', {
-            movie_id: payload.content_id,
-            is_default_locale: true,
-            locale: DEFAULT_LOCALE_TAG,
-            title: payload.title,
-            synopsis: payload.synopsis,
-            description: payload.description,
-          }).run(txnClient);
         }
       },
     );

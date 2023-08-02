@@ -44,6 +44,23 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
+      movie_localizations: {
+        description: 'Localized values of the movie.',
+        attribute: {
+          title: {
+            description: 'Title of the movie.',
+            ...disableFilterAndOrder,
+          },
+          synopsis: {
+            description: 'Short description of the main plot elements.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Extended synopsis.',
+            ...disableFilterAndOrder,
+          },
+        },
+      },
       movie_images: {
         description: 'Asset image metadata.',
         attribute: {
@@ -308,6 +325,14 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
         tags: {
           omit: 'create,update,delete',
+        },
+      },
+      movie_genre_localizations: {
+        description: 'Localized values of the movie genre.',
+        attribute: {
+          title: {
+            description: 'Title of the movie genre.',
+          },
         },
       },
       tvshow: {

@@ -12,15 +12,11 @@
         "description": "An individual movie genre object.",
         "type": "object",
         "title": "movie_genre",
-        "required": ["content_id", "title", "order_no"],
+        "required": ["content_id", "order_no", "localizations"],
         "additionalProperties": false,
         "properties": {
           "content_id": {
             "$ref": "./common.json#/definitions/movie_genre_id"
-          },
-          "title": {
-            "description": "Title of the genre.",
-            "$ref": "../common.json#/definitions/non_empty_string"
           },
           "order_no": {
             "description": "Global ordering number for the genre.",

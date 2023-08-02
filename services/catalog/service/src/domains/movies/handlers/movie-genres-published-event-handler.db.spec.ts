@@ -3,7 +3,7 @@ import { all, insert, select, selectOne } from 'zapatos/db';
 import { movie_genre } from 'zapatos/schema';
 import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
-  createMovieGenrePublishedEvent,
+  createMovieGenresPublishedEvent,
   createTestContext,
   ITestContext,
 } from '../../../tests/test-utils';
@@ -28,13 +28,9 @@ describe('MovieGenrePublishEventHandler', () => {
   });
 
   describe('onMessage', () => {
-    test('A new movie genre is published without localization', async () => {
+    test('A new movie genre is published', async () => {
       // Arrange
-      const message = createMovieGenrePublishedEvent(
-        'movie_genre-1',
-        'New title',
-      );
-      message.genres[0].localizations = undefined;
+      const message = createMovieGenresPublishedEvent('movie_genre-1');
 
       // Act
       await handler.onMessage(message);
@@ -52,13 +48,12 @@ describe('MovieGenrePublishEventHandler', () => {
         { movie_genre_id: message.genres[0].content_id },
         { columns: ['title', 'locale', 'is_default_locale'] },
       ).run(ctx.ownerPool);
-      expect(localizations).toEqual([
-        {
-          title: message.genres[0].title,
-          locale: DEFAULT_LOCALE_TAG,
-          is_default_locale: true,
-        },
-      ]);
+      expect(localizations).toIncludeSameMembers(
+        message.genres[0].localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
 
     test('An existing movie genre is republished', async () => {
@@ -74,7 +69,7 @@ describe('MovieGenrePublishEventHandler', () => {
         locale: DEFAULT_LOCALE_TAG,
         is_default_locale: true,
       }).run(ctx.ownerPool);
-      const message = createMovieGenrePublishedEvent(contentId, 'New title');
+      const message = createMovieGenresPublishedEvent(contentId);
 
       // Act
       await handler.onMessage(message);
@@ -91,7 +86,7 @@ describe('MovieGenrePublishEventHandler', () => {
         { columns: ['title', 'locale', 'is_default_locale'] },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.genres[0].localizations!.map(({ language_tag, ...other }) => ({
+        message.genres[0].localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),
@@ -110,10 +105,7 @@ describe('MovieGenrePublishEventHandler', () => {
         locale: DEFAULT_LOCALE_TAG,
         is_default_locale: true,
       }).run(ctx.ownerPool);
-      const message = createMovieGenrePublishedEvent(
-        'movie_genre-2',
-        'New title',
-      );
+      const message = createMovieGenresPublishedEvent('movie_genre-2');
 
       // Act
       await handler.onMessage(message);
@@ -127,7 +119,7 @@ describe('MovieGenrePublishEventHandler', () => {
         columns: ['title', 'locale', 'is_default_locale'],
       }).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.genres[0].localizations!.map(({ language_tag, ...other }) => ({
+        message.genres[0].localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),
