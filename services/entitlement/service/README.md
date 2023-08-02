@@ -82,8 +82,8 @@ get the jwt value during development, `yarn util:token` can be executed.
 The `yarn setup:webhooks` script is used for development environments. To get
 the values for `ENTITLEMENT_WEBHOOK_SECRET` and `MANIFEST_WEBHOOK_SECRET` env
 variables for the production environment, the following mutation must be
-launched against the Encoding Service GraphQL API. You can use GraphiQL UI for
-that (https://encoding.service.eu.axinom.net/graphiql):
+launched against the Video Service GraphQL API. You can use GraphiQL UI for that
+(https://encoding.service.eu.axinom.net/graphiql):
 
 ```
   mutation GenerateSecrets {
@@ -99,6 +99,6 @@ that (https://encoding.service.eu.axinom.net/graphiql):
 To authenticate the request, you would need an appropriate JWT. To get the JWT -
 the Portal Admin UI can be used (https://admin.service.eu.axinom.com). You would
 need to create or use an existing service account for your environment, make
-sure it has `Settings: Edit` permission for the Encoding Service, and generate a
+sure it has `Settings: Edit` permission for the Video Service, and generate a
 JWT on a dedicated `Access Token` station. More info here:
 https://portal.axinom.com/mosaic/documentation/authenticate-service-account

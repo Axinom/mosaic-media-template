@@ -563,7 +563,7 @@ describe('publishingTvshowProcessor', () => {
                 title: 'a',
                 output_format: 'DASH',
                 length_in_seconds: 1,
-                audio_languages: ['en'], // Trusting encoding service
+                audio_languages: ['en'], // Trusting Video Service
                 subtitle_languages: [],
                 caption_languages: [],
                 dash_manifest:

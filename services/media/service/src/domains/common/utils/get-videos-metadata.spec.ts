@@ -1,17 +1,17 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import 'jest-extended';
 import { CommonErrors } from '../../../common';
-import * as encoding from '../../../generated/graphql/encoding';
+import * as video from '../../../generated/graphql/video';
 import {
   EncodingState,
   OutputFormat,
   PreviewStatus,
   VideoStreamType,
-} from '../../../generated/graphql/encoding';
+} from '../../../generated/graphql/video';
 import { getVideosMetadata, GqlVideo } from './get-videos-metadata';
 
 let result: any = () => undefined;
-jest.spyOn(encoding, 'getSdk').mockImplementation(() => ({
+jest.spyOn(video, 'getSdk').mockImplementation(() => ({
   GetVideos: () => result(),
 }));
 

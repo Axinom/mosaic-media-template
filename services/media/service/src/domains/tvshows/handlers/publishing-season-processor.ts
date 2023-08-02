@@ -61,7 +61,7 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
 
   const { result: videos, validation: videosValidation } =
     await getVideosMetadata(
-      config.encodingServiceBaseUrl,
+      config.videoServiceBaseUrl,
       authToken,
       null,
       season.trailers,
