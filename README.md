@@ -194,17 +194,6 @@ like:
 You can find these keys and values usually in the `.env.template` file of the
 workflow.
 
-## Development notes
-
-- `zapatos` models will be generated after `yarn db:commit` but you can trigger
-  the generator manually via `yarn internal:zapatos`.
-- Run `yarn test:reset:dbs` before running `yarn test` in case new test files
-  were created or existing ones renamed or moved.
-- To obtain a development-time auth token for a service, run `yarn util:token`
-  in that service's workspace. There should also be a corresponding permissions
-  file under that service's `scripts/resources`. For a working example see
-  `package.json` in the Media Service.
-
 ## Deploying the services via Mosaic Hosting Service
 
 ### Pre-requisites for deploying any service
@@ -255,17 +244,17 @@ https://portal.axinom.com/mosaic/documentation/deploy-a-customized-service-with-
        `yarn util:load-vars mosaic hosting pilet register -i media-service -p ./`
 5. Upload the deployment manifest to the Mosaic Hosting Service
    - CLI Command
-     - `yarn util:load-vars mosaic hosting manifest upload -i <custom-service-id> -p <path-to-deployment-manifest-yaml> -n <unique-name-for-deployment-manifest>`
+     - `yarn util:load-vars mosaic hosting manifest upload -i <custom-service-id> -p <path-to-deployment-manifest-yaml> -n <manifest-name>`
      - i.e.
        `yarn util:load-vars mosaic hosting manifest upload -i media-service -p ./services/media/service/mosaic-hosting-deployment-manifest.yaml -n media-service-manifest-20230927`
-   - Ensure you provide a unique value for the manifest name
+   - Ensure you provide a unique value for the `<manifest-name>`
 6. Deploy the service with the specific artifacts (i.e. container image tag,
    pilet artifact, deployment manifest)
    - CLI Command
-     - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -p <workflow-package@version> -m <deployment-manifest-name>`
+     - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -p <workflow-package@version> -m <manifest-name> -n <deployment-name>`
      - i.e.
        `yarn util:load-vars mosaic hosting service deploy -i media-service -t 20230927.1 -p media-workflows@1.0.1 -m media-service-manifest-20230927 -n media-service-deployment-20230927.1`
-   - Ensure you provide a unique value for the deployment name
+   - Ensure you provide a unique value for the `<deployment-name>`
 
 ### Deploying Catalog Service
 
@@ -284,17 +273,17 @@ https://portal.axinom.com/mosaic/documentation/deploy-a-customized-service-with-
    register them
 4. Upload the deployment manifest to the Mosaic Hosting Service
    - CLI Command
-     - `yarn util:load-vars mosaic hosting manifest upload -i <custom-service-id> -p <path-to-deployment-manifest-yaml> -n <unique-name-for-deployment-manifest>`
+     - `yarn util:load-vars mosaic hosting manifest upload -i <custom-service-id> -p <path-to-deployment-manifest-yaml> -n <manifest-name>`
      - i.e.
        `yarn util:load-vars mosaic hosting manifest upload -i catalog-service -p ./services/catalog/service/mosaic-hosting-deployment-manifest.yaml -n catalog-service-manifest-20230927`
-   - Ensure you provide a unique value for the manifest name
+   - Ensure you provide a unique value for the `<manifest-name>`
 5. Deploy the service with the specific artifacts (i.e. container image tag,
    deployment manifest)
    - CLI Command
-     - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -m <deployment-manifest-name>`
+     - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -m <manifest-name> -n <deployment-name>`
      - i.e.
        `yarn util:load-vars mosaic hosting service deploy -i catalog-service -t 20230927.1 -m catalog-service-manifest-20230927 -n catalog-service-deployment-20230927.1`
-   - Ensure you provide a unique value for the deployment name
+   - Ensure you provide a unique value for the `<deployment-name>`
 
 ### Deploying Entitlement Service
 
@@ -313,18 +302,30 @@ https://portal.axinom.com/mosaic/documentation/deploy-a-customized-service-with-
    register them
 4. Upload the deployment manifest to the Mosaic Hosting Service
    - CLI Command
-     - `yarn util:load-vars mosaic hosting manifest upload -i <custom-service-id> -p <path-to-deployment-manifest-yaml> -n <unique-name-for-deployment-manifest>`
+     - `yarn util:load-vars mosaic hosting manifest upload -i <custom-service-id> -p <path-to-deployment-manifest-yaml> -n <manifest-name>`
      - i.e.
        `yarn util:load-vars mosaic hosting manifest upload -i entitlement-service -p ./services/entitlement/service/mosaic-hosting-deployment-manifest.yaml -n entitlement-service-manifest-20230927`
-   - Ensure you provide a unique value for the manifest name
-   - NOTE: The entitlement-service requires certain environment variables to be
-     configured that are user specific (i.e. `GEOLITE` & `DRM Keys`). Therefore
-     ensure that you've followed the necessary steps to retrieve these values
-     and have updated the deployment manifest YAML with the correct values.
+   - Ensure you provide a unique value for the `<manifest-name>`
+   - **IMPORTANT:** The entitlement-service requires certain environment
+     variables to be configured that are user specific (i.e. `GEOLITE` &
+     `DRM Keys`). Therefore ensure that you've followed the necessary steps to
+     retrieve these values and have updated the deployment manifest YAML with
+     the correct values.
 5. Deploy the service with the specific artifacts (i.e. container image tag,
    deployment manifest)
    - CLI Command
-     - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -m <deployment-manifest-name>`
+     - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -m <manifest-name> -n <deployment-name>`
      - i.e.
        `yarn util:load-vars mosaic hosting service deploy -i entitlement-service -t 20230927.1 -m entitlement-service-manifest-20230927 -n entitlement-service-deployment-20230927.1`
-   - Ensure you provide a unique value for the deployment name
+   - Ensure you provide a unique value for the `<deployment-name>`
+
+## Development notes
+
+- `zapatos` models will be generated after `yarn db:commit` but you can trigger
+  the generator manually via `yarn internal:zapatos`.
+- Run `yarn test:reset:dbs` before running `yarn test` in case new test files
+  were created or existing ones renamed or moved.
+- To obtain a development-time auth token for a service, run `yarn util:token`
+  in that service's workspace. There should also be a corresponding permissions
+  file under that service's `scripts/resources`. For a working example see
+  `package.json` in the Media Service.
