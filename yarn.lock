@@ -340,10 +340,10 @@
     uuid-encoder "^1.2.0"
     verror "^1.10.1"
 
-"@axinom/mosaic-ui@0.34.0":
-  version "0.34.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.34.0.tgz#1ad2df7cb1868e700874858ca2857856742fefad"
-  integrity sha512-21LT5nbdA/yGId2Zog8OZ1dZMth35KVvHUuWPNZOmHF9HU3ebackriPSRLzYyBzGRNFiWduKAODrV+jhsCFGTw==
+"@axinom/mosaic-ui@0.34.1":
+  version "0.34.1"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.34.1.tgz#69451a9852c4a7c46f276e319ffe99a8e1e8c3b5"
+  integrity sha512-yk1Q+ts2kym0a+Q/hvG6UJONuGEBJ2lXkiYs+PHRPENeu4mzm9M3WVzqSMsl2ntLaLNP+cn4QaZUCEEE0DzdaQ==
   dependencies:
     "@axinom/mosaic-core" "^0.4.7"
     "@faker-js/faker" "^7.4.0"
