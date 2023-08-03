@@ -8,7 +8,7 @@ import { Config } from '../../../common';
 
 export class CuePointTypesDeclareFailedHandler extends MessageHandler<CuePointTypesDeclareFailedEvent> {
   private logger: Logger;
-  constructor(config: Config) {
+  constructor(private config: Config) {
     super(
       VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclareFailed
         .messageType,
@@ -20,9 +20,11 @@ export class CuePointTypesDeclareFailedHandler extends MessageHandler<CuePointTy
   }
 
   async onMessage(content: CuePointTypesDeclareFailedEvent): Promise<void> {
-    this.logger.error({
-      message: 'Cue point types declare command has failed!',
-      details: { ...content },
-    });
+    if (content.service_id === this.config.serviceId) {
+      this.logger.error({
+        message: 'Cue point types declare command has failed!',
+        details: { ...content },
+      });
+    }
   }
 }

@@ -8,7 +8,7 @@ import { Config } from '../../../common';
 
 export class EntityDefinitionDeleteFinishedHandler extends MessageHandler<EntityDefinitionDeleteFinishedEvent> {
   private logger: Logger;
-  constructor(config: Config) {
+  constructor(private config: Config) {
     super(
       LocalizationServiceMultiTenantMessagingSettings
         .EntityDefinitionDeleteFinished.messageType,
@@ -20,9 +20,11 @@ export class EntityDefinitionDeleteFinishedHandler extends MessageHandler<Entity
   }
 
   async onMessage(content: EntityDefinitionDeleteFinishedEvent): Promise<void> {
-    this.logger.log({
-      message: 'Entity Definition delete command has succeeded!',
-      details: { ...content },
-    });
+    if (content.service_id === this.config.serviceId) {
+      this.logger.log({
+        message: 'Entity Definition delete command has succeeded!',
+        details: { ...content },
+      });
+    }
   }
 }

@@ -9,24 +9,8 @@
       "type": "string",
       "pattern": "^(movie)-([a-zA-Z0-9_-]+)$"
     },
-    "title": {
-      "type": "string",
-      "minLength": 1,
-      "pattern": "^$|.*\\S.*",
-      "description": "A string with at least one character and not only whitespace characters."
-    },
     "original_title": {
       "description": "Original title of the movie.",
-      "type": "string"
-    },
-    "synopsis": {
-      "type": "string",
-      "minLength": 1,
-      "pattern": "^$|.*\\S.*",
-      "description": "A string with at least one character and not only whitespace characters."
-    },
-    "description": {
-      "description": "Extended synopsis.",
       "type": "string"
     },
     "studio": {
@@ -416,15 +400,58 @@
         ],
         "additionalProperties": false
       }
+    },
+    "localizations": {
+      "description": "Localizations for every defined locale.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "title": "movie_localization",
+        "required": [
+          "is_default_locale",
+          "language_tag",
+          "title"
+        ],
+        "properties": {
+          "is_default_locale": {
+            "type": "boolean",
+            "description": "Boolean flag to indicate if locale is default or not."
+          },
+          "language_tag": {
+            "type": "string",
+            "description": "The locale for which the values are localized."
+          },
+          "title": {
+            "type": "string",
+            "description": "The localized title of this movie."
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The localized description of this movie."
+          },
+          "synopsis": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The localized synopsis of this movie."
+          }
+        }
+      }
     }
   },
   "required": [
     "content_id",
-    "title",
     "licenses",
     "genre_ids",
     "images",
-    "videos"
+    "videos",
+    "localizations"
   ],
   "additionalProperties": false
 }
