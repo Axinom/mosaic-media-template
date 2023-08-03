@@ -947,17 +947,8 @@ type CollectionItemsRelation {
 type Movie {
   id: String!
 
-  """Title of the movie."""
-  title: String
-
   """Original title of the movie."""
   originalTitle: String
-
-  """Short description of the main plot elements."""
-  synopsis: String
-
-  """Extended synopsis."""
-  description: String
 
   """Name of the producing studio."""
   studio: String
@@ -1109,6 +1100,14 @@ type Movie {
     """
     filter: MovieGenresRelationFilter
   ): MovieGenresRelationsConnection!
+
+  """The localized movie metadata."""
+  localization(
+    """
+    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
+    """
+    locale: String
+  ): MovieLocalization!
 }
 
 """
@@ -1806,11 +1805,22 @@ type MovieGenresRelation {
 type MovieGenre {
   id: String!
 
-  """Title of the genre."""
-  title: String
-
   """Global ordering number for the genre."""
   orderNo: Int
+
+  """The localized movie_genre metadata."""
+  localization(
+    """
+    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
+    """
+    locale: String
+  ): MovieGenreLocalization!
+}
+
+"""Localized values of the movie genre."""
+type MovieGenreLocalization {
+  """Title of the movie genre."""
+  title: String!
 }
 
 """A `MovieGenresRelation` edge in the connection."""
@@ -1879,6 +1889,18 @@ input MovieGenresRelationFilter {
 
   """Negates the expression."""
   not: MovieGenresRelationFilter
+}
+
+"""Localized values of the movie."""
+type MovieLocalization {
+  """Title of the movie."""
+  title: String!
+
+  """Extended synopsis."""
+  description: String
+
+  """Short description of the main plot elements."""
+  synopsis: String
 }
 
 """Definition of the TV show publish format."""

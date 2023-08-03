@@ -1,16 +1,33 @@
 /* eslint-disable no-console */
-import {
-  getBasicDbConfigDefinitions,
-  getValidatedConfig,
-} from '@axinom/mosaic-service-common';
+import { getValidatedConfig, pick } from '@axinom/mosaic-service-common';
 import { reset } from 'graphile-migrate';
 import { initializePgPool, runResetQueries } from '../../../../scripts/helpers';
-import { getMigrationSettings } from '../src/common';
+import { getConfigDefinitions, getMigrationSettings } from '../src/common';
 
 async function main(): Promise<void> {
   console.log('1. Validating Config...');
-  const config = getValidatedConfig(getBasicDbConfigDefinitions());
-
+  const config = getValidatedConfig(
+    pick(
+      getConfigDefinitions(),
+      'pgRootConnectionString',
+      'dbOwnerConnectionString',
+      'dbShadowConnectionString',
+      'dbLoginConnectionString',
+      'dbName',
+      'dbGqlRole',
+      'dbLogin',
+      'dbLoginPassword',
+      'dbOwner',
+      'dbOwnerPassword',
+      'pgHost',
+      'pgPort',
+      'pgUserSuffix',
+      'pgSSLMode',
+      'pgRoot',
+      'pgRootPassword',
+      'dbLocalizationReplicationSlot',
+    ),
+  );
   console.log('2. Initializing ROOT Database Connection...');
   const rootPgPool = await initializePgPool(config.pgRootConnectionString);
 
@@ -23,6 +40,7 @@ async function main(): Promise<void> {
     config.dbLoginPassword,
     config.dbOwner,
     config.dbOwnerPassword,
+    undefined,
     true,
   );
 

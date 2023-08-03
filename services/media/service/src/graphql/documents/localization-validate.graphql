@@ -1,0 +1,22 @@
+query ValidateEntityLocalizations(
+  $entityId: String!
+  $entityType: String!
+  $serviceId: String!
+) {
+  validateEntityLocalizations(
+    input: {
+      entityId: $entityId
+      entityType: $entityType
+      serviceId: $serviceId
+    }
+  ) {
+    validationHash
+    validationStatus
+    validationMessages {
+      fieldName
+      locale
+      message
+      severity
+    }
+  }
+}
