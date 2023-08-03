@@ -1,0 +1,17 @@
+mutation PrepareEntityLocalizationsForPublishing(
+  $serviceId: String!
+  $hash: String!
+  $entityType: String!
+  $entityId: String!
+) {
+  prepareEntityLocalizationsForPublishing(
+    input: {
+      entityId: $entityId
+      entityType: $entityType
+      serviceId: $serviceId
+      hash: $hash
+    }
+  ) {
+    localizations
+  }
+}
