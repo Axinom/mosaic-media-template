@@ -5,7 +5,7 @@ import {
 } from 'media-messages';
 import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config } from '../../../common';
+import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   atLeastOneString,
   buildPublishingId,
@@ -18,6 +18,7 @@ import {
   videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
+import { getMovieLocalizationsMetadata } from '../localization';
 
 const movieDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -59,26 +60,23 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     },
   ).run(queryable);
 
-  const { result: videos, validation: videosValidation } =
-    await getVideosMetadata(
+  const [
+    { result: videos, validation: videosValidation },
+    { result: images, validation: imagesValidation },
+    { result: localizations, validation: localizationsValidation },
+  ] = await Promise.all([
+    getVideosMetadata(
       config.videoServiceBaseUrl,
       authToken,
       movie.main_video_id,
       movie.trailers,
-    );
-
-  const { result: images, validation: imagesValidation } =
-    await getImagesMetadata(
-      config.imageServiceBaseUrl,
-      authToken,
-      movie.images,
-    );
+    ),
+    getImagesMetadata(config.imageServiceBaseUrl, authToken, movie.images),
+    getMovieLocalizationsMetadata(config, authToken, movie.id.toString()),
+  ]);
 
   const snapshotJson: MoviePublishedEvent = {
     content_id: buildPublishingId('movies', movie.id),
-    title: movie.title,
-    synopsis: movie.synopsis ?? undefined,
-    description: movie.description ?? undefined,
     original_title: movie.original_title ?? undefined,
     released: movie.released ?? undefined,
     studio: movie.studio ?? undefined,
@@ -95,11 +93,24 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     })),
     images,
     videos,
+    localizations: localizations ?? [
+      {
+        is_default_locale: true,
+        language_tag: DEFAULT_LOCALE_TAG,
+        title: movie.title,
+        synopsis: movie.synopsis ?? undefined,
+        description: movie.description ?? undefined,
+      },
+    ],
   };
 
   return {
     result: snapshotJson,
-    validation: [...imagesValidation, ...videosValidation],
+    validation: [
+      ...imagesValidation,
+      ...videosValidation,
+      ...localizationsValidation,
+    ],
   };
 };
 
