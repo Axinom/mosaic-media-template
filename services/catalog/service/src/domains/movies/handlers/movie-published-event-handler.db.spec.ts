@@ -1,6 +1,7 @@
 import 'jest-extended';
 import { insert, select, selectOne } from 'zapatos/db';
 import { movie } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   createMoviePublishedMessage,
   createTestContext,
@@ -37,21 +38,17 @@ describe('MoviePublishEventHandler', () => {
         await handler.handleMessage(message, txn);
       });
 
-      // TODO: Consider verifying via the GQL API.
       // Assert
       const movie = await selectOne('movie', { id: payload.content_id }).run(
         ctx.ownerPool,
       );
       expect(movie).toEqual<movie.JSONSelectable>({
         id: payload.content_id,
-        title: payload.title ?? null,
-        description: payload.description ?? null,
         movie_cast: payload.cast ?? null,
         original_title: payload.original_title ?? null,
         production_countries: payload.production_countries ?? null,
         released: payload.released ?? null,
         studio: payload.studio ?? null,
-        synopsis: payload.synopsis ?? null,
         tags: payload.tags ?? null,
       });
 
@@ -111,16 +108,40 @@ describe('MoviePublishEventHandler', () => {
       expect(genreRelations.map((g) => g.movie_genre_id)).toEqual(
         payload.genre_ids,
       );
+      const localizations = await select(
+        'movie_localizations',
+        { movie_id: payload.content_id },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        message.payload.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
 
     test('An existing movie is republished', async () => {
       // Arrange
-      await insert('movie', { id: 'movie-1', title: 'Old title' }).run(
-        ctx.ownerPool,
-      );
+      await insert('movie', {
+        id: 'movie-1',
+        original_title: 'Incorrect original title',
+      }).run(ctx.ownerPool);
+      await insert('movie_localizations', {
+        movie_id: 'movie-1',
+        title: 'Old title',
+        locale: DEFAULT_LOCALE_TAG,
+        is_default_locale: true,
+      }).run(ctx.ownerPool);
       const message = createMoviePublishedMessage('movie-1');
-      const payload = message.payload;
-      payload.title = 'New title';
 
       // Act
       await ctx.executeOwnerSql(async (txn) => {
@@ -128,11 +149,30 @@ describe('MoviePublishEventHandler', () => {
       });
 
       // Assert
-      const movie = await selectOne('movie', { id: payload.content_id }).run(
-        ctx.ownerPool,
-      );
+      const movie = await selectOne('movie', {
+        id: message.payload.content_id,
+      }).run(ctx.ownerPool);
 
-      expect(movie?.title).toEqual('New title');
+      expect(movie?.original_title).toEqual('Movie title');
+      const localizations = await select(
+        'movie_localizations',
+        { movie_id: 'movie-1' },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        message.payload.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
   });
 });
