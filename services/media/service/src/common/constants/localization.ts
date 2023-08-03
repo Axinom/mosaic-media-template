@@ -4,3 +4,7 @@
  * See 000020-replication-on-localizable-tables-added.sql for original definition.
  */
 export const PG_LOCALIZATION_PUBLICATION = 'pg_localization_publication';
+
+export const LOCALIZATION_IS_DEFAULT_LOCALE = '@isDefaultLocale';
+export const LOCALIZATION_LANGUAGE_TAG = '@languageTag';
+export const DEFAULT_LOCALE_TAG = 'default';

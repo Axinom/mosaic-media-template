@@ -20,13 +20,24 @@ interface VideoApiResults {
 }
 
 const getMappedError = mosaicErrorMappingFactory(
-  (error: Error & { response?: { errors?: unknown[] } }) => {
-    return {
-      ...CommonErrors.PublishVideosMetadataRequestError,
-      details: {
-        errors: error.response?.errors,
-      },
-    };
+  (error: Error & { code?: string; response?: { errors?: unknown[] } }) => {
+    if (error?.code === 'ECONNREFUSED') {
+      return {
+        ...CommonErrors.ServiceNotAccessible,
+        messageParams: ['Video'],
+      };
+    }
+
+    if (error.response?.errors) {
+      return {
+        ...CommonErrors.PublishVideosMetadataRequestError,
+        details: {
+          errors: error.response?.errors,
+        },
+      };
+    }
+
+    return CommonErrors.PublishVideosMetadataRequestError;
   },
 );
 

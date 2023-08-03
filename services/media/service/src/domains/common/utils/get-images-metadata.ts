@@ -15,13 +15,23 @@ interface ImageApiResults {
 }
 
 const getMappedError = mosaicErrorMappingFactory(
-  (error: Error & { response?: { errors?: unknown[] } }) => {
-    return {
-      ...CommonErrors.PublishImagesMetadataRequestError,
-      details: {
-        errors: error.response?.errors,
-      },
-    };
+  (error: Error & { code?: string; response?: { errors?: unknown[] } }) => {
+    if (error?.code === 'ECONNREFUSED') {
+      return {
+        ...CommonErrors.ServiceNotAccessible,
+        messageParams: ['Image'],
+      };
+    }
+
+    if (error.response?.errors) {
+      return {
+        ...CommonErrors.PublishImagesMetadataRequestError,
+        details: {
+          errors: error.response?.errors,
+        },
+      };
+    }
+    return CommonErrors.PublishImagesMetadataRequestError;
   },
 );
 
