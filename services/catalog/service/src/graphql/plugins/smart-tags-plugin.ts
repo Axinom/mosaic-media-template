@@ -12,20 +12,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       movie: {
         description: 'Definition of the movie publish format.',
         attribute: {
-          title: {
-            description: 'Title of the movie.',
-            ...disableFilterAndOrder,
-          },
           original_title: {
             description: 'Original title of the movie.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
             ...disableFilterAndOrder,
           },
           studio: {
@@ -54,6 +42,23 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
         tags: {
           omit: 'create,update,delete',
+        },
+      },
+      movie_localizations: {
+        description: 'Localized values of the movie.',
+        attribute: {
+          title: {
+            description: 'Title of the movie.',
+            ...disableFilterAndOrder,
+          },
+          synopsis: {
+            description: 'Short description of the main plot elements.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Extended synopsis.',
+            ...disableFilterAndOrder,
+          },
         },
       },
       movie_images: {
@@ -314,16 +319,20 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       movie_genre: {
         description: 'Definition of the movie genre publish format.',
         attribute: {
-          title: {
-            description: 'Title of the genre.',
-            ...disableFilterAndOrder,
-          },
           order_no: {
             description: 'Global ordering number for the genre.',
           },
         },
         tags: {
           omit: 'create,update,delete',
+        },
+      },
+      movie_genre_localizations: {
+        description: 'Localized values of the movie genre.',
+        attribute: {
+          title: {
+            description: 'Title of the movie genre.',
+          },
         },
       },
       tvshow: {

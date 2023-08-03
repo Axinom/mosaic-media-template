@@ -30,6 +30,7 @@ export const createTestConfig = (
     DATABASE_OWNER: createTestDbIdentifier(process.env.DATABASE_OWNER),
     DATABASE_LOGIN: createTestDbIdentifier(process.env.DATABASE_LOGIN),
     DATABASE_GQL_ROLE: createTestDbIdentifier(process.env.DATABASE_GQL_ROLE),
+    IS_LOCALIZATION_ENABLED: 'TRUE',
   };
 
   return getValidatedConfig(

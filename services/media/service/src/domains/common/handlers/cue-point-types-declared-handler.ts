@@ -8,7 +8,7 @@ import { Config } from '../../../common';
 
 export class CuePointTypesDeclaredHandler extends MessageHandler<CuePointTypesDeclaredEvent> {
   private logger: Logger;
-  constructor(config: Config) {
+  constructor(private config: Config) {
     super(
       VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclared
         .messageType,
@@ -20,9 +20,11 @@ export class CuePointTypesDeclaredHandler extends MessageHandler<CuePointTypesDe
   }
 
   async onMessage(content: CuePointTypesDeclaredEvent): Promise<void> {
-    this.logger.log({
-      message: 'Cue point types declare command has succeeded!',
-      details: { ...content },
-    });
+    if (content.service_id === this.config.serviceId) {
+      this.logger.log({
+        message: 'Cue point types declare command has succeeded!',
+        details: { ...content },
+      });
+    }
   }
 }
