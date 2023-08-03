@@ -1,5 +1,6 @@
 import { Image } from '../types/image';
 import { License } from '../types/license';
+import { MovieLocalization } from '../types/movie-localization';
 import { Video } from '../types/video';
 /**
  * Definition of the movie publish format.
@@ -10,21 +11,9 @@ export interface MoviePublishedEvent {
    */
   content_id: string;
   /**
-   * A string with at least one character and not only whitespace characters.
-   */
-  title: string;
-  /**
    * Original title of the movie.
    */
   original_title?: string;
-  /**
-   * A string with at least one character and not only whitespace characters.
-   */
-  synopsis?: string;
-  /**
-   * Extended synopsis.
-   */
-  description?: string;
   /**
    * Name of the producing studio.
    */
@@ -61,4 +50,8 @@ export interface MoviePublishedEvent {
    * Array of video streams associated with movie or episode.
    */
   videos: Video[];
+  /**
+   * Localizations for every defined locale.
+   */
+  localizations: MovieLocalization[];
 }
