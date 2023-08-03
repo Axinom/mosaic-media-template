@@ -24,3 +24,15 @@ generates:
       withHOC: false
       withComponent: false
       withMutationFn: false
+  src/generated/graphql/localization.ts:
+    schema: '${LOCALIZATION_SERVICE_BASE_URL}/graphql'
+    documents: 'src/graphql/documents/localization-*.graphql'
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-graphql-request'
+    config:
+      rawRequest: true
+      withHOC: false
+      withComponent: false
+      withMutationFn: false
