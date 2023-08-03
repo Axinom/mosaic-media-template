@@ -8,7 +8,7 @@ import { Config } from '../../../common';
 
 export class EntityDefinitionDeclareFailedHandler extends MessageHandler<EntityDefinitionDeclareFailedEvent> {
   private logger: Logger;
-  constructor(config: Config) {
+  constructor(private config: Config) {
     super(
       LocalizationServiceMultiTenantMessagingSettings
         .EntityDefinitionDeclareFailed.messageType,
@@ -20,9 +20,11 @@ export class EntityDefinitionDeclareFailedHandler extends MessageHandler<EntityD
   }
 
   async onMessage(content: EntityDefinitionDeclareFailedEvent): Promise<void> {
-    this.logger.error({
-      message: 'Entity definition declare command has failed!',
-      details: { ...content },
-    });
+    if (content.service_id === this.config.serviceId) {
+      this.logger.error({
+        message: 'Entity definition declare command has failed!',
+        details: { ...content },
+      });
+    }
   }
 }

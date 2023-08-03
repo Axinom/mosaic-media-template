@@ -37,6 +37,12 @@ export const getConfigDefinitions = (
 
     isLocalizationEnabled: () =>
       env.get('IS_LOCALIZATION_ENABLED').default('FALSE').asBoolStrict(),
+    localizationServiceBaseUrl: function () {
+      return env
+        .get('LOCALIZATION_SERVICE_BASE_URL')
+        .required(this.isLocalizationEnabled())
+        .asUrlString();
+    },
 
     /**
      * **N.B!** If this value ever changes -

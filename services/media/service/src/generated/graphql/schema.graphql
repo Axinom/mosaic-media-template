@@ -3347,6 +3347,9 @@ enum SnapshotValidationIssueContext {
 
   """Video"""
   VIDEO
+
+  """Localization"""
+  LOCALIZATION
 }
 
 """
@@ -13712,6 +13715,9 @@ enum ErrorCodesEnum {
   """Unable to retrieve images metadata."""
   PUBLISH_IMAGES_METADATA_REQUEST_ERROR
 
+  """Unable to retrieve localizations metadata."""
+  PUBLISH_LOCALIZATIONS_METADATA_REQUEST_ERROR
+
   """Attempt to publish media has failed."""
   PUBLISH_ERROR
 
@@ -13736,6 +13742,14 @@ enum ErrorCodesEnum {
   The subject was provided, but it does not have enough permissions to perform the operation.
   """
   NOT_ENOUGH_PERMISSIONS
+
+  """The %s service is not accessible. Please contact the service support."""
+  SERVICE_NOT_ACCESSIBLE
+
+  """
+  The retrieved localizations are missing key properties. Please contact the service support.
+  """
+  MISSING_KEY_LOCALIZATION_PROPERTIES
 }
 
 """
