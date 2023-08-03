@@ -1,7 +1,12 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import { ClientError } from 'graphql-request';
 import 'jest-extended';
-import { CommonErrors, Config } from '../../../common';
+import {
+  CommonErrors,
+  Config,
+  LOCALIZATION_IS_DEFAULT_LOCALE,
+  LOCALIZATION_LANGUAGE_TAG,
+} from '../../../common';
 import * as localization from '../../../generated/graphql/localization';
 import {
   EntityLocalizationValidationSeverity,
@@ -92,6 +97,57 @@ describe('GetLocalizationsMetadata', () => {
       validationStatus: 'OK',
     });
     expect(localizations).toEqual([]);
+  });
+
+  it('non-empty localizations and validations arrays returned -> non-empty localizations and validation arrays', async () => {
+    // Arrange
+    const expectedLocalizations = [
+      {
+        title: 'source title',
+        [LOCALIZATION_LANGUAGE_TAG]: 'en-US',
+        [LOCALIZATION_IS_DEFAULT_LOCALE]: true,
+      },
+      {
+        title: 'localized title 1',
+        [LOCALIZATION_LANGUAGE_TAG]: 'de-DE',
+        [LOCALIZATION_IS_DEFAULT_LOCALE]: false,
+      },
+      {
+        title: 'localized title 2',
+        [LOCALIZATION_LANGUAGE_TAG]: 'et-EE',
+        [LOCALIZATION_IS_DEFAULT_LOCALE]: false,
+      },
+    ];
+    const expectedValidations = [
+      {
+        severity: EntityLocalizationValidationSeverity.Warning,
+        message: 'Not approved.',
+        fieldName: 'title',
+        locale: 'de-DE',
+      },
+    ];
+    validationResult = () => {
+      return createValidationObject(expectedValidations, mockedString);
+    };
+    publishResult = () => {
+      return createPublishObject(expectedLocalizations);
+    };
+
+    // Act
+    const { validation, localizations } = await getLocalizationsMetadata(
+      config,
+      mockedString,
+      mockedString,
+      mockedString,
+    );
+
+    // Assert
+    expect(validation).toEqual({
+      validationHash: 'does-not-matter-as-request-is-mocked',
+      validationMessages: expectedValidations,
+      validationStatus: 'WARNINGS',
+    });
+    expect(localizations).toEqual(expectedLocalizations);
   });
 
   it('Error thrown because service is not available -> error thrown', async () => {

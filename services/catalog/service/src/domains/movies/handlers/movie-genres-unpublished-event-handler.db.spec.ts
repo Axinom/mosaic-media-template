@@ -24,7 +24,7 @@ describe('MovieGenrePublishEventHandler', () => {
   });
 
   describe('onMessage', () => {
-    test('An existing movie-genre is unpublished', async () => {
+    test('Received a movie-genres unpublish message -> the single existing movie-genre is removed', async () => {
       // Arrange
       await insert('movie_genre', {
         id: 'movie_genre-1',
@@ -49,7 +49,46 @@ describe('MovieGenrePublishEventHandler', () => {
       expect(localizations).toHaveLength(0);
     });
 
-    test('two existing movie-genres are unpublished', async () => {
+    test('Received a movie-genres unpublish message -> the single existing movie-genre with multiple localizations is removed', async () => {
+      // Arrange
+      await insert('movie_genre', {
+        id: 'movie_genre-1',
+      }).run(ctx.ownerPool);
+      await insert('movie_genre_localizations', [
+        {
+          movie_genre_id: 'movie_genre-1',
+          title: 'Some title',
+          locale: DEFAULT_LOCALE_TAG,
+          is_default_locale: true,
+        },
+        {
+          movie_genre_id: 'movie_genre-1',
+          title: 'Localized title (de-DE)',
+          locale: 'de-DE',
+          is_default_locale: false,
+        },
+        {
+          movie_genre_id: 'movie_genre-1',
+          title: 'Localized title (et-EE)',
+          locale: 'et-EE',
+          is_default_locale: false,
+        },
+      ]).run(ctx.ownerPool);
+
+      // Act
+      await handler.onMessage();
+
+      // Assert
+      const movieGenre = await select('movie_genre', all).run(ctx.ownerPool);
+      const localizations = await select('movie_genre_localizations', all).run(
+        ctx.ownerPool,
+      );
+
+      expect(movieGenre).toHaveLength(0);
+      expect(localizations).toHaveLength(0);
+    });
+
+    test('Received a movie-genres unpublish message -> all existing movie-genre are removed', async () => {
       // Arrange
       await insert('movie_genre', [
         {
