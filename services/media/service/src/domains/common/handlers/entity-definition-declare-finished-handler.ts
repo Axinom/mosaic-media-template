@@ -8,7 +8,7 @@ import { Config } from '../../../common';
 
 export class EntityDefinitionDeclareFinishedHandler extends MessageHandler<EntityDefinitionDeclareFinishedEvent> {
   private logger: Logger;
-  constructor(config: Config) {
+  constructor(private config: Config) {
     super(
       LocalizationServiceMultiTenantMessagingSettings
         .EntityDefinitionDeclareFinished.messageType,
@@ -22,9 +22,11 @@ export class EntityDefinitionDeclareFinishedHandler extends MessageHandler<Entit
   async onMessage(
     content: EntityDefinitionDeclareFinishedEvent,
   ): Promise<void> {
-    this.logger.log({
-      message: 'Entity Definition declare command has succeeded!',
-      details: { ...content },
-    });
+    if (content.service_id === this.config.serviceId) {
+      this.logger.log({
+        message: 'Entity Definition declare command has succeeded!',
+        details: { ...content },
+      });
+    }
   }
 }

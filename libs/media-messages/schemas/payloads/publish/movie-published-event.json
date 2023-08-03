@@ -7,20 +7,8 @@
     "content_id": {
       "$ref": "./common.json#/definitions/movie_id"
     },
-    "title": {
-      "description": "Title of the movie.",
-      "$ref": "../common.json#/definitions/non_empty_string"
-    },
     "original_title": {
       "description": "Original title of the movie.",
-      "type": "string"
-    },
-    "synopsis": {
-      "description": "Short description of the main plot elements.",
-      "$ref": "../common.json#/definitions/non_empty_string"
-    },
-    "description": {
-      "description": "Extended synopsis.",
       "type": "string"
     },
     "studio": {
@@ -61,15 +49,48 @@
     },
     "videos": {
       "$ref": "./common.json#/definitions/videos"
+    },
+    "localizations": {
+      "description": "Localizations for every defined locale.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "title": "movie_localization",
+        "required": ["is_default_locale", "language_tag", "title"],
+        "properties": {
+          "is_default_locale": {
+            "type": "boolean",
+            "description": "Boolean flag to indicate if locale is default or not."
+          },
+          "language_tag": {
+            "type": "string",
+            "description": "The locale for which the values are localized."
+          },
+          "title": {
+            "type": "string",
+            "description": "The localized title of this movie."
+          },
+          "description": {
+            "type": ["string", "null"],
+            "description": "The localized description of this movie."
+          },
+          "synopsis": {
+            "type": ["string", "null"],
+            "description": "The localized synopsis of this movie."
+          }
+        }
+      }
     }
   },
   "required": [
     "content_id",
-    "title",
     "licenses",
     "genre_ids",
     "images",
-    "videos"
+    "videos",
+    "localizations"
   ],
   "additionalProperties": false
 }
