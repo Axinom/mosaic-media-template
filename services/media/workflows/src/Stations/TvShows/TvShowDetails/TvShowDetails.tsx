@@ -33,7 +33,6 @@ import {
   MutationDeleteTvshowsProductionCountryArgs,
   MutationDeleteTvshowsTagArgs,
   MutationDeleteTvshowsTvshowGenreArgs,
-  PublishStatus,
   SearchTvShowCastDocument,
   SearchTvShowCastQuery,
   SearchTvShowCastQueryVariables,
@@ -283,7 +282,7 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
-          {values.publishStatus === PublishStatus.Published ? (
+          {values.publishedDate ? (
             <Paragraph title="Last Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
