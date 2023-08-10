@@ -50,9 +50,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
     ]),
   );
 
-  app.registerRouteResolver({
-    station: 'tv_show-details',
-    resolver: (dynamicSegments?: Record<string, string> | string) => {
+  app.setRouteResolver(
+    'tv_show-details',
+    (dynamicSegments?: Record<string, string> | string) => {
       const tvshowId =
         typeof dynamicSegments === 'string'
           ? dynamicSegments
@@ -60,13 +60,13 @@ export function register(app: PiletApi, extensions: Extensions): void {
 
       return tvshowId ? `/tvshows/${tvshowId}` : undefined;
     },
-  });
+  );
 
-  app.registerRouteResolver({
-    station: 'tv_show_genre-details',
-    resolver: (_dynamicRouteSegments?: Record<string, string> | string) =>
+  app.setRouteResolver(
+    'tv_show_genre-details',
+    (_dynamicRouteSegments?: Record<string, string> | string) =>
       '/settings/media/tvshowgenres',
-  });
+  );
 
   app.registerTile(
     {

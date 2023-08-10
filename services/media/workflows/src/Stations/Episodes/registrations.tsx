@@ -36,9 +36,11 @@ export function register(app: PiletApi, extensions: Extensions): void {
     ]),
   );
 
-  app.registerRouteResolver({
-    station: 'episode-details',
-    resolver: (dynamicRouteSegments?: Record<string, string> | string) => {
+  app.setRouteResolver(
+    'episode-details',
+    (
+      dynamicRouteSegments?: Record<string, string> | string,
+    ): string | undefined => {
       const episodeId =
         typeof dynamicRouteSegments === 'string'
           ? dynamicRouteSegments
@@ -46,7 +48,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
 
       return episodeId ? `/episodes/${episodeId}` : undefined;
     },
-  });
+  );
 
   app.registerTile(
     {

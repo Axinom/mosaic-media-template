@@ -37,9 +37,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
     ]),
   );
 
-  app.registerRouteResolver({
-    station: 'season-details',
-    resolver: (dynamicRouteSegments?: Record<string, string> | string) => {
+  app.setRouteResolver(
+    'season-details',
+    (dynamicRouteSegments?: Record<string, string> | string) => {
       const dynamicRouteSegmentsString =
         typeof dynamicRouteSegments === 'string'
           ? dynamicRouteSegments
@@ -49,7 +49,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
         ? `/seasons/${dynamicRouteSegmentsString}`
         : undefined;
     },
-  });
+  );
 
   app.registerTile(
     {
