@@ -8,7 +8,7 @@ import { CuePoint, VideoStream } from 'media-messages';
 import urljoin from 'url-join';
 import { CommonErrors } from '../../../common';
 import { videoCuePointTypes } from '../../../domains/register-video-cue-point-types';
-import { getSdk, GetVideosQuery } from '../../../generated/graphql/encoding';
+import { getSdk, GetVideosQuery } from '../../../generated/graphql/video';
 import { SnapshotValidationResult } from '../../../publishing';
 import { PublishVideo, TrailerJSONSelectable } from '../models';
 
@@ -133,7 +133,7 @@ const processVideo = (
 };
 
 export const getVideosMetadata = async (
-  encodingServiceBaseUrl: string,
+  videoServiceBaseUrl: string,
   authToken: string,
   mainVideoId: string | null,
   trailers: TrailerJSONSelectable[],
@@ -148,9 +148,7 @@ export const getVideosMetadata = async (
   }
 
   try {
-    const client = new GraphQLClient(
-      urljoin(encodingServiceBaseUrl, 'graphql'),
-    );
+    const client = new GraphQLClient(urljoin(videoServiceBaseUrl, 'graphql'));
     const { GetVideos } = getSdk(client);
     const { data } = await GetVideos(
       {
@@ -167,7 +165,7 @@ export const getVideosMetadata = async (
         ...CommonErrors.PublishVideosMetadataRequestError,
         logInfo: {
           reason:
-            'The request to the Encoding Service succeeded, but no videos were returned and an explicit error was not thrown.',
+            'The request to the Video Service succeeded, but no videos were returned and an explicit error was not thrown.',
         },
       });
     }
