@@ -1,6 +1,6 @@
 [
   {
-    "serviceId": "ax-encoding-service",
+    "serviceId": "ax-video-service",
     "permissions": ["SETTINGS_VIEW"]
   }
 ]

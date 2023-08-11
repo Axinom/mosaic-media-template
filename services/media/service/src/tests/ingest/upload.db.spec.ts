@@ -129,7 +129,7 @@ describe('Movies GraphQL endpoints', () => {
           'MOVIES_EDIT',
           'TVSHOWS_EDIT',
         ],
-        'ax-encoding-service': ['VIDEOS_EDIT'],
+        'ax-video-service': ['VIDEOS_EDIT'],
       },
     });
     defaultRequestContext = createTestRequestContext(
