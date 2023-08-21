@@ -1,4 +1,4 @@
-import { SubscriptionsPluginFactory } from '@axinom/mosaic-service-common';
+import { SubscriptionsPluginFactory } from '@axinom/mosaic-graphql-common';
 import { makePluginByCombiningPlugins } from 'graphile-utils';
 import { AllCollectionDevPlugins, AllCollectionPlugins } from './collections';
 import { AllMovieDevPlugins, AllMoviePlugins } from './movies';

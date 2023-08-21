@@ -2,7 +2,7 @@ import {
   BulkIdParameters,
   DefinePlugin,
   GenericBulkPluginFactory,
-} from '@axinom/mosaic-service-common';
+} from '@axinom/mosaic-graphql-common';
 import { Plugin } from 'graphile-build';
 import * as GraphQL from 'graphql';
 import { getLongLivedToken } from '../../common';

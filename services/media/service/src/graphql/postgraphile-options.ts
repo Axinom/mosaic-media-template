@@ -1,5 +1,14 @@
 import { buildPgSettings, OwnerPgPool } from '@axinom/mosaic-db-common';
 import {
+  AddErrorCodesEnumPluginFactory,
+  AnnotateTypesWithPermissionsPlugin,
+  enhanceGraphqlErrors,
+  getWebsocketFromRequest,
+  OperationsEnumGeneratorPluginFactory,
+  PostgraphileOptionsBuilder,
+  ValidationDirectivesPlugin,
+} from '@axinom/mosaic-graphql-common';
+import {
   AuthenticationConfig,
   AxGuardPlugin,
   EnforceStrictPermissionsPlugin,
@@ -8,16 +17,11 @@ import {
 } from '@axinom/mosaic-id-guard';
 import { Broker } from '@axinom/mosaic-message-bus';
 import {
-  AddErrorCodesEnumPluginFactory,
-  AnnotateTypesWithPermissionsPlugin,
+  customizeGraphQlErrorFields,
   defaultWriteLogMapper,
-  getWebsocketFromRequest,
-  graphqlErrorsHandler,
   Logger,
+  logGraphQlError,
   MosaicErrors,
-  OperationsEnumGeneratorPluginFactory,
-  PostgraphileOptionsBuilder,
-  ValidationDirectivesPlugin,
 } from '@axinom/mosaic-service-common';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import { Request, Response } from 'express';
@@ -53,11 +57,12 @@ export const buildPostgraphileOptions = (
   return new PostgraphileOptionsBuilder()
     .setDefaultSettings(config.isDev, config.graphqlGuiEnabled)
     .setHeader('Access-Control-Max-Age', 86400)
-    .setErrorsHandler((errors) => {
-      return graphqlErrorsHandler(
+    .setErrorsHandler((errors, req) => {
+      return enhanceGraphqlErrors(
         errors,
-        mediaPgErrorMapper,
-        defaultWriteLogMapper,
+        req.body.operationName,
+        customizeGraphQlErrorFields(mediaPgErrorMapper),
+        logGraphQlError(defaultWriteLogMapper),
       );
     })
     .setPgSettings(async (req) => {
