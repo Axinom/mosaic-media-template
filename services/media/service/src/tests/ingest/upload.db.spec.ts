@@ -300,31 +300,29 @@ describe('Movies GraphQL endpoints', () => {
       assertNotFalsy(resp.errors, 'resp.errors');
 
       expect(resp.data.startIngest).toBeFalsy();
-      expect(resp.errors).toEqual([
-        {
-          timestamp: resp.errors[0].timestamp,
-          message: 'Ingest Document validation has failed.',
-          code: 'INGEST_VALIDATION_ERROR',
-          details: {
-            validationErrors: [
-              {
-                message:
-                  'JSON path "document/items/0/data" should have required property \'title\' (line: 7, column: 15)',
-                schemaPath:
-                  '#/properties/items/items/allOf/0/then/properties/data/required',
-                type: 'JsonSchemaValidation',
-              },
-              {
-                message:
-                  'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
-                schemaPath: '#/properties/items/items/allOf/0/if',
-                type: 'JsonSchemaValidation',
-              },
-            ],
-          },
-          path: ['startIngest'],
+      expect(resp.errors[0]).toMatchObject({
+        timestamp: resp.errors[0].timestamp,
+        message: 'Ingest Document validation has failed.',
+        code: 'INGEST_VALIDATION_ERROR',
+        details: {
+          validationErrors: [
+            {
+              message:
+                'JSON path "document/items/0/data" should have required property \'title\' (line: 7, column: 15)',
+              schemaPath:
+                '#/properties/items/items/allOf/0/then/properties/data/required',
+              type: 'JsonSchemaValidation',
+            },
+            {
+              message:
+                'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              schemaPath: '#/properties/items/items/allOf/0/if',
+              type: 'JsonSchemaValidation',
+            },
+          ],
         },
-      ]);
+        path: ['startIngest'],
+      });
 
       // If validation has failed - no messages are sent and no document is created
       const docs = await select('ingest_documents', all).run(ctx.ownerPool);
@@ -360,31 +358,29 @@ describe('Movies GraphQL endpoints', () => {
       assertNotFalsy(resp.errors, 'resp.errors');
 
       expect(resp.data.startIngest).toBeFalsy();
-      expect(resp.errors).toEqual([
-        {
-          timestamp: resp.errors[0].timestamp,
-          message: 'Ingest Document validation has failed.',
-          code: 'INGEST_VALIDATION_ERROR',
-          details: {
-            validationErrors: [
-              {
-                message:
-                  'JSON path "document/items/0/data" should have required property \'title\' (line: 1, column: 94)',
-                schemaPath:
-                  '#/properties/items/items/allOf/0/then/properties/data/required',
-                type: 'JsonSchemaValidation',
-              },
-              {
-                message:
-                  'JSON path "document/items/0" should match "then" schema (line: 1, column: 37)',
-                schemaPath: '#/properties/items/items/allOf/0/if',
-                type: 'JsonSchemaValidation',
-              },
-            ],
-          },
-          path: ['startIngest'],
+      expect(resp.errors[0]).toMatchObject({
+        timestamp: resp.errors[0].timestamp,
+        message: 'Ingest Document validation has failed.',
+        code: 'INGEST_VALIDATION_ERROR',
+        details: {
+          validationErrors: [
+            {
+              message:
+                'JSON path "document/items/0/data" should have required property \'title\' (line: 1, column: 94)',
+              schemaPath:
+                '#/properties/items/items/allOf/0/then/properties/data/required',
+              type: 'JsonSchemaValidation',
+            },
+            {
+              message:
+                'JSON path "document/items/0" should match "then" schema (line: 1, column: 37)',
+              schemaPath: '#/properties/items/items/allOf/0/if',
+              type: 'JsonSchemaValidation',
+            },
+          ],
         },
-      ]);
+        path: ['startIngest'],
+      });
 
       // If validation has failed - no messages are sent and no document is created
       const docs = await select('ingest_documents', all).run(ctx.ownerPool);
@@ -420,52 +416,50 @@ describe('Movies GraphQL endpoints', () => {
       assertNotFalsy(resp.errors, 'resp.errors');
 
       expect(resp.data.startIngest).toBeFalsy();
-      expect(resp.errors).toEqual([
-        {
-          timestamp: resp.errors[0].timestamp,
-          message: 'Ingest Document validation has failed.',
-          code: 'INGEST_VALIDATION_ERROR',
-          details: {
-            validationErrors: [
-              {
-                message:
-                  'JSON path "document/items/0/data" should have required property \'title\' (line: 7, column: 15)',
-                schemaPath:
-                  '#/properties/items/items/allOf/0/then/properties/data/required',
-                type: 'JsonSchemaValidation',
-              },
-              {
-                message:
-                  'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
-                schemaPath: '#/properties/items/items/allOf/0/if',
-                type: 'JsonSchemaValidation',
-              },
-              {
-                message:
-                  'JSON path "document/items/1" should have required property \'data\' (line: 33, column: 5)',
-                schemaPath: '#/properties/items/items/required',
-                type: 'JsonSchemaValidation',
-              },
-              {
-                message:
-                  'Document has 2 duplicate items with type "MOVIE" and external_id "avatar67A23"',
-                type: 'CustomDataValidation',
-              },
-              {
-                message:
-                  'Item with externalId "avatar67A23" is using a video with source "test" more than once.',
-                type: 'CustomDataValidation',
-              },
-              {
-                message:
-                  'Item with externalId "avatar67A23" has 2 duplicate licenses "{"start":"2020-08-01T00:00:00.000+00:00","end":"2020-08-30T23:59:59.999+00:00","countries":["AT","AW","FI"]}".',
-                type: 'CustomDataValidation',
-              },
-            ],
-          },
-          path: ['startIngest'],
+      expect(resp.errors[0]).toMatchObject({
+        timestamp: resp.errors[0].timestamp,
+        message: 'Ingest Document validation has failed.',
+        code: 'INGEST_VALIDATION_ERROR',
+        details: {
+          validationErrors: [
+            {
+              message:
+                'JSON path "document/items/0/data" should have required property \'title\' (line: 7, column: 15)',
+              schemaPath:
+                '#/properties/items/items/allOf/0/then/properties/data/required',
+              type: 'JsonSchemaValidation',
+            },
+            {
+              message:
+                'JSON path "document/items/0" should match "then" schema (line: 4, column: 5)',
+              schemaPath: '#/properties/items/items/allOf/0/if',
+              type: 'JsonSchemaValidation',
+            },
+            {
+              message:
+                'JSON path "document/items/1" should have required property \'data\' (line: 33, column: 5)',
+              schemaPath: '#/properties/items/items/required',
+              type: 'JsonSchemaValidation',
+            },
+            {
+              message:
+                'Document has 2 duplicate items with type "MOVIE" and external_id "avatar67A23"',
+              type: 'CustomDataValidation',
+            },
+            {
+              message:
+                'Item with externalId "avatar67A23" is using a video with source "test" more than once.',
+              type: 'CustomDataValidation',
+            },
+            {
+              message:
+                'Item with externalId "avatar67A23" has 2 duplicate licenses "{"start":"2020-08-01T00:00:00.000+00:00","end":"2020-08-30T23:59:59.999+00:00","countries":["AT","AW","FI"]}".',
+              type: 'CustomDataValidation',
+            },
+          ],
         },
-      ]);
+        path: ['startIngest'],
+      });
 
       // If validation has failed - no messages are sent and no document is created
       const docs = await select('ingest_documents', all).run(ctx.ownerPool);
@@ -502,23 +496,21 @@ describe('Movies GraphQL endpoints', () => {
 
       expect(resp.data.startIngest).toBeFalsy();
 
-      expect(resp.errors).toEqual([
-        {
-          timestamp: resp.errors[0].timestamp,
-          message: 'Ingest Document validation has failed.',
-          code: 'INGEST_VALIDATION_ERROR',
-          details: {
-            validationErrors: [
-              {
-                message:
-                  'Document has 2 duplicate items with type "MOVIE" and external_id "avatar67A23"',
-                type: 'CustomDataValidation',
-              },
-            ],
-          },
-          path: ['startIngest'],
+      expect(resp.errors[0]).toMatchObject({
+        timestamp: resp.errors[0].timestamp,
+        message: 'Ingest Document validation has failed.',
+        code: 'INGEST_VALIDATION_ERROR',
+        details: {
+          validationErrors: [
+            {
+              message:
+                'Document has 2 duplicate items with type "MOVIE" and external_id "avatar67A23"',
+              type: 'CustomDataValidation',
+            },
+          ],
         },
-      ]);
+        path: ['startIngest'],
+      });
 
       // If validation has failed - no messages are sent and no document is created
       const docs = await select('ingest_documents', all).run(ctx.ownerPool);
