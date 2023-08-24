@@ -41,10 +41,11 @@
     "util:define-func-migration": "yarn mosaic generate-define-func-migration"
   },
   "dependencies": {
-    "@axinom/mosaic-db-common": "0.25.2",
-    "@axinom/mosaic-message-bus": "0.14.7",
-    "@axinom/mosaic-message-bus-abstractions": "0.5.7",
-    "@axinom/mosaic-service-common": "0.35.0",
+    "@axinom/mosaic-db-common": "0.25.3-rc.11",
+    "@axinom/mosaic-message-bus": "0.15.0-rc.5",
+    "@axinom/mosaic-message-bus-abstractions": "0.5.8-rc.11",
+    "@axinom/mosaic-service-common": "0.36.0-rc.11",
+    "@axinom/mosaic-graphql-common": "0.1.0-rc.2",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "add": "^2.0.6",
     "amqplib": "^0.6.0",

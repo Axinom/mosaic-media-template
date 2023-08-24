@@ -1,5 +1,10 @@
 import { OwnerPgPool } from '@axinom/mosaic-db-common';
 import {
+  AddErrorCodesEnumPluginFactory,
+  enhanceGraphqlErrors,
+  PostgraphileOptionsBuilder,
+} from '@axinom/mosaic-graphql-common';
+import {
   AuthenticationConfig,
   AxGuardPlugin,
   getEndUserAuthenticationContext,
@@ -7,13 +12,12 @@ import {
 } from '@axinom/mosaic-id-guard';
 import { EndUserAuthorizationConfig } from '@axinom/mosaic-id-utils';
 import {
-  AddErrorCodesEnumPluginFactory,
+  customizeGraphQlErrorFields,
   defaultPgErrorMapper,
-  graphqlErrorsHandler,
   isNullOrWhitespace,
   Logger,
+  logGraphQlError,
   MosaicErrors,
-  PostgraphileOptionsBuilder,
   WebhookErrors,
 } from '@axinom/mosaic-service-common';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
@@ -40,11 +44,12 @@ export const buildPostgraphileOptions = (
   const logger = new Logger({ config, context: buildPostgraphileOptions.name });
   let options = new PostgraphileOptionsBuilder()
     .setDefaultSettings(config.isDev, config.graphqlGuiEnabled)
-    .setErrorsHandler((errors) => {
-      return graphqlErrorsHandler(
+    .setErrorsHandler((errors, req) => {
+      return enhanceGraphqlErrors(
         errors,
-        defaultPgErrorMapper,
-        entitlementLogMapper,
+        req.body.operationName,
+        customizeGraphQlErrorFields(defaultPgErrorMapper),
+        logGraphQlError(entitlementLogMapper),
       );
     })
     .setPgSettings(async () => ({ role: config.dbGqlRole }))
