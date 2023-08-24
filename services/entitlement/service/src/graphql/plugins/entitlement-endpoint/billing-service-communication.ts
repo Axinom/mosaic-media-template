@@ -12,19 +12,12 @@ const getBillingMappedError = mosaicErrorMappingFactory(
     if (error instanceof ClientError) {
       return {
         ...CommonErrors.BillingErrors,
-        details: { errors: error.response.errors },
+        logInfo: { errors: error.response.errors },
       };
     }
 
     if (error?.code === 'ECONNREFUSED' || error?.code === 'ENOTFOUND') {
       return CommonErrors.BillingConnectionFailed;
-      /*return {
-        ...CommonErrors.BillingConnectionFailed,
-        details: {
-          code: error.code,
-          message: error.message,
-        },
-      };*/
     }
 
     return undefined;

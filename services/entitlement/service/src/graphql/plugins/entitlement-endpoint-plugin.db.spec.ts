@@ -311,23 +311,23 @@ describe('EntitlementEndpointPlugin', () => {
 
         // Assert
         expect(resp.data?.entitlement).toBeFalsy();
+        expect(resp.errors).toMatchObject([
+          {
+            message:
+              "Error(s) occurred while trying to retrieve the movie with ID 'movie-1' from the catalog service. Please contact the service support.",
+            code: CommonErrors.CatalogErrors.code,
+            path: ['entitlement'],
+            details: undefined,
+          },
+        ]);
 
-        expect(resp.errors![0]).toMatchObject({
-          message:
-            "Error(s) occurred while trying to retrieve the movie with ID 'movie-1' from the catalog service. Please contact the service support.",
-          code: CommonErrors.CatalogErrors.code,
-          path: ['entitlement'],
-        });
         const loggedObject = getFirstMockResult<any>(errorOverride);
-
         expect(loggedObject).toMatchObject({
           message:
             "Error(s) occurred while trying to retrieve the movie with ID 'movie-1' from the catalog service. Please contact the service support.",
           loglevel: 'ERROR',
           error: {
-            extensions: {
-              errors: [{ message: 'Some catalog error occurred.' }],
-            },
+            logInfo: { errors: [{ message: 'Some catalog error occurred.' }] },
           },
         });
       },
@@ -371,12 +371,15 @@ describe('EntitlementEndpointPlugin', () => {
 
         // Assert
         expect(resp.data?.entitlement).toBeFalsy();
-        expect(resp.errors![0]).toMatchObject({
-          message:
-            'Error(s) occurred while trying to retrieve active subscription from the billing service. Please contact the service support.',
-          code: CommonErrors.BillingErrors.code,
-          path: ['entitlement'],
-        });
+        expect(resp.errors).toMatchObject([
+          {
+            message:
+              'Error(s) occurred while trying to retrieve active subscription from the billing service. Please contact the service support.',
+            code: CommonErrors.BillingErrors.code,
+            path: ['entitlement'],
+            details: undefined,
+          },
+        ]);
 
         const loggedObject = getFirstMockResult<any>(errorOverride);
         expect(loggedObject).toMatchObject({
@@ -384,7 +387,7 @@ describe('EntitlementEndpointPlugin', () => {
             'Error(s) occurred while trying to retrieve active subscription from the billing service. Please contact the service support.',
           loglevel: 'ERROR',
           error: {
-            extensions: {
+            logInfo: {
               errors: [{ message: 'Some billing error occurred.' }],
             },
           },
@@ -740,12 +743,15 @@ describe('EntitlementEndpointPlugin', () => {
 
         // Assert
         expect(resp.data?.entitlement).toBeFalsy();
-        expect(resp.errors![0]).toMatchObject({
-          message:
-            'We were unable to connect to the catalog service. Please contact the service support or try again later.',
-          code: CommonErrors.CatalogConnectionFailed.code,
-          path: ['entitlement'],
-        });
+        expect(resp.errors).toMatchObject([
+          {
+            message:
+              'We were unable to connect to the catalog service. Please contact the service support or try again later.',
+            code: CommonErrors.CatalogConnectionFailed.code,
+            path: ['entitlement'],
+            details: undefined,
+          },
+        ]);
 
         const loggedObject = getFirstMockResult<any>(errorOverride);
         expect(loggedObject).toMatchObject({
@@ -753,7 +759,7 @@ describe('EntitlementEndpointPlugin', () => {
             'We were unable to connect to the catalog service. Please contact the service support or try again later.',
           loglevel: 'ERROR',
           error: {
-            extensions: {
+            innerError: {
               code,
               message: 'Custom request error',
             },
@@ -790,12 +796,15 @@ describe('EntitlementEndpointPlugin', () => {
 
         // Assert
         expect(resp.data?.entitlement).toBeFalsy();
-        expect(resp.errors![0]).toMatchObject({
-          message:
-            'We were unable to connect to the billing service. Please contact the service support or try again later.',
-          code: CommonErrors.BillingConnectionFailed.code,
-          path: ['entitlement'],
-        });
+        expect(resp.errors).toMatchObject([
+          {
+            message:
+              'We were unable to connect to the billing service. Please contact the service support or try again later.',
+            code: CommonErrors.BillingConnectionFailed.code,
+            path: ['entitlement'],
+            details: undefined,
+          },
+        ]);
 
         const loggedObject = getFirstMockResult<any>(errorOverride);
         expect(loggedObject).toMatchObject({
@@ -803,7 +812,7 @@ describe('EntitlementEndpointPlugin', () => {
             'We were unable to connect to the billing service. Please contact the service support or try again later.',
           loglevel: 'ERROR',
           error: {
-            extensions: {
+            innerError: {
               code,
               message: 'Custom request error',
             },
@@ -842,7 +851,7 @@ describe('EntitlementEndpointPlugin', () => {
         loglevel: 'ERROR',
         details: { code: MosaicErrors.UnhandledError.code },
         error: {
-          extensions: {
+          innerError: {
             details: {
               originalError: {
                 message: 'Custom request error',
@@ -889,11 +898,14 @@ describe('EntitlementEndpointPlugin', () => {
 
         // Assert
         expect(resp.data?.entitlement).toBeFalsy();
-        expect(resp.errors![0]).toMatchObject({
-          message: errors[0].message,
-          code: errors[0].code,
-          path: ['entitlement'],
-        });
+        expect(resp.errors).toMatchObject([
+          {
+            message: errors[0].message,
+            code: errors[0].code,
+            path: ['entitlement'],
+            details: undefined,
+          },
+        ]);
 
         const loggedObject = getFirstMockResult<any>(debugOverride);
         expect(loggedObject).toMatchObject({
@@ -901,7 +913,7 @@ describe('EntitlementEndpointPlugin', () => {
           loglevel: 'DEBUG',
           details: { code: errors[0].code },
           error: {
-            extensions: {
+            logInfo: {
               errors,
             },
           },
@@ -939,11 +951,14 @@ describe('EntitlementEndpointPlugin', () => {
 
         // Assert
         expect(resp.data?.entitlement).toBeFalsy();
-        expect(resp.errors![0]).toMatchObject({
-          message: errors[0].message,
-          code: errors[0].code,
-          path: ['entitlement'],
-        });
+        expect(resp.errors).toMatchObject([
+          {
+            message: errors[0].message,
+            code: errors[0].code,
+            path: ['entitlement'],
+            details: undefined,
+          },
+        ]);
 
         const loggedObject = getFirstMockResult<any>(errorOverride);
         expect(loggedObject).toMatchObject({
@@ -951,7 +966,7 @@ describe('EntitlementEndpointPlugin', () => {
           loglevel: 'ERROR',
           details: { code: errors[0].code },
           error: {
-            extensions: { errors },
+            logInfo: { errors },
           },
         });
       },
@@ -986,10 +1001,13 @@ describe('EntitlementEndpointPlugin', () => {
 
       // Assert
       expect(resp.data?.entitlement).toBeFalsy();
-      expect(resp.errors![0]).toMatchObject({
-        ...CommonErrors.UnableToPlaybackVideo,
-        path: ['entitlement'],
-      });
+      expect(resp.errors).toMatchObject([
+        {
+          ...CommonErrors.UnableToPlaybackVideo,
+          path: ['entitlement'],
+          details: undefined,
+        },
+      ]);
 
       const loggedObject = getFirstMockResult<any>(errorOverride);
       expect(loggedObject).toMatchObject({
@@ -1001,18 +1019,25 @@ describe('EntitlementEndpointPlugin', () => {
         message: 'Unable to playback video.',
         details: {
           code: CommonErrors.UnableToPlaybackVideo.code,
+          graphQlOperations: [
+            {
+              name: 'Entitlement',
+              operation: 'query',
+              rootEndpoints: ['entitlement'],
+            },
+          ],
         },
         error: {
           ...CommonErrors.UnableToPlaybackVideo,
-          extensions: {
+          logInfo: {
             clientIpAddress: '******',
             hint: 'The location of the user could not be confirmed based on his IP address.',
           },
         },
       });
       expect(Object.keys(loggedObject)).toHaveLength(8);
-      expect(Object.keys(loggedObject.error)).toHaveLength(7);
-      expect(Object.keys(loggedObject.details)).toHaveLength(3);
+      expect(Object.keys(loggedObject.error)).toHaveLength(5);
+      expect(Object.keys(loggedObject.details)).toHaveLength(2);
     });
   });
 
