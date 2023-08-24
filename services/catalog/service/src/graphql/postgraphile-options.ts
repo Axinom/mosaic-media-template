@@ -1,9 +1,13 @@
 import {
   AddErrorCodesEnumPluginFactory,
-  defaultPgErrorMapper,
-  graphqlErrorsHandler,
-  MosaicErrors,
+  enhanceGraphqlErrors,
   PostgraphileOptionsBuilder,
+} from '@axinom/mosaic-graphql-common';
+import {
+  customizeGraphQlErrorFields,
+  defaultPgErrorMapper,
+  logGraphQlError,
+  MosaicErrors,
 } from '@axinom/mosaic-service-common';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import { Request, Response } from 'express';
@@ -23,11 +27,12 @@ export function buildPostgraphileOptions(
 ): PostGraphileOptions<Request, Response> {
   return new PostgraphileOptionsBuilder()
     .setDefaultSettings(config.isDev, config.graphqlGuiEnabled)
-    .setErrorsHandler((errors) => {
-      return graphqlErrorsHandler(
+    .setErrorsHandler((errors, req) => {
+      return enhanceGraphqlErrors(
         errors,
-        defaultPgErrorMapper,
-        catalogLogMapper,
+        req.body.operationName,
+        customizeGraphQlErrorFields(defaultPgErrorMapper),
+        logGraphQlError(catalogLogMapper),
       );
     })
     .setHeader('Access-Control-Max-Age', 86400)

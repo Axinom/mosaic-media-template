@@ -5,13 +5,15 @@ import {
   OwnerPgPool,
   runCurrentSql,
 } from '@axinom/mosaic-db-common';
+import { enhanceGraphqlErrors } from '@axinom/mosaic-graphql-common';
 import {
   assertError,
+  customizeGraphQlErrorFields,
   defaultPgErrorMapper,
   Dict,
   GraphQLErrorEnhanced,
-  graphqlErrorsHandler,
   Logger,
+  logGraphQlError,
   MosaicError,
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
@@ -79,11 +81,11 @@ const runGqlQuery = async function (
 
       // Transform errors
       if (result.errors) {
-        result.errors = graphqlErrorsHandler(
+        result.errors = enhanceGraphqlErrors(
           result.errors,
-          defaultPgErrorMapper,
-          catalogLogMapper,
-          this.logger,
+          req.body.operationName,
+          customizeGraphQlErrorFields(defaultPgErrorMapper),
+          logGraphQlError(catalogLogMapper, this.logger),
         );
       }
       return result;

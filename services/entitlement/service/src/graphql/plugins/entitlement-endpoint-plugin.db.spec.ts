@@ -1019,9 +1019,13 @@ describe('EntitlementEndpointPlugin', () => {
         message: 'Unable to playback video.',
         details: {
           code: CommonErrors.UnableToPlaybackVideo.code,
-          request: {
-            path: ['entitlement'],
-          },
+          graphQlOperations: [
+            {
+              name: 'Entitlement',
+              operation: 'query',
+              rootEndpoints: ['entitlement'],
+            },
+          ],
         },
         error: {
           ...CommonErrors.UnableToPlaybackVideo,
