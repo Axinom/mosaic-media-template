@@ -51,7 +51,7 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
             if (isNullOrWhitespace(countryCode)) {
               throw new MosaicError({
                 ...CommonErrors.UnableToPlaybackVideo,
-                logInfo: {
+                details: {
                   hint: 'The location of the user could not be confirmed based on his IP address.',
                   clientIpAddress,
                 },
