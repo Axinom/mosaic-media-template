@@ -69,9 +69,11 @@ serviceAccounts:
 
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.
-  - name: 'media_workflows'
+  # Use the pilet's package name as the 'name', and any ENV arguments required by the pilet under 'args'.
+  - name: 'media-workflows'
     args:
-      MEDIA_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.self.api}'
+      MEDIA_MANAGEMENT_HOST: '${__ax_hosted__.dns.self.api}'
+      MEDIA_MANAGEMENT_HTTP_PROTOCOL: 'https'
 
 dnsMappedPorts:
   # Defines the DNS subdomains that will provisioned and be mapped to the ports exposed by the service
