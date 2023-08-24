@@ -44,18 +44,21 @@ const getCatalogMappedError = mosaicErrorMappingFactory<{
       return {
         message: gqlError.message,
         code: gqlError.code,
-        logInfo: { errors: error.response.errors },
+        details: { errors: error.response.errors },
       };
     }
     return {
       ...CommonErrors.CatalogErrors,
-      logInfo: { errors: error.response.errors },
+      details: { errors: error.response.errors },
       messageParams: [context?.type, context?.id],
     };
   }
 
   if (error?.code === 'ECONNREFUSED' || error?.code === 'ENOTFOUND') {
-    return CommonErrors.CatalogConnectionFailed;
+    return {
+      ...CommonErrors.CatalogConnectionFailed,
+      details: { code: error.code, message: error.message },
+    };
   }
 
   return undefined;
@@ -195,6 +198,8 @@ export const getVideoKeyIds = async (
         throw new UnreachableCaseError(type);
     }
   } catch (error) {
+    console.log('*****getVideoKeyIds ERROR*****');
+    console.log(error);
     throw getCatalogMappedError(error, { id, type });
   }
 };
