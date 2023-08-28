@@ -1,0 +1,9 @@
+import { url as debugUrl } from 'inspector';
+
+//TODO: Move this to jest.config.js as `testTimeout` property when this issue is
+//resolved: https://github.com/facebook/jest/issues/9696
+if (debugUrl() !== undefined) {
+  jest.setTimeout(60000); // wait for longer when debugging a test
+} else {
+  jest.setTimeout(30000);
+}
