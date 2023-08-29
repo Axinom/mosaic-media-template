@@ -11,8 +11,7 @@ import {
   pick,
 } from '@axinom/mosaic-service-common';
 import { from } from 'env-var';
-import { promises as fs } from 'fs';
-import { join, resolve } from 'path';
+import { updateEnvFile } from './helpers';
 
 async function main(): Promise<void> {
   const env = from(process.env);
@@ -87,41 +86,16 @@ const serviceAccountSetup = async (
     permissions,
   );
 
-  await updateEnvFile(serviceAccount.clientId, serviceAccount.clientSecret);
+  await updateEnvFile({
+    MOSAIC_HOSTING_CLIENT_ID: serviceAccount.clientId,
+    MOSAIC_HOSTING_CLIENT_SECRET: serviceAccount.clientSecret,
+  });
 
   console.log({
     message: `Service account "${serviceAccountName}" successfully created and its credentials added to the .env file.`,
     ...serviceAccount,
   });
 };
-
-async function updateEnvFile(
-  clientId: string,
-  clientSecret: string,
-): Promise<void> {
-  const envVarPath = resolve(join(process.cwd(), '.env'));
-  let envFileContent = await fs.readFile(envVarPath, { encoding: 'utf8' });
-
-  const clientIdRegex = /^MOSAIC_HOSTING_CLIENT_ID=.*$/gm;
-  const clientSecretRegex = /^MOSAIC_HOSTING_CLIENT_SECRET=.*$/gm;
-
-  const clientIdEnv = 'MOSAIC_HOSTING_CLIENT_ID=' + clientId;
-  const clientSecretEnv = 'MOSAIC_HOSTING_CLIENT_SECRET=' + clientSecret;
-
-  if (envFileContent.match(clientIdRegex) !== null) {
-    envFileContent = envFileContent.replace(clientIdRegex, clientIdEnv);
-  } else {
-    envFileContent += '\n' + clientIdEnv;
-  }
-
-  if (envFileContent.match(clientSecretRegex) !== null) {
-    envFileContent = envFileContent.replace(clientSecretRegex, clientSecretEnv);
-  } else {
-    envFileContent += '\n' + clientSecretEnv;
-  }
-
-  await fs.writeFile(envVarPath, envFileContent, 'utf8');
-}
 
 main().catch((error) => {
   console.error(error);
