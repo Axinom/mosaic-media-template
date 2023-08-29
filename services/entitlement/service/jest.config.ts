@@ -3,9 +3,13 @@ import type { JestConfigWithTsJest } from 'ts-jest';
 const jestConfig: JestConfigWithTsJest = {
   preset: 'ts-jest',
   modulePathIgnorePatterns: ['./dist/', './legacy/'],
-  setupFilesAfterEnv: ['jest-expect-message', 'jest-extended/all'],
+  setupFilesAfterEnv: [
+    'jest-expect-message',
+    'jest-extended/all',
+    '<rootDir>/jest.setup.ts',
+  ],
   displayName: 'entitlement-service',
-  testTimeout: 60000,
+  workerIdleMemoryLimit: '1GB',
 };
 
 export default jestConfig;
