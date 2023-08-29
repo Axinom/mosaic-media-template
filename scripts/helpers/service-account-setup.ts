@@ -4,36 +4,7 @@ import {
   getServiceAccountToken,
 } from '@axinom/mosaic-id-link-be';
 import { PermissionStructure } from '@axinom/mosaic-id-utils';
-import { promises as fs } from 'fs';
-import { join, resolve } from 'path';
-
-async function updateEnvFile(
-  clientId: string,
-  clientSecret: string,
-): Promise<void> {
-  const envVarPath = resolve(join(process.cwd(), '.env'));
-  let envFileContent = await fs.readFile(envVarPath, { encoding: 'utf8' });
-
-  const clientIdRegex = /^SERVICE_ACCOUNT_CLIENT_ID=.*$/gm;
-  const clientSecretRegex = /^SERVICE_ACCOUNT_CLIENT_SECRET=.*$/gm;
-
-  const clientIdEnv = 'SERVICE_ACCOUNT_CLIENT_ID=' + clientId;
-  const clientSecretEnv = 'SERVICE_ACCOUNT_CLIENT_SECRET=' + clientSecret;
-
-  if (envFileContent.match(clientIdRegex) !== null) {
-    envFileContent = envFileContent.replace(clientIdRegex, clientIdEnv);
-  } else {
-    envFileContent += '\n' + clientIdEnv;
-  }
-
-  if (envFileContent.match(clientSecretRegex) !== null) {
-    envFileContent = envFileContent.replace(clientSecretRegex, clientSecretEnv);
-  } else {
-    envFileContent += '\n' + clientSecretEnv;
-  }
-
-  await fs.writeFile(envVarPath, envFileContent, 'utf8');
-}
+import { updateEnvFile } from './update-env-file';
 
 export const serviceAccountSetup = async (
   idServiceAuthBaseUrl: string,
@@ -56,7 +27,10 @@ export const serviceAccountSetup = async (
     permissions,
   );
 
-  await updateEnvFile(serviceAccount.clientId, serviceAccount.clientSecret);
+  await updateEnvFile({
+    SERVICE_ACCOUNT_CLIENT_ID: serviceAccount.clientId,
+    SERVICE_ACCOUNT_CLIENT_SECRET: serviceAccount.clientSecret,
+  });
 
   console.log({
     message: `Service account "${serviceAccountName}" successfully created and its credentials added to the .env file.`,
