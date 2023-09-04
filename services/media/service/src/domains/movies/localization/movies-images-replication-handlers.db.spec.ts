@@ -153,7 +153,7 @@ describe('moviesImagesReplicationHandlers', () => {
       });
     });
 
-    it('image relation is deleted -> delete message data is retuSrned', async () => {
+    it('image relation is deleted -> delete message data is returned', async () => {
       // Act
       const result = await handlers.deleteHandler({
         ...defaultImage,

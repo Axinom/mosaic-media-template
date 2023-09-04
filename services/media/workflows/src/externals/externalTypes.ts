@@ -96,5 +96,16 @@ declare module '@axinom/mosaic-portal' {
   interface GetProviders {
     (type: FastProviderType): FastProviderData[];
   }
+  /**
+   * Route resolver registration function.
+   */
+  interface RegistrationFunction {
+    (
+      station: string,
+      resolver: (
+        dynamicRouteSegments?: Record<string, string> | string,
+      ) => void,
+    ): string | undefined;
+  }
 }
 // #endregion

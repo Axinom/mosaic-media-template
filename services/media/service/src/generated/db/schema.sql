@@ -3664,6 +3664,8 @@ CREATE TABLE app_public.collections (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
+ALTER TABLE ONLY app_public.collections REPLICA IDENTITY FULL;
+
 
 --
 -- Name: collections_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
@@ -3688,6 +3690,8 @@ CREATE TABLE app_public.collections_images (
     image_id uuid NOT NULL,
     image_type app_public.collection_image_type_enum NOT NULL
 );
+
+ALTER TABLE ONLY app_public.collections_images REPLICA IDENTITY FULL;
 
 
 --
@@ -3772,6 +3776,8 @@ CREATE TABLE app_public.episodes (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
+ALTER TABLE ONLY app_public.episodes REPLICA IDENTITY FULL;
+
 
 --
 -- Name: episodes_casts; Type: TABLE; Schema: app_public; Owner: -
@@ -3807,6 +3813,8 @@ CREATE TABLE app_public.episodes_images (
     image_id uuid NOT NULL,
     image_type app_public.episode_image_type_enum NOT NULL
 );
+
+ALTER TABLE ONLY app_public.episodes_images REPLICA IDENTITY FULL;
 
 
 --
@@ -4376,6 +4384,8 @@ CREATE TABLE app_public.seasons (
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL
 );
 
+ALTER TABLE ONLY app_public.seasons REPLICA IDENTITY FULL;
+
 
 --
 -- Name: seasons_casts; Type: TABLE; Schema: app_public; Owner: -
@@ -4411,6 +4421,8 @@ CREATE TABLE app_public.seasons_images (
     image_id uuid NOT NULL,
     image_type app_public.season_image_type_enum NOT NULL
 );
+
+ALTER TABLE ONLY app_public.seasons_images REPLICA IDENTITY FULL;
 
 
 --
@@ -4656,6 +4668,8 @@ CREATE TABLE app_public.tvshow_genres (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
+ALTER TABLE ONLY app_public.tvshow_genres REPLICA IDENTITY FULL;
+
 
 --
 -- Name: tvshow_genres_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
@@ -4712,6 +4726,8 @@ CREATE TABLE app_public.tvshows (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
+ALTER TABLE ONLY app_public.tvshows REPLICA IDENTITY FULL;
+
 
 --
 -- Name: tvshows_casts; Type: TABLE; Schema: app_public; Owner: -
@@ -4747,6 +4763,8 @@ CREATE TABLE app_public.tvshows_images (
     image_id uuid NOT NULL,
     image_type app_public.tvshow_image_type_enum NOT NULL
 );
+
+ALTER TABLE ONLY app_public.tvshows_images REPLICA IDENTITY FULL;
 
 
 --
@@ -10700,6 +10718,34 @@ CREATE PUBLICATION pg_localization_publication WITH (publish = 'insert, update, 
 
 
 --
+-- Name: pg_localization_publication collections; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.collections;
+
+
+--
+-- Name: pg_localization_publication collections_images; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.collections_images;
+
+
+--
+-- Name: pg_localization_publication episodes; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.episodes;
+
+
+--
+-- Name: pg_localization_publication episodes_images; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.episodes_images;
+
+
+--
 -- Name: pg_localization_publication movie_genres; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
 --
 
@@ -10718,6 +10764,41 @@ ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.movies;
 --
 
 ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.movies_images;
+
+
+--
+-- Name: pg_localization_publication seasons; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.seasons;
+
+
+--
+-- Name: pg_localization_publication seasons_images; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.seasons_images;
+
+
+--
+-- Name: pg_localization_publication tvshow_genres; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.tvshow_genres;
+
+
+--
+-- Name: pg_localization_publication tvshows; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.tvshows;
+
+
+--
+-- Name: pg_localization_publication tvshows_images; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
+--
+
+ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.tvshows_images;
 
 
 --
