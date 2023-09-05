@@ -8,7 +8,7 @@ import { ReplicationOperationHandlers } from '../../common';
 import { LOCALIZATION_MOVIE_GENRE_TYPE } from './constants';
 import { movieGenresReplicationHandlers } from './movie-genres-replication-handlers';
 
-describe('movie_genresReplicationHandlers', () => {
+describe('movieGenresReplicationHandlers', () => {
   let config: Config;
   let handlers: ReplicationOperationHandlers;
   let defaultMovieGenre: Partial<movie_genres.JSONSelectable>;

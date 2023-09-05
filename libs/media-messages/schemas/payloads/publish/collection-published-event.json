@@ -7,18 +7,6 @@
     "content_id": {
       "$ref": "./common.json#/definitions/collection_id"
     },
-    "title": {
-      "description": "Title of the collection.",
-      "$ref": "../common.json#/definitions/non_empty_string"
-    },
-    "synopsis": {
-      "description": "Short description.",
-      "type": "string"
-    },
-    "description": {
-      "description": "Longer description.",
-      "type": "string"
-    },
     "tags": {
       "$ref": "./common.json#/definitions/tags"
     },
@@ -60,8 +48,41 @@
         "required": ["order_no", "relation_type"],
         "additionalProperties": false
       }
+    },
+    "localizations": {
+      "description": "Localizations for every defined locale.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "title": "collection_localization",
+        "required": ["is_default_locale", "language_tag", "title"],
+        "properties": {
+          "is_default_locale": {
+            "type": "boolean",
+            "description": "Boolean flag to indicate if locale is default or not."
+          },
+          "language_tag": {
+            "type": "string",
+            "description": "The locale for which the values are localized."
+          },
+          "title": {
+            "type": "string",
+            "description": "The localized title of this collection."
+          },
+          "description": {
+            "type": ["string", "null"],
+            "description": "The localized description of this collection."
+          },
+          "synopsis": {
+            "type": ["string", "null"],
+            "description": "The localized synopsis of this collection."
+          }
+        }
+      }
     }
   },
-  "required": ["content_id", "title", "related_items"],
+  "required": ["content_id", "related_items", "localizations"],
   "additionalProperties": false
 }

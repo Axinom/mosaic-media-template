@@ -695,24 +695,6 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
-      * **collection.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
-      /**
-      * **collection.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis: string | null;
-      /**
-      * **collection.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description: string | null;
-      /**
       * **collection.tags**
       * - `_text` in database
       * - Nullable, no default
@@ -726,24 +708,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id: string;
-      /**
-      * **collection.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
-      /**
-      * **collection.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis: string | null;
-      /**
-      * **collection.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description: string | null;
       /**
       * **collection.tags**
       * - `_text` in database
@@ -759,24 +723,6 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **collection.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **collection.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **collection.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **collection.tags**
       * - `_text` in database
       * - Nullable, no default
@@ -791,24 +737,6 @@ declare module 'zapatos/schema' {
       */
       id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **collection.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **collection.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **collection.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **collection.tags**
       * - `_text` in database
       * - Nullable, no default
@@ -822,24 +750,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **collection.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **collection.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **collection.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **collection.tags**
       * - `_text` in database
@@ -1312,6 +1222,235 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
+  export namespace collection_localizations {
+    export type Table = 'collection_localizations';
+    export interface Selectable {
+      /**
+      * **collection_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **collection_localizations.collection_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_id: string | null;
+      /**
+      * **collection_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **collection_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean;
+      /**
+      * **collection_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **collection_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+      /**
+      * **collection_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **collection_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **collection_localizations.collection_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_id: string | null;
+      /**
+      * **collection_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **collection_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean;
+      /**
+      * **collection_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **collection_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+      /**
+      * **collection_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **collection_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collection_localizations.collection_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collection_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collection_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collection_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collection_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collection_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **collection_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **collection_localizations.collection_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **collection_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **collection_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean | db.Parameter<boolean> | db.SQLFragment;
+      /**
+      * **collection_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **collection_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **collection_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **collection_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **collection_localizations.collection_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **collection_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **collection_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment>;
+      /**
+      * **collection_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **collection_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **collection_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'collection_localizations_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
   export namespace episode {
     export type Table = 'episode';
     export interface Selectable {
@@ -1334,29 +1473,11 @@ declare module 'zapatos/schema' {
       */
       index: number | null;
       /**
-      * **episode.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
-      /**
       * **episode.original_title**
       * - `text` in database
       * - Nullable, no default
       */
       original_title: string | null;
-      /**
-      * **episode.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis: string | null;
-      /**
-      * **episode.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description: string | null;
       /**
       * **episode.studio**
       * - `text` in database
@@ -1408,29 +1529,11 @@ declare module 'zapatos/schema' {
       */
       index: number | null;
       /**
-      * **episode.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
-      /**
       * **episode.original_title**
       * - `text` in database
       * - Nullable, no default
       */
       original_title: string | null;
-      /**
-      * **episode.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis: string | null;
-      /**
-      * **episode.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description: string | null;
       /**
       * **episode.studio**
       * - `text` in database
@@ -1482,29 +1585,11 @@ declare module 'zapatos/schema' {
       */
       index?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **episode.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **episode.original_title**
       * - `text` in database
       * - Nullable, no default
       */
       original_title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **episode.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **episode.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **episode.studio**
       * - `text` in database
@@ -1556,29 +1641,11 @@ declare module 'zapatos/schema' {
       */
       index?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **episode.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **episode.original_title**
       * - `text` in database
       * - Nullable, no default
       */
       original_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **episode.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **episode.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **episode.studio**
       * - `text` in database
@@ -1630,29 +1697,11 @@ declare module 'zapatos/schema' {
       */
       index?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **episode.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **episode.original_title**
       * - `text` in database
       * - Nullable, no default
       */
       original_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **episode.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **episode.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **episode.studio**
       * - `text` in database
@@ -2192,6 +2241,235 @@ declare module 'zapatos/schema' {
       end_time?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'episode_licenses_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  export namespace episode_localizations {
+    export type Table = 'episode_localizations';
+    export interface Selectable {
+      /**
+      * **episode_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **episode_localizations.episode_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      episode_id: string | null;
+      /**
+      * **episode_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **episode_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean;
+      /**
+      * **episode_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **episode_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+      /**
+      * **episode_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **episode_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **episode_localizations.episode_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      episode_id: string | null;
+      /**
+      * **episode_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **episode_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean;
+      /**
+      * **episode_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **episode_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+      /**
+      * **episode_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **episode_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_localizations.episode_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      episode_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **episode_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_localizations.episode_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      episode_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **episode_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean | db.Parameter<boolean> | db.SQLFragment;
+      /**
+      * **episode_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **episode_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **episode_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_localizations.episode_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      episode_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **episode_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment>;
+      /**
+      * **episode_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **episode_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'episode_localizations_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -5707,18 +5985,6 @@ declare module 'zapatos/schema' {
       */
       index: number | null;
       /**
-      * **season.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis: string | null;
-      /**
-      * **season.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description: string | null;
-      /**
       * **season.studio**
       * - `text` in database
       * - Nullable, no default
@@ -5768,18 +6034,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       index: number | null;
-      /**
-      * **season.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis: string | null;
-      /**
-      * **season.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description: string | null;
       /**
       * **season.studio**
       * - `text` in database
@@ -5831,18 +6085,6 @@ declare module 'zapatos/schema' {
       */
       index?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **season.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **season.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **season.studio**
       * - `text` in database
       * - Nullable, no default
@@ -5893,18 +6135,6 @@ declare module 'zapatos/schema' {
       */
       index?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **season.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **season.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **season.studio**
       * - `text` in database
       * - Nullable, no default
@@ -5954,18 +6184,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       index?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **season.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **season.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **season.studio**
       * - `text` in database
@@ -6505,6 +6723,205 @@ declare module 'zapatos/schema' {
       end_time?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'season_licenses_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  export namespace season_localizations {
+    export type Table = 'season_localizations';
+    export interface Selectable {
+      /**
+      * **season_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **season_localizations.season_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      season_id: string | null;
+      /**
+      * **season_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **season_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean;
+      /**
+      * **season_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+      /**
+      * **season_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **season_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **season_localizations.season_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      season_id: string | null;
+      /**
+      * **season_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **season_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean;
+      /**
+      * **season_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+      /**
+      * **season_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **season_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_localizations.season_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      season_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **season_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_localizations.season_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      season_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **season_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean | db.Parameter<boolean> | db.SQLFragment;
+      /**
+      * **season_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **season_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_localizations.season_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      season_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **season_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment>;
+      /**
+      * **season_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'season_localizations_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -7658,29 +8075,11 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
-      * **tvshow.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
-      /**
       * **tvshow.original_title**
       * - `text` in database
       * - Nullable, no default
       */
       original_title: string | null;
-      /**
-      * **tvshow.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis: string | null;
-      /**
-      * **tvshow.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description: string | null;
       /**
       * **tvshow.studio**
       * - `text` in database
@@ -7720,29 +8119,11 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
-      * **tvshow.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
-      /**
       * **tvshow.original_title**
       * - `text` in database
       * - Nullable, no default
       */
       original_title: string | null;
-      /**
-      * **tvshow.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis: string | null;
-      /**
-      * **tvshow.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description: string | null;
       /**
       * **tvshow.studio**
       * - `text` in database
@@ -7782,29 +8163,11 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **tvshow.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **tvshow.original_title**
       * - `text` in database
       * - Nullable, no default
       */
       original_title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tvshow.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tvshow.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tvshow.studio**
       * - `text` in database
@@ -7844,29 +8207,11 @@ declare module 'zapatos/schema' {
       */
       id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **tvshow.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **tvshow.original_title**
       * - `text` in database
       * - Nullable, no default
       */
       original_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tvshow.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tvshow.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **tvshow.studio**
       * - `text` in database
@@ -7906,29 +8251,11 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **tvshow.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **tvshow.original_title**
       * - `text` in database
       * - Nullable, no default
       */
       original_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tvshow.synopsis**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tvshow.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **tvshow.studio**
       * - `text` in database
@@ -7977,12 +8304,6 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
-      * **tvshow_genre.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
-      /**
       * **tvshow_genre.order_no**
       * - `int4` in database
       * - Nullable, no default
@@ -7996,12 +8317,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id: string;
-      /**
-      * **tvshow_genre.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
       /**
       * **tvshow_genre.order_no**
       * - `int4` in database
@@ -8017,12 +8332,6 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **tvshow_genre.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **tvshow_genre.order_no**
       * - `int4` in database
       * - Nullable, no default
@@ -8036,12 +8345,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **tvshow_genre.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **tvshow_genre.order_no**
       * - `int4` in database
@@ -8057,12 +8360,6 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **tvshow_genre.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **tvshow_genre.order_no**
       * - `int4` in database
       * - Nullable, no default
@@ -8070,6 +8367,175 @@ declare module 'zapatos/schema' {
       order_no?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshow_genre_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  export namespace tvshow_genre_localizations {
+    export type Table = 'tvshow_genre_localizations';
+    export interface Selectable {
+      /**
+      * **tvshow_genre_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **tvshow_genre_localizations.tvshow_genre_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tvshow_genre_id: string | null;
+      /**
+      * **tvshow_genre_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **tvshow_genre_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean;
+      /**
+      * **tvshow_genre_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **tvshow_genre_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **tvshow_genre_localizations.tvshow_genre_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tvshow_genre_id: string | null;
+      /**
+      * **tvshow_genre_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **tvshow_genre_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean;
+      /**
+      * **tvshow_genre_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+    }
+    export interface Whereable {
+      /**
+      * **tvshow_genre_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_genre_localizations.tvshow_genre_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tvshow_genre_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_genre_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_genre_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_genre_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **tvshow_genre_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_genre_localizations.tvshow_genre_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tvshow_genre_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_genre_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **tvshow_genre_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean | db.Parameter<boolean> | db.SQLFragment;
+      /**
+      * **tvshow_genre_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **tvshow_genre_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_genre_localizations.tvshow_genre_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tvshow_genre_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_genre_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **tvshow_genre_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment>;
+      /**
+      * **tvshow_genre_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'tvshow_genre_localizations_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -8577,6 +9043,235 @@ declare module 'zapatos/schema' {
       end_time?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshow_licenses_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  export namespace tvshow_localizations {
+    export type Table = 'tvshow_localizations';
+    export interface Selectable {
+      /**
+      * **tvshow_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **tvshow_localizations.tvshow_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tvshow_id: string | null;
+      /**
+      * **tvshow_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **tvshow_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean;
+      /**
+      * **tvshow_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **tvshow_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+      /**
+      * **tvshow_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **tvshow_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id: number;
+      /**
+      * **tvshow_localizations.tvshow_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tvshow_id: string | null;
+      /**
+      * **tvshow_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **tvshow_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean;
+      /**
+      * **tvshow_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **tvshow_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description: string | null;
+      /**
+      * **tvshow_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **tvshow_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_localizations.tvshow_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tvshow_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **tvshow_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_localizations.tvshow_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tvshow_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **tvshow_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale: boolean | db.Parameter<boolean> | db.SQLFragment;
+      /**
+      * **tvshow_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **tvshow_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **tvshow_localizations.id**
+      * - `int4` in database
+      * - `NOT NULL`, identity column
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_localizations.tvshow_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tvshow_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_localizations.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **tvshow_localizations.is_default_locale**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      is_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment>;
+      /**
+      * **tvshow_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **tvshow_localizations.description**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_localizations.synopsis**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'tvshow_localizations_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -9819,15 +10514,15 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = channel.Table | channel_images.Table | channel_localizations.Table | collection.Table | collection_images.Table | collection_items_relation.Table | episode.Table | episode_genres_relation.Table | episode_images.Table | episode_licenses.Table | episode_video_cue_points.Table | episode_video_streams.Table | episode_videos.Table | messaging_counter.Table | movie.Table | movie_genre.Table | movie_genre_localizations.Table | movie_genres_relation.Table | movie_images.Table | movie_licenses.Table | movie_localizations.Table | movie_video_cue_points.Table | movie_video_streams.Table | movie_videos.Table | season.Table | season_genres_relation.Table | season_images.Table | season_licenses.Table | season_video_cue_points.Table | season_video_streams.Table | season_videos.Table | tvshow.Table | tvshow_genre.Table | tvshow_genres_relation.Table | tvshow_images.Table | tvshow_licenses.Table | tvshow_video_cue_points.Table | tvshow_video_streams.Table | tvshow_videos.Table | video_stream_type.Table;
-  export type Selectable = channel.Selectable | channel_images.Selectable | channel_localizations.Selectable | collection.Selectable | collection_images.Selectable | collection_items_relation.Selectable | episode.Selectable | episode_genres_relation.Selectable | episode_images.Selectable | episode_licenses.Selectable | episode_video_cue_points.Selectable | episode_video_streams.Selectable | episode_videos.Selectable | messaging_counter.Selectable | movie.Selectable | movie_genre.Selectable | movie_genre_localizations.Selectable | movie_genres_relation.Selectable | movie_images.Selectable | movie_licenses.Selectable | movie_localizations.Selectable | movie_video_cue_points.Selectable | movie_video_streams.Selectable | movie_videos.Selectable | season.Selectable | season_genres_relation.Selectable | season_images.Selectable | season_licenses.Selectable | season_video_cue_points.Selectable | season_video_streams.Selectable | season_videos.Selectable | tvshow.Selectable | tvshow_genre.Selectable | tvshow_genres_relation.Selectable | tvshow_images.Selectable | tvshow_licenses.Selectable | tvshow_video_cue_points.Selectable | tvshow_video_streams.Selectable | tvshow_videos.Selectable | video_stream_type.Selectable;
-  export type JSONSelectable = channel.JSONSelectable | channel_images.JSONSelectable | channel_localizations.JSONSelectable | collection.JSONSelectable | collection_images.JSONSelectable | collection_items_relation.JSONSelectable | episode.JSONSelectable | episode_genres_relation.JSONSelectable | episode_images.JSONSelectable | episode_licenses.JSONSelectable | episode_video_cue_points.JSONSelectable | episode_video_streams.JSONSelectable | episode_videos.JSONSelectable | messaging_counter.JSONSelectable | movie.JSONSelectable | movie_genre.JSONSelectable | movie_genre_localizations.JSONSelectable | movie_genres_relation.JSONSelectable | movie_images.JSONSelectable | movie_licenses.JSONSelectable | movie_localizations.JSONSelectable | movie_video_cue_points.JSONSelectable | movie_video_streams.JSONSelectable | movie_videos.JSONSelectable | season.JSONSelectable | season_genres_relation.JSONSelectable | season_images.JSONSelectable | season_licenses.JSONSelectable | season_video_cue_points.JSONSelectable | season_video_streams.JSONSelectable | season_videos.JSONSelectable | tvshow.JSONSelectable | tvshow_genre.JSONSelectable | tvshow_genres_relation.JSONSelectable | tvshow_images.JSONSelectable | tvshow_licenses.JSONSelectable | tvshow_video_cue_points.JSONSelectable | tvshow_video_streams.JSONSelectable | tvshow_videos.JSONSelectable | video_stream_type.JSONSelectable;
-  export type Whereable = channel.Whereable | channel_images.Whereable | channel_localizations.Whereable | collection.Whereable | collection_images.Whereable | collection_items_relation.Whereable | episode.Whereable | episode_genres_relation.Whereable | episode_images.Whereable | episode_licenses.Whereable | episode_video_cue_points.Whereable | episode_video_streams.Whereable | episode_videos.Whereable | messaging_counter.Whereable | movie.Whereable | movie_genre.Whereable | movie_genre_localizations.Whereable | movie_genres_relation.Whereable | movie_images.Whereable | movie_licenses.Whereable | movie_localizations.Whereable | movie_video_cue_points.Whereable | movie_video_streams.Whereable | movie_videos.Whereable | season.Whereable | season_genres_relation.Whereable | season_images.Whereable | season_licenses.Whereable | season_video_cue_points.Whereable | season_video_streams.Whereable | season_videos.Whereable | tvshow.Whereable | tvshow_genre.Whereable | tvshow_genres_relation.Whereable | tvshow_images.Whereable | tvshow_licenses.Whereable | tvshow_video_cue_points.Whereable | tvshow_video_streams.Whereable | tvshow_videos.Whereable | video_stream_type.Whereable;
-  export type Insertable = channel.Insertable | channel_images.Insertable | channel_localizations.Insertable | collection.Insertable | collection_images.Insertable | collection_items_relation.Insertable | episode.Insertable | episode_genres_relation.Insertable | episode_images.Insertable | episode_licenses.Insertable | episode_video_cue_points.Insertable | episode_video_streams.Insertable | episode_videos.Insertable | messaging_counter.Insertable | movie.Insertable | movie_genre.Insertable | movie_genre_localizations.Insertable | movie_genres_relation.Insertable | movie_images.Insertable | movie_licenses.Insertable | movie_localizations.Insertable | movie_video_cue_points.Insertable | movie_video_streams.Insertable | movie_videos.Insertable | season.Insertable | season_genres_relation.Insertable | season_images.Insertable | season_licenses.Insertable | season_video_cue_points.Insertable | season_video_streams.Insertable | season_videos.Insertable | tvshow.Insertable | tvshow_genre.Insertable | tvshow_genres_relation.Insertable | tvshow_images.Insertable | tvshow_licenses.Insertable | tvshow_video_cue_points.Insertable | tvshow_video_streams.Insertable | tvshow_videos.Insertable | video_stream_type.Insertable;
-  export type Updatable = channel.Updatable | channel_images.Updatable | channel_localizations.Updatable | collection.Updatable | collection_images.Updatable | collection_items_relation.Updatable | episode.Updatable | episode_genres_relation.Updatable | episode_images.Updatable | episode_licenses.Updatable | episode_video_cue_points.Updatable | episode_video_streams.Updatable | episode_videos.Updatable | messaging_counter.Updatable | movie.Updatable | movie_genre.Updatable | movie_genre_localizations.Updatable | movie_genres_relation.Updatable | movie_images.Updatable | movie_licenses.Updatable | movie_localizations.Updatable | movie_video_cue_points.Updatable | movie_video_streams.Updatable | movie_videos.Updatable | season.Updatable | season_genres_relation.Updatable | season_images.Updatable | season_licenses.Updatable | season_video_cue_points.Updatable | season_video_streams.Updatable | season_videos.Updatable | tvshow.Updatable | tvshow_genre.Updatable | tvshow_genres_relation.Updatable | tvshow_images.Updatable | tvshow_licenses.Updatable | tvshow_video_cue_points.Updatable | tvshow_video_streams.Updatable | tvshow_videos.Updatable | video_stream_type.Updatable;
-  export type UniqueIndex = channel.UniqueIndex | channel_images.UniqueIndex | channel_localizations.UniqueIndex | collection.UniqueIndex | collection_images.UniqueIndex | collection_items_relation.UniqueIndex | episode.UniqueIndex | episode_genres_relation.UniqueIndex | episode_images.UniqueIndex | episode_licenses.UniqueIndex | episode_video_cue_points.UniqueIndex | episode_video_streams.UniqueIndex | episode_videos.UniqueIndex | messaging_counter.UniqueIndex | movie.UniqueIndex | movie_genre.UniqueIndex | movie_genre_localizations.UniqueIndex | movie_genres_relation.UniqueIndex | movie_images.UniqueIndex | movie_licenses.UniqueIndex | movie_localizations.UniqueIndex | movie_video_cue_points.UniqueIndex | movie_video_streams.UniqueIndex | movie_videos.UniqueIndex | season.UniqueIndex | season_genres_relation.UniqueIndex | season_images.UniqueIndex | season_licenses.UniqueIndex | season_video_cue_points.UniqueIndex | season_video_streams.UniqueIndex | season_videos.UniqueIndex | tvshow.UniqueIndex | tvshow_genre.UniqueIndex | tvshow_genres_relation.UniqueIndex | tvshow_images.UniqueIndex | tvshow_licenses.UniqueIndex | tvshow_video_cue_points.UniqueIndex | tvshow_video_streams.UniqueIndex | tvshow_videos.UniqueIndex | video_stream_type.UniqueIndex;
-  export type Column = channel.Column | channel_images.Column | channel_localizations.Column | collection.Column | collection_images.Column | collection_items_relation.Column | episode.Column | episode_genres_relation.Column | episode_images.Column | episode_licenses.Column | episode_video_cue_points.Column | episode_video_streams.Column | episode_videos.Column | messaging_counter.Column | movie.Column | movie_genre.Column | movie_genre_localizations.Column | movie_genres_relation.Column | movie_images.Column | movie_licenses.Column | movie_localizations.Column | movie_video_cue_points.Column | movie_video_streams.Column | movie_videos.Column | season.Column | season_genres_relation.Column | season_images.Column | season_licenses.Column | season_video_cue_points.Column | season_video_streams.Column | season_videos.Column | tvshow.Column | tvshow_genre.Column | tvshow_genres_relation.Column | tvshow_images.Column | tvshow_licenses.Column | tvshow_video_cue_points.Column | tvshow_video_streams.Column | tvshow_videos.Column | video_stream_type.Column;
-  export type AllTables = [channel.Table, channel_images.Table, channel_localizations.Table, collection.Table, collection_images.Table, collection_items_relation.Table, episode.Table, episode_genres_relation.Table, episode_images.Table, episode_licenses.Table, episode_video_cue_points.Table, episode_video_streams.Table, episode_videos.Table, messaging_counter.Table, movie.Table, movie_genre.Table, movie_genre_localizations.Table, movie_genres_relation.Table, movie_images.Table, movie_licenses.Table, movie_localizations.Table, movie_video_cue_points.Table, movie_video_streams.Table, movie_videos.Table, season.Table, season_genres_relation.Table, season_images.Table, season_licenses.Table, season_video_cue_points.Table, season_video_streams.Table, season_videos.Table, tvshow.Table, tvshow_genre.Table, tvshow_genres_relation.Table, tvshow_images.Table, tvshow_licenses.Table, tvshow_video_cue_points.Table, tvshow_video_streams.Table, tvshow_videos.Table, video_stream_type.Table];
+  export type Table = channel.Table | channel_images.Table | channel_localizations.Table | collection.Table | collection_images.Table | collection_items_relation.Table | collection_localizations.Table | episode.Table | episode_genres_relation.Table | episode_images.Table | episode_licenses.Table | episode_localizations.Table | episode_video_cue_points.Table | episode_video_streams.Table | episode_videos.Table | messaging_counter.Table | movie.Table | movie_genre.Table | movie_genre_localizations.Table | movie_genres_relation.Table | movie_images.Table | movie_licenses.Table | movie_localizations.Table | movie_video_cue_points.Table | movie_video_streams.Table | movie_videos.Table | season.Table | season_genres_relation.Table | season_images.Table | season_licenses.Table | season_localizations.Table | season_video_cue_points.Table | season_video_streams.Table | season_videos.Table | tvshow.Table | tvshow_genre.Table | tvshow_genre_localizations.Table | tvshow_genres_relation.Table | tvshow_images.Table | tvshow_licenses.Table | tvshow_localizations.Table | tvshow_video_cue_points.Table | tvshow_video_streams.Table | tvshow_videos.Table | video_stream_type.Table;
+  export type Selectable = channel.Selectable | channel_images.Selectable | channel_localizations.Selectable | collection.Selectable | collection_images.Selectable | collection_items_relation.Selectable | collection_localizations.Selectable | episode.Selectable | episode_genres_relation.Selectable | episode_images.Selectable | episode_licenses.Selectable | episode_localizations.Selectable | episode_video_cue_points.Selectable | episode_video_streams.Selectable | episode_videos.Selectable | messaging_counter.Selectable | movie.Selectable | movie_genre.Selectable | movie_genre_localizations.Selectable | movie_genres_relation.Selectable | movie_images.Selectable | movie_licenses.Selectable | movie_localizations.Selectable | movie_video_cue_points.Selectable | movie_video_streams.Selectable | movie_videos.Selectable | season.Selectable | season_genres_relation.Selectable | season_images.Selectable | season_licenses.Selectable | season_localizations.Selectable | season_video_cue_points.Selectable | season_video_streams.Selectable | season_videos.Selectable | tvshow.Selectable | tvshow_genre.Selectable | tvshow_genre_localizations.Selectable | tvshow_genres_relation.Selectable | tvshow_images.Selectable | tvshow_licenses.Selectable | tvshow_localizations.Selectable | tvshow_video_cue_points.Selectable | tvshow_video_streams.Selectable | tvshow_videos.Selectable | video_stream_type.Selectable;
+  export type JSONSelectable = channel.JSONSelectable | channel_images.JSONSelectable | channel_localizations.JSONSelectable | collection.JSONSelectable | collection_images.JSONSelectable | collection_items_relation.JSONSelectable | collection_localizations.JSONSelectable | episode.JSONSelectable | episode_genres_relation.JSONSelectable | episode_images.JSONSelectable | episode_licenses.JSONSelectable | episode_localizations.JSONSelectable | episode_video_cue_points.JSONSelectable | episode_video_streams.JSONSelectable | episode_videos.JSONSelectable | messaging_counter.JSONSelectable | movie.JSONSelectable | movie_genre.JSONSelectable | movie_genre_localizations.JSONSelectable | movie_genres_relation.JSONSelectable | movie_images.JSONSelectable | movie_licenses.JSONSelectable | movie_localizations.JSONSelectable | movie_video_cue_points.JSONSelectable | movie_video_streams.JSONSelectable | movie_videos.JSONSelectable | season.JSONSelectable | season_genres_relation.JSONSelectable | season_images.JSONSelectable | season_licenses.JSONSelectable | season_localizations.JSONSelectable | season_video_cue_points.JSONSelectable | season_video_streams.JSONSelectable | season_videos.JSONSelectable | tvshow.JSONSelectable | tvshow_genre.JSONSelectable | tvshow_genre_localizations.JSONSelectable | tvshow_genres_relation.JSONSelectable | tvshow_images.JSONSelectable | tvshow_licenses.JSONSelectable | tvshow_localizations.JSONSelectable | tvshow_video_cue_points.JSONSelectable | tvshow_video_streams.JSONSelectable | tvshow_videos.JSONSelectable | video_stream_type.JSONSelectable;
+  export type Whereable = channel.Whereable | channel_images.Whereable | channel_localizations.Whereable | collection.Whereable | collection_images.Whereable | collection_items_relation.Whereable | collection_localizations.Whereable | episode.Whereable | episode_genres_relation.Whereable | episode_images.Whereable | episode_licenses.Whereable | episode_localizations.Whereable | episode_video_cue_points.Whereable | episode_video_streams.Whereable | episode_videos.Whereable | messaging_counter.Whereable | movie.Whereable | movie_genre.Whereable | movie_genre_localizations.Whereable | movie_genres_relation.Whereable | movie_images.Whereable | movie_licenses.Whereable | movie_localizations.Whereable | movie_video_cue_points.Whereable | movie_video_streams.Whereable | movie_videos.Whereable | season.Whereable | season_genres_relation.Whereable | season_images.Whereable | season_licenses.Whereable | season_localizations.Whereable | season_video_cue_points.Whereable | season_video_streams.Whereable | season_videos.Whereable | tvshow.Whereable | tvshow_genre.Whereable | tvshow_genre_localizations.Whereable | tvshow_genres_relation.Whereable | tvshow_images.Whereable | tvshow_licenses.Whereable | tvshow_localizations.Whereable | tvshow_video_cue_points.Whereable | tvshow_video_streams.Whereable | tvshow_videos.Whereable | video_stream_type.Whereable;
+  export type Insertable = channel.Insertable | channel_images.Insertable | channel_localizations.Insertable | collection.Insertable | collection_images.Insertable | collection_items_relation.Insertable | collection_localizations.Insertable | episode.Insertable | episode_genres_relation.Insertable | episode_images.Insertable | episode_licenses.Insertable | episode_localizations.Insertable | episode_video_cue_points.Insertable | episode_video_streams.Insertable | episode_videos.Insertable | messaging_counter.Insertable | movie.Insertable | movie_genre.Insertable | movie_genre_localizations.Insertable | movie_genres_relation.Insertable | movie_images.Insertable | movie_licenses.Insertable | movie_localizations.Insertable | movie_video_cue_points.Insertable | movie_video_streams.Insertable | movie_videos.Insertable | season.Insertable | season_genres_relation.Insertable | season_images.Insertable | season_licenses.Insertable | season_localizations.Insertable | season_video_cue_points.Insertable | season_video_streams.Insertable | season_videos.Insertable | tvshow.Insertable | tvshow_genre.Insertable | tvshow_genre_localizations.Insertable | tvshow_genres_relation.Insertable | tvshow_images.Insertable | tvshow_licenses.Insertable | tvshow_localizations.Insertable | tvshow_video_cue_points.Insertable | tvshow_video_streams.Insertable | tvshow_videos.Insertable | video_stream_type.Insertable;
+  export type Updatable = channel.Updatable | channel_images.Updatable | channel_localizations.Updatable | collection.Updatable | collection_images.Updatable | collection_items_relation.Updatable | collection_localizations.Updatable | episode.Updatable | episode_genres_relation.Updatable | episode_images.Updatable | episode_licenses.Updatable | episode_localizations.Updatable | episode_video_cue_points.Updatable | episode_video_streams.Updatable | episode_videos.Updatable | messaging_counter.Updatable | movie.Updatable | movie_genre.Updatable | movie_genre_localizations.Updatable | movie_genres_relation.Updatable | movie_images.Updatable | movie_licenses.Updatable | movie_localizations.Updatable | movie_video_cue_points.Updatable | movie_video_streams.Updatable | movie_videos.Updatable | season.Updatable | season_genres_relation.Updatable | season_images.Updatable | season_licenses.Updatable | season_localizations.Updatable | season_video_cue_points.Updatable | season_video_streams.Updatable | season_videos.Updatable | tvshow.Updatable | tvshow_genre.Updatable | tvshow_genre_localizations.Updatable | tvshow_genres_relation.Updatable | tvshow_images.Updatable | tvshow_licenses.Updatable | tvshow_localizations.Updatable | tvshow_video_cue_points.Updatable | tvshow_video_streams.Updatable | tvshow_videos.Updatable | video_stream_type.Updatable;
+  export type UniqueIndex = channel.UniqueIndex | channel_images.UniqueIndex | channel_localizations.UniqueIndex | collection.UniqueIndex | collection_images.UniqueIndex | collection_items_relation.UniqueIndex | collection_localizations.UniqueIndex | episode.UniqueIndex | episode_genres_relation.UniqueIndex | episode_images.UniqueIndex | episode_licenses.UniqueIndex | episode_localizations.UniqueIndex | episode_video_cue_points.UniqueIndex | episode_video_streams.UniqueIndex | episode_videos.UniqueIndex | messaging_counter.UniqueIndex | movie.UniqueIndex | movie_genre.UniqueIndex | movie_genre_localizations.UniqueIndex | movie_genres_relation.UniqueIndex | movie_images.UniqueIndex | movie_licenses.UniqueIndex | movie_localizations.UniqueIndex | movie_video_cue_points.UniqueIndex | movie_video_streams.UniqueIndex | movie_videos.UniqueIndex | season.UniqueIndex | season_genres_relation.UniqueIndex | season_images.UniqueIndex | season_licenses.UniqueIndex | season_localizations.UniqueIndex | season_video_cue_points.UniqueIndex | season_video_streams.UniqueIndex | season_videos.UniqueIndex | tvshow.UniqueIndex | tvshow_genre.UniqueIndex | tvshow_genre_localizations.UniqueIndex | tvshow_genres_relation.UniqueIndex | tvshow_images.UniqueIndex | tvshow_licenses.UniqueIndex | tvshow_localizations.UniqueIndex | tvshow_video_cue_points.UniqueIndex | tvshow_video_streams.UniqueIndex | tvshow_videos.UniqueIndex | video_stream_type.UniqueIndex;
+  export type Column = channel.Column | channel_images.Column | channel_localizations.Column | collection.Column | collection_images.Column | collection_items_relation.Column | collection_localizations.Column | episode.Column | episode_genres_relation.Column | episode_images.Column | episode_licenses.Column | episode_localizations.Column | episode_video_cue_points.Column | episode_video_streams.Column | episode_videos.Column | messaging_counter.Column | movie.Column | movie_genre.Column | movie_genre_localizations.Column | movie_genres_relation.Column | movie_images.Column | movie_licenses.Column | movie_localizations.Column | movie_video_cue_points.Column | movie_video_streams.Column | movie_videos.Column | season.Column | season_genres_relation.Column | season_images.Column | season_licenses.Column | season_localizations.Column | season_video_cue_points.Column | season_video_streams.Column | season_videos.Column | tvshow.Column | tvshow_genre.Column | tvshow_genre_localizations.Column | tvshow_genres_relation.Column | tvshow_images.Column | tvshow_licenses.Column | tvshow_localizations.Column | tvshow_video_cue_points.Column | tvshow_video_streams.Column | tvshow_videos.Column | video_stream_type.Column;
+  export type AllTables = [channel.Table, channel_images.Table, channel_localizations.Table, collection.Table, collection_images.Table, collection_items_relation.Table, collection_localizations.Table, episode.Table, episode_genres_relation.Table, episode_images.Table, episode_licenses.Table, episode_localizations.Table, episode_video_cue_points.Table, episode_video_streams.Table, episode_videos.Table, messaging_counter.Table, movie.Table, movie_genre.Table, movie_genre_localizations.Table, movie_genres_relation.Table, movie_images.Table, movie_licenses.Table, movie_localizations.Table, movie_video_cue_points.Table, movie_video_streams.Table, movie_videos.Table, season.Table, season_genres_relation.Table, season_images.Table, season_licenses.Table, season_localizations.Table, season_video_cue_points.Table, season_video_streams.Table, season_videos.Table, tvshow.Table, tvshow_genre.Table, tvshow_genre_localizations.Table, tvshow_genres_relation.Table, tvshow_images.Table, tvshow_licenses.Table, tvshow_localizations.Table, tvshow_video_cue_points.Table, tvshow_video_streams.Table, tvshow_videos.Table, video_stream_type.Table];
   export type AllMaterializedViews = [];
 
 
@@ -9838,10 +10533,12 @@ declare module 'zapatos/schema' {
     collection: collection.Selectable;
     collection_images: collection_images.Selectable;
     collection_items_relation: collection_items_relation.Selectable;
+    collection_localizations: collection_localizations.Selectable;
     episode: episode.Selectable;
     episode_genres_relation: episode_genres_relation.Selectable;
     episode_images: episode_images.Selectable;
     episode_licenses: episode_licenses.Selectable;
+    episode_localizations: episode_localizations.Selectable;
     episode_video_cue_points: episode_video_cue_points.Selectable;
     episode_video_streams: episode_video_streams.Selectable;
     episode_videos: episode_videos.Selectable;
@@ -9860,14 +10557,17 @@ declare module 'zapatos/schema' {
     season_genres_relation: season_genres_relation.Selectable;
     season_images: season_images.Selectable;
     season_licenses: season_licenses.Selectable;
+    season_localizations: season_localizations.Selectable;
     season_video_cue_points: season_video_cue_points.Selectable;
     season_video_streams: season_video_streams.Selectable;
     season_videos: season_videos.Selectable;
     tvshow: tvshow.Selectable;
     tvshow_genre: tvshow_genre.Selectable;
+    tvshow_genre_localizations: tvshow_genre_localizations.Selectable;
     tvshow_genres_relation: tvshow_genres_relation.Selectable;
     tvshow_images: tvshow_images.Selectable;
     tvshow_licenses: tvshow_licenses.Selectable;
+    tvshow_localizations: tvshow_localizations.Selectable;
     tvshow_video_cue_points: tvshow_video_cue_points.Selectable;
     tvshow_video_streams: tvshow_video_streams.Selectable;
     tvshow_videos: tvshow_videos.Selectable;
@@ -9881,10 +10581,12 @@ declare module 'zapatos/schema' {
     collection: collection.JSONSelectable;
     collection_images: collection_images.JSONSelectable;
     collection_items_relation: collection_items_relation.JSONSelectable;
+    collection_localizations: collection_localizations.JSONSelectable;
     episode: episode.JSONSelectable;
     episode_genres_relation: episode_genres_relation.JSONSelectable;
     episode_images: episode_images.JSONSelectable;
     episode_licenses: episode_licenses.JSONSelectable;
+    episode_localizations: episode_localizations.JSONSelectable;
     episode_video_cue_points: episode_video_cue_points.JSONSelectable;
     episode_video_streams: episode_video_streams.JSONSelectable;
     episode_videos: episode_videos.JSONSelectable;
@@ -9903,14 +10605,17 @@ declare module 'zapatos/schema' {
     season_genres_relation: season_genres_relation.JSONSelectable;
     season_images: season_images.JSONSelectable;
     season_licenses: season_licenses.JSONSelectable;
+    season_localizations: season_localizations.JSONSelectable;
     season_video_cue_points: season_video_cue_points.JSONSelectable;
     season_video_streams: season_video_streams.JSONSelectable;
     season_videos: season_videos.JSONSelectable;
     tvshow: tvshow.JSONSelectable;
     tvshow_genre: tvshow_genre.JSONSelectable;
+    tvshow_genre_localizations: tvshow_genre_localizations.JSONSelectable;
     tvshow_genres_relation: tvshow_genres_relation.JSONSelectable;
     tvshow_images: tvshow_images.JSONSelectable;
     tvshow_licenses: tvshow_licenses.JSONSelectable;
+    tvshow_localizations: tvshow_localizations.JSONSelectable;
     tvshow_video_cue_points: tvshow_video_cue_points.JSONSelectable;
     tvshow_video_streams: tvshow_video_streams.JSONSelectable;
     tvshow_videos: tvshow_videos.JSONSelectable;
@@ -9924,10 +10629,12 @@ declare module 'zapatos/schema' {
     collection: collection.Whereable;
     collection_images: collection_images.Whereable;
     collection_items_relation: collection_items_relation.Whereable;
+    collection_localizations: collection_localizations.Whereable;
     episode: episode.Whereable;
     episode_genres_relation: episode_genres_relation.Whereable;
     episode_images: episode_images.Whereable;
     episode_licenses: episode_licenses.Whereable;
+    episode_localizations: episode_localizations.Whereable;
     episode_video_cue_points: episode_video_cue_points.Whereable;
     episode_video_streams: episode_video_streams.Whereable;
     episode_videos: episode_videos.Whereable;
@@ -9946,14 +10653,17 @@ declare module 'zapatos/schema' {
     season_genres_relation: season_genres_relation.Whereable;
     season_images: season_images.Whereable;
     season_licenses: season_licenses.Whereable;
+    season_localizations: season_localizations.Whereable;
     season_video_cue_points: season_video_cue_points.Whereable;
     season_video_streams: season_video_streams.Whereable;
     season_videos: season_videos.Whereable;
     tvshow: tvshow.Whereable;
     tvshow_genre: tvshow_genre.Whereable;
+    tvshow_genre_localizations: tvshow_genre_localizations.Whereable;
     tvshow_genres_relation: tvshow_genres_relation.Whereable;
     tvshow_images: tvshow_images.Whereable;
     tvshow_licenses: tvshow_licenses.Whereable;
+    tvshow_localizations: tvshow_localizations.Whereable;
     tvshow_video_cue_points: tvshow_video_cue_points.Whereable;
     tvshow_video_streams: tvshow_video_streams.Whereable;
     tvshow_videos: tvshow_videos.Whereable;
@@ -9967,10 +10677,12 @@ declare module 'zapatos/schema' {
     collection: collection.Insertable;
     collection_images: collection_images.Insertable;
     collection_items_relation: collection_items_relation.Insertable;
+    collection_localizations: collection_localizations.Insertable;
     episode: episode.Insertable;
     episode_genres_relation: episode_genres_relation.Insertable;
     episode_images: episode_images.Insertable;
     episode_licenses: episode_licenses.Insertable;
+    episode_localizations: episode_localizations.Insertable;
     episode_video_cue_points: episode_video_cue_points.Insertable;
     episode_video_streams: episode_video_streams.Insertable;
     episode_videos: episode_videos.Insertable;
@@ -9989,14 +10701,17 @@ declare module 'zapatos/schema' {
     season_genres_relation: season_genres_relation.Insertable;
     season_images: season_images.Insertable;
     season_licenses: season_licenses.Insertable;
+    season_localizations: season_localizations.Insertable;
     season_video_cue_points: season_video_cue_points.Insertable;
     season_video_streams: season_video_streams.Insertable;
     season_videos: season_videos.Insertable;
     tvshow: tvshow.Insertable;
     tvshow_genre: tvshow_genre.Insertable;
+    tvshow_genre_localizations: tvshow_genre_localizations.Insertable;
     tvshow_genres_relation: tvshow_genres_relation.Insertable;
     tvshow_images: tvshow_images.Insertable;
     tvshow_licenses: tvshow_licenses.Insertable;
+    tvshow_localizations: tvshow_localizations.Insertable;
     tvshow_video_cue_points: tvshow_video_cue_points.Insertable;
     tvshow_video_streams: tvshow_video_streams.Insertable;
     tvshow_videos: tvshow_videos.Insertable;
@@ -10010,10 +10725,12 @@ declare module 'zapatos/schema' {
     collection: collection.Updatable;
     collection_images: collection_images.Updatable;
     collection_items_relation: collection_items_relation.Updatable;
+    collection_localizations: collection_localizations.Updatable;
     episode: episode.Updatable;
     episode_genres_relation: episode_genres_relation.Updatable;
     episode_images: episode_images.Updatable;
     episode_licenses: episode_licenses.Updatable;
+    episode_localizations: episode_localizations.Updatable;
     episode_video_cue_points: episode_video_cue_points.Updatable;
     episode_video_streams: episode_video_streams.Updatable;
     episode_videos: episode_videos.Updatable;
@@ -10032,14 +10749,17 @@ declare module 'zapatos/schema' {
     season_genres_relation: season_genres_relation.Updatable;
     season_images: season_images.Updatable;
     season_licenses: season_licenses.Updatable;
+    season_localizations: season_localizations.Updatable;
     season_video_cue_points: season_video_cue_points.Updatable;
     season_video_streams: season_video_streams.Updatable;
     season_videos: season_videos.Updatable;
     tvshow: tvshow.Updatable;
     tvshow_genre: tvshow_genre.Updatable;
+    tvshow_genre_localizations: tvshow_genre_localizations.Updatable;
     tvshow_genres_relation: tvshow_genres_relation.Updatable;
     tvshow_images: tvshow_images.Updatable;
     tvshow_licenses: tvshow_licenses.Updatable;
+    tvshow_localizations: tvshow_localizations.Updatable;
     tvshow_video_cue_points: tvshow_video_cue_points.Updatable;
     tvshow_video_streams: tvshow_video_streams.Updatable;
     tvshow_videos: tvshow_videos.Updatable;
@@ -10053,10 +10773,12 @@ declare module 'zapatos/schema' {
     collection: collection.UniqueIndex;
     collection_images: collection_images.UniqueIndex;
     collection_items_relation: collection_items_relation.UniqueIndex;
+    collection_localizations: collection_localizations.UniqueIndex;
     episode: episode.UniqueIndex;
     episode_genres_relation: episode_genres_relation.UniqueIndex;
     episode_images: episode_images.UniqueIndex;
     episode_licenses: episode_licenses.UniqueIndex;
+    episode_localizations: episode_localizations.UniqueIndex;
     episode_video_cue_points: episode_video_cue_points.UniqueIndex;
     episode_video_streams: episode_video_streams.UniqueIndex;
     episode_videos: episode_videos.UniqueIndex;
@@ -10075,14 +10797,17 @@ declare module 'zapatos/schema' {
     season_genres_relation: season_genres_relation.UniqueIndex;
     season_images: season_images.UniqueIndex;
     season_licenses: season_licenses.UniqueIndex;
+    season_localizations: season_localizations.UniqueIndex;
     season_video_cue_points: season_video_cue_points.UniqueIndex;
     season_video_streams: season_video_streams.UniqueIndex;
     season_videos: season_videos.UniqueIndex;
     tvshow: tvshow.UniqueIndex;
     tvshow_genre: tvshow_genre.UniqueIndex;
+    tvshow_genre_localizations: tvshow_genre_localizations.UniqueIndex;
     tvshow_genres_relation: tvshow_genres_relation.UniqueIndex;
     tvshow_images: tvshow_images.UniqueIndex;
     tvshow_licenses: tvshow_licenses.UniqueIndex;
+    tvshow_localizations: tvshow_localizations.UniqueIndex;
     tvshow_video_cue_points: tvshow_video_cue_points.UniqueIndex;
     tvshow_video_streams: tvshow_video_streams.UniqueIndex;
     tvshow_videos: tvshow_videos.UniqueIndex;
@@ -10096,10 +10821,12 @@ declare module 'zapatos/schema' {
     collection: collection.Column;
     collection_images: collection_images.Column;
     collection_items_relation: collection_items_relation.Column;
+    collection_localizations: collection_localizations.Column;
     episode: episode.Column;
     episode_genres_relation: episode_genres_relation.Column;
     episode_images: episode_images.Column;
     episode_licenses: episode_licenses.Column;
+    episode_localizations: episode_localizations.Column;
     episode_video_cue_points: episode_video_cue_points.Column;
     episode_video_streams: episode_video_streams.Column;
     episode_videos: episode_videos.Column;
@@ -10118,14 +10845,17 @@ declare module 'zapatos/schema' {
     season_genres_relation: season_genres_relation.Column;
     season_images: season_images.Column;
     season_licenses: season_licenses.Column;
+    season_localizations: season_localizations.Column;
     season_video_cue_points: season_video_cue_points.Column;
     season_video_streams: season_video_streams.Column;
     season_videos: season_videos.Column;
     tvshow: tvshow.Column;
     tvshow_genre: tvshow_genre.Column;
+    tvshow_genre_localizations: tvshow_genre_localizations.Column;
     tvshow_genres_relation: tvshow_genres_relation.Column;
     tvshow_images: tvshow_images.Column;
     tvshow_licenses: tvshow_licenses.Column;
+    tvshow_localizations: tvshow_localizations.Column;
     tvshow_video_cue_points: tvshow_video_cue_points.Column;
     tvshow_video_streams: tvshow_video_streams.Column;
     tvshow_videos: tvshow_videos.Column;
@@ -10139,10 +10869,12 @@ declare module 'zapatos/schema' {
     collection: collection.SQL;
     collection_images: collection_images.SQL;
     collection_items_relation: collection_items_relation.SQL;
+    collection_localizations: collection_localizations.SQL;
     episode: episode.SQL;
     episode_genres_relation: episode_genres_relation.SQL;
     episode_images: episode_images.SQL;
     episode_licenses: episode_licenses.SQL;
+    episode_localizations: episode_localizations.SQL;
     episode_video_cue_points: episode_video_cue_points.SQL;
     episode_video_streams: episode_video_streams.SQL;
     episode_videos: episode_videos.SQL;
@@ -10161,14 +10893,17 @@ declare module 'zapatos/schema' {
     season_genres_relation: season_genres_relation.SQL;
     season_images: season_images.SQL;
     season_licenses: season_licenses.SQL;
+    season_localizations: season_localizations.SQL;
     season_video_cue_points: season_video_cue_points.SQL;
     season_video_streams: season_video_streams.SQL;
     season_videos: season_videos.SQL;
     tvshow: tvshow.SQL;
     tvshow_genre: tvshow_genre.SQL;
+    tvshow_genre_localizations: tvshow_genre_localizations.SQL;
     tvshow_genres_relation: tvshow_genres_relation.SQL;
     tvshow_images: tvshow_images.SQL;
     tvshow_licenses: tvshow_licenses.SQL;
+    tvshow_localizations: tvshow_localizations.SQL;
     tvshow_video_cue_points: tvshow_video_cue_points.SQL;
     tvshow_video_streams: tvshow_video_streams.SQL;
     tvshow_videos: tvshow_videos.SQL;

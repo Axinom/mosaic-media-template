@@ -7,6 +7,10 @@ import { Broker } from '@axinom/mosaic-message-bus';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { Config, InternalErrors, requestServiceAccountToken } from '../common';
 import {
+  collectionsImagesReplicationHandlers,
+  collectionsReplicationHandlers,
+} from './collections/localization';
+import {
   LocalizationMessageData,
   ReplicationOperationHandlers,
 } from './common';
@@ -15,6 +19,15 @@ import {
   moviesImagesReplicationHandlers,
   moviesReplicationHandlers,
 } from './movies/localization';
+import {
+  episodesImagesReplicationHandlers,
+  episodesReplicationHandlers,
+  seasonsImagesReplicationHandlers,
+  seasonsReplicationHandlers,
+  tvshowGenresReplicationHandlers,
+  tvshowsImagesReplicationHandlers,
+  tvshowsReplicationHandlers,
+} from './tvshows/localization';
 
 const getTableSpecificHandlers = (
   scopedMessage: PgOutputScopedMessage,
@@ -28,6 +41,24 @@ const getTableSpecificHandlers = (
       return movieGenresReplicationHandlers(config);
     case 'movies_images':
       return moviesImagesReplicationHandlers(config, ownerPool);
+    case 'tvshows':
+      return tvshowsReplicationHandlers(config);
+    case 'tvshow_genres':
+      return tvshowGenresReplicationHandlers(config);
+    case 'tvshows_images':
+      return tvshowsImagesReplicationHandlers(config, ownerPool);
+    case 'seasons':
+      return seasonsReplicationHandlers(config, ownerPool);
+    case 'seasons_images':
+      return seasonsImagesReplicationHandlers(config, ownerPool);
+    case 'episodes':
+      return episodesReplicationHandlers(config, ownerPool);
+    case 'episodes_images':
+      return episodesImagesReplicationHandlers(config, ownerPool);
+    case 'collections':
+      return collectionsReplicationHandlers(config);
+    case 'collections_images':
+      return collectionsImagesReplicationHandlers(config, ownerPool);
     default:
       throw new MosaicError({
         ...InternalErrors.UnsupportedReplicationTable,

@@ -4,6 +4,7 @@ import 'jest-extended';
 import { SeasonPublishedEvent } from 'media-messages';
 import { insert, select, selectOne } from 'zapatos/db';
 import { season } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   createSeasonPublishedEvent,
   createTestContext,
@@ -43,7 +44,6 @@ describe('SeasonPublishEventHandler', () => {
       // Act
       await handler.onMessage(message, messageInfo);
 
-      // TODO: Consider verifying via the GQL API.
       // Assert
       const season = await selectOne('season', {
         id: message.content_id,
@@ -52,12 +52,10 @@ describe('SeasonPublishEventHandler', () => {
         id: message.content_id,
         tvshow_id: message.tvshow_id ?? null,
         index: message.index,
-        description: message.description ?? null,
         season_cast: message.cast ?? null,
         production_countries: message.production_countries ?? null,
         released: message.released ?? null,
         studio: message.studio ?? null,
-        synopsis: message.synopsis ?? null,
         tags: message.tags ?? null,
       });
 
@@ -117,17 +115,34 @@ describe('SeasonPublishEventHandler', () => {
       expect(genreRelations.map((g) => g.tvshow_genre_id)).toEqual(
         message.genre_ids,
       );
+      const localizations = await select(
+        'season_localizations',
+        { season_id: message.content_id },
+        {
+          columns: ['description', 'synopsis', 'locale', 'is_default_locale'],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        message.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
 
     test('An existing season is republished', async () => {
       // Arrange
       await insert('season', {
         id: 'season-1',
-        description: 'Old description',
+        studio: 'Incorrect studio',
+      }).run(ctx.ownerPool);
+      await insert('season_localizations', {
+        season_id: 'season-1',
+        locale: DEFAULT_LOCALE_TAG,
+        is_default_locale: true,
       }).run(ctx.ownerPool);
 
       const message = createSeasonPublishedEvent('season-1');
-      message.description = 'New description';
       const messageInfo = stub<MessageInfo<SeasonPublishedEvent>>({
         envelope: {
           auth_token: 'no-token',
@@ -143,7 +158,20 @@ describe('SeasonPublishEventHandler', () => {
         ctx.ownerPool,
       );
 
-      expect(season?.description).toEqual('New description');
+      expect(season?.studio).toEqual(message.studio);
+      const localizations = await select(
+        'season_localizations',
+        { season_id: 'season-1' },
+        {
+          columns: ['description', 'synopsis', 'locale', 'is_default_locale'],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        message.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
   });
 });

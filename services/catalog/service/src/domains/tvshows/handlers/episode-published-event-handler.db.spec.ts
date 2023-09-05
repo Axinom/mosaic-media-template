@@ -4,6 +4,7 @@ import 'jest-extended';
 import { EpisodePublishedEvent } from 'media-messages';
 import { insert, select, selectOne } from 'zapatos/db';
 import { episode } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   createEpisodePublishedEvent,
   createTestContext,
@@ -43,7 +44,6 @@ describe('EpisodePublishEventHandler', () => {
       // Act
       await handler.onMessage(message, messageInfo);
 
-      // TODO: Consider verifying via the GQL API.
       // Assert
       const episode = await selectOne('episode', {
         id: message.content_id,
@@ -52,14 +52,11 @@ describe('EpisodePublishEventHandler', () => {
         id: message.content_id,
         season_id: message.season_id ?? null,
         index: message.index,
-        title: message.title ?? null,
-        description: message.description ?? null,
         episode_cast: message.cast ?? null,
         production_countries: message.production_countries ?? null,
         original_title: message.original_title ?? null,
         released: message.released ?? null,
         studio: message.studio ?? null,
-        synopsis: message.synopsis ?? null,
         tags: message.tags ?? null,
       });
 
@@ -103,15 +100,40 @@ describe('EpisodePublishEventHandler', () => {
         episode_id: message.content_id,
       }).run(ctx.ownerPool);
       expect(licenses).toMatchObject(licenses);
+      const localizations = await select(
+        'episode_localizations',
+        { episode_id: message.content_id },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        message.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
 
     test('An existing episode is republished', async () => {
       // Arrange
-      await insert('episode', { id: 'episode-1', title: 'Old title' }).run(
-        ctx.ownerPool,
-      );
+      await insert('episode', {
+        id: 'episode-1',
+        original_title: 'Incorrect original title',
+      }).run(ctx.ownerPool);
+      await insert('episode_localizations', {
+        episode_id: 'episode-1',
+        title: 'Old title',
+        locale: DEFAULT_LOCALE_TAG,
+        is_default_locale: true,
+      }).run(ctx.ownerPool);
       const message = createEpisodePublishedEvent('episode-1');
-      message.title = 'New title';
       const messageInfo = stub<MessageInfo<EpisodePublishedEvent>>({
         envelope: {
           auth_token: 'no-token',
@@ -127,7 +149,26 @@ describe('EpisodePublishEventHandler', () => {
         id: message.content_id,
       }).run(ctx.ownerPool);
 
-      expect(episode?.title).toEqual('New title');
+      expect(episode?.original_title).toEqual('Episode title');
+      const localizations = await select(
+        'episode_localizations',
+        { episode_id: 'episode-1' },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        message.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
   });
 });
