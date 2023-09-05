@@ -121,7 +121,6 @@ describe('publishingMovieGenresProcessor', () => {
         title: 'Genre2',
         sort_order: 1,
       }).run(ctx.ownerPool);
-      // Arrange
       const localizations: MovieGenreLocalization[] = [
         {
           title: 'source title',

@@ -1,5 +1,6 @@
 import { Image } from '../types/image';
 import { License } from '../types/license';
+import { TvshowLocalization } from '../types/tvshow-localization';
 import { Video } from '../types/video';
 /**
  * Definition of the TV show publish format.
@@ -10,21 +11,9 @@ export interface TvshowPublishedEvent {
    */
   content_id: string;
   /**
-   * A string with at least one character and not only whitespace characters.
-   */
-  title: string;
-  /**
    * Original title of the TV show.
    */
   original_title?: string;
-  /**
-   * A string with at least one character and not only whitespace characters.
-   */
-  synopsis?: string;
-  /**
-   * Extended synopsis.
-   */
-  description?: string;
   /**
    * Name of the producing studio.
    */
@@ -61,4 +50,8 @@ export interface TvshowPublishedEvent {
    * Array of video streams associated with tv show or season.
    */
   videos: Video[];
+  /**
+   * Localizations for every defined locale.
+   */
+  localizations: TvshowLocalization[];
 }

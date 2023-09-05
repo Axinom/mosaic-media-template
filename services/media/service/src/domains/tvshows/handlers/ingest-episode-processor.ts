@@ -36,7 +36,13 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
       { external_id: c.isNotNull },
       {
         columns: ['id', 'external_id', 'index'],
-        lateral: { tvshow: selectOne('tvshows', { id: parent('tvshow_id') }) },
+        lateral: {
+          tvshow: selectOne(
+            'tvshows',
+            { id: parent('tvshow_id') },
+            { columns: ['title'] },
+          ),
+        },
       },
     ).run(ctx);
 

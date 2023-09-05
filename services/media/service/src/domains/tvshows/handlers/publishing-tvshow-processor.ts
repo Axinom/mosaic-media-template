@@ -5,7 +5,7 @@ import {
 } from 'media-messages';
 import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config } from '../../../common';
+import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   atLeastOneString,
   buildPublishingId,
@@ -18,6 +18,7 @@ import {
   videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
+import { getTvshowLocalizationsMetadata } from '../localization';
 
 const tvshowDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -59,26 +60,23 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
     },
   ).run(queryable);
 
-  const { result: videos, validation: videosValidation } =
-    await getVideosMetadata(
+  const [
+    { result: videos, validation: videosValidation },
+    { result: images, validation: imagesValidation },
+    { result: localizations, validation: localizationsValidation },
+  ] = await Promise.all([
+    getVideosMetadata(
       config.videoServiceBaseUrl,
       authToken,
       null,
       tvshow.trailers,
-    );
-
-  const { result: images, validation: imagesValidation } =
-    await getImagesMetadata(
-      config.imageServiceBaseUrl,
-      authToken,
-      tvshow.images,
-    );
+    ),
+    getImagesMetadata(config.imageServiceBaseUrl, authToken, tvshow.images),
+    getTvshowLocalizationsMetadata(config, authToken, tvshow.id.toString()),
+  ]);
 
   const snapshotJson: TvshowPublishedEvent = {
     content_id: buildPublishingId('tvshows', tvshow.id),
-    title: tvshow.title,
-    synopsis: tvshow.synopsis ?? undefined,
-    description: tvshow.description ?? undefined,
     original_title: tvshow.original_title ?? undefined,
     released: tvshow.released ?? undefined,
     studio: tvshow.studio ?? undefined,
@@ -95,11 +93,24 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
     })),
     images,
     videos,
+    localizations: localizations ?? [
+      {
+        is_default_locale: true,
+        language_tag: DEFAULT_LOCALE_TAG,
+        title: tvshow.title,
+        synopsis: tvshow.synopsis ?? undefined,
+        description: tvshow.description ?? undefined,
+      },
+    ],
   };
 
   return {
     result: snapshotJson,
-    validation: [...imagesValidation, ...videosValidation],
+    validation: [
+      ...imagesValidation,
+      ...videosValidation,
+      ...localizationsValidation,
+    ],
   };
 };
 

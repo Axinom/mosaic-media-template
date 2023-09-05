@@ -1,6 +1,8 @@
 import 'jest-extended';
+import { SeasonLocalization } from 'media-messages';
 import { insert, update } from 'zapatos/db';
 import { seasons } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   commonPublishValidator,
   SnapshotValidationResult,
@@ -9,6 +11,7 @@ import { createTestContext, ITestContext } from '../../../tests/test-utils';
 import { PublishImage, PublishVideo } from '../../common';
 import * as imageMetadata from '../../common/utils/get-images-metadata';
 import * as videoMetadata from '../../common/utils/get-videos-metadata';
+import * as localizationMetadata from '../localization/get-season-localizations-metadata';
 import { publishingSeasonProcessor } from './publishing-season-processor';
 
 describe('publishingSeasonProcessor', () => {
@@ -53,6 +56,12 @@ describe('publishingSeasonProcessor', () => {
           result: [],
           validation: [],
         }));
+      jest
+        .spyOn(localizationMetadata, 'getSeasonLocalizationsMetadata')
+        .mockImplementation(async () => ({
+          result: undefined,
+          validation: [],
+        }));
 
       // Act
       const result = await publishingSeasonProcessor.aggregator(
@@ -69,7 +78,6 @@ describe('publishingSeasonProcessor', () => {
           tags: [],
           content_id: `season-${season1.id}`,
           tvshow_id: undefined,
-          description: undefined,
           genre_ids: [],
           images: [],
           licenses: [],
@@ -77,8 +85,15 @@ describe('publishingSeasonProcessor', () => {
           production_countries: [],
           released: undefined,
           studio: undefined,
-          synopsis: undefined,
           videos: [],
+          localizations: [
+            {
+              is_default_locale: true,
+              language_tag: DEFAULT_LOCALE_TAG,
+              description: undefined,
+              synopsis: undefined,
+            },
+          ],
         },
         validation: [],
       });
@@ -222,6 +237,37 @@ describe('publishingSeasonProcessor', () => {
           result: [image],
           validation: [imageError, imageWarning],
         }));
+      const localizationWarning: SnapshotValidationResult = {
+        context: 'LOCALIZATION',
+        message: `test localization warning`,
+        severity: 'WARNING',
+      };
+      const localizations: SeasonLocalization[] = [
+        {
+          synopsis: 'source synopsis',
+          description: 'source description',
+          language_tag: 'en-US',
+          is_default_locale: true,
+        },
+        {
+          synopsis: 'localized synopsis',
+          description: 'localized description',
+          language_tag: 'de-DE',
+          is_default_locale: false,
+        },
+        {
+          synopsis: null,
+          description: null,
+          language_tag: 'et-EE',
+          is_default_locale: false,
+        },
+      ];
+      jest
+        .spyOn(localizationMetadata, 'getSeasonLocalizationsMetadata')
+        .mockImplementation(async () => ({
+          result: localizations,
+          validation: [localizationWarning],
+        }));
 
       // Act
       const result = await publishingSeasonProcessor.aggregator(
@@ -239,7 +285,6 @@ describe('publishingSeasonProcessor', () => {
           cast: ['Actress 1', 'Actor 2'],
           tags: ['Tag 1', 'Tag 3'],
           content_id: `season-${season1.id}`,
-          description: updateValues.description,
           genre_ids: [`tvshow_genre-${genre1.id}`, `tvshow_genre-${genre2.id}`],
           images: [image],
           licenses: [
@@ -257,10 +302,16 @@ describe('publishingSeasonProcessor', () => {
           production_countries: ['Imaginary Country A', 'Imaginary Country B'],
           released: updateValues.released,
           studio: updateValues.studio,
-          synopsis: updateValues.synopsis,
           videos: [video],
+          localizations,
         },
-        validation: [imageError, imageWarning, videoError, videoWarning],
+        validation: [
+          imageError,
+          imageWarning,
+          videoError,
+          videoWarning,
+          localizationWarning,
+        ],
       });
     });
   });
@@ -315,10 +366,15 @@ describe('publishingSeasonProcessor', () => {
           message: `Property 'videos' is required.`,
           severity: 'ERROR',
         },
+        {
+          context: 'METADATA',
+          message: `Property 'localizations' is required.`,
+          severity: 'ERROR',
+        },
       ]);
     });
 
-    it('object with empty required properties and and invalid video and image -> errors', async () => {
+    it('object with empty required properties and and invalid video, image, and localization -> errors', async () => {
       // Act
       const result = await commonPublishValidator(
         {
@@ -330,6 +386,7 @@ describe('publishingSeasonProcessor', () => {
             genre_ids: [],
             images: [{ type: 'COVER' }],
             videos: [{ type: 'TRAILER' }],
+            localizations: [{}],
           },
           validation: [],
         } as any,
@@ -419,6 +476,18 @@ describe('publishingSeasonProcessor', () => {
           message: `Property 'is_protected' of the first video is required.`,
           severity: 'ERROR',
         },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'is_default_locale' of the first localization is required.",
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'language_tag' of the first localization is required.",
+          severity: 'ERROR',
+        },
       ]);
     });
 
@@ -446,6 +515,7 @@ describe('publishingSeasonProcessor', () => {
                 dash_manifest: 'a',
               },
             ],
+            localizations: [{ is_default_locale: 'no', language_tag: null }],
           },
           validation: [],
         } as any,
@@ -507,6 +577,18 @@ describe('publishingSeasonProcessor', () => {
           message: `Property 'output_format' of the first video should be one of the following values: DASH, HLS, DASH_HLS, CMAF, DASH_ON_DEMAND.`,
           severity: 'ERROR',
         },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'is_default_locale' of the first localization should be of type 'boolean'.",
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'language_tag' of the first localization should be of type 'string'.",
+          severity: 'ERROR',
+        },
       ]);
     });
 
@@ -524,6 +606,12 @@ describe('publishingSeasonProcessor', () => {
             licenses: [],
             images: [],
             videos: [],
+            localizations: [
+              {
+                is_default_locale: true,
+                language_tag: DEFAULT_LOCALE_TAG,
+              },
+            ],
           },
           validation: [],
         } as any,
@@ -583,6 +671,12 @@ describe('publishingSeasonProcessor', () => {
                   'https://videoimagedev.blob.core.windows.net/encoded-videos/83Y9JqrKjiCMLpj1bCnsed/dash/manifest.mpd',
               },
             ],
+            localizations: [
+              {
+                is_default_locale: true,
+                language_tag: DEFAULT_LOCALE_TAG,
+              },
+            ],
           },
           validation: [
             {
@@ -624,10 +718,6 @@ describe('publishingSeasonProcessor', () => {
             content_id: 'season-6',
             tvshow_id: 'tvshow-1',
             index: 1,
-            synopsis:
-              "In 2154, humans have depleted Earth's natural resources...",
-            description:
-              'Avatar is a 2009 American epic science fiction film...',
             released: '2009-12-10',
             studio: '20th Century Fox',
             production_countries: [
@@ -697,6 +787,28 @@ describe('publishingSeasonProcessor', () => {
                   'https://videoimagedev.blob.core.windows.net/encoded-videos/83Y9JqrKjiCMLpj1bCnsed/dash/manifest.mpd',
                 dash_manifest:
                   'https://videoimagedev.blob.core.windows.net/encoded-videos/83Y9JqrKjiCMLpj1bCnsed/dash/manifest.mpd',
+              },
+            ],
+            localizations: [
+              {
+                synopsis:
+                  "In 2154, humans have depleted Earth's natural resources...",
+                description:
+                  'Avatar is a 2009 American epic science fiction film...',
+                is_default_locale: true,
+                language_tag: 'en-US',
+              },
+              {
+                synopsis: 'localized synopsis 1',
+                description: 'localized description 1',
+                is_default_locale: false,
+                language_tag: 'et-EE',
+              },
+              {
+                synopsis: 'localized synopsis 2',
+                description: 'localized description 2',
+                is_default_locale: false,
+                language_tag: 'de-DE',
               },
             ],
           },

@@ -1,7 +1,9 @@
 import { Broker } from '@axinom/mosaic-message-bus';
 import { LocalizationServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import { Config, requestServiceAccountToken } from '../common';
+import { getCollectionLocalizationEntityDefinitions } from './collections';
 import { getMovieLocalizationEntityDefinitions } from './movies';
+import { getTvshowLocalizationEntityDefinitions } from './tvshows';
 
 export const registerLocalizationEntityDefinitions = async (
   broker: Broker,
@@ -13,7 +15,17 @@ export const registerLocalizationEntityDefinitions = async (
   const movieDefinitions = getMovieLocalizationEntityDefinitions(
     config.serviceId,
   );
-  const definitions = [...movieDefinitions];
+  const tvshowDefinitions = getTvshowLocalizationEntityDefinitions(
+    config.serviceId,
+  );
+  const collectionDefinitions = getCollectionLocalizationEntityDefinitions(
+    config.serviceId,
+  );
+  const definitions = [
+    ...movieDefinitions,
+    ...tvshowDefinitions,
+    ...collectionDefinitions,
+  ];
   for (const definition of definitions) {
     await broker.publish(
       settings.messageType,
