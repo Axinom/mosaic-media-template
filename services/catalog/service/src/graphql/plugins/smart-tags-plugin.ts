@@ -338,20 +338,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       tvshow: {
         description: 'Definition of the TV show publish format.',
         attribute: {
-          title: {
-            description: 'Title of the TV show.',
-            ...disableFilterAndOrder,
-          },
           original_title: {
             description: 'Original title of the TV show.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
             ...disableFilterAndOrder,
           },
           studio: {
@@ -380,6 +368,23 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
         tags: {
           omit: 'create,update,delete',
+        },
+      },
+      tvshow_localizations: {
+        description: 'Localized values of the TV show.',
+        attribute: {
+          title: {
+            description: 'Title of the TV show.',
+            ...disableFilterAndOrder,
+          },
+          synopsis: {
+            description: 'Short description of the main plot elements.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Extended synopsis.',
+            ...disableFilterAndOrder,
+          },
         },
       },
       tvshow_images: {
@@ -641,10 +646,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       tvshow_genre: {
         description: 'Definition of the TV show genre publish format.',
         attribute: {
-          title: {
-            description: 'Title of the genre.',
-            ...disableFilterAndOrder,
-          },
           order_no: {
             description: 'Global ordering number for the genre.',
           },
@@ -653,19 +654,19 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
+      tvshow_genre_localizations: {
+        description: 'Localized values of the TV show genre.',
+        attribute: {
+          title: {
+            description: 'Title of the TV show genre.',
+          },
+        },
+      },
       season: {
         description: 'Definition of the TV show season publish format.',
         attribute: {
           index: {
             description: 'Season number',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
             ...disableFilterAndOrder,
           },
           studio: {
@@ -696,6 +697,19 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
           foreignKey:
             '(tvshow_id) references app_public.tvshow(id)|@fieldName tvshow',
+        },
+      },
+      season_localizations: {
+        description: 'Localized values of the season.',
+        attribute: {
+          synopsis: {
+            description: 'Short description of the main plot elements.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Extended synopsis.',
+            ...disableFilterAndOrder,
+          },
         },
       },
       season_images: {
@@ -961,20 +975,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
             description: 'Episode number',
             ...disableFilterAndOrder,
           },
-          title: {
-            description: 'Title of the episode.',
-            ...disableFilterAndOrder,
-          },
           original_title: {
             description: 'Original title of the episode.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
             ...disableFilterAndOrder,
           },
           studio: {
@@ -1005,6 +1007,23 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
           foreignKey:
             '(season_id) references app_public.season(id)|@fieldName season',
+        },
+      },
+      episode_localizations: {
+        description: 'Localized values of the episode.',
+        attribute: {
+          title: {
+            description: 'Title of the episode.',
+            ...disableFilterAndOrder,
+          },
+          synopsis: {
+            description: 'Short description of the main plot elements.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Extended synopsis.',
+            ...disableFilterAndOrder,
+          },
         },
       },
       episode_images: {
@@ -1265,18 +1284,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       collection: {
         description: 'Definition of the collection publish format.',
         attribute: {
-          title: {
-            description: 'Title of the collection.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Longer description.',
-            ...disableFilterAndOrder,
-          },
           tags: {
             description: 'Array of tags associated with the content.',
             ...disableFilterAndOrder,
@@ -1284,6 +1291,23 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
         tags: {
           omit: 'create,update,delete',
+        },
+      },
+      collection_localizations: {
+        description: 'Localized values of the collection.',
+        attribute: {
+          title: {
+            description: 'Title of the collection.',
+            ...disableFilterAndOrder,
+          },
+          synopsis: {
+            description: 'Short description of the main plot elements.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Extended synopsis.',
+            ...disableFilterAndOrder,
+          },
         },
       },
       collection_images: {

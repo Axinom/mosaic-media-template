@@ -49,9 +49,9 @@ export function register(app: PiletApi, extensions: Extensions): void {
     ]),
   );
 
-  app.registerRouteResolver({
-    station: 'movie-details',
-    resolver: (dynamicRouteSegments?: Record<string, string> | string) => {
+  app.setRouteResolver(
+    'movie-details',
+    (dynamicRouteSegments?: Record<string, string> | string) => {
       const movieId =
         typeof dynamicRouteSegments === 'string'
           ? dynamicRouteSegments
@@ -59,13 +59,13 @@ export function register(app: PiletApi, extensions: Extensions): void {
 
       return movieId ? `/movies/${movieId}` : undefined;
     },
-  });
+  );
 
-  app.registerRouteResolver({
-    station: 'movie_genre-details',
-    resolver: (_dynamicRouteSegments?: Record<string, string> | string) =>
+  app.setRouteResolver(
+    'movie_genre-details',
+    (_dynamicRouteSegments?: Record<string, string> | string) =>
       '/settings/media/moviegenres',
-  });
+  );
 
   app.registerTile(
     {
