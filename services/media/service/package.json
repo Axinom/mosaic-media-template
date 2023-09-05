@@ -39,6 +39,7 @@
     "internal:zapatos:committed": "yarn util:load-vars ts-node --files scripts/codegen-zapatos.ts",
     "internal:migrate-watch": "yarn util:load-vars ts-node --files scripts/migrate-watch.ts",
     " -- utilities -- ": "",
+    "util:generate-replication-slot-name": "yarn util:load-vars ts-node --files --transpile-only scripts/generate-replication-slot-name.ts",
     "util:load-vars": "env-cmd -f .env env-cmd -f ../../../.env",
     "util:ingest-gen": "yarn util:load-vars ts-node --files --transpile-only scripts/ingest-gen.ts",
     "util:token": "yarn util:load-vars mosaic get-access-token -f ./scripts/resources/media-admin.json",

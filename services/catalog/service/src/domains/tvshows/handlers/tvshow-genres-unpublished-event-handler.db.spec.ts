@@ -1,6 +1,7 @@
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { TvshowGenresUnpublishedEvent } from 'media-messages';
 import { all, insert, select } from 'zapatos/db';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
 import { TvshowGenresUnpublishedEventHandler } from './tvshow-genres-unpublished-event-handler';
 
@@ -25,11 +26,16 @@ describe('TvshowGenrePublishEventHandler', () => {
   });
 
   describe('onMessage', () => {
-    test('An existing tvshow-genre is unpublished', async () => {
+    test('Received a tvshow-genres unpublish message -> the single existing tvshow-genre is removed', async () => {
       // Arrange
       await insert('tvshow_genre', {
         id: 'tvshow_genre-1',
+      }).run(ctx.ownerPool);
+      await insert('tvshow_genre_localizations', {
+        tvshow_genre_id: 'tvshow_genre-1',
         title: 'Some title',
+        locale: DEFAULT_LOCALE_TAG,
+        is_default_locale: true,
       }).run(ctx.ownerPool);
 
       // Act
@@ -42,20 +48,37 @@ describe('TvshowGenrePublishEventHandler', () => {
 
       // Assert
       const tvshowGenre = await select('tvshow_genre', all).run(ctx.ownerPool);
+      const localizations = await select('tvshow_genre_localizations', all).run(
+        ctx.ownerPool,
+      );
 
       expect(tvshowGenre).toHaveLength(0);
+      expect(localizations).toHaveLength(0);
     });
 
-    test('two existing tvshow-genres are unpublished', async () => {
+    test('Received a tvshow-genres unpublish message -> the single existing tvshow-genre with multiple localizations is removed', async () => {
       // Arrange
-      await insert('tvshow_genre', [
+      await insert('tvshow_genre', {
+        id: 'tvshow_genre-1',
+      }).run(ctx.ownerPool);
+      await insert('tvshow_genre_localizations', [
         {
-          id: 'tvshow_genre-1',
+          tvshow_genre_id: 'tvshow_genre-1',
           title: 'Some title',
+          locale: DEFAULT_LOCALE_TAG,
+          is_default_locale: true,
         },
         {
-          id: 'tvshow_genre-2',
-          title: 'Some title 2',
+          tvshow_genre_id: 'tvshow_genre-1',
+          title: 'Localized title (de-DE)',
+          locale: 'de-DE',
+          is_default_locale: false,
+        },
+        {
+          tvshow_genre_id: 'tvshow_genre-1',
+          title: 'Localized title (et-EE)',
+          locale: 'et-EE',
+          is_default_locale: false,
         },
       ]).run(ctx.ownerPool);
 
@@ -69,19 +92,71 @@ describe('TvshowGenrePublishEventHandler', () => {
 
       // Assert
       const tvshowGenre = await select('tvshow_genre', all).run(ctx.ownerPool);
+      const localizations = await select('tvshow_genre_localizations', all).run(
+        ctx.ownerPool,
+      );
 
       expect(tvshowGenre).toHaveLength(0);
+      expect(localizations).toHaveLength(0);
+    });
+
+    test('Received a tvshow-genres unpublish message -> all existing tvshow-genre are removed', async () => {
+      // Arrange
+      await insert('tvshow_genre', [
+        {
+          id: 'tvshow_genre-1',
+        },
+        {
+          id: 'tvshow_genre-2',
+        },
+      ]).run(ctx.ownerPool);
+      await insert('tvshow_genre_localizations', [
+        {
+          tvshow_genre_id: 'tvshow_genre-1',
+          title: 'Some title 1',
+          locale: DEFAULT_LOCALE_TAG,
+          is_default_locale: true,
+        },
+        {
+          tvshow_genre_id: 'tvshow_genre-2',
+          title: 'Some title 2',
+          locale: DEFAULT_LOCALE_TAG,
+          is_default_locale: true,
+        },
+      ]).run(ctx.ownerPool);
+
+      // Act
+      await ctx.executeGqlSql(async (txn) => {
+        await handler.handleMessage(
+          {} as TypedTransactionalMessage<TvshowGenresUnpublishedEvent>,
+          txn,
+        );
+      });
+
+      // Assert
+      const tvshowGenre = await select('tvshow_genre', all).run(ctx.ownerPool);
+      const localizations = await select('tvshow_genre_localizations', all).run(
+        ctx.ownerPool,
+      );
+
+      expect(tvshowGenre).toHaveLength(0);
+      expect(localizations).toHaveLength(0);
     });
 
     test('An existing tvshow-genre is unpublished while having a relation -> relation persists', async () => {
       // Arrange
       const genre = await insert('tvshow_genre', {
         id: 'tvshow_genre-1',
-        title: 'Some title',
       }).run(ctx.ownerPool);
+      await insert('tvshow_genre_localizations', {
+        tvshow_genre_id: 'tvshow_genre-1',
+        title: 'Some title',
+        locale: DEFAULT_LOCALE_TAG,
+        is_default_locale: true,
+      }).run(ctx.ownerPool);
+
       const tvshow = await insert('tvshow', {
         id: 'tvshow-1',
-        title: 'Some title',
       }).run(ctx.ownerPool);
       await insert('tvshow_genres_relation', {
         tvshow_genre_id: genre.id,
@@ -99,7 +174,12 @@ describe('TvshowGenrePublishEventHandler', () => {
 
       // Assert
       const tvshowGenre = await select('tvshow_genre', all).run(ctx.ownerPool);
+      const localizations = await select('tvshow_genre_localizations', all).run(
+        ctx.ownerPool,
+      );
+
       expect(tvshowGenre).toHaveLength(0);
+      expect(localizations).toHaveLength(0);
 
       const tvshows = await select('tvshow', all).run(ctx.ownerPool);
       const relations = await select('tvshow_genres_relation', all).run(
