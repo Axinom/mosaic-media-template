@@ -1,13 +1,17 @@
 import { ChannelPublishedEvent } from '@axinom/mosaic-messages';
 import {
+  CollectionLocalization,
   CollectionPublishedEvent,
   CuePoint,
+  EpisodeLocalization,
   EpisodePublishedEvent,
   MovieGenresPublishedEvent,
   MovieLocalization,
   MoviePublishedEvent,
+  SeasonLocalization,
   SeasonPublishedEvent,
   TvshowGenresPublishedEvent,
+  TvshowLocalization,
   TvshowPublishedEvent,
   VideoStream,
 } from 'media-messages';
@@ -28,7 +32,7 @@ export function createMoviePublishedEvent(
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
-    localizations: createMovieLocalizations(),
+    localizations: createGenericLocalizations(),
   };
 }
 
@@ -37,19 +41,17 @@ export function createTvshowPublishedEvent(
 ): TvshowPublishedEvent {
   return {
     content_id: contentId,
-    title: 'TV show title',
-    description: 'A pretty long description.',
-    synopsis: 'A bit shorter description.',
     original_title: 'TV show title',
     tags: ['tag1', 'tag2'],
     cast: ['Actor One', 'Actor Two'],
-    genre_ids: ['movie_genre-1', 'movie_genre-2'],
+    genre_ids: ['tvshow_genre-1', 'tvshow_genre-2'],
     production_countries: ['US', 'DK'],
     released: '1999-10-15T00:00:00+00:00',
     studio: 'WB',
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
+    localizations: createGenericLocalizations(),
   };
 }
 
@@ -60,17 +62,16 @@ export function createSeasonPublishedEvent(
     content_id: contentId,
     tvshow_id: 'tvshow-1',
     index: 0,
-    description: 'A pretty long description.',
-    synopsis: 'A bit shorter description.',
     tags: ['tag1', 'tag2'],
     cast: ['Actor One', 'Actor Two'],
-    genre_ids: ['movie_genre-1', 'movie_genre-2'],
+    genre_ids: ['tvshow_genre-1', 'tvshow_genre-2'],
     production_countries: ['US', 'DK'],
     released: '1999-10-15T00:00:00+00:00',
     studio: 'WB',
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
+    localizations: createSeasonLocalizations(),
   };
 }
 
@@ -80,20 +81,18 @@ export function createEpisodePublishedEvent(
   return {
     content_id: contentId,
     season_id: 'season-1',
-    title: 'Episode title',
     original_title: 'Episode title',
     tags: ['tag1', 'tag2'],
     cast: ['Actor One', 'Actor Two'],
     production_countries: ['US', 'DK'],
-    genre_ids: ['movie_genre-1', 'movie_genre-2'],
+    genre_ids: ['tvshow_genre-1', 'tvshow_genre-2'],
     released: '1999-10-15T00:00:00+00:00',
     studio: 'WB',
     index: 0,
-    description: 'A pretty long description.',
-    synopsis: 'A bit shorter description.',
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
+    localizations: createGenericLocalizations(),
   };
 }
 
@@ -105,7 +104,7 @@ export function createMovieGenresPublishedEvent(
       {
         content_id: contentId,
         order_no: 0,
-        localizations: createMovieGenreLocalizations(),
+        localizations: createGenreLocalizations(),
       },
     ],
   };
@@ -113,14 +112,13 @@ export function createMovieGenresPublishedEvent(
 
 export function createGenrePublishedEvent(
   contentId: string,
-  title = 'Generic genre',
 ): TvshowGenresPublishedEvent {
   return {
     genres: [
       {
         content_id: contentId,
-        title: title,
         order_no: 0,
+        localizations: createGenreLocalizations(),
       },
     ],
   };
@@ -131,9 +129,6 @@ export function createCollectionPublishedEvent(
 ): CollectionPublishedEvent {
   return {
     content_id: contentId,
-    title: 'A collection, yay',
-    description: 'This collection is a pretty big one.',
-    synopsis: 'Pretty big.',
     images: [
       {
         type: 'COVER',
@@ -149,6 +144,7 @@ export function createCollectionPublishedEvent(
       { season_id: 'season-1', order_no: 3, relation_type: 'SEASON' },
       { episode_id: 'episode-1', order_no: 4, relation_type: 'EPISODE' },
     ],
+    localizations: createGenericLocalizations(),
   };
 }
 
@@ -343,7 +339,11 @@ function createLicense(): License {
   };
 }
 
-function createMovieLocalizations(): MovieLocalization[] {
+function createGenericLocalizations():
+  | MovieLocalization[]
+  | TvshowLocalization[]
+  | EpisodeLocalization[]
+  | CollectionLocalization[] {
   return [
     {
       title: 'source title',
@@ -369,7 +369,30 @@ function createMovieLocalizations(): MovieLocalization[] {
   ];
 }
 
-function createMovieGenreLocalizations(): MovieLocalization[] {
+function createSeasonLocalizations(): SeasonLocalization[] {
+  return [
+    {
+      synopsis: 'source synopsis',
+      description: 'source description',
+      language_tag: 'en-US',
+      is_default_locale: true,
+    },
+    {
+      synopsis: 'localized synopsis',
+      description: 'localized description',
+      language_tag: 'de-DE',
+      is_default_locale: false,
+    },
+    {
+      synopsis: null,
+      description: null,
+      language_tag: 'et-EE',
+      is_default_locale: false,
+    },
+  ];
+}
+
+function createGenreLocalizations(): MovieLocalization[] {
   return [
     {
       title: 'source title',

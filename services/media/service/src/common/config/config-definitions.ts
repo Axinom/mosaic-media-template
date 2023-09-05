@@ -45,12 +45,20 @@ export const getConfigDefinitions = (
     },
 
     /**
-     * **N.B!** If this value ever changes -
-     * Replication slot must be re-created in db migrations to continue working as before.
-     * See `000020-replication-on-localizable-tables-added.sql` for example.
+     * This value is required, but is empty in the template on purpose. This is because the
+     * replication slot is created on Postgres Server level and must be unique,
+     * meaning it can conflict with replication slots for other databases. Take care
+     * when setting this value for deployed environments!
      *
-     * The replication slot is created on Postgres Server level and has a unique
-     * name, meaning it can conflict with replication slots for other databases.
+     * During development - `yarn db:reset` would generate and fill a value in .env file.
+     * For hosted scenarios - `yarn util:generate-replication-slot-name` would
+     * generate and print a unique value based on your environment_id and service_id
+     * to the console. You may use that value or decide to use your own custom value
+     * as needed.
+     *
+     * If there is ever a need to change this value in a deployed environment -
+     * replication slot must be re-created in db migrations to continue working as before.
+     * See `000020-replication-on-localizable-tables-added.sql` for example.
      */
     dbLocalizationReplicationSlot: () =>
       env.get('DATABASE_LOCALIZATION_REPLICATION_SLOT').required().asString(),
