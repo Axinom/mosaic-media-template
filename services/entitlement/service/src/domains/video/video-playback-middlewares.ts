@@ -37,8 +37,7 @@ const validateVideoPlaybackPermissionMiddleware = (
   }
 
   const permissions =
-    req.body?.payload?.management_user?.permissions?.['ax-encoding-service'] ??
-    [];
+    req.body?.payload?.management_user?.permissions?.['ax-video-service'] ?? [];
   if (!permissions.includes('VIDEOS_STREAMING')) {
     throw new MosaicError(CommonErrors.NoStreamingPermissions);
   }
