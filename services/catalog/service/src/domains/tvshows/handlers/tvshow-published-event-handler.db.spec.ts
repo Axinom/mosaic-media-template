@@ -4,6 +4,7 @@ import 'jest-extended';
 import { TvshowPublishedEvent } from 'media-messages';
 import { insert, select, selectOne } from 'zapatos/db';
 import { tvshow } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   createTestContext,
   createTvshowPublishedEvent,
@@ -43,21 +44,17 @@ describe('TvshowPublishEventHandler', () => {
       // Act
       await handler.onMessage(message, messageInfo);
 
-      // TODO: Consider verifying via the GQL API.
       // Assert
       const tvshow = await selectOne('tvshow', {
         id: message.content_id,
       }).run(ctx.ownerPool);
       expect(tvshow).toEqual<tvshow.JSONSelectable>({
         id: message.content_id,
-        title: message.title ?? null,
-        description: message.description ?? null,
         tvshow_cast: message.cast ?? null,
         original_title: message.original_title ?? null,
         production_countries: message.production_countries ?? null,
         released: message.released ?? null,
         studio: message.studio ?? null,
-        synopsis: message.synopsis ?? null,
         tags: message.tags ?? null,
       });
 
@@ -116,15 +113,40 @@ describe('TvshowPublishEventHandler', () => {
       expect(genreRelations.map((g) => g.tvshow_genre_id)).toEqual(
         message.genre_ids,
       );
+      const localizations = await select(
+        'tvshow_localizations',
+        { tvshow_id: message.content_id },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        message.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
 
     test('An existing tvshow is republished', async () => {
       // Arrange
-      await insert('tvshow', { id: 'tvshow-1', title: 'Old title' }).run(
-        ctx.ownerPool,
-      );
+      await insert('tvshow', {
+        id: 'tvshow-1',
+        original_title: 'Incorrect original title',
+      }).run(ctx.ownerPool);
+      await insert('tvshow_localizations', {
+        tvshow_id: 'tvshow-1',
+        title: 'Old title',
+        locale: DEFAULT_LOCALE_TAG,
+        is_default_locale: true,
+      }).run(ctx.ownerPool);
       const message = createTvshowPublishedEvent('tvshow-1');
-      message.title = 'New title';
       const messageInfo = stub<MessageInfo<TvshowPublishedEvent>>({
         envelope: {
           auth_token: 'no-token',
@@ -140,7 +162,26 @@ describe('TvshowPublishEventHandler', () => {
         ctx.ownerPool,
       );
 
-      expect(tvshow?.title).toEqual('New title');
+      expect(tvshow?.original_title).toEqual(message.original_title);
+      const localizations = await select(
+        'tvshow_localizations',
+        { tvshow_id: 'tvshow-1' },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        message.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
   });
 });

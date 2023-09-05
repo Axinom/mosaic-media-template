@@ -9,20 +9,6 @@
       "type": "string",
       "pattern": "^(collection)-([a-zA-Z0-9_-]+)$"
     },
-    "title": {
-      "type": "string",
-      "minLength": 1,
-      "pattern": "^$|.*\\S.*",
-      "description": "A string with at least one character and not only whitespace characters."
-    },
-    "synopsis": {
-      "description": "Short description.",
-      "type": "string"
-    },
-    "description": {
-      "description": "Longer description.",
-      "type": "string"
-    },
     "tags": {
       "description": "Array of tags associated with the content.",
       "type": "array",
@@ -127,12 +113,55 @@
         ],
         "additionalProperties": false
       }
+    },
+    "localizations": {
+      "description": "Localizations for every defined locale.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "title": "collection_localization",
+        "required": [
+          "is_default_locale",
+          "language_tag",
+          "title"
+        ],
+        "properties": {
+          "is_default_locale": {
+            "type": "boolean",
+            "description": "Boolean flag to indicate if locale is default or not."
+          },
+          "language_tag": {
+            "type": "string",
+            "description": "The locale for which the values are localized."
+          },
+          "title": {
+            "type": "string",
+            "description": "The localized title of this collection."
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The localized description of this collection."
+          },
+          "synopsis": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The localized synopsis of this collection."
+          }
+        }
+      }
     }
   },
   "required": [
     "content_id",
-    "title",
-    "related_items"
+    "related_items",
+    "localizations"
   ],
   "additionalProperties": false
 }

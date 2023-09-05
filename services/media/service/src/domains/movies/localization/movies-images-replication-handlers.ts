@@ -1,11 +1,6 @@
-import {
-  buildPgSettings,
-  DEFAULT_SYSTEM_USERNAME,
-  OwnerPgPool,
-  transactionWithContext,
-} from '@axinom/mosaic-db-common';
+import { OwnerPgPool } from '@axinom/mosaic-db-common';
 import { Dict } from '@axinom/mosaic-service-common';
-import { IsolationLevel, selectOne } from 'zapatos/db';
+import { selectOne } from 'zapatos/db';
 import { movies_images } from 'zapatos/schema';
 import { Config } from '../../../common';
 import {
@@ -34,32 +29,13 @@ const assertMovieImage: (
 
 const movieIsDeleted = async (
   movieImage: LocalizableMovieImage,
-  config: Config,
   ownerPool: OwnerPgPool,
 ): Promise<boolean> => {
-  const pgSettings = buildPgSettings(
-    {
-      tenantId: config.tenantId,
-      environmentId: config.environmentId,
-      name: DEFAULT_SYSTEM_USERNAME,
-      permissions: { [config.serviceId]: ['ADMIN'] },
-    },
-    config.dbOwner,
-    config.serviceId,
-  );
-
-  const data = await transactionWithContext(
-    ownerPool,
-    IsolationLevel.Serializable,
-    pgSettings,
-    async (txn) => {
-      return selectOne(
-        'movies',
-        { id: movieImage.movie_id },
-        { columns: ['id'] },
-      ).run(txn);
-    },
-  );
+  const data = await selectOne(
+    'movies',
+    { id: movieImage.movie_id },
+    { columns: ['id'] },
+  ).run(ownerPool);
   return !data;
 };
 
@@ -105,7 +81,7 @@ export const moviesImagesReplicationHandlers = (
       assertMovieImage(oldData);
       if (
         oldData.image_type !== 'COVER' ||
-        (await movieIsDeleted(oldData, config, ownerPool))
+        (await movieIsDeleted(oldData, ownerPool))
       ) {
         // Ignore any changes to non-cover image relations
         // If image relation is deleted as part of a cascade delete of movie - no need to upsert

@@ -1,3 +1,4 @@
+import { getTranslationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
 import { ActionData, IconName } from '@axinom/mosaic-ui';
 import { useMemo } from 'react';
 import { useHistory } from 'react-router';
@@ -12,6 +13,7 @@ export function useCollectionDetailsActions(id: number): {
   readonly actions: ActionData[];
 } {
   const history = useHistory();
+  const localizationPath = getTranslationEntryPoint('collection');
 
   const [deleteCollectionMutation] = useDeleteCollectionMutation({
     client,
@@ -43,6 +45,14 @@ export function useCollectionDetailsActions(id: number): {
         label: 'Manage Cover Image',
         path: `/collections/${id}/images`,
       },
+      ...(localizationPath
+        ? [
+            {
+              label: 'Localizations',
+              path: localizationPath.replace(':collectionId', id.toString()),
+            },
+          ]
+        : []),
       {
         label: 'Publish Now',
         confirmationMode: 'Simple',
@@ -76,5 +86,6 @@ export function useCollectionDetailsActions(id: number): {
     id,
     publishCollectionMutation,
     unpublishCollectionMutation,
+    localizationPath,
   ]);
 }
