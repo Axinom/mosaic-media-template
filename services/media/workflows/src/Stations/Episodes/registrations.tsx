@@ -1,3 +1,4 @@
+import { generateLocalizationEntryPoints } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions, ExtensionsContext } from '../../externals';
@@ -22,6 +23,32 @@ export function register(app: PiletApi, extensions: Extensions): void {
     label: 'Episodes',
     icon: <MediaIcons icon={MediaIconName.Episodes} />,
   };
+
+  // Generate entry points to embedded localization stations
+  app.getDataHelper(
+    'localization-registration',
+    generateLocalizationEntryPoints([
+      {
+        root: '/episodes/:episodeId',
+        entityIdParam: 'episodeId',
+        entityType: 'episode',
+      },
+    ]),
+  );
+
+  app.setRouteResolver(
+    'episode-details',
+    (
+      dynamicRouteSegments?: Record<string, string> | string,
+    ): string | undefined => {
+      const episodeId =
+        typeof dynamicRouteSegments === 'string'
+          ? dynamicRouteSegments
+          : dynamicRouteSegments?.episodeId;
+
+      return episodeId ? `/episodes/${episodeId}` : undefined;
+    },
+  );
 
   app.registerTile(
     {
