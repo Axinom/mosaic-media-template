@@ -195,7 +195,7 @@ async function main(): Promise<void> {
       }
     }
 
-    if (typeIndex < 7) {
+    if (typeIndex < typeMapping.length) {
       logger.log(
         `Processing ${payloads.length} message(s) of type ${typeMapping[typeIndex].type}. Already processed: ${typeMapping[typeIndex].counter}.`,
       );
