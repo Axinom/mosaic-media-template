@@ -17995,7 +17995,7 @@ export type SearchCollectionTagsQueryResult = Apollo.QueryResult<SearchCollectio
 export const CollectionRelatedEntitiesDocument = gql`
     query CollectionRelatedEntities($id: Int!) {
   collection(id: $id) {
-    collectionRelations {
+    collectionRelations(orderBy: SORT_ORDER_ASC) {
       nodes {
         movie {
           entityId: id
