@@ -1,5 +1,5 @@
 query MovieGenres {
-  movieGenres(orderBy: UPDATED_DATE_DESC) {
+  movieGenres(orderBy: SORT_ORDER_ASC) {
     nodes {
       sortOrder
       title
