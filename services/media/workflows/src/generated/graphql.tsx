@@ -17995,7 +17995,7 @@ export type SearchCollectionTagsQueryResult = Apollo.QueryResult<SearchCollectio
 export const CollectionRelatedEntitiesDocument = gql`
     query CollectionRelatedEntities($id: Int!) {
   collection(id: $id) {
-    collectionRelations {
+    collectionRelations(orderBy: SORT_ORDER_ASC) {
       nodes {
         movie {
           entityId: id
@@ -20004,7 +20004,7 @@ export type MoviesMutatedSubscriptionHookResult = ReturnType<typeof useMoviesMut
 export type MoviesMutatedSubscriptionResult = Apollo.SubscriptionResult<MoviesMutatedSubscription>;
 export const MovieGenresDocument = gql`
     query MovieGenres {
-  movieGenres(orderBy: UPDATED_DATE_DESC) {
+  movieGenres(orderBy: SORT_ORDER_ASC) {
     nodes {
       sortOrder
       title
@@ -22478,7 +22478,7 @@ export type TvShowsMutatedSubscriptionHookResult = ReturnType<typeof useTvShowsM
 export type TvShowsMutatedSubscriptionResult = Apollo.SubscriptionResult<TvShowsMutatedSubscription>;
 export const TvShowGenresDocument = gql`
     query TvShowGenres {
-  tvshowGenres(orderBy: UPDATED_DATE_DESC) {
+  tvshowGenres(orderBy: SORT_ORDER_ASC) {
     nodes {
       sortOrder
       title

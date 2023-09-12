@@ -45,7 +45,7 @@ regularVariables:
   # Managed Service URLs
   ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
   IMAGE_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-image-service.management_base_url}'
-  ENCODING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-encoding-service.management_base_url}'
+  VIDEO_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-video-service.management_base_url}'
 
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
@@ -69,9 +69,11 @@ serviceAccounts:
 
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.
-  - name: 'media_workflows'
+  # Use the pilet's package name as the 'name', and any ENV arguments required by the pilet under 'args'.
+  - name: 'media-workflows'
     args:
-      MEDIA_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.self.api}'
+      MEDIA_MANAGEMENT_HOST: '${__ax_hosted__.dns.self.api}'
+      MEDIA_MANAGEMENT_HTTP_PROTOCOL: 'https'
 
 dnsMappedPorts:
   # Defines the DNS subdomains that will provisioned and be mapped to the ports exposed by the service
