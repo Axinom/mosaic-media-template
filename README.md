@@ -194,7 +194,7 @@ like:
 You can find these keys and values usually in the `.env.template` file of the
 workflow.
 
-    ## Deploying the services via Mosaic Hosting Service
+## Deploying the services via Mosaic Hosting Service
 
 ### Pre-requisites for deploying any service
 
