@@ -30,8 +30,9 @@ export const ValidationErrors = {
     message: 'The playlist cannot begin and end with an "AD_POD".',
     code: 'PLAYLIST_CANNOT_START_AND_END_WITH_AD_POD',
   },
-  PlaylistVideosHaveNoMutualStreams: {
-    message: 'The videos in the playlist do not share a common stream format.',
+  PlaceholderAndPlaylistVideosHaveNoMutualStreams: {
+    message:
+      'The placeholder video and playlist video(s) must each have at least one stream with the same resolution, frame rate, and bitrate.',
     code: 'PLAYLIST_VIDEOS_HAVE_NO_MUTUAL_STREAMS',
   },
   PlaylistPlaceholderVideoWasNotFound: {
