@@ -194,6 +194,127 @@ like:
 You can find these keys and values usually in the `.env.template` file of the
 workflow.
 
+    ## Deploying the services via Mosaic Hosting Service
+
+### Pre-requisites for deploying any service
+
+1. Ensure you've configured the Container Registry for your environment in the
+   Admin Portal under Hosting Service (the following steps assumes `Docker Hub`
+   as the Container Registry provider for simplicity).
+2. For each service you wish to host in Axinom, ensure you've created a
+   `Customized Service` entity via the Admin Portal, and that the correct
+   repository name has been set as expected.
+3. Ensure you've run `yarn setup:hosting` from the root of the
+   mosaic-media-template. This will setup the required service-account for using
+   the Mosaic CLI commands shown below with the correct permissions. NOTE:
+   `yarn util:load-vars` is used in the below commands to load values for
+   certain CLI arguments from the `.env` file. If required, the CLI arguments
+   can also be directly provided as necessary (i.e. when used in a CI
+   environment/agent). NOTE: The final deployment step (i.e. the
+   `mosaic hosting service deploy` step) can also be performed via the Admin
+   Portal under Hosting Service. A detailed guide on how to deploy services via
+   Mosaic Hosting Service can be found at
+   https://portal.axinom.com/mosaic/documentation/deploy-a-customized-service-with-hosting-service
+
+### Deploying Media Service
+
+1. Build the service using the provided Dockerfile
+   - CLI Command
+     - `docker build -t <username>/<repository_name>:<tag> --build-arg PACKAGE_ROOT=services/media/service --build-arg PACKAGE_BUILD_COMMAND=build:media-service:prod .`
+     - i.e.
+       `docker build -t my-user/media-service:20230927.1 --build-arg PACKAGE_ROOT=services/media/service --build-arg PACKAGE_BUILD_COMMAND=build:media-service:prod .`
+   - Ensure to use the same `<repository_name>` you decide on here, also in the
+     `Customized Service` details station of the Admin Portal.
+2. Push the container image to Docker Hub
+   - CLI Command
+     - `docker push <dockerhub_username>/<repository_name>:<tag>`
+     - i.e. `docker push my-user/media-service:20230927.1`
+3. Build the workflows of the media-service
+   - CLI Command
+     - `yarn build:media-workflows:prod`
+   - This will produce a `.tgz` pilet artifact on the project root
+4. Register the pilet artifact on the Mosaic Hosting Service
+   - CLI Command
+     - `yarn util:load-vars mosaic hosting pilet register -i <custom-service-id> -p <path-to-workflow-build-artifact>`
+     - i.e.
+       `yarn util:load-vars mosaic hosting pilet register -i media-service -p ./`
+5. Upload the deployment manifest to the Mosaic Hosting Service
+   - CLI Command
+     - `yarn util:load-vars mosaic hosting manifest upload -i <custom-service-id> -p <path-to-deployment-manifest-yaml> -n <manifest-name>`
+     - i.e.
+       `yarn util:load-vars mosaic hosting manifest upload -i media-service -p ./services/media/service/mosaic-hosting-deployment-manifest.yaml -n media-service-manifest-20230927`
+   - Ensure you provide a unique value for the `<manifest-name>`
+6. Deploy the service with the specific artifacts (i.e. container image tag,
+   pilet artifact, deployment manifest)
+   - CLI Command
+     - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -p <workflow-package@version> -m <manifest-name> -n <deployment-name>`
+     - i.e.
+       `yarn util:load-vars mosaic hosting service deploy -i media-service -t 20230927.1 -p media-workflows@1.0.1 -m media-service-manifest-20230927 -n media-service-deployment-20230927.1`
+   - Ensure you provide a unique value for the `<deployment-name>`
+
+### Deploying Catalog Service
+
+1. Build the service using the provided Dockerfile
+   - CLI Command
+     - `docker build -t <username>/<repository_name>:<tag> --build-arg PACKAGE_ROOT=services/catalog/service --build-arg PACKAGE_BUILD_COMMAND=build:catalog-service:prod .`
+     - i.e.
+       `docker build -t my-user/catalog-service:20230927.1 --build-arg PACKAGE_ROOT=services/catalog/service --build-arg PACKAGE_BUILD_COMMAND=build:catalog-service:prod .`
+   - Ensure to use the same `<repository_name>` you decide on here, also in the
+     `Customized Service` details station of the Admin Portal.
+2. Push the container image to Docker Hub
+   - CLI Command
+     - `docker push <dockerhub_username>/<repository_name>:<tag>`
+     - i.e. `docker push my-user/catalog-service:20230927.1`
+3. Since this service has no workflows, we do not need to build them nor
+   register them
+4. Upload the deployment manifest to the Mosaic Hosting Service
+   - CLI Command
+     - `yarn util:load-vars mosaic hosting manifest upload -i <custom-service-id> -p <path-to-deployment-manifest-yaml> -n <manifest-name>`
+     - i.e.
+       `yarn util:load-vars mosaic hosting manifest upload -i catalog-service -p ./services/catalog/service/mosaic-hosting-deployment-manifest.yaml -n catalog-service-manifest-20230927`
+   - Ensure you provide a unique value for the `<manifest-name>`
+5. Deploy the service with the specific artifacts (i.e. container image tag,
+   deployment manifest)
+   - CLI Command
+     - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -m <manifest-name> -n <deployment-name>`
+     - i.e.
+       `yarn util:load-vars mosaic hosting service deploy -i catalog-service -t 20230927.1 -m catalog-service-manifest-20230927 -n catalog-service-deployment-20230927.1`
+   - Ensure you provide a unique value for the `<deployment-name>`
+
+### Deploying Entitlement Service
+
+1. Build the service using the provided Dockerfile
+   - CLI Command
+     - `docker build -t <username>/<repository_name>:<tag> --build-arg PACKAGE_ROOT=services/entitlement/service --build-arg PACKAGE_BUILD_COMMAND=build:entitlement-service:prod .`
+     - i.e.
+       `docker build -t my-user/entitlement-service:20230927.1 --build-arg PACKAGE_ROOT=services/entitlement/service --build-arg PACKAGE_BUILD_COMMAND=build:entitlement-service:prod .`
+   - Ensure to use the same `<repository_name>` you decide on here, also in the
+     `Customized Service` details station of the Admin Portal.
+2. Push the container image to Docker Hub
+   - CLI Command
+     - `docker push <dockerhub_username>/<repository_name>:<tag>`
+     - i.e. `docker push my-user/entitlement-service:20230927.1`
+3. Since this service has no workflows, we do not need to build them nor
+   register them
+4. Upload the deployment manifest to the Mosaic Hosting Service
+   - CLI Command
+     - `yarn util:load-vars mosaic hosting manifest upload -i <custom-service-id> -p <path-to-deployment-manifest-yaml> -n <manifest-name>`
+     - i.e.
+       `yarn util:load-vars mosaic hosting manifest upload -i entitlement-service -p ./services/entitlement/service/mosaic-hosting-deployment-manifest.yaml -n entitlement-service-manifest-20230927`
+   - Ensure you provide a unique value for the `<manifest-name>`
+   - **IMPORTANT:** The entitlement-service requires certain environment
+     variables to be configured that are user specific (i.e. `GEOLITE` &
+     `DRM Keys`). Therefore ensure that you've followed the necessary steps to
+     retrieve these values and have updated the deployment manifest YAML with
+     the correct values.
+5. Deploy the service with the specific artifacts (i.e. container image tag,
+   deployment manifest)
+   - CLI Command
+     - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -m <manifest-name> -n <deployment-name>`
+     - i.e.
+       `yarn util:load-vars mosaic hosting service deploy -i entitlement-service -t 20230927.1 -m entitlement-service-manifest-20230927 -n entitlement-service-deployment-20230927.1`
+   - Ensure you provide a unique value for the `<deployment-name>`
+
 ## Development notes
 
 - `zapatos` models will be generated after `yarn db:commit` but you can trigger
