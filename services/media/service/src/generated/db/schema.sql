@@ -1991,8 +1991,8 @@ DECLARE
   found_column text;
 begin
   EXECUTE '
-    SELECT column_name
-    FROM information_schema.columns
+    SELECT column_name 
+    FROM information_schema.columns 
     WHERE table_schema='''||schemaName||''' and table_name='''||tableName||''' and column_name='''||columnName||''';
   ' INTO found_column;
 
@@ -2076,7 +2076,7 @@ CREATE FUNCTION ax_define.define_audit_date_fields_on_table(tablename text, sche
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN
+    DO $do$ BEGIN 
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN created_date timestamptz NOT NULL DEFAULT (now() at time zone ''utc'');
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN updated_date timestamptz NOT NULL DEFAULT (now() at time zone ''utc'');
@@ -2099,7 +2099,7 @@ CREATE FUNCTION ax_define.define_audit_user_fields_on_table(tablename text, sche
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN
+    DO $do$ BEGIN 
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN created_user text NOT NULL DEFAULT ''' || defaultUserName || ''';
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN updated_user text NOT NULL DEFAULT ''' || defaultUserName || ''';
@@ -2173,8 +2173,8 @@ DECLARE
 BEGIN
   EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ENABLE ROW LEVEL SECURITY;';
   EXECUTE 'DROP POLICY IF EXISTS ' || tableName || '_end_user_authorization ON ' || schemaName || '.' || tableName || ';';
-
-
+  
+ 
   EXECUTE 'CREATE POLICY ' || tableName || '_end_user_authorization ON ' || schemaName || '.' || tableName || ' AS RESTRICTIVE FOR ALL
     USING (' || end_user_rls_string || ');';
 
@@ -2230,51 +2230,6 @@ BEGIN
   PERFORM ax_utils.validate_identifier_length(indexName, 'If the auto-generated name is too long then an "indexName" argument must be provided.');
   PERFORM ax_define.drop_like_index(fieldName, tableName, indexName);
   EXECUTE 'CREATE INDEX ' || indexName || ' ON ' || schemaName || '.' || tableName || ' USING gin (' || fieldName || ' gin_trgm_ops);';
-END;
-$$;
-
-
---
--- Name: define_logical_replication_publication(text, text[], text, text); Type: FUNCTION; Schema: ax_define; Owner: -
---
-
-CREATE FUNCTION ax_define.define_logical_replication_publication(publicationname text, tablenames text[], schemaname text, publicationoperations text DEFAULT 'insert,update,delete'::text) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-  i integer;
-  tableName text;
-BEGIN
-  EXECUTE 'DROP PUBLICATION IF EXISTS ' || publicationName;
-  EXECUTE 'CREATE PUBLICATION ' || publicationName || ' WITH (publish = "' || publicationOperations || '");';
-  FOR i IN 1..array_length(tableNames, 1) LOOP
-    tableName := tableNames[i];
-    EXECUTE 'ALTER PUBLICATION ' || publicationName || ' ADD TABLE ' || schemaName || '.' ||  tableName || ';';
-    EXECUTE 'ALTER TABLE ' || schemaName || '.' ||  tableName || ' REPLICA IDENTITY full;';
-  END LOOP;
-END;
-$$;
-
-
---
--- Name: define_logical_replication_slot(text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
---
-
-CREATE FUNCTION ax_define.define_logical_replication_slot(slotname text, skipifmatches text, pluginname text DEFAULT 'pgoutput'::text) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-  databaseName TEXT;
-BEGIN
-  SELECT current_database() INTO databaseName;
-  IF ax_utils.validation_not_empty(skipIfMatches) AND databaseName ~* skipIfMatches THEN
-    RETURN;
-  END IF;
-
-  PERFORM pg_drop_replication_slot(slot_name) FROM pg_replication_slots WHERE slot_name = slotName AND database = databaseName;
-  PERFORM pg_create_logical_replication_slot(slotName, pluginName);
-  EXCEPTION
-    WHEN object_in_use THEN RAISE NOTICE 'The replication slot "%" is in use and cannot be deleted.', slotName;
 END;
 $$;
 
@@ -2364,15 +2319,15 @@ BEGIN
   -- Set updated_date=now() on the foreign table. This will propogate UPDATE triggers.
   --
   -- A new function is created for each table to do this.
-  --     It *may* be possible to use a stock function with trigger arguments but its not easy as NEW and OLD cannot be accessed with dynamic column names. A possible
-  --     solution to that is described here: https://itectec.com/database/postgresql-assignment-of-a-column-with-dynamic-column-name/. But even there the advise is
+  --     It *may* be possible to use a stock function with trigger arguments but its not easy as NEW and OLD cannot be accessed with dynamic column names. A possible 
+  --     solution to that is described here: https://itectec.com/database/postgresql-assignment-of-a-column-with-dynamic-column-name/. But even there the advise is 
   --     to: "Just write a new trigger function for each table. Less hassle, better performance. Byte the bullet on code duplication:"
   --
-  -- WARNING: This function uses "SECURITY DEFINER". This is required to ensure that update to the target table is allowed. This means that the function is
+  -- WARNING: This function uses "SECURITY DEFINER". This is required to ensure that update to the target table is allowed. This means that the function is 
   --          executed with role "DB_OWNER". Any propogated trigger functions will also execute with role "DB_OWNER".
   EXECUTE  '
             CREATE OR REPLACE FUNCTION ' || schemaName || '.' || functionName || '() RETURNS TRIGGER
-            LANGUAGE plpgsql
+            LANGUAGE plpgsql 
             SECURITY DEFINER
             SET search_path = pg_temp
             AS $b$
@@ -2385,31 +2340,31 @@ BEGIN
                         RETURN NULL;
                     END IF;
                 END IF;
-
+                
                 -- UPDATE (where relationship is unchanged, or changed to another entity in which case a change is triggered on both the old and new relation)
                 IF (OLD.' || idColumnName || ' IS NOT NULL AND NEW.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE (' || foreignIdColumnName || ' = OLD.' || idColumnName || ') OR (' || foreignIdColumnName || ' = NEW.' || idColumnName || ');
-
+                
                 -- INSERT (or UPDATE which sets nullable relationship)
                 ELSIF (NEW.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE ' || foreignIdColumnName || ' = NEW.' || idColumnName || ';
-
+                
                 -- DELETE (or UPDATE which removes nullable relationship)
                 ELSIF (OLD.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE ' || foreignIdColumnName || ' = OLD.' || idColumnName || ';
-
+                    
                 END IF;
                 RETURN NULL;
             END $b$;
             REVOKE EXECUTE ON FUNCTION ' || schemaName || '.' || functionName || '() FROM public;
             ';
-
+  
   -- Function runs *AFTER* INSERT, UPDATE, DELETE. Propogated queries can still raise an error and rollback the transaction
   EXECUTE  'DROP TRIGGER IF EXISTS _200_propogate_timestamps on ' || schemaName || '.' || tableName;
-  EXECUTE  'CREATE trigger _200_propogate_timestamps
+  EXECUTE  'CREATE trigger _200_propogate_timestamps 
             AFTER INSERT OR UPDATE OR DELETE ON ' || schemaName || '.' || tableName || '
             FOR EACH ROW EXECUTE PROCEDURE ' || schemaName || '.' || functionName || '();';
 END;
@@ -2473,17 +2428,17 @@ CREATE FUNCTION ax_define.define_user_id_on_table(tablename text, schemaname tex
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN
+    DO $do$ BEGIN 
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN user_id UUID NOT NULL DEFAULT ''00000000-0000-0000-0000-000000000000'';
       EXCEPTION
           WHEN duplicate_column THEN RAISE NOTICE ''The column user_id already exists in the ' || schemaName || '.' || tableName || ' table.'';
       END;
     END $do$;
-
+    
     ALTER TABLE ' || schemaName || '.' || tableName || ' DROP CONSTRAINT IF EXISTS user_id_not_default;
     ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT user_id_not_default CHECK (ax_utils.constraint_not_default_uuid(user_id, uuid_nil()));
-
+    
     SELECT ax_define.define_user_id_trigger(''' || tableName || ''', ''' || schemaName || ''');
   ';
 END;
@@ -2692,59 +2647,6 @@ $_$;
 
 
 --
--- Name: pgmemento_create_table_audit(text, text, text, boolean, boolean, boolean); Type: FUNCTION; Schema: ax_define; Owner: -
---
-
-CREATE FUNCTION ax_define.pgmemento_create_table_audit(table_name text, schema_name text DEFAULT 'app_public'::text, audit_id_column_name text DEFAULT 'pgmemento_audit_id'::text, log_old_data boolean DEFAULT true, log_new_data boolean DEFAULT false, log_state boolean DEFAULT false) RETURNS void
-    LANGUAGE plpgsql
-    AS $_$
-BEGIN
-    PERFORM pgmemento.create_table_audit($1, $2, $3, $4, $5, $6, TRUE);
-EXCEPTION
-    -- If this has been run before the table will already have the pgmemento_audit_id column and an error will be thrown.
-    WHEN duplicate_column THEN
-        RAISE INFO 'Column % already exists on %.%', $3, $2, $1 ;
-END;
-$_$;
-
-
---
--- Name: pgmemento_delete_old_logs(interval); Type: FUNCTION; Schema: ax_define; Owner: -
---
-
-CREATE FUNCTION ax_define.pgmemento_delete_old_logs(age interval) RETURNS integer
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-    counter INTEGER;
-    transaction_id INTEGER;
-    tablename TEXT;
-    schemaname TEXT;
-BEGIN
-    counter := 0;
-    FOR transaction_id, tablename, schemaname IN (
-        -- 1. Get all transaction metadata and associated table event metadata older than specified age.
-        SELECT DISTINCT
-            tl.id, el.table_name, el.schema_name
-        FROM
-            pgmemento.transaction_log tl
-            JOIN pgmemento.table_event_log el ON tl.id = el.transaction_id
-        WHERE
-            tl.txid_time  < NOW() - age)
-    LOOP
-        -- 2. Delete all table event metadata and row log entries associated with the transaction.
-        PERFORM  pgmemento.delete_table_event_log(transaction_id, tablename, schemaname);
-        -- 3. Delete the transaction metadata itself.
-        PERFORM pgmemento.delete_txid_log(transaction_id);
-        counter := counter + 1;
-    END LOOP;
-
-    RETURN counter;
-END;
-$$;
-
-
---
 -- Name: set_enum_as_column_type(text, text, text, text, text, text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
 --
 
@@ -2761,10 +2663,10 @@ BEGIN
   END IF;
   IF NOT ax_define.column_exists(columnName, tableName, schemaName) THEN
     EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN ' || columnName ||' text ' || default_setting || ' ' || notNullOptions || ';';
-  END IF;
+  END IF; 
 
   -- Set the column that uses enum value as a foreign key
-  EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT ' || constraintName || ' FOREIGN KEY ('|| columnName ||') REFERENCES ' || enumSchemaName || '.' || enumName || '(value);';
+  EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT ' || constraintName || ' FOREIGN KEY ('|| columnName ||') REFERENCES ' || enumSchemaName || '.' || enumName || '(value);'; 
 END;
 $$;
 
@@ -2778,8 +2680,8 @@ CREATE FUNCTION ax_define.set_enum_domain(columnname text, tablename text, schem
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN
-      BEGIN
+    DO $do$ BEGIN 
+      BEGIN 
         CREATE DOMAIN ' || enumSchemaName || '.' || enumName || ' AS text;
       EXCEPTION
         WHEN duplicate_object THEN RAISE NOTICE ''Domain already existed.'';
@@ -3664,8 +3566,6 @@ CREATE TABLE app_public.collections (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
-ALTER TABLE ONLY app_public.collections REPLICA IDENTITY FULL;
-
 
 --
 -- Name: collections_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
@@ -3690,8 +3590,6 @@ CREATE TABLE app_public.collections_images (
     image_id uuid NOT NULL,
     image_type app_public.collection_image_type_enum NOT NULL
 );
-
-ALTER TABLE ONLY app_public.collections_images REPLICA IDENTITY FULL;
 
 
 --
@@ -3776,8 +3674,6 @@ CREATE TABLE app_public.episodes (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
-ALTER TABLE ONLY app_public.episodes REPLICA IDENTITY FULL;
-
 
 --
 -- Name: episodes_casts; Type: TABLE; Schema: app_public; Owner: -
@@ -3813,8 +3709,6 @@ CREATE TABLE app_public.episodes_images (
     image_id uuid NOT NULL,
     image_type app_public.episode_image_type_enum NOT NULL
 );
-
-ALTER TABLE ONLY app_public.episodes_images REPLICA IDENTITY FULL;
 
 
 --
@@ -4138,8 +4032,6 @@ CREATE TABLE app_public.movie_genres (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
-ALTER TABLE ONLY app_public.movie_genres REPLICA IDENTITY FULL;
-
 
 --
 -- Name: movie_genres_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
@@ -4197,8 +4089,6 @@ CREATE TABLE app_public.movies (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
-ALTER TABLE ONLY app_public.movies REPLICA IDENTITY FULL;
-
 
 --
 -- Name: movies_casts; Type: TABLE; Schema: app_public; Owner: -
@@ -4234,8 +4124,6 @@ CREATE TABLE app_public.movies_images (
     image_id uuid NOT NULL,
     image_type app_public.movie_image_type_enum NOT NULL
 );
-
-ALTER TABLE ONLY app_public.movies_images REPLICA IDENTITY FULL;
 
 
 --
@@ -4384,8 +4272,6 @@ CREATE TABLE app_public.seasons (
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL
 );
 
-ALTER TABLE ONLY app_public.seasons REPLICA IDENTITY FULL;
-
 
 --
 -- Name: seasons_casts; Type: TABLE; Schema: app_public; Owner: -
@@ -4421,8 +4307,6 @@ CREATE TABLE app_public.seasons_images (
     image_id uuid NOT NULL,
     image_type app_public.season_image_type_enum NOT NULL
 );
-
-ALTER TABLE ONLY app_public.seasons_images REPLICA IDENTITY FULL;
 
 
 --
@@ -4668,8 +4552,6 @@ CREATE TABLE app_public.tvshow_genres (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
-ALTER TABLE ONLY app_public.tvshow_genres REPLICA IDENTITY FULL;
-
 
 --
 -- Name: tvshow_genres_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
@@ -4726,8 +4608,6 @@ CREATE TABLE app_public.tvshows (
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
 
-ALTER TABLE ONLY app_public.tvshows REPLICA IDENTITY FULL;
-
 
 --
 -- Name: tvshows_casts; Type: TABLE; Schema: app_public; Owner: -
@@ -4763,8 +4643,6 @@ CREATE TABLE app_public.tvshows_images (
     image_id uuid NOT NULL,
     image_type app_public.tvshow_image_type_enum NOT NULL
 );
-
-ALTER TABLE ONLY app_public.tvshows_images REPLICA IDENTITY FULL;
 
 
 --
@@ -10711,97 +10589,6 @@ CREATE POLICY tvshows_tvshow_genres_authorization_delete ON app_public.tvshows_t
 
 
 --
--- Name: pg_localization_publication; Type: PUBLICATION; Schema: -; Owner: -
---
-
-CREATE PUBLICATION pg_localization_publication WITH (publish = 'insert, update, delete');
-
-
---
--- Name: pg_localization_publication collections; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.collections;
-
-
---
--- Name: pg_localization_publication collections_images; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.collections_images;
-
-
---
--- Name: pg_localization_publication episodes; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.episodes;
-
-
---
--- Name: pg_localization_publication episodes_images; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.episodes_images;
-
-
---
--- Name: pg_localization_publication movie_genres; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.movie_genres;
-
-
---
--- Name: pg_localization_publication movies; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.movies;
-
-
---
--- Name: pg_localization_publication movies_images; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.movies_images;
-
-
---
--- Name: pg_localization_publication seasons; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.seasons;
-
-
---
--- Name: pg_localization_publication seasons_images; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.seasons_images;
-
-
---
--- Name: pg_localization_publication tvshow_genres; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.tvshow_genres;
-
-
---
--- Name: pg_localization_publication tvshows; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.tvshows;
-
-
---
--- Name: pg_localization_publication tvshows_images; Type: PUBLICATION TABLE; Schema: app_public; Owner: -
---
-
-ALTER PUBLICATION pg_localization_publication ADD TABLE ONLY app_public.tvshows_images;
-
-
---
 -- Name: SCHEMA app_hidden; Type: ACL; Schema: -; Owner: -
 --
 
@@ -11429,20 +11216,6 @@ REVOKE ALL ON FUNCTION ax_define.define_like_index(fieldname text, tablename tex
 
 
 --
--- Name: FUNCTION define_logical_replication_publication(publicationname text, tablenames text[], schemaname text, publicationoperations text); Type: ACL; Schema: ax_define; Owner: -
---
-
-REVOKE ALL ON FUNCTION ax_define.define_logical_replication_publication(publicationname text, tablenames text[], schemaname text, publicationoperations text) FROM PUBLIC;
-
-
---
--- Name: FUNCTION define_logical_replication_slot(slotname text, skipifmatches text, pluginname text); Type: ACL; Schema: ax_define; Owner: -
---
-
-REVOKE ALL ON FUNCTION ax_define.define_logical_replication_slot(slotname text, skipifmatches text, pluginname text) FROM PUBLIC;
-
-
---
 -- Name: FUNCTION define_multiple_field_index(fieldnames text[], tablename text, schemaname text, indexname text); Type: ACL; Schema: ax_define; Owner: -
 --
 
@@ -11594,20 +11367,6 @@ REVOKE ALL ON FUNCTION ax_define.drop_users_trigger(tablename text, schemaname t
 --
 
 REVOKE ALL ON FUNCTION ax_define.live_suggestions_endpoint(propertyname text, typename text, schemaname text) FROM PUBLIC;
-
-
---
--- Name: FUNCTION pgmemento_create_table_audit(table_name text, schema_name text, audit_id_column_name text, log_old_data boolean, log_new_data boolean, log_state boolean); Type: ACL; Schema: ax_define; Owner: -
---
-
-REVOKE ALL ON FUNCTION ax_define.pgmemento_create_table_audit(table_name text, schema_name text, audit_id_column_name text, log_old_data boolean, log_new_data boolean, log_state boolean) FROM PUBLIC;
-
-
---
--- Name: FUNCTION pgmemento_delete_old_logs(age interval); Type: ACL; Schema: ax_define; Owner: -
---
-
-REVOKE ALL ON FUNCTION ax_define.pgmemento_delete_old_logs(age interval) FROM PUBLIC;
 
 
 --
