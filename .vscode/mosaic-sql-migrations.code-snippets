@@ -449,40 +449,6 @@
     ],
     "scope": "sql"
   },
-  "Define Logical Replication Publication (Ax Define)": {
-    "prefix": "ax-define-logical-replication-publication",
-    "body": [
-      "BEGIN;",
-      "  SELECT ax_define.define_logical_replication_publication(",
-      "    '${1:publication_name_or_placeholder}',",
-      "    ARRAY['${2:table_name_one}', '${3:table_name_two}', '${4:table_name_three}'],",
-      "    '${5:app_public}');",
-      "COMMIT;"
-    ],
-    "description": [
-      "Defines a publication for multiple tables.\n",
-      "REPLICA IDENTITY FULL is set for each passed table.\n",
-      "By default, sets the publish parameter of publication to `insert,update,delete`, but this can be overridden by the 4-th parameter.\n",
-      "The result of a call is committed right away to enable adding a replication slot in context of the same migration."
-    ],
-    "scope": "sql"
-  },
-  "Define Logical Replication Slot (Ax Define)": {
-    "prefix": "ax-define-logical-replication-slot",
-    "body": [
-      "SELECT ax_define.define_logical_replication_slot(slotName => '${1:replication_slot_name_or_placeholder}',",
-      "                                                 skipIfMatches => '${2:^.*(_t|_shadow)$}');"
-    ],
-    "description": [
-      "An idempotent wrapper for pg_create_logical_replication_slot.\n",
-      "The replication slot is created on a PostgreSQL server level and has a unique name across all databases.\n",
-      "It must also be created after the publications which will be utilized together with the slot to watch for table changes.\n",
-      "Because of the slot name uniqueness, special care must be taken to avoid other databases like graphile-migrate shadow database or test database(s) to create the slot with the same name for themselves.\n",
-      "For this reason, second parameter skipIfMatches is expected to skip creating the slot if current database name matches a certain pattern.\n",
-      "Plugin used by default is `pgoutput`. It can be overridden using the third parameter."
-    ],
-    "scope": "sql"
-  },
   "Raise Error (Ax Utils)": {
     "prefix": "ax-raise-error",
     "body": [
@@ -1140,24 +1106,5 @@
       "Make sure the dropped value is not used in other tables.\n",
       "This snippet has a simplified migration sample that might require adjustments."
     ]
-  },
-  "Define Logical Replication For Tables (Ax Custom)": {
-    "prefix": "ax-define-logical-replication-for-tables",
-    "body": [
-      "BEGIN;",
-      "  SELECT ax_define.define_logical_replication_publication(",
-      "    '${1:publication_name_or_placeholder}',",
-      "    ARRAY['${2:table_name_one}', '${3:table_name_two}', '${4:table_name_three}'],",
-      "    '${5:app_public}');",
-      "COMMIT;",
-      "SELECT ax_define.define_logical_replication_slot(slotName => '${6:replication_slot_name_or_placeholder}',",
-      "                                                 skipIfMatches => '${7:^.*(_t|_shadow)$}');"
-    ],
-    "description": [
-      "Defines a publication and a replication slot for multiple tables.\n",
-      "See snippets for individual define functions for more details.\n",
-      "The publications are committed right away to enable adding a replication slot in context of the same migration."
-    ],
-    "scope": "sql"
   }
 }
