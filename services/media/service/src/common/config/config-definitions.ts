@@ -57,8 +57,7 @@ export const getConfigDefinitions = (
      * as needed.
      *
      * If there is ever a need to change this value in a deployed environment -
-     * replication slot must be re-created in db migrations to continue working as before.
-     * See `000020-replication-on-localizable-tables-added.sql` for example.
+     * make sure to manually delete the old replication slot.
      */
     dbLocalizationReplicationSlot: () =>
       env.get('DATABASE_LOCALIZATION_REPLICATION_SLOT').required().asString(),
