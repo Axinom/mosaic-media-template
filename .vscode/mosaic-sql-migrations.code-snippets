@@ -1075,24 +1075,5 @@
       "Make sure the dropped value is not used in other tables.\n",
       "This snippet has a simplified migration sample that might require adjustments."
     ]
-  },
-  "Define Logical Replication For Tables (Ax Custom)": {
-    "prefix": "ax-define-logical-replication-for-tables",
-    "body": [
-      "BEGIN;",
-      "  SELECT ax_define.define_logical_replication_publication(",
-      "    '${1:publication_name_or_placeholder}',",
-      "    ARRAY['${2:table_name_one}', '${3:table_name_two}', '${4:table_name_three}'],",
-      "    '${5:app_public}');",
-      "COMMIT;",
-      "SELECT ax_define.define_logical_replication_slot(slotName => '${6:replication_slot_name_or_placeholder}',",
-      "                                                 skipIfMatches => '${7:^.*(_t|_shadow)$}');"
-    ],
-    "description": [
-      "Defines a publication and a replication slot for multiple tables.\n",
-      "See snippets for individual define functions for more details.\n",
-      "The publications are committed right away to enable adding a replication slot in context of the same migration."
-    ],
-    "scope": "sql"
   }
 }
