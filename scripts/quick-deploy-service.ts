@@ -338,7 +338,7 @@ async function main(): Promise<void> {
       {
         type: 'confirm',
         name: 'deploy',
-        message: 'Confirm the deployment of the selected service?',
+        message: 'All set; start deploying the selected service now?',
         initial: true,
       },
     ]);
