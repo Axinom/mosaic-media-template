@@ -170,15 +170,13 @@ function validateDeploymentManifestIsModified(
 ): void {
   const servicePrefix = serviceId.split('-service')[0];
 
-  if (serviceId === 'entitlement-service') {
-    const deploymentManifestFilePath = `./services/${servicePrefix}/service/mosaic-hosting-deployment-manifest.yaml`;
-    const fileContent = readFileSync(deploymentManifestFilePath).toString();
-    if (fileContent.includes(`'REPLACE_WITH_VALID_`)) {
-      throw new Error(
-        `The deployment manifest YAML [${deploymentManifestFilePath}] of the [${serviceId}] still has some variables that need to be manually adjusted.
+  const deploymentManifestFilePath = `./services/${servicePrefix}/service/mosaic-hosting-deployment-manifest.yaml`;
+  const fileContent = readFileSync(deploymentManifestFilePath).toString();
+  if (fileContent.includes(`'REPLACE_WITH_VALID_`)) {
+    throw new Error(
+      `The deployment manifest YAML [${deploymentManifestFilePath}] of the [${serviceId}] still has some variables that need to be manually adjusted.
 Please follow the service README file to understand how to generate the values, then update them accordingly in the YAML file and try again.`,
-      );
-    }
+    );
   }
 }
 
