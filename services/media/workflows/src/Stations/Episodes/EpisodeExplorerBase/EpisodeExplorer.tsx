@@ -225,6 +225,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           dataProvider={dataProvider}
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
+          generateItemLink={(item) => `/episodes/${item.id}`}
         />
       );
     default:

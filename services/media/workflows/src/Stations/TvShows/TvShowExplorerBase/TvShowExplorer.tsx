@@ -204,6 +204,7 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
           dataProvider={dataProvider}
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
+          generateItemLink={(item) => `/tvshows/${item.id}`}
         />
       );
     default:

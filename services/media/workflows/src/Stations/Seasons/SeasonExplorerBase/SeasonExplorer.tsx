@@ -223,6 +223,7 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           dataProvider={dataProvider}
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
+          generateItemLink={(item) => `/seasons/${item.id}`}
         />
       );
     default:

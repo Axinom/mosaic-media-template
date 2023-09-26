@@ -83,7 +83,7 @@ The `yarn setup:webhooks` script is used for development environments. To get
 the values for `ENTITLEMENT_WEBHOOK_SECRET` and `MANIFEST_WEBHOOK_SECRET` env
 variables for the production environment, the following mutation must be
 launched against the Video Service GraphQL API. You can use GraphiQL UI for that
-(https://encoding.service.eu.axinom.net/graphiql):
+(https://video.service.eu.axinom.net/graphiql):
 
 ```
   mutation GenerateSecrets {

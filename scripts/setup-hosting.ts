@@ -51,7 +51,8 @@ async function main(): Promise<void> {
       {
         serviceId: 'ax-hosting-service',
         permissions: [
-          'SERVICE_DEFINITIONS_VIEW',
+          'CONFIGURATIONS_VIEW',
+          'SERVICE_DEFINITIONS_EDIT',
           'CONTAINER_REGISTRY_CONNECTIONS_VIEW',
           'SERVICE_PILET_ARTIFACTS_EDIT',
           'SERVICE_DEPLOYMENT_CONFIG_EDIT',

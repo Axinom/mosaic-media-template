@@ -212,6 +212,7 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           dataProvider={dataProvider}
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
+          generateItemLink={(item) => `/movies/${item.id}`}
         />
       );
     default:
