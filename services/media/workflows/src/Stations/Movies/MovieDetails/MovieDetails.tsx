@@ -1,3 +1,4 @@
+import { ID } from '@axinom/mosaic-managed-workflow-integration';
 import {
   createUpdateGQLFragmentGenerator,
   CustomTagsField,
@@ -21,7 +22,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
-import { ExtensionsContext, ImageID } from '../../../externals';
+import { ExtensionsContext } from '../../../externals';
 import {
   Movie,
   MovieGenre,
@@ -247,7 +248,7 @@ const Panel: React.FC = () => {
   const { values } = useFormikContext<Movie>();
 
   return useMemo(() => {
-    let coverImageId: ImageID;
+    let coverImageId: ID;
     let coverImageCount = 0;
     let teaserImageCount = 0;
 
@@ -268,7 +269,7 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover params={{ id: coverImageId }} />
+          <ImageCover id={coverImageId} />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>

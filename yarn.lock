@@ -300,6 +300,11 @@
   dependencies:
     "@axinom/mosaic-core" "^0.4.8"
 
+"@axinom/mosaic-managed-workflow-integration@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.2.0.tgz#8e021383079294344263341d8dcea1b01bf40f99"
+  integrity sha512-iLcD5n+jiyOAbPYPmV8uaFbhOj6FjnJnVxDne4O4eBnHjxjpUq2rV42Rkf0QT6zV2kSXCK3sbcLGQooCYNXP/w==
+
 "@axinom/mosaic-message-bus-abstractions@0.5.8", "@axinom/mosaic-message-bus-abstractions@^0.5.8":
   version "0.5.8"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus-abstractions/-/mosaic-message-bus-abstractions-0.5.8.tgz#a4cc95a7f987d80886b01a7aa839be7a73673efe"

@@ -1,32 +1,23 @@
+import {
+  bindImageExtensions,
+  bindVideoExtensions,
+  extensionDefaultValue,
+  ImageExtensions,
+  setGetThumbnailAndStateRenderer,
+  VideoExtensions,
+} from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
-import {
-  ExtensionParams,
-  ImageCoverProps,
-  ImagePreviewProps,
-  ImageSelectExplorerProps,
-  VideoSelectExplorerProps,
-} from './externalTypes';
-import { setGetThumbnailAndStateRenderer } from './thumbnails';
 
-export interface Extensions {
-  VideoSelectExplorer: React.FC<ExtensionParams<VideoSelectExplorerProps>>;
-  ImageCover: React.FC<ExtensionParams<ImageCoverProps>>;
-  ImagePreview: React.FC<ExtensionParams<ImagePreviewProps>>;
-  ImageSelectExplorer: React.FC<ExtensionParams<ImageSelectExplorerProps>>;
-  ImageSelectField: React.FC<ExtensionParams<unknown>>;
-  VideoSelectField: React.FC<ExtensionParams<unknown>>;
-}
-
-const defaultValue = (): JSX.Element => <div>Extension not Loaded</div>;
+export type Extensions = ImageExtensions & VideoExtensions;
 
 export const ExtensionsContext = React.createContext<Extensions>({
-  VideoSelectExplorer: defaultValue,
-  ImageCover: defaultValue,
-  ImagePreview: defaultValue,
-  ImageSelectExplorer: defaultValue,
-  ImageSelectField: defaultValue,
-  VideoSelectField: defaultValue,
+  ImageCover: extensionDefaultValue,
+  ImagePreview: extensionDefaultValue,
+  ImageSelectExplorer: extensionDefaultValue,
+  ImageSelectField: extensionDefaultValue,
+  VideoSelectField: extensionDefaultValue,
+  VideoSelectExplorer: extensionDefaultValue,
 });
 
 /**
@@ -39,46 +30,12 @@ export const ExtensionsContext = React.createContext<Extensions>({
 export const bindExtensions = (app: PiletApi): Extensions => {
   setGetThumbnailAndStateRenderer(app);
 
-  /** Extensions */
-  const VideoSelectExplorer: React.FC = (props) => (
-    <app.Extension
-      name="video-select-explorer"
-      empty={defaultValue}
-      {...props}
-    />
-  );
+  /** Video Extensions */
+  const { VideoSelectExplorer, VideoSelectField } = bindVideoExtensions(app);
 
-  const ImageCover: React.FC = (props) => (
-    <app.Extension name="image-cover" empty={defaultValue} {...props} />
-  );
-
-  const ImagePreview: React.FC = (props) => (
-    <app.Extension name="image-preview" empty={defaultValue} {...props} />
-  );
-
-  const ImageSelectExplorer: React.FC = (props) => (
-    <app.Extension
-      name="image-select-explorer"
-      empty={defaultValue}
-      {...props}
-    />
-  );
-
-  const ImageSelectField: React.FC = (props) => (
-    <app.Extension
-      name="image-select-field"
-      empty={defaultValue}
-      params={props}
-    />
-  );
-
-  const VideoSelectField: React.FC = (props) => (
-    <app.Extension
-      name="video-select-field"
-      empty={defaultValue}
-      params={props}
-    />
-  );
+  /** Image Extensions */
+  const { ImageCover, ImagePreview, ImageSelectExplorer, ImageSelectField } =
+    bindImageExtensions(app);
 
   return {
     VideoSelectExplorer,
