@@ -13,6 +13,7 @@ import { CreateRabbitMQConnectivityMetric } from '@axinom/mosaic-message-bus';
 import {
   closeHttpServer,
   handleGlobalErrors,
+  isServiceAvailable,
   Logger,
   MosaicErrors,
   setupGlobalConsoleOverride,
@@ -21,6 +22,7 @@ import {
   setupHttpServerWithWebsockets,
   setupLivenessAndReadiness,
   setupMonitoring,
+  setupServiceHealthEndpoint,
   setupShutdownActions,
   tenantEnvironmentIdsLogMiddleware,
   trimErrorsSkipMaskMiddleware,
@@ -69,6 +71,16 @@ async function bootstrap(): Promise<void> {
   );
   // Set up liveness and readiness probe endpoints for Kubernetes.
   const { readiness } = setupLivenessAndReadiness(config);
+
+  // Check ID service is available
+  if (!(await isServiceAvailable(config.idServiceAuthBaseUrl))) {
+    throw new Error(
+      'The Mosaic Identity Service is required to run this service, but it was not available.',
+    );
+  }
+
+  // Register service health endpoint
+  setupServiceHealthEndpoint(app, config.port);
 
   // Enable multipart request support for GQL to support file upload.
   app.use(graphqlUploadExpress());
