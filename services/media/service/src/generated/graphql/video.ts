@@ -368,7 +368,7 @@ export type CreateVideosTagPayloadVideosTagEdgeArgs = {
 
 /**
  * All input for the create `VideoStream` mutation.
- * @permissions: CUSTOM_VIDEOS_EDIT,ADMIN
+ * @permissions: VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,ADMIN
  */
 export type CreateVideoStreamInput = {
   /**
@@ -934,7 +934,7 @@ export type DeleteVideosTagPayloadVideosTagEdgeArgs = {
 
 /**
  * All input for the `deleteCustomVideoStream` mutation.
- * @permissions: CUSTOM_VIDEOS_EDIT,ADMIN
+ * @permissions: VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,ADMIN
  */
 export type DeleteVideoStreamInput = {
   /**
@@ -1557,27 +1557,44 @@ export type EncodingModeFilter = {
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type EncodingProcessingProfile = {
   __typename?: 'EncodingProcessingProfile';
+  archiveOutputName?: Maybe<Scalars['String']>;
+  audioChunksPattern?: Maybe<Scalars['String']>;
   audioFileLanguageExpression?: Maybe<Scalars['String']>;
   captionFileLanguageExpression?: Maybe<Scalars['String']>;
+  checksumFileName?: Maybe<Scalars['String']>;
+  closedCaptionChunksPattern?: Maybe<Scalars['String']>;
   createdDate: Scalars['Datetime'];
   createdUser: Scalars['String'];
+  dashManifestName?: Maybe<Scalars['String']>;
   deleteFilesFromSourceWhenDone: Scalars['Boolean'];
   drmProtection: DrmProtection;
   encodingMode: EncodingMode;
   /** Reads and enables pagination through a set of `EncodingVideoRepresentation`. */
   encodingVideoRepresentations: EncodingVideoRepresentationsConnection;
+  explicitIv?: Maybe<Scalars['String']>;
+  extractAndApplyHdr: Scalars['Boolean'];
+  extractAndApplyHdr10Plus: Scalars['Boolean'];
   forceAspectRatioToStandard: Scalars['Boolean'];
   forcePixelAspectRatioTo1: Scalars['Boolean'];
+  hlsManifestName?: Maybe<Scalars['String']>;
   id: Scalars['UUID'];
+  manifestName?: Maybe<Scalars['String']>;
+  normalizeAudio: Scalars['Boolean'];
+  optimizeFor: OptimizeFor;
   outputFormat: OutputFormat;
   searchForOptimalNearbyResolutions: Scalars['Boolean'];
+  subtitleChunksPattern?: Maybe<Scalars['String']>;
   subtitleFileLanguageExpression?: Maybe<Scalars['String']>;
   tarMode: TarMode;
   title: Scalars['String'];
   updatedDate: Scalars['Datetime'];
   updatedUser: Scalars['String'];
+  useHighestPossibleBitrate: Scalars['Boolean'];
   useNativeLanguageNames: Scalars['Boolean'];
+  videoChunksPattern?: Maybe<Scalars['String']>;
+  videoFormat: VideoFormat;
   videoStreamExpression?: Maybe<Scalars['String']>;
+  videoSyncMethod: VideoSyncMethod;
 };
 
 
@@ -1599,6 +1616,16 @@ export type EncodingProcessingProfileEncodingVideoRepresentationsArgs = {
  */
 export type EncodingProcessingProfileCondition = {
   /**
+   * Checks for equality with the object’s `archiveOutputName` field.
+   * @matchesPattern()
+   */
+  archiveOutputName?: InputMaybe<Scalars['String']>;
+  /**
+   * Checks for equality with the object’s `audioChunksPattern` field.
+   * @matchesPattern()
+   */
+  audioChunksPattern?: InputMaybe<Scalars['String']>;
+  /**
    * Checks for equality with the object’s `audioFileLanguageExpression` field.
    * @isTrimmed()
    */
@@ -1608,26 +1635,71 @@ export type EncodingProcessingProfileCondition = {
    * @isTrimmed()
    */
   captionFileLanguageExpression?: InputMaybe<Scalars['String']>;
+  /**
+   * Checks for equality with the object’s `checksumFileName` field.
+   * @matchesPattern()
+   */
+  checksumFileName?: InputMaybe<Scalars['String']>;
+  /**
+   * Checks for equality with the object’s `closedCaptionChunksPattern` field.
+   * @matchesPattern()
+   */
+  closedCaptionChunksPattern?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `createdDate` field. */
   createdDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `createdUser` field. */
   createdUser?: InputMaybe<Scalars['String']>;
+  /**
+   * Checks for equality with the object’s `dashManifestName` field.
+   * @matchesPattern()
+   */
+  dashManifestName?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `deleteFilesFromSourceWhenDone` field. */
   deleteFilesFromSourceWhenDone?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `drmProtection` field. */
   drmProtection?: InputMaybe<DrmProtection>;
   /** Checks for equality with the object’s `encodingMode` field. */
   encodingMode?: InputMaybe<EncodingMode>;
+  /**
+   * Checks for equality with the object’s `explicitIv` field.
+   * @matchesPattern()
+   * @maxLength(32)
+   * @minLength(32)
+   */
+  explicitIv?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `extractAndApplyHdr` field. */
+  extractAndApplyHdr?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `extractAndApplyHdr10Plus` field. */
+  extractAndApplyHdr10Plus?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `forceAspectRatioToStandard` field. */
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `forcePixelAspectRatioTo1` field. */
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
+  /**
+   * Checks for equality with the object’s `hlsManifestName` field.
+   * @matchesPattern()
+   */
+  hlsManifestName?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']>;
+  /**
+   * Checks for equality with the object’s `manifestName` field.
+   * @matchesPattern()
+   */
+  manifestName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `normalizeAudio` field. */
+  normalizeAudio?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `optimizeFor` field. */
+  optimizeFor?: InputMaybe<OptimizeFor>;
   /** Checks for equality with the object’s `outputFormat` field. */
   outputFormat?: InputMaybe<OutputFormat>;
   /** Checks for equality with the object’s `searchForOptimalNearbyResolutions` field. */
   searchForOptimalNearbyResolutions?: InputMaybe<Scalars['Boolean']>;
+  /**
+   * Checks for equality with the object’s `subtitleChunksPattern` field.
+   * @matchesPattern()
+   */
+  subtitleChunksPattern?: InputMaybe<Scalars['String']>;
   /**
    * Checks for equality with the object’s `subtitleFileLanguageExpression` field.
    * @isTrimmed()
@@ -1646,28 +1718,49 @@ export type EncodingProcessingProfileCondition = {
   updatedDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `updatedUser` field. */
   updatedUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `useHighestPossibleBitrate` field. */
+  useHighestPossibleBitrate?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `useNativeLanguageNames` field. */
   useNativeLanguageNames?: InputMaybe<Scalars['Boolean']>;
+  /**
+   * Checks for equality with the object’s `videoChunksPattern` field.
+   * @matchesPattern()
+   */
+  videoChunksPattern?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `videoFormat` field. */
+  videoFormat?: InputMaybe<VideoFormat>;
   /**
    * Checks for equality with the object’s `videoStreamExpression` field.
    * @isTrimmed()
    * @notEmpty()
    */
   videoStreamExpression?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `videoSyncMethod` field. */
+  videoSyncMethod?: InputMaybe<VideoSyncMethod>;
 };
 
 /** A filter to be used against `EncodingProcessingProfile` object types. All fields are combined with a logical ‘and.’ */
 export type EncodingProcessingProfileFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<EncodingProcessingProfileFilter>>;
+  /** Filter by the object’s `archiveOutputName` field. */
+  archiveOutputName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `audioChunksPattern` field. */
+  audioChunksPattern?: InputMaybe<StringFilter>;
   /** Filter by the object’s `audioFileLanguageExpression` field. */
   audioFileLanguageExpression?: InputMaybe<StringFilter>;
   /** Filter by the object’s `captionFileLanguageExpression` field. */
   captionFileLanguageExpression?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `checksumFileName` field. */
+  checksumFileName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `closedCaptionChunksPattern` field. */
+  closedCaptionChunksPattern?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dashManifestName` field. */
+  dashManifestName?: InputMaybe<StringFilter>;
   /** Filter by the object’s `deleteFilesFromSourceWhenDone` field. */
   deleteFilesFromSourceWhenDone?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `drmProtection` field. */
@@ -1678,20 +1771,36 @@ export type EncodingProcessingProfileFilter = {
   encodingVideoRepresentations?: InputMaybe<EncodingProcessingProfileToManyEncodingVideoRepresentationFilter>;
   /** Some related `encodingVideoRepresentations` exist. */
   encodingVideoRepresentationsExist?: InputMaybe<Scalars['Boolean']>;
+  /** Filter by the object’s `explicitIv` field. */
+  explicitIv?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `extractAndApplyHdr` field. */
+  extractAndApplyHdr?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `extractAndApplyHdr10Plus` field. */
+  extractAndApplyHdr10Plus?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `forceAspectRatioToStandard` field. */
   forceAspectRatioToStandard?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `forcePixelAspectRatioTo1` field. */
   forcePixelAspectRatioTo1?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `hlsManifestName` field. */
+  hlsManifestName?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `manifestName` field. */
+  manifestName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `normalizeAudio` field. */
+  normalizeAudio?: InputMaybe<BooleanFilter>;
   /** Negates the expression. */
   not?: InputMaybe<EncodingProcessingProfileFilter>;
+  /** Filter by the object’s `optimizeFor` field. */
+  optimizeFor?: InputMaybe<OptimizeForFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<EncodingProcessingProfileFilter>>;
   /** Filter by the object’s `outputFormat` field. */
   outputFormat?: InputMaybe<OutputFormatFilter>;
   /** Filter by the object’s `searchForOptimalNearbyResolutions` field. */
   searchForOptimalNearbyResolutions?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `subtitleChunksPattern` field. */
+  subtitleChunksPattern?: InputMaybe<StringFilter>;
   /** Filter by the object’s `subtitleFileLanguageExpression` field. */
   subtitleFileLanguageExpression?: InputMaybe<StringFilter>;
   /** Filter by the object’s `tarMode` field. */
@@ -1702,25 +1811,59 @@ export type EncodingProcessingProfileFilter = {
   updatedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `updatedUser` field. */
   updatedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `useHighestPossibleBitrate` field. */
+  useHighestPossibleBitrate?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `useNativeLanguageNames` field. */
   useNativeLanguageNames?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `videoChunksPattern` field. */
+  videoChunksPattern?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `videoFormat` field. */
+  videoFormat?: InputMaybe<VideoFormatFilter>;
   /** Filter by the object’s `videoStreamExpression` field. */
   videoStreamExpression?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `videoSyncMethod` field. */
+  videoSyncMethod?: InputMaybe<VideoSyncMethodFilter>;
 };
 
 /** An input for mutations affecting `EncodingProcessingProfile` */
 export type EncodingProcessingProfileInput = {
+  /** @matchesPattern() */
+  archiveOutputName?: InputMaybe<Scalars['String']>;
+  /** @matchesPattern() */
+  audioChunksPattern?: InputMaybe<Scalars['String']>;
   /** @isTrimmed() */
   audioFileLanguageExpression?: InputMaybe<Scalars['String']>;
   /** @isTrimmed() */
   captionFileLanguageExpression?: InputMaybe<Scalars['String']>;
+  /** @matchesPattern() */
+  checksumFileName?: InputMaybe<Scalars['String']>;
+  /** @matchesPattern() */
+  closedCaptionChunksPattern?: InputMaybe<Scalars['String']>;
+  /** @matchesPattern() */
+  dashManifestName?: InputMaybe<Scalars['String']>;
   deleteFilesFromSourceWhenDone?: InputMaybe<Scalars['Boolean']>;
   drmProtection?: InputMaybe<DrmProtection>;
   encodingMode?: InputMaybe<EncodingMode>;
+  /**
+   * @matchesPattern()
+   * @maxLength(32)
+   * @minLength(32)
+   */
+  explicitIv?: InputMaybe<Scalars['String']>;
+  extractAndApplyHdr?: InputMaybe<Scalars['Boolean']>;
+  extractAndApplyHdr10Plus?: InputMaybe<Scalars['Boolean']>;
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
+  /** @matchesPattern() */
+  hlsManifestName?: InputMaybe<Scalars['String']>;
+  /** @matchesPattern() */
+  manifestName?: InputMaybe<Scalars['String']>;
+  normalizeAudio?: InputMaybe<Scalars['Boolean']>;
+  optimizeFor?: InputMaybe<OptimizeFor>;
   outputFormat?: InputMaybe<OutputFormat>;
   searchForOptimalNearbyResolutions?: InputMaybe<Scalars['Boolean']>;
+  /** @matchesPattern() */
+  subtitleChunksPattern?: InputMaybe<Scalars['String']>;
   /** @isTrimmed() */
   subtitleFileLanguageExpression?: InputMaybe<Scalars['String']>;
   tarMode?: InputMaybe<TarMode>;
@@ -1730,27 +1873,58 @@ export type EncodingProcessingProfileInput = {
    * @notEmpty()
    */
   title: Scalars['String'];
+  useHighestPossibleBitrate?: InputMaybe<Scalars['Boolean']>;
   useNativeLanguageNames?: InputMaybe<Scalars['Boolean']>;
+  /** @matchesPattern() */
+  videoChunksPattern?: InputMaybe<Scalars['String']>;
+  videoFormat?: InputMaybe<VideoFormat>;
   /**
    * @isTrimmed()
    * @notEmpty()
    */
   videoStreamExpression?: InputMaybe<Scalars['String']>;
+  videoSyncMethod?: InputMaybe<VideoSyncMethod>;
 };
 
 /** Represents an update to a `EncodingProcessingProfile`. Fields that are set will be updated. */
 export type EncodingProcessingProfilePatch = {
+  /** @matchesPattern() */
+  archiveOutputName?: InputMaybe<Scalars['String']>;
+  /** @matchesPattern() */
+  audioChunksPattern?: InputMaybe<Scalars['String']>;
   /** @isTrimmed() */
   audioFileLanguageExpression?: InputMaybe<Scalars['String']>;
   /** @isTrimmed() */
   captionFileLanguageExpression?: InputMaybe<Scalars['String']>;
+  /** @matchesPattern() */
+  checksumFileName?: InputMaybe<Scalars['String']>;
+  /** @matchesPattern() */
+  closedCaptionChunksPattern?: InputMaybe<Scalars['String']>;
+  /** @matchesPattern() */
+  dashManifestName?: InputMaybe<Scalars['String']>;
   deleteFilesFromSourceWhenDone?: InputMaybe<Scalars['Boolean']>;
   drmProtection?: InputMaybe<DrmProtection>;
   encodingMode?: InputMaybe<EncodingMode>;
+  /**
+   * @matchesPattern()
+   * @maxLength(32)
+   * @minLength(32)
+   */
+  explicitIv?: InputMaybe<Scalars['String']>;
+  extractAndApplyHdr?: InputMaybe<Scalars['Boolean']>;
+  extractAndApplyHdr10Plus?: InputMaybe<Scalars['Boolean']>;
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
+  /** @matchesPattern() */
+  hlsManifestName?: InputMaybe<Scalars['String']>;
+  /** @matchesPattern() */
+  manifestName?: InputMaybe<Scalars['String']>;
+  normalizeAudio?: InputMaybe<Scalars['Boolean']>;
+  optimizeFor?: InputMaybe<OptimizeFor>;
   outputFormat?: InputMaybe<OutputFormat>;
   searchForOptimalNearbyResolutions?: InputMaybe<Scalars['Boolean']>;
+  /** @matchesPattern() */
+  subtitleChunksPattern?: InputMaybe<Scalars['String']>;
   /** @isTrimmed() */
   subtitleFileLanguageExpression?: InputMaybe<Scalars['String']>;
   tarMode?: InputMaybe<TarMode>;
@@ -1760,12 +1934,17 @@ export type EncodingProcessingProfilePatch = {
    * @notEmpty()
    */
   title?: InputMaybe<Scalars['String']>;
+  useHighestPossibleBitrate?: InputMaybe<Scalars['Boolean']>;
   useNativeLanguageNames?: InputMaybe<Scalars['Boolean']>;
+  /** @matchesPattern() */
+  videoChunksPattern?: InputMaybe<Scalars['String']>;
+  videoFormat?: InputMaybe<VideoFormat>;
   /**
    * @isTrimmed()
    * @notEmpty()
    */
   videoStreamExpression?: InputMaybe<Scalars['String']>;
+  videoSyncMethod?: InputMaybe<VideoSyncMethod>;
 };
 
 /**
@@ -1795,33 +1974,59 @@ export type EncodingProcessingProfilesEdge = {
 
 /** Methods to use when ordering `EncodingProcessingProfile`. */
 export enum EncodingProcessingProfilesOrderBy {
+  ArchiveOutputNameAsc = 'ARCHIVE_OUTPUT_NAME_ASC',
+  ArchiveOutputNameDesc = 'ARCHIVE_OUTPUT_NAME_DESC',
+  AudioChunksPatternAsc = 'AUDIO_CHUNKS_PATTERN_ASC',
+  AudioChunksPatternDesc = 'AUDIO_CHUNKS_PATTERN_DESC',
   AudioFileLanguageExpressionAsc = 'AUDIO_FILE_LANGUAGE_EXPRESSION_ASC',
   AudioFileLanguageExpressionDesc = 'AUDIO_FILE_LANGUAGE_EXPRESSION_DESC',
   CaptionFileLanguageExpressionAsc = 'CAPTION_FILE_LANGUAGE_EXPRESSION_ASC',
   CaptionFileLanguageExpressionDesc = 'CAPTION_FILE_LANGUAGE_EXPRESSION_DESC',
+  ChecksumFileNameAsc = 'CHECKSUM_FILE_NAME_ASC',
+  ChecksumFileNameDesc = 'CHECKSUM_FILE_NAME_DESC',
+  ClosedCaptionChunksPatternAsc = 'CLOSED_CAPTION_CHUNKS_PATTERN_ASC',
+  ClosedCaptionChunksPatternDesc = 'CLOSED_CAPTION_CHUNKS_PATTERN_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
+  DashManifestNameAsc = 'DASH_MANIFEST_NAME_ASC',
+  DashManifestNameDesc = 'DASH_MANIFEST_NAME_DESC',
   DeleteFilesFromSourceWhenDoneAsc = 'DELETE_FILES_FROM_SOURCE_WHEN_DONE_ASC',
   DeleteFilesFromSourceWhenDoneDesc = 'DELETE_FILES_FROM_SOURCE_WHEN_DONE_DESC',
   DrmProtectionAsc = 'DRM_PROTECTION_ASC',
   DrmProtectionDesc = 'DRM_PROTECTION_DESC',
   EncodingModeAsc = 'ENCODING_MODE_ASC',
   EncodingModeDesc = 'ENCODING_MODE_DESC',
+  ExplicitIvAsc = 'EXPLICIT_IV_ASC',
+  ExplicitIvDesc = 'EXPLICIT_IV_DESC',
+  ExtractAndApplyHdrAsc = 'EXTRACT_AND_APPLY_HDR_ASC',
+  ExtractAndApplyHdrDesc = 'EXTRACT_AND_APPLY_HDR_DESC',
+  ExtractAndApplyHdr10PlusAsc = 'EXTRACT_AND_APPLY_HDR10PLUS_ASC',
+  ExtractAndApplyHdr10PlusDesc = 'EXTRACT_AND_APPLY_HDR10PLUS_DESC',
   ForceAspectRatioToStandardAsc = 'FORCE_ASPECT_RATIO_TO_STANDARD_ASC',
   ForceAspectRatioToStandardDesc = 'FORCE_ASPECT_RATIO_TO_STANDARD_DESC',
   ForcePixelAspectRatioTo_1Asc = 'FORCE_PIXEL_ASPECT_RATIO_TO_1_ASC',
   ForcePixelAspectRatioTo_1Desc = 'FORCE_PIXEL_ASPECT_RATIO_TO_1_DESC',
+  HlsManifestNameAsc = 'HLS_MANIFEST_NAME_ASC',
+  HlsManifestNameDesc = 'HLS_MANIFEST_NAME_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  ManifestNameAsc = 'MANIFEST_NAME_ASC',
+  ManifestNameDesc = 'MANIFEST_NAME_DESC',
   Natural = 'NATURAL',
+  NormalizeAudioAsc = 'NORMALIZE_AUDIO_ASC',
+  NormalizeAudioDesc = 'NORMALIZE_AUDIO_DESC',
+  OptimizeForAsc = 'OPTIMIZE_FOR_ASC',
+  OptimizeForDesc = 'OPTIMIZE_FOR_DESC',
   OutputFormatAsc = 'OUTPUT_FORMAT_ASC',
   OutputFormatDesc = 'OUTPUT_FORMAT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   SearchForOptimalNearbyResolutionsAsc = 'SEARCH_FOR_OPTIMAL_NEARBY_RESOLUTIONS_ASC',
   SearchForOptimalNearbyResolutionsDesc = 'SEARCH_FOR_OPTIMAL_NEARBY_RESOLUTIONS_DESC',
+  SubtitleChunksPatternAsc = 'SUBTITLE_CHUNKS_PATTERN_ASC',
+  SubtitleChunksPatternDesc = 'SUBTITLE_CHUNKS_PATTERN_DESC',
   SubtitleFileLanguageExpressionAsc = 'SUBTITLE_FILE_LANGUAGE_EXPRESSION_ASC',
   SubtitleFileLanguageExpressionDesc = 'SUBTITLE_FILE_LANGUAGE_EXPRESSION_DESC',
   TarModeAsc = 'TAR_MODE_ASC',
@@ -1832,10 +2037,18 @@ export enum EncodingProcessingProfilesOrderBy {
   UpdatedDateDesc = 'UPDATED_DATE_DESC',
   UpdatedUserAsc = 'UPDATED_USER_ASC',
   UpdatedUserDesc = 'UPDATED_USER_DESC',
+  UseHighestPossibleBitrateAsc = 'USE_HIGHEST_POSSIBLE_BITRATE_ASC',
+  UseHighestPossibleBitrateDesc = 'USE_HIGHEST_POSSIBLE_BITRATE_DESC',
   UseNativeLanguageNamesAsc = 'USE_NATIVE_LANGUAGE_NAMES_ASC',
   UseNativeLanguageNamesDesc = 'USE_NATIVE_LANGUAGE_NAMES_DESC',
+  VideoChunksPatternAsc = 'VIDEO_CHUNKS_PATTERN_ASC',
+  VideoChunksPatternDesc = 'VIDEO_CHUNKS_PATTERN_DESC',
+  VideoFormatAsc = 'VIDEO_FORMAT_ASC',
+  VideoFormatDesc = 'VIDEO_FORMAT_DESC',
   VideoStreamExpressionAsc = 'VIDEO_STREAM_EXPRESSION_ASC',
-  VideoStreamExpressionDesc = 'VIDEO_STREAM_EXPRESSION_DESC'
+  VideoStreamExpressionDesc = 'VIDEO_STREAM_EXPRESSION_DESC',
+  VideoSyncMethodAsc = 'VIDEO_SYNC_METHOD_ASC',
+  VideoSyncMethodDesc = 'VIDEO_SYNC_METHOD_DESC'
 }
 
 /** A filter to be used against many `EncodingVideoRepresentation` object types. All fields are combined with a logical ‘and.’ */
@@ -2294,9 +2507,9 @@ export enum ErrorCodesEnum {
   EmptyWebhookResponse = 'EMPTY_WEBHOOK_RESPONSE',
   /** The webhook request validation has failed because the provided webhook secret is empty. */
   EmptyWebhookSecret = 'EMPTY_WEBHOOK_SECRET',
-  /** Encoder authorization failed. This might be an issue with service configuration. Please contact Axinom Support. */
+  /** Axinom Encoding Service authorization failed. This might be an issue with the service configuration. Please contact Axinom Support. */
   EncoderAuthorizationFailed = 'ENCODER_AUTHORIZATION_FAILED',
-  /** Encoding service job request sent, but failed with Bad Request error. Its possible that values from Video Encoding Settings are encrypted incorrectly or have invalid values. */
+  /** A job request to the Axinom Encoding Service was sent, but failed with a Bad Request error. Its possible that values from the Video Encoding Settings are encrypted incorrectly or have invalid values. */
   EncoderBadRequest = 'ENCODER_BAD_REQUEST',
   /** The request to start the encoding process has failed. */
   EncoderJobRequestFailed = 'ENCODER_JOB_REQUEST_FAILED',
@@ -2304,11 +2517,11 @@ export enum ErrorCodesEnum {
   EncoderMessageTypeNotSupported = 'ENCODER_MESSAGE_TYPE_NOT_SUPPORTED',
   /** The output format '%s' received from the encoder is not supported. */
   EncoderOutputFormatNotSupported = 'ENCODER_OUTPUT_FORMAT_NOT_SUPPORTED',
-  /** Request to the encoder has failed with a code 404. This might be an issue with service configuration. Please contact Axinom Support. */
+  /** A request to the Axinom Encoding Service has failed with an 404 error code. This might be an issue with the service configuration. Please contact Axinom Support. */
   EncoderRequestNotFound = 'ENCODER_REQUEST_NOT_FOUND',
-  /** Request to the encoder has failed with a code 405. This might be an issue with service configuration. Please contact Axinom Support. */
+  /** The request to the Axinom Encoding Service has failed with an 405 error code. This might be an issue with the service configuration. Please contact Axinom Support. */
   EncoderRequestWrongApi = 'ENCODER_REQUEST_WRONG_API',
-  /** Encoder validation failed with following messages: %s */
+  /** The Axinom Encoding Service validation failed with the following messages: %s */
   EncoderValidationFailed = 'ENCODER_VALIDATION_FAILED',
   /** Unable to start the encoding process as there was an authorization issue. Please contact Axinom Support. */
   EncodingJwtNotFound = 'ENCODING_JWT_NOT_FOUND',
@@ -2862,6 +3075,41 @@ export type MutationUpdateVideoArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateVideosTagArgs = {
   input: UpdateVideosTagInput;
+};
+
+export enum OptimizeFor {
+  /** Balance */
+  Balance = 'BALANCE',
+  /** Quality */
+  Quality = 'QUALITY',
+  /** Speed */
+  Speed = 'SPEED'
+}
+
+/** A filter to be used against OptimizeFor fields. All fields are combined with a logical ‘and.’ */
+export type OptimizeForFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<OptimizeFor>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<OptimizeFor>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<OptimizeFor>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<OptimizeFor>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<OptimizeFor>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<OptimizeFor>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<OptimizeFor>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<OptimizeFor>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<OptimizeFor>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<OptimizeFor>>;
 };
 
 export enum OutputFormat {
@@ -3840,7 +4088,7 @@ export type UpdateVideosTagPayloadVideosTagEdgeArgs = {
 
 /**
  * All input for the `updateCustomVideoStream` mutation.
- * @permissions: CUSTOM_VIDEOS_EDIT,ADMIN
+ * @permissions: VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,ADMIN
  */
 export type UpdateVideoStreamInput = {
   /**
@@ -3903,7 +4151,7 @@ export type UuidFilter = {
   notIn?: InputMaybe<Array<Scalars['UUID']>>;
 };
 
-/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
+/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type Video = {
   __typename?: 'Video';
   acquisitionProgress?: Maybe<Scalars['Int']>;
@@ -3940,6 +4188,7 @@ export type Video = {
   overallProgress: Scalars['Float'];
   previewComment?: Maybe<Scalars['String']>;
   previewStatus: PreviewStatus;
+  /** @deprecated Use `videoStreams` of type `VIDEO` instead */
   qualityLevels?: Maybe<Array<Maybe<QualityLevel>>>;
   sourceFileExtension?: Maybe<Scalars['String']>;
   sourceFileName?: Maybe<Scalars['String']>;
@@ -3959,7 +4208,7 @@ export type Video = {
 };
 
 
-/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
+/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type VideoCuePointsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -3972,7 +4221,7 @@ export type VideoCuePointsArgs = {
 };
 
 
-/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
+/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type VideoEncodingHistoriesArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -3985,7 +4234,7 @@ export type VideoEncodingHistoriesArgs = {
 };
 
 
-/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
+/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type VideoVideosTagsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -3998,7 +4247,7 @@ export type VideoVideosTagsArgs = {
 };
 
 
-/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
+/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type VideoVideoStreamsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -4216,6 +4465,41 @@ export type VideoFilter = {
   videoStreamsExist?: InputMaybe<Scalars['Boolean']>;
 };
 
+export enum VideoFormat {
+  /** Do Not Encode */
+  DoNotEncode = 'DO_NOT_ENCODE',
+  /** H264 */
+  H264 = 'H264',
+  /** H265 */
+  H265 = 'H265'
+}
+
+/** A filter to be used against VideoFormat fields. All fields are combined with a logical ‘and.’ */
+export type VideoFormatFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<VideoFormat>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<VideoFormat>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<VideoFormat>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<VideoFormat>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<VideoFormat>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<VideoFormat>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<VideoFormat>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<VideoFormat>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<VideoFormat>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<VideoFormat>>;
+};
+
 /** Represents an update to a `Video`. Fields that are set will be updated. */
 export type VideoPatch = {
   isArchived?: InputMaybe<Scalars['Boolean']>;
@@ -4230,7 +4514,7 @@ export type VideoPatch = {
 
 /**
  * A connection to a list of `Video` values.
- * @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
+ * @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
  */
 export type VideosConnection = {
   __typename?: 'VideosConnection';
@@ -4420,7 +4704,7 @@ export enum VideosTagsOrderBy {
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
 
-/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
+/** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type VideoStream = {
   __typename?: 'VideoStream';
   /** @deprecated Use `bitrateInKbps` instead */
@@ -4603,7 +4887,7 @@ export type VideoStreamPatch = {
 
 /**
  * A connection to a list of `VideoStream` values.
- * @permissions: VIDEOS_VIEW,VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
+ * @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
  */
 export type VideoStreamsConnection = {
   __typename?: 'VideoStreamsConnection';
@@ -4717,6 +5001,43 @@ export type VideoSubscriptionPayload = {
   event?: Maybe<Scalars['String']>;
   id: Scalars['UUID'];
   video?: Maybe<Video>;
+};
+
+export enum VideoSyncMethod {
+  /** Auto */
+  Auto = 'AUTO',
+  /** CFR */
+  Cfr = 'CFR',
+  /** Pass Through */
+  PassThrough = 'PASS_THROUGH',
+  /** VFR */
+  Vfr = 'VFR'
+}
+
+/** A filter to be used against VideoSyncMethod fields. All fields are combined with a logical ‘and.’ */
+export type VideoSyncMethodFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<VideoSyncMethod>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<VideoSyncMethod>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<VideoSyncMethod>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<VideoSyncMethod>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<VideoSyncMethod>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<VideoSyncMethod>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<VideoSyncMethod>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<VideoSyncMethod>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<VideoSyncMethod>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<VideoSyncMethod>>;
 };
 
 /** A filter to be used against many `CuePoint` object types. All fields are combined with a logical ‘and.’ */
