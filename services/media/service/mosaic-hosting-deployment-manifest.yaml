@@ -67,6 +67,10 @@ serviceAccounts:
         permissions:
           - 'IMAGE_TYPES_DECLARE'
 
+      - serviceId: 'ax-video-service'
+        permissions:
+          - 'CUE_POINT_TYPES_DECLARE'
+
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.
   # Use the pilet's package name as the 'name', and any ENV arguments required by the pilet under 'args'.
