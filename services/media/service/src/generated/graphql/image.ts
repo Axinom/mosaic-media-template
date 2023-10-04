@@ -161,6 +161,14 @@ export type BulkMutationUuidPayload = {
   totalCount?: Maybe<Scalars['Int']>;
 };
 
+/** The deleted image upload webhook signing secret. */
+export type ClearImageUploadWebhookSecretPayload = {
+  __typename?: 'ClearImageUploadWebhookSecretPayload';
+  /** Boolean indicating if the secret was deleted */
+  deleted: Scalars['Boolean'];
+  query?: Maybe<Query>;
+};
+
 /**
  * All input for the create `ImagesTag` mutation.
  * @permissions: IMAGES_EDIT,ADMIN
@@ -266,6 +274,13 @@ export type DeleteImagesTagPayloadImagesTagEdgeArgs = {
   orderBy?: InputMaybe<Array<ImagesTagsOrderBy>>;
 };
 
+/** Response when an image upload webhook configuration is deleted. */
+export type DeleteImageUploadWebhookConfigurationPayload = {
+  __typename?: 'DeleteImageUploadWebhookConfigurationPayload';
+  deleted: Scalars['Boolean'];
+  query?: Maybe<Query>;
+};
+
 /** Exposes all error codes and messages for errors that a service requests can throw. In some cases, messages that are actually thrown can be different, since they can include more details or a single code can used for different errors of the same type. */
 export enum ErrorCodesEnum {
   /** Access Token has expired. */
@@ -328,8 +343,12 @@ export enum ErrorCodesEnum {
   DeclareImageTypesDuplicate = 'DECLARE_IMAGE_TYPES_DUPLICATE',
   /** Could not process the ensure image exists command after multiple retries. */
   EnsureImageExistsFailed = 'ENSURE_IMAGE_EXISTS_FAILED',
+  /** Unknown error occurred while calling the image upload webhook. */
+  ErrorCallingImageUploadWebhook = 'ERROR_CALLING_IMAGE_UPLOAD_WEBHOOK',
   /** This is a wrapper error for the original unhandled error of unsupported type. */
   ErrorWrapper = 'ERROR_WRAPPER',
+  /** Unable to generate image upload webhook secret. */
+  FailedGenerateImageUploadWebhookSecret = 'FAILED_GENERATE_IMAGE_UPLOAD_WEBHOOK_SECRET',
   /** A GraphQL validation error has occurred. Please make sure that the GraphQL request is made with correct syntax or parameters. */
   GraphqlValidationFailed = 'GRAPHQL_VALIDATION_FAILED',
   /** The Identity service is not accessible. Please contact Axinom support. */
@@ -374,6 +393,8 @@ export enum ErrorCodesEnum {
   NotAuthenticatedManagementSubject = 'NOT_AUTHENTICATED_MANAGEMENT_SUBJECT',
   /** The object is not a AuthenticatedRequest */
   NotAuthenticatedRequest = 'NOT_AUTHENTICATED_REQUEST',
+  /** A caught error is not an AxiosError. */
+  NotAxiosError = 'NOT_AXIOS_ERROR',
   /** The token is not an End-User Application */
   NotEndUserApplication = 'NOT_END_USER_APPLICATION',
   /** The object is not an EndUserAuthenticationContext */
@@ -384,18 +405,24 @@ export enum ErrorCodesEnum {
   NotManagementAuthenticationContext = 'NOT_MANAGEMENT_AUTHENTICATION_CONTEXT',
   /** The %s is missing required properties: %s. */
   ObjectIsMissingProperties = 'OBJECT_IS_MISSING_PROPERTIES',
+  /** Unable to set the general settings because no input values were provided. */
+  SetSettingsInputIsEmpty = 'SET_SETTINGS_INPUT_IS_EMPTY',
   /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
   SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
   /** User is authenticated, but subject information was not found. Please contact Axinom Support. */
   SubjectInformationNotFound = 'SUBJECT_INFORMATION_NOT_FOUND',
+  /** An unexpected error has happened. Please try again. */
+  TransientError = 'TRANSIENT_ERROR',
   /** An unhandled database-related error has occurred. Please contact the service support. */
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
   /** Unable to update the profile because no update values were provided. */
   UpdateInputIsEmpty = 'UPDATE_INPUT_IS_EMPTY',
+  /** The image upload webhook returned errors. */
+  UploadImageWebhookError = 'UPLOAD_IMAGE_WEBHOOK_ERROR',
   /** User is not authorized to access the operation. */
   UserNotAuthorized = 'USER_NOT_AUTHORIZED',
   /** The User service is not accessible. Please contact Axinom support. */
@@ -405,6 +432,25 @@ export enum ErrorCodesEnum {
   /** Websocket not found in ExtendedGraphQLContext. This is a development time issue. A reference to the websocket must be included in Postgraphile build options. */
   WebsocketNotFound = 'WEBSOCKET_NOT_FOUND'
 }
+
+/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
+export type GeneralSetting = {
+  __typename?: 'GeneralSetting';
+  createdDate: Scalars['Datetime'];
+  createdUser: Scalars['String'];
+  imageUploadWebhookSecretIsSet: Scalars['Boolean'];
+  imageUploadWebhookUrl?: Maybe<Scalars['String']>;
+  updatedDate: Scalars['Datetime'];
+  updatedUser: Scalars['String'];
+};
+
+/** The generated image upload webhook signing secret. */
+export type GenerateImageUploadWebhookSecretPayload = {
+  __typename?: 'GenerateImageUploadWebhookSecretPayload';
+  query?: Maybe<Query>;
+  /** Generated secret. */
+  secret: Scalars['String'];
+};
 
 /** A `String` edge in the connection. */
 export type GetImagesTagsValueEdge = {
@@ -1217,14 +1263,22 @@ export type IntFilter = {
 export type Mutation = {
   __typename?: 'Mutation';
   archiveImages?: Maybe<BulkMutationUuidPayload>;
+  /** Clear image upload webhook secret for signing. */
+  clearImageUploadWebhookSecret: ClearImageUploadWebhookSecretPayload;
   /** Creates a single `ImagesTag`. */
   createImagesTag?: Maybe<CreateImagesTagPayload>;
   /** Deletes a single `ImagesTag` using a unique key. */
   deleteImagesTag?: Maybe<DeleteImagesTagPayload>;
+  /** Mutation do delete an existing image upload webhook configuration. */
+  deleteImageUploadWebhookConfiguration: DeleteImageUploadWebhookConfigurationPayload;
+  /** Generate a new image upload webhook secret for signing. */
+  generateImageUploadWebhookSecret: GenerateImageUploadWebhookSecretPayload;
   populateImages?: Maybe<PopulatePayload>;
   populateImageTypes?: Maybe<PopulatePayload>;
   setAmazonS3AcquisitionProfile: ImageAcquisitionProfile;
   setAzureBlobAcquisitionProfile: ImageAcquisitionProfile;
+  /** Mutation to set General Settings in Image Service. */
+  setGeneralSettings: GeneralSetting;
   truncateImages?: Maybe<TruncateImagesPayload>;
   updateAmazonS3AcquisitionProfile: ImageAcquisitionProfile;
   updateAzureBlobAcquisitionProfile: ImageAcquisitionProfile;
@@ -1269,6 +1323,12 @@ export type MutationSetAmazonS3AcquisitionProfileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSetAzureBlobAcquisitionProfileArgs = {
   input: SetAzureBlobAcquisitionProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationSetGeneralSettingsArgs = {
+  input: SetGeneralSettingsInput;
 };
 
 
@@ -1329,6 +1389,7 @@ export type PopulatePayload = {
 /** The root query type which gives access points into the data universe. */
 export type Query = {
   __typename?: 'Query';
+  getGeneralSettings?: Maybe<GeneralSetting>;
   getImagesTagsValues?: Maybe<GetImagesTagsValuesConnection>;
   image?: Maybe<Image>;
   imageAcquisitionProfile?: Maybe<ImageAcquisitionProfile>;
@@ -1452,6 +1513,11 @@ export type SetAzureBlobAcquisitionProfileInput = {
   containerName: Scalars['String'];
   rootFolderPath?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
+};
+
+/** Input for setting General Settings in Image Service. */
+export type SetGeneralSettingsInput = {
+  imageUploadWebhookUrl?: InputMaybe<Scalars['String']>;
 };
 
 export enum StorageProvider {

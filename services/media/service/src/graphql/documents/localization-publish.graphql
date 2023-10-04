@@ -1,4 +1,4 @@
-mutation PrepareEntityLocalizationsForPublishing(
+query PrepareEntityLocalizationsForPublishing(
   $serviceId: String!
   $hash: String!
   $entityType: String!
