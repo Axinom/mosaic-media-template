@@ -1160,10 +1160,6 @@ export enum LocalizationSourceEntitiesOrderBy {
   ImageIdAsc = 'IMAGE_ID_ASC',
   ImageIdDesc = 'IMAGE_ID_DESC',
   Natural = 'NATURAL',
-  PreparedForPublishingDateAsc = 'PREPARED_FOR_PUBLISHING_DATE_ASC',
-  PreparedForPublishingDateDesc = 'PREPARED_FOR_PUBLISHING_DATE_DESC',
-  PreparedForPublishingUserAsc = 'PREPARED_FOR_PUBLISHING_USER_ASC',
-  PreparedForPublishingUserDesc = 'PREPARED_FOR_PUBLISHING_USER_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   TitleAsc = 'TITLE_ASC',
@@ -1188,8 +1184,6 @@ export type LocalizationSourceEntity = {
   imageId?: Maybe<Scalars['UUID']>;
   /** Reads and enables pagination through a set of `LocalizedEntity`. */
   localizedEntities: LocalizedEntitiesConnection;
-  preparedForPublishingDate?: Maybe<Scalars['Datetime']>;
-  preparedForPublishingUser?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   updatedDate: Scalars['Datetime'];
   updatedUser: Scalars['String'];
@@ -1225,10 +1219,6 @@ export type LocalizationSourceEntityCondition = {
   id?: InputMaybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `imageId` field. */
   imageId?: InputMaybe<Scalars['UUID']>;
-  /** Checks for equality with the object’s `preparedForPublishingDate` field. */
-  preparedForPublishingDate?: InputMaybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `preparedForPublishingUser` field. */
-  preparedForPublishingUser?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `title` field. */
   title?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `updatedDate` field. */
@@ -1263,10 +1253,6 @@ export type LocalizationSourceEntityFilter = {
   localizedEntities?: InputMaybe<LocalizationSourceEntityToManyLocalizedEntityFilter>;
   /** Some related `localizedEntities` exist. */
   localizedEntitiesExist?: InputMaybe<Scalars['Boolean']>;
-  /** Filter by the object’s `preparedForPublishingDate` field. */
-  preparedForPublishingDate?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `preparedForPublishingUser` field. */
-  preparedForPublishingUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `title` field. */
   title?: InputMaybe<StringFilter>;
   /** Filter by the object’s `updatedDate` field. */
@@ -1504,8 +1490,6 @@ export type Mutation = {
   deleteLocalizationSourceEntity?: Maybe<DeleteLocalizationSourceEntityPayload>;
   localizeEntity?: Maybe<LocalizeEntityPayload>;
   populateLocalizations?: Maybe<PopulatePayload>;
-  /** Prepares localizations for specific source entity that can be used during publishing. */
-  prepareEntityLocalizationsForPublishing: PrepareEntityLocalizationsForPublishingPayload;
   truncateLocalizations?: Maybe<TruncateLocalizationsPayload>;
   unarchiveLocale?: Maybe<UnarchiveLocalePayload>;
   /** Updates a single `Locale` using a unique key and a patch. */
@@ -1549,12 +1533,6 @@ export type MutationLocalizeEntityArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationPopulateLocalizationsArgs = {
   input: PopulateInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationPrepareEntityLocalizationsForPublishingArgs = {
-  input: PrepareEntityLocalizationsForPublishingInput;
 };
 
 
@@ -1674,6 +1652,8 @@ export type Query = {
   /** Reads and enables pagination through a set of `LocalizedEntity`. */
   localizedEntities?: Maybe<LocalizedEntitiesConnection>;
   localizedEntity?: Maybe<LocalizedEntity>;
+  /** Prepares localizations for specific source entity that can be used during publishing. */
+  prepareEntityLocalizationsForPublishing: PrepareEntityLocalizationsForPublishingPayload;
   /**
    * Exposes the root query type nested one level down. This is helpful for Relay 1
    * which can only query top level fields if they are in a particular form.
@@ -1770,6 +1750,12 @@ export type QueryLocalizedEntitiesArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryLocalizedEntityArgs = {
   id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPrepareEntityLocalizationsForPublishingArgs = {
+  input: PrepareEntityLocalizationsForPublishingInput;
 };
 
 
@@ -2070,7 +2056,7 @@ export type ValidationSeverityFilter = {
   notIn?: InputMaybe<Array<ValidationSeverity>>;
 };
 
-export type PrepareEntityLocalizationsForPublishingMutationVariables = Exact<{
+export type PrepareEntityLocalizationsForPublishingQueryVariables = Exact<{
   serviceId: Scalars['String'];
   hash: Scalars['String'];
   entityType: Scalars['String'];
@@ -2078,7 +2064,7 @@ export type PrepareEntityLocalizationsForPublishingMutationVariables = Exact<{
 }>;
 
 
-export type PrepareEntityLocalizationsForPublishingMutation = { __typename?: 'Mutation', prepareEntityLocalizationsForPublishing: { __typename?: 'PrepareEntityLocalizationsForPublishingPayload', localizations: Array<any> } };
+export type PrepareEntityLocalizationsForPublishingQuery = { __typename?: 'Query', prepareEntityLocalizationsForPublishing: { __typename?: 'PrepareEntityLocalizationsForPublishingPayload', localizations: Array<any> } };
 
 export type ValidateEntityLocalizationsQueryVariables = Exact<{
   entityId: Scalars['String'];
@@ -2091,7 +2077,7 @@ export type ValidateEntityLocalizationsQuery = { __typename?: 'Query', validateE
 
 
 export const PrepareEntityLocalizationsForPublishingDocument = gql`
-    mutation PrepareEntityLocalizationsForPublishing($serviceId: String!, $hash: String!, $entityType: String!, $entityId: String!) {
+    query PrepareEntityLocalizationsForPublishing($serviceId: String!, $hash: String!, $entityType: String!, $entityId: String!) {
   prepareEntityLocalizationsForPublishing(
     input: {entityId: $entityId, entityType: $entityType, serviceId: $serviceId, hash: $hash}
   ) {
@@ -2124,8 +2110,8 @@ const PrepareEntityLocalizationsForPublishingDocumentString = print(PrepareEntit
 const ValidateEntityLocalizationsDocumentString = print(ValidateEntityLocalizationsDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    PrepareEntityLocalizationsForPublishing(variables: PrepareEntityLocalizationsForPublishingMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: PrepareEntityLocalizationsForPublishingMutation; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<PrepareEntityLocalizationsForPublishingMutation>(PrepareEntityLocalizationsForPublishingDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PrepareEntityLocalizationsForPublishing', 'mutation');
+    PrepareEntityLocalizationsForPublishing(variables: PrepareEntityLocalizationsForPublishingQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: PrepareEntityLocalizationsForPublishingQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<PrepareEntityLocalizationsForPublishingQuery>(PrepareEntityLocalizationsForPublishingDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PrepareEntityLocalizationsForPublishing', 'query');
     },
     ValidateEntityLocalizations(variables: ValidateEntityLocalizationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<{ data: ValidateEntityLocalizationsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<ValidateEntityLocalizationsQuery>(ValidateEntityLocalizationsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ValidateEntityLocalizations', 'query');
