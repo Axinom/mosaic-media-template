@@ -80,7 +80,7 @@ async function bootstrap(): Promise<void> {
   }
 
   // Register service health endpoint
-  setupServiceHealthEndpoint(app, config.port);
+  setupServiceHealthEndpoint(app);
 
   // Enable multipart request support for GQL to support file upload.
   app.use(graphqlUploadExpress());

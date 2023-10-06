@@ -66,7 +66,7 @@ async function bootstrap(): Promise<void> {
   }
 
   // Register service health endpoint
-  setupServiceHealthEndpoint(app, config.port);
+  setupServiceHealthEndpoint(app);
 
   await applyMigrations(config);
 

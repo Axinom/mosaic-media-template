@@ -51,7 +51,7 @@ async function bootstrap(): Promise<void> {
   }
 
   // Register service health endpoint
-  setupServiceHealthEndpoint(app, config.port);
+  setupServiceHealthEndpoint(app);
 
   const shutdownActions = setupShutdownActions(app, logger);
 
