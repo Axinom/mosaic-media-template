@@ -180,7 +180,7 @@ Please follow the service README file to understand how to generate the values, 
   }
 }
 
-function getDockerInfo(): { registry: string; username: string } {
+function getDockerInfo(): { registry: string; username?: string } {
   console.log(`\nChecking Docker Info...\n`);
 
   try {
@@ -194,7 +194,7 @@ function getDockerInfo(): { registry: string; username: string } {
 
     const username = dockerInfo
       .filter((line) => line.startsWith('Username: '))[0]
-      .split('Username: ')[1];
+      ?.split('Username: ')[1];
 
     return { registry, username };
   } catch (error) {
@@ -315,6 +315,7 @@ function printAdminPortalURL(serviceDefinitionId: string): void {
 
 async function main(): Promise<void> {
   try {
+    const { registry, username } = getDockerInfo();
     const answers = await prompt([
       {
         type: 'select',
@@ -325,6 +326,12 @@ async function main(): Promise<void> {
           { title: 'Catalog Service', value: 'catalog-service' },
           { title: 'Entitlement Service', value: 'entitlement-service' },
         ],
+      },
+      {
+        type: 'text',
+        name: 'dockerUsername',
+        message: 'Enter the Docker username',
+        initial: username,
       },
       {
         type: 'text',
@@ -347,16 +354,18 @@ async function main(): Promise<void> {
     } else {
       const uniqueID = getUniqueID();
 
-      const { registry, username } = getDockerInfo();
-
       console.log(`Docker Registry: ${chalk.green(registry)}`);
-      console.log(`Docker Username: ${chalk.green(username)}`);
+      console.log(`Docker Username: ${chalk.green(answers.dockerUsername)}`);
 
       validateDeploymentManifestIsModified(answers.serviceId);
 
       const token = await getAccessToken();
 
-      await ensureServiceDefinitionExists(token, answers.serviceId, username);
+      await ensureServiceDefinitionExists(
+        token,
+        answers.serviceId,
+        answers.dockerUsername,
+      );
 
       const serviceDefinitionId = await getServiceDefinitionID(
         token,
@@ -364,7 +373,11 @@ async function main(): Promise<void> {
       );
 
       if (answers.dockerImageTag === '') {
-        buildDockerImageAndPush(username, answers.serviceId, uniqueID);
+        buildDockerImageAndPush(
+          answers.dockerUsername,
+          answers.serviceId,
+          uniqueID,
+        );
       } else {
         console.log(
           `\nUsing the pre-built and pushed docker image [${answers.dockerImageTag}]. Skipping building the backend.`,
