@@ -180,7 +180,7 @@ Please follow the service README file to understand how to generate the values, 
   }
 }
 
-function getDockerInfo(): { registry: string; username?: string } {
+function getDockerInfo(): { registry?: string; username?: string } {
   console.log(`\nChecking Docker Info...\n`);
 
   try {
@@ -190,7 +190,7 @@ function getDockerInfo(): { registry: string; username?: string } {
 
     const registry = dockerInfo
       .filter((line) => line.startsWith('Registry: '))[0]
-      .split('Registry: ')[1];
+      ?.split('Registry: ')[1];
 
     const username = dockerInfo
       .filter((line) => line.startsWith('Username: '))[0]
@@ -220,13 +220,22 @@ function buildDockerImageAndPush(
 
   execSync(dockerBuildCommand, { stdio: 'inherit' });
 
-  const dockerPushCommand = `docker push ${imageTag}`;
+  try {
+    const dockerPushCommand = `docker push ${imageTag}`;
 
-  console.log(
-    `\nRunning Docker Push command:\n${chalk.green(dockerPushCommand)}\n`,
-  );
+    console.log(
+      `\nRunning Docker Push command:\n${chalk.green(dockerPushCommand)}\n`,
+    );
 
-  execSync(dockerPushCommand, { stdio: 'inherit' });
+    execSync(dockerPushCommand, { stdio: 'inherit' });
+  } catch (error) {
+    console.log(
+      `\nError running Docker Push command:\n${chalk.red(
+        'Please make sure you are logged in to the Docker Hub Registry.',
+      )}\n`,
+    );
+    throw new Error('Unable to push docker image to repository.');
+  }
 }
 
 function buildPiletAndRegister(serviceId: 'media-service'): void {
@@ -354,7 +363,6 @@ async function main(): Promise<void> {
     } else {
       const uniqueID = getUniqueID();
 
-      console.log(`Docker Registry: ${chalk.green(registry)}`);
       console.log(`Docker Username: ${chalk.green(answers.dockerUsername)}`);
 
       validateDeploymentManifestIsModified(answers.serviceId);
