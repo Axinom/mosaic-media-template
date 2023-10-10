@@ -1,3 +1,4 @@
+import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
   Column,
@@ -11,7 +12,6 @@ import {
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { client } from '../../../apolloClient';
-import { getThumbnailAndStateRenderer } from '../../../externals';
 import {
   CollectionsDocument,
   CollectionsMutatedDocument,

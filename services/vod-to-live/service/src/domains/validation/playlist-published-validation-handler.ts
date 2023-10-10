@@ -155,7 +155,7 @@ export class PlaylistPublishedValidationWebhookHandler
         ]);
         if (mutualStreams.length < 1) {
           validationResult.errors.push(
-            ValidationErrors.PlaylistVideosHaveNoMutualStreams,
+            ValidationErrors.PlaceholderAndPlaylistVideosHaveNoMutualStreams,
           );
         }
       } else {

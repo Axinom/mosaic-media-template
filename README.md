@@ -196,27 +196,52 @@ workflow.
 
 ## Deploying the services via Mosaic Hosting Service
 
-### Pre-requisites for deploying any service
+If you're looking for a quick way to deploy a service in the Axinom Cloud, we
+offer a `Quick Deploy` interactive script in the root package.
 
-1. Ensure you've configured the Container Registry for your environment in the
-   Admin Portal under Hosting Service (the following steps assumes `Docker Hub`
-   as the Container Registry provider for simplicity).
-2. For each service you wish to host in Axinom, ensure you've created a
+If you're looking to deploy your customized service in the Axinom Cloud using
+your CI/CD pipelines, we recommend the `Advanced Deploy` option that uses the
+`Mosaic CLI` where you can control the deployment steps with more precision via
+the supplied arguments.
+
+A detailed guide on how to deploy services via Mosaic Hosting Service can be
+found at
+https://portal.axinom.com/mosaic/documentation/deploy-a-customized-service-with-hosting-service
+
+### Quick Deploy
+
+1. Ensure you've configured the `Container Registry` for your environment in the
+   Admin Portal under `Hosting Service`.
+2. Ensure you've run `yarn setup:hosting` from the root of the
+   mosaic-media-template. This will setup the required service-account for the
+   quick-deploy script.
+3. From the root of the mosaic-media-template, run `yarn quick-deploy` and
+   follow the on-screen instructions.
+
+### Advanced Deploy (using the Mosaic CLI)
+
+The following sections list the individual steps needed to `Build` & `Deploy`
+the customizable services from your CI/CD pipelines.
+
+Note that the following pre-requisites are assumed:
+
+1. You've configured the `Container Registry` for your environment in the Admin
+   Portal under `Hosting Service`.
+2. For each service you wish to host in the Axinom Cloud, you've created a
    `Customized Service` entity via the Admin Portal, and that the correct
    repository name has been set as expected.
-3. Ensure you've run `yarn setup:hosting` from the root of the
-   mosaic-media-template. This will setup the required service-account for using
-   the Mosaic CLI commands shown below with the correct permissions. NOTE:
-   `yarn util:load-vars` is used in the below commands to load values for
-   certain CLI arguments from the `.env` file. If required, the CLI arguments
-   can also be directly provided as necessary (i.e. when used in a CI
-   environment/agent). NOTE: The final deployment step (i.e. the
-   `mosaic hosting service deploy` step) can also be performed via the Admin
-   Portal under Hosting Service. A detailed guide on how to deploy services via
-   Mosaic Hosting Service can be found at
-   https://portal.axinom.com/mosaic/documentation/deploy-a-customized-service-with-hosting-service
+3. You've run `yarn setup:hosting` from the root of the mosaic-media-template.
+   This will setup the required service-account for using the Mosaic CLI
+   commands shown below with the correct permissions.
 
-### Deploying Media Service
+   NOTE: `yarn util:load-vars` is used in the below commands to load values for
+   certain CLI arguments from the `.env` file. If required, the CLI arguments
+   can also be directly provided as necessary.
+
+   NOTE: The final deployment step (i.e. the `mosaic hosting service deploy`
+   step) can also be performed via the Admin Portal under Hosting Service.
+
+#### Deploy Media Service
 
 1. Build the service using the provided Dockerfile
    - CLI Command
@@ -252,7 +277,7 @@ workflow.
        `yarn util:load-vars mosaic hosting service deploy -i media-service -t 20230927.1 -p media-workflows@1.0.1 -m media-service-manifest-20230927 -n media-service-deployment-20230927.1`
    - Ensure you provide a unique value for the `<deployment-name>`
 
-### Deploying Catalog Service
+#### Deploy Catalog Service
 
 1. Build the service using the provided Dockerfile
    - CLI Command
@@ -281,7 +306,7 @@ workflow.
        `yarn util:load-vars mosaic hosting service deploy -i catalog-service -t 20230927.1 -m catalog-service-manifest-20230927 -n catalog-service-deployment-20230927.1`
    - Ensure you provide a unique value for the `<deployment-name>`
 
-### Deploying Entitlement Service
+#### Deploy Entitlement Service
 
 1. Build the service using the provided Dockerfile
    - CLI Command

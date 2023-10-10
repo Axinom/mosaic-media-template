@@ -1,3 +1,4 @@
+import { ID } from '@axinom/mosaic-managed-workflow-integration';
 import {
   createUpdateGQLFragmentGenerator,
   CustomTagsField,
@@ -23,7 +24,7 @@ import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { InfoPanelParent } from '../../../components';
-import { ExtensionsContext, ImageID } from '../../../externals';
+import { ExtensionsContext } from '../../../externals';
 import {
   Mutation,
   MutationCreateSeasonsCastArgs,
@@ -251,7 +252,7 @@ const Panel: React.FC = () => {
   const { values } = useFormikContext<Season>();
 
   return useMemo(() => {
-    let coverImageId: ImageID;
+    let coverImageId: ID;
     let coverImageCount = 0;
     let teaserImageCount = 0;
 
@@ -272,7 +273,7 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover params={{ id: coverImageId }} />
+          <ImageCover id={coverImageId} />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>

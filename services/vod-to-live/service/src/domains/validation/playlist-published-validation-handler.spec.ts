@@ -972,7 +972,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
       expect(validationResult.warnings).toHaveLength(0);
       expect(validationResult.errors).toHaveLength(1);
       expect(validationResult.errors).toMatchObject([
-        ValidationErrors.PlaylistVideosHaveNoMutualStreams,
+        ValidationErrors.PlaceholderAndPlaylistVideosHaveNoMutualStreams,
       ]);
     });
 
