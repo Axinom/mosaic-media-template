@@ -180,7 +180,7 @@ Please follow the service README file to understand how to generate the values, 
   }
 }
 
-function getDockerInfo(): { registry: string; username: string } {
+function getDockerInfo(): { registry?: string; username?: string } {
   console.log(`\nChecking Docker Info...\n`);
 
   try {
@@ -190,11 +190,11 @@ function getDockerInfo(): { registry: string; username: string } {
 
     const registry = dockerInfo
       .filter((line) => line.startsWith('Registry: '))[0]
-      .split('Registry: ')[1];
+      ?.split('Registry: ')[1];
 
     const username = dockerInfo
       .filter((line) => line.startsWith('Username: '))[0]
-      .split('Username: ')[1];
+      ?.split('Username: ')[1];
 
     return { registry, username };
   } catch (error) {
@@ -220,13 +220,22 @@ function buildDockerImageAndPush(
 
   execSync(dockerBuildCommand, { stdio: 'inherit' });
 
-  const dockerPushCommand = `docker push ${imageTag}`;
+  try {
+    const dockerPushCommand = `docker push ${imageTag}`;
 
-  console.log(
-    `\nRunning Docker Push command:\n${chalk.green(dockerPushCommand)}\n`,
-  );
+    console.log(
+      `\nRunning Docker Push command:\n${chalk.green(dockerPushCommand)}\n`,
+    );
 
-  execSync(dockerPushCommand, { stdio: 'inherit' });
+    execSync(dockerPushCommand, { stdio: 'inherit' });
+  } catch (error) {
+    console.log(
+      `\nError running Docker Push command:\n${chalk.red(
+        'Please make sure you are logged in to the Docker Hub Registry.',
+      )}\n`,
+    );
+    throw new Error('Unable to push docker image to repository.');
+  }
 }
 
 function buildPiletAndRegister(serviceId: 'media-service'): void {
@@ -315,6 +324,7 @@ function printAdminPortalURL(serviceDefinitionId: string): void {
 
 async function main(): Promise<void> {
   try {
+    const { username } = getDockerInfo();
     const answers = await prompt([
       {
         type: 'select',
@@ -325,6 +335,16 @@ async function main(): Promise<void> {
           { title: 'Catalog Service', value: 'catalog-service' },
           { title: 'Entitlement Service', value: 'entitlement-service' },
         ],
+      },
+      {
+        type: 'text',
+        name: 'dockerUsername',
+        message: 'Enter the Docker username',
+        initial: username,
+        validate: (value: string) =>
+          value === undefined || value === ''
+            ? 'A Docker username is required to continue with the deployment. Please provide a value.'
+            : true,
       },
       {
         type: 'text',
@@ -347,16 +367,15 @@ async function main(): Promise<void> {
     } else {
       const uniqueID = getUniqueID();
 
-      const { registry, username } = getDockerInfo();
-
-      console.log(`Docker Registry: ${chalk.green(registry)}`);
-      console.log(`Docker Username: ${chalk.green(username)}`);
-
       validateDeploymentManifestIsModified(answers.serviceId);
 
       const token = await getAccessToken();
 
-      await ensureServiceDefinitionExists(token, answers.serviceId, username);
+      await ensureServiceDefinitionExists(
+        token,
+        answers.serviceId,
+        answers.dockerUsername,
+      );
 
       const serviceDefinitionId = await getServiceDefinitionID(
         token,
@@ -364,7 +383,11 @@ async function main(): Promise<void> {
       );
 
       if (answers.dockerImageTag === '') {
-        buildDockerImageAndPush(username, answers.serviceId, uniqueID);
+        buildDockerImageAndPush(
+          answers.dockerUsername,
+          answers.serviceId,
+          uniqueID,
+        );
       } else {
         console.log(
           `\nUsing the pre-built and pushed docker image [${answers.dockerImageTag}]. Skipping building the backend.`,
