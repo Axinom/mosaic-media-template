@@ -324,7 +324,7 @@ function printAdminPortalURL(serviceDefinitionId: string): void {
 
 async function main(): Promise<void> {
   try {
-    const { registry, username } = getDockerInfo();
+    const { username } = getDockerInfo();
     const answers = await prompt([
       {
         type: 'select',
@@ -341,6 +341,10 @@ async function main(): Promise<void> {
         name: 'dockerUsername',
         message: 'Enter the Docker username',
         initial: username,
+        validate: (value: string) =>
+          value === undefined || value === ''
+            ? 'A Docker username is required to continue with the deployment. Please provide a value.'
+            : true,
       },
       {
         type: 'text',
@@ -362,8 +366,6 @@ async function main(): Promise<void> {
       return;
     } else {
       const uniqueID = getUniqueID();
-
-      console.log(`Docker Username: ${chalk.green(answers.dockerUsername)}`);
 
       validateDeploymentManifestIsModified(answers.serviceId);
 
