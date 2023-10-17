@@ -54,8 +54,7 @@ export class ChannelPublishedEventHandler extends ChannelGuardedTransactionalMes
     if (payload.localizations) {
       await insert(
         'channel_localizations',
-        //TODO: Remove `as any[]` when messages lib is updated
-        (payload.localizations as any[]).map(
+        payload.localizations.map(
           (l): channel_localizations.Insertable => ({
             channel_id: channelId,
             is_default_locale: l.is_default_locale,

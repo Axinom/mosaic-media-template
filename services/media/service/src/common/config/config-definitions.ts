@@ -59,8 +59,12 @@ export const getConfigDefinitions = (
      * If there is ever a need to change this value in a deployed environment -
      * make sure to manually delete the old replication slot.
      */
-    dbLocalizationReplicationSlot: () =>
-      env.get('DATABASE_LOCALIZATION_REPLICATION_SLOT').required().asString(),
+    dbLocalizationReplicationSlot: function () {
+      return env
+        .get('DATABASE_LOCALIZATION_REPLICATION_SLOT')
+        .required(this.isLocalizationEnabled())
+        .asString();
+    },
 
     /**
      * Optional Service Account Client ID, used to get ID service token during development
