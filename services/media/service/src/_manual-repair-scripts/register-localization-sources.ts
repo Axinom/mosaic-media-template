@@ -28,23 +28,23 @@ import {
   tvshows_images,
   tvshow_genres,
 } from 'zapatos/schema';
-import { getFullConfig } from './common/config';
-import { requestServiceAccountToken } from './common/utils/token-utils';
-import { LOCALIZATION_COLLECTION_TYPE } from './domains/collections';
-import { buildDisplayTitle } from './domains/common';
+import { getFullConfig } from '../common/config';
+import { requestServiceAccountToken } from '../common/utils/token-utils';
+import { LOCALIZATION_COLLECTION_TYPE } from '../domains/collections';
+import { buildDisplayTitle } from '../domains/common';
 import {
   LOCALIZATION_MOVIE_GENRE_TYPE,
   LOCALIZATION_MOVIE_TYPE,
-} from './domains/movies';
+} from '../domains/movies';
 import {
   LOCALIZATION_EPISODE_TYPE,
   LOCALIZATION_SEASON_TYPE,
   LOCALIZATION_TVSHOW_GENRE_TYPE,
   LOCALIZATION_TVSHOW_TYPE,
-} from './domains/tvshows';
+} from '../domains/tvshows';
 
 const logger = new Logger({
-  context: 'one-time-register-localization-sources',
+  context: 'register-localization-sources-script',
 });
 
 /**
@@ -64,6 +64,9 @@ const logger = new Logger({
  *
  * This script only sends out messages and does not modify any database rows in
  * the media service.
+ *
+ * Local script call:
+ * yarn util:load-vars node dist/_manual-repair-scripts/register-localization-sources.js
  */
 async function main(): Promise<void> {
   logger.log('Starting the migration script...');
