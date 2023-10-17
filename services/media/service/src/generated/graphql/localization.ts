@@ -1614,19 +1614,19 @@ export type PrepareEntityLocalizationsForPublishingPayload = {
    * Localizations of a specific source entity that are prepared for publishing. Example:
    *
    * ```json
-   * localizations: [
+   * "localizations": [
    *   {
-   *     '@isDefaultLocale': true,
-   *     '@languageTag': 'en-US',
-   *     title: 'title source value',
-   *     description: 'description source value',
+   *     "@isDefaultLocale": true,
+   *     "@languageTag": "en-US",
+   *     "title": "title source value",
+   *     "description": "description source value"
    *   },
    *   {
-   *     '@isDefaultLocale': false,
-   *     '@languageTag': 'de-DE',
-   *     title: 'title translated value',
-   *     description: 'description translated value',
-   *   },
+   *     "@isDefaultLocale": false,
+   *     "@languageTag": "de-DE",
+   *     "title": "title translated value",
+   *     "description": "description translated value"
+   *   }
    * ]
    * ```
    */
