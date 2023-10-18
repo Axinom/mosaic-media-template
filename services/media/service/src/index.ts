@@ -153,7 +153,7 @@ async function bootstrap(): Promise<void> {
     // Starting up the logical replication service to monitor and handle changes
     // on tables related to passed publications
     const shutdown = await createLogicalReplicationService({
-      connectionString: config.dbOwnerConnectionString,
+      connectionString: config.dbOwnerReplicationConnectionString,
       publicationNames: [PG_LOCALIZATION_PUBLICATION],
       replicationSlotName: config.dbLocalizationReplicationSlot,
       messageHandler: syncSourcesWithLocalization(ownerPool, broker, config),
