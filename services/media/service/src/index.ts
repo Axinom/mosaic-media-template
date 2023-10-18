@@ -6,6 +6,7 @@ import {
 } from '@axinom/mosaic-db-common';
 import {
   AuthenticationConfig,
+  IdGuardErrors,
   setupManagementAuthentication,
   setupManagementGQLSubscriptionAuthentication,
 } from '@axinom/mosaic-id-guard';
@@ -15,6 +16,7 @@ import {
   handleGlobalErrors,
   isServiceAvailable,
   Logger,
+  MosaicError,
   MosaicErrors,
   setupGlobalConsoleOverride,
   setupGlobalLogMiddleware,
@@ -74,9 +76,7 @@ async function bootstrap(): Promise<void> {
 
   // Check ID service is available
   if (!(await isServiceAvailable(config.idServiceAuthBaseUrl))) {
-    throw new Error(
-      'The Mosaic Identity Service is required to run this service, but it was not available.',
-    );
+    throw new MosaicError(IdGuardErrors.IdentityServiceNotAccessible);
   }
 
   // Register service health endpoint

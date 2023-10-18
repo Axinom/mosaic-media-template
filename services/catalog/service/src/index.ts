@@ -14,7 +14,6 @@ import {
 import {
   closeHttpServer,
   handleGlobalErrors,
-  isServiceAvailable,
   Logger,
   MosaicErrors,
   setupGlobalConsoleOverride,
@@ -42,13 +41,6 @@ async function bootstrap(): Promise<void> {
   const app = express();
 
   const { readiness } = setupLivenessAndReadiness(config);
-
-  // Check ID service is available
-  if (!(await isServiceAvailable(config.idServiceAuthBaseUrl))) {
-    throw new Error(
-      'The Mosaic Identity Service is required to run this service, but it was not available.',
-    );
-  }
 
   // Register service health endpoint
   setupServiceHealthEndpoint(app);

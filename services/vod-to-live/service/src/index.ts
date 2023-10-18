@@ -1,3 +1,4 @@
+import { IdGuardErrors } from '@axinom/mosaic-id-guard';
 import {
   CreateRabbitMQConnectivityMetric,
   envelopeLoggingMiddleware,
@@ -8,6 +9,7 @@ import {
   handleGlobalErrors,
   isServiceAvailable,
   Logger,
+  MosaicError,
   MosaicErrors,
   setupGlobalConsoleOverride,
   setupGlobalLogMiddleware,
@@ -45,9 +47,7 @@ async function bootstrap(): Promise<void> {
 
   // Check ID service is available
   if (!(await isServiceAvailable(config.idServiceAuthBaseUrl))) {
-    throw new Error(
-      'The Mosaic Identity Service is required to run this service, but it was not available.',
-    );
+    throw new MosaicError(IdGuardErrors.IdentityServiceNotAccessible);
   }
 
   // Register service health endpoint
