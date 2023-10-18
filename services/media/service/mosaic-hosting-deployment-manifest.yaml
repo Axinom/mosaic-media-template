@@ -21,6 +21,7 @@ regularVariables:
   PGSSLMODE: '${__ax_hosted__.pg.sslmode}'
   POSTGRESQL_HOST: '${__ax_hosted__.pg.host}'
   POSTGRESQL_PORT: '${__ax_hosted__.pg.port}'
+  POSTGRESQL_REPLICATION_PORT: '${__ax_hosted__.pg.replication_port}'
   POSTGRESQL_USER_SUFFIX: '${__ax_hosted__.pg.user_suffix}'
 
   # Database Variables
