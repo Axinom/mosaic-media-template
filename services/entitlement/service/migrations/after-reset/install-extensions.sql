@@ -7,6 +7,6 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public; -- used for gener
 
 -- This ensures that ILIKE gin indexes from pg_trgm extension are triggered
 -- when used together with RLS.
--- e.g. `SELECT ax_utils.define_like_index('title', 'entities', 'app_public');`
+-- e.g. `SELECT ax_define.define_like_index('title', 'entities', 'app_public');`
 -- More context: https://www.postgresql.org/message-id/CAGrP7a3PwDYJhPe53yE6pBPPNxk2Ve4n%2BdPQMS1HcBU6swXYfA%40mail.gmail.com
 ALTER FUNCTION pg_catalog.texticlike LEAKPROOF;
