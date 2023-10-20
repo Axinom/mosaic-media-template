@@ -194,6 +194,17 @@ like:
 You can find these keys and values usually in the `.env.template` file of the
 workflow.
 
+#### Unpublishing a workflow package
+
+If you want to unpublish a previously published workflow package from the Mosaic
+Micro Frontend Service, the following CLI command provided by the Mosaic CLI can
+be used. The Service Account used to create the `api-key` must have
+`Pilets: Delete` permission assigned.
+
+```sh
+yarn mosaic unpublish-pilet -t {tenantId} -e {environmentId} -a {api-key} -n {pilet-name} -m {micro-frontend-service-base-url}
+```
+
 ## Deploying the services via Mosaic Hosting Service
 
 If you're looking for a quick way to deploy a service in the Axinom Cloud, we

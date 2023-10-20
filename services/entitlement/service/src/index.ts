@@ -17,6 +17,7 @@ import {
 import {
   closeHttpServer,
   handleGlobalErrors,
+  isServiceAvailable,
   Logger,
   MosaicErrors,
   setupGlobalConsoleOverride,
@@ -24,6 +25,7 @@ import {
   setupGlobalSkipMaskMiddleware,
   setupLivenessAndReadiness,
   setupMonitoring,
+  setupServiceHealthEndpoint,
   setupShutdownActions,
   tenantEnvironmentIdsLogMiddleware,
   trimErrorsSkipMaskMiddleware,
@@ -55,6 +57,16 @@ async function bootstrap(): Promise<void> {
   updateGeoDatabase(config);
 
   const { readiness } = setupLivenessAndReadiness(config);
+
+  // Check ID service is available
+  if (!(await isServiceAvailable(config.idServiceAuthBaseUrl))) {
+    throw new Error(
+      'The Mosaic Identity Service is required to run this service, but it was not available.',
+    );
+  }
+
+  // Register service health endpoint
+  setupServiceHealthEndpoint(app);
 
   await applyMigrations(config);
 

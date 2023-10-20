@@ -137,7 +137,9 @@ const Panel: React.FC<{ data?: MovieGenresQuery }> = ({ data }) => {
           <Paragraph title="Statistic">
             <div className={classes.datalist}>
               <div>Items Total</div>
-              <div>{data?.movieGenres?.totalCount}</div>
+              <div className={classes.rightAlignment}>
+                {data?.movieGenres?.totalCount}
+              </div>
             </div>
           </Paragraph>
           <Paragraph title="Publishing Status">
