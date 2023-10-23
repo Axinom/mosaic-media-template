@@ -1,4 +1,4 @@
-import { getTranslationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
+import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
 import { FormActionData, IconName } from '@axinom/mosaic-ui';
 import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
@@ -13,7 +13,7 @@ export function useSeasonDetailsActions(id: number): {
   readonly actions: FormActionData<SeasonDetailsFormData>[];
 } {
   const history = useHistory();
-  const localizationPath = getTranslationEntryPoint('season');
+  const localizationPath = getLocalizationEntryPoint('season');
 
   const [deleteSeasonMutation] = useDeleteSeasonMutation({
     client,
