@@ -1,4 +1,4 @@
-import { getTranslationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
+import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
   createInputRenderer,
@@ -105,7 +105,7 @@ export const TvShowGenres: React.FC = () => {
 
 const Form: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<TvShowGenresFormData>();
-  const localizationPath = getTranslationEntryPoint('tv_show_genre');
+  const localizationPath = getLocalizationEntryPoint('tv_show_genre');
 
   const generateInlineMenuActions: ((data) => ActionData[]) | undefined =
     localizationPath

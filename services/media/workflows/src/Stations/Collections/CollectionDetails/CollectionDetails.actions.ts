@@ -1,4 +1,4 @@
-import { getTranslationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
+import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
 import { ActionData } from '@axinom/mosaic-ui';
 import { useMemo } from 'react';
 import { useHistory } from 'react-router';
@@ -13,7 +13,7 @@ export function useCollectionDetailsActions(id: number): {
   readonly actions: ActionData[];
 } {
   const history = useHistory();
-  const localizationPath = getTranslationEntryPoint('collection');
+  const localizationPath = getLocalizationEntryPoint('collection');
 
   const [deleteCollectionMutation] = useDeleteCollectionMutation({
     client,
