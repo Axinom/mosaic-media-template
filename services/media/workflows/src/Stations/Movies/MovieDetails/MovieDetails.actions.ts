@@ -1,4 +1,4 @@
-import { getTranslationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
+import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
 import { FormActionData, IconName } from '@axinom/mosaic-ui';
 import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
@@ -13,7 +13,7 @@ export function useMovieDetailsActions(id: number): {
   readonly actions: FormActionData<MovieDetailsFormData>[];
 } {
   const history = useHistory();
-  const localizationPath = getTranslationEntryPoint('movie');
+  const localizationPath = getLocalizationEntryPoint('movie');
 
   const [deleteMovieMutation] = useDeleteMovieMutation({
     client,
