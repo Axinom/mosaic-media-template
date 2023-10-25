@@ -1,4 +1,4 @@
-import { generateLocalizationEntryPoints } from '@axinom/mosaic-managed-workflow-integration';
+import { registerLocalizationEntryPoints } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions, ExtensionsContext } from '../../externals';
@@ -33,9 +33,8 @@ export function register(app: PiletApi, extensions: Extensions): void {
   };
 
   // Generate entry points to embedded localization stations
-  app.getDataHelper(
-    'localization-registration',
-    generateLocalizationEntryPoints([
+  registerLocalizationEntryPoints(
+    [
       {
         root: '/movies/:movieId',
         entityIdParam: 'movieId',
@@ -46,7 +45,8 @@ export function register(app: PiletApi, extensions: Extensions): void {
         entityIdParam: 'genreId',
         entityType: 'movie_genre',
       },
-    ]),
+    ],
+    app,
   );
 
   app.setRouteResolver(
