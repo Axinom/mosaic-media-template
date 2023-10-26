@@ -1,3 +1,4 @@
+import { Dict } from '@axinom/mosaic-db-common';
 import { Plugin } from 'graphile-build';
 import { QueryBuilder } from 'graphile-build-pg';
 import {
@@ -10,24 +11,24 @@ import {
 import { Table } from 'zapatos/schema';
 import { MOSAIC_LOCALE_PG_KEY } from '../../common';
 
-const wellKnownProperties = [
-  {
-    name: 'title',
+const wellKnownProperties: Dict<{
+  description: (entity: string) => string;
+  required: boolean;
+}> = {
+  title: {
     description: (entity: string) =>
       `Title of the ${entity.replace('_', ' ')}.`,
     required: true,
   },
-  {
-    name: 'synopsis',
+  synopsis: {
     description: () => 'Short description of the main plot elements.',
     required: false,
   },
-  {
-    name: 'description',
+  description: {
     description: () => 'Extended synopsis.',
     required: false,
   },
-];
+};
 
 const EntityLocalizationExtendPlugin = (
   entityName: string, // e.g. movie
@@ -36,9 +37,7 @@ const EntityLocalizationExtendPlugin = (
 ): Plugin => {
   return makeExtendSchemaPlugin((build) => {
     const { pgSql: sql, inflection } = build;
-    const fieldDefinition = wellKnownProperties.find(
-      (x) => x.name === property,
-    );
+    const fieldDefinition = wellKnownProperties[property];
     const comment = fieldDefinition
       ? `"""${fieldDefinition.description(entityName)}"""`
       : '';
@@ -49,7 +48,6 @@ const EntityLocalizationExtendPlugin = (
     const column = sql.identifier(property);
     const fk = sql.identifier(`${entityName}_id`);
     const localeKey = sql.value(MOSAIC_LOCALE_PG_KEY);
-    const condition = sql.fragment`(${schema}.${localizations_table}.locale = (SELECT pg_catalog.current_setting(${localeKey}, true)) OR ${schema}.${localizations_table}.is_default_locale IS TRUE)`;
     return {
       typeDefs: gql`
         extend type ${capitalizedEntityName} {
@@ -59,7 +57,8 @@ const EntityLocalizationExtendPlugin = (
               const entity_table = queryBuilder.getTableAlias();
               return sql.fragment`(
                 SELECT ${column} from ${schema}.${localizations_table} 
-                WHERE ${schema}.${localizations_table}.${fk} = ${entity_table}.id AND ${condition} 
+                WHERE ${schema}.${localizations_table}.${fk} = ${entity_table}.id AND 
+                (${schema}.${localizations_table}.locale = (SELECT pg_catalog.current_setting(${localeKey}, true)) OR ${schema}.${localizations_table}.is_default_locale IS TRUE)
                 ORDER BY ${schema}.${localizations_table}.is_default_locale ASC
                 LIMIT 1)`;
             })}

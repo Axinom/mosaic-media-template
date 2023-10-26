@@ -80,7 +80,7 @@ describe('Tvshow genre Localization Graphql Requests', () => {
     const resp = await ctx.runGqlQuery(
       TVSHOW_GENRE_REQUEST,
       {},
-      getRequestContext('asdf'),
+      getRequestContext(''),
     );
 
     // Assert
