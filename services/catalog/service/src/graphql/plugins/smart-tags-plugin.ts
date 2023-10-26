@@ -45,20 +45,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       movie_localizations: {
-        description: 'Localized values of the movie.',
-        attribute: {
-          title: {
-            description: 'Title of the movie.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
-            ...disableFilterAndOrder,
-          },
+        tags: {
+          omit: true,
         },
       },
       movie_images: {
@@ -328,11 +316,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       movie_genre_localizations: {
-        description: 'Localized values of the movie genre.',
-        attribute: {
-          title: {
-            description: 'Title of the movie genre.',
-          },
+        tags: {
+          omit: true,
         },
       },
       tvshow: {
@@ -371,20 +356,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       tvshow_localizations: {
-        description: 'Localized values of the TV show.',
-        attribute: {
-          title: {
-            description: 'Title of the TV show.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
-            ...disableFilterAndOrder,
-          },
+        tags: {
+          omit: true,
         },
       },
       tvshow_images: {
@@ -655,11 +628,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       tvshow_genre_localizations: {
-        description: 'Localized values of the TV show genre.',
-        attribute: {
-          title: {
-            description: 'Title of the TV show genre.',
-          },
+        tags: {
+          omit: true,
         },
       },
       season: {
@@ -700,16 +670,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       season_localizations: {
-        description: 'Localized values of the season.',
-        attribute: {
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
-            ...disableFilterAndOrder,
-          },
+        tags: {
+          omit: true,
         },
       },
       season_images: {
@@ -1010,20 +972,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       episode_localizations: {
-        description: 'Localized values of the episode.',
-        attribute: {
-          title: {
-            description: 'Title of the episode.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
-            ...disableFilterAndOrder,
-          },
+        tags: {
+          omit: true,
         },
       },
       episode_images: {
@@ -1294,20 +1244,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       collection_localizations: {
-        description: 'Localized values of the collection.',
-        attribute: {
-          title: {
-            description: 'Title of the collection.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
-            ...disableFilterAndOrder,
-          },
+        tags: {
+          omit: true,
         },
       },
       collection_images: {
@@ -1385,6 +1323,11 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
         tags: {
           omit: 'create,update,delete',
+        },
+      },
+      channel_localizations: {
+        tags: {
+          omit: true,
         },
       },
       channel_images: {

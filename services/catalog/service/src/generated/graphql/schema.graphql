@@ -351,13 +351,11 @@ type Channel {
     filter: ChannelImageFilter
   ): ChannelImagesConnection!
 
-  """The localized channel metadata."""
-  localization(
-    """
-    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
-    """
-    locale: String
-  ): ChannelLocalization!
+  """Title of the channel."""
+  title: String!
+
+  """Extended synopsis."""
+  description: String
 }
 
 """A connection to a list of `ChannelImage` values."""
@@ -642,11 +640,6 @@ input StringFilter {
   greaterThanOrEqualToInsensitive: String
 }
 
-type ChannelLocalization {
-  title: String!
-  description: String
-}
-
 """A `Channel` edge in the connection."""
 type ChannelsEdge {
   """A cursor for use in pagination."""
@@ -784,13 +777,14 @@ type Collection {
     filter: CollectionItemsRelationFilter
   ): CollectionItemsRelationsConnection!
 
-  """The localized collection metadata."""
-  localization(
-    """
-    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
-    """
-    locale: String
-  ): CollectionLocalization!
+  """Title of the collection."""
+  title: String!
+
+  """Extended synopsis."""
+  description: String
+
+  """Short description of the main plot elements."""
+  synopsis: String
 }
 
 """A connection to a list of `CollectionImage` values."""
@@ -1100,13 +1094,14 @@ type Movie {
     filter: MovieGenresRelationFilter
   ): MovieGenresRelationsConnection!
 
-  """The localized movie metadata."""
-  localization(
-    """
-    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
-    """
-    locale: String
-  ): MovieLocalization!
+  """Title of the movie."""
+  title: String!
+
+  """Extended synopsis."""
+  description: String
+
+  """Short description of the main plot elements."""
+  synopsis: String
 }
 
 """
@@ -1807,17 +1802,6 @@ type MovieGenre {
   """Global ordering number for the genre."""
   orderNo: Int
 
-  """The localized movie_genre metadata."""
-  localization(
-    """
-    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
-    """
-    locale: String
-  ): MovieGenreLocalization!
-}
-
-"""Localized values of the movie genre."""
-type MovieGenreLocalization {
   """Title of the movie genre."""
   title: String!
 }
@@ -1888,18 +1872,6 @@ input MovieGenresRelationFilter {
 
   """Negates the expression."""
   not: MovieGenresRelationFilter
-}
-
-"""Localized values of the movie."""
-type MovieLocalization {
-  """Title of the movie."""
-  title: String!
-
-  """Extended synopsis."""
-  description: String
-
-  """Short description of the main plot elements."""
-  synopsis: String
 }
 
 """Definition of the TV show publish format."""
@@ -2094,13 +2066,14 @@ type Tvshow {
     filter: SeasonFilter
   ): SeasonsConnection!
 
-  """The localized tvshow metadata."""
-  localization(
-    """
-    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
-    """
-    locale: String
-  ): TvshowLocalization!
+  """Title of the tvshow."""
+  title: String!
+
+  """Extended synopsis."""
+  description: String
+
+  """Short description of the main plot elements."""
+  synopsis: String
 }
 
 """A connection to a list of `TvshowImage` values."""
@@ -2733,18 +2706,7 @@ type TvshowGenre {
   """Global ordering number for the genre."""
   orderNo: Int
 
-  """The localized tvshow_genre metadata."""
-  localization(
-    """
-    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
-    """
-    locale: String
-  ): TvshowGenreLocalization!
-}
-
-"""Localized values of the TV show genre."""
-type TvshowGenreLocalization {
-  """Title of the TV show genre."""
+  """Title of the tvshow genre."""
   title: String!
 }
 
@@ -3029,13 +2991,11 @@ type Season {
     filter: EpisodeFilter
   ): EpisodesConnection!
 
-  """The localized season metadata."""
-  localization(
-    """
-    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
-    """
-    locale: String
-  ): SeasonLocalization!
+  """Extended synopsis."""
+  description: String
+
+  """Short description of the main plot elements."""
+  synopsis: String
 }
 
 """A connection to a list of `SeasonImage` values."""
@@ -3911,13 +3871,14 @@ type Episode {
     filter: EpisodeGenresRelationFilter
   ): EpisodeGenresRelationsConnection!
 
-  """The localized episode metadata."""
-  localization(
-    """
-    The localizable field values are returned for the requested locale. In case the locale is not provided or does not exist, the default locale will be used.
-    """
-    locale: String
-  ): EpisodeLocalization!
+  """Title of the episode."""
+  title: String!
+
+  """Extended synopsis."""
+  description: String
+
+  """Short description of the main plot elements."""
+  synopsis: String
 }
 
 """A connection to a list of `EpisodeImage` values."""
@@ -4619,18 +4580,6 @@ input EpisodeGenresRelationFilter {
   not: EpisodeGenresRelationFilter
 }
 
-"""Localized values of the episode."""
-type EpisodeLocalization {
-  """Title of the episode."""
-  title: String!
-
-  """Extended synopsis."""
-  description: String
-
-  """Short description of the main plot elements."""
-  synopsis: String
-}
-
 """A `Episode` edge in the connection."""
 type EpisodesEdge {
   """A cursor for use in pagination."""
@@ -4682,15 +4631,6 @@ input EpisodeFilter {
   not: EpisodeFilter
 }
 
-"""Localized values of the season."""
-type SeasonLocalization {
-  """Extended synopsis."""
-  description: String
-
-  """Short description of the main plot elements."""
-  synopsis: String
-}
-
 """A `Season` edge in the connection."""
 type SeasonsEdge {
   """A cursor for use in pagination."""
@@ -4740,18 +4680,6 @@ input SeasonFilter {
 
   """Negates the expression."""
   not: SeasonFilter
-}
-
-"""Localized values of the TV show."""
-type TvshowLocalization {
-  """Title of the TV show."""
-  title: String!
-
-  """Extended synopsis."""
-  description: String
-
-  """Short description of the main plot elements."""
-  synopsis: String
 }
 
 """A `CollectionItemsRelation` edge in the connection."""
@@ -4844,18 +4772,6 @@ input CollectionItemsRelationFilter {
 
   """Negates the expression."""
   not: CollectionItemsRelationFilter
-}
-
-"""Localized values of the collection."""
-type CollectionLocalization {
-  """Title of the collection."""
-  title: String!
-
-  """Extended synopsis."""
-  description: String
-
-  """Short description of the main plot elements."""
-  synopsis: String
 }
 
 """A `Collection` edge in the connection."""

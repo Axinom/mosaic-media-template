@@ -4,6 +4,12 @@ import { ExtendMovieQueryWithCountryCodePlugin } from './extend-movie-query-with
 
 export const AllMoviePlugins = makePluginByCombiningPlugins(
   ExtendMovieQueryWithCountryCodePlugin,
-  EntityLocalizationPlugin('movie', 'movie_localizations'),
-  EntityLocalizationPlugin('movie_genre', 'movie_genre_localizations'),
+  EntityLocalizationPlugin('movie', 'movie_localizations', [
+    'title',
+    'description',
+    'synopsis',
+  ]),
+  EntityLocalizationPlugin('movie_genre', 'movie_genre_localizations', [
+    'title',
+  ]),
 );
