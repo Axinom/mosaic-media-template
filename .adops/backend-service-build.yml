@@ -8,6 +8,9 @@ schedules:
         - dev
     always: true
 
+pool:
+  vmImage: 'ubuntu-latest'
+
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   continueBuild: true
@@ -85,7 +88,7 @@ stages:
                 inputs:
                   targetType: 'inline'
                   script: |
-                    $buildType = if ("$(Build.SourceBranch)" -like "refs/heads/release*") { "stable" } else { "prerelease" }
+                    $buildType = if ("$(Build.SourceBranch)" -like "*refs/heads/release*" ) { "stable" } else { "prerelease" }
                     Write-Host "##vso[build.addbuildtag]$buildType"
                     Write-Host "##vso[build.addbuildtag]complete-build"
 
