@@ -13,7 +13,13 @@ import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import { Request, Response } from 'express';
 import { PostGraphileOptions } from 'postgraphile';
 import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
-import { catalogLogMapper, CommonErrors, Config } from '../common';
+import {
+  catalogLogMapper,
+  CommonErrors,
+  Config,
+  MOSAIC_LOCALE_HEADER_KEY,
+  MOSAIC_LOCALE_PG_KEY,
+} from '../common';
 import { AllChannelPlugins } from '../domains/channels/plugins/all-channel-plugins';
 import { AllCollectionPlugins } from '../domains/collections/plugins/all-collection-plugins';
 import { AllMoviePlugins } from '../domains/movies/plugins/all-movie-plugins';
@@ -38,7 +44,10 @@ export function buildPostgraphileOptions(
       );
     })
     .setHeader('Access-Control-Max-Age', 86400)
-    .setPgSettings(async () => ({ role: config.dbGqlRole }))
+    .setPgSettings(async (req) => ({
+      role: config.dbGqlRole,
+      [MOSAIC_LOCALE_PG_KEY]: req.headers[MOSAIC_LOCALE_HEADER_KEY],
+    }))
     .addPlugins(
       PgSimplifyInflectorPlugin,
       PgSmallNumericToFloatPlugin,
