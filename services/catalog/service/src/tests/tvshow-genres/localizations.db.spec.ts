@@ -1,16 +1,14 @@
 import gql from 'graphql-tag';
 import 'jest-extended';
 import { insert } from 'zapatos/db';
-import { DEFAULT_LOCALE_TAG } from '../../common';
+import { DEFAULT_LOCALE_TAG, MOSAIC_LOCALE_HEADER_KEY } from '../../common';
 import { createTestContext, ITestContext } from '../test-utils';
 
 const TVSHOW_GENRE_REQUEST = gql`
-  query TvshowGenreLocalization($locale: String!) {
+  query TvshowGenreLocalization {
     tvshowGenres {
       nodes {
-        localization(locale: $locale) {
-          title
-        }
+        title
       }
     }
   }
@@ -43,20 +41,28 @@ describe('Tvshow genre Localization Graphql Requests', () => {
     await ctx?.dispose();
   });
 
+  const getRequestContext = (locale: string) => {
+    return {
+      headers: {
+        [MOSAIC_LOCALE_HEADER_KEY]: locale,
+      },
+    };
+  };
+
   it('Tvshow genre with only default localization and empty filter -> default localization returned', async () => {
     // Act
-    const resp = await ctx.runGqlQuery(TVSHOW_GENRE_REQUEST, {
-      locale: '',
-    });
+    const resp = await ctx.runGqlQuery(
+      TVSHOW_GENRE_REQUEST,
+      {},
+      getRequestContext(''),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.tvshowGenres.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-        },
+        title: 'Default title',
       },
     ]);
   });
@@ -71,18 +77,18 @@ describe('Tvshow genre Localization Graphql Requests', () => {
     }).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(TVSHOW_GENRE_REQUEST, {
-      locale: '',
-    });
+    const resp = await ctx.runGqlQuery(
+      TVSHOW_GENRE_REQUEST,
+      {},
+      getRequestContext(''),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.tvshowGenres.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-        },
+        title: 'Default title',
       },
     ]);
   });
@@ -97,28 +103,14 @@ describe('Tvshow genre Localization Graphql Requests', () => {
     }).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(
-      gql`
-        query TvshowGenreLocalization {
-          tvshowGenres {
-            nodes {
-              localization {
-                title
-              }
-            }
-          }
-        }
-      `,
-    );
+    const resp = await ctx.runGqlQuery(TVSHOW_GENRE_REQUEST);
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.tvshowGenres.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-        },
+        title: 'Default title',
       },
     ]);
   });
@@ -141,18 +133,18 @@ describe('Tvshow genre Localization Graphql Requests', () => {
     ]).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(TVSHOW_GENRE_REQUEST, {
-      locale: 'de-DE',
-    });
+    const resp = await ctx.runGqlQuery(
+      TVSHOW_GENRE_REQUEST,
+      {},
+      getRequestContext('de-DE'),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.tvshowGenres.nodes).toEqual([
       {
-        localization: {
-          title: 'Localized title',
-        },
+        title: 'Localized title',
       },
     ]);
   });
@@ -175,18 +167,18 @@ describe('Tvshow genre Localization Graphql Requests', () => {
     ]).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(TVSHOW_GENRE_REQUEST, {
-      locale: 'asdf',
-    });
+    const resp = await ctx.runGqlQuery(
+      TVSHOW_GENRE_REQUEST,
+      {},
+      getRequestContext('asdf'),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.tvshowGenres.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-        },
+        title: 'Default title',
       },
     ]);
   });

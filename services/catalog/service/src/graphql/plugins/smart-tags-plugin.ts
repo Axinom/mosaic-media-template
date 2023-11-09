@@ -9,11 +9,23 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
   version: 1,
   config: {
     class: {
-      movie: {
+      movie_view: {
         description: 'Definition of the movie publish format.',
         attribute: {
+          title: {
+            description: 'Title of the movie.',
+            ...disableFilterAndOrder,
+          },
           original_title: {
             description: 'Original title of the movie.',
+            ...disableFilterAndOrder,
+          },
+          synopsis: {
+            description: 'Short description of the main plot elements.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Extended synopsis.',
             ...disableFilterAndOrder,
           },
           studio: {
@@ -44,23 +56,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
-      movie_localizations: {
-        description: 'Localized values of the movie.',
-        attribute: {
-          title: {
-            description: 'Title of the movie.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
-            ...disableFilterAndOrder,
-          },
-        },
-      },
       movie_images: {
         description: 'Asset image metadata.',
         attribute: {
@@ -84,13 +79,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          movie_images_movie_id_fkey: {
-            tags: {
-              foreignFieldName: 'images',
-            },
-          },
+          foreignKey: [
+            '(movie_id) references app_public.movie_view (id)|@foreignFieldName images',
+          ],
         },
       },
       movie_licenses: {
@@ -113,13 +104,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          movie_licenses_movie_id_fkey: {
-            tags: {
-              foreignFieldName: 'licenses',
-            },
-          },
+          foreignKey: [
+            '(movie_id) references app_public.movie_view (id)|@foreignFieldName licenses',
+          ],
         },
       },
       movie_videos: {
@@ -168,13 +155,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          movie_videos_movie_id_fkey: {
-            tags: {
-              foreignFieldName: 'videos',
-            },
-          },
+          foreignKey: [
+            '(movie_id) references app_public.movie_view (id)|@foreignFieldName videos',
+          ],
         },
       },
       movie_video_cue_points: {
@@ -306,19 +289,19 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-          foreignKey: ['(movie_genre_id) references movie_genre|@omit many'],
-        },
-        constraint: {
-          movie_genres_relation_movie_id_fkey: {
-            tags: {
-              foreignFieldName: 'genres',
-            },
-          },
+          foreignKey: [
+            '(movie_genre_id) references app_public.movie_genre_view (id)|@omit many',
+            '(movie_id) references app_public.movie_view (id)|@foreignFieldName genres',
+          ],
         },
       },
-      movie_genre: {
+      movie_genre_view: {
         description: 'Definition of the movie genre publish format.',
         attribute: {
+          title: {
+            description: 'Title of the genre.',
+            ...disableFilterAndOrder,
+          },
           order_no: {
             description: 'Global ordering number for the genre.',
           },
@@ -327,17 +310,21 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
-      movie_genre_localizations: {
-        description: 'Localized values of the movie genre.',
-        attribute: {
-          title: {
-            description: 'Title of the movie genre.',
-          },
-        },
-      },
-      tvshow: {
+      tvshow_view: {
         description: 'Definition of the TV show publish format.',
         attribute: {
+          title: {
+            description: 'Title of the TV show.',
+            ...disableFilterAndOrder,
+          },
+          synopsis: {
+            description: 'Short description of the main plot elements.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Extended synopsis.',
+            ...disableFilterAndOrder,
+          },
           original_title: {
             description: 'Original title of the TV show.',
             ...disableFilterAndOrder,
@@ -370,23 +357,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
-      tvshow_localizations: {
-        description: 'Localized values of the TV show.',
-        attribute: {
-          title: {
-            description: 'Title of the TV show.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
-            ...disableFilterAndOrder,
-          },
-        },
-      },
       tvshow_images: {
         description: 'Asset image metadata.',
         attribute: {
@@ -410,13 +380,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          tvshow_images_tvshow_id_fkey: {
-            tags: {
-              foreignFieldName: 'images',
-            },
-          },
+          foreignKey: [
+            '(tvshow_id) references app_public.tvshow_view (id)|@foreignFieldName images',
+          ],
         },
       },
       tvshow_licenses: {
@@ -439,13 +405,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          tvshow_licenses_tvshow_id_fkey: {
-            tags: {
-              foreignFieldName: 'licenses',
-            },
-          },
+          foreignKey: [
+            '(tvshow_id) references app_public.tvshow_view (id)|@foreignFieldName licenses',
+          ],
         },
       },
       tvshow_videos: {
@@ -495,13 +457,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          tvshow_videos_tvshow_id_fkey: {
-            tags: {
-              foreignFieldName: 'videos',
-            },
-          },
+          foreignKey: [
+            '(tvshow_id) references app_public.tvshow_view (id)|@foreignFieldName videos',
+          ],
         },
       },
       tvshow_video_cue_points: {
@@ -633,19 +591,19 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-          foreignKey: ['(tvshow_genre_id) references tvshow_genre|@omit many'],
-        },
-        constraint: {
-          tvshow_genres_relation_tvshow_id_fkey: {
-            tags: {
-              foreignFieldName: 'genres',
-            },
-          },
+          foreignKey: [
+            '(tvshow_genre_id) references tvshow_genre_view|@omit many',
+            '(tvshow_id) references app_public.tvshow_view (id)|@foreignFieldName genres',
+          ],
         },
       },
-      tvshow_genre: {
+      tvshow_genre_view: {
         description: 'Definition of the TV show genre publish format.',
         attribute: {
+          title: {
+            description: 'Title of the genre.',
+            ...disableFilterAndOrder,
+          },
           order_no: {
             description: 'Global ordering number for the genre.',
           },
@@ -654,17 +612,17 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
-      tvshow_genre_localizations: {
-        description: 'Localized values of the TV show genre.',
-        attribute: {
-          title: {
-            description: 'Title of the TV show genre.',
-          },
-        },
-      },
-      season: {
+      season_view: {
         description: 'Definition of the TV show season publish format.',
         attribute: {
+          synopsis: {
+            description: 'Short description of the main plot elements.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Extended synopsis.',
+            ...disableFilterAndOrder,
+          },
           index: {
             description: 'Season number',
             ...disableFilterAndOrder,
@@ -696,20 +654,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omit: 'create,update,delete',
           foreignKey:
-            '(tvshow_id) references app_public.tvshow(id)|@fieldName tvshow',
-        },
-      },
-      season_localizations: {
-        description: 'Localized values of the season.',
-        attribute: {
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
-            ...disableFilterAndOrder,
-          },
+            '(tvshow_id) references app_public.tvshow_view (id)|@fieldName tvshow|@foreignFieldName seasons',
         },
       },
       season_images: {
@@ -735,13 +680,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          season_images_season_id_fkey: {
-            tags: {
-              foreignFieldName: 'images',
-            },
-          },
+          foreignKey: [
+            '(season_id) references app_public.season_view (id)|@foreignFieldName images',
+          ],
         },
       },
       season_licenses: {
@@ -764,13 +705,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          season_licenses_season_id_fkey: {
-            tags: {
-              foreignFieldName: 'licenses',
-            },
-          },
+          foreignKey: [
+            '(season_id) references app_public.season_view (id)|@foreignFieldName licenses',
+          ],
         },
       },
       season_videos: {
@@ -820,13 +757,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          season_videos_season_id_fkey: {
-            tags: {
-              foreignFieldName: 'videos',
-            },
-          },
+          foreignKey: [
+            '(season_id) references app_public.season_view (id)|@foreignFieldName videos',
+          ],
         },
       },
       season_video_cue_points: {
@@ -958,19 +891,27 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-          foreignKey: ['(tvshow_genre_id) references tvshow_genre|@omit many'],
-        },
-        constraint: {
-          season_genres_relation_season_id_fkey: {
-            tags: {
-              foreignFieldName: 'genres',
-            },
-          },
+          foreignKey: [
+            '(tvshow_genre_id) references tvshow_genre_view|@omit many',
+            '(season_id) references app_public.season_view (id)|@foreignFieldName genres',
+          ],
         },
       },
-      episode: {
+      episode_view: {
         description: 'Definition of the TV show episode publish format.',
         attribute: {
+          title: {
+            description: 'Title of the episode.',
+            ...disableFilterAndOrder,
+          },
+          synopsis: {
+            description: 'Short description of the main plot elements.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Extended synopsis.',
+            ...disableFilterAndOrder,
+          },
           index: {
             description: 'Episode number',
             ...disableFilterAndOrder,
@@ -1006,24 +947,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omit: 'create,update,delete',
           foreignKey:
-            '(season_id) references app_public.season(id)|@fieldName season',
-        },
-      },
-      episode_localizations: {
-        description: 'Localized values of the episode.',
-        attribute: {
-          title: {
-            description: 'Title of the episode.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
-            ...disableFilterAndOrder,
-          },
+            '(season_id) references app_public.season_view (id)|@fieldName season|@foreignFieldName episodes',
         },
       },
       episode_images: {
@@ -1049,13 +973,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          episode_images_episode_id_fkey: {
-            tags: {
-              foreignFieldName: 'images',
-            },
-          },
+          foreignKey: [
+            '(episode_id) references app_public.episode_view (id)|@foreignFieldName images',
+          ],
         },
       },
       episode_licenses: {
@@ -1078,13 +998,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          episode_licenses_episode_id_fkey: {
-            tags: {
-              foreignFieldName: 'licenses',
-            },
-          },
+          foreignKey: [
+            '(episode_id) references app_public.episode_view (id)|@foreignFieldName licenses',
+          ],
         },
       },
       episode_videos: {
@@ -1133,13 +1049,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          episode_videos_episode_id_fkey: {
-            tags: {
-              foreignFieldName: 'videos',
-            },
-          },
+          foreignKey: [
+            '(episode_id) references app_public.episode_view (id)|@foreignFieldName videos',
+          ],
         },
       },
       episode_video_cue_points: {
@@ -1271,19 +1183,27 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-          foreignKey: ['(tvshow_genre_id) references tvshow_genre|@omit many'],
-        },
-        constraint: {
-          episode_genres_relation_episode_id_fkey: {
-            tags: {
-              foreignFieldName: 'genres',
-            },
-          },
+          foreignKey: [
+            '(tvshow_genre_id) references tvshow_genre_view|@omit many',
+            '(episode_id) references app_public.episode_view (id)|@foreignFieldName genres',
+          ],
         },
       },
-      collection: {
+      collection_view: {
         description: 'Definition of the collection publish format.',
         attribute: {
+          title: {
+            description: 'Title of the collection.',
+            ...disableFilterAndOrder,
+          },
+          synopsis: {
+            description: 'Short description.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Longer description.',
+            ...disableFilterAndOrder,
+          },
           tags: {
             description: 'Array of tags associated with the content.',
             ...disableFilterAndOrder,
@@ -1291,23 +1211,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
         tags: {
           omit: 'create,update,delete',
-        },
-      },
-      collection_localizations: {
-        description: 'Localized values of the collection.',
-        attribute: {
-          title: {
-            description: 'Title of the collection.',
-            ...disableFilterAndOrder,
-          },
-          synopsis: {
-            description: 'Short description of the main plot elements.',
-            ...disableFilterAndOrder,
-          },
-          description: {
-            description: 'Extended synopsis.',
-            ...disableFilterAndOrder,
-          },
         },
       },
       collection_images: {
@@ -1333,13 +1236,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          collection_images_collection_id_fkey: {
-            tags: {
-              foreignFieldName: 'images',
-            },
-          },
+          foreignKey: [
+            '(collection_id) references app_public.collection_view (id)|@foreignFieldName images',
+          ],
         },
       },
       collection_items_relation: {
@@ -1353,23 +1252,28 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
           foreignKey: [
-            '(movie_id) references movie|@omit many',
-            '(tvshow_id) references tvshow|@omit many',
-            '(season_id) references season|@omit many',
-            '(episode_id) references episode|@omit many',
+            '(movie_id) references movie_view|@omit many',
+            '(tvshow_id) references tvshow_view|@omit many',
+            '(season_id) references season_view|@omit many',
+            '(episode_id) references episode_view|@omit many',
+            '(collection_id) references app_public.collection_view (id)|@foreignFieldName items',
           ],
         },
-        constraint: {
-          collection_items_relation_collection_id_fkey: {
-            tags: {
-              foreignFieldName: 'items',
-            },
-          },
-        },
       },
-      channel: {
+      channel_view: {
         description: 'Definition of the channel publish format.',
         attribute: {
+          title: {
+            description: 'Title of the channel.',
+            tags: {
+              notNull: true,
+              omit: 'filter,order',
+            },
+          },
+          description: {
+            description: 'Description of the channel.',
+            ...disableFilterAndOrder,
+          },
           hls_stream_url: {
             description: 'HLS stream URL of the channel.',
             ...disableFilterAndOrder,
@@ -1410,13 +1314,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-        },
-        constraint: {
-          channel_images_channel_id_fkey: {
-            tags: {
-              foreignFieldName: 'images',
-            },
-          },
+          foreignKey: [
+            '(channel_id) references app_public.channel_view (id)|@foreignFieldName images',
+          ],
         },
       },
     },
