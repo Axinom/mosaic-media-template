@@ -1,17 +1,15 @@
 import gql from 'graphql-tag';
 import 'jest-extended';
 import { insert } from 'zapatos/db';
-import { DEFAULT_LOCALE_TAG } from '../../common';
+import { DEFAULT_LOCALE_TAG, MOSAIC_LOCALE_HEADER_KEY } from '../../common';
 import { createTestContext, ITestContext } from '../test-utils';
 
 const SEASON_REQUEST = gql`
-  query SeasonLocalization($locale: String!) {
+  query SeasonLocalization {
     seasons {
       nodes {
-        localization(locale: $locale) {
-          description
-          synopsis
-        }
+        description
+        synopsis
       }
     }
   }
@@ -45,21 +43,29 @@ describe('Season Localization Graphql Requests', () => {
     await ctx?.dispose();
   });
 
+  const getRequestContext = (locale: string) => {
+    return {
+      headers: {
+        [MOSAIC_LOCALE_HEADER_KEY]: locale,
+      },
+    };
+  };
+
   it('Season with only default localization and empty filter -> default localization returned', async () => {
     // Act
-    const resp = await ctx.runGqlQuery(SEASON_REQUEST, {
-      locale: '',
-    });
+    const resp = await ctx.runGqlQuery(
+      SEASON_REQUEST,
+      {},
+      getRequestContext(''),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.seasons.nodes).toEqual([
       {
-        localization: {
-          synopsis: 'Default synopsis',
-          description: 'Default description',
-        },
+        synopsis: 'Default synopsis',
+        description: 'Default description',
       },
     ]);
   });
@@ -75,19 +81,19 @@ describe('Season Localization Graphql Requests', () => {
     }).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(SEASON_REQUEST, {
-      locale: '',
-    });
+    const resp = await ctx.runGqlQuery(
+      SEASON_REQUEST,
+      {},
+      getRequestContext('asdf'),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.seasons.nodes).toEqual([
       {
-        localization: {
-          synopsis: 'Default synopsis',
-          description: 'Default description',
-        },
+        synopsis: 'Default synopsis',
+        description: 'Default description',
       },
     ]);
   });
@@ -103,30 +109,15 @@ describe('Season Localization Graphql Requests', () => {
     }).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(
-      gql`
-        query SeasonLocalization {
-          seasons {
-            nodes {
-              localization {
-                description
-                synopsis
-              }
-            }
-          }
-        }
-      `,
-    );
+    const resp = await ctx.runGqlQuery(SEASON_REQUEST);
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.seasons.nodes).toEqual([
       {
-        localization: {
-          synopsis: 'Default synopsis',
-          description: 'Default description',
-        },
+        synopsis: 'Default synopsis',
+        description: 'Default description',
       },
     ]);
   });
@@ -151,19 +142,19 @@ describe('Season Localization Graphql Requests', () => {
     ]).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(SEASON_REQUEST, {
-      locale: 'de-DE',
-    });
+    const resp = await ctx.runGqlQuery(
+      SEASON_REQUEST,
+      {},
+      getRequestContext('de-DE'),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.seasons.nodes).toEqual([
       {
-        localization: {
-          synopsis: 'Localized synopsis',
-          description: 'Localized description',
-        },
+        synopsis: 'Localized synopsis',
+        description: 'Localized description',
       },
     ]);
   });
@@ -188,19 +179,19 @@ describe('Season Localization Graphql Requests', () => {
     ]).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(SEASON_REQUEST, {
-      locale: 'asdf',
-    });
+    const resp = await ctx.runGqlQuery(
+      SEASON_REQUEST,
+      {},
+      getRequestContext('asdf'),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.seasons.nodes).toEqual([
       {
-        localization: {
-          synopsis: 'Default synopsis',
-          description: 'Default description',
-        },
+        synopsis: 'Default synopsis',
+        description: 'Default description',
       },
     ]);
   });
