@@ -1,17 +1,15 @@
 import gql from 'graphql-tag';
 import 'jest-extended';
 import { insert } from 'zapatos/db';
-import { DEFAULT_LOCALE_TAG } from '../../common';
+import { DEFAULT_LOCALE_TAG, MOSAIC_LOCALE_HEADER_KEY } from '../../common';
 import { createTestContext, ITestContext } from '../test-utils';
 
 const CHANNEL_REQUEST = gql`
-  query ChannelLocalization($locale: String!) {
+  query ChannelLocalization {
     channels {
       nodes {
-        localization(locale: $locale) {
-          description
-          title
-        }
+        description
+        title
       }
     }
   }
@@ -45,21 +43,29 @@ describe('Channel Localization Graphql Requests', () => {
     await ctx?.dispose();
   });
 
+  const getRequestContext = (locale: string) => {
+    return {
+      headers: {
+        [MOSAIC_LOCALE_HEADER_KEY]: locale,
+      },
+    };
+  };
+
   it('Channel with only default localization and empty filter -> default localization returned', async () => {
     // Act
-    const resp = await ctx.runGqlQuery(CHANNEL_REQUEST, {
-      locale: '',
-    });
+    const resp = await ctx.runGqlQuery(
+      CHANNEL_REQUEST,
+      {},
+      getRequestContext(''),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.channels.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-          description: 'Default description',
-        },
+        title: 'Default title',
+        description: 'Default description',
       },
     ]);
   });
@@ -75,19 +81,19 @@ describe('Channel Localization Graphql Requests', () => {
     }).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(CHANNEL_REQUEST, {
-      locale: '',
-    });
+    const resp = await ctx.runGqlQuery(
+      CHANNEL_REQUEST,
+      {},
+      getRequestContext(''),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.channels.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-          description: 'Default description',
-        },
+        title: 'Default title',
+        description: 'Default description',
       },
     ]);
   });
@@ -103,30 +109,15 @@ describe('Channel Localization Graphql Requests', () => {
     }).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(
-      gql`
-        query ChannelLocalization {
-          channels {
-            nodes {
-              localization {
-                description
-                title
-              }
-            }
-          }
-        }
-      `,
-    );
+    const resp = await ctx.runGqlQuery(CHANNEL_REQUEST);
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.channels.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-          description: 'Default description',
-        },
+        title: 'Default title',
+        description: 'Default description',
       },
     ]);
   });
@@ -151,19 +142,19 @@ describe('Channel Localization Graphql Requests', () => {
     ]).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(CHANNEL_REQUEST, {
-      locale: 'de-DE',
-    });
+    const resp = await ctx.runGqlQuery(
+      CHANNEL_REQUEST,
+      {},
+      getRequestContext('de-DE'),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.channels.nodes).toEqual([
       {
-        localization: {
-          title: 'Localized title',
-          description: 'Localized description',
-        },
+        title: 'Localized title',
+        description: 'Localized description',
       },
     ]);
   });
@@ -188,19 +179,19 @@ describe('Channel Localization Graphql Requests', () => {
     ]).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(CHANNEL_REQUEST, {
-      locale: 'asdf',
-    });
+    const resp = await ctx.runGqlQuery(
+      CHANNEL_REQUEST,
+      {},
+      getRequestContext('asdf'),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.channels.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-          description: 'Default description',
-        },
+        title: 'Default title',
+        description: 'Default description',
       },
     ]);
   });

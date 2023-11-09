@@ -1,18 +1,16 @@
 import gql from 'graphql-tag';
 import 'jest-extended';
 import { insert } from 'zapatos/db';
-import { DEFAULT_LOCALE_TAG } from '../../common';
+import { DEFAULT_LOCALE_TAG, MOSAIC_LOCALE_HEADER_KEY } from '../../common';
 import { createTestContext, ITestContext } from '../test-utils';
 
 const COLLECTION_REQUEST = gql`
-  query CollectionLocalization($locale: String!) {
+  query CollectionLocalization {
     collections {
       nodes {
-        localization(locale: $locale) {
-          description
-          synopsis
-          title
-        }
+        description
+        synopsis
+        title
       }
     }
   }
@@ -47,22 +45,30 @@ describe('Collection Localization Graphql Requests', () => {
     await ctx?.dispose();
   });
 
+  const getRequestContext = (locale: string) => {
+    return {
+      headers: {
+        [MOSAIC_LOCALE_HEADER_KEY]: locale,
+      },
+    };
+  };
+
   it('Collection with only default localization and empty filter -> default localization returned', async () => {
     // Act
-    const resp = await ctx.runGqlQuery(COLLECTION_REQUEST, {
-      locale: '',
-    });
+    const resp = await ctx.runGqlQuery(
+      COLLECTION_REQUEST,
+      {},
+      getRequestContext(''),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.collections.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-          synopsis: 'Default synopsis',
-          description: 'Default description',
-        },
+        title: 'Default title',
+        synopsis: 'Default synopsis',
+        description: 'Default description',
       },
     ]);
   });
@@ -79,20 +85,20 @@ describe('Collection Localization Graphql Requests', () => {
     }).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(COLLECTION_REQUEST, {
-      locale: '',
-    });
+    const resp = await ctx.runGqlQuery(
+      COLLECTION_REQUEST,
+      {},
+      getRequestContext(''),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.collections.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-          synopsis: 'Default synopsis',
-          description: 'Default description',
-        },
+        title: 'Default title',
+        synopsis: 'Default synopsis',
+        description: 'Default description',
       },
     ]);
   });
@@ -109,32 +115,16 @@ describe('Collection Localization Graphql Requests', () => {
     }).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(
-      gql`
-        query CollectionLocalization {
-          collections {
-            nodes {
-              localization {
-                description
-                synopsis
-                title
-              }
-            }
-          }
-        }
-      `,
-    );
+    const resp = await ctx.runGqlQuery(COLLECTION_REQUEST);
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.collections.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-          synopsis: 'Default synopsis',
-          description: 'Default description',
-        },
+        title: 'Default title',
+        synopsis: 'Default synopsis',
+        description: 'Default description',
       },
     ]);
   });
@@ -161,20 +151,20 @@ describe('Collection Localization Graphql Requests', () => {
     ]).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(COLLECTION_REQUEST, {
-      locale: 'de-DE',
-    });
+    const resp = await ctx.runGqlQuery(
+      COLLECTION_REQUEST,
+      {},
+      getRequestContext('de-DE'),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.collections.nodes).toEqual([
       {
-        localization: {
-          title: 'Localized title',
-          synopsis: 'Localized synopsis',
-          description: 'Localized description',
-        },
+        title: 'Localized title',
+        synopsis: 'Localized synopsis',
+        description: 'Localized description',
       },
     ]);
   });
@@ -201,20 +191,20 @@ describe('Collection Localization Graphql Requests', () => {
     ]).run(ctx.ownerPool);
 
     // Act
-    const resp = await ctx.runGqlQuery(COLLECTION_REQUEST, {
-      locale: 'asdf',
-    });
+    const resp = await ctx.runGqlQuery(
+      COLLECTION_REQUEST,
+      {},
+      getRequestContext('asdf'),
+    );
 
     // Assert
     expect(resp.errors).toBeFalsy();
 
     expect(resp?.data?.collections.nodes).toEqual([
       {
-        localization: {
-          title: 'Default title',
-          synopsis: 'Default synopsis',
-          description: 'Default description',
-        },
+        title: 'Default title',
+        synopsis: 'Default synopsis',
+        description: 'Default description',
       },
     ]);
   });
