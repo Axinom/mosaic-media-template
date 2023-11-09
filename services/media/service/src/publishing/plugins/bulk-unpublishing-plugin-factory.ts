@@ -19,7 +19,7 @@ export const BulkUnpublishingPluginFactory = (
         mutationNameBuilder: (filter) =>
           camelCase(`unpublish-${pluralize(filter.entityTypeName)}`),
       },
-      MediaServiceMessagingSettings.UnpublishEntity.messageType,
+      MediaServiceMessagingSettings.UnpublishEntity,
     ),
   );
 };

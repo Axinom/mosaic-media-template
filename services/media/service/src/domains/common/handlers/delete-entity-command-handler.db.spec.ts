@@ -23,7 +23,7 @@ describe('Start Ingest Item Handler', () => {
   beforeAll(async () => {
     ctx = await createTestContext();
     const broker = stub<Broker>({
-      publish: (_key: string, message: unknown) => {
+      publish: (_id: string, _settings: unknown, message: unknown) => {
         messages.push(message);
       },
     });

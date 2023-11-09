@@ -86,38 +86,56 @@ channels:
 components:
   messages:
     check-finish-ingest-item-command:
+      tags:
+        - name: aggregate-type:ingest-item
       contentType: application/json
       payload:
         $ref: 'commands/check-finish-ingest-item-command.json'
     check-finish-ingest-document-command:
+      tags:
+        - name: aggregate-type:ingest
       contentType: application/json
       payload:
         $ref: 'commands/check-finish-ingest-document-command.json'
     delete-entity-command:
+      tags:
+        - name: aggregate-type:entity
       contentType: application/json
       payload:
         $ref: 'commands/delete-entity-command.json'
     publish-entity-command:
+      tags:
+        - name: aggregate-type:entity
       contentType: application/json
       payload:
         $ref: 'commands/publish-entity-command.json'
     start-ingest-command:
+      tags:
+        - name: aggregate-type:ingest
       contentType: application/json
       payload:
         $ref: 'commands/start-ingest-command.json'
     start-ingest-item-command:
+      tags:
+        - name: aggregate-type:ingest-item
       contentType: application/json
       payload:
         $ref: 'commands/start-ingest-item-command.json'
     unpublish-entity-command:
+      tags:
+        - name: aggregate-type:entity
       contentType: application/json
       payload:
         $ref: 'commands/unpublish-entity-command.json'
     update-metadata-command:
+      tags:
+        - name: aggregate-type:ingest-item
       contentType: application/json
       payload:
         $ref: 'commands/update-metadata-command.json'
     entity-deleted-event:
+      tags:
+        - name: aggregate-type:entity
       contentType: application/json
       payload:
         $ref: 'event/entity-deleted-event.json'

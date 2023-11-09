@@ -45,11 +45,13 @@ export class DeleteEntityCommandHandler extends MediaGuardedMessageHandler<Delet
         if (deletedItems.length >= 1) {
           const deletedRow = deletedItems[0];
           assertDictionary(deletedRow);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const entity_id = (deletedRow as any)[payload.primary_key_name]; //TODO: see if it's possible to get rid of any here, changed with zapatos 3.6.0
           await this.broker.publish(
-            MediaServiceMessagingSettings.EntityDeleted.messageType,
+            entity_id,
+            MediaServiceMessagingSettings.EntityDeleted,
             {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              entity_id: (deletedRow as any)[payload.primary_key_name], //TODO: see if it's possible to get rid of any here, changed with zapatos 3.6.0
+              entity_id,
             },
             {
               auth_token: messageInfo.envelope.auth_token,

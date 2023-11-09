@@ -75,7 +75,8 @@ export class StartIngestItemHandler extends MediaGuardedMessageHandler<StartInge
 
     for (const data of orchestrationData) {
       await this.broker.publish(
-        data.messagingSettings.messageType,
+        content.entity_id.toString(),
+        data.messagingSettings,
         data.messagePayload,
         {
           auth_token: message.envelope.auth_token,

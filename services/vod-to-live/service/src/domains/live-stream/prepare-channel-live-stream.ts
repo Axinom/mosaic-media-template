@@ -43,8 +43,8 @@ export const prepareChannelLiveStream = async (
       // if channel doesn't have any playlist transitions - new transition with channel's updated placeholder video is created
       if (!(await virtualChannelApi.channelHasPlaylistTransitions(channelId))) {
         await broker.publish<PrepareTransitionLiveStreamCommand>(
-          VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream
-            .messageType,
+          channelId,
+          VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream,
           {
             channel_id: channelId,
             playlist_id: channelId,
@@ -75,8 +75,8 @@ export const prepareChannelLiveStream = async (
           storage,
         );
         await broker.publish<LiveStreamProtectionKeyCreatedEvent>(
-          VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated
-            .messageType,
+          channelId,
+          VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated,
           {
             channel_id: channelId,
             key_id: channelKey.Id,
@@ -107,7 +107,8 @@ export const prepareChannelLiveStream = async (
         },
       });
       await broker.publish<CheckChannelJobStatusCommand>(
-        VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
+        channelId,
+        VodToLiveServiceMessagingSettings.CheckChannelJobStatus,
         {
           channel_id: channelId,
           seconds_elapsed_while_waiting: 0,

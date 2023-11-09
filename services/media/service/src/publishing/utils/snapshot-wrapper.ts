@@ -147,7 +147,8 @@ export class SnapshotWrapper {
     ).run(this.queryable);
 
     await this.broker.publish(
-      messagingSettings.messageType,
+      snapshot.entity_id.toString(),
+      messagingSettings,
       snapshot.snapshot_json,
       { auth_token: authToken },
     );
@@ -179,7 +180,8 @@ export class SnapshotWrapper {
     }
 
     await this.broker.publish<UnpublishMessage>(
-      messagingSettings.messageType,
+      snapshot.entity_id.toString(),
+      messagingSettings,
       { content_id: snapshot.publish_id },
       { auth_token: authToken },
     );

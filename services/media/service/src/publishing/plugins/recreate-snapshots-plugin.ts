@@ -90,7 +90,8 @@ export const RecreateSnapshotsPlugin = BulkMutationPluginFactory(
         }
 
         await context.messagingBroker.publish<PublishEntityCommand>(
-          MediaServiceMessagingSettings.PublishEntity.messageType,
+          entityId.toString(),
+          MediaServiceMessagingSettings.PublishEntity,
           {
             table_name: tableName,
             entity_id: entityId,

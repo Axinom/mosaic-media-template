@@ -88,8 +88,8 @@ export const deleteTransitionLiveStream = async (
       const generator = new ChannelSmilGenerator(cpixSettings);
       const smil = generator.generate(event);
       await broker.publish<PrepareTransitionLiveStreamCommand>(
-        VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream
-          .messageType,
+        channelId,
+        VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream,
         {
           channel_id: channelId,
           playlist_id: channelId,
