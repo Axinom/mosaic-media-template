@@ -74,7 +74,7 @@ export const RecreateSnapshotsPlugin = BulkMutationPluginFactory(
       );
       for (const entity of entities) {
         let tableName = entity.table;
-        let entityId = entity.id;
+        let entityOrSnapshotId = entity.id;
 
         if (entity.isListSnapshot) {
           const snapshot = await transactionWithContext(
@@ -86,15 +86,15 @@ export const RecreateSnapshotsPlugin = BulkMutationPluginFactory(
             },
           );
           tableName = 'snapshots';
-          entityId = snapshot.id;
+          entityOrSnapshotId = snapshot.id;
         }
 
         await context.messagingBroker.publish<PublishEntityCommand>(
-          entityId.toString(),
+          entityOrSnapshotId.toString(),
           MediaServiceMessagingSettings.PublishEntity,
           {
             table_name: tableName,
-            entity_id: entityId,
+            entity_id: entityOrSnapshotId,
             job_id: jobId,
             publish_options: {
               action: 'NO_PUBLISH',

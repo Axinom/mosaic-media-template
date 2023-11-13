@@ -75,7 +75,7 @@ export class StartIngestItemHandler extends MediaGuardedMessageHandler<StartInge
 
     for (const data of orchestrationData) {
       await this.broker.publish(
-        content.ingest_item_id.toString(),
+        data.aggregateId,
         data.messagingSettings,
         data.messagePayload,
         {

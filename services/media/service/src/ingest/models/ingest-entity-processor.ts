@@ -39,6 +39,7 @@ export interface MediaInitializeResult extends CreateIngestMediaResult {
 }
 
 export interface OrchestrationData {
+  aggregateId: string;
   messagingSettings: MultiTenantMessagingSettings | MessagingSettings;
   messagePayload: unknown;
   messageContext: unknown;

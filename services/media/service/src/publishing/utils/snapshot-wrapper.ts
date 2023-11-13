@@ -147,7 +147,7 @@ export class SnapshotWrapper {
     ).run(this.queryable);
 
     await this.broker.publish(
-      snapshot.entity_id.toString(),
+      snapshot.id.toString(),
       messagingSettings,
       snapshot.snapshot_json,
       { auth_token: authToken },
@@ -162,7 +162,7 @@ export class SnapshotWrapper {
 
   /**
    * Unpublishes a snapshot i.e. sends an unpublish message to remove data from the catalog service.
-   * @param messagingSettings - Messaging settings for routing.
+   * @param messagingSettings - Messaging settings from the corresponding unpublish handler for routing.
    * @param authToken - Authentication token to pass into the message.
    */
   public async unpublish(
@@ -180,7 +180,7 @@ export class SnapshotWrapper {
     }
 
     await this.broker.publish<UnpublishMessage>(
-      snapshot.entity_id.toString(),
+      snapshot.id.toString(),
       messagingSettings,
       { content_id: snapshot.publish_id },
       { auth_token: authToken },
@@ -197,6 +197,7 @@ export class SnapshotWrapper {
     JSONOnlyColsForTable<
       'snapshots',
       (
+        | 'id'
         | 'snapshot_state'
         | 'publish_id'
         | 'snapshot_json'
@@ -210,6 +211,7 @@ export class SnapshotWrapper {
       { id: this.snapshotId },
       {
         columns: [
+          'id',
           'snapshot_state',
           'publish_id',
           'snapshot_json',
