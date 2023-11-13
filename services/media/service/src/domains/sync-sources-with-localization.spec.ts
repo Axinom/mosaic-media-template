@@ -2,6 +2,7 @@ import { OwnerPgPool, PgOutputScopedMessage } from '@axinom/mosaic-db-common';
 import { SubjectType } from '@axinom/mosaic-id-guard';
 import { TokenResult } from '@axinom/mosaic-id-link-be';
 import { Broker } from '@axinom/mosaic-message-bus';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { LocalizationServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import { Dict, rejectionOf } from '@axinom/mosaic-service-common';
 import { stub } from 'jest-auto-stub';
@@ -47,12 +48,13 @@ describe('syncSourcesWithLocalization', () => {
     config = createTestConfig();
     broker = stub<Broker>({
       publish: (
-        key: string,
+        _id: string,
+        { messageType }: MessagingSettings,
         message: any,
         context: Dict<string>,
         options: PublicationConfig | undefined,
       ) => {
-        messages.push({ messageType: key, message, context, options });
+        messages.push({ messageType, message, context, options });
       },
     });
   });
