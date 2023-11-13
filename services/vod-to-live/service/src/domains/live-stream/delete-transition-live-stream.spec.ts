@@ -1,5 +1,6 @@
 /* eslint-disable jest/no-conditional-expect */
 import { Broker } from '@axinom/mosaic-message-bus';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { stub } from 'jest-auto-stub';
 import { VodToLiveServiceMessagingSettings } from 'media-messages';
 import { v4 as uuid } from 'uuid';
@@ -98,8 +99,12 @@ describe('deleteTransitionLiveStream', () => {
   });
 
   const mockedBroker = stub<Broker>({
-    publish: (key: string, message: any) => {
-      messages.push({ messageType: key, message });
+    publish: (
+      _id: string,
+      { messageType }: MessagingSettings,
+      message: unknown,
+    ) => {
+      messages.push({ messageType, message });
     },
   });
   beforeEach(() => {

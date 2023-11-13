@@ -156,7 +156,8 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
             // Ideally the whole doc should have been sent and message should be self-contained,
             // but because the document can be quite big we save it to DB and pass only it's ID.
             await messagingBroker.publish<StartIngestCommand>(
-              MediaServiceMessagingSettings.StartIngest.messageType,
+              doc.id.toString(),
+              MediaServiceMessagingSettings.StartIngest,
               { doc_id: doc.id },
               { auth_token: token },
             );

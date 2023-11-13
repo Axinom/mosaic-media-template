@@ -115,7 +115,7 @@
           "bindingKey": "entitlement-service:claim_definitions:synchronize_finished.#",
           "destination": "entitlement-service:claim_definitions:synchronize_finished"
         },
-        "entitlement-service:claim_definitions:synchronize_finished": {
+        "ax-monetization-grants-service.*.*.claim_definitions.synchronize_finished": {
           "source": "event",
           "bindingKey": "ax-monetization-grants-service.*.*.claim_definitions.synchronize_finished",
           "destination": "entitlement-service:claim_definitions:synchronize_finished"
@@ -125,7 +125,7 @@
           "bindingKey": "entitlement-service:claim_definitions:synchronize_failed.#",
           "destination": "entitlement-service:claim_definitions:synchronize_failed"
         },
-        "entitlement-service:claim_definitions:synchronize_failed": {
+        "ax-monetization-grants-service.*.*.claim_definitions.synchronize_failed": {
           "source": "event",
           "bindingKey": "ax-monetization-grants-service.*.*.claim_definitions.synchronize_failed",
           "destination": "entitlement-service:claim_definitions:synchronize_failed"
@@ -135,7 +135,7 @@
           "bindingKey": "entitlement-service:claim_set:published.#",
           "destination": "entitlement-service:claim_set:published"
         },
-        "entitlement-service:claim_set:published": {
+        "ax-monetization-grants-service.*.*.claim_set.published": {
           "source": "event",
           "bindingKey": "ax-monetization-grants-service.*.*.claim_set.published",
           "destination": "entitlement-service:claim_set:published"
@@ -145,7 +145,7 @@
           "bindingKey": "entitlement-service:subscription_plan:published.#",
           "destination": "entitlement-service:subscription_plan:published"
         },
-        "entitlement-service:subscription_plan:published": {
+        "ax-subscription-monetization-service.*.*.subscription_plan.published": {
           "source": "event",
           "bindingKey": "ax-subscription-monetization-service.*.*.subscription_plan.published",
           "destination": "entitlement-service:subscription_plan:published"

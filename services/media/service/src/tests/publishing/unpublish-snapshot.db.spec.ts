@@ -1,4 +1,5 @@
 import { Broker } from '@axinom/mosaic-message-bus';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { toBeUuid } from '@axinom/mosaic-service-common';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
@@ -27,7 +28,11 @@ describe('Snapshot Unpublish endpoint', () => {
 
   beforeAll(async () => {
     const broker = stub<Broker>({
-      publish: (messageType: string, message: UnpublishEntityCommand) => {
+      publish: (
+        _id: string,
+        { messageType }: MessagingSettings,
+        message: UnpublishEntityCommand,
+      ) => {
         messages.push({ messageType, message });
       },
     });

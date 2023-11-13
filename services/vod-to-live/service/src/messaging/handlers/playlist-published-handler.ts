@@ -140,8 +140,8 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
       const smilDocument = generator.generate(payload);
 
       await this.broker.publish<PrepareTransitionLiveStreamCommand>(
-        VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream
-          .messageType,
+        payload.channel_id,
+        VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream,
         {
           channel_id: payload.channel_id,
           playlist_id: payload.id,

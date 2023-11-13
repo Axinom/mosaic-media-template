@@ -1051,7 +1051,7 @@ $$;
 CREATE FUNCTION ax_utils.current_environment_id() RETURNS uuid
     LANGUAGE sql STABLE
     AS $$
-  SELECT coalesce(nullif(current_setting('mosaic.environment_id', TRUE), ''), uuid_nil()::TEXT)::UUID;
+  SELECT coalesce(nullif(current_setting('mosaic.environment_id', TRUE), ''), 'ffffffff-ffff-ffff-ffff-ffffffffffff')::UUID;
 $$;
 
 
@@ -1062,7 +1062,7 @@ $$;
 CREATE FUNCTION ax_utils.current_tenant_id() RETURNS uuid
     LANGUAGE sql STABLE
     AS $$
-  SELECT coalesce(nullif(current_setting('mosaic.tenant_id', TRUE), ''), uuid_nil()::TEXT)::UUID;
+  SELECT coalesce(nullif(current_setting('mosaic.tenant_id', TRUE), ''), 'ffffffff-ffff-ffff-ffff-ffffffffffff')::UUID;
 $$;
 
 

@@ -123,7 +123,8 @@ export const EntityPublishingEndpointsPluginFactory = (
                 );
 
                 await messagingBroker.publish<PublishEntityCommand>(
-                  MediaServiceMessagingSettings.PublishEntity.messageType,
+                  snapshot.id.toString(),
+                  MediaServiceMessagingSettings.PublishEntity,
                   {
                     table_name: 'snapshots',
                     entity_id: snapshot.id,
@@ -182,7 +183,8 @@ export const EntityPublishingEndpointsPluginFactory = (
                 }
 
                 await messagingBroker.publish<UnpublishEntityCommand>(
-                  MediaServiceMessagingSettings.UnpublishEntity.messageType,
+                  entityId.toString(),
+                  MediaServiceMessagingSettings.UnpublishEntity,
                   {
                     entity_id: entityId,
                     table_name: tableName,
@@ -252,7 +254,8 @@ export const EntityPublishingEndpointsPluginFactory = (
                 );
 
                 await messagingBroker.publish<PublishEntityCommand>(
-                  MediaServiceMessagingSettings.PublishEntity.messageType,
+                  snapshot.id.toString(),
+                  MediaServiceMessagingSettings.PublishEntity,
                   {
                     table_name: 'snapshots',
                     entity_id: snapshot.id,

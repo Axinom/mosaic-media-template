@@ -17,7 +17,8 @@ export const registerVideoCuePointTypes = async (
 ): Promise<void> => {
   const serviceAccountToken = await requestServiceAccountToken(config);
   await broker.publish<DeclareCuePointTypesCommand>(
-    VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes.messageType,
+    config.environmentId,
+    VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes,
     {
       service_id: config.serviceId,
       cue_point_types: videoCuePointTypes,

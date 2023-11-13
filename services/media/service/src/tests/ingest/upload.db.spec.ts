@@ -109,11 +109,16 @@ describe('Movies GraphQL endpoints', () => {
   beforeAll(async () => {
     broker = stub<Broker>({
       publish: (
-        messageType: string,
-        message: any,
+        _id: string,
+        settings: any,
+        message: unknown,
         overrides: MessageEnvelopeOverrides,
       ) => {
-        messages.push({ messageType, message, overrides });
+        messages.push({
+          message,
+          messageType: settings.messageType,
+          overrides,
+        });
       },
     });
     ctx = await createTestContext({}, broker);

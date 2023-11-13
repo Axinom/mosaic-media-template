@@ -1,4 +1,5 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { DetailedVideo, PlaylistPublishedEvent } from '@axinom/mosaic-messages';
 import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
@@ -20,8 +21,12 @@ describe('PlaylistPublishedHandler', () => {
   let getFileContentResult: any = () => undefined;
 
   const mockedBroker = stub<Broker>({
-    publish: (key: string, message: any) => {
-      messages.push({ messageType: key, message });
+    publish: (
+      _id: string,
+      { messageType }: MessagingSettings,
+      message: unknown,
+    ) => {
+      messages.push({ messageType, message });
     },
   });
 
