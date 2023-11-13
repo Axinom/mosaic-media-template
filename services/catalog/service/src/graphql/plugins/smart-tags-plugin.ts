@@ -1260,15 +1260,12 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           ],
         },
       },
-      channel_view: {
+      channel: {
         description: 'Definition of the channel publish format.',
         attribute: {
           title: {
             description: 'Title of the channel.',
-            tags: {
-              notNull: true,
-              omit: 'filter,order',
-            },
+            ...disableFilterAndOrder,
           },
           description: {
             description: 'Description of the channel.',
@@ -1314,9 +1311,13 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
-          foreignKey: [
-            '(channel_id) references app_public.channel_view (id)|@foreignFieldName images',
-          ],
+        },
+        constraint: {
+          channel_images_channel_id_fkey: {
+            tags: {
+              foreignFieldName: 'images',
+            },
+          },
         },
       },
     },

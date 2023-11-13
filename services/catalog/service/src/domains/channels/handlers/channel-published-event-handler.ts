@@ -3,9 +3,9 @@ import {
   ChannelPublishedEvent,
   ChannelServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
-import { deletes, doNothing, insert, IsolationLevel, upsert } from 'zapatos/db';
-import { channel_images, channel_localizations } from 'zapatos/schema';
-import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
+import { deletes, insert, IsolationLevel, upsert } from 'zapatos/db';
+import { channel_images } from 'zapatos/schema';
+import { Config } from '../../../common';
 import { getChannelId } from '../common';
 import { AuthenticatedMessageHandler } from './authenticated-message-handler';
 
@@ -27,9 +27,15 @@ export class ChannelPublishedEventHandler extends AuthenticatedMessageHandler<Ch
       IsolationLevel.Serializable,
       { role: this.config.dbGqlRole },
       async (txnClient) => {
-        await upsert('channel', { id: channelId }, ['id'], {
-          updateColumns: doNothing,
-        }).run(txnClient);
+        await upsert(
+          'channel',
+          {
+            id: channelId,
+            title: payload.title,
+            description: payload.description,
+          },
+          ['id'],
+        ).run(txnClient);
 
         await deletes('channel_images', { channel_id: channelId }).run(
           txnClient,
@@ -47,32 +53,6 @@ export class ChannelPublishedEventHandler extends AuthenticatedMessageHandler<Ch
               }),
             ),
           ).run(txnClient);
-        }
-
-        await deletes('channel_localizations', { channel_id: channelId }).run(
-          txnClient,
-        );
-        if (payload.localizations) {
-          await insert(
-            'channel_localizations',
-            payload.localizations.map(
-              (l): channel_localizations.Insertable => ({
-                channel_id: channelId,
-                is_default_locale: l.is_default_locale,
-                locale: l.language_tag,
-                title: l.title,
-                description: l.description,
-              }),
-            ),
-          ).run(txnClient);
-        } else {
-          await insert('channel_localizations', {
-            channel_id: channelId,
-            is_default_locale: true,
-            locale: DEFAULT_LOCALE_TAG,
-            title: payload.title,
-            description: payload.description,
-          }).run(txnClient);
         }
       },
     );
