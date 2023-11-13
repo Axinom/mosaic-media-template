@@ -58,6 +58,7 @@ describe('CheckChannelJobStatusSucceededEventHandler', () => {
       const channelId = getChannelId(originalId);
       await insert('channel', {
         id: channelId,
+        title: 'Old title',
         dash_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.mpd',
         hls_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.m3u8',
       }).run(ctx.ownerPool);
