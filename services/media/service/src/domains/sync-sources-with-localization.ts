@@ -106,7 +106,8 @@ export const syncSourcesWithLocalization: (
     const accessToken = await requestServiceAccountToken(config);
 
     await broker.publish(
-      settings.messageType,
+      payload.entity_id,
+      settings,
       payload,
       { auth_token: accessToken },
       {
