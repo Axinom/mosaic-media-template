@@ -502,7 +502,7 @@
           "bindingKey": "media-service:entity_definition:declare_failed.#",
           "destination": "media-service:entity_definition:declare_failed"
         },
-        "media-service:entity_definition:declare_failed": {
+        "ax-localization-service.*.*.entity_definition.declare_failed": {
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.declare_failed",
           "destination": "media-service:entity_definition:declare_failed"
@@ -512,7 +512,7 @@
           "bindingKey": "media-service:entity_definition:declare_finished.#",
           "destination": "media-service:entity_definition:declare_finished"
         },
-        "media-service:entity_definition:declare_finished": {
+        "ax-localization-service.*.*.entity_definition.declare_finished": {
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.declare_finished",
           "destination": "media-service:entity_definition:declare_finished"
@@ -527,7 +527,7 @@
           "bindingKey": "media-service:entity_definition:delete_failed.#",
           "destination": "media-service:entity_definition:delete_failed"
         },
-        "media-service:entity_definition:delete_failed": {
+        "ax-localization-service.*.*.entity_definition.delete_failed": {
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.delete_failed",
           "destination": "media-service:entity_definition:delete_failed"
@@ -537,7 +537,7 @@
           "bindingKey": "media-service:entity_definition:delete_finished.#",
           "destination": "media-service:entity_definition:delete_finished"
         },
-        "media-service:entity_definition:delete_finished": {
+        "ax-localization-service.*.*.entity_definition.delete_finished": {
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.delete_finished",
           "destination": "media-service:entity_definition:delete_finished"
