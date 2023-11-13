@@ -214,7 +214,8 @@ async function main(): Promise<void> {
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity;
     for await (const payload of payloads) {
       await broker.publish<UpsertLocalizationSourceEntityCommand>(
-        settings.messageType,
+        payload.entity_id,
+        settings,
         payload,
         { auth_token: accessToken },
         {
