@@ -28,7 +28,8 @@ export const registerLocalizationEntityDefinitions = async (
   ];
   for (const definition of definitions) {
     await broker.publish(
-      settings.messageType,
+      config.environmentId,
+      settings,
       definition,
       { auth_token: accessToken },
       {
