@@ -1,6 +1,7 @@
 import { formatDateTime, GenericField, ReadOnlyField } from '@axinom/mosaic-ui';
+import clsx from 'clsx';
 import { Field } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 import { client } from '../../../../apolloClient';
 import {
   StatusIcon,
@@ -8,6 +9,7 @@ import {
 } from '../../../../components/StatusIcons/StatusIcons';
 import {
   IngestDocumentQuery,
+  IngestItemStatus,
   useIngestDocumentQuery,
 } from '../../../../generated/graphql';
 import { IngestItemsList } from '../IngestItemsList/IngestItemsList';
@@ -21,6 +23,9 @@ interface IngestStatusProps {
 
 export const IngestStatus: React.FC<IngestStatusProps> = ({ initialData }) => {
   // TODO: Subscription to update ingest document status goes here.
+  const [statusFilter, setStatusFilter] = useState<
+    IngestItemStatus | undefined
+  >();
 
   const { data: queryData } = useIngestDocumentQuery({
     client,
@@ -34,28 +39,49 @@ export const IngestStatus: React.FC<IngestStatusProps> = ({ initialData }) => {
 
   return (
     <>
-      <GenericField name="status" label="Ingest Status">
-        <div className={classes.statusContainer}>
-          <div className={classes.statusItem}>
-            Processed: {data.successCount + data.errorCount}
-          </div>
-          <div className={classes.statusItem}>
-            <StatusIcons icon={StatusIcon.Success} className={classes.icon} />
-            <div>Success: {data.successCount}</div>
-          </div>
-          <div className={classes.statusItem}>
-            <StatusIcons icon={StatusIcon.Error} className={classes.icon} />
-            <div>Failed: {data.errorCount}</div>
-          </div>
-        </div>
-      </GenericField>
       <Field
         name="createdDate"
         label="Started At"
         as={ReadOnlyField}
         transform={formatDateTime}
       />
-      <IngestItemsList items={data?.ingestItems?.nodes ?? []} />
+      <GenericField name="status" label="Ingest Status">
+        <div className={classes.statusContainer}>
+          <div
+            className={clsx(classes.statusItem, {
+              [classes.active]: statusFilter === undefined,
+            })}
+            onClick={() => setStatusFilter(undefined)}
+          >
+            <div>Processed: {data.successCount + data.errorCount}</div>
+          </div>
+          <div
+            className={clsx(classes.statusItem, {
+              [classes.active]: statusFilter === IngestItemStatus.Success,
+            })}
+            onClick={() => setStatusFilter(IngestItemStatus.Success)}
+          >
+            <StatusIcons icon={StatusIcon.Success} className={classes.icon} />
+            <div>Success: {data.successCount}</div>
+          </div>
+          <div
+            className={clsx(classes.statusItem, {
+              [classes.active]: statusFilter === IngestItemStatus.Error,
+            })}
+            onClick={() => setStatusFilter(IngestItemStatus.Error)}
+          >
+            <StatusIcons icon={StatusIcon.Error} className={classes.icon} />
+            <div>Failed: {data.errorCount}</div>
+          </div>
+        </div>
+        <IngestItemsList
+          items={
+            data?.ingestItems?.nodes.filter(
+              (i) => statusFilter === undefined || i.status === statusFilter,
+            ) ?? []
+          }
+        />
+      </GenericField>
     </>
   );
 };
