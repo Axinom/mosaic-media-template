@@ -72,6 +72,7 @@ export const TvShowsReadOperations = [
   S.tvshowMutated,
   Sub.tvshowsSnapshots,
   Sub.snapshotValidationResults,
+  R.tvshowGenres,
 ];
 
 export const TvShowsMutateOperations = [

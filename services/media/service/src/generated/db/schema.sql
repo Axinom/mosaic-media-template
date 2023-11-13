@@ -9554,7 +9554,7 @@ ALTER TABLE app_public.movie_genres ENABLE ROW LEVEL SECURITY;
 -- Name: movie_genres movie_genres_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movie_genres_authorization ON app_public.movie_genres USING ((( SELECT ax_utils.user_has_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY movie_genres_authorization ON app_public.movie_genres USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
@@ -10378,7 +10378,7 @@ ALTER TABLE app_public.tvshow_genres ENABLE ROW LEVEL SECURITY;
 -- Name: tvshow_genres tvshow_genres_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshow_genres_authorization ON app_public.tvshow_genres USING ((( SELECT ax_utils.user_has_permission('SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY tvshow_genres_authorization ON app_public.tvshow_genres USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('SETTINGS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
