@@ -93,7 +93,7 @@ components:
         $ref: 'commands/check-finish-ingest-item-command.json'
     check-finish-ingest-document-command:
       tags:
-        - name: aggregate-type:ingest
+        - name: aggregate-type:ingest-document
       contentType: application/json
       payload:
         $ref: 'commands/check-finish-ingest-document-command.json'
@@ -111,7 +111,7 @@ components:
         $ref: 'commands/publish-entity-command.json'
     start-ingest-command:
       tags:
-        - name: aggregate-type:ingest
+        - name: aggregate-type:ingest-document
       contentType: application/json
       payload:
         $ref: 'commands/start-ingest-command.json'

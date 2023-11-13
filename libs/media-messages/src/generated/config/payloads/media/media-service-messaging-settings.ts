@@ -27,7 +27,7 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'ingest:start', 
     'ingest.start',
     'command',
-    'ingest'
+    'ingest-document'
     );
   public static StartIngestItem = new MediaServiceMessagingSettings(
     'StartIngestItem', 
@@ -55,7 +55,7 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'ingest:check_finish_document', 
     'ingest.check_finish_document',
     'command',
-    'ingest'
+    'ingest-document'
     );
   public static EntityDeleted = new MediaServiceMessagingSettings(
     'EntityDeleted', 
