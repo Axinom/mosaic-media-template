@@ -39,6 +39,7 @@ describe('Start Ingest Item Handler', () => {
     settings: MessagingSettings,
   ): OrchestrationData => {
     return {
+      aggregateId: itemId.toString(),
       messagingSettings: settings,
       messagePayload: { test: 'payload' },
       messageContext: { test: 'context' },
