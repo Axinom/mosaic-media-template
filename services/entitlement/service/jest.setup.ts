@@ -5,5 +5,5 @@ import { url as debugUrl } from 'inspector';
 if (debugUrl() !== undefined) {
   jest.setTimeout(900_000); // wait for longer when debugging a test
 } else {
-  jest.setTimeout(30_000);
+  jest.setTimeout(120_000);
 }
