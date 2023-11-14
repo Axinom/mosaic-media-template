@@ -1,4 +1,4 @@
-import { getOwnerPgPool } from '@axinom/mosaic-db-common';
+import { getLoginPgPool, getOwnerPgPool } from '@axinom/mosaic-db-common';
 import { AuthenticationConfig } from '@axinom/mosaic-id-guard';
 import { getMessagingBroker } from '@axinom/mosaic-message-bus';
 import {
@@ -19,6 +19,7 @@ export const setupPostGraphile = async (
   const websocketMiddlewares = getWebsocketMiddlewares(app);
   const broker = getMessagingBroker(app);
   const ownerPool = getOwnerPgPool(app);
+  const loginPool = getLoginPgPool(app);
   const options = buildPostgraphileOptions(
     config,
     ownerPool,
@@ -27,11 +28,7 @@ export const setupPostGraphile = async (
     authConfig,
   );
 
-  const middleware = postgraphile(
-    config.dbLoginConnectionString,
-    'app_public',
-    options,
-  );
+  const middleware = postgraphile(loginPool, 'app_public', options);
   app.use(middleware);
 
   const httpServer = getHttpServer(app);

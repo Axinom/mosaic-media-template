@@ -38,6 +38,7 @@ regularVariables:
   DATABASE_LOGIN: '${__ax_hosted__.pg.db_login_role}'
   DATABASE_LOGIN_PASSWORD: '${__ax_hosted__.pg.db_login_password}'
   DATABASE_GQL_ROLE: '${__ax_hosted__.pg.db_gql_role}'
+  PG_POOL_MAX_CONNECTIONS: 25
 
   # RabbitMQ Variables
   RABBITMQ_PROTOCOL: '${__ax_hosted__.rmq.protocol}'

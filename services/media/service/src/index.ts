@@ -31,6 +31,7 @@ import {
 } from '@axinom/mosaic-service-common';
 import express from 'express';
 import { graphqlUploadExpress } from 'graphql-upload';
+import { PoolConfig } from 'pg';
 import { applyMigrations, getFullConfig } from './common';
 import { syncPermissions } from './domains/permission-definition';
 import { populateSeedData } from './domains/populate-seed-data';
@@ -89,12 +90,14 @@ async function bootstrap(): Promise<void> {
 
   // Register shutdown actions. These actions will be performed on service shutdown; in the order of registration.
   const shutdownActions = setupShutdownActions(app, logger);
+  const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
   // Create environment owner connection pool (internal use).
   setupOwnerPgPool(
     app,
     config.dbOwnerConnectionString,
     logger,
     shutdownActions,
+    poolConfig,
   );
   // Create login connection pool (used by service components, including PostGraphile).
   setupLoginPgPool(
@@ -102,6 +105,7 @@ async function bootstrap(): Promise<void> {
     config.dbLoginConnectionString,
     logger,
     shutdownActions,
+    poolConfig,
   );
 
   // Populate the DB with some initial seed data and sync defined permissions to the ID service.

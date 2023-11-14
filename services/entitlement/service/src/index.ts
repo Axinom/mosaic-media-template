@@ -33,6 +33,7 @@ import {
   trimErrorsSkipMaskMiddleware,
 } from '@axinom/mosaic-service-common';
 import express from 'express';
+import { PoolConfig } from 'pg';
 import { applyMigrations, getFullConfig } from './common';
 import {
   setupEntitlementWebhookEndpoint,
@@ -71,17 +72,20 @@ async function bootstrap(): Promise<void> {
   await applyMigrations(config);
 
   const shutdownActions = setupShutdownActions(app, logger);
+  const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
   setupOwnerPgPool(
     app,
     config.dbOwnerConnectionString,
     logger,
     shutdownActions,
+    poolConfig,
   );
   setupLoginPgPool(
     app,
     config.dbLoginConnectionString,
     logger,
     shutdownActions,
+    poolConfig,
   );
 
   const counter = initMessagingCounter(getOwnerPgPool(app));
