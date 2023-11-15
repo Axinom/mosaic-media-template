@@ -25,7 +25,7 @@
     "dev:workflows": "yarn util:portal-version-check && yarn util:load-vars cross-env-shell pilet debug 'services/**/workflows/src/index.tsx' --feed '\\$MICRO_FRONTEND_SERVICE_BASE_URL/v1/pilets/\\$TENANT_ID/\\$ENVIRONMENT_ID' --port 10053",
     "dev:workflows:local": "pilet debug 'services/**/workflows/src/index.tsx' --port 10053",
     "test": "yarn util:load-vars jest --silent",
-    "test:ci": "jest --silent --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura --maxWorkers=3",
+    "test:ci": "jest --silent --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura",
     "test:reset:dbs": "wsrun -sm test:reset:dbs",
     "test:create:dbs": "wsrun -sm test:create:dbs",
     "db:reset": "wsrun -sm db:reset",
