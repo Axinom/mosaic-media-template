@@ -17,3 +17,9 @@
     }
   }
 }
+
+.resultsContainer {
+  display: grid;
+  grid-template-rows: auto auto;
+  row-gap: 2px;
+}

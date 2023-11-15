@@ -5,6 +5,7 @@
   // column-gap: 10px;
   grid-template-columns: repeat(2, min-content) auto min-content;
   font-weight: bold;
+  font-size: 14px;
 
   .externalID {
     padding: 10px;
@@ -27,6 +28,7 @@
   grid-auto-rows: 50px;
   align-items: center;
   border-bottom: 1px solid #ddd;
+  font-size: 14px;
 }
 
 .icon {

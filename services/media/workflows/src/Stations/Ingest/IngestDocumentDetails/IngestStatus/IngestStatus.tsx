@@ -1,6 +1,11 @@
-import { formatDateTime, GenericField, ReadOnlyField } from '@axinom/mosaic-ui';
+import {
+  formatDateTime,
+  GenericField,
+  ReadOnlyField,
+  Select,
+} from '@axinom/mosaic-ui';
 import { Field } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 import { client } from '../../../../apolloClient';
 import {
   StatusIcon,
@@ -8,6 +13,7 @@ import {
 } from '../../../../components/StatusIcons/StatusIcons';
 import {
   IngestDocumentQuery,
+  IngestItemStatus,
   useIngestDocumentQuery,
 } from '../../../../generated/graphql';
 import { IngestItemsList } from '../IngestItemsList/IngestItemsList';
@@ -30,10 +36,20 @@ export const IngestStatus: React.FC<IngestStatusProps> = ({ initialData }) => {
     pollInterval: 5000,
   });
 
+  const [statusFilter, setStatusFilter] = useState<
+    IngestItemStatus | undefined
+  >();
+
   const data: IngestDocument = { ...initialData, ...queryData?.ingestDocument };
 
   return (
     <>
+      <Field
+        name="createdDate"
+        label="Started At"
+        as={ReadOnlyField}
+        transform={formatDateTime}
+      />
       <GenericField name="status" label="Ingest Status">
         <div className={classes.statusContainer}>
           <div className={classes.statusItem}>
@@ -49,13 +65,32 @@ export const IngestStatus: React.FC<IngestStatusProps> = ({ initialData }) => {
           </div>
         </div>
       </GenericField>
-      <Field
-        name="createdDate"
-        label="Started At"
-        as={ReadOnlyField}
-        transform={formatDateTime}
-      />
-      <IngestItemsList items={data?.ingestItems?.nodes ?? []} />
+      <GenericField name="results" label="Ingest Results">
+        <div className={classes.resultsContainer}>
+          <Select
+            name="results"
+            options={[
+              { label: 'Success', value: IngestItemStatus.Success },
+              { label: 'Failed', value: IngestItemStatus.Error },
+              { label: 'In Progress', value: IngestItemStatus.InProgress },
+            ]}
+            addEmptyOption
+            inlineMode
+            onChange={(e) =>
+              setStatusFilter(
+                (e.currentTarget.value || undefined) as IngestItemStatus,
+              )
+            }
+          />
+          <IngestItemsList
+            items={
+              data?.ingestItems?.nodes.filter(
+                (i) => statusFilter === undefined || i.status === statusFilter,
+              ) ?? []
+            }
+          />
+        </div>
+      </GenericField>
     </>
   );
 };
