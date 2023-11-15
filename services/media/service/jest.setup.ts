@@ -5,5 +5,5 @@ import { url as debugUrl } from 'inspector';
 if (debugUrl() !== undefined) {
   jest.setTimeout(900_000); // wait for longer when debugging a test
 } else {
-  jest.setTimeout(120_000); // media service has some long-running tests compared to other services
+  jest.setTimeout(60_000); // media service has some long-running tests compared to other services
 }

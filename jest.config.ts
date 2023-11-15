@@ -17,6 +17,7 @@ const jestConfig: JestConfigWithTsJest = {
     '!**/dist/**',
     '!**/vendor/**',
   ],
+  workerIdleMemoryLimit: '1GB',
 };
 
 export default jestConfig;
