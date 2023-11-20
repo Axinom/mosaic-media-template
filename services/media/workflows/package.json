@@ -68,7 +68,7 @@
     "sass": "^1.55.0",
     "tslib": "^1.14.1",
     "typescript": "^4.8.4",
-    "typescript-plugin-css-modules": "^2.8.0"
+    "typescript-plugin-css-modules": "^5.0.2"
   },
   "peerDependencies": {
     "@axinom/mosaic-portal": "*",
