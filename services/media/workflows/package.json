@@ -56,7 +56,6 @@
     "env-cmd": "^10.1.0",
     "fork-ts-checker-webpack-plugin": "^6.5.2",
     "history": "^4.10.1",
-    "path-to-regexp": "^0.1.7",
     "piral-cli": "^0.15.8",
     "piral-cli-webpack5": "^0.15.8",
     "postcss-modules": "^2.0.0",
