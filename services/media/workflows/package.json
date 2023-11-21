@@ -55,7 +55,7 @@
     "dotenv-webpack": "^7.1.1",
     "env-cmd": "^10.1.0",
     "fork-ts-checker-webpack-plugin": "^6.5.2",
-    "history": "^4.10.1",
+    "history": "^5.3.0",
     "piral-cli": "^0.15.8",
     "piral-cli-webpack5": "^0.15.8",
     "postcss-modules": "^2.0.0",
