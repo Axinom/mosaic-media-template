@@ -13607,6 +13607,9 @@ enum ErrorCodesEnum {
   """The %s is missing required properties: %s."""
   OBJECT_IS_MISSING_PROPERTIES
 
+  """A database operation has failed because of a lock timeout."""
+  DATABASE_LOCK_TIMEOUT_ERROR
+
   """Access Token is not provided"""
   ACCESS_TOKEN_REQUIRED
 
