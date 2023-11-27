@@ -124,7 +124,7 @@
             }
           }
         },
-        "ax-image-service:image:ensure_exists": {
+        "ax-image-service:inbox": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
@@ -183,15 +183,6 @@
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
               "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-image-service:image_types:declare": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-image-service.dead_letter",
               "x-queue-type": "quorum"
             }
           }
@@ -325,10 +316,10 @@
           "bindingKey": "ax-video-service.*.*.video.ensure_exists_failed",
           "destination": "media-service:video:ensure_exists_failed"
         },
-        "retry:ax-image-service:image:ensure_exists": {
+        "retry:ax-image-service:inbox": {
           "source": "retry",
-          "bindingKey": "ax-image-service:image:ensure_exists.#",
-          "destination": "ax-image-service:image:ensure_exists"
+          "bindingKey": "ax-image-service:inbox.#",
+          "destination": "ax-image-service:inbox"
         },
         "retry:media-service:image:ensure_exists_already_existed": {
           "source": "retry",
@@ -389,11 +380,6 @@
           "source": "command",
           "bindingKey": "media-service.entity.delete",
           "destination": "media-service:entity:delete"
-        },
-        "retry:ax-image-service:image_types:declare": {
-          "source": "retry",
-          "bindingKey": "ax-image-service:image_types:declare.#",
-          "destination": "ax-image-service:image_types:declare"
         },
         "retry:ax-video-service:cue_point_types:declare": {
           "source": "retry",

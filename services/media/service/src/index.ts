@@ -90,7 +90,10 @@ async function bootstrap(): Promise<void> {
 
   // Register shutdown actions. These actions will be performed on service shutdown; in the order of registration.
   const shutdownActions = setupShutdownActions(app, logger);
-  const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
+  const poolConfig: PoolConfig = {
+    max: config.pgPoolMaxConnections,
+    lock_timeout: config.pgLockTimeoutInMs,
+  };
   // Create environment owner connection pool (internal use).
   setupOwnerPgPool(
     app,
