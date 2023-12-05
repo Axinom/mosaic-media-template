@@ -1371,6 +1371,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status: c.PublishStatusEnum;
+      /**
+      * **episodes.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
     }
     export interface JSONSelectable {
       /**
@@ -1481,6 +1489,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status: c.PublishStatusEnum;
+      /**
+      * **episodes.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
     }
     export interface Whereable {
       /**
@@ -1591,6 +1607,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1701,6 +1725,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1811,6 +1843,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'episodes_external_id_key' | 'episodes_pkey';
     export type Column = keyof Selectable;
@@ -4927,6 +4967,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status: c.PublishStatusEnum;
+      /**
+      * **movies.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
     }
     export interface JSONSelectable {
       /**
@@ -5025,6 +5073,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status: c.PublishStatusEnum;
+      /**
+      * **movies.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
     }
     export interface Whereable {
       /**
@@ -5123,6 +5179,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -5221,6 +5285,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -5319,6 +5391,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movies_external_id_key' | 'movies_pkey';
     export type Column = keyof Selectable;
@@ -6439,6 +6519,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status: c.PublishStatusEnum;
+      /**
+      * **seasons.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
     }
     export interface JSONSelectable {
       /**
@@ -6531,6 +6619,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status: c.PublishStatusEnum;
+      /**
+      * **seasons.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
     }
     export interface Whereable {
       /**
@@ -6623,6 +6719,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -6715,6 +6819,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -6807,6 +6919,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'seasons_external_id_key' | 'seasons_pkey';
     export type Column = keyof Selectable;
@@ -9151,6 +9271,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status: c.PublishStatusEnum;
+      /**
+      * **tvshows.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
     }
     export interface JSONSelectable {
       /**
@@ -9243,6 +9371,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status: c.PublishStatusEnum;
+      /**
+      * **tvshows.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
     }
     export interface Whereable {
       /**
@@ -9335,6 +9471,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -9427,6 +9571,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -9519,6 +9671,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'NOT_PUBLISHED'::text`
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshows_external_id_key' | 'tvshows_pkey';
     export type Column = keyof Selectable;

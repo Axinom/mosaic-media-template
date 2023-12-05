@@ -6,12 +6,15 @@ import {
 } from '@axinom/mosaic-service-common';
 import { serviceAccountSetup } from '../../../../scripts/helpers';
 import { getConfigDefinitions } from '../src/common';
+import { syncPermissions } from '../src/domains/permission-definition';
 
 async function main(): Promise<void> {
   const config = getValidatedConfig(
     pick(
       getConfigDefinitions(),
       'idServiceAuthBaseUrl',
+      'serviceAccountClientId',
+      'serviceAccountClientSecret',
       'serviceId',
       'tenantId',
       'environmentId',
@@ -29,6 +32,7 @@ async function main(): Promise<void> {
     );
   }
 
+  await syncPermissions(config);
   await serviceAccountSetup(
     config.idServiceAuthBaseUrl,
     config.devServiceAccountClientId,
@@ -52,7 +56,15 @@ async function main(): Promise<void> {
       },
       {
         serviceId: 'ax-localization-service',
-        permissions: ['SOURCE_ENTITIES_EDIT', 'ENTITY_DEFINITIONS_EDIT'],
+        permissions: [
+          'SOURCE_ENTITIES_EDIT',
+          'ENTITY_DEFINITIONS_EDIT',
+          'LOCALIZED_ENTITIES_REVIEW',
+        ],
+      },
+      {
+        serviceId: config.serviceId,
+        permissions: ['INGESTS_EDIT'],
       },
     ],
   );

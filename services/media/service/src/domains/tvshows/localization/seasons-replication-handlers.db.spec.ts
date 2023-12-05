@@ -163,19 +163,57 @@ describe('seasonsReplicationHandlers', () => {
       expect(result).toBeUndefined();
     });
 
+    it('season is updated, properties remains the same, but context is passed -> upsert message data with context is returned', async () => {
+      // Arrange
+      const context = { ingestItemId: 1 };
+      const contextHandlers = seasonsReplicationHandlers(
+        ctx.config,
+        ctx.ownerPool,
+        context,
+      );
+
+      // Act
+      const result = await contextHandlers.updateHandler(
+        defaultSeason,
+        defaultSeason,
+      );
+
+      // Assert
+      expect(result).toEqual({
+        payload: {
+          entity_id: defaultSeason.id!.toString(),
+          entity_title: 'Season 2',
+          entity_type: LOCALIZATION_SEASON_TYPE,
+          fields: {},
+          image_id: undefined,
+          service_id: ctx.config.serviceId,
+        },
+        settings:
+          LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
+        messageContext: context,
+      });
+    });
+
     it.each([
-      { description: 'updated' },
-      { synopsis: 'updated' },
-      { description: 'updated', synopsis: 'updated' },
+      [{ description: 'updated' }, undefined],
+      [{ synopsis: 'updated' }, { ingestItemId: 2 }],
+      [{ description: 'updated', synopsis: 'updated' }, undefined],
     ])(
       'season is updated, changing properties %p -> upsert message data is returned',
-      async (updated) => {
+      async (updated, messageContext) => {
+        // Arrange
+        const contextHandlers = seasonsReplicationHandlers(
+          ctx.config,
+          ctx.ownerPool,
+          messageContext,
+        );
+
         // Act
         const updatedSeason = {
           ...defaultSeason,
           ...updated,
         };
-        const result = await handlers.updateHandler(
+        const result = await contextHandlers.updateHandler(
           updatedSeason,
           defaultSeason,
         );
@@ -192,6 +230,7 @@ describe('seasonsReplicationHandlers', () => {
           },
           settings:
             LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
+          messageContext,
         });
       },
     );

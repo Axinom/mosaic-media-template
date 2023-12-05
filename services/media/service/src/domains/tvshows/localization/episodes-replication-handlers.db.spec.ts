@@ -214,20 +214,61 @@ describe('episodesReplicationHandlers', () => {
       expect(result).toBeUndefined();
     });
 
+    it('episode is updated, properties remains the same, but context is passed -> upsert message data with context is returned', async () => {
+      // Arrange
+      const context = { ingestItemId: 1 };
+      const contextHandlers = episodesReplicationHandlers(
+        ctx.config,
+        ctx.ownerPool,
+        context,
+      );
+
+      // Act
+      const result = await contextHandlers.updateHandler(
+        defaultEpisode,
+        defaultEpisode,
+      );
+
+      // Assert
+      expect(result).toEqual({
+        payload: {
+          entity_id: defaultEpisode.id!.toString(),
+          entity_title: `Episode 1: ${defaultEpisode.title}`,
+          entity_type: LOCALIZATION_EPISODE_TYPE,
+          fields: {},
+          image_id: undefined,
+          service_id: ctx.config.serviceId,
+        },
+        settings:
+          LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
+        messageContext: context,
+      });
+    });
+
     it.each([
-      { title: 'updated' },
-      { description: 'updated' },
-      { title: 'updated', description: 'updated' },
-      { title: 'updated', description: 'updated', synopsis: 'updated' },
+      [{ title: 'updated' }, undefined],
+      [{ description: 'updated' }, undefined],
+      [{ title: 'updated', description: 'updated' }, undefined],
+      [
+        { title: 'updated', description: 'updated', synopsis: 'updated' },
+        undefined,
+      ],
     ])(
       'episode is updated, changing properties %p -> upsert message data is returned',
-      async (updated) => {
+      async (updated, messageContext) => {
+        // Arrange
+        const contextHandlers = episodesReplicationHandlers(
+          ctx.config,
+          ctx.ownerPool,
+          messageContext,
+        );
+
         // Act
         const updatedEpisode = {
           ...defaultEpisode,
           ...updated,
         };
-        const result = await handlers.updateHandler(
+        const result = await contextHandlers.updateHandler(
           updatedEpisode,
           defaultEpisode,
         );
@@ -244,6 +285,7 @@ describe('episodesReplicationHandlers', () => {
           },
           settings:
             LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
+          messageContext,
         });
       },
     );
