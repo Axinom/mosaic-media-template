@@ -1,9 +1,5 @@
 import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
-import {
-  Broker,
-  MessageInfo,
-  UNKNOWN_AGGREGATE_ID,
-} from '@axinom/mosaic-message-bus';
+import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import {
   EntityLocalization,
   EntityLocalizationFieldState,
@@ -63,7 +59,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedM
       !messageContext?.ingestItemId ||
       content.service_id !== this.config.serviceId
     ) {
-      // skipping message without ingest context or from different service
+      // skipping message without ingest context or for entity types from different services
       return;
     }
 
@@ -125,7 +121,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedM
     };
 
     await this.broker.publish<LocalizeEntityCommand>(
-      UNKNOWN_AGGREGATE_ID,
+      content.entity_id,
       messageSettings,
       messagePayload,
       {

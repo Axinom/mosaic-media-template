@@ -51,7 +51,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedMes
       !messageContext?.ingestItemId ||
       content.service_id !== this.config.serviceId
     ) {
-      // skipping message without ingest context or from different service
+      // skipping message without ingest context or for entity types from different services
       return;
     }
 

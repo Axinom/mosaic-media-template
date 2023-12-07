@@ -124,6 +124,7 @@ describe('UpsertLocalizationSourceEntityFailedHandler', () => {
       await handler.onMessage(content, message);
 
       // Assert
+      expect(messages).toHaveLength(1);
       expect(messages[0]).toEqual<CheckFinishIngestItemCommand>({
         ingest_item_step_id: step1.id,
         ingest_item_id: item1.id,

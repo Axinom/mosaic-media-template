@@ -39,7 +39,7 @@ export class LocalizeEntityFinishedHandler extends MediaGuardedMessageHandler<Lo
     message: MessageInfo,
   ): Promise<void> {
     if (content.service_id !== this.config.serviceId) {
-      // skipping message from different service
+      // skipping events for entity types from different services
       return;
     }
 

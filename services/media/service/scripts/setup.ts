@@ -59,6 +59,7 @@ async function main(): Promise<void> {
         permissions: [
           'SOURCE_ENTITIES_EDIT',
           'ENTITY_DEFINITIONS_EDIT',
+          'LOCALIZED_ENTITIES_EDIT',
           'LOCALIZED_ENTITIES_REVIEW',
         ],
       },

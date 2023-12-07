@@ -178,7 +178,7 @@
     },
     "localizations": {
       "type": ["array", "null"],
-      "description": "Localizations for every defined locale.",
+      "description": "Localizations for any defined locale.",
       "items": {
         "type": "object",
         "additionalProperties": true,

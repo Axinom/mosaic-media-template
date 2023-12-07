@@ -64,6 +64,7 @@ describe('LocalizeEntityFinishedHandler', () => {
       await handler.onMessage(content, message);
 
       // Assert
+      expect(messages).toHaveLength(1);
       expect(messages[0]).toEqual<CheckFinishIngestItemCommand>({
         ingest_item_step_id: '34d91ea5-db63-4e51-b511-ae545d5c669c',
         ingest_item_id: 1,
