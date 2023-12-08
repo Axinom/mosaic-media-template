@@ -7,7 +7,7 @@ export const BulkDeletePluginFactory = (
   ...filterTypeNames: string[]
 ): Plugin => {
   return MediaBulkPluginFactory(
-    MediaServiceMessagingSettings.DeleteEntity.messageType,
+    MediaServiceMessagingSettings.DeleteEntity,
     (filter) => {
       if (
         filterTypeNames.some((filterName) => filterName === filter.filterName)

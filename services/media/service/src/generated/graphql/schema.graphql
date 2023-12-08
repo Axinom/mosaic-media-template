@@ -7719,7 +7719,7 @@ type MoviesMovieGenre {
   movieGenres: MovieGenre
 }
 
-"""@permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN"""
+"""@permissions: MOVIES_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN"""
 type MovieGenre {
   id: Int!
   title: String!
@@ -8769,7 +8769,7 @@ type TvshowsTvshowGenre {
   tvshowGenres: TvshowGenre
 }
 
-"""@permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN"""
+"""@permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN"""
 type TvshowGenre {
   id: Int!
   title: String!
@@ -12718,7 +12718,7 @@ input IngestDocumentCondition {
 
 """
 A connection to a list of `MovieGenre` values.
-@permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
+@permissions: MOVIES_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
 """
 type MovieGenresConnection {
   """A list of `MovieGenre` objects."""
@@ -13057,7 +13057,7 @@ input SnapshotCondition {
 
 """
 A connection to a list of `TvshowGenre` values.
-@permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
+@permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
 """
 type TvshowGenresConnection {
   """A list of `TvshowGenre` objects."""

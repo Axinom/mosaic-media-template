@@ -1,3 +1,4 @@
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { assertDictionary } from '@axinom/mosaic-service-common';
 import {
   camelCase,
@@ -149,17 +150,18 @@ export interface BulkOperationResult {
 
 /**
  * Default resolver body.
- * @param messageTypeName - Message type name (MessagingSettings) .
+ * @param messagingSettings - Message type name (MessagingSettings) .
  */
 const defaultResolverBodyBuilder =
-  (messageTypeName: string): BulkResolverBodyBuilder =>
+  (messagingSettings: MessagingSettings): BulkResolverBodyBuilder =>
   async (ids, filter, context, input, token) => {
     if (ids.length > 0) {
       const { input: additionalInput } = input;
 
       for (const id of ids) {
         await context.messagingBroker.publish(
-          messageTypeName,
+          id.toString(),
+          messagingSettings,
           {
             entity_id: id,
             entity_type: filter.entityTypeName,
@@ -185,18 +187,21 @@ type SomeOptional<T, K extends keyof T> = Required<Omit<T, K>> & Partial<T>;
 /**
  * Creates a valid settings object for the plugin.
  * @param settings - Input settings
- * @param messageType - Published message type name. Required only if settings.resolverBodyBuilder is not specified (default resolver body builder).
+ * @param messagingSettings - Published message type name. Required only if settings.resolverBodyBuilder is not specified (default resolver body builder).
  */
 export const buildBulkActionSettings = (
   settings: SomeOptional<
     BulkMutationSettings,
     'additionalInputType' | 'outType' | 'resolverBodyBuilder'
   >,
-  messageType?: string,
+  messagingSettings?: MessagingSettings,
 ): BulkMutationSettings => {
-  if (settings.resolverBodyBuilder === undefined && messageType === undefined) {
+  if (
+    settings.resolverBodyBuilder === undefined &&
+    messagingSettings === undefined
+  ) {
     throw new Error(
-      'messageType is required if no settings.resolverBodyBuilder is specified.',
+      'messagingSettings are required if no settings.resolverBodyBuilder is specified.',
     );
   }
   return {
@@ -205,7 +210,7 @@ export const buildBulkActionSettings = (
     outType: settings.outType ?? defaultBulkActionOutType,
     resolverBodyBuilder:
       settings.resolverBodyBuilder ??
-      defaultResolverBodyBuilder(messageType as string),
+      defaultResolverBodyBuilder(messagingSettings as MessagingSettings),
   };
 };
 

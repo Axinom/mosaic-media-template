@@ -41,7 +41,8 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
           }
 
           await messagingBroker.publish<PublishEntityCommand>(
-            MediaServiceMessagingSettings.PublishEntity.messageType,
+            snapshotId.toString(),
+            MediaServiceMessagingSettings.PublishEntity,
             {
               entity_id: snapshotId,
               table_name: 'snapshots',
@@ -76,7 +77,8 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
           }
 
           await messagingBroker.publish<UnpublishEntityCommand>(
-            MediaServiceMessagingSettings.UnpublishEntity.messageType,
+            snapshotId.toString(),
+            MediaServiceMessagingSettings.UnpublishEntity,
             {
               entity_id: snapshotId,
               table_name: 'snapshots',

@@ -14,7 +14,8 @@ export const syncClaimDefinitions = async (
   const settings =
     MonetizationGrantsServiceMultiTenantMessagingSettings.SynchronizeClaimDefinitions;
   await broker.publish<SynchronizeClaimDefinitionsCommand>(
-    settings.messageType,
+    config.environmentId,
+    settings,
     { claim_definition_groups: claimDefinitionGroups },
     { auth_token: serviceAccountToken.accessToken },
     {

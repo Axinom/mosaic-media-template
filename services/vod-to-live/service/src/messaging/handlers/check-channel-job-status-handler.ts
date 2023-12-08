@@ -55,8 +55,8 @@ export class CheckChannelJobStatusHandler extends AuthenticatedMessageHandler<Ch
         },
       });
       await this.broker.publish<CheckChannelJobStatusSucceededEvent>(
-        VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded
-          .messageType,
+        channel_id,
+        VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded,
         {
           channel_id,
           dash_stream_url: dashUrl,
@@ -80,8 +80,8 @@ export class CheckChannelJobStatusHandler extends AuthenticatedMessageHandler<Ch
       });
 
       await this.broker.publish<CheckChannelJobStatusFailedEvent>(
-        VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed
-          .messageType,
+        channel_id,
+        VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed,
         { channel_id, message: uspErrors.toString() },
         { auth_token: message.envelope.auth_token },
       );
@@ -100,8 +100,8 @@ export class CheckChannelJobStatusHandler extends AuthenticatedMessageHandler<Ch
         });
 
         await this.broker.publish<CheckChannelJobStatusFailedEvent>(
-          VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed
-            .messageType,
+          channel_id,
+          VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed,
           {
             channel_id,
             message: `The channel ${channel_id} has taken more than ${this.config.channelProcessingWaitTimeInSeconds} seconds to go live.`,
@@ -113,7 +113,8 @@ export class CheckChannelJobStatusHandler extends AuthenticatedMessageHandler<Ch
 
       await sleep(5000);
       await this.broker.publish<CheckChannelJobStatusCommand>(
-        VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
+        channel_id,
+        VodToLiveServiceMessagingSettings.CheckChannelJobStatus,
         {
           seconds_elapsed_while_waiting,
           channel_id,

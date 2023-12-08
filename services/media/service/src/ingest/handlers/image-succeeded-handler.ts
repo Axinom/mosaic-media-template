@@ -78,7 +78,8 @@ export abstract class ImageSucceededHandler<
     );
 
     await this.broker.publish<CheckFinishIngestItemCommand>(
-      MediaServiceMessagingSettings.CheckFinishIngestItem.messageType,
+      messageContext.ingestItemId.toString(),
+      MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,
@@ -96,7 +97,8 @@ export abstract class ImageSucceededHandler<
       .message_context as ImageMessageContext;
 
     await this.broker.publish<CheckFinishIngestItemCommand>(
-      MediaServiceMessagingSettings.CheckFinishIngestItem.messageType,
+      messageContext.ingestItemId.toString(),
+      MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,

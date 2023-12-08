@@ -3,13 +3,14 @@ import {
   DefinePlugin,
   GenericBulkPluginFactory,
 } from '@axinom/mosaic-graphql-common';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { Plugin } from 'graphile-build';
 import * as GraphQL from 'graphql';
 import { getLongLivedToken } from '../../common';
 import { getValidatedExtendedContext } from './extended-graphql-context';
 
 export const MediaBulkPluginFactory = (
-  messageType: string,
+  messagingSettings: MessagingSettings,
   definePlugin: DefinePlugin,
   inputType?: GraphQL.GraphQLInputObjectType,
 ): Plugin => {
@@ -28,7 +29,8 @@ export const MediaBulkPluginFactory = (
       const token = await getLongLivedToken(jwtToken, config);
       for (const id of entityIds) {
         await messagingBroker.publish(
-          messageType,
+          id.toString(),
+          messagingSettings,
           {
             entity_id: id,
             entity_type: entityType,

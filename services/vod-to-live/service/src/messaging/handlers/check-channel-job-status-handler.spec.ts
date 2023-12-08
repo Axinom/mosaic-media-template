@@ -1,4 +1,5 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { sleep } from '@axinom/mosaic-service-common';
 import { stub } from 'jest-auto-stub';
 import {
@@ -14,6 +15,7 @@ import {
   VirtualChannelApi,
 } from '../../domains';
 import { CheckChannelJobStatusHandler } from './check-channel-job-status-handler';
+
 jest.mock('@axinom/mosaic-service-common', () => {
   const original = jest.requireActual('@axinom/mosaic-service-common');
   return {
@@ -25,8 +27,12 @@ describe('CheckChannelJobStatusHandler', () => {
   let messages: { messageType: string; message: any }[] = [];
 
   const mockedBroker = stub<Broker>({
-    publish: (key: string, message: any) => {
-      messages.push({ messageType: key, message });
+    publish: (
+      _id: string,
+      { messageType }: MessagingSettings,
+      message: unknown,
+    ) => {
+      messages.push({ messageType, message });
     },
   });
 

@@ -3,6 +3,7 @@ import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { assertDictionary } from '@axinom/mosaic-service-common';
 import {
   DeleteEntityCommand,
+  EntityDeletedEvent,
   MediaServiceMessagingSettings,
 } from 'media-messages';
 import { deletes, IsolationLevel } from 'zapatos/db';
@@ -45,11 +46,15 @@ export class DeleteEntityCommandHandler extends MediaGuardedMessageHandler<Delet
         if (deletedItems.length >= 1) {
           const deletedRow = deletedItems[0];
           assertDictionary(deletedRow);
-          await this.broker.publish(
-            MediaServiceMessagingSettings.EntityDeleted.messageType,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const entity_id = (deletedRow as any)[payload.primary_key_name]; //TODO: see if it's possible to get rid of any here, changed with zapatos 3.6.0
+          await this.broker.publish<EntityDeletedEvent>(
+            entity_id,
+            MediaServiceMessagingSettings.EntityDeleted,
             {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              entity_id: (deletedRow as any)[payload.primary_key_name], //TODO: see if it's possible to get rid of any here, changed with zapatos 3.6.0
+              entity_id,
+              primary_key_name: payload.primary_key_name,
+              table_name: payload.table_name,
             },
             {
               auth_token: messageInfo.envelope.auth_token,

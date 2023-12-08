@@ -245,7 +245,7 @@
           "bindingKey": "media-service:ingest:start.#",
           "destination": "media-service:ingest:start"
         },
-        "media-service:ingest:start": {
+        "media-service.ingest.start": {
           "source": "command",
           "bindingKey": "media-service.ingest.start",
           "destination": "media-service:ingest:start"
@@ -255,7 +255,7 @@
           "bindingKey": "media-service:ingest:start_item.#",
           "destination": "media-service:ingest:start_item"
         },
-        "media-service:ingest:start_item": {
+        "media-service.ingest.start_item": {
           "source": "command",
           "bindingKey": "media-service.ingest.start_item",
           "destination": "media-service:ingest:start_item"
@@ -265,7 +265,7 @@
           "bindingKey": "media-service:ingest:update_metadata.#",
           "destination": "media-service:ingest:update_metadata"
         },
-        "media-service:ingest:update_metadata": {
+        "media-service.ingest.update_metadata": {
           "source": "command",
           "bindingKey": "media-service.ingest.update_metadata",
           "destination": "media-service:ingest:update_metadata"
@@ -275,7 +275,7 @@
           "bindingKey": "media-service:ingest:check_finish_item.#",
           "destination": "media-service:ingest:check_finish_item"
         },
-        "media-service:ingest:check_finish_item": {
+        "media-service.ingest.check_finish_item": {
           "source": "command",
           "bindingKey": "media-service.ingest.check_finish_item",
           "destination": "media-service:ingest:check_finish_item"
@@ -285,7 +285,7 @@
           "bindingKey": "media-service:ingest:check_finish_document.#",
           "destination": "media-service:ingest:check_finish_document"
         },
-        "media-service:ingest:check_finish_document": {
+        "media-service.ingest.check_finish_document": {
           "source": "command",
           "bindingKey": "media-service.ingest.check_finish_document",
           "destination": "media-service:ingest:check_finish_document"
@@ -300,7 +300,7 @@
           "bindingKey": "media-service:video:ensure_exists_already_existed.#",
           "destination": "media-service:video:ensure_exists_already_existed"
         },
-        "media-service:video:ensure_exists_already_existed": {
+        "ax-video-service.*.*.video.ensure_exists_already_existed": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.video.ensure_exists_already_existed",
           "destination": "media-service:video:ensure_exists_already_existed"
@@ -310,7 +310,7 @@
           "bindingKey": "media-service:video:ensure_exists_creation_started.#",
           "destination": "media-service:video:ensure_exists_creation_started"
         },
-        "media-service:video:ensure_exists_creation_started": {
+        "ax-video-service.*.*.video.ensure_exists_creation_started": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.video.ensure_exists_creation_started",
           "destination": "media-service:video:ensure_exists_creation_started"
@@ -320,7 +320,7 @@
           "bindingKey": "media-service:video:ensure_exists_failed.#",
           "destination": "media-service:video:ensure_exists_failed"
         },
-        "media-service:video:ensure_exists_failed": {
+        "ax-video-service.*.*.video.ensure_exists_failed": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.video.ensure_exists_failed",
           "destination": "media-service:video:ensure_exists_failed"
@@ -335,7 +335,7 @@
           "bindingKey": "media-service:image:ensure_exists_already_existed.#",
           "destination": "media-service:image:ensure_exists_already_existed"
         },
-        "media-service:image:ensure_exists_already_existed": {
+        "ax-image-service.*.*.image.ensure_exists_already_existed": {
           "source": "event",
           "bindingKey": "ax-image-service.*.*.image.ensure_exists_already_existed",
           "destination": "media-service:image:ensure_exists_already_existed"
@@ -345,7 +345,7 @@
           "bindingKey": "media-service:image:ensure_exists_created.#",
           "destination": "media-service:image:ensure_exists_created"
         },
-        "media-service:image:ensure_exists_created": {
+        "ax-image-service.*.*.image.ensure_exists_created": {
           "source": "event",
           "bindingKey": "ax-image-service.*.*.image.ensure_exists_created",
           "destination": "media-service:image:ensure_exists_created"
@@ -355,7 +355,7 @@
           "bindingKey": "media-service:image:ensure_exists_failed.#",
           "destination": "media-service:image:ensure_exists_failed"
         },
-        "media-service:image:ensure_exists_failed": {
+        "ax-image-service.*.*.image.ensure_exists_failed": {
           "source": "event",
           "bindingKey": "ax-image-service.*.*.image.ensure_exists_failed",
           "destination": "media-service:image:ensure_exists_failed"
@@ -365,7 +365,7 @@
           "bindingKey": "media-service:entity:publish_entity.#",
           "destination": "media-service:entity:publish_entity"
         },
-        "media-service:entity:publish_entity": {
+        "media-service.entity.publish_entity": {
           "source": "command",
           "bindingKey": "media-service.entity.publish_entity",
           "destination": "media-service:entity:publish_entity"
@@ -375,7 +375,7 @@
           "bindingKey": "media-service:entity:unpublish_entity.#",
           "destination": "media-service:entity:unpublish_entity"
         },
-        "media-service:entity:unpublish_entity": {
+        "media-service.entity.unpublish_entity": {
           "source": "command",
           "bindingKey": "media-service.entity.unpublish_entity",
           "destination": "media-service:entity:unpublish_entity"
@@ -385,7 +385,7 @@
           "bindingKey": "media-service:entity:delete.#",
           "destination": "media-service:entity:delete"
         },
-        "media-service:entity:delete": {
+        "media-service.entity.delete": {
           "source": "command",
           "bindingKey": "media-service.entity.delete",
           "destination": "media-service:entity:delete"
@@ -405,7 +405,7 @@
           "bindingKey": "media-service:cue_point_types:declared.#",
           "destination": "media-service:cue_point_types:declared"
         },
-        "media-service:cue_point_types:declared": {
+        "ax-video-service.*.*.cue_point_types.declared": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.cue_point_types.declared",
           "destination": "media-service:cue_point_types:declared"
@@ -415,7 +415,7 @@
           "bindingKey": "media-service:cue_point_types:declare_failed.#",
           "destination": "media-service:cue_point_types:declare_failed"
         },
-        "media-service:cue_point_types:declare_failed": {
+        "ax-video-service.*.*.cue_point_types.declare_failed": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.cue_point_types.declare_failed",
           "destination": "media-service:cue_point_types:declare_failed"

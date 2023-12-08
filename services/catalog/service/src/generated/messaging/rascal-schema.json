@@ -236,7 +236,7 @@
           "bindingKey": "catalog-service:movie:published.#",
           "destination": "catalog-service:movie:published"
         },
-        "catalog-service:movie:published": {
+        "media-service.movie.published": {
           "source": "event",
           "bindingKey": "media-service.movie.published",
           "destination": "catalog-service:movie:published"
@@ -246,7 +246,7 @@
           "bindingKey": "catalog-service:movie:unpublished.#",
           "destination": "catalog-service:movie:unpublished"
         },
-        "catalog-service:movie:unpublished": {
+        "media-service.movie.unpublished": {
           "source": "event",
           "bindingKey": "media-service.movie.unpublished",
           "destination": "catalog-service:movie:unpublished"
@@ -256,7 +256,7 @@
           "bindingKey": "catalog-service:movie-genres:published.#",
           "destination": "catalog-service:movie-genres:published"
         },
-        "catalog-service:movie-genres:published": {
+        "media-service.movie-genres.published": {
           "source": "event",
           "bindingKey": "media-service.movie-genres.published",
           "destination": "catalog-service:movie-genres:published"
@@ -266,7 +266,7 @@
           "bindingKey": "catalog-service:movie-genres:unpublished.#",
           "destination": "catalog-service:movie-genres:unpublished"
         },
-        "catalog-service:movie-genres:unpublished": {
+        "media-service.movie-genres.unpublished": {
           "source": "event",
           "bindingKey": "media-service.movie-genres.unpublished",
           "destination": "catalog-service:movie-genres:unpublished"
@@ -276,7 +276,7 @@
           "bindingKey": "catalog-service:tvshow-genres:published.#",
           "destination": "catalog-service:tvshow-genres:published"
         },
-        "catalog-service:tvshow-genres:published": {
+        "media-service.tvshow-genres.published": {
           "source": "event",
           "bindingKey": "media-service.tvshow-genres.published",
           "destination": "catalog-service:tvshow-genres:published"
@@ -286,7 +286,7 @@
           "bindingKey": "catalog-service:tvshow-genres:unpublished.#",
           "destination": "catalog-service:tvshow-genres:unpublished"
         },
-        "catalog-service:tvshow-genres:unpublished": {
+        "media-service.tvshow-genres.unpublished": {
           "source": "event",
           "bindingKey": "media-service.tvshow-genres.unpublished",
           "destination": "catalog-service:tvshow-genres:unpublished"
@@ -296,7 +296,7 @@
           "bindingKey": "catalog-service:tvshow:published.#",
           "destination": "catalog-service:tvshow:published"
         },
-        "catalog-service:tvshow:published": {
+        "media-service.tvshow.published": {
           "source": "event",
           "bindingKey": "media-service.tvshow.published",
           "destination": "catalog-service:tvshow:published"
@@ -306,7 +306,7 @@
           "bindingKey": "catalog-service:tvshow:unpublished.#",
           "destination": "catalog-service:tvshow:unpublished"
         },
-        "catalog-service:tvshow:unpublished": {
+        "media-service.tvshow.unpublished": {
           "source": "event",
           "bindingKey": "media-service.tvshow.unpublished",
           "destination": "catalog-service:tvshow:unpublished"
@@ -316,7 +316,7 @@
           "bindingKey": "catalog-service:season:published.#",
           "destination": "catalog-service:season:published"
         },
-        "catalog-service:season:published": {
+        "media-service.season.published": {
           "source": "event",
           "bindingKey": "media-service.season.published",
           "destination": "catalog-service:season:published"
@@ -326,7 +326,7 @@
           "bindingKey": "catalog-service:season:unpublished.#",
           "destination": "catalog-service:season:unpublished"
         },
-        "catalog-service:season:unpublished": {
+        "media-service.season.unpublished": {
           "source": "event",
           "bindingKey": "media-service.season.unpublished",
           "destination": "catalog-service:season:unpublished"
@@ -336,7 +336,7 @@
           "bindingKey": "catalog-service:episode:published.#",
           "destination": "catalog-service:episode:published"
         },
-        "catalog-service:episode:published": {
+        "media-service.episode.published": {
           "source": "event",
           "bindingKey": "media-service.episode.published",
           "destination": "catalog-service:episode:published"
@@ -346,7 +346,7 @@
           "bindingKey": "catalog-service:episode:unpublished.#",
           "destination": "catalog-service:episode:unpublished"
         },
-        "catalog-service:episode:unpublished": {
+        "media-service.episode.unpublished": {
           "source": "event",
           "bindingKey": "media-service.episode.unpublished",
           "destination": "catalog-service:episode:unpublished"
@@ -356,7 +356,7 @@
           "bindingKey": "catalog-service:collection:published.#",
           "destination": "catalog-service:collection:published"
         },
-        "catalog-service:collection:published": {
+        "media-service.collection.published": {
           "source": "event",
           "bindingKey": "media-service.collection.published",
           "destination": "catalog-service:collection:published"
@@ -366,7 +366,7 @@
           "bindingKey": "catalog-service:collection:unpublished.#",
           "destination": "catalog-service:collection:unpublished"
         },
-        "catalog-service:collection:unpublished": {
+        "media-service.collection.unpublished": {
           "source": "event",
           "bindingKey": "media-service.collection.unpublished",
           "destination": "catalog-service:collection:unpublished"
@@ -376,7 +376,7 @@
           "bindingKey": "catalog-service:channel:published.#",
           "destination": "catalog-service:channel:published"
         },
-        "catalog-service:channel:published": {
+        "ax-channel-service.*.*.channel.published": {
           "source": "event",
           "bindingKey": "ax-channel-service.*.*.channel.published",
           "destination": "catalog-service:channel:published"
@@ -386,7 +386,7 @@
           "bindingKey": "catalog-service:channel:unpublished.#",
           "destination": "catalog-service:channel:unpublished"
         },
-        "catalog-service:channel:unpublished": {
+        "ax-channel-service.*.*.channel.unpublished": {
           "source": "event",
           "bindingKey": "ax-channel-service.*.*.channel.unpublished",
           "destination": "catalog-service:channel:unpublished"
@@ -396,7 +396,7 @@
           "bindingKey": "catalog-service:channel:check_job_status_succeeded.#",
           "destination": "catalog-service:channel:check_job_status_succeeded"
         },
-        "catalog-service:channel:check_job_status_succeeded": {
+        "vod-to-live-service.channel.check_job_status_succeeded": {
           "source": "event",
           "bindingKey": "vod-to-live-service.channel.check_job_status_succeeded",
           "destination": "catalog-service:channel:check_job_status_succeeded"
@@ -406,7 +406,7 @@
           "bindingKey": "catalog-service:channel:check_job_status_failed.#",
           "destination": "catalog-service:channel:check_job_status_failed"
         },
-        "catalog-service:channel:check_job_status_failed": {
+        "vod-to-live-service.channel.check_job_status_failed": {
           "source": "event",
           "bindingKey": "vod-to-live-service.channel.check_job_status_failed",
           "destination": "catalog-service:channel:check_job_status_failed"
@@ -416,7 +416,7 @@
           "bindingKey": "catalog-service:channel:protection_key_created.#",
           "destination": "catalog-service:channel:protection_key_created"
         },
-        "catalog-service:channel:protection_key_created": {
+        "vod-to-live-service.channel.protection_key_created": {
           "source": "event",
           "bindingKey": "vod-to-live-service.channel.protection_key_created",
           "destination": "catalog-service:channel:protection_key_created"

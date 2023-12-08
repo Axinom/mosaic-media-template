@@ -53,7 +53,8 @@ export class ChannelPublishedHandler extends AuthenticatedMessageHandler<Channel
     const generator = new ChannelSmilGenerator(cpixSettings);
     const smilEnvelope = generator.generate(payload);
     await this.broker.publish<PrepareChannelLiveStreamCommand>(
-      VodToLiveServiceMessagingSettings.PrepareChannelLiveStream.messageType,
+      payload.id,
+      VodToLiveServiceMessagingSettings.PrepareChannelLiveStream,
       {
         channel_id: payload.id,
         smil: convertObjectToXml(smilEnvelope),
