@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@axinom/mosaic-cli": "0.26.0-rc.0",
-    "@axinom/mosaic-message-bus-abstractions": "0.7.0-rc.0",
+    "@axinom/mosaic-message-bus-abstractions": "0.7.0-rc.8",
     "@types/glob": "^7.2.0",
     "concurrently": "^5.3.0",
     "rimraf": "^3.0.2",
