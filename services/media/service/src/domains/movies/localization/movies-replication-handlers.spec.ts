@@ -115,20 +115,59 @@ describe('moviesReplicationHandlers', () => {
       expect(result).toBeUndefined();
     });
 
+    it('movie is updated, properties remains the same, but context is passed -> upsert message data with context is returned', async () => {
+      // Arrange
+      const context = { ingestItemId: 1 };
+      const contextHandlers = moviesReplicationHandlers(config, context);
+
+      // Act
+      const result = await contextHandlers.updateHandler(
+        defaultMovie,
+        defaultMovie,
+      );
+
+      // Assert
+      expect(result).toEqual({
+        payload: {
+          entity_id: defaultMovie.id!.toString(),
+          entity_title: defaultMovie.title,
+          entity_type: LOCALIZATION_MOVIE_TYPE,
+          fields: {},
+          image_id: undefined,
+          service_id: config.serviceId,
+        },
+        settings:
+          LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
+        messageContext: context,
+      });
+    });
+
     it.each([
-      { title: 'updated' },
-      { description: 'updated' },
-      { title: 'updated', description: 'updated' },
-      { title: 'updated', description: 'updated', synopsis: 'updated' },
+      [{ title: 'updated' }, undefined],
+      [{ description: 'updated' }, undefined],
+      [{ title: 'updated', description: 'updated' }, undefined],
+      [
+        { title: 'updated', description: 'updated', synopsis: 'updated' },
+        { ingestItemId: 2 },
+      ],
     ])(
       'movie is updated, changing properties %p -> upsert message data is returned',
-      async (updated) => {
+      async (updated, messageContext) => {
+        // Arrange
+        const contextHandlers = moviesReplicationHandlers(
+          config,
+          messageContext,
+        );
+
         // Act
         const updatedMovie = {
           ...defaultMovie,
           ...updated,
         };
-        const result = await handlers.updateHandler(updatedMovie, defaultMovie);
+        const result = await contextHandlers.updateHandler(
+          updatedMovie,
+          defaultMovie,
+        );
 
         // Assert
         expect(result).toEqual({
@@ -142,6 +181,7 @@ describe('moviesReplicationHandlers', () => {
           },
           settings:
             LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
+          messageContext,
         });
       },
     );

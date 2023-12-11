@@ -39,7 +39,7 @@ import {
   ImageTypesDeclaredHandler,
   ImageTypesDeclareFailedHandler,
 } from '../domains/common';
-import { ingestProcessors } from '../domains/ingest-processors';
+import { getIngestProcessors } from '../domains/get-ingest-processors';
 import {
   entityPublishEventSettings,
   publishingProcessors,
@@ -129,6 +129,7 @@ const registerTransactionalInboxHandlers = (
   logMapper: TransactionalLogMapper,
   shutdownActions: ShutdownActionsMiddleware,
 ): void => {
+  const ingestProcessors = getIngestProcessors(config);
   const publishMessageHandlers: TransactionalMessageHandler[] = [
     new PublishEntityHandler(publishingProcessors, storeOutboxMessage, config),
     new UnpublishEntityHandler(
