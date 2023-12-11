@@ -4,7 +4,7 @@ import { getShutdownActions, Logger } from '@axinom/mosaic-service-common';
 import { Express } from 'express';
 import { Config } from '../common';
 import { registerCommonMessaging } from '../domains/common/register-messaging';
-import { ingestProcessors } from '../domains/ingest-processors';
+import { getIngestProcessors } from '../domains/get-ingest-processors';
 import {
   entityPublishEventSettings,
   publishingProcessors,
@@ -19,6 +19,7 @@ export const registerMessaging = async (
   logger?: Logger,
 ): Promise<Broker> => {
   logger = logger ?? new Logger({ context: registerMessaging.name });
+  const ingestProcessors = getIngestProcessors(config);
   const ingest = registerIngestMessaging(ingestProcessors, app, config);
   const counter = initMessagingCounter(getOwnerPgPool(app));
   const publishing = registerPublishingMessaging(

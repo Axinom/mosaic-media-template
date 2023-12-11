@@ -84,6 +84,8 @@ serviceAccounts:
         permissions:
           - 'SOURCE_ENTITIES_EDIT'
           - 'ENTITY_DEFINITIONS_EDIT'
+          - 'LOCALIZED_ENTITIES_EDIT'
+          - 'LOCALIZED_ENTITIES_REVIEW'
 
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.

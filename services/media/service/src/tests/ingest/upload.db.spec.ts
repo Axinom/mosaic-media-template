@@ -35,7 +35,7 @@ import {
   tvshow_genres,
 } from 'zapatos/schema';
 import { getLongLivedToken } from '../../common/utils/token-utils';
-import { ingestProcessors } from '../../domains/ingest-processors';
+import { getIngestProcessors } from '../../domains/get-ingest-processors';
 import {
   CheckFinishIngestDocumentHandler,
   CheckFinishIngestItemHandler,
@@ -141,7 +141,7 @@ describe('Movies GraphQL endpoints', () => {
       ctx.config.serviceId,
       subject,
     );
-
+    const ingestProcessors = getIngestProcessors(ctx.config);
     startIngest = new StartIngestHandler(
       ingestProcessors,
       broker,
@@ -659,6 +659,7 @@ describe('Movies GraphQL endpoints', () => {
           publish_status: 'NOT_PUBLISHED',
           published_date: null,
           published_user: null,
+          ingest_correlation_id: null,
         },
       ]);
 
@@ -821,6 +822,7 @@ describe('Movies GraphQL endpoints', () => {
           title: 'Mandalorian',
           updated_date: tvshows[0].updated_date,
           updated_user: DEFAULT_SYSTEM_USERNAME,
+          ingest_correlation_id: null,
         },
       ]);
 
@@ -973,6 +975,7 @@ describe('Movies GraphQL endpoints', () => {
           tvshow_id: tvshows[0].id,
           updated_date: seasons[0].updated_date,
           updated_user: DEFAULT_SYSTEM_USERNAME,
+          ingest_correlation_id: null,
         },
       ]);
 
@@ -1128,6 +1131,7 @@ describe('Movies GraphQL endpoints', () => {
           title: 'The Marshal',
           updated_date: episodes[0].updated_date,
           updated_user: DEFAULT_SYSTEM_USERNAME,
+          ingest_correlation_id: null,
         },
       ]);
 

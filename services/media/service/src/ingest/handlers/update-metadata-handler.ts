@@ -8,7 +8,7 @@ import {
   UpdateMetadataCommand,
 } from 'media-messages';
 import { SubscriptionConfig } from 'rascal';
-import { IsolationLevel } from 'zapatos/db';
+import { IsolationLevel, selectOne } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
 import { MediaGuardedMessageHandler } from '../../messaging';
 import { IngestEntityProcessor } from '../models';
@@ -35,6 +35,9 @@ export class UpdateMetadataHandler extends MediaGuardedMessageHandler<UpdateMeta
     message: MessageInfo,
   ): Promise<void> {
     const pgSettings = await this.getPgSettings(message);
+    const messageContext = message.envelope
+      .message_context as IngestMessageContext;
+
     await transactionWithContext(
       this.loginPool,
       // Serializable is not used here to avoid transaction error retries.
@@ -54,13 +57,23 @@ export class UpdateMetadataHandler extends MediaGuardedMessageHandler<UpdateMeta
             code: CommonErrors.IngestError.code,
           });
         }
+        const localizationStep = await selectOne(
+          'ingest_item_steps',
+          {
+            ingest_item_id: messageContext.ingestItemId,
+            type: 'LOCALIZATIONS',
+          },
+          { columns: ['id'] },
+        ).run(ctx);
 
-        await processor.updateMetadata(content, ctx);
+        await processor.updateMetadata(
+          content,
+          ctx,
+          localizationStep ? messageContext.ingestItemId : undefined,
+        );
       },
     );
 
-    const messageContext = message.envelope
-      .message_context as IngestMessageContext;
     await this.broker.publish<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,

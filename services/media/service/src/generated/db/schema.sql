@@ -3704,6 +3704,7 @@ CREATE TABLE app_public.episodes (
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
+    ingest_correlation_id integer,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -3714,6 +3715,13 @@ CREATE TABLE app_public.episodes (
 --
 
 COMMENT ON TABLE app_public.episodes IS '@subscription_events_episodes EPISODE_CREATED,EPISODE_CHANGED,EPISODE_DELETED';
+
+
+--
+-- Name: COLUMN episodes.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.episodes.ingest_correlation_id IS '@omit';
 
 
 --
@@ -4203,6 +4211,7 @@ CREATE TABLE app_public.movies (
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
+    ingest_correlation_id integer,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -4213,6 +4222,13 @@ CREATE TABLE app_public.movies (
 --
 
 COMMENT ON TABLE app_public.movies IS '@subscription_events_movies MOVIE_CREATED,MOVIE_CHANGED,MOVIE_DELETED';
+
+
+--
+-- Name: COLUMN movies.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.movies.ingest_correlation_id IS '@omit';
 
 
 --
@@ -4450,7 +4466,8 @@ CREATE TABLE app_public.seasons (
     updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
-    publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL
+    publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
+    ingest_correlation_id integer
 );
 
 
@@ -4459,6 +4476,13 @@ CREATE TABLE app_public.seasons (
 --
 
 COMMENT ON TABLE app_public.seasons IS '@subscription_events_seasons SEASON_CREATED,SEASON_CHANGED,SEASON_DELETED';
+
+
+--
+-- Name: COLUMN seasons.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.seasons.ingest_correlation_id IS '@omit';
 
 
 --
@@ -4869,6 +4893,7 @@ CREATE TABLE app_public.tvshows (
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
+    ingest_correlation_id integer,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -4879,6 +4904,13 @@ CREATE TABLE app_public.tvshows (
 --
 
 COMMENT ON TABLE app_public.tvshows IS '@subscription_events_tvshows TVSHOW_CREATED,TVSHOW_CHANGED,TVSHOW_DELETED';
+
+
+--
+-- Name: COLUMN tvshows.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.tvshows.ingest_correlation_id IS '@omit';
 
 
 --
@@ -12240,6 +12272,13 @@ GRANT INSERT(main_video_id),UPDATE(main_video_id) ON TABLE app_public.episodes T
 
 
 --
+-- Name: COLUMN episodes.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.episodes TO media_service_gql_role;
+
+
+--
 -- Name: TABLE episodes_casts; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -12737,6 +12776,13 @@ GRANT INSERT(main_video_id),UPDATE(main_video_id) ON TABLE app_public.movies TO 
 
 
 --
+-- Name: COLUMN movies.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.movies TO media_service_gql_role;
+
+
+--
 -- Name: TABLE movies_casts; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -12930,6 +12976,13 @@ GRANT INSERT(studio),UPDATE(studio) ON TABLE app_public.seasons TO media_service
 --
 
 GRANT INSERT(released),UPDATE(released) ON TABLE app_public.seasons TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN seasons.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.seasons TO media_service_gql_role;
 
 
 --
@@ -13329,6 +13382,13 @@ GRANT INSERT(studio),UPDATE(studio) ON TABLE app_public.tvshows TO media_service
 --
 
 GRANT INSERT(released),UPDATE(released) ON TABLE app_public.tvshows TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshows.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.tvshows TO media_service_gql_role;
 
 
 --

@@ -22,7 +22,11 @@ import {
 } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
 import { MediaGuardedMessageHandler } from '../../messaging';
-import { IngestEntityProcessor, OrchestrationData } from '../models';
+import {
+  FullOrchestrationData,
+  IngestEntityProcessor,
+  OrchestrationData,
+} from '../models';
 import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 export class StartIngestItemHandler extends MediaGuardedMessageHandler<StartIngestItemCommand> {
@@ -39,6 +43,12 @@ export class StartIngestItemHandler extends MediaGuardedMessageHandler<StartInge
       config,
       overrides,
     );
+  }
+
+  private isFullOrchestrationData(
+    data: OrchestrationData,
+  ): data is FullOrchestrationData {
+    return 'messagingSettings' in data;
   }
 
   async onMessage(
@@ -64,12 +74,14 @@ export class StartIngestItemHandler extends MediaGuardedMessageHandler<StartInge
 
         const data = processor.getOrchestrationData(content);
         await this.saveIngestItemSteps(data, ctx);
-        return data.map((original) => ({
-          ...original,
-          publicationConfig: this.getPublicationConfig(
-            original.messagingSettings,
-          ),
-        }));
+        return data
+          .filter<FullOrchestrationData>(this.isFullOrchestrationData)
+          .map((original) => ({
+            ...original,
+            publicationConfig: this.getPublicationConfig(
+              original.messagingSettings,
+            ),
+          }));
       },
     );
 

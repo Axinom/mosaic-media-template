@@ -50,6 +50,7 @@ const getEntityTitle = async (
 export const seasonsReplicationHandlers = (
   config: Config,
   ownerPool: OwnerPgPool,
+  messageContext?: unknown,
 ): ReplicationOperationHandlers => {
   const entityType = LOCALIZATION_SEASON_TYPE;
   const fieldDefinitions = SeasonFieldDefinitions.filter((d) => !d.is_archived);
@@ -77,10 +78,16 @@ export const seasonsReplicationHandlers = (
       assertSeason(oldData);
 
       const fields = getChangedFields(newData, oldData, fieldDefinitions);
-      if (isEmptyObject(fields) && newData.tvshow_id === oldData.tvshow_id) {
-        return undefined; // Do not send a message if no localizable fields have changed and parent tvshow remains the same
+      if (
+        isEmptyObject(fields) &&
+        newData.tvshow_id === oldData.tvshow_id &&
+        !messageContext
+      ) {
+        return undefined;
       }
 
+      // Message is send if at least one field is updated, or if parent tvshow has
+      // changed, or if update happened in context of ingest.
       const entityTitle = await getEntityTitle(newData, ownerPool);
       return getUpsertMessageData(
         config.serviceId,
@@ -89,6 +96,7 @@ export const seasonsReplicationHandlers = (
         fields,
         entityTitle,
         undefined, // Image is updated through season_images change
+        messageContext,
       );
     },
     deleteHandler: async (oldData: Dict<unknown> | undefined) => {

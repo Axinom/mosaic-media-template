@@ -8,6 +8,11 @@ import {
   EnsureVideoExistsCreationStartedEvent,
   EnsureVideoExistsFailedEvent,
   ImageServiceMultiTenantMessagingSettings,
+  LocalizationServiceMultiTenantMessagingSettings,
+  LocalizeEntityFailedEvent,
+  LocalizeEntityFinishedEvent,
+  UpsertLocalizationSourceEntityFailedEvent,
+  UpsertLocalizationSourceEntityFinishedEvent,
   VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Express } from 'express';
@@ -26,9 +31,13 @@ import {
   ImageAlreadyExistedHandler,
   ImageCreatedHandler,
   ImageFailedHandler,
+  LocalizeEntityFailedHandler,
+  LocalizeEntityFinishedHandler,
   StartIngestHandler,
   StartIngestItemHandler,
   UpdateMetadataHandler,
+  UpsertLocalizationSourceEntityFailedHandler,
+  UpsertLocalizationSourceEntityFinishedHandler,
   VideoAlreadyExistedHandler,
   VideoCreationStartedHandler,
   VideoFailedHandler,
@@ -155,6 +164,44 @@ export const registerIngestMessaging = (
       config,
     ).subscribeForEvent<EnsureImageExistsFailedEvent>(
       (broker: Broker) => new ImageFailedHandler(broker, config),
+    ),
+    new RascalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFinished,
+      config,
+    ).subscribeForEvent<UpsertLocalizationSourceEntityFinishedEvent>(
+      (broker: Broker) =>
+        new UpsertLocalizationSourceEntityFinishedHandler(
+          broker,
+          loginPool,
+          config,
+        ),
+    ),
+    new RascalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFailed,
+      config,
+    ).subscribeForEvent<UpsertLocalizationSourceEntityFailedEvent>(
+      (broker: Broker) =>
+        new UpsertLocalizationSourceEntityFailedHandler(
+          broker,
+          loginPool,
+          config,
+        ),
+    ),
+    new RascalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.LocalizeEntity,
+      config,
+    ).sendCommand(),
+    new RascalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFinished,
+      config,
+    ).subscribeForEvent<LocalizeEntityFinishedEvent>(
+      (broker: Broker) => new LocalizeEntityFinishedHandler(broker, config),
+    ),
+    new RascalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFailed,
+      config,
+    ).subscribeForEvent<LocalizeEntityFailedEvent>(
+      (broker: Broker) => new LocalizeEntityFailedHandler(broker, config),
     ),
   ];
 };
