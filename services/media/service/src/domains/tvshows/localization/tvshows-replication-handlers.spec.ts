@@ -115,20 +115,56 @@ describe('tvshowsReplicationHandlers', () => {
       expect(result).toBeUndefined();
     });
 
+    it('tvshow is updated, properties remains the same, but context is passed -> upsert message data with context is returned', async () => {
+      // Arrange
+      const context = { ingestItemId: 1 };
+      const contextHandlers = tvshowsReplicationHandlers(config, context);
+
+      // Act
+      const result = await contextHandlers.updateHandler(
+        defaultTvshow,
+        defaultTvshow,
+      );
+
+      // Assert
+      expect(result).toEqual({
+        payload: {
+          entity_id: defaultTvshow.id!.toString(),
+          entity_title: defaultTvshow.title,
+          entity_type: LOCALIZATION_TVSHOW_TYPE,
+          fields: {},
+          image_id: undefined,
+          service_id: config.serviceId,
+        },
+        settings:
+          LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
+        messageContext: context,
+      });
+    });
+
     it.each([
-      { title: 'updated' },
-      { description: 'updated' },
-      { title: 'updated', description: 'updated' },
-      { title: 'updated', description: 'updated', synopsis: 'updated' },
+      [{ title: 'updated' }, undefined],
+      [{ description: 'updated' }, undefined],
+      [{ title: 'updated', description: 'updated' }, undefined],
+      [
+        { title: 'updated', description: 'updated', synopsis: 'updated' },
+        { ingestItemId: 2 },
+      ],
     ])(
       'tvshow is updated, changing properties %p -> upsert message data is returned',
-      async (updated) => {
+      async (updated, messageContext) => {
+        // Arrange
+        const contextHandlers = tvshowsReplicationHandlers(
+          config,
+          messageContext,
+        );
+
         // Act
         const updatedTvshow = {
           ...defaultTvshow,
           ...updated,
         };
-        const result = await handlers.updateHandler(
+        const result = await contextHandlers.updateHandler(
           updatedTvshow,
           defaultTvshow,
         );
@@ -145,6 +181,7 @@ describe('tvshowsReplicationHandlers', () => {
           },
           settings:
             LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
+          messageContext,
         });
       },
     );

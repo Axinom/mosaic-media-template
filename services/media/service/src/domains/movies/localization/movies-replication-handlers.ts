@@ -29,6 +29,7 @@ const assertMovie: (
 
 export const moviesReplicationHandlers = (
   config: Config,
+  messageContext?: unknown,
 ): ReplicationOperationHandlers => {
   const entityType = LOCALIZATION_MOVIE_TYPE;
   const fieldDefinitions = MovieFieldDefinitions.filter((d) => !d.is_archived);
@@ -55,10 +56,12 @@ export const moviesReplicationHandlers = (
       assertMovie(oldData);
 
       const fields = getChangedFields(newData, oldData, fieldDefinitions);
-      if (isEmptyObject(fields)) {
-        return undefined; // Do not send a message if no localizable fields have changed
+      if (isEmptyObject(fields) && !messageContext) {
+        return undefined;
       }
 
+      // Message is send if at least one field is updated or if update happened
+      // in context of ingest.
       return getUpsertMessageData(
         config.serviceId,
         entityType,
@@ -66,6 +69,7 @@ export const moviesReplicationHandlers = (
         fields,
         newData.title,
         undefined, // Image is updated through movie_images change
+        messageContext,
       );
     },
     deleteHandler: async (oldData: Dict<unknown> | undefined) => {

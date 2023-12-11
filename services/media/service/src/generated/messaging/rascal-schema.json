@@ -160,6 +160,51 @@
             }
           }
         },
+        "media-service:localization_source_entity:upsert_finished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:localization_source_entity:upsert_failed": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-localization-service:entity:localize": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:entity:localize_finished": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:entity:localize_failed": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
         "media-service:entity:publish_entity": {
           "options": {
             "arguments": {
@@ -423,6 +468,51 @@
           "bindingKey": "ax-image-service.*.*.image.ensure_exists_failed",
           "destination": "media-service:image:ensure_exists_failed"
         },
+        "retry:media-service:localization_source_entity:upsert_finished": {
+          "source": "retry",
+          "bindingKey": "media-service:localization_source_entity:upsert_finished.#",
+          "destination": "media-service:localization_source_entity:upsert_finished"
+        },
+        "ax-localization-service.*.*.localization_source_entity.upsert_finished": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.localization_source_entity.upsert_finished",
+          "destination": "media-service:localization_source_entity:upsert_finished"
+        },
+        "retry:media-service:localization_source_entity:upsert_failed": {
+          "source": "retry",
+          "bindingKey": "media-service:localization_source_entity:upsert_failed.#",
+          "destination": "media-service:localization_source_entity:upsert_failed"
+        },
+        "ax-localization-service.*.*.localization_source_entity.upsert_failed": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.localization_source_entity.upsert_failed",
+          "destination": "media-service:localization_source_entity:upsert_failed"
+        },
+        "retry:ax-localization-service:entity:localize": {
+          "source": "retry",
+          "bindingKey": "ax-localization-service:entity:localize.#",
+          "destination": "ax-localization-service:entity:localize"
+        },
+        "retry:media-service:entity:localize_finished": {
+          "source": "retry",
+          "bindingKey": "media-service:entity:localize_finished.#",
+          "destination": "media-service:entity:localize_finished"
+        },
+        "ax-localization-service.*.*.entity.localize_finished": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity.localize_finished",
+          "destination": "media-service:entity:localize_finished"
+        },
+        "retry:media-service:entity:localize_failed": {
+          "source": "retry",
+          "bindingKey": "media-service:entity:localize_failed.#",
+          "destination": "media-service:entity:localize_failed"
+        },
+        "ax-localization-service.*.*.entity.localize_failed": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity.localize_failed",
+          "destination": "media-service:entity:localize_failed"
+        },
         "retry:media-service:entity:publish_entity": {
           "source": "retry",
           "bindingKey": "media-service:entity:publish_entity.#",
@@ -583,6 +673,10 @@
         "EnsureImageExists": {
           "exchange": "command",
           "routingKey": "ax-image-service.*.*.image.ensure_exists"
+        },
+        "LocalizeEntity": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.entity.localize"
         },
         "PublishEntity": {
           "exchange": "command",
@@ -774,6 +868,42 @@
         },
         "EnsureImageExistsFailed": {
           "queue": "media-service:image:ensure_exists_failed",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "UpsertLocalizationSourceEntityFinished": {
+          "queue": "media-service:localization_source_entity:upsert_finished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "UpsertLocalizationSourceEntityFailed": {
+          "queue": "media-service:localization_source_entity:upsert_failed",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "LocalizeEntityFinished": {
+          "queue": "media-service:entity:localize_finished",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic"
+          }
+        },
+        "LocalizeEntityFailed": {
+          "queue": "media-service:entity:localize_failed",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {

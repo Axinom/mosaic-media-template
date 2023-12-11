@@ -10,6 +10,7 @@ export interface LocalizationMessageData {
   payload:
     | DeleteLocalizationSourceEntityCommand
     | UpsertLocalizationSourceEntityCommand;
+  messageContext?: unknown;
 }
 
 export interface ReplicationOperationHandlers {
