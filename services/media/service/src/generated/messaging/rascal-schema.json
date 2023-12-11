@@ -238,6 +238,10 @@
           "exchange": "command",
           "routingKey": "ax-image-service.*.*.image.ensure_exists"
         },
+        "LocalizeEntity": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.entity.localize"
+        },
         "PublishEntity": {
           "exchange": "command",
           "routingKey": "media-service.entity.publish_entity"

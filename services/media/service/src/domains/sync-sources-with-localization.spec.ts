@@ -141,6 +141,55 @@ describe('syncSourcesWithLocalization', () => {
     expect(messages).toEqual([]);
   });
 
+  it('movie is updated, title remains the same, but ingest_correlation_id is set -> upsert message is sent with empty fields', async () => {
+    // Arrange
+    const movie = {
+      id: uuid(),
+      tenant_id: uuid(),
+      environment_id: uuid(),
+      title: 'Test Title',
+    };
+    const ingestItemId = 3;
+    const scopedMessage: PgOutputScopedMessage = {
+      operation: 'update',
+      tableName: 'movies',
+      schemaName: 'app_public',
+      new: { ...movie, ingest_correlation_id: ingestItemId },
+      old: movie,
+    };
+
+    // Act
+    await syncSourcesWithLocalization(
+      stub<OwnerPgPool>(),
+      broker,
+      config,
+    )({ scopedMessage, fullMessage: stub<Pgoutput.Message>() });
+
+    // Assert
+    expect(messages).toEqual([
+      {
+        messageType:
+          LocalizationServiceMultiTenantMessagingSettings
+            .UpsertLocalizationSourceEntity.messageType,
+        context: {
+          auth_token: serviceAccountToken,
+          message_context: { ingestItemId },
+        },
+        message: {
+          entity_id: movie.id,
+          entity_title: movie.title,
+          entity_type: LOCALIZATION_MOVIE_TYPE,
+          fields: {},
+          image_id: undefined,
+          service_id: config.serviceId,
+        },
+        options: {
+          routingKey: `ax-localization-service.${config.tenantId}.${config.environmentId}.localization_source_entity.upsert`,
+        },
+      },
+    ]);
+  });
+
   it('movie image is updated -> upsert message is sent', async () => {
     // Arrange
     const image = {

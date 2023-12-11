@@ -29,6 +29,7 @@ const assertTvshow: (
 
 export const tvshowsReplicationHandlers = (
   config: Config,
+  messageContext?: unknown,
 ): ReplicationOperationHandlers => {
   const entityType = LOCALIZATION_TVSHOW_TYPE;
   const fieldDefinitions = TvshowFieldDefinitions.filter((d) => !d.is_archived);
@@ -55,10 +56,12 @@ export const tvshowsReplicationHandlers = (
       assertTvshow(oldData);
 
       const fields = getChangedFields(newData, oldData, fieldDefinitions);
-      if (isEmptyObject(fields)) {
-        return undefined; // Do not send a message if no localizable fields have changed
+      if (isEmptyObject(fields) && !messageContext) {
+        return undefined;
       }
 
+      // Message is send if at least one field is updated or if update happened
+      // in context of ingest.
       return getUpsertMessageData(
         config.serviceId,
         entityType,
@@ -66,6 +69,7 @@ export const tvshowsReplicationHandlers = (
         fields,
         newData.title,
         undefined, // Image is updated through tvshow_images change
+        messageContext,
       );
     },
     deleteHandler: async (oldData: Dict<unknown> | undefined) => {

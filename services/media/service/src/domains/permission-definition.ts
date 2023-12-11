@@ -186,9 +186,16 @@ export const ingestPermissionMappings: {
  * Synchronize service permissions with ID service
  */
 export const syncPermissions = async (
-  config: Config,
-  logger: Logger,
+  config: Pick<
+    Config,
+    | 'idServiceAuthBaseUrl'
+    | 'serviceAccountClientId'
+    | 'serviceAccountClientSecret'
+    | 'serviceId'
+  >,
+  logger?: Logger,
 ): Promise<void> => {
+  logger = logger ?? new Logger({ context: syncPermissions.name });
   const accessToken = await requestServiceAccountToken(config);
   const result = await synchronizePermissions(
     config.idServiceAuthBaseUrl,

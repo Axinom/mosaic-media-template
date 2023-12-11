@@ -25,7 +25,7 @@ import {
   createTestUser,
   ITestContext,
 } from '../../tests/test-utils';
-import { OrchestrationData } from '../models';
+import { DeferredOrchestrationData, OrchestrationData } from '../models';
 import { StartIngestItemHandler } from './start-ingest-item-handler';
 
 describe('Start Ingest Item Handler', () => {
@@ -254,6 +254,91 @@ describe('Start Ingest Item Handler', () => {
             message_context: { test: 'context' },
           },
           options: {
+            routingKey: `${
+              VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
+                .serviceId
+            }.${VideoServiceMultiTenantMessagingSettings.EnsureVideoExists.routingKey
+              .replace('*', ctx.config.tenantId)
+              .replace('*', ctx.config.environmentId)}`,
+          },
+        },
+      ]);
+    });
+
+    it('message for 3 steps -> 3 steps are saved and 2 commands are sent', async () => {
+      // Arrange
+      const mockItem = createOrchestrationMock(
+        item1.id,
+        1,
+        MediaServiceMessagingSettings.UpdateMetadata,
+      );
+      const mockItem2 = createOrchestrationMock(
+        item1.id,
+        2,
+        VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
+      );
+      const mockItem3: DeferredOrchestrationData = {
+        ingestItemStep: {
+          ingest_item_id: item1.id,
+          type: 'ENTITY',
+          id: `349c11f1-c188-4950-9743-442c45c5c8e5`,
+          sub_type: 'TEST',
+        },
+      };
+      jest
+        .spyOn(processor, 'getOrchestrationData')
+        .mockImplementation(() => [mockItem, mockItem2, mockItem3]);
+
+      const content: StartIngestItemCommand = {
+        ingest_item_id: item1.id,
+        entity_id: 1,
+        item: {
+          type: 'MOVIE',
+          external_id: 'externalId',
+          data: {},
+        },
+      };
+
+      // Act
+      await handler.onMessage(content, message);
+
+      // Assert
+      const items = await select('ingest_items', all, { columns: ['id'] }).run(
+        ctx.ownerPool,
+      );
+      expect(items).toHaveLength(1);
+
+      const steps = await select(
+        'ingest_item_steps',
+        { ingest_item_id: items[0].id },
+        { columns: ['id', 'ingest_item_id', 'sub_type', 'type', 'status'] },
+      ).run(ctx.ownerPool);
+
+      expect(steps).toIncludeSameMembers([
+        { ...mockItem.ingestItemStep, status: 'IN_PROGRESS' },
+        { ...mockItem2.ingestItemStep, status: 'IN_PROGRESS' },
+        { ...mockItem3.ingestItemStep, status: 'IN_PROGRESS' },
+      ]);
+
+      expect(messages).toIncludeSameMembers([
+        {
+          key: MediaServiceMessagingSettings.UpdateMetadata.messageType,
+          payload: { test: 'payload' },
+          overrides: {
+            auth_token: 'test',
+            message_context: { test: 'context' },
+          },
+          config: undefined,
+        },
+        {
+          key: VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
+            .messageType,
+          payload: { test: 'payload' },
+          overrides: {
+            auth_token: 'test',
+            message_context: { test: 'context' },
+          },
+          config: {
             routingKey: `${
               VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
                 .serviceId

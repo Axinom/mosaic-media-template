@@ -11716,6 +11716,9 @@ enum IngestItemStepType {
 
   """Video"""
   VIDEO
+
+  """Localizations"""
+  LOCALIZATIONS
 }
 
 enum IngestItemStepStatus {
