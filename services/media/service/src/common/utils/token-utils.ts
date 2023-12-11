@@ -13,7 +13,12 @@ const cache = new NodeCache({ stdTTL: 55 * 60 });
  * @param config the configuration object
  */
 export const requestServiceAccountToken = async (
-  config: Config,
+  config: Pick<
+    Config,
+    | 'idServiceAuthBaseUrl'
+    | 'serviceAccountClientId'
+    | 'serviceAccountClientSecret'
+  >,
 ): Promise<string> => {
   const cacheKey = `serviceAccountToken`;
   const token = cache.get<string>(cacheKey);

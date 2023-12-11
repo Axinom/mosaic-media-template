@@ -34,25 +34,32 @@ const getTableSpecificHandlers = (
   config: Config,
   ownerPool: OwnerPgPool,
 ): ReplicationOperationHandlers => {
+  // If operation originated in context of Ingest - provide message context to
+  // be able to receive response events, making sure source entity is created
+  // in the localization service and ready to receive localizations.
+  const messageContext = scopedMessage.new?.ingest_correlation_id
+    ? { ingestItemId: scopedMessage.new.ingest_correlation_id }
+    : undefined;
+
   switch (scopedMessage.tableName) {
     case 'movies':
-      return moviesReplicationHandlers(config);
+      return moviesReplicationHandlers(config, messageContext);
     case 'movie_genres':
       return movieGenresReplicationHandlers(config);
     case 'movies_images':
       return moviesImagesReplicationHandlers(config, ownerPool);
     case 'tvshows':
-      return tvshowsReplicationHandlers(config);
+      return tvshowsReplicationHandlers(config, messageContext);
     case 'tvshow_genres':
       return tvshowGenresReplicationHandlers(config);
     case 'tvshows_images':
       return tvshowsImagesReplicationHandlers(config, ownerPool);
     case 'seasons':
-      return seasonsReplicationHandlers(config, ownerPool);
+      return seasonsReplicationHandlers(config, ownerPool, messageContext);
     case 'seasons_images':
       return seasonsImagesReplicationHandlers(config, ownerPool);
     case 'episodes':
-      return episodesReplicationHandlers(config, ownerPool);
+      return episodesReplicationHandlers(config, ownerPool, messageContext);
     case 'episodes_images':
       return episodesImagesReplicationHandlers(config, ownerPool);
     case 'collections':
@@ -102,14 +109,14 @@ export const syncSourcesWithLocalization: (
       return;
     }
 
-    const { settings, payload } = data;
+    const { settings, payload, messageContext } = data;
     const accessToken = await requestServiceAccountToken(config);
 
     await broker.publish(
       payload.entity_id,
       settings,
       payload,
-      { auth_token: accessToken },
+      { auth_token: accessToken, message_context: messageContext },
       {
         routingKey: settings.getEnvironmentRoutingKey({
           tenantId: config.tenantId,
