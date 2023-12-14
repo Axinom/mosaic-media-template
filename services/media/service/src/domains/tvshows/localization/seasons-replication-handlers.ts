@@ -53,12 +53,11 @@ export const seasonsReplicationHandlers = (
   messageContext?: unknown,
 ): ReplicationOperationHandlers => {
   const entityType = LOCALIZATION_SEASON_TYPE;
-  const fieldDefinitions = SeasonFieldDefinitions.filter((d) => !d.is_archived);
   return {
     insertHandler: async (newData: Dict<unknown> | undefined) => {
       assertSeason(newData);
 
-      const fields = getInsertedFields(newData, fieldDefinitions);
+      const fields = getInsertedFields(newData, SeasonFieldDefinitions);
 
       const entityTitle = await getEntityTitle(newData, ownerPool);
       return getUpsertMessageData(
@@ -77,7 +76,7 @@ export const seasonsReplicationHandlers = (
       assertSeason(newData);
       assertSeason(oldData);
 
-      const fields = getChangedFields(newData, oldData, fieldDefinitions);
+      const fields = getChangedFields(newData, oldData, SeasonFieldDefinitions);
       if (
         isEmptyObject(fields) &&
         newData.tvshow_id === oldData.tvshow_id &&

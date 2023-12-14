@@ -32,14 +32,11 @@ export const tvshowGenresReplicationHandlers = (
   config: Config,
 ): ReplicationOperationHandlers => {
   const entityType = LOCALIZATION_TVSHOW_GENRE_TYPE;
-  const fieldDefinitions = TvshowGenreFieldDefinitions.filter(
-    (d) => !d.is_archived,
-  );
   return {
     insertHandler: async (newData: Dict<unknown> | undefined) => {
       assertTvshowGenre(newData);
 
-      const fields = getInsertedFields(newData, fieldDefinitions);
+      const fields = getInsertedFields(newData, TvshowGenreFieldDefinitions);
 
       return getUpsertMessageData(
         config.serviceId,
@@ -57,7 +54,11 @@ export const tvshowGenresReplicationHandlers = (
       assertTvshowGenre(newData);
       assertTvshowGenre(oldData);
 
-      const fields = getChangedFields(newData, oldData, fieldDefinitions);
+      const fields = getChangedFields(
+        newData,
+        oldData,
+        TvshowGenreFieldDefinitions,
+      );
       if (isEmptyObject(fields)) {
         return undefined; // Do not send a message if no localizable fields have changed
       }

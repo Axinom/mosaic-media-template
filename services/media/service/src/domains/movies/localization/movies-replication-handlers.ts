@@ -32,12 +32,11 @@ export const moviesReplicationHandlers = (
   messageContext?: unknown,
 ): ReplicationOperationHandlers => {
   const entityType = LOCALIZATION_MOVIE_TYPE;
-  const fieldDefinitions = MovieFieldDefinitions.filter((d) => !d.is_archived);
   return {
     insertHandler: async (newData: Dict<unknown> | undefined) => {
       assertMovie(newData);
 
-      const fields = getInsertedFields(newData, fieldDefinitions);
+      const fields = getInsertedFields(newData, MovieFieldDefinitions);
 
       return getUpsertMessageData(
         config.serviceId,
@@ -55,7 +54,7 @@ export const moviesReplicationHandlers = (
       assertMovie(newData);
       assertMovie(oldData);
 
-      const fields = getChangedFields(newData, oldData, fieldDefinitions);
+      const fields = getChangedFields(newData, oldData, MovieFieldDefinitions);
       if (isEmptyObject(fields) && !messageContext) {
         return undefined;
       }
