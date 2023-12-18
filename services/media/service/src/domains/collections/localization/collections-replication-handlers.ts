@@ -34,14 +34,11 @@ export const collectionsReplicationHandlers = (
   config: Config,
 ): ReplicationOperationHandlers => {
   const entityType = LOCALIZATION_COLLECTION_TYPE;
-  const fieldDefinitions = CollectionFieldDefinitions.filter(
-    (d) => !d.is_archived,
-  );
   return {
     insertHandler: async (newData: Dict<unknown> | undefined) => {
       assertCollection(newData);
 
-      const fields = getInsertedFields(newData, fieldDefinitions);
+      const fields = getInsertedFields(newData, CollectionFieldDefinitions);
 
       return getUpsertMessageData(
         config.serviceId,
@@ -59,7 +56,11 @@ export const collectionsReplicationHandlers = (
       assertCollection(newData);
       assertCollection(oldData);
 
-      const fields = getChangedFields(newData, oldData, fieldDefinitions);
+      const fields = getChangedFields(
+        newData,
+        oldData,
+        CollectionFieldDefinitions,
+      );
       if (isEmptyObject(fields)) {
         return undefined; // Do not send a message if no localizable fields have changed
       }

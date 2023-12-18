@@ -32,14 +32,11 @@ export const movieGenresReplicationHandlers = (
   config: Config,
 ): ReplicationOperationHandlers => {
   const entityType = LOCALIZATION_MOVIE_GENRE_TYPE;
-  const fieldDefinitions = MovieGenreFieldDefinitions.filter(
-    (d) => !d.is_archived,
-  );
   return {
     insertHandler: async (newData: Dict<unknown> | undefined) => {
       assertMovieGenre(newData);
 
-      const fields = getInsertedFields(newData, fieldDefinitions);
+      const fields = getInsertedFields(newData, MovieGenreFieldDefinitions);
 
       return getUpsertMessageData(
         config.serviceId,
@@ -57,7 +54,11 @@ export const movieGenresReplicationHandlers = (
       assertMovieGenre(newData);
       assertMovieGenre(oldData);
 
-      const fields = getChangedFields(newData, oldData, fieldDefinitions);
+      const fields = getChangedFields(
+        newData,
+        oldData,
+        MovieGenreFieldDefinitions,
+      );
       if (isEmptyObject(fields)) {
         return undefined; // Do not send a message if no localizable fields have changed
       }
