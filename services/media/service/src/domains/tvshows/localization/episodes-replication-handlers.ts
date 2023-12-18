@@ -63,14 +63,11 @@ export const episodesReplicationHandlers = (
   messageContext?: unknown,
 ): ReplicationOperationHandlers => {
   const entityType = LOCALIZATION_EPISODE_TYPE;
-  const fieldDefinitions = EpisodeFieldDefinitions.filter(
-    (d) => !d.is_archived,
-  );
   return {
     insertHandler: async (newData: Dict<unknown> | undefined) => {
       assertEpisode(newData);
 
-      const fields = getInsertedFields(newData, fieldDefinitions);
+      const fields = getInsertedFields(newData, EpisodeFieldDefinitions);
 
       const entityTitle = await getEntityTitle(newData, ownerPool);
       return getUpsertMessageData(
@@ -89,7 +86,11 @@ export const episodesReplicationHandlers = (
       assertEpisode(newData);
       assertEpisode(oldData);
 
-      const fields = getChangedFields(newData, oldData, fieldDefinitions);
+      const fields = getChangedFields(
+        newData,
+        oldData,
+        EpisodeFieldDefinitions,
+      );
       if (
         isEmptyObject(fields) &&
         newData.season_id === oldData.season_id &&

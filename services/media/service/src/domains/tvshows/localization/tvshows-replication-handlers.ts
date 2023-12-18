@@ -32,12 +32,11 @@ export const tvshowsReplicationHandlers = (
   messageContext?: unknown,
 ): ReplicationOperationHandlers => {
   const entityType = LOCALIZATION_TVSHOW_TYPE;
-  const fieldDefinitions = TvshowFieldDefinitions.filter((d) => !d.is_archived);
   return {
     insertHandler: async (newData: Dict<unknown> | undefined) => {
       assertTvshow(newData);
 
-      const fields = getInsertedFields(newData, fieldDefinitions);
+      const fields = getInsertedFields(newData, TvshowFieldDefinitions);
 
       return getUpsertMessageData(
         config.serviceId,
@@ -55,7 +54,7 @@ export const tvshowsReplicationHandlers = (
       assertTvshow(newData);
       assertTvshow(oldData);
 
-      const fields = getChangedFields(newData, oldData, fieldDefinitions);
+      const fields = getChangedFields(newData, oldData, TvshowFieldDefinitions);
       if (isEmptyObject(fields) && !messageContext) {
         return undefined;
       }
