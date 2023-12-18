@@ -311,10 +311,10 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.8.0-rc.0.tgz#2f0e1c7143c2cad043546eb65760b69931281c1f"
   integrity sha512-M32Cv18KT2lWmqKvnwwKwg8rMyWT7cdrwAKc9WCj9srsiMvScipXUNWhz4n16iVqMeNhGuwJg/W/LtfHf5lnhA==
 
-"@axinom/mosaic-message-bus-abstractions@0.7.0-rc.0", "@axinom/mosaic-message-bus-abstractions@^0.7.0-rc.0":
-  version "0.7.0-rc.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus-abstractions/-/mosaic-message-bus-abstractions-0.7.0-rc.0.tgz#26b42f9f7d04331d7958f0d5e02cf84f465a52de"
-  integrity sha512-Nbr6znRa2cfTr8DejhkS+8EHZwOpfLmPGxHjcBxmh8aJIhqYz4XzBSZaFVzsAuOMRZA3XMMUJH6/USL0b4QW2A==
+"@axinom/mosaic-message-bus-abstractions@0.7.0-rc.12", "@axinom/mosaic-message-bus-abstractions@^0.7.0-rc.0":
+  version "0.7.0-rc.12"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus-abstractions/-/mosaic-message-bus-abstractions-0.7.0-rc.12.tgz#a2ff8df647e80d256110303a1c3134048855c41f"
+  integrity sha512-0qzaMvPLYzIGuQTkamLTbJYdA3plUhG+7WQ3y8KO+ze+OAoOS5KpmB2Jk3mh1hUs8I95SYloC90goNPFKv0QFw==
 
 "@axinom/mosaic-message-bus@0.20.0-rc.0", "@axinom/mosaic-message-bus@^0.20.0-rc.0":
   version "0.20.0-rc.0"
