@@ -20,13 +20,13 @@ export type Scalars = {
   UUID: any;
 };
 
-export type ArchiveLocaleInput = {
+export type ActivateLocaleInput = {
   clientMutationId?: InputMaybe<Scalars['String']>;
   languageTag: Scalars['String'];
 };
 
-export type ArchiveLocalePayload = {
-  __typename?: 'ArchiveLocalePayload';
+export type ActivateLocalePayload = {
+  __typename?: 'ActivateLocalePayload';
   clientMutationId?: Maybe<Scalars['String']>;
   locale?: Maybe<Locale>;
   query?: Maybe<Query>;
@@ -110,6 +110,18 @@ export type DatetimeFilter = {
   notEqualTo?: InputMaybe<Scalars['Datetime']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['Datetime']>>;
+};
+
+export type DeactivateLocaleInput = {
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  languageTag: Scalars['String'];
+};
+
+export type DeactivateLocalePayload = {
+  __typename?: 'DeactivateLocalePayload';
+  clientMutationId?: Maybe<Scalars['String']>;
+  locale?: Maybe<Locale>;
+  query?: Maybe<Query>;
 };
 
 /**
@@ -388,7 +400,7 @@ export type EntityFieldDefinition = {
   entityDefinitionId: Scalars['UUID'];
   fieldName: Scalars['String'];
   fieldType: FieldType;
-  isArchived: Scalars['Boolean'];
+  isActive: Scalars['Boolean'];
   sortIndex: Scalars['Int'];
   title: Scalars['String'];
   uiFieldType: UiFieldType;
@@ -428,8 +440,8 @@ export type EntityFieldDefinitionCondition = {
   fieldName?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `fieldType` field. */
   fieldType?: InputMaybe<FieldType>;
-  /** Checks for equality with the object’s `isArchived` field. */
-  isArchived?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isActive` field. */
+  isActive?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `sortIndex` field. */
   sortIndex?: InputMaybe<Scalars['Int']>;
   /**
@@ -461,8 +473,8 @@ export type EntityFieldDefinitionFilter = {
   fieldName?: InputMaybe<StringFilter>;
   /** Filter by the object’s `fieldType` field. */
   fieldType?: InputMaybe<FieldTypeFilter>;
-  /** Filter by the object’s `isArchived` field. */
-  isArchived?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isActive` field. */
+  isActive?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `title` field. */
   title?: InputMaybe<StringFilter>;
   /** Filter by the object’s `uiFieldType` field. */
@@ -516,8 +528,8 @@ export enum EntityFieldDefinitionsOrderBy {
   FieldNameDesc = 'FIELD_NAME_DESC',
   FieldTypeAsc = 'FIELD_TYPE_ASC',
   FieldTypeDesc = 'FIELD_TYPE_DESC',
-  IsArchivedAsc = 'IS_ARCHIVED_ASC',
-  IsArchivedDesc = 'IS_ARCHIVED_DESC',
+  IsActiveAsc = 'IS_ACTIVE_ASC',
+  IsActiveDesc = 'IS_ACTIVE_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -689,8 +701,9 @@ export enum EntityLocalizationValidationStatus {
 /** The validation type for the source entity localization. */
 export enum EntityLocalizationValidationType {
   DataTypeMismatch = 'DATA_TYPE_MISMATCH',
+  DefinitionInactive = 'DEFINITION_INACTIVE',
   DefinitionMissing = 'DEFINITION_MISSING',
-  FieldsForArchivedLocaleFound = 'FIELDS_FOR_ARCHIVED_LOCALE_FOUND',
+  FieldsForInactiveLocaleFound = 'FIELDS_FOR_INACTIVE_LOCALE_FOUND',
   Length = 'LENGTH',
   LocalizationMissing = 'LOCALIZATION_MISSING',
   LocalizationSourceMissing = 'LOCALIZATION_SOURCE_MISSING',
@@ -723,12 +736,16 @@ export enum ErrorCodesEnum {
   CannotChangeStateOfDefaultLocale = 'CANNOT_CHANGE_STATE_OF_DEFAULT_LOCALE',
   /** Cannot delete the default locale when there are still other non-default locales (tried to delete "%s"). */
   CannotDeleteDefaultLocale = 'CANNOT_DELETE_DEFAULT_LOCALE',
+  /** A database operation has failed because of a lock timeout. */
+  DatabaseLockTimeoutError = 'DATABASE_LOCK_TIMEOUT_ERROR',
   /** An authorization database error has occurred. The user might not have enough permissions. */
   DatabasePermissionsCheckFailed = 'DATABASE_PERMISSIONS_CHECK_FAILED',
   /** An expected and handled database constraint error has occurred. The actual message will have more information. */
   DatabaseValidationFailed = 'DATABASE_VALIDATION_FAILED',
   /** The entity definition was not found. */
   EntityDefinitionNotFound = 'ENTITY_DEFINITION_NOT_FOUND',
+  /** All entity field definitions that were found are inactive. Please activate at least one field definition to enable publishing. */
+  EntityFieldDefinitionsInactive = 'ENTITY_FIELD_DEFINITIONS_INACTIVE',
   /** The entity field definitions were not found. */
   EntityFieldDefinitionsNotFound = 'ENTITY_FIELD_DEFINITIONS_NOT_FOUND',
   /** The entity field validation rule is not valid. */
@@ -747,10 +764,10 @@ export enum ErrorCodesEnum {
   JwtIsNotMosaicToken = 'JWT_IS_NOT_MOSAIC_TOKEN',
   /** The locale is already being deleted (tried to delete "%s"). */
   LocaleAlreadyBeingDeleted = 'LOCALE_ALREADY_BEING_DELETED',
-  /** Cannot delete a non-archived locale (tried to delete "%s"). */
-  LocaleNotArchived = 'LOCALE_NOT_ARCHIVED',
   /** The locale was not found. */
   LocaleNotFound = 'LOCALE_NOT_FOUND',
+  /** Cannot delete an active locale (tried to delete "%s"). */
+  LocaleNotInactive = 'LOCALE_NOT_INACTIVE',
   /** The localization source entity was not found. */
   LocalizationSourceEntityNotFound = 'LOCALIZATION_SOURCE_ENTITY_NOT_FOUND',
   /** Malformed access token received */
@@ -1018,10 +1035,10 @@ export enum LocalesOrderBy {
 export enum LocaleState {
   /** Active */
   Active = 'ACTIVE',
-  /** Archived */
-  Archived = 'ARCHIVED',
   /** Deleting */
-  Deleting = 'DELETING'
+  Deleting = 'DELETING',
+  /** Inactive */
+  Inactive = 'INACTIVE'
 }
 
 /** A filter to be used against LocaleState fields. All fields are combined with a logical ‘and.’ */
@@ -1481,9 +1498,10 @@ export type LocalizeEntityPayloadLocalizedEntityEdgeArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
-  archiveLocale?: Maybe<ArchiveLocalePayload>;
+  activateLocale?: Maybe<ActivateLocalePayload>;
   /** Creates a single `Locale`. */
   createLocale?: Maybe<CreateLocalePayload>;
+  deactivateLocale?: Maybe<DeactivateLocalePayload>;
   /** Deletes a single `Locale` using a unique key. */
   deleteLocale?: Maybe<DeleteLocalePayload>;
   /** Deletes a single `LocalizationSourceEntity` using a unique key. */
@@ -1491,7 +1509,6 @@ export type Mutation = {
   localizeEntity?: Maybe<LocalizeEntityPayload>;
   populateLocalizations?: Maybe<PopulatePayload>;
   truncateLocalizations?: Maybe<TruncateLocalizationsPayload>;
-  unarchiveLocale?: Maybe<UnarchiveLocalePayload>;
   /** Updates a single `Locale` using a unique key and a patch. */
   updateLocale?: Maybe<UpdateLocalePayload>;
   /** Updates a single `LocalizationSourceEntity` using a unique key and a patch. */
@@ -1501,14 +1518,20 @@ export type Mutation = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationArchiveLocaleArgs = {
-  input: ArchiveLocaleInput;
+export type MutationActivateLocaleArgs = {
+  input: ActivateLocaleInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateLocaleArgs = {
   input: CreateLocaleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeactivateLocaleArgs = {
+  input: DeactivateLocaleInput;
 };
 
 
@@ -1533,12 +1556,6 @@ export type MutationLocalizeEntityArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationPopulateLocalizationsArgs = {
   input: PopulateInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUnarchiveLocaleArgs = {
-  input: UnarchiveLocaleInput;
 };
 
 
@@ -1849,18 +1866,6 @@ export type UiFieldTypeFilter = {
   notEqualTo?: InputMaybe<UiFieldType>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<UiFieldType>>;
-};
-
-export type UnarchiveLocaleInput = {
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  languageTag: Scalars['String'];
-};
-
-export type UnarchiveLocalePayload = {
-  __typename?: 'UnarchiveLocalePayload';
-  clientMutationId?: Maybe<Scalars['String']>;
-  locale?: Maybe<Locale>;
-  query?: Maybe<Query>;
 };
 
 /**
