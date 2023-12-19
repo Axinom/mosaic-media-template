@@ -1,12 +1,16 @@
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import {
   createOffsetDate,
   dateToBeInRange,
 } from '@axinom/mosaic-service-common';
+import {
+  StoreOutboxMessage,
+  TransactionalInboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { UnpublishEntityCommand } from 'media-messages';
+import { OutboxMessage } from 'pg-transactional-outbox';
 import { all, insert, select, update } from 'zapatos/db';
 import { movies, snapshots } from 'zapatos/schema';
 import { mockPublishingProcessor } from '../../tests/ingest/mock-publish-processor';
@@ -16,52 +20,52 @@ import {
   ITestContext,
 } from '../../tests/test-utils';
 import { createSnapshotWithRelation } from '../utils';
-import { UnpublishEntityCommandHandler } from './unpublish-entity-command-handler';
+import { UnpublishEntityCommandHandler } from './unpublish-entity-handler';
 
 describe('UnpublishEntityCommandHandler', () => {
   let ctx: ITestContext;
+  let user: AuthenticatedManagementSubject;
   let handler: UnpublishEntityCommandHandler;
-  let message: MessageInfo<UnpublishEntityCommand>;
   let messages: unknown[] = [];
   let movie1: movies.JSONSelectable;
   let snapshot1: snapshots.JSONSelectable;
   let timestampBeforeTest: Date;
 
-  beforeAll(async () => {
-    ctx = await createTestContext();
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        settings: MessagingSettings,
-        message: unknown,
-        overrides: unknown,
-        options: unknown,
-      ) => {
-        messages.push({
-          message,
-          messageType: settings.messageType,
-          overrides,
-          options,
-        });
-      },
-    });
-    const user = createTestUser(ctx.config.serviceId);
-    message = stub<MessageInfo<UnpublishEntityCommand>>({
-      envelope: {
-        auth_token:
+  const createMessage = (payload: UnpublishEntityCommand) =>
+    stub<TransactionalInboxMessage<UnpublishEntityCommand>>({
+      payload,
+      metadata: {
+        authToken:
           'some token value which is not used because we are substituting getPgSettings method and using a stub user',
       },
     });
+
+  beforeAll(async () => {
+    ctx = await createTestContext();
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (
+        _aggregateId,
+        { messageType },
+        payload,
+        _client,
+        overrides,
+        options,
+      ) => {
+        messages.push({
+          messageType,
+          payload,
+          overrides,
+          options,
+        });
+        return Promise.resolve(stub<OutboxMessage>());
+      },
+    );
+    user = createTestUser(ctx.config.serviceId);
     handler = new UnpublishEntityCommandHandler(
       [mockPublishingProcessor],
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
       ctx.config,
     );
-
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
   });
 
   beforeEach(async () => {
@@ -97,12 +101,14 @@ describe('UnpublishEntityCommandHandler', () => {
   describe('onMessage', () => {
     it('message to publish a movie -> snapshot with relation created with correct metadata and publish message sent', async () => {
       // Act
-      await handler.onMessage(
-        {
-          table_name: mockPublishingProcessor.type,
-          entity_id: movie1.id,
-        },
-        message,
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(
+          createMessage({
+            table_name: mockPublishingProcessor.type,
+            entity_id: movie1.id,
+          }),
+          dbCtx,
+        ),
       );
 
       // Assert
@@ -136,7 +142,7 @@ describe('UnpublishEntityCommandHandler', () => {
             auth_token:
               'some token value which is not used because we are substituting getPgSettings method and using a stub user',
           },
-          message: { content_id: `movie-${movie1.id}` },
+          payload: { content_id: `movie-${movie1.id}` },
           messageType: 'mock-unpublish',
           options: undefined,
         },
@@ -145,12 +151,14 @@ describe('UnpublishEntityCommandHandler', () => {
 
     it('message to publish a snapshot -> existing snapshot is updated with correct metadata and publish message sent', async () => {
       // Act
-      await handler.onMessage(
-        {
-          table_name: 'snapshots',
-          entity_id: snapshot1.id,
-        },
-        message,
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(
+          createMessage({
+            table_name: 'snapshots',
+            entity_id: snapshot1.id,
+          }),
+          dbCtx,
+        ),
       );
 
       // Assert
@@ -184,7 +192,7 @@ describe('UnpublishEntityCommandHandler', () => {
             auth_token:
               'some token value which is not used because we are substituting getPgSettings method and using a stub user',
           },
-          message: { content_id: `movie-${movie1.id}` },
+          payload: { content_id: `movie-${movie1.id}` },
           messageType: 'mock-unpublish',
           options: undefined,
         },

@@ -3547,6 +3547,39 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: inbox; Type: TABLE; Schema: app_hidden; Owner: -
+--
+
+CREATE TABLE app_hidden.inbox (
+    id uuid NOT NULL,
+    aggregate_type character varying(255) NOT NULL,
+    aggregate_id character varying(255) NOT NULL,
+    message_type character varying(255) NOT NULL,
+    payload jsonb NOT NULL,
+    metadata jsonb,
+    created_at timestamp with time zone NOT NULL,
+    processed_at timestamp with time zone,
+    started_attempts smallint DEFAULT 0 NOT NULL,
+    finished_attempts smallint DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: outbox; Type: TABLE; Schema: app_hidden; Owner: -
+--
+
+CREATE TABLE app_hidden.outbox (
+    id uuid NOT NULL,
+    aggregate_type character varying(255) NOT NULL,
+    aggregate_id character varying(255) NOT NULL,
+    message_type character varying(255) NOT NULL,
+    payload jsonb NOT NULL,
+    metadata jsonb,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
 -- Name: messaging_counter; Type: TABLE; Schema: app_private; Owner: -
 --
 
@@ -12080,6 +12113,41 @@ GRANT ALL ON FUNCTION ax_utils.validation_starts_with(input_value text, prefix_v
 
 REVOKE ALL ON FUNCTION ax_utils.validation_valid_url_array(input_value text[]) FROM PUBLIC;
 GRANT ALL ON FUNCTION ax_utils.validation_valid_url_array(input_value text[]) TO media_service_gql_role;
+
+
+--
+-- Name: TABLE inbox; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT SELECT ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.processed_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(processed_at) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.started_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(started_attempts) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.finished_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(finished_attempts) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: TABLE outbox; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE ON TABLE app_hidden.outbox TO media_service_gql_role;
 
 
 --

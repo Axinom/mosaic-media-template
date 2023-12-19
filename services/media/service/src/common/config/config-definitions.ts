@@ -7,6 +7,7 @@ import {
   getBasicGraphQlConfigDefinitions,
   getBasicMetricsEndpointDefinitions,
   getBasicRabbitMqConfigDefinitions,
+  getBasicTransactionalInboxOutboxConfigDefinitions,
   getConfigType,
   getValidatedConfig,
 } from '@axinom/mosaic-service-common';
@@ -28,6 +29,7 @@ export const getConfigDefinitions = (
     ...getBasicDbConfigDefinitions(variables),
     ...getBasicRabbitMqConfigDefinitions(variables),
     ...getBasicCustomizableConfigDefinitions(variables),
+    ...getBasicTransactionalInboxOutboxConfigDefinitions(variables),
 
     videoServiceBaseUrl: () =>
       env.get('VIDEO_SERVICE_BASE_URL').required().asUrlString(),

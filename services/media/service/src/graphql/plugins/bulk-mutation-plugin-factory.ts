@@ -155,11 +155,14 @@ export interface BulkOperationResult {
 const defaultResolverBodyBuilder =
   (messagingSettings: MessagingSettings): BulkResolverBodyBuilder =>
   async (ids, filter, context, input, token) => {
+    const { storeOutboxMessage, pgClient } =
+      getValidatedExtendedContext(context);
+
     if (ids.length > 0) {
       const { input: additionalInput } = input;
 
       for (const id of ids) {
-        await context.messagingBroker.publish(
+        await storeOutboxMessage(
           id.toString(),
           messagingSettings,
           {
@@ -169,6 +172,7 @@ const defaultResolverBodyBuilder =
             table_name: filter.tableName,
             input: additionalInput,
           },
+          pgClient,
           { auth_token: token },
         );
       }

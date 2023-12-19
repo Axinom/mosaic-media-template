@@ -1,5 +1,3 @@
-import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import {
   CheckFinishIngestItemCommand,
@@ -7,79 +5,80 @@ import {
   MediaServiceMessagingSettings,
   UpdateMetadataCommand,
 } from 'media-messages';
-import { SubscriptionConfig } from 'rascal';
-import { IsolationLevel } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
-import { MediaGuardedMessageHandler } from '../../messaging';
 import { IngestEntityProcessor } from '../models';
 import { getIngestErrorMessage } from '../utils/ingest-validation';
 
-export class UpdateMetadataHandler extends MediaGuardedMessageHandler<UpdateMetadataCommand> {
+import { Logger } from '@axinom/mosaic-service-common';
+import {
+  StoreOutboxMessage,
+  TransactionalInboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
+import { ClientBase } from 'pg';
+import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+
+export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessageHandler<
+  UpdateMetadataCommand,
+  Config
+> {
   constructor(
     private entityProcessors: IngestEntityProcessor[],
-    private broker: Broker,
-    private loginPool: LoginPgPool,
+    private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
-    overrides?: SubscriptionConfig,
   ) {
     super(
-      MediaServiceMessagingSettings.UpdateMetadata.messageType,
+      MediaServiceMessagingSettings.UpdateMetadata,
       ['INGESTS_EDIT', 'ADMIN'],
+      new Logger({
+        config,
+        context: UpdateMetadataHandler.name,
+      }),
       config,
-      overrides,
     );
   }
 
-  async onMessage(
-    content: UpdateMetadataCommand,
-    message: MessageInfo,
+  override async handleMessage(
+    { payload, metadata }: TransactionalInboxMessage<UpdateMetadataCommand>,
+    loginClient: ClientBase,
   ): Promise<void> {
-    const pgSettings = await this.getPgSettings(message);
-    await transactionWithContext(
-      this.loginPool,
-      // Serializable is not used here to avoid transaction error retries.
-      // Errors happen because of concurrent updates to relation tables, e.g. movies_tags
-      // Because updates are targeted and limited to inserts or deletes, there
-      // should be no problems with using RepeatableRead.
-      IsolationLevel.RepeatableRead,
-      pgSettings,
-      async (ctx) => {
-        const processor = this.entityProcessors.find(
-          (h) => h.type === content.item.type,
-        );
-
-        if (!processor) {
-          throw new MosaicError({
-            message: `Entity type '${content.item.type}' is not recognized. Please make sure that a correct ingest entity processor is registered for specified type.`,
-            code: CommonErrors.IngestError.code,
-          });
-        }
-
-        await processor.updateMetadata(content, ctx);
-      },
+    const processor = this.entityProcessors.find(
+      (h) => h.type === payload.item.type,
     );
 
-    const messageContext = message.envelope
-      .message_context as IngestMessageContext;
-    await this.broker.publish<CheckFinishIngestItemCommand>(
+    if (!processor) {
+      throw new MosaicError({
+        message: `Entity type '${payload.item.type}' is not recognized. Please make sure that a correct ingest entity processor is registered for specified type.`,
+        code: CommonErrors.IngestError.code,
+      });
+    }
+
+    await processor.updateMetadata(payload, loginClient);
+
+    const messageContext = metadata.messageContext as IngestMessageContext;
+    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,
       },
-      { auth_token: message.envelope.auth_token },
+      loginClient,
+      { auth_token: metadata.authToken },
     );
   }
 
-  public async onMessageFailure(
-    _content: UpdateMetadataCommand,
-    message: MessageInfo,
+  override async handleErrorMessage(
     error: Error,
+    { metadata }: TransactionalInboxMessage<UpdateMetadataCommand>,
+    loginClient: ClientBase,
+    retry: boolean,
   ): Promise<void> {
-    const messageContext = message.envelope
-      .message_context as IngestMessageContext;
-    await this.broker.publish<CheckFinishIngestItemCommand>(
+    if (retry) {
+      return;
+    }
+    const messageContext = metadata.messageContext as IngestMessageContext;
+
+    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -90,7 +89,8 @@ export class UpdateMetadataHandler extends MediaGuardedMessageHandler<UpdateMeta
           'Unexpected error occurred while updating metadata.',
         ),
       },
-      { auth_token: message.envelope.auth_token },
+      loginClient,
+      { auth_token: metadata.authToken },
     );
   }
 }

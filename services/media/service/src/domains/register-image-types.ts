@@ -1,19 +1,21 @@
-import { Broker } from '@axinom/mosaic-message-bus';
 import {
   DeclareImageTypesCommand,
   ImageServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { ClientBase } from 'pg';
 import { Config, requestServiceAccountToken } from '../common';
 import { collectionImageTypes } from './collections';
 import { movieImageTypes } from './movies';
 import { tvshowImageTypes } from './tvshows';
 
 export const registerImageTypes = async (
-  broker: Broker,
+  storeOutboxMessage: StoreOutboxMessage,
+  loginClient: ClientBase,
   config: Config,
 ): Promise<void> => {
   const serviceAccountToken = await requestServiceAccountToken(config);
-  await broker.publish<DeclareImageTypesCommand>(
+  await storeOutboxMessage<DeclareImageTypesCommand>(
     config.environmentId,
     ImageServiceMultiTenantMessagingSettings.DeclareImageTypes,
     {
@@ -24,6 +26,7 @@ export const registerImageTypes = async (
         ...collectionImageTypes,
       ],
     },
+    loginClient,
     {
       auth_token: serviceAccountToken.accessToken,
     },

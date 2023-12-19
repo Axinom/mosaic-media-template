@@ -1,11 +1,11 @@
-import { Broker } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   PublishEntityCommand,
 } from 'media-messages';
+import { OutboxMessage } from 'pg-transactional-outbox';
 import { EntityTypeEnum } from 'zapatos/custom';
 import { all, insert, select } from 'zapatos/db';
 import { snapshots } from 'zapatos/schema';
@@ -25,19 +25,19 @@ describe('Recreate snapshots endpoint', () => {
   let snapshot1: snapshots.JSONSelectable;
   let messages: {
     messageType: string;
-    message: PublishEntityCommand;
+    payload: PublishEntityCommand;
   }[] = [];
   beforeAll(async () => {
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        { messageType }: MessagingSettings,
-        message: PublishEntityCommand,
-      ) => {
-        messages.push({ messageType, message });
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload) => {
+        messages.push({
+          payload: payload as PublishEntityCommand,
+          messageType,
+        });
+        return Promise.resolve(stub<OutboxMessage>());
       },
-    });
-    ctx = await createTestContext({}, broker);
+    );
+    ctx = await createTestContext({}, storeOutboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
     jest
       .spyOn(tokenHelpers, 'getLongLivedToken')
@@ -102,7 +102,7 @@ describe('Recreate snapshots endpoint', () => {
       expect(resp?.data?.recreateSnapshots.affectedIds).toEqual([snapshot1.id]);
       expect(messages).toMatchObject([
         {
-          message: {
+          payload: {
             entity_id: 1,
             publish_options: {
               action: 'NO_PUBLISH',
@@ -149,7 +149,7 @@ describe('Recreate snapshots endpoint', () => {
         ]);
         expect(messages).toMatchObject([
           {
-            message: {
+            payload: {
               entity_id: 1,
               publish_options: {
                 action: 'NO_PUBLISH',
@@ -160,7 +160,7 @@ describe('Recreate snapshots endpoint', () => {
               MediaServiceMessagingSettings.PublishEntity.messageType,
           },
           {
-            message: {
+            payload: {
               entity_id: 2,
               publish_options: {
                 action: 'NO_PUBLISH',
@@ -197,7 +197,7 @@ describe('Recreate snapshots endpoint', () => {
       ]);
       expect(messages).toMatchObject([
         {
-          message: {
+          payload: {
             entity_id: 1,
             publish_options: {
               action: 'NO_PUBLISH',
@@ -241,7 +241,7 @@ describe('Recreate snapshots endpoint', () => {
       ]);
       expect(messages).toMatchObject([
         {
-          message: {
+          payload: {
             entity_id: 1,
             table_name: 'movies',
             publish_options: {
@@ -251,7 +251,7 @@ describe('Recreate snapshots endpoint', () => {
           messageType: MediaServiceMessagingSettings.PublishEntity.messageType,
         },
         {
-          message: {
+          payload: {
             entity_id: snapshot2.id + 1,
             table_name: 'snapshots',
             publish_options: {

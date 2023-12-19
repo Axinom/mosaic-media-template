@@ -1,12 +1,12 @@
-import { Broker } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { toBeUuid } from '@axinom/mosaic-service-common';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   UnpublishEntityCommand,
 } from 'media-messages';
+import { OutboxMessage } from 'pg-transactional-outbox';
 import { insert, select, update } from 'zapatos/db';
 import { snapshots } from 'zapatos/schema';
 import * as tokenHelpers from '../../common/utils/token-utils';
@@ -29,20 +29,20 @@ describe('Movie Unpublish endpoint', () => {
   let defaultRequestContext: TestRequestContext;
   let messages: {
     messageType: string;
-    message: UnpublishEntityCommand;
+    payload: UnpublishEntityCommand;
   }[] = [];
 
   beforeAll(async () => {
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        { messageType }: MessagingSettings,
-        message: UnpublishEntityCommand,
-      ) => {
-        messages.push({ messageType, message });
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload) => {
+        messages.push({
+          payload: payload as UnpublishEntityCommand,
+          messageType,
+        });
+        return Promise.resolve(stub<OutboxMessage>());
       },
-    });
-    ctx = await createTestContext({}, broker);
+    );
+    ctx = await createTestContext({}, storeOutboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
     jest
       .spyOn(tokenHelpers, 'getLongLivedToken')
@@ -111,7 +111,7 @@ describe('Movie Unpublish endpoint', () => {
 
       expect(messages).toEqual([
         {
-          message: {
+          payload: {
             entity_id: movieId1,
             table_name: 'movies',
           },

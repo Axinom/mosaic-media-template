@@ -1,10 +1,10 @@
-import { getLoginPgPool, getOwnerPgPool } from '@axinom/mosaic-db-common';
+import { LoginPgPool, OwnerPgPool } from '@axinom/mosaic-db-common';
 import { AuthenticationConfig } from '@axinom/mosaic-id-guard';
-import { getMessagingBroker } from '@axinom/mosaic-message-bus';
 import {
   getHttpServer,
   getWebsocketMiddlewares,
 } from '@axinom/mosaic-service-common';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { altairExpress } from 'altair-express-middleware';
 import { Express } from 'express';
 import { enhanceHttpServerWithSubscriptions, postgraphile } from 'postgraphile';
@@ -13,17 +13,17 @@ import { buildPostgraphileOptions } from './postgraphile-options';
 
 export const setupPostGraphile = async (
   app: Express,
+  ownerPool: OwnerPgPool,
+  loginPool: LoginPgPool,
   config: Config,
   authConfig: AuthenticationConfig,
+  storeOutboxMessage: StoreOutboxMessage,
 ): Promise<void> => {
   const websocketMiddlewares = getWebsocketMiddlewares(app);
-  const broker = getMessagingBroker(app);
-  const ownerPool = getOwnerPgPool(app);
-  const loginPool = getLoginPgPool(app);
   const options = buildPostgraphileOptions(
     config,
     ownerPool,
-    broker,
+    storeOutboxMessage,
     websocketMiddlewares,
     authConfig,
   );

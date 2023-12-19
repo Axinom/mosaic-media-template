@@ -1,11 +1,15 @@
 import { DEFAULT_SYSTEM_USERNAME } from '@axinom/mosaic-db-common';
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import {
   createOffsetDate,
   dateToBeInRange,
 } from '@axinom/mosaic-service-common';
+import {
+  StoreOutboxMessage,
+  TransactionalInboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
@@ -13,6 +17,7 @@ import {
   MediaServiceMessagingSettings,
   StartIngestItemCommand,
 } from 'media-messages';
+import { OutboxMessage } from 'pg-transactional-outbox';
 import { all, insert, select } from 'zapatos/db';
 import { ingest_documents, ingest_items } from 'zapatos/schema';
 import { MockIngestProcessor } from '../../tests/ingest/mock-ingest-processor';
@@ -26,10 +31,10 @@ import { StartIngestItemHandler } from './start-ingest-item-handler';
 
 describe('Start Ingest Item Handler', () => {
   let ctx: ITestContext;
+  let user: AuthenticatedManagementSubject;
   let handler: StartIngestItemHandler;
   let item1: ingest_items.JSONSelectable;
   let doc1: ingest_documents.JSONSelectable;
-  let message: MessageInfo;
   let messages: unknown[] = [];
   let timestampBeforeTest: Date;
   const processor = new MockIngestProcessor();
@@ -52,36 +57,40 @@ describe('Start Ingest Item Handler', () => {
     };
   };
 
-  beforeAll(async () => {
-    ctx = await createTestContext();
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        settings: MessagingSettings,
-        payload: unknown,
-        overrides: unknown,
-        config: unknown,
-      ) => {
-        messages.push({
-          key: settings.messageType,
-          payload,
-          overrides,
-          config,
-        });
+  const createMessage = (payload: StartIngestItemCommand) =>
+    stub<TransactionalInboxMessage<StartIngestItemCommand>>({
+      payload,
+      metadata: {
+        authToken: 'test',
       },
     });
-    const user = createTestUser(ctx.config.serviceId);
-    message = stub<MessageInfo>({ envelope: { auth_token: 'test' } });
+
+  beforeAll(async () => {
+    ctx = await createTestContext();
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (
+        _aggregateId,
+        messagingSettings,
+        payload,
+        _client,
+        overrides,
+        options,
+      ) => {
+        messages.push({
+          key: messagingSettings.messageType,
+          payload,
+          overrides,
+          options,
+        });
+        return Promise.resolve(stub<OutboxMessage>());
+      },
+    );
+    user = createTestUser(ctx.config.serviceId);
     handler = new StartIngestItemHandler(
       [processor],
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
       ctx.config,
     );
-
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
   });
 
   beforeEach(async () => {
@@ -136,7 +145,7 @@ describe('Start Ingest Item Handler', () => {
         .spyOn(processor, 'getOrchestrationData')
         .mockImplementation(() => [mockItem]);
 
-      const content: StartIngestItemCommand = {
+      const payload: StartIngestItemCommand = {
         ingest_item_id: item1.id,
         entity_id: 1,
         item: {
@@ -147,7 +156,9 @@ describe('Start Ingest Item Handler', () => {
       };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx),
+      );
 
       // Assert
       const items = await select('ingest_items', all, { columns: ['id'] }).run(
@@ -173,7 +184,7 @@ describe('Start Ingest Item Handler', () => {
             auth_token: 'test',
             message_context: { test: 'context' },
           },
-          config: undefined,
+          options: undefined,
         },
       ]);
     });
@@ -194,7 +205,7 @@ describe('Start Ingest Item Handler', () => {
         .spyOn(processor, 'getOrchestrationData')
         .mockImplementation(() => [mockItem, mockItem2]);
 
-      const content: StartIngestItemCommand = {
+      const payload: StartIngestItemCommand = {
         ingest_item_id: item1.id,
         entity_id: 1,
         item: {
@@ -205,7 +216,9 @@ describe('Start Ingest Item Handler', () => {
       };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx),
+      );
 
       // Assert
       const items = await select('ingest_items', all, { columns: ['id'] }).run(
@@ -232,7 +245,7 @@ describe('Start Ingest Item Handler', () => {
             auth_token: 'test',
             message_context: { test: 'context' },
           },
-          config: undefined,
+          options: undefined,
         },
         {
           key: VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
@@ -242,7 +255,7 @@ describe('Start Ingest Item Handler', () => {
             auth_token: 'test',
             message_context: { test: 'context' },
           },
-          config: {
+          options: {
             routingKey: `${
               VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
                 .serviceId
@@ -258,7 +271,7 @@ describe('Start Ingest Item Handler', () => {
   describe('onMessageFailure', () => {
     it('message failed on all retries -> item state updated to ERROR', async () => {
       // Arrange
-      const content: StartIngestItemCommand = {
+      const payload: StartIngestItemCommand = {
         ingest_item_id: item1.id,
         entity_id: 1,
         item: {
@@ -269,7 +282,14 @@ describe('Start Ingest Item Handler', () => {
       };
 
       // Act
-      await handler.onMessageFailure(content, message, new Error('test error'));
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(
+          new Error('test error'),
+          createMessage(payload),
+          dbCtx,
+          false,
+        ),
+      );
 
       // Assert
       const docs = await select('ingest_documents', all).run(ctx.ownerPool);

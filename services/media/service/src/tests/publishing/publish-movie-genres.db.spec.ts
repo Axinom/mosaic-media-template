@@ -1,12 +1,12 @@
-import { Broker } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { toBeUuid } from '@axinom/mosaic-service-common';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   PublishEntityCommand,
 } from 'media-messages';
+import { OutboxMessage } from 'pg-transactional-outbox';
 import { all, insert, select } from 'zapatos/db';
 import * as tokenHelpers from '../../common/utils/token-utils';
 import * as snapshotHelpers from '../../publishing/utils/snapshot-utils';
@@ -23,20 +23,20 @@ describe('Create Movie Genres snapshot endpoint', () => {
   let defaultRequestContext: TestRequestContext;
   let messages: {
     messageType: string;
-    message: PublishEntityCommand;
+    payload: PublishEntityCommand;
   }[] = [];
 
   beforeAll(async () => {
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        { messageType }: MessagingSettings,
-        message: PublishEntityCommand,
-      ) => {
-        messages.push({ messageType, message });
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload) => {
+        messages.push({
+          payload: payload as PublishEntityCommand,
+          messageType,
+        });
+        return Promise.resolve(stub<OutboxMessage>());
       },
-    });
-    ctx = await createTestContext({}, broker);
+    );
+    ctx = await createTestContext({}, storeOutboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
   });
 
@@ -94,7 +94,7 @@ describe('Create Movie Genres snapshot endpoint', () => {
 
       expect(messages).toEqual([
         {
-          message: {
+          payload: {
             entity_id: snapshot.id,
             table_name: 'snapshots',
             publish_options: {
@@ -165,7 +165,7 @@ describe('Create Movie Genres snapshot endpoint', () => {
 
       expect(messages).toEqual([
         {
-          message: {
+          payload: {
             entity_id: snapshot.id,
             table_name: 'snapshots',
             publish_options: {

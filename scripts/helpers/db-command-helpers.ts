@@ -85,6 +85,7 @@ export const runResetQueries = async (
   dbLoginPassword: string,
   dbOwner: string,
   dbOwnerPassword: string,
+  enableReplication: boolean,
   pgRoot?: string,
 ): Promise<void> => {
   const client = await pgPool.connect();
@@ -102,6 +103,9 @@ export const runResetQueries = async (
 
       // Create a non-superuser user (unlike PostGraphile suggests) because we want to make the development database behave as close to the deployment database as possible. E.g. when deploying to Azure or AWS owner user will never be a superuser.
       `CREATE ROLE ${dbOwner} WITH LOGIN PASSWORD '${dbOwnerPassword}';`,
+
+      // Grant REPLICATION if enabled
+      enableReplication ? `ALTER ROLE ${dbOwner} WITH REPLICATION;` : '',
 
       // This is the no-access role that PostGraphile will run as by default
       `CREATE ROLE ${dbLogin} WITH LOGIN PASSWORD '${dbLoginPassword}' NOINHERIT;`,

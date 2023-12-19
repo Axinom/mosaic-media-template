@@ -1,11 +1,12 @@
-import { Broker } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
+  PublishEntityCommand,
   UnpublishEntityCommand,
 } from 'media-messages';
+import { OutboxMessage } from 'pg-transactional-outbox';
 import { insert } from 'zapatos/db';
 import * as tokenHelpers from '../../common/utils/token-utils';
 import {
@@ -23,7 +24,7 @@ describe('Movies Bulk Unpublish endpoint', () => {
   let defaultRequestContext: TestRequestContext;
   let messages: {
     messageType: string;
-    message: UnpublishEntityCommand;
+    payload: UnpublishEntityCommand;
   }[] = [];
 
   const createMovie = async (
@@ -39,16 +40,16 @@ describe('Movies Bulk Unpublish endpoint', () => {
   };
 
   beforeAll(async () => {
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        { messageType }: MessagingSettings,
-        message: UnpublishEntityCommand,
-      ) => {
-        messages.push({ messageType, message });
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload) => {
+        messages.push({
+          payload: payload as PublishEntityCommand,
+          messageType,
+        });
+        return Promise.resolve(stub<OutboxMessage>());
       },
-    });
-    ctx = await createTestContext({}, broker);
+    );
+    ctx = await createTestContext({}, storeOutboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
     jest
       .spyOn(tokenHelpers, 'getLongLivedToken')
@@ -94,7 +95,7 @@ describe('Movies Bulk Unpublish endpoint', () => {
         ]);
         expect(messages).toEqual([
           {
-            message: {
+            payload: {
               entity_id: movieId1,
               entity_type: 'Movie',
               input: undefined,
@@ -134,7 +135,7 @@ describe('Movies Bulk Unpublish endpoint', () => {
 
         expect(messages).toEqual([
           {
-            message: {
+            payload: {
               entity_id: movieId1,
               entity_type: 'Movie',
               input: undefined,
@@ -145,7 +146,7 @@ describe('Movies Bulk Unpublish endpoint', () => {
               MediaServiceMessagingSettings.UnpublishEntity.messageType,
           },
           {
-            message: {
+            payload: {
               entity_id: movieId2,
               entity_type: 'Movie',
               input: undefined,

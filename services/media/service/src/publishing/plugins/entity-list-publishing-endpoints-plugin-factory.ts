@@ -76,7 +76,7 @@ export const EntityListPublishingEndpointsPluginFactory = (
                   ownerPool,
                   jwtToken,
                   config,
-                  messagingBroker,
+                  storeOutboxMessage,
                 } = getValidatedExtendedContext(context);
                 const pgSettings = buildPgSettings(
                   subject,
@@ -91,26 +91,27 @@ export const EntityListPublishingEndpointsPluginFactory = (
                   IsolationLevel.Serializable,
                   pgSettings,
                   async (ctx) => {
-                    return createListSnapshot(
+                    const snapshot = await createListSnapshot(
                       info,
                       generateSnapshotJobId(),
                       ctx,
                     );
-                  },
-                );
-
-                await messagingBroker.publish<PublishEntityCommand>(
-                  snapshot.id.toString(),
-                  MediaServiceMessagingSettings.PublishEntity,
-                  {
-                    table_name: 'snapshots',
-                    entity_id: snapshot.id,
-                    publish_options: {
-                      action: 'PUBLISH_NOW',
-                    },
-                  },
-                  {
-                    auth_token: await getLongLivedToken(jwtToken, config),
+                    await storeOutboxMessage<PublishEntityCommand>(
+                      snapshot.id.toString(),
+                      MediaServiceMessagingSettings.PublishEntity,
+                      {
+                        table_name: 'snapshots',
+                        entity_id: snapshot.id,
+                        publish_options: {
+                          action: 'PUBLISH_NOW',
+                        },
+                      },
+                      ctx,
+                      {
+                        auth_token: await getLongLivedToken(jwtToken, config),
+                      },
+                    );
+                    return snapshot;
                   },
                 );
 
@@ -137,7 +138,7 @@ export const EntityListPublishingEndpointsPluginFactory = (
               resolveInfo: unknown,
             ) => {
               try {
-                const { pgClient, jwtToken, config, messagingBroker } =
+                const { pgClient, jwtToken, config, storeOutboxMessage } =
                   getValidatedExtendedContext(context);
                 const snapshot = await selectOne('snapshots', {
                   entity_type: info.type,
@@ -151,13 +152,14 @@ export const EntityListPublishingEndpointsPluginFactory = (
                   });
                 }
 
-                await messagingBroker.publish<UnpublishEntityCommand>(
+                await storeOutboxMessage<UnpublishEntityCommand>(
                   snapshot.id.toString(),
                   MediaServiceMessagingSettings.UnpublishEntity,
                   {
                     entity_id: snapshot.id,
                     table_name: 'snapshots',
                   },
+                  pgClient,
                   {
                     auth_token: await getLongLivedToken(jwtToken, config),
                   },
@@ -186,35 +188,15 @@ export const EntityListPublishingEndpointsPluginFactory = (
               resolveInfo: unknown,
             ) => {
               try {
-                const {
-                  subject,
-                  ownerPool,
-                  jwtToken,
-                  config,
-                  messagingBroker,
-                } = getValidatedExtendedContext(context);
-                const pgSettings = buildPgSettings(
-                  subject,
-                  config.dbGqlRole,
-                  config.serviceId,
+                const { jwtToken, config, pgClient, storeOutboxMessage } =
+                  getValidatedExtendedContext(context);
+                const snapshot = await createListSnapshot(
+                  info,
+                  generateSnapshotJobId(),
+                  pgClient,
                 );
 
-                // A new transaction is started and committed to make sure the snapshot
-                // exists before the 'PublishEntityCommand' message is published.
-                const snapshot = await transactionWithContext(
-                  ownerPool,
-                  IsolationLevel.Serializable,
-                  pgSettings,
-                  async (ctx) => {
-                    return createListSnapshot(
-                      info,
-                      generateSnapshotJobId(),
-                      ctx,
-                    );
-                  },
-                );
-
-                await messagingBroker.publish<PublishEntityCommand>(
+                await storeOutboxMessage<PublishEntityCommand>(
                   snapshot.id.toString(),
                   MediaServiceMessagingSettings.PublishEntity,
                   {
@@ -224,6 +206,7 @@ export const EntityListPublishingEndpointsPluginFactory = (
                       action: 'NO_PUBLISH',
                     },
                   },
+                  pgClient,
                   {
                     auth_token: await getLongLivedToken(jwtToken, config),
                   },

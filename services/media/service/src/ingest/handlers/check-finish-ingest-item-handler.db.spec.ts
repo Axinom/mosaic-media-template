@@ -1,4 +1,5 @@
-import { MessageInfo } from '@axinom/mosaic-message-bus';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
+import { TransactionalInboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { CheckFinishIngestItemCommand } from 'media-messages';
@@ -18,26 +19,21 @@ import { CheckFinishIngestItemHandler } from './check-finish-ingest-item-handler
 
 describe('Check Finish Ingest Item Handler', () => {
   let ctx: ITestContext;
+  let user: AuthenticatedManagementSubject;
   let handler: CheckFinishIngestItemHandler;
   let doc1: ingest_documents.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
   let step1: ingest_item_steps.JSONSelectable;
-  let message: MessageInfo;
+
+  const createMessage = (payload: CheckFinishIngestItemCommand) =>
+    stub<TransactionalInboxMessage<CheckFinishIngestItemCommand>>({
+      payload,
+    });
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const user = createTestUser(ctx.config.serviceId);
-    message = stub<MessageInfo>({
-      envelope: {
-        auth_token:
-          'some token value which is not used because we are substituting getPgSettings method and using a stub user',
-      },
-    });
-    handler = new CheckFinishIngestItemHandler(ctx.loginPool, ctx.config);
-
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
+    user = createTestUser(ctx.config.serviceId);
+    handler = new CheckFinishIngestItemHandler(ctx.config);
   });
 
   beforeEach(async () => {
@@ -85,13 +81,15 @@ describe('Check Finish Ingest Item Handler', () => {
   describe('onMessage', () => {
     it('message with matching ingest_item_step_id without error_message -> item and document success', async () => {
       // Arrange
-      const content: CheckFinishIngestItemCommand = {
+      const payload: CheckFinishIngestItemCommand = {
         ingest_item_id: item1.id,
         ingest_item_step_id: step1.id,
       };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx),
+      );
 
       // Assert
       const steps = await select('ingest_item_steps', all).run(ctx.ownerPool);
@@ -122,16 +120,18 @@ describe('Check Finish Ingest Item Handler', () => {
 
     it('message with matching ingest_item_step_id without error_message received 2 times -> item and document success, correct progress counts', async () => {
       // Arrange
-      const content: CheckFinishIngestItemCommand = {
+      const payload: CheckFinishIngestItemCommand = {
         ingest_item_id: item1.id,
         ingest_item_step_id: step1.id,
       };
 
       // Act
-      await Promise.all([
-        handler.onMessage(content, message),
-        handler.onMessage(content, message),
-      ]);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        Promise.all([
+          handler.handleMessage(createMessage(payload), dbCtx),
+          handler.handleMessage(createMessage(payload), dbCtx),
+        ]),
+      );
 
       // Assert
       const steps = await select('ingest_item_steps', all).run(ctx.ownerPool);
@@ -159,14 +159,16 @@ describe('Check Finish Ingest Item Handler', () => {
 
     it('single message with error_message -> item and document error', async () => {
       // Arrange
-      const content: CheckFinishIngestItemCommand = {
+      const payload: CheckFinishIngestItemCommand = {
         ingest_item_id: item1.id,
         ingest_item_step_id: step1.id,
         error_message: 'Test error message.',
       };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx),
+      );
 
       // Assert
       const steps = await select('ingest_item_steps', all).run(ctx.ownerPool);
@@ -179,7 +181,7 @@ describe('Check Finish Ingest Item Handler', () => {
 
       expect(steps[0].id).toEqual(step1.id);
       expect(steps[0].status).toEqual('ERROR');
-      expect(steps[0].response_message).toEqual(content.error_message);
+      expect(steps[0].response_message).toEqual(payload.error_message);
 
       expect(items[0].status).toEqual('ERROR');
       expect(items[0].errors).toEqual([]);
@@ -236,13 +238,15 @@ describe('Check Finish Ingest Item Handler', () => {
         },
       ]).run(ctx.ownerPool);
 
-      const content: CheckFinishIngestItemCommand = {
+      const payload: CheckFinishIngestItemCommand = {
         ingest_item_id: item.id,
         ingest_item_step_id: metadataId,
       };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx),
+      );
 
       // Assert
       const steps = await select(
@@ -341,14 +345,16 @@ describe('Check Finish Ingest Item Handler', () => {
       ]).run(ctx.ownerPool);
 
       // Act
-      await handler.onMessage(
-        {
-          ingest_item_id: item.id,
-          ingest_item_step_id: videoId,
-          error_message:
-            'Unexpected error occurred while ensuring that video exists.',
-        },
-        message,
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(
+          createMessage({
+            ingest_item_id: item.id,
+            ingest_item_step_id: videoId,
+            error_message:
+              'Unexpected error occurred while ensuring that video exists.',
+          }),
+          dbCtx,
+        ),
       );
 
       // Assert
@@ -459,30 +465,32 @@ describe('Check Finish Ingest Item Handler', () => {
       ]).run(ctx.ownerPool);
 
       // Act
-      await handler.onMessage(
-        {
-          ingest_item_id: item.id,
-          ingest_item_step_id: videoId,
-          error_message: `An unexpected error occurred while trying to ensure that video exists 1.`,
-        },
-        message,
-      );
-      await handler.onMessage(
-        {
-          ingest_item_id: item.id,
-          ingest_item_step_id: trailerId1,
-          error_message: `An unexpected error occurred while trying to ensure that video exists 2.`,
-        },
-        message,
-      );
-      await handler.onMessage(
-        {
-          ingest_item_id: item.id,
-          ingest_item_step_id: trailerId2,
-          error_message: `An unexpected error occurred while trying to ensure that video exists 3.`,
-        },
-        message,
-      );
+      await ctx.executeGqlSql(user, async (dbCtx) => {
+        await handler.handleMessage(
+          createMessage({
+            ingest_item_id: item.id,
+            ingest_item_step_id: videoId,
+            error_message: `An unexpected error occurred while trying to ensure that video exists 1.`,
+          }),
+          dbCtx,
+        );
+        await handler.handleMessage(
+          createMessage({
+            ingest_item_id: item.id,
+            ingest_item_step_id: trailerId1,
+            error_message: `An unexpected error occurred while trying to ensure that video exists 2.`,
+          }),
+          dbCtx,
+        );
+        await handler.handleMessage(
+          createMessage({
+            ingest_item_id: item.id,
+            ingest_item_step_id: trailerId2,
+            error_message: `An unexpected error occurred while trying to ensure that video exists 3.`,
+          }),
+          dbCtx,
+        );
+      });
 
       // Assert
       const steps = await select(
@@ -593,21 +601,23 @@ describe('Check Finish Ingest Item Handler', () => {
         },
       ]).run(ctx.ownerPool);
 
-      const content1: CheckFinishIngestItemCommand = {
+      const payload1: CheckFinishIngestItemCommand = {
         ingest_item_id: item2.id,
         ingest_item_step_id: metadataId1,
         error_message: 'Test error message 1',
       };
 
-      const content2: CheckFinishIngestItemCommand = {
+      const payload2: CheckFinishIngestItemCommand = {
         ingest_item_id: item3.id,
         ingest_item_step_id: metadataId2,
         error_message: 'Test error message 2',
       };
 
       // Act
-      await handler.onMessage(content1, message);
-      await handler.onMessage(content2, message);
+      await ctx.executeGqlSql(user, async (dbCtx) => {
+        await handler.handleMessage(createMessage(payload1), dbCtx);
+        await handler.handleMessage(createMessage(payload2), dbCtx);
+      });
 
       // Assert
       const step2 = await selectExactlyOne('ingest_item_steps', {
@@ -623,13 +633,13 @@ describe('Check Finish Ingest Item Handler', () => {
       expect(docs).toHaveLength(2);
 
       expect(step2.status).toEqual('ERROR');
-      expect(step2.response_message).toBe(content1.error_message);
+      expect(step2.response_message).toBe(payload1.error_message);
 
       expect(items[1].status).toEqual('ERROR');
       expect(items[1].errors).toEqual([]);
 
       expect(step3.status).toEqual('ERROR');
-      expect(step3.response_message).toBe(content2.error_message);
+      expect(step3.response_message).toBe(payload2.error_message);
 
       expect(items[2].status).toEqual('ERROR');
       expect(items[2].errors).toEqual([]);

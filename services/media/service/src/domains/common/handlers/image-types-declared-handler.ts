@@ -1,6 +1,6 @@
 import {
-  CuePointTypesDeclaredEvent,
-  VideoServiceMultiTenantMessagingSettings,
+  ImageServiceMultiTenantMessagingSettings,
+  ImageTypesDeclaredEvent,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
@@ -9,13 +9,13 @@ import {
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { Config } from '../../../common';
 
-export class CuePointTypesDeclaredHandler extends TransactionalInboxMessageHandler<CuePointTypesDeclaredEvent> {
+export class ImageTypesDeclaredHandler extends TransactionalInboxMessageHandler<ImageTypesDeclaredEvent> {
   constructor(config: Config) {
     super(
-      VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclared,
+      ImageServiceMultiTenantMessagingSettings.ImageTypesDeclared,
       new Logger({
         config,
-        context: CuePointTypesDeclaredHandler.name,
+        context: ImageTypesDeclaredHandler.name,
       }),
       config,
     );
@@ -23,9 +23,9 @@ export class CuePointTypesDeclaredHandler extends TransactionalInboxMessageHandl
 
   async handleMessage({
     payload,
-  }: TransactionalInboxMessage<CuePointTypesDeclaredEvent>): Promise<void> {
+  }: TransactionalInboxMessage<ImageTypesDeclaredEvent>): Promise<void> {
     this.logger.log({
-      message: 'Cue point types declare command has succeeded!',
+      message: 'Image types declare command has succeeded!',
       details: { ...payload },
     });
   }

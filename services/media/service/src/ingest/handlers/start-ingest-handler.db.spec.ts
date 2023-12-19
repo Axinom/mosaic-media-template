@@ -1,5 +1,9 @@
 import { DEFAULT_SYSTEM_USERNAME } from '@axinom/mosaic-db-common';
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
+import {
+  StoreOutboxMessage,
+  TransactionalInboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
@@ -7,6 +11,7 @@ import {
   StartIngestCommand,
   StartIngestItemCommand,
 } from 'media-messages';
+import { OutboxMessage } from 'pg-transactional-outbox';
 import { all, insert, select } from 'zapatos/db';
 import { ingest_documents } from 'zapatos/schema';
 import { MockIngestProcessor } from '../../tests/ingest/mock-ingest-processor';
@@ -19,10 +24,15 @@ import { StartIngestHandler } from './start-ingest-handler';
 
 describe('Start Ingest Handler', () => {
   let ctx: ITestContext;
+  let user: AuthenticatedManagementSubject;
   let handler: StartIngestHandler;
-  let message: MessageInfo;
   let messages: unknown[] = [];
   const processor = new MockIngestProcessor();
+
+  const createMessage = (payload: StartIngestCommand) =>
+    stub<TransactionalInboxMessage<StartIngestCommand>>({
+      payload,
+    });
 
   const createDoc = async (
     items: IngestItem[],
@@ -41,32 +51,18 @@ describe('Start Ingest Handler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        _settings: unknown,
-        message: StartIngestItemCommand,
-      ) => {
-        messages.push(message);
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, _messagingSettings, message) => {
+        messages.push(message as StartIngestItemCommand);
+        return Promise.resolve(stub<OutboxMessage>());
       },
-    });
-    const user = createTestUser(ctx.config.serviceId);
-    message = stub<MessageInfo>({
-      envelope: {
-        auth_token:
-          'some token value which is not used because we are substituting getPgSettings method and using a stub user',
-      },
-    });
+    );
+    user = createTestUser(ctx.config.serviceId);
     handler = new StartIngestHandler(
       [processor],
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
       ctx.config,
     );
-
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
   });
 
   afterEach(async () => {
@@ -106,10 +102,12 @@ describe('Start Ingest Handler', () => {
         },
       ];
       const doc = await createDoc(docItems);
-      const body: StartIngestCommand = { doc_id: doc.id };
+      const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await handler.onMessage(body, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx),
+      );
 
       // Assert
       const items = await select(
@@ -199,10 +197,12 @@ describe('Start Ingest Handler', () => {
         },
       ];
       const doc = await createDoc(docItems);
-      const body: StartIngestCommand = { doc_id: doc.id };
+      const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await handler.onMessage(body, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx),
+      );
 
       // Assert
       const items = await select(
@@ -281,11 +281,17 @@ describe('Start Ingest Handler', () => {
         },
       ];
       const doc = await createDoc(docItems);
-      const body: StartIngestCommand = { doc_id: doc.id };
+      const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await handler.onMessageFailure(body, message, new Error('test error'));
-
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(
+          new Error('test error'),
+          createMessage(payload),
+          dbCtx,
+          false,
+        ),
+      );
       // Assert
       const docs = await select('ingest_documents', all).run(ctx.ownerPool);
       const items = await select('ingest_items', all).run(ctx.ownerPool);

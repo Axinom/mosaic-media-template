@@ -1,55 +1,59 @@
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import {
   EnsureImageExistsFailedEvent,
   ImageServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
+  StoreOutboxMessage,
+  TransactionalInboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
+import {
   CheckFinishIngestItemCommand,
   ImageMessageContext,
   MediaServiceMessagingSettings,
 } from 'media-messages';
-import { SubscriptionConfig } from 'rascal';
+import { ClientBase } from 'pg';
 import { Config } from '../../common';
-import { MediaGuardedMessageHandler } from '../../messaging';
-import { skipNonIngestEventsMiddleware } from '../middleware';
+import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 
-export class ImageFailedHandler extends MediaGuardedMessageHandler<EnsureImageExistsFailedEvent> {
+export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<
+  EnsureImageExistsFailedEvent,
+  Config
+> {
   constructor(
-    private broker: Broker,
+    private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
-    overrides?: SubscriptionConfig,
   ) {
     super(
-      ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed
-        .messageType,
+      ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed,
       ['INGESTS_EDIT', 'ADMIN'],
+      new Logger({
+        config,
+        context: ImageFailedHandler.name,
+      }),
       config,
-      overrides,
-      [
-        skipNonIngestEventsMiddleware(
-          new Logger({ config, context: ImageFailedHandler.name }),
-        ),
-      ],
     );
   }
 
-  async onMessage(
-    content: EnsureImageExistsFailedEvent,
-    message: MessageInfo,
+  async handleMessage(
+    {
+      payload,
+      metadata,
+    }: TransactionalInboxMessage<EnsureImageExistsFailedEvent>,
+    loginClient: ClientBase,
   ): Promise<void> {
-    const messageContext = message.envelope
-      .message_context as ImageMessageContext;
+    const messageContext = metadata.messageContext as ImageMessageContext;
 
-    await this.broker.publish<CheckFinishIngestItemCommand>(
+    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,
-        error_message: content.message,
+        error_message: payload.message,
       },
-      { auth_token: message.envelope.auth_token },
+      loginClient,
+      { auth_token: metadata.authToken },
     );
   }
 }

@@ -1,55 +1,66 @@
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import {
   EnsureVideoExistsFailedEvent,
   VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
+  StoreOutboxMessage,
+  TransactionalInboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
+import {
   CheckFinishIngestItemCommand,
   MediaServiceMessagingSettings,
   VideoMessageContext,
 } from 'media-messages';
-import { SubscriptionConfig } from 'rascal';
+import { ClientBase } from 'pg';
 import { Config } from '../../common';
-import { MediaGuardedMessageHandler } from '../../messaging';
-import { skipNonIngestEventsMiddleware } from '../middleware';
+import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
-export class VideoFailedHandler extends MediaGuardedMessageHandler<EnsureVideoExistsFailedEvent> {
+export class VideoFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<
+  EnsureVideoExistsFailedEvent,
+  Config
+> {
   constructor(
-    private broker: Broker,
+    private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
-    overrides?: SubscriptionConfig,
   ) {
     super(
-      VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed
-        .messageType,
+      VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed,
       ['INGESTS_EDIT', 'ADMIN'],
+      new Logger({
+        config,
+        context: VideoFailedHandler.name,
+      }),
       config,
-      overrides,
-      [
-        skipNonIngestEventsMiddleware(
-          new Logger({ config, context: VideoFailedHandler.name }),
-        ),
-      ],
     );
   }
 
-  async onMessage(
-    content: EnsureVideoExistsFailedEvent,
-    message: MessageInfo,
+  override async handleMessage(
+    {
+      payload,
+      metadata,
+      id,
+      aggregateId,
+    }: TransactionalInboxMessage<EnsureVideoExistsFailedEvent>,
+    loginClient: ClientBase,
   ): Promise<void> {
-    const messageContext = message.envelope
-      .message_context as VideoMessageContext;
+    if (!checkIsIngestEvent(metadata, this.logger, id, aggregateId)) {
+      return;
+    }
 
-    await this.broker.publish<CheckFinishIngestItemCommand>(
+    const messageContext = metadata.messageContext as VideoMessageContext;
+
+    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,
-        error_message: content.message,
+        error_message: payload.message,
       },
-      { auth_token: message.envelope.auth_token },
+      loginClient,
+      { auth_token: metadata.authToken },
     );
   }
 }

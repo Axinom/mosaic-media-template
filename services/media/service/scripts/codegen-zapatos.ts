@@ -30,7 +30,7 @@ async function main(): Promise<void> {
     schemas: {
       app_public: { include: '*', exclude: [] },
       ax_utils: { include: '*', exclude: [] },
-      app_hidden: { include: '*', exclude: [] },
+      app_hidden: { include: '*', exclude: ['inbox', 'outbox'] }, // excluding the 'inbox' and 'outbox' storages
       app_private: { include: '*', exclude: [] },
       public: { include: '*', exclude: [] },
     },

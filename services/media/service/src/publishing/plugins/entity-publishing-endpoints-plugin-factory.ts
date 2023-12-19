@@ -93,36 +93,17 @@ export const EntityPublishingEndpointsPluginFactory = (
             ) => {
               const entityId = args[idArgName];
               try {
-                const {
-                  subject,
-                  ownerPool,
-                  jwtToken,
-                  config,
-                  messagingBroker,
-                } = getValidatedExtendedContext(context);
-                const pgSettings = buildPgSettings(
-                  subject,
-                  config.dbGqlRole,
-                  config.serviceId,
+                const { jwtToken, config, pgClient, storeOutboxMessage } =
+                  getValidatedExtendedContext(context);
+
+                const snapshot = await createSnapshotWithRelation(
+                  gqlEntityNameToEntityType(entityName),
+                  entityId,
+                  generateSnapshotJobId(),
+                  pgClient,
                 );
 
-                // A new transaction is started and committed to make sure the snapshot
-                // exists before the 'PublishEntityCommand' message is published.
-                const snapshot = await transactionWithContext(
-                  ownerPool,
-                  IsolationLevel.Serializable,
-                  pgSettings,
-                  async (ctx) => {
-                    return createSnapshotWithRelation(
-                      gqlEntityNameToEntityType(entityName),
-                      entityId,
-                      generateSnapshotJobId(),
-                      ctx,
-                    );
-                  },
-                );
-
-                await messagingBroker.publish<PublishEntityCommand>(
+                await storeOutboxMessage<PublishEntityCommand>(
                   snapshot.id.toString(),
                   MediaServiceMessagingSettings.PublishEntity,
                   {
@@ -132,6 +113,7 @@ export const EntityPublishingEndpointsPluginFactory = (
                       action: 'PUBLISH_NOW',
                     },
                   },
+                  pgClient,
                   {
                     auth_token: await getLongLivedToken(jwtToken, config),
                   },
@@ -167,7 +149,7 @@ export const EntityPublishingEndpointsPluginFactory = (
             ) => {
               const entityId = args[idArgName];
               try {
-                const { pgClient, jwtToken, config, messagingBroker } =
+                const { pgClient, jwtToken, config, storeOutboxMessage } =
                   getValidatedExtendedContext(context);
                 const snapshot = await getPublishedSnapshot(
                   tableName,
@@ -182,13 +164,14 @@ export const EntityPublishingEndpointsPluginFactory = (
                   });
                 }
 
-                await messagingBroker.publish<UnpublishEntityCommand>(
+                await storeOutboxMessage<UnpublishEntityCommand>(
                   entityId.toString(),
                   MediaServiceMessagingSettings.UnpublishEntity,
                   {
                     entity_id: entityId,
                     table_name: tableName,
                   },
+                  pgClient,
                   {
                     auth_token: await getLongLivedToken(jwtToken, config),
                   },
@@ -229,7 +212,8 @@ export const EntityPublishingEndpointsPluginFactory = (
                   ownerPool,
                   jwtToken,
                   config,
-                  messagingBroker,
+                  pgClient,
+                  storeOutboxMessage,
                 } = getValidatedExtendedContext(context);
                 const pgSettings = buildPgSettings(
                   subject,
@@ -253,7 +237,7 @@ export const EntityPublishingEndpointsPluginFactory = (
                   },
                 );
 
-                await messagingBroker.publish<PublishEntityCommand>(
+                await storeOutboxMessage<PublishEntityCommand>(
                   snapshot.id.toString(),
                   MediaServiceMessagingSettings.PublishEntity,
                   {
@@ -263,6 +247,7 @@ export const EntityPublishingEndpointsPluginFactory = (
                       action: 'NO_PUBLISH',
                     },
                   },
+                  pgClient,
                   {
                     auth_token: await getLongLivedToken(jwtToken, config),
                   },

@@ -1,18 +1,20 @@
-import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import {
   MessagingSettings,
   MultiTenantMessagingSettings,
 } from '@axinom/mosaic-message-bus-abstractions';
-import { MosaicError } from '@axinom/mosaic-service-common';
+import { Logger, MosaicError } from '@axinom/mosaic-service-common';
+import {
+  StoreOutboxMessage,
+  TransactionalInboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   MediaServiceMessagingSettings,
   StartIngestItemCommand,
 } from 'media-messages';
-import { PublicationConfig, SubscriptionConfig } from 'rascal';
+import { ClientBase } from 'pg';
+import { PublicationConfig } from 'rascal';
 import {
   insert,
-  IsolationLevel,
   param,
   Queryable,
   self as value,
@@ -21,65 +23,60 @@ import {
   update,
 } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
-import { MediaGuardedMessageHandler } from '../../messaging';
+import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import { IngestEntityProcessor, OrchestrationData } from '../models';
 import { getIngestErrorMessage } from '../utils/ingest-validation';
 
-export class StartIngestItemHandler extends MediaGuardedMessageHandler<StartIngestItemCommand> {
+export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessageHandler<
+  StartIngestItemCommand,
+  Config
+> {
   constructor(
     private entityProcessors: IngestEntityProcessor[],
-    private broker: Broker,
-    private loginPool: LoginPgPool,
+    private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
-    overrides?: SubscriptionConfig,
   ) {
     super(
-      MediaServiceMessagingSettings.StartIngestItem.messageType,
+      MediaServiceMessagingSettings.StartIngestItem,
       ['INGESTS_EDIT', 'ADMIN'],
+      new Logger({
+        config,
+        context: StartIngestItemHandler.name,
+      }),
       config,
-      overrides,
     );
   }
 
-  async onMessage(
-    content: StartIngestItemCommand,
-    message: MessageInfo,
+  override async handleMessage(
+    { payload, metadata }: TransactionalInboxMessage<StartIngestItemCommand>,
+    loginClient: ClientBase,
   ): Promise<void> {
-    const pgSettings = await this.getPgSettings(message);
-    const orchestrationData = await transactionWithContext(
-      this.loginPool,
-      IsolationLevel.Serializable,
-      pgSettings,
-      async (ctx) => {
-        const processor = this.entityProcessors.find(
-          (h) => h.type === content.item.type,
-        );
-
-        if (!processor) {
-          throw new MosaicError({
-            message: `Entity type '${content.item.type}' is not recognized. Please make sure that a correct ingest entity processor is registered for specified type.`,
-            code: CommonErrors.IngestError.code,
-          });
-        }
-
-        const data = processor.getOrchestrationData(content);
-        await this.saveIngestItemSteps(data, ctx);
-        return data.map((original) => ({
-          ...original,
-          publicationConfig: this.getPublicationConfig(
-            original.messagingSettings,
-          ),
-        }));
-      },
+    const processor = this.entityProcessors.find(
+      (h) => h.type === payload.item.type,
     );
 
+    if (!processor) {
+      throw new MosaicError({
+        message: `Entity type '${payload.item.type}' is not recognized. Please make sure that a correct ingest entity processor is registered for specified type.`,
+        code: CommonErrors.IngestError.code,
+      });
+    }
+
+    const data = processor.getOrchestrationData(payload);
+    await this.saveIngestItemSteps(data, loginClient);
+    const orchestrationData = await data.map((original) => ({
+      ...original,
+      publicationConfig: this.getPublicationConfig(original.messagingSettings),
+    }));
+
     for (const data of orchestrationData) {
-      await this.broker.publish(
+      await this.storeOutboxMessage(
         data.aggregateId,
         data.messagingSettings,
         data.messagePayload,
+        loginClient,
         {
-          auth_token: message.envelope.auth_token,
+          auth_token: metadata.authToken,
           message_context: data.messageContext,
         },
         data.publicationConfig,
@@ -87,35 +84,31 @@ export class StartIngestItemHandler extends MediaGuardedMessageHandler<StartInge
     }
   }
 
-  public async onMessageFailure(
-    content: StartIngestItemCommand,
-    message: MessageInfo,
+  override async handleErrorMessage(
     error: Error,
+    { payload }: TransactionalInboxMessage<StartIngestItemCommand>,
+    loginClient: ClientBase,
+    retry: boolean,
   ): Promise<void> {
-    const pgSettings = await this.getPgSettings(message);
+    if (retry) {
+      return;
+    }
     const errorMessage = getIngestErrorMessage(
       error,
       'An error occurred while trying to orchestrate ingest items.',
     );
-    await transactionWithContext(
-      this.loginPool,
-      IsolationLevel.Serializable,
-      pgSettings,
-      async (ctx) => {
-        const error = param({
-          message: errorMessage,
-          source: StartIngestItemHandler.name,
-        });
-        await update(
-          'ingest_items',
-          {
-            status: 'ERROR',
-            errors: sql<SQL>`${value} || ${error}::jsonb`,
-          },
-          { id: content.ingest_item_id },
-        ).run(ctx);
+    const errorParam = param({
+      message: errorMessage,
+      source: StartIngestItemHandler.name,
+    });
+    await update(
+      'ingest_items',
+      {
+        status: 'ERROR',
+        errors: sql<SQL>`${value} || ${errorParam}::jsonb`,
       },
-    );
+      { id: payload.ingest_item_id },
+    ).run(loginClient);
   }
 
   private getPublicationConfig(

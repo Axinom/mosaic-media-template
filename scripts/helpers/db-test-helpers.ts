@@ -65,6 +65,7 @@ export async function recreateTestDbTemplate(
     dbConfig.dbLoginPassword,
     dbConfig.dbOwner,
     dbConfig.dbOwnerPassword,
+    true,
     dbConfig.pgRoot,
   );
 

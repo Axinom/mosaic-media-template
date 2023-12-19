@@ -1,14 +1,14 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import { Broker } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
   createOffsetDate,
   dateToBeInRange,
   rejectionOf,
 } from '@axinom/mosaic-service-common';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { PublishServiceMessagingSettings } from 'media-messages';
+import { OutboxMessage } from 'pg-transactional-outbox';
 import { SnapshotStateEnum } from 'zapatos/custom';
 import { insert, select, selectExactlyOne, update } from 'zapatos/db';
 import { movies, snapshots } from 'zapatos/schema';
@@ -31,7 +31,7 @@ describe('SnapshotWrapper', () => {
   let movie1: movies.JSONSelectable;
   let snapshot1: snapshots.JSONSelectable;
   let wrapper: SnapshotWrapper;
-  let broker: Broker;
+  let storeOutboxMessage: StoreOutboxMessage;
   let user: AuthenticatedManagementSubject;
   const authToken = 'does-not-matter-as-request-is-mocked';
   const messageType = 'test:queue';
@@ -50,22 +50,24 @@ describe('SnapshotWrapper', () => {
   beforeAll(async () => {
     ctx = await createTestContext();
     user = createTestUser(ctx.config.serviceId);
-    broker = stub<Broker>({
-      publish: (
-        _id: string,
-        settings: MessagingSettings,
-        message: unknown,
-        overrides: unknown,
-        options: unknown,
+    storeOutboxMessage = jest.fn(
+      async (
+        _aggregateId,
+        { messageType },
+        payload,
+        _client,
+        overrides,
+        options,
       ) => {
         messages.push({
-          message,
-          messageType: settings.messageType,
+          payload,
+          messageType,
           overrides,
           options,
         });
+        return Promise.resolve(stub<OutboxMessage>());
       },
-    });
+    );
   });
 
   beforeEach(async () => {
@@ -105,7 +107,12 @@ describe('SnapshotWrapper', () => {
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
-        wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+        wrapper = new SnapshotWrapper(
+          snapshot1.id,
+          ct,
+          storeOutboxMessage,
+          ctx.config,
+        );
         await wrapper.prepareAndValidate(processor, ctx.config, authToken);
       });
 
@@ -190,7 +197,12 @@ describe('SnapshotWrapper', () => {
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
-        wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+        wrapper = new SnapshotWrapper(
+          snapshot1.id,
+          ct,
+          storeOutboxMessage,
+          ctx.config,
+        );
         await wrapper.prepareAndValidate(processor, ctx.config, authToken);
       });
 
@@ -242,7 +254,12 @@ describe('SnapshotWrapper', () => {
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
-        wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+        wrapper = new SnapshotWrapper(
+          snapshot1.id,
+          ct,
+          storeOutboxMessage,
+          ctx.config,
+        );
         await wrapper.prepareAndValidate(processor, ctx.config, authToken);
       });
 
@@ -300,7 +317,12 @@ describe('SnapshotWrapper', () => {
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
-        wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+        wrapper = new SnapshotWrapper(
+          snapshot1.id,
+          ct,
+          storeOutboxMessage,
+          ctx.config,
+        );
         await wrapper.prepareAndValidate(processor, ctx.config, authToken);
       });
 
@@ -366,7 +388,12 @@ describe('SnapshotWrapper', () => {
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
-        wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+        wrapper = new SnapshotWrapper(
+          snapshot1.id,
+          ct,
+          storeOutboxMessage,
+          ctx.config,
+        );
         await wrapper.prepareAndValidate(processor, ctx.config, authToken);
       });
 
@@ -390,7 +417,12 @@ describe('SnapshotWrapper', () => {
 
       // Act
       const error = await ctx.executeGqlSql(user, async (ct) => {
-        wrapper = new SnapshotWrapper(invalidId, ct, broker, ctx.config);
+        wrapper = new SnapshotWrapper(
+          invalidId,
+          ct,
+          storeOutboxMessage,
+          ctx.config,
+        );
         return rejectionOf(
           wrapper.prepareAndValidate(processor, ctx.config, authToken),
         );
@@ -408,16 +440,21 @@ describe('SnapshotWrapper', () => {
       'snapshot in publishable state %p -> message sent and snapshot updated',
       async (state) => {
         // Arrange
-        const json = { title: 'Some title' };
+        const payload = { title: 'Some title' };
         const snapshot = await update(
           'snapshots',
-          { snapshot_state: state, snapshot_json: json },
+          { snapshot_state: state, snapshot_json: payload },
           { id: snapshot1.id },
         ).run(ctx.ownerPool);
 
         // Act
         await ctx.executeGqlSql(user, async (ct) => {
-          wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+          wrapper = new SnapshotWrapper(
+            snapshot1.id,
+            ct,
+            storeOutboxMessage,
+            ctx.config,
+          );
           await wrapper.publish(mockMessagingSettings, authToken);
         });
 
@@ -442,7 +479,7 @@ describe('SnapshotWrapper', () => {
 
         expect(messages).toEqual([
           {
-            message: json,
+            payload,
             messageType,
             overrides: { auth_token: authToken },
             options: undefined,
@@ -470,7 +507,12 @@ describe('SnapshotWrapper', () => {
 
         // Act
         await ctx.executeGqlSql(user, async (ct) => {
-          wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+          wrapper = new SnapshotWrapper(
+            snapshot1.id,
+            ct,
+            storeOutboxMessage,
+            ctx.config,
+          );
           await wrapper.publish(mockMessagingSettings, authToken);
         });
 
@@ -494,7 +536,12 @@ describe('SnapshotWrapper', () => {
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
-        wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+        wrapper = new SnapshotWrapper(
+          snapshot1.id,
+          ct,
+          storeOutboxMessage,
+          ctx.config,
+        );
         await wrapper.publish(mockMessagingSettings, authToken);
       });
 
@@ -514,7 +561,7 @@ describe('SnapshotWrapper', () => {
 
     it('snapshot is published while another published snapshot exists -> message sent and snapshot updated, other snapshot unpublished', async () => {
       // Arrange
-      const json = { title: 'Some title' };
+      const payload = { title: 'Some title' };
       const snapshot = await createSnapshotWithRelation(
         'MOVIE',
         movie1.id,
@@ -529,13 +576,18 @@ describe('SnapshotWrapper', () => {
 
       const snapshotToPublish = await update(
         'snapshots',
-        { snapshot_state: 'READY', snapshot_json: json },
+        { snapshot_state: 'READY', snapshot_json: payload },
         { id: snapshot1.id },
       ).run(ctx.ownerPool);
 
       // Act
       await ctx.executeGqlSql(user, async (ct) => {
-        wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+        wrapper = new SnapshotWrapper(
+          snapshot1.id,
+          ct,
+          storeOutboxMessage,
+          ctx.config,
+        );
         await wrapper.publish(mockMessagingSettings, authToken);
       });
 
@@ -560,7 +612,7 @@ describe('SnapshotWrapper', () => {
 
       expect(messages).toEqual([
         {
-          message: json,
+          payload,
           messageType,
           overrides: { auth_token: authToken },
           options: undefined,
@@ -595,7 +647,12 @@ describe('SnapshotWrapper', () => {
 
       // Act
       const error = await ctx.executeGqlSql(user, async (ct) => {
-        wrapper = new SnapshotWrapper(invalidId, ct, broker, ctx.config);
+        wrapper = new SnapshotWrapper(
+          invalidId,
+          ct,
+          storeOutboxMessage,
+          ctx.config,
+        );
         return rejectionOf(wrapper.publish(mockMessagingSettings, authToken));
       });
 
@@ -617,13 +674,18 @@ describe('SnapshotWrapper', () => {
           { id: snapshot1.id },
         ).run(ctx.ownerPool);
 
-        const message = {
+        const payload = {
           content_id: snapshot[0].publish_id,
         };
 
         // Act
         await ctx.executeGqlSql(user, async (ct) => {
-          wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+          wrapper = new SnapshotWrapper(
+            snapshot1.id,
+            ct,
+            storeOutboxMessage,
+            ctx.config,
+          );
           await wrapper.unpublish(mockMessagingSettings, authToken);
         });
 
@@ -647,7 +709,7 @@ describe('SnapshotWrapper', () => {
 
         expect(messages).toEqual([
           {
-            message,
+            payload,
             messageType,
             overrides: { auth_token: authToken },
             options: undefined,
@@ -675,7 +737,12 @@ describe('SnapshotWrapper', () => {
 
         // Act
         await ctx.executeGqlSql(user, async (ct) => {
-          wrapper = new SnapshotWrapper(snapshot1.id, ct, broker, ctx.config);
+          wrapper = new SnapshotWrapper(
+            snapshot1.id,
+            ct,
+            storeOutboxMessage,
+            ctx.config,
+          );
           await wrapper.unpublish(mockMessagingSettings, authToken);
         });
 
@@ -696,7 +763,12 @@ describe('SnapshotWrapper', () => {
 
     // Act
     const error = await ctx.executeGqlSql(user, async (ct) => {
-      wrapper = new SnapshotWrapper(invalidId, ct, broker, ctx.config);
+      wrapper = new SnapshotWrapper(
+        invalidId,
+        ct,
+        storeOutboxMessage,
+        ctx.config,
+      );
       return rejectionOf(wrapper.unpublish(mockMessagingSettings, authToken));
     });
 

@@ -1,8 +1,13 @@
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { EnsureImageExistsFailedEvent } from '@axinom/mosaic-messages';
+import {
+  StoreOutboxMessage,
+  TransactionalInboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { CheckFinishIngestItemCommand } from 'media-messages';
+import { ClientBase } from 'pg';
+import { OutboxMessage } from 'pg-transactional-outbox';
 import { createTestConfig } from '../../tests/test-utils';
 import { ImageFailedHandler } from './image-failed-handler';
 
@@ -10,27 +15,25 @@ describe('ImageFailedHandler', () => {
   let handler: ImageFailedHandler;
   let messages: CheckFinishIngestItemCommand[] = [];
 
-  const createMessage = (messageContext: unknown = {}): MessageInfo => {
-    return stub<MessageInfo>({
-      envelope: {
-        auth_token:
-          'some token value which is not used because we are substituting getPgSettings method and using a stub user',
-        message_context: messageContext,
+  const createMessage = (
+    payload: EnsureImageExistsFailedEvent,
+    messageContext: unknown,
+  ) =>
+    stub<TransactionalInboxMessage<EnsureImageExistsFailedEvent>>({
+      payload,
+      metadata: {
+        messageContext,
       },
     });
-  };
 
   beforeAll(async () => {
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        _settings: unknown,
-        message: CheckFinishIngestItemCommand,
-      ) => {
-        messages.push(message);
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, _messagingSettings, message) => {
+        messages.push(message as CheckFinishIngestItemCommand);
+        return Promise.resolve(stub<OutboxMessage>());
       },
-    });
-    handler = new ImageFailedHandler(broker, createTestConfig());
+    );
+    handler = new ImageFailedHandler(storeOutboxMessage, createTestConfig());
   });
 
   afterEach(async () => {
@@ -44,26 +47,28 @@ describe('ImageFailedHandler', () => {
   describe('onMessage', () => {
     it('message received -> message with error ingestItemStepId sent', async () => {
       // Arrange
-      const content: EnsureImageExistsFailedEvent = {
+      const payload: EnsureImageExistsFailedEvent = {
         message: 'Test error message',
         image_location: 'Test',
         image_type: 'movie_cover',
       };
-      const message = createMessage({
+      const context = {
         ingestItemStepId: '34d91ea5-db63-4e51-b511-ae545d5c669c',
         ingestItemId: 1,
         imageType: 'MAIN',
-      });
+      };
 
       // Act
-      await handler.onMessage(content, message);
-
-      // Assert
-      expect(messages[0]).toEqual<CheckFinishIngestItemCommand>({
-        ingest_item_step_id: '34d91ea5-db63-4e51-b511-ae545d5c669c',
-        ingest_item_id: 1,
-        error_message: 'Test error message',
-      });
+      handler.handleMessage(
+        createMessage(payload, context),
+        stub<ClientBase>(),
+      ),
+        // Assert
+        expect(messages[0]).toEqual<CheckFinishIngestItemCommand>({
+          ingest_item_step_id: '34d91ea5-db63-4e51-b511-ae545d5c669c',
+          ingest_item_id: 1,
+          error_message: 'Test error message',
+        });
     });
   });
 });

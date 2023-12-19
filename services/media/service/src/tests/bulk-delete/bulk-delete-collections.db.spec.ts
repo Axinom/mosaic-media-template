@@ -1,11 +1,11 @@
-import { Broker } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
   DeleteEntityCommand,
   MediaServiceMessagingSettings,
 } from 'media-messages';
+import { OutboxMessage } from 'pg-transactional-outbox';
 import { insert } from 'zapatos/db';
 import * as tokenHelpers from '../../common/utils/token-utils';
 import {
@@ -21,9 +21,9 @@ describe('Collections Bulk Delete endpoint', () => {
   let collectionId1: number;
   let collectionId2: number;
   let defaultRequestContext: TestRequestContext;
-  let messages: {
+  const messages: {
     messageType: string;
-    message: DeleteEntityCommand;
+    payload: DeleteEntityCommand;
   }[] = [];
 
   const createCollection = async (
@@ -39,16 +39,13 @@ describe('Collections Bulk Delete endpoint', () => {
   };
 
   beforeAll(async () => {
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        settings: MessagingSettings,
-        message: DeleteEntityCommand,
-      ) => {
-        messages.push({ messageType: settings.messageType, message });
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload) => {
+        messages.push({ payload: payload as DeleteEntityCommand, messageType });
+        return Promise.resolve(stub<OutboxMessage>());
       },
-    });
-    ctx = await createTestContext({}, broker);
+    );
+    ctx = await createTestContext({}, storeOutboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
     jest
       .spyOn(tokenHelpers, 'getLongLivedToken')
@@ -62,7 +59,7 @@ describe('Collections Bulk Delete endpoint', () => {
 
   afterEach(async () => {
     await ctx.truncate('collections');
-    messages = [];
+    messages.length = 0;
   });
 
   afterAll(async () => {
@@ -96,7 +93,7 @@ describe('Collections Bulk Delete endpoint', () => {
         expect(messages).toIncludeSameMembers([
           {
             messageType: MediaServiceMessagingSettings.DeleteEntity.messageType,
-            message: {
+            payload: {
               entity_id: collectionId1,
               entity_type: 'Collection',
               input: undefined,
@@ -135,7 +132,7 @@ describe('Collections Bulk Delete endpoint', () => {
         expect(messages).toIncludeSameMembers([
           {
             messageType: MediaServiceMessagingSettings.DeleteEntity.messageType,
-            message: {
+            payload: {
               entity_id: collectionId1,
               entity_type: 'Collection',
               input: undefined,
@@ -145,7 +142,7 @@ describe('Collections Bulk Delete endpoint', () => {
           },
           {
             messageType: MediaServiceMessagingSettings.DeleteEntity.messageType,
-            message: {
+            payload: {
               entity_id: collectionId2,
               entity_type: 'Collection',
               input: undefined,
