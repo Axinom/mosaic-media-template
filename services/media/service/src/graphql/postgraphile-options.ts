@@ -93,7 +93,10 @@ export const buildPostgraphileOptions = (
       }),
     )
     .addPlugins(
-      AxGuardPlugin,
+      AxGuardPlugin(
+        config,
+        './src/generated/security/permission-definition.json',
+      ),
       EnforceStrictPermissionsPlugin,
       AnnotateTypesWithPermissionsPlugin,
       AtomicMutationsPlugin,
