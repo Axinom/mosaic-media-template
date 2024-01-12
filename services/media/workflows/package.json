@@ -58,7 +58,7 @@
     "history": "^4.10.1",
     "piral-cli": "^0.15.8",
     "piral-cli-webpack5": "^0.15.8",
-    "postcss-modules": "^2.0.0",
+    "postcss-modules": "^3.2.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router": "^5.3.4",
