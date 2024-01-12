@@ -57,7 +57,7 @@ export const buildPostgraphileOptions = (
       PgSimplifyInflectorPlugin,
       ConnectionFilterPlugin,
       EntitlementEndpointPlugin,
-      AxGuardPlugin,
+      AxGuardPlugin(),
       AddErrorCodesEnumPluginFactory([
         MosaicErrors,
         WebhookErrors,
