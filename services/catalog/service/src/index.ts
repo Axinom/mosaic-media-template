@@ -48,10 +48,7 @@ async function bootstrap(): Promise<void> {
 
   await applyMigrations(config);
   const shutdownActions = setupShutdownActions(app, logger);
-  const poolConfig: PoolConfig = {
-    max: config.pgPoolMaxConnections,
-    lock_timeout: config.pgLockTimeoutInMs,
-  };
+  const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
   setupOwnerPgPool(
     app,
     config.dbOwnerConnectionString,
