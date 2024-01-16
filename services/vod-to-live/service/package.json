@@ -30,7 +30,7 @@
   "dependencies": {
     "@axinom/mosaic-id-guard": "0.20.5",
     "@axinom/mosaic-message-bus": "0.14.6",
-    "@axinom/mosaic-messages": "0.29.0",
+    "@axinom/mosaic-messages": "0.31.0",
     "@axinom/mosaic-service-common": "0.34.0",
     "@azure/storage-blob": "^12.12.0",
     "amqplib": "^0.6.0",
