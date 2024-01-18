@@ -88,11 +88,11 @@
             }
           }
         },
-        "ax-encoding-service:video:ensure_exists": {
+        "ax-video-service:video:ensure_exists": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-encoding-service.dead_letter",
+              "x-dead-letter-routing-key": "ax-video-service.dead_letter",
               "x-queue-type": "quorum"
             }
           }
@@ -196,11 +196,11 @@
             }
           }
         },
-        "ax-encoding-service:cue_point_types:declare": {
+        "ax-video-service:cue_point_types:declare": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-encoding-service.dead_letter",
+              "x-dead-letter-routing-key": "ax-video-service.dead_letter",
               "x-queue-type": "quorum"
             }
           }
@@ -290,10 +290,10 @@
           "bindingKey": "media-service.ingest.check_finish_document",
           "destination": "media-service:ingest:check_finish_document"
         },
-        "retry:ax-encoding-service:video:ensure_exists": {
+        "retry:ax-video-service:video:ensure_exists": {
           "source": "retry",
-          "bindingKey": "ax-encoding-service:video:ensure_exists.#",
-          "destination": "ax-encoding-service:video:ensure_exists"
+          "bindingKey": "ax-video-service:video:ensure_exists.#",
+          "destination": "ax-video-service:video:ensure_exists"
         },
         "retry:media-service:video:ensure_exists_already_existed": {
           "source": "retry",
@@ -302,7 +302,7 @@
         },
         "media-service:video:ensure_exists_already_existed": {
           "source": "event",
-          "bindingKey": "ax-encoding-service.*.*.video.ensure_exists_already_existed",
+          "bindingKey": "ax-video-service.*.*.video.ensure_exists_already_existed",
           "destination": "media-service:video:ensure_exists_already_existed"
         },
         "retry:media-service:video:ensure_exists_creation_started": {
@@ -312,7 +312,7 @@
         },
         "media-service:video:ensure_exists_creation_started": {
           "source": "event",
-          "bindingKey": "ax-encoding-service.*.*.video.ensure_exists_creation_started",
+          "bindingKey": "ax-video-service.*.*.video.ensure_exists_creation_started",
           "destination": "media-service:video:ensure_exists_creation_started"
         },
         "retry:media-service:video:ensure_exists_failed": {
@@ -322,7 +322,7 @@
         },
         "media-service:video:ensure_exists_failed": {
           "source": "event",
-          "bindingKey": "ax-encoding-service.*.*.video.ensure_exists_failed",
+          "bindingKey": "ax-video-service.*.*.video.ensure_exists_failed",
           "destination": "media-service:video:ensure_exists_failed"
         },
         "retry:ax-image-service:image:ensure_exists": {
@@ -395,10 +395,10 @@
           "bindingKey": "ax-image-service:image_types:declare.#",
           "destination": "ax-image-service:image_types:declare"
         },
-        "retry:ax-encoding-service:cue_point_types:declare": {
+        "retry:ax-video-service:cue_point_types:declare": {
           "source": "retry",
-          "bindingKey": "ax-encoding-service:cue_point_types:declare.#",
-          "destination": "ax-encoding-service:cue_point_types:declare"
+          "bindingKey": "ax-video-service:cue_point_types:declare.#",
+          "destination": "ax-video-service:cue_point_types:declare"
         },
         "retry:media-service:cue_point_types:declared": {
           "source": "retry",
@@ -407,7 +407,7 @@
         },
         "media-service:cue_point_types:declared": {
           "source": "event",
-          "bindingKey": "ax-encoding-service.*.*.cue_point_types.declared",
+          "bindingKey": "ax-video-service.*.*.cue_point_types.declared",
           "destination": "media-service:cue_point_types:declared"
         },
         "retry:media-service:cue_point_types:declare_failed": {
@@ -417,7 +417,7 @@
         },
         "media-service:cue_point_types:declare_failed": {
           "source": "event",
-          "bindingKey": "ax-encoding-service.*.*.cue_point_types.declare_failed",
+          "bindingKey": "ax-video-service.*.*.cue_point_types.declare_failed",
           "destination": "media-service:cue_point_types:declare_failed"
         }
       },
@@ -460,7 +460,7 @@
         },
         "EnsureVideoExists": {
           "exchange": "command",
-          "routingKey": "ax-encoding-service.*.*.video.ensure_exists"
+          "routingKey": "ax-video-service.*.*.video.ensure_exists"
         },
         "EnsureImageExists": {
           "exchange": "command",
@@ -544,7 +544,7 @@
         },
         "DeclareCuePointTypes": {
           "exchange": "command",
-          "routingKey": "ax-encoding-service.*.*.cue_point_types.declare"
+          "routingKey": "ax-video-service.*.*.cue_point_types.declare"
         }
       },
       "subscriptions": {
