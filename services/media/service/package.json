@@ -50,7 +50,7 @@
     "@axinom/mosaic-id-link-be": "0.13.2",
     "@axinom/mosaic-message-bus": "0.14.5",
     "@axinom/mosaic-message-bus-abstractions": "0.5.5",
-    "@axinom/mosaic-messages": "0.28.0",
+    "@axinom/mosaic-messages": "0.31.0",
     "@axinom/mosaic-service-common": "0.33.0",
     "@faker-js/faker": "^7.5.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
