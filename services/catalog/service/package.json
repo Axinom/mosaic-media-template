@@ -43,7 +43,7 @@
   "dependencies": {
     "@axinom/mosaic-db-common": "0.31.0-rc.17",
     "@axinom/mosaic-message-bus": "0.21.0-rc.17",
-    "@axinom/mosaic-message-bus-abstractions": "0.8.0-rc.17",
+    "@axinom/mosaic-message-bus-abstractions": "0.8.0-rc.18",
     "@axinom/mosaic-service-common": "0.43.0-rc.17",
     "@axinom/mosaic-graphql-common": "0.7.0-rc.17",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
