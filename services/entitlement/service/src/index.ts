@@ -1,5 +1,5 @@
 import {
-  CreatePostgresPoolConnectivityMetric,
+  createPostgresPoolConnectivityMetric,
   getLoginPgPool,
   getOwnerPgPool,
   initMessagingCounter,
@@ -12,7 +12,7 @@ import {
   setupEndUserAuthentication,
 } from '@axinom/mosaic-id-guard';
 import {
-  CreateRabbitMQConnectivityMetric,
+  createRabbitMQConnectivityMetric,
   setupMessagingBroker,
 } from '@axinom/mosaic-message-bus';
 import {
@@ -102,8 +102,8 @@ async function bootstrap(): Promise<void> {
 
   setupMonitoring(config, {
     metrics: [
-      CreatePostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
-      CreateRabbitMQConnectivityMetric(broker),
+      createPostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
+      createRabbitMQConnectivityMetric(broker),
     ],
   });
 

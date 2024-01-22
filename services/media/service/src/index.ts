@@ -1,5 +1,5 @@
 import {
-  CreatePostgresPoolConnectivityMetric,
+  createPostgresPoolConnectivityMetric,
   getLoginPgPool,
   setupLoginPgPool,
   setupOwnerPgPool,
@@ -10,7 +10,7 @@ import {
   setupManagementAuthentication,
   setupManagementGQLSubscriptionAuthentication,
 } from '@axinom/mosaic-id-guard';
-import { CreateRabbitMQConnectivityMetric } from '@axinom/mosaic-message-bus';
+import { createRabbitMQConnectivityMetric } from '@axinom/mosaic-message-bus';
 import {
   closeHttpServer,
   handleGlobalErrors,
@@ -120,8 +120,8 @@ async function bootstrap(): Promise<void> {
   // Configure metrics endpoint for Prometheus.
   setupMonitoring(config, {
     metrics: [
-      CreatePostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
-      CreateRabbitMQConnectivityMetric(broker),
+      createPostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
+      createRabbitMQConnectivityMetric(broker),
     ],
   });
 

@@ -1,6 +1,6 @@
 import { IdGuardErrors } from '@axinom/mosaic-id-guard';
 import {
-  CreateRabbitMQConnectivityMetric,
+  createRabbitMQConnectivityMetric,
   envelopeLoggingMiddleware,
   setupMessagingBroker,
 } from '@axinom/mosaic-message-bus';
@@ -82,7 +82,7 @@ async function bootstrap(): Promise<void> {
   });
 
   setupMonitoring(config, {
-    metrics: [CreateRabbitMQConnectivityMetric(broker)],
+    metrics: [createRabbitMQConnectivityMetric(broker)],
   });
 
   setupPrePublishingValidationWebhook(app, config, storage);
