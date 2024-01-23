@@ -45,7 +45,7 @@ regularVariables:
   # Managed Service URLs
   ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
   IMAGE_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-image-service.management_base_url}'
-  ENCODING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-encoding-service.management_base_url}'
+  ENCODING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-video-service.management_base_url}'
 
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
