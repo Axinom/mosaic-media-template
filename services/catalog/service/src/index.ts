@@ -1,5 +1,5 @@
 import {
-  CreatePostgresPoolConnectivityMetric,
+  createPostgresPoolConnectivityMetric,
   getLoginPgPool,
   getOwnerPgPool,
   initMessagingCounter,
@@ -7,7 +7,7 @@ import {
   setupOwnerPgPool,
 } from '@axinom/mosaic-db-common';
 import {
-  CreateRabbitMQConnectivityMetric,
+  createRabbitMQConnectivityMetric,
   envelopeLoggingMiddleware,
   setupMessagingBroker,
 } from '@axinom/mosaic-message-bus';
@@ -48,10 +48,7 @@ async function bootstrap(): Promise<void> {
 
   await applyMigrations(config);
   const shutdownActions = setupShutdownActions(app, logger);
-  const poolConfig: PoolConfig = {
-    max: config.pgPoolMaxConnections,
-    lock_timeout: config.pgLockTimeoutInMs,
-  };
+  const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
   setupOwnerPgPool(
     app,
     config.dbOwnerConnectionString,
@@ -80,8 +77,8 @@ async function bootstrap(): Promise<void> {
 
   setupMonitoring(config, {
     metrics: [
-      CreatePostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
-      CreateRabbitMQConnectivityMetric(broker),
+      createPostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
+      createRabbitMQConnectivityMetric(broker),
     ],
   });
 
