@@ -5127,6 +5127,9 @@ enum ErrorCodesEnum {
   """The %s is missing required properties: %s."""
   OBJECT_IS_MISSING_PROPERTIES
 
+  """A database operation has failed because of a lock timeout."""
+  DATABASE_LOCK_TIMEOUT_ERROR
+
   """The %s does not have a license."""
   LICENSE_NOT_FOUND
 
