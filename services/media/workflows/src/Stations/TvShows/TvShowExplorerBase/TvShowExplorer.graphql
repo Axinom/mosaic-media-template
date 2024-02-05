@@ -38,8 +38,17 @@ fragment TVShowExplorerProperties on Tvshow {
   publishedDate
 }
 
-query TVShows($filter: TvshowFilter, $orderBy: [TvshowsOrderBy!], $after: Cursor) {
-  filtered: tvshows(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+query TVShows(
+  $filter: TvshowFilter
+  $orderBy: [TvshowsOrderBy!]
+  $after: Cursor
+) {
+  filtered: tvshows(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
     totalCount
     pageInfo {
       hasNextPage
@@ -57,7 +66,7 @@ query TVShows($filter: TvshowFilter, $orderBy: [TvshowsOrderBy!], $after: Cursor
 subscription TVShowsMutated {
   tvshowMutated {
     id
-    event
+    eventKey
     tvshow {
       ...TVShowExplorerProperties
     }

@@ -22,6 +22,7 @@ import {
   MoviesOrderBy,
   MoviesQuery,
   MoviesQueryVariables,
+  MovieSubscriptionEventKey,
   useCreateMovieSnapshotMutation,
   useDeleteMovieMutation,
   usePublishMovieMutation,
@@ -121,16 +122,16 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           query: MoviesMutatedDocument,
         })
         .subscribe((e) => {
-          switch (e.data?.movieMutated?.event) {
-            case 'MovieChanged':
+          switch (e.data?.movieMutated?.eventKey) {
+            case MovieSubscriptionEventKey.MovieChanged:
               if (e.data.movieMutated.movie) {
                 change(e.data.movieMutated.id, e.data.movieMutated.movie);
               }
               break;
-            case 'MovieDeleted':
+            case MovieSubscriptionEventKey.MovieDeleted:
               remove(e.data.movieMutated.id);
               break;
-            case 'MovieCreated':
+            case MovieSubscriptionEventKey.MovieCreated:
               if (e.data.movieMutated.movie) {
                 add(e.data.movieMutated.movie);
               }

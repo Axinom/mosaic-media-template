@@ -21,6 +21,7 @@ import {
   TvShowsQuery,
   TvShowsQueryVariables,
   TvshowsTvshowGenresConnection,
+  TvshowSubscriptionEventKey,
   useCreateTvShowSnapshotMutation,
   useDeleteTvShowMutation,
   usePublishTvShowMutation,
@@ -113,16 +114,16 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
           query: TvShowsMutatedDocument,
         })
         .subscribe((e) => {
-          switch (e.data?.tvshowMutated?.event) {
-            case 'TvshowChanged':
+          switch (e.data?.tvshowMutated?.eventKey) {
+            case TvshowSubscriptionEventKey.TvshowChanged:
               if (e.data.tvshowMutated.tvshow) {
                 change(e.data.tvshowMutated.id, e.data.tvshowMutated.tvshow);
               }
               break;
-            case 'TvshowDeleted':
+            case TvshowSubscriptionEventKey.TvshowDeleted:
               remove(e.data.tvshowMutated.id);
               break;
-            case 'TvshowCreated':
+            case TvshowSubscriptionEventKey.TvshowCreated:
               if (e.data.tvshowMutated.tvshow) {
                 add(e.data.tvshowMutated.tvshow);
               }
