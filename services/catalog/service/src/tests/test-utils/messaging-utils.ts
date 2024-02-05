@@ -149,6 +149,7 @@ export function createChannelPublishedEvent(
     placeholder_video: {
       id: '3a8e5dc9-5c91-4d61-bf95-c4e719b705f2',
       is_archived: false,
+      custom_id: null,
       source_file_extension: '.mp4',
       source_file_name: '1min_loop_mosaic',
       source_full_file_name: '1min_loop_mosaic.mp4',
