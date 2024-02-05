@@ -21124,53 +21124,215 @@ type Subscription {
 type IngestDocumentSubscriptionPayload {
   id: Int!
   ingestDocument: IngestDocument
-  event: String
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: IngestDocumentSubscriptionEventKey
+}
+
+enum IngestDocumentSubscriptionEventKey {
+  INGEST_DOCUMENT_CREATED
+  INGEST_DOCUMENT_CHANGED
+  INGEST_DOCUMENT_DELETED
+  INGEST_ITEM_CREATED
+  INGEST_ITEM_CHANGED
+  INGEST_ITEM_DELETED
 }
 
 type SnapshotSubscriptionPayload {
   id: Int!
   snapshot: Snapshot
-  event: String
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: SnapshotSubscriptionEventKey
+}
+
+enum SnapshotSubscriptionEventKey {
+  SNAPSHOT_VALIDATION_RESULT_CREATED
+  SNAPSHOT_VALIDATION_RESULT_CHANGED
+  SNAPSHOT_VALIDATION_RESULT_DELETED
+  SNAPSHOT_CREATED
+  SNAPSHOT_CHANGED
+  SNAPSHOT_DELETED
 }
 
 type CollectionSubscriptionPayload {
   id: Int!
   collection: Collection
-  event: String
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: CollectionSubscriptionEventKey
+}
+
+enum CollectionSubscriptionEventKey {
+  COLLECTION_RELATION_CREATED
+  COLLECTION_RELATION_CHANGED
+  COLLECTION_RELATION_DELETED
+  COLLECTION_CREATED
+  COLLECTION_CHANGED
+  COLLECTION_DELETED
+  COLLECTION_IMAGE_CREATED
+  COLLECTION_IMAGE_CHANGED
+  COLLECTION_IMAGE_DELETED
+  COLLECTION_TAG_CREATED
+  COLLECTION_TAG_CHANGED
+  COLLECTION_TAG_DELETED
 }
 
 type MovieGenreSubscriptionPayload {
   id: Int!
   movieGenre: MovieGenre
-  event: String
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: MovieGenreSubscriptionEventKey
+}
+
+enum MovieGenreSubscriptionEventKey {
+  MOVIE_GENRE_CREATED
+  MOVIE_GENRE_CHANGED
+  MOVIE_GENRE_DELETED
 }
 
 type MovieSubscriptionPayload {
   id: Int!
   movie: Movie
-  event: String
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: MovieSubscriptionEventKey
+}
+
+enum MovieSubscriptionEventKey {
+  MOVIE_CREATED
+  MOVIE_CHANGED
+  MOVIE_DELETED
+  MOVIE_CAST_CREATED
+  MOVIE_CAST_CHANGED
+  MOVIE_CAST_DELETED
+  MOVIE_IMAGE_CREATED
+  MOVIE_IMAGE_CHANGED
+  MOVIE_IMAGE_DELETED
+  MOVIE_LICENSE_CREATED
+  MOVIE_LICENSE_CHANGED
+  MOVIE_LICENSE_DELETED
+  MOVIE_MOVIE_GENRE_CREATED
+  MOVIE_MOVIE_GENRE_CHANGED
+  MOVIE_MOVIE_GENRE_DELETED
+  MOVIE_PRODUCTION_COUNTRY_CREATED
+  MOVIE_PRODUCTION_COUNTRY_CHANGED
+  MOVIE_PRODUCTION_COUNTRY_DELETED
+  MOVIE_TAG_CREATED
+  MOVIE_TAG_CHANGED
+  MOVIE_TAG_DELETED
+  MOVIE_TRAILER_CREATED
+  MOVIE_TRAILER_CHANGED
+  MOVIE_TRAILER_DELETED
 }
 
 type TvshowGenreSubscriptionPayload {
   id: Int!
   tvshowGenre: TvshowGenre
-  event: String
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: TvshowGenreSubscriptionEventKey
+}
+
+enum TvshowGenreSubscriptionEventKey {
+  TVSHOW_GENRE_CREATED
+  TVSHOW_GENRE_CHANGED
+  TVSHOW_GENRE_DELETED
 }
 
 type TvshowSubscriptionPayload {
   id: Int!
   tvshow: Tvshow
-  event: String
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: TvshowSubscriptionEventKey
+}
+
+enum TvshowSubscriptionEventKey {
+  TVSHOW_CREATED
+  TVSHOW_CHANGED
+  TVSHOW_DELETED
+  TVSHOW_CAST_CREATED
+  TVSHOW_CAST_CHANGED
+  TVSHOW_CAST_DELETED
+  TVSHOW_IMAGE_CREATED
+  TVSHOW_IMAGE_CHANGED
+  TVSHOW_IMAGE_DELETED
+  TVSHOW_LICENSE_CREATED
+  TVSHOW_LICENSE_CHANGED
+  TVSHOW_LICENSE_DELETED
+  TVSHOW_PRODUCTION_COUNTRY_CREATED
+  TVSHOW_PRODUCTION_COUNTRY_CHANGED
+  TVSHOW_PRODUCTION_COUNTRY_DELETED
+  TVSHOW_TAG_CREATED
+  TVSHOW_TAG_CHANGED
+  TVSHOW_TAG_DELETED
+  TVSHOW_TRAILER_CREATED
+  TVSHOW_TRAILER_CHANGED
+  TVSHOW_TRAILER_DELETED
+  TVSHOW_TVSHOW_GENRE_CREATED
+  TVSHOW_TVSHOW_GENRE_CHANGED
+  TVSHOW_TVSHOW_GENRE_DELETED
 }
 
 type SeasonSubscriptionPayload {
   id: Int!
   season: Season
-  event: String
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: SeasonSubscriptionEventKey
+}
+
+enum SeasonSubscriptionEventKey {
+  SEASON_CREATED
+  SEASON_CHANGED
+  SEASON_DELETED
+  SEASON_CAST_CREATED
+  SEASON_CAST_CHANGED
+  SEASON_CAST_DELETED
+  SEASON_IMAGE_CREATED
+  SEASON_IMAGE_CHANGED
+  SEASON_IMAGE_DELETED
+  SEASON_LICENSE_CREATED
+  SEASON_LICENSE_CHANGED
+  SEASON_LICENSE_DELETED
+  SEASON_PRODUCTION_COUNTRY_CREATED
+  SEASON_PRODUCTION_COUNTRY_CHANGED
+  SEASON_PRODUCTION_COUNTRY_DELETED
+  SEASON_TAG_CREATED
+  SEASON_TAG_CHANGED
+  SEASON_TAG_DELETED
+  SEASON_TRAILER_CREATED
+  SEASON_TRAILER_CHANGED
+  SEASON_TRAILER_DELETED
+  SEASON_TVSHOW_GENRE_CREATED
+  SEASON_TVSHOW_GENRE_CHANGED
+  SEASON_TVSHOW_GENRE_DELETED
 }
 
 type EpisodeSubscriptionPayload {
   id: Int!
   episode: Episode
-  event: String
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: EpisodeSubscriptionEventKey
+}
+
+enum EpisodeSubscriptionEventKey {
+  EPISODE_CREATED
+  EPISODE_CHANGED
+  EPISODE_DELETED
+  EPISODE_CAST_CREATED
+  EPISODE_CAST_CHANGED
+  EPISODE_CAST_DELETED
+  EPISODE_IMAGE_CREATED
+  EPISODE_IMAGE_CHANGED
+  EPISODE_IMAGE_DELETED
+  EPISODE_LICENSE_CREATED
+  EPISODE_LICENSE_CHANGED
+  EPISODE_LICENSE_DELETED
+  EPISODE_PRODUCTION_COUNTRY_CREATED
+  EPISODE_PRODUCTION_COUNTRY_CHANGED
+  EPISODE_PRODUCTION_COUNTRY_DELETED
+  EPISODE_TAG_CREATED
+  EPISODE_TAG_CHANGED
+  EPISODE_TAG_DELETED
+  EPISODE_TRAILER_CREATED
+  EPISODE_TRAILER_CHANGED
+  EPISODE_TRAILER_DELETED
+  EPISODE_TVSHOW_GENRE_CREATED
+  EPISODE_TVSHOW_GENRE_CHANGED
+  EPISODE_TVSHOW_GENRE_DELETED
 }
