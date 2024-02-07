@@ -2215,8 +2215,8 @@ DECLARE
   found_column text;
 begin
   EXECUTE '
-    SELECT column_name 
-    FROM information_schema.columns 
+    SELECT column_name
+    FROM information_schema.columns
     WHERE table_schema='''||schemaName||''' and table_name='''||tableName||''' and column_name='''||columnName||''';
   ' INTO found_column;
 
@@ -2300,7 +2300,7 @@ CREATE FUNCTION ax_define.define_audit_date_fields_on_table(tablename text, sche
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
+    DO $do$ BEGIN
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN created_date timestamptz NOT NULL DEFAULT (now() at time zone ''utc'');
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN updated_date timestamptz NOT NULL DEFAULT (now() at time zone ''utc'');
@@ -2323,7 +2323,7 @@ CREATE FUNCTION ax_define.define_audit_user_fields_on_table(tablename text, sche
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
+    DO $do$ BEGIN
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN created_user text NOT NULL DEFAULT ''' || defaultUserName || ''';
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN updated_user text NOT NULL DEFAULT ''' || defaultUserName || ''';
@@ -2397,8 +2397,8 @@ DECLARE
 BEGIN
   EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ENABLE ROW LEVEL SECURITY;';
   EXECUTE 'DROP POLICY IF EXISTS ' || tableName || '_end_user_authorization ON ' || schemaName || '.' || tableName || ';';
-  
- 
+
+
   EXECUTE 'CREATE POLICY ' || tableName || '_end_user_authorization ON ' || schemaName || '.' || tableName || ' AS RESTRICTIVE FOR ALL
     USING (' || end_user_rls_string || ');';
 
@@ -2549,15 +2549,15 @@ BEGIN
   -- Set updated_date=now() on the foreign table. This will propogate UPDATE triggers.
   --
   -- A new function is created for each table to do this.
-  --     It *may* be possible to use a stock function with trigger arguments but its not easy as NEW and OLD cannot be accessed with dynamic column names. A possible 
-  --     solution to that is described here: https://itectec.com/database/postgresql-assignment-of-a-column-with-dynamic-column-name/. But even there the advise is 
+  --     It *may* be possible to use a stock function with trigger arguments but its not easy as NEW and OLD cannot be accessed with dynamic column names. A possible
+  --     solution to that is described here: https://itectec.com/database/postgresql-assignment-of-a-column-with-dynamic-column-name/. But even there the advise is
   --     to: "Just write a new trigger function for each table. Less hassle, better performance. Byte the bullet on code duplication:"
   --
-  -- WARNING: This function uses "SECURITY DEFINER". This is required to ensure that update to the target table is allowed. This means that the function is 
+  -- WARNING: This function uses "SECURITY DEFINER". This is required to ensure that update to the target table is allowed. This means that the function is
   --          executed with role "DB_OWNER". Any propogated trigger functions will also execute with role "DB_OWNER".
   EXECUTE  '
             CREATE OR REPLACE FUNCTION ' || schemaName || '.' || functionName || '() RETURNS TRIGGER
-            LANGUAGE plpgsql 
+            LANGUAGE plpgsql
             SECURITY DEFINER
             SET search_path = pg_temp
             AS $b$
@@ -2570,31 +2570,31 @@ BEGIN
                         RETURN NULL;
                     END IF;
                 END IF;
-                
+
                 -- UPDATE (where relationship is unchanged, or changed to another entity in which case a change is triggered on both the old and new relation)
                 IF (OLD.' || idColumnName || ' IS NOT NULL AND NEW.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE (' || foreignIdColumnName || ' = OLD.' || idColumnName || ') OR (' || foreignIdColumnName || ' = NEW.' || idColumnName || ');
-                
+
                 -- INSERT (or UPDATE which sets nullable relationship)
                 ELSIF (NEW.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE ' || foreignIdColumnName || ' = NEW.' || idColumnName || ';
-                
+
                 -- DELETE (or UPDATE which removes nullable relationship)
                 ELSIF (OLD.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE ' || foreignIdColumnName || ' = OLD.' || idColumnName || ';
-                    
+
                 END IF;
                 RETURN NULL;
             END $b$;
             REVOKE EXECUTE ON FUNCTION ' || schemaName || '.' || functionName || '() FROM public;
             ';
-  
+
   -- Function runs *AFTER* INSERT, UPDATE, DELETE. Propogated queries can still raise an error and rollback the transaction
   EXECUTE  'DROP TRIGGER IF EXISTS _200_propogate_timestamps on ' || schemaName || '.' || tableName;
-  EXECUTE  'CREATE trigger _200_propogate_timestamps 
+  EXECUTE  'CREATE trigger _200_propogate_timestamps
             AFTER INSERT OR UPDATE OR DELETE ON ' || schemaName || '.' || tableName || '
             FOR EACH ROW EXECUTE PROCEDURE ' || schemaName || '.' || functionName || '();';
 END;
@@ -2658,17 +2658,17 @@ CREATE FUNCTION ax_define.define_user_id_on_table(tablename text, schemaname tex
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
+    DO $do$ BEGIN
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN user_id UUID NOT NULL DEFAULT ''00000000-0000-0000-0000-000000000000'';
       EXCEPTION
           WHEN duplicate_column THEN RAISE NOTICE ''The column user_id already exists in the ' || schemaName || '.' || tableName || ' table.'';
       END;
     END $do$;
-    
+
     ALTER TABLE ' || schemaName || '.' || tableName || ' DROP CONSTRAINT IF EXISTS user_id_not_default;
     ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT user_id_not_default CHECK (ax_utils.constraint_not_default_uuid(user_id, uuid_nil()));
-    
+
     SELECT ax_define.define_user_id_trigger(''' || tableName || ''', ''' || schemaName || ''');
   ';
 END;
@@ -2877,6 +2877,59 @@ $_$;
 
 
 --
+-- Name: pgmemento_create_table_audit(text, text, text, boolean, boolean, boolean); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.pgmemento_create_table_audit(table_name text, schema_name text DEFAULT 'app_public'::text, audit_id_column_name text DEFAULT 'pgmemento_audit_id'::text, log_old_data boolean DEFAULT true, log_new_data boolean DEFAULT false, log_state boolean DEFAULT false) RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+BEGIN
+    PERFORM pgmemento.create_table_audit($1, $2, $3, $4, $5, $6, TRUE);
+EXCEPTION
+    -- If this has been run before the table will already have the pgmemento_audit_id column and an error will be thrown.
+    WHEN duplicate_column THEN
+        RAISE INFO 'Column % already exists on %.%', $3, $2, $1 ;
+END;
+$_$;
+
+
+--
+-- Name: pgmemento_delete_old_logs(interval); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.pgmemento_delete_old_logs(age interval) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    counter INTEGER;
+    transaction_id INTEGER;
+    tablename TEXT;
+    schemaname TEXT;
+BEGIN
+    counter := 0;
+    FOR transaction_id, tablename, schemaname IN (
+        -- 1. Get all transaction metadata and associated table event metadata older than specified age.
+        SELECT DISTINCT
+            tl.id, el.table_name, el.schema_name
+        FROM
+            pgmemento.transaction_log tl
+            JOIN pgmemento.table_event_log el ON tl.id = el.transaction_id
+        WHERE
+            tl.txid_time  < NOW() - age)
+    LOOP
+        -- 2. Delete all table event metadata and row log entries associated with the transaction.
+        PERFORM  pgmemento.delete_table_event_log(transaction_id, tablename, schemaname);
+        -- 3. Delete the transaction metadata itself.
+        PERFORM pgmemento.delete_txid_log(transaction_id);
+        counter := counter + 1;
+    END LOOP;
+
+    RETURN counter;
+END;
+$$;
+
+
+--
 -- Name: set_enum_as_column_type(text, text, text, text, text, text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
 --
 
@@ -2893,10 +2946,10 @@ BEGIN
   END IF;
   IF NOT ax_define.column_exists(columnName, tableName, schemaName) THEN
     EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN ' || columnName ||' text ' || default_setting || ' ' || notNullOptions || ';';
-  END IF; 
+  END IF;
 
   -- Set the column that uses enum value as a foreign key
-  EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT ' || constraintName || ' FOREIGN KEY ('|| columnName ||') REFERENCES ' || enumSchemaName || '.' || enumName || '(value);'; 
+  EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT ' || constraintName || ' FOREIGN KEY ('|| columnName ||') REFERENCES ' || enumSchemaName || '.' || enumName || '(value);';
 END;
 $$;
 
@@ -2910,8 +2963,8 @@ CREATE FUNCTION ax_define.set_enum_domain(columnname text, tablename text, schem
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
-      BEGIN 
+    DO $do$ BEGIN
+      BEGIN
         CREATE DOMAIN ' || enumSchemaName || '.' || enumName || ' AS text;
       EXCEPTION
         WHEN duplicate_object THEN RAISE NOTICE ''Domain already existed.'';
@@ -12133,6 +12186,20 @@ REVOKE ALL ON FUNCTION ax_define.drop_users_trigger(tablename text, schemaname t
 --
 
 REVOKE ALL ON FUNCTION ax_define.live_suggestions_endpoint(propertyname text, typename text, schemaname text) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION pgmemento_create_table_audit(table_name text, schema_name text, audit_id_column_name text, log_old_data boolean, log_new_data boolean, log_state boolean); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.pgmemento_create_table_audit(table_name text, schema_name text, audit_id_column_name text, log_old_data boolean, log_new_data boolean, log_state boolean) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION pgmemento_delete_old_logs(age interval); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.pgmemento_delete_old_logs(age interval) FROM PUBLIC;
 
 
 --
