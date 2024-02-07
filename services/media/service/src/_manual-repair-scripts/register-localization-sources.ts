@@ -57,7 +57,7 @@ const logger = new Logger({
  * properties are introduced.
  *
  * Entities are processed in batches of 1000, queried by ID, starting with the
- * oldest. The last batch would also contain all genres.
+ * oldest.
  *
  * Before sending out messages, this script will create corresponding localization
  * command queues and bindings (if they do not already exist).
