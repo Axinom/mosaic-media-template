@@ -212,7 +212,7 @@ function buildDockerImageAndPush(
   const servicePrefix = serviceId.split('-service')[0];
   const imageTag = `${username}/${serviceId}:${uniqueID}`;
 
-  const dockerBuildCommand = `docker build -t ${imageTag} --build-arg PACKAGE_ROOT=services/${servicePrefix}/service --build-arg PACKAGE_BUILD_COMMAND=build:${serviceId}:prod .`;
+  const dockerBuildCommand = `docker build -t ${imageTag} --build-arg PACKAGE_ROOT=services/${servicePrefix}/service --build-arg PACKAGE_BUILD_COMMAND=build:${serviceId}:prod . --platform linux/amd64`;
 
   console.log(
     `\nRunning Docker Build command:\n${chalk.green(dockerBuildCommand)}\n`,
