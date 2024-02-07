@@ -1,6 +1,10 @@
---! Previous: sha1:6a3a69a353cda197823704f1f392400ea09f5a3e
---! Hash: sha1:c5fbc30c9342e8df584cc3a54160ac2384e3f6d1
---! Message: ingest-localization-added
+--! Previous: sha1:95f2cb8f12acd7bc84f7438f981092e254f74973
+--! Hash: sha1:8c2406bddb2aec8bcab649daf4039e6f830e4bf1
+--! Message: localization-enum-values-and-ingest-correlation-id-added
+
+INSERT INTO app_public.snapshot_validation_issue_context (value, description)
+VALUES ('LOCALIZATION', 'Localization')
+ON CONFLICT (value) DO NOTHING;
 
 INSERT INTO app_public.ingest_item_step_type (value, description)
 VALUES ('LOCALIZATIONS', 'Localizations')
