@@ -6,7 +6,6 @@ import {
   FormActionData,
   generateArrayMutations,
   getFormDiff,
-  IconName,
   TagsField,
 } from '@axinom/mosaic-ui';
 import { Field } from 'formik';
@@ -182,7 +181,6 @@ function useActions(
   const actions: FormActionData[] = [
     {
       label: 'Delete',
-      icon: IconName.Delete,
       confirmationMode: 'Simple',
       onActionSelected: deleteLicense,
     },
