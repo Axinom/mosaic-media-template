@@ -15,6 +15,7 @@ import {
   IngestDocumentsOrderBy,
   IngestDocumentsQuery,
   IngestDocumentsQueryVariables,
+  IngestDocumentSubscriptionEventKey,
 } from '../../../generated/graphql';
 import { IngestStatusRenderer } from './IngestStatusRenderer/IngestStatusRenderer';
 
@@ -86,8 +87,8 @@ export const IngestDocuments: React.FC = () => {
           query: IngestDocumentsMutatedDocument,
         })
         .subscribe((e) => {
-          switch (e.data?.ingestDocumentMutated?.event) {
-            case 'IngestDocumentChanged':
+          switch (e.data?.ingestDocumentMutated?.eventKey) {
+            case IngestDocumentSubscriptionEventKey.IngestDocumentChanged:
               if (e.data.ingestDocumentMutated.ingestDocument) {
                 change(
                   e.data.ingestDocumentMutated.id,
@@ -95,10 +96,10 @@ export const IngestDocuments: React.FC = () => {
                 );
               }
               break;
-            case 'IngestDocumentDeleted':
+            case IngestDocumentSubscriptionEventKey.IngestDocumentDeleted:
               remove(e.data.ingestDocumentMutated.id);
               break;
-            case 'IngestDocumentCreated':
+            case IngestDocumentSubscriptionEventKey.IngestDocumentCreated:
               if (e.data.ingestDocumentMutated.ingestDocument) {
                 add(e.data.ingestDocumentMutated.ingestDocument);
               }

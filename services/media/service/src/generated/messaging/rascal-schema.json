@@ -88,7 +88,7 @@
             }
           }
         },
-        "ax-video-service:video:ensure_exists": {
+        "ax-video-service:inbox": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
@@ -187,15 +187,6 @@
             }
           }
         },
-        "ax-video-service:cue_point_types:declare": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-video-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
         "media-service:cue_point_types:declared": {
           "options": {
             "arguments": {
@@ -281,10 +272,10 @@
           "bindingKey": "media-service.ingest.check_finish_document",
           "destination": "media-service:ingest:check_finish_document"
         },
-        "retry:ax-video-service:video:ensure_exists": {
+        "retry:ax-video-service:inbox": {
           "source": "retry",
-          "bindingKey": "ax-video-service:video:ensure_exists.#",
-          "destination": "ax-video-service:video:ensure_exists"
+          "bindingKey": "ax-video-service:inbox.#",
+          "destination": "ax-video-service:inbox"
         },
         "retry:media-service:video:ensure_exists_already_existed": {
           "source": "retry",
@@ -380,11 +371,6 @@
           "source": "command",
           "bindingKey": "media-service.entity.delete",
           "destination": "media-service:entity:delete"
-        },
-        "retry:ax-video-service:cue_point_types:declare": {
-          "source": "retry",
-          "bindingKey": "ax-video-service:cue_point_types:declare.#",
-          "destination": "ax-video-service:cue_point_types:declare"
         },
         "retry:media-service:cue_point_types:declared": {
           "source": "retry",

@@ -60,7 +60,7 @@ export const buildPostgraphileOptions = (
     .setErrorsHandler((errors, req) => {
       return enhanceGraphqlErrors(
         errors,
-        req.body.operationName,
+        req.body?.operationName,
         customizeGraphQlErrorFields(mediaPgErrorMapper),
         logGraphQlError(defaultWriteLogMapper),
       );
@@ -93,7 +93,10 @@ export const buildPostgraphileOptions = (
       }),
     )
     .addPlugins(
-      AxGuardPlugin,
+      AxGuardPlugin(
+        config,
+        './src/generated/security/permission-definition.json',
+      ),
       EnforceStrictPermissionsPlugin,
       AnnotateTypesWithPermissionsPlugin,
       AtomicMutationsPlugin,

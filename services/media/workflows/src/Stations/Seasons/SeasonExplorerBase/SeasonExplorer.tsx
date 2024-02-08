@@ -21,6 +21,7 @@ import {
   SeasonsQuery,
   SeasonsQueryVariables,
   SeasonsTvshowGenresConnection,
+  SeasonSubscriptionEventKey,
   useCreateSeasonSnapshotMutation,
   useDeleteSeasonMutation,
   usePublishSeasonMutation,
@@ -122,16 +123,16 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           query: SeasonsMutatedDocument,
         })
         .subscribe((e) => {
-          switch (e.data?.seasonMutated?.event) {
-            case 'SeasonChanged':
+          switch (e.data?.seasonMutated?.eventKey) {
+            case SeasonSubscriptionEventKey.SeasonChanged:
               if (e.data.seasonMutated.season) {
                 change(e.data.seasonMutated.id, e.data.seasonMutated.season);
               }
               break;
-            case 'SeasonDeleted':
+            case SeasonSubscriptionEventKey.SeasonDeleted:
               remove(e.data.seasonMutated.id);
               break;
-            case 'SeasonCreated':
+            case SeasonSubscriptionEventKey.SeasonCreated:
               if (e.data.seasonMutated.season) {
                 add(e.data.seasonMutated.season);
               }
