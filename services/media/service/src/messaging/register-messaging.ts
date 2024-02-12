@@ -157,6 +157,17 @@ const registerTransactionalInboxHandlers = (
         .EnsureImageExistsImageCreated.messageType:
       case ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed
         .messageType:
+      case MediaServiceMessagingSettings.PublishEntity.messageType:
+      case MediaServiceMessagingSettings.UnpublishEntity.messageType:
+      case MediaServiceMessagingSettings.DeleteEntity.messageType:
+      case ImageServiceMultiTenantMessagingSettings.ImageTypesDeclared
+        .messageType:
+      case ImageServiceMultiTenantMessagingSettings.ImageTypesDeclareFailed
+        .messageType:
+      case VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclared
+        .messageType:
+      case VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclareFailed
+        .messageType:
         return 'full-concurrency';
       default: // especially the "common" and "publish" ones are safer with a mutex
         return 'mutex';

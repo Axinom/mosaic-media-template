@@ -11776,7 +11776,7 @@ shell-quote@^1.7.2:
 short-hash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/short-hash/-/short-hash-1.0.0.tgz#3f491d728fcc777ec605bbaf7f83f23712f42050"
-  integrity sha1-P0kdco/Md37GBbuvf4PyNxL0IFA=
+  integrity sha512-qbUCD2Pkl4IXRyVqneEjGnUr0NGDGLzZnBUVGJngIQZf/FrhOL0yJhH+JQzak0t8xMmScIKpoX1SxOsPHdwa4w==
   dependencies:
     hash-string "^1.0.0"
 

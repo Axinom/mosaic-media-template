@@ -9,7 +9,6 @@ import { getMigrationSettings } from '../src/common';
 
 async function main(): Promise<void> {
   console.log('1. Validating Config...');
-
   const config = getValidatedConfig(getBasicDbConfigDefinitions());
 
   console.log('2. Initializing ROOT Database Connection...');
@@ -24,7 +23,6 @@ async function main(): Promise<void> {
     config.dbLoginPassword,
     config.dbOwner,
     config.dbOwnerPassword,
-    true,
   );
 
   console.log('4. Closing ROOT Database Connection...');

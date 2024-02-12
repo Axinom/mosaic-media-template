@@ -15,6 +15,7 @@ import {
 import { ClientBase } from 'pg';
 import { Config } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
 export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<
   EnsureImageExistsFailedEvent,
@@ -37,11 +38,16 @@ export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHan
 
   async handleMessage(
     {
+      id,
+      aggregateId,
       payload,
       metadata,
     }: TransactionalInboxMessage<EnsureImageExistsFailedEvent>,
     loginClient: ClientBase,
   ): Promise<void> {
+    if (!checkIsIngestEvent(metadata, this.logger, id, aggregateId)) {
+      return;
+    }
     const messageContext = metadata.messageContext as ImageMessageContext;
 
     await this.storeOutboxMessage<CheckFinishIngestItemCommand>(

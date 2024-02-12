@@ -1,4 +1,4 @@
-import { Logger, sleep } from '@axinom/mosaic-service-common';
+import { Logger } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
   TransactionalInboxMessage,
@@ -103,7 +103,6 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
         { id: ingest_document_id },
       ).run(loginClient);
     } else {
-      await sleep(5000);
       await this.storeOutboxMessage<CheckFinishIngestDocumentCommand>(
         ingest_document_id.toString(),
         MediaServiceMessagingSettings.CheckFinishIngestDocument,

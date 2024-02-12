@@ -35,7 +35,6 @@ import { syncPermissions } from './domains/permission-definition';
 import { populateSeedData } from './domains/populate-seed-data';
 import { registerTypes } from './domains/register-types';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
-import { ensureTransactionalSlotsAndPublicationsExist } from './messaging';
 import { registerMessaging } from './messaging/register-messaging';
 
 // Create the default logger instance to log the application bootstrap sequence and pass to downstream components (where it makes sense).
@@ -113,11 +112,6 @@ async function bootstrap(): Promise<void> {
   ]);
 
   // Configure messaging: subscribe to topics, create queues, register handlers, start transactional outbox/inbox listeners
-  await ensureTransactionalSlotsAndPublicationsExist(
-    config,
-    ownerPgPool,
-    logger,
-  );
   const storeOutboxMessage = setupOutboxStorage(config);
   const broker = await registerMessaging(
     app,

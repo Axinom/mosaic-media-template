@@ -85,7 +85,6 @@ export const runResetQueries = async (
   dbLoginPassword: string,
   dbOwner: string,
   dbOwnerPassword: string,
-  enableReplication: boolean,
   pgRoot?: string,
 ): Promise<void> => {
   const client = await pgPool.connect();
@@ -104,9 +103,6 @@ export const runResetQueries = async (
       // Create a non-superuser user (unlike PostGraphile suggests) because we want to make the development database behave as close to the deployment database as possible. E.g. when deploying to Azure or AWS owner user will never be a superuser.
       `CREATE ROLE ${dbOwner} WITH LOGIN PASSWORD '${dbOwnerPassword}';`,
 
-      // Grant REPLICATION if enabled
-      enableReplication ? `ALTER ROLE ${dbOwner} WITH REPLICATION;` : '',
-
       // This is the no-access role that PostGraphile will run as by default
       `CREATE ROLE ${dbLogin} WITH LOGIN PASSWORD '${dbLoginPassword}' NOINHERIT;`,
 
@@ -122,8 +118,8 @@ export const runResetQueries = async (
       // When owner is superuser - this is not needed, but in deployed environments and for test databases owner is a regular user and also needs such grant.
       `GRANT ${dbGqlRole} TO ${dbOwner};`,
 
-      // Trying to create a database with a different owner than the user/role that is running the create db query will,
-      // fail in Flexible Servers for Postgres servers in Azure. Therefore we grant the `dbOwner` role to the user that runs,
+      // Trying to create a database with a different owner than the user/role that is running the create db query will
+      // fail in Flexible Servers for Postgres servers in Azure. Therefore we grant the `dbOwner` role to the user that runs
       // the query first.
       pgRoot ? `GRANT ${dbOwner} TO ${pgRoot}` : '',
     ];

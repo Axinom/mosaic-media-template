@@ -63,13 +63,14 @@ describe('VideoFailedHandler', () => {
       handler.handleMessage(
         createMessage(payload, context),
         stub<ClientBase>(),
-      ),
-        // Asert
-        expect(messages[0]).toEqual<CheckFinishIngestItemCommand>({
-          ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
-          ingest_item_id: 1,
-          error_message: 'Test error message',
-        });
+      );
+
+      // Assert
+      expect(messages[0]).toEqual<CheckFinishIngestItemCommand>({
+        ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
+        ingest_item_id: 1,
+        error_message: 'Test error message',
+      });
     });
   });
 });

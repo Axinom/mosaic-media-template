@@ -64,7 +64,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
 
     const data = processor.getOrchestrationData(payload);
     await this.saveIngestItemSteps(data, loginClient);
-    const orchestrationData = await data.map((original) => ({
+    const orchestrationData = data.map((original) => ({
       ...original,
       publicationConfig: this.getPublicationConfig(original.messagingSettings),
     }));
