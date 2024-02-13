@@ -41,8 +41,17 @@ fragment SeasonExplorerProperties on Season {
   publishedDate
 }
 
-query Seasons($filter: SeasonFilter, $orderBy: [SeasonsOrderBy!], $after: Cursor) {
-  filtered: seasons(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+query Seasons(
+  $filter: SeasonFilter
+  $orderBy: [SeasonsOrderBy!]
+  $after: Cursor
+) {
+  filtered: seasons(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
     totalCount
     pageInfo {
       hasNextPage
@@ -60,7 +69,7 @@ query Seasons($filter: SeasonFilter, $orderBy: [SeasonsOrderBy!], $after: Cursor
 subscription SeasonsMutated {
   seasonMutated {
     id
-    event
+    eventKey
     season {
       ...SeasonExplorerProperties
     }

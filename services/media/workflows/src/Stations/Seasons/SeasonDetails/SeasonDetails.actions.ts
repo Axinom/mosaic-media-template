@@ -1,4 +1,4 @@
-import { FormActionData, IconName } from '@axinom/mosaic-ui';
+import { FormActionData } from '@axinom/mosaic-ui';
 import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
 import {
@@ -70,7 +70,6 @@ export function useSeasonDetailsActions(id: number): {
     },
     {
       label: 'Delete',
-      icon: IconName.Delete,
       confirmationMode: 'Simple',
       onActionSelected: deleteSeason,
     },
