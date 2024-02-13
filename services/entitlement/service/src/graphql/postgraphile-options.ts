@@ -47,7 +47,7 @@ export const buildPostgraphileOptions = (
     .setErrorsHandler((errors, req) => {
       return enhanceGraphqlErrors(
         errors,
-        req.body.operationName,
+        req.body?.operationName,
         customizeGraphQlErrorFields(defaultPgErrorMapper),
         logGraphQlError(entitlementLogMapper),
       );
@@ -57,7 +57,7 @@ export const buildPostgraphileOptions = (
       PgSimplifyInflectorPlugin,
       ConnectionFilterPlugin,
       EntitlementEndpointPlugin,
-      AxGuardPlugin,
+      AxGuardPlugin(),
       AddErrorCodesEnumPluginFactory([
         MosaicErrors,
         WebhookErrors,

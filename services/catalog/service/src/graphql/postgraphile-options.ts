@@ -30,7 +30,7 @@ export function buildPostgraphileOptions(
     .setErrorsHandler((errors, req) => {
       return enhanceGraphqlErrors(
         errors,
-        req.body.operationName,
+        req.body?.operationName,
         customizeGraphQlErrorFields(defaultPgErrorMapper),
         logGraphQlError(catalogLogMapper),
       );

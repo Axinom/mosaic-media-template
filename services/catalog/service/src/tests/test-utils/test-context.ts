@@ -83,7 +83,7 @@ const runGqlQuery = async function (
       if (result.errors) {
         result.errors = enhanceGraphqlErrors(
           result.errors,
-          req.body.operationName,
+          req.body?.operationName,
           customizeGraphQlErrorFields(defaultPgErrorMapper),
           logGraphQlError(catalogLogMapper, this.logger),
         );
