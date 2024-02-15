@@ -270,6 +270,96 @@ $_$;
 
 
 --
+-- Name: create_localizable_entity_triggers(text, text, text, text, text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.create_localizable_entity_triggers(aggregateid text, tablename text, entitytype text, localizable_fields text, required_fields text) RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+BEGIN
+    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_insert() RETURNS TRIGGER AS $body$ ' ||
+            'DECLARE ' ||
+              '_jsonb_new jsonb := row_to_json(NEW.*); ' ||
+              '_fields text[] := string_to_array(''' || localizable_fields || ''', '','') || string_to_array(''' || required_fields || ''', '',''); ' ||
+              '_payload jsonb := ''{}''::jsonb; ' ||
+              '_field text; ' ||
+            'BEGIN ' ||
+              'FOREACH _field IN ARRAY _fields ' ||
+              'LOOP ' ||
+                'IF coalesce(_jsonb_new ->> _field, '''') != '''' THEN ' ||
+                  '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); '
+                'END IF; ' ||
+              'END LOOP; ' ||
+              'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) ' ||
+              'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Created'', ''parallel'', _payload, NOW()); ' ||
+              'RETURN NEW; ' ||
+            'END; ' ||
+            '$body$ LANGUAGE plpgsql volatile;';
+
+    EXECUTE 'DROP trigger IF EXISTS _900_localizable_' || entityType || '_insert on app_public.' || tableName || ';';
+    EXECUTE 'CREATE trigger _900_localizable_' || entityType || '_insert ' ||
+            'AFTER INSERT ON app_public.' || tableName || ' FOR EACH ROW WHEN (app_hidden.is_localization_enabled() IS TRUE) ' ||
+            'EXECUTE PROCEDURE app_hidden.localizable_' || entityType || '_insert();';
+
+    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_update() RETURNS TRIGGER AS $body$ ' ||
+            'DECLARE ' ||
+              '_jsonb_old jsonb := row_to_json(OLD.*); ' ||
+              '_jsonb_new jsonb := row_to_json(NEW.*); ' ||
+              '_required_fields text[] := string_to_array(''' || required_fields || ''', '',''); ' ||
+              '_localizable_fields text[] := string_to_array(''' || localizable_fields || ''', '',''); ' ||
+              '_payload jsonb := ''{}''::jsonb; ' ||
+              '_metadata jsonb; ' ||
+              '_field text; ' ||
+            'BEGIN ' ||
+              'FOREACH _field IN ARRAY _localizable_fields ' ||
+              'LOOP ' ||
+                'IF coalesce(_jsonb_old ->> _field, '''') != coalesce(_jsonb_new ->> _field, '''') THEN ' ||
+                  '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); '
+                'END IF; ' ||
+              'END LOOP; ' ||
+              'IF _jsonb_new ->> ''ingest_correlation_id'' IS NOT NULL THEN ' ||
+                  '_metadata := jsonb_build_object(''messageContext'', jsonb_build_object(''ingestItemId'', _jsonb_new -> ''ingest_correlation_id'')); '
+              'END IF; ' ||
+              'IF _payload != ''{}''::jsonb OR _metadata IS NOT NULL THEN ' ||          
+                'FOREACH _field IN ARRAY _required_fields ' ||
+                'LOOP ' ||
+                  '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); '
+                'END LOOP; ' ||
+                'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) ' ||
+                'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Updated'', ''parallel'', _payload, _metadata, NOW()); ' ||
+              'END IF; ' ||
+              'RETURN NEW; ' ||
+            'END; ' ||
+            '$body$ LANGUAGE plpgsql volatile;';
+
+    EXECUTE 'DROP trigger IF EXISTS _900_localizable_' || entityType || '_update on app_public.' || tableName || ';';
+    EXECUTE 'CREATE trigger _900_localizable_' || entityType || '_update ' ||
+            'AFTER UPDATE ON app_public.' || tableName || ' FOR EACH ROW WHEN (app_hidden.is_localization_enabled() IS TRUE) ' ||
+            'EXECUTE PROCEDURE app_hidden.localizable_' || entityType || '_update();';
+
+    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_delete() RETURNS TRIGGER AS $body$ ' ||
+            'DECLARE ' ||
+              '_jsonb_old jsonb := row_to_json(OLD.*); ' ||
+              '_fields text[] := string_to_array(''' || required_fields || ''', '',''); ' ||
+              '_payload jsonb := ''{}''::jsonb; ' ||
+            'BEGIN ' ||
+              'SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) ' ||
+              'FROM (SELECT unnest(_fields) AS field) as f INTO _payload; ' ||
+              'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) ' ||
+              'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), OLD.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Deleted'', ''parallel'', _payload, NOW()); ' ||
+              'RETURN OLD; ' ||
+            'END; ' ||
+            '$body$ LANGUAGE plpgsql volatile;';
+
+    EXECUTE 'DROP trigger IF EXISTS _900_localizable_' || entityType || '_delete on app_public.' || tableName || ';';
+    EXECUTE 'CREATE trigger _900_localizable_' || entityType || '_delete ' ||
+            'AFTER DELETE ON app_public.' || tableName || ' FOR EACH ROW WHEN (app_hidden.is_localization_enabled() IS TRUE) ' ||
+            'EXECUTE PROCEDURE app_hidden.localizable_' || entityType || '_delete();';
+END;
+$_$;
+
+
+--
 -- Name: create_propagate_publish_state_trigger(text, text); Type: FUNCTION; Schema: app_hidden; Owner: -
 --
 
@@ -372,6 +462,339 @@ BEGIN
   EXECUTE 'DROP POLICY IF EXISTS snapshots_validation_' || entityType || '_authorization_delete ON app_public.snapshot_validation_results;';
 END;
 $$;
+
+
+--
+-- Name: is_localization_enabled(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.is_localization_enabled() RETURNS boolean
+    LANGUAGE sql IMMUTABLE
+    AS $$SELECT FALSE $$;
+
+
+--
+-- Name: localizable_collection_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_collection_image_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_image_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('collection_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_collection_image_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_image_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('image_id', ',') || string_to_array('collection_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_collection_image_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_image_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('collection_id,image_id,image_type', ','); _localizable_fields text[] := string_to_array('image_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_collection_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_collection_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id', ','); _localizable_fields text[] := string_to_array('title,synopsis,description', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_episode_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id,index', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_episode_image_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_image_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('episode_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_episode_image_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_image_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('image_id', ',') || string_to_array('episode_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_episode_image_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_image_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('episode_id,image_id,image_type', ','); _localizable_fields text[] := string_to_array('image_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_episode_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title,synopsis,description,season_id', ',') || string_to_array('id,index', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_episode_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id,index', ','); _localizable_fields text[] := string_to_array('title,synopsis,description,season_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_movie_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_movie_genre_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_genre_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_movie_genre_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_genre_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title', ',') || string_to_array('id', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_movie_genre_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_genre_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id', ','); _localizable_fields text[] := string_to_array('title', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_movie_image_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_image_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('movie_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_movie_image_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_image_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('image_id', ',') || string_to_array('movie_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_movie_image_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_image_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('movie_id,image_id,image_type', ','); _localizable_fields text[] := string_to_array('image_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_movie_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_movie_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id', ','); _localizable_fields text[] := string_to_array('title,synopsis,description', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_season_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id,index', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_season_image_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_image_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('season_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_season_image_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_image_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('image_id', ',') || string_to_array('season_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_season_image_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_image_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('season_id,image_id,image_type', ','); _localizable_fields text[] := string_to_array('image_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_season_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('synopsis,description,tvshow_id', ',') || string_to_array('id,index', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_season_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id,index', ','); _localizable_fields text[] := string_to_array('synopsis,description,tvshow_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_tvshow_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_tvshow_genre_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_genre_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_tvshow_genre_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_genre_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title', ',') || string_to_array('id', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_tvshow_genre_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_genre_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id', ','); _localizable_fields text[] := string_to_array('title', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_tvshow_image_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_image_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('tvshow_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+
+
+--
+-- Name: localizable_tvshow_image_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_image_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('image_id', ',') || string_to_array('tvshow_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_tvshow_image_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_image_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('tvshow_id,image_id,image_type', ','); _localizable_fields text[] := string_to_array('image_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_tvshow_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+
+
+--
+-- Name: localizable_tvshow_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id', ','); _localizable_fields text[] := string_to_array('title,synopsis,description', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
 
 
 --
@@ -500,6 +923,32 @@ CREATE FUNCTION app_hidden.tg_snapshots__propagate_publish_state_to_tvshows() RE
 CREATE FUNCTION app_hidden.tg_tvshows__check_active_snapshots() RETURNS trigger
     LANGUAGE plpgsql STABLE
     AS $$ BEGIN IF EXISTS (SELECT '' FROM app_public.snapshots s INNER JOIN app_public.tvshows_snapshots es ON es.snapshot_id = s.id WHERE es.tvshow_id = OLD.id AND s.snapshot_state IN ('INITIALIZATION', 'VALIDATION', 'PUBLISHED')) THEN perform ax_utils.raise_error('%s with ID %s cannot be deleted as it has active snapshots.', 'ACSNS', 'TV Show', OLD.id::text); END IF; RETURN OLD; END; $$;
+
+
+--
+-- Name: to_kebab_case(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.to_kebab_case(input_value text) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  RETURN lower(replace(input_value, '_', '-'));
+END;
+$$;
+
+
+--
+-- Name: to_pascal_case(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.to_pascal_case(input_value text) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  RETURN replace(initcap(replace(input_value, '_', ' ')), ' ', '');
+END;
+$$;
 
 
 --
@@ -3547,6 +3996,28 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: inbox; Type: TABLE; Schema: app_hidden; Owner: -
+--
+
+CREATE TABLE app_hidden.inbox (
+    id uuid NOT NULL,
+    aggregate_type text NOT NULL,
+    aggregate_id text NOT NULL,
+    message_type text NOT NULL,
+    segment text,
+    concurrency text DEFAULT 'sequential'::text NOT NULL,
+    payload jsonb NOT NULL,
+    metadata jsonb,
+    locked_until timestamp with time zone DEFAULT to_timestamp((0)::double precision) NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    processed_at timestamp with time zone,
+    abandoned_at timestamp with time zone,
+    started_attempts smallint DEFAULT 0 NOT NULL,
+    finished_attempts smallint DEFAULT 0 NOT NULL
+);
+
+
+--
 -- Name: messaging_counter; Type: TABLE; Schema: app_private; Owner: -
 --
 
@@ -5146,6 +5617,14 @@ CREATE TABLE app_public.tvshows_tvshow_genres (
 --
 
 COMMENT ON TABLE app_public.tvshows_tvshow_genres IS '@subscription_events_tvshows TVSHOW_TVSHOW_GENRE_CREATED,TVSHOW_TVSHOW_GENRE_CHANGED,TVSHOW_TVSHOW_GENRE_DELETED';
+
+
+--
+-- Name: inbox inbox_pkey; Type: CONSTRAINT; Schema: app_hidden; Owner: -
+--
+
+ALTER TABLE ONLY app_hidden.inbox
+    ADD CONSTRAINT inbox_pkey PRIMARY KEY (id);
 
 
 --
@@ -8891,6 +9370,258 @@ CREATE TRIGGER _500_gql_tvshows_updated AFTER UPDATE ON app_public.tvshows FOR E
 
 
 --
+-- Name: collections _900_localizable_collection_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_delete AFTER DELETE ON app_public.collections FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_delete();
+
+
+--
+-- Name: collections_images _900_localizable_collection_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_image_delete AFTER DELETE ON app_public.collections_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_image_delete();
+
+
+--
+-- Name: collections_images _900_localizable_collection_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_image_insert AFTER INSERT ON app_public.collections_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_image_insert();
+
+
+--
+-- Name: collections_images _900_localizable_collection_image_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_image_update AFTER UPDATE ON app_public.collections_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_image_update();
+
+
+--
+-- Name: collections _900_localizable_collection_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_insert AFTER INSERT ON app_public.collections FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_insert();
+
+
+--
+-- Name: collections _900_localizable_collection_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_update AFTER UPDATE ON app_public.collections FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_update();
+
+
+--
+-- Name: episodes _900_localizable_episode_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_delete AFTER DELETE ON app_public.episodes FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_delete();
+
+
+--
+-- Name: episodes_images _900_localizable_episode_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_image_delete AFTER DELETE ON app_public.episodes_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_image_delete();
+
+
+--
+-- Name: episodes_images _900_localizable_episode_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_image_insert AFTER INSERT ON app_public.episodes_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_image_insert();
+
+
+--
+-- Name: episodes_images _900_localizable_episode_image_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_image_update AFTER UPDATE ON app_public.episodes_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_image_update();
+
+
+--
+-- Name: episodes _900_localizable_episode_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_insert AFTER INSERT ON app_public.episodes FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_insert();
+
+
+--
+-- Name: episodes _900_localizable_episode_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_update AFTER UPDATE ON app_public.episodes FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_update();
+
+
+--
+-- Name: movies _900_localizable_movie_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_delete AFTER DELETE ON app_public.movies FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_delete();
+
+
+--
+-- Name: movie_genres _900_localizable_movie_genre_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_genre_delete AFTER DELETE ON app_public.movie_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_genre_delete();
+
+
+--
+-- Name: movie_genres _900_localizable_movie_genre_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_genre_insert AFTER INSERT ON app_public.movie_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_genre_insert();
+
+
+--
+-- Name: movie_genres _900_localizable_movie_genre_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_genre_update AFTER UPDATE ON app_public.movie_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_genre_update();
+
+
+--
+-- Name: movies_images _900_localizable_movie_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_image_delete AFTER DELETE ON app_public.movies_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_image_delete();
+
+
+--
+-- Name: movies_images _900_localizable_movie_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_image_insert AFTER INSERT ON app_public.movies_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_image_insert();
+
+
+--
+-- Name: movies_images _900_localizable_movie_image_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_image_update AFTER UPDATE ON app_public.movies_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_image_update();
+
+
+--
+-- Name: movies _900_localizable_movie_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_insert AFTER INSERT ON app_public.movies FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_insert();
+
+
+--
+-- Name: movies _900_localizable_movie_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_update AFTER UPDATE ON app_public.movies FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_update();
+
+
+--
+-- Name: seasons _900_localizable_season_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_delete AFTER DELETE ON app_public.seasons FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_delete();
+
+
+--
+-- Name: seasons_images _900_localizable_season_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_image_delete AFTER DELETE ON app_public.seasons_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_image_delete();
+
+
+--
+-- Name: seasons_images _900_localizable_season_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_image_insert AFTER INSERT ON app_public.seasons_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_image_insert();
+
+
+--
+-- Name: seasons_images _900_localizable_season_image_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_image_update AFTER UPDATE ON app_public.seasons_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_image_update();
+
+
+--
+-- Name: seasons _900_localizable_season_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_insert AFTER INSERT ON app_public.seasons FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_insert();
+
+
+--
+-- Name: seasons _900_localizable_season_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_update AFTER UPDATE ON app_public.seasons FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_update();
+
+
+--
+-- Name: tvshows _900_localizable_tvshow_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_delete AFTER DELETE ON app_public.tvshows FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_delete();
+
+
+--
+-- Name: tvshow_genres _900_localizable_tvshow_genre_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_genre_delete AFTER DELETE ON app_public.tvshow_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_genre_delete();
+
+
+--
+-- Name: tvshow_genres _900_localizable_tvshow_genre_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_genre_insert AFTER INSERT ON app_public.tvshow_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_genre_insert();
+
+
+--
+-- Name: tvshow_genres _900_localizable_tvshow_genre_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_genre_update AFTER UPDATE ON app_public.tvshow_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_genre_update();
+
+
+--
+-- Name: tvshows_images _900_localizable_tvshow_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_image_delete AFTER DELETE ON app_public.tvshows_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_image_delete();
+
+
+--
+-- Name: tvshows_images _900_localizable_tvshow_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_image_insert AFTER INSERT ON app_public.tvshows_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_image_insert();
+
+
+--
+-- Name: tvshows_images _900_localizable_tvshow_image_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_image_update AFTER UPDATE ON app_public.tvshows_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_image_update();
+
+
+--
+-- Name: tvshows _900_localizable_tvshow_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_insert AFTER INSERT ON app_public.tvshows FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_insert();
+
+
+--
+-- Name: tvshows _900_localizable_tvshow_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_update AFTER UPDATE ON app_public.tvshows FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_update();
+
+
+--
 -- Name: collections_snapshots tg_cleanup_orphaned_collection_snapshots; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -11032,6 +11763,14 @@ GRANT ALL ON FUNCTION app_hidden.create_active_snapshots_before_delete_trigger(t
 
 
 --
+-- Name: FUNCTION create_localizable_entity_triggers(aggregateid text, tablename text, entitytype text, localizable_fields text, required_fields text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.create_localizable_entity_triggers(aggregateid text, tablename text, entitytype text, localizable_fields text, required_fields text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.create_localizable_entity_triggers(aggregateid text, tablename text, entitytype text, localizable_fields text, required_fields text) TO media_service_gql_role;
+
+
+--
 -- Name: FUNCTION create_propagate_publish_state_trigger(tablename text, entitytype text); Type: ACL; Schema: app_hidden; Owner: -
 --
 
@@ -11053,6 +11792,302 @@ GRANT ALL ON FUNCTION app_hidden.define_snapshot_authentication(entitytype text,
 
 REVOKE ALL ON FUNCTION app_hidden.drop_snapshot_authentication(entitytype text) FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.drop_snapshot_authentication(entitytype text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION is_localization_enabled(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.is_localization_enabled() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.is_localization_enabled() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_image_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_image_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_image_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_image_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_image_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_image_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_image_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_image_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_image_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_image_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_image_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_image_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_image_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_image_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_image_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_image_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_image_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_image_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_genre_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_genre_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_genre_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_genre_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_genre_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_genre_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_genre_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_genre_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_genre_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_image_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_image_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_image_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_image_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_image_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_image_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_image_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_image_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_image_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_image_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_image_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_image_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_image_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_image_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_image_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_image_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_image_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_image_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_genre_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_genre_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_genre_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_genre_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_genre_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_genre_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_genre_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_genre_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_genre_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_image_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_image_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_image_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_image_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_image_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_image_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_image_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_image_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_image_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_update() TO media_service_gql_role;
 
 
 --
@@ -11149,6 +12184,22 @@ GRANT ALL ON FUNCTION app_hidden.tg_snapshots__propagate_publish_state_to_tvshow
 
 REVOKE ALL ON FUNCTION app_hidden.tg_tvshows__check_active_snapshots() FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.tg_tvshows__check_active_snapshots() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION to_kebab_case(input_value text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.to_kebab_case(input_value text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.to_kebab_case(input_value text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION to_pascal_case(input_value text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.to_pascal_case(input_value text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.to_pascal_case(input_value text) TO media_service_gql_role;
 
 
 --
@@ -12112,6 +13163,97 @@ GRANT ALL ON FUNCTION ax_utils.validation_starts_with(input_value text, prefix_v
 
 REVOKE ALL ON FUNCTION ax_utils.validation_valid_url_array(input_value text[]) FROM PUBLIC;
 GRANT ALL ON FUNCTION ax_utils.validation_valid_url_array(input_value text[]) TO media_service_gql_role;
+
+
+--
+-- Name: TABLE inbox; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT SELECT ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.id; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT INSERT(id) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.aggregate_type; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT INSERT(aggregate_type) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.aggregate_id; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT INSERT(aggregate_id) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.message_type; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT INSERT(message_type) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.concurrency; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT INSERT(concurrency) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.payload; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT INSERT(payload) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.metadata; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT INSERT(metadata) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.created_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT INSERT(created_at) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.processed_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(processed_at) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.abandoned_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(abandoned_at) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.started_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(started_attempts) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.finished_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(finished_attempts) ON TABLE app_hidden.inbox TO media_service_gql_role;
 
 
 --

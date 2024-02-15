@@ -37,9 +37,14 @@ import {
   PostGraphileOptions,
   withPostGraphileContext,
 } from 'postgraphile';
-import { IsolationLevel, truncate, TxnClient } from 'zapatos/db';
+import { IsolationLevel, sql, truncate, TxnClient } from 'zapatos/db';
 import { Table } from 'zapatos/schema';
-import { Config, getMigrationSettings, mediaPgErrorMapper } from '../../common';
+import {
+  Config,
+  getMigrationSettings,
+  mediaPgErrorMapper,
+  setIsLocalizationEnabledDbFunction,
+} from '../../common';
 import { buildPostgraphileOptions } from '../../graphql/postgraphile-options';
 import { createTestConfig } from './test-config';
 import { createTestUser } from './test-user';
@@ -119,6 +124,8 @@ export interface ITestContext {
     user: AuthenticatedManagementSubject,
     callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
   ): Promise<T>;
+  truncateInbox: () => Promise<void>;
+  getInbox: () => Promise<Dict<unknown>[]>;
 }
 
 export interface TestRequestContext {
@@ -173,6 +180,10 @@ export const createTestContext = async (
     connectionString: config.dbOwnerConnectionString,
   }) as OwnerPgPool;
   ownerPool.label = 'Owner';
+  await setIsLocalizationEnabledDbFunction(
+    config.isLocalizationEnabled,
+    ownerPool,
+  );
 
   const loginPool = new Pool({
     connectionString: config.dbLoginConnectionString,
@@ -245,5 +256,13 @@ export const createTestContext = async (
       }
     },
     executeGqlSql,
+    truncateInbox: async function (): Promise<void> {
+      await sql`TRUNCATE TABLE app_hidden.inbox CASCADE;`.run(this.ownerPool);
+    },
+    getInbox: async function (): Promise<Dict<unknown>[]> {
+      return sql`SELECT aggregate_type, aggregate_id, message_type, concurrency, payload, metadata FROM app_hidden.inbox;`.run(
+        this.ownerPool,
+      );
+    },
   } as ITestContext;
 };

@@ -1,7 +1,5 @@
 import {
-  createLogicalReplicationService,
   createPostgresPoolConnectivityMetric,
-  ensureReplicationSlotAndPublicationExist,
   getLoginPgPool,
   setupLoginPgPool,
   setupOwnerPgPool,
@@ -37,16 +35,13 @@ import { PoolConfig } from 'pg';
 import {
   applyMigrations,
   getFullConfig,
-  PG_LOCALIZATION_PUBLICATION,
+  setIsLocalizationEnabledDbFunction,
 } from './common';
-import { localizationTableNames } from './domains/localization-table-names';
 import { syncPermissions } from './domains/permission-definition';
 import { populateSeedData } from './domains/populate-seed-data';
 import { registerImageTypes } from './domains/register-image-types';
 import { registerLocalizationEntityDefinitions } from './domains/register-localization-entity-definitions';
 import { registerVideoCuePointTypes } from './domains/register-video-cue-point-types';
-
-import { syncSourcesWithLocalization } from './domains/sync-sources-with-localization';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
 import { registerMessaging } from './messaging/register-messaging';
 
@@ -95,6 +90,8 @@ async function bootstrap(): Promise<void> {
 
   // Enable multipart request support for GQL to support file upload.
   app.use(graphqlUploadExpress());
+  // Run database migrations to the latest committed state.
+  await applyMigrations(config);
 
   // Register shutdown actions. These actions will be performed on service shutdown; in the order of registration.
   const shutdownActions = setupShutdownActions(app, logger);
@@ -107,6 +104,10 @@ async function bootstrap(): Promise<void> {
     shutdownActions,
     poolConfig,
   );
+  await setIsLocalizationEnabledDbFunction(
+    config.isLocalizationEnabled,
+    ownerPool,
+  );
   // Create login connection pool (used by service components, including PostGraphile).
   setupLoginPgPool(
     app,
@@ -115,21 +116,6 @@ async function bootstrap(): Promise<void> {
     shutdownActions,
     poolConfig,
   );
-
-  // Run database migrations to the latest committed state.
-  await applyMigrations(config);
-  if (config.isLocalizationEnabled) {
-    // Make sure logical replication slot and publication already exist or create them.
-    await ensureReplicationSlotAndPublicationExist({
-      replicationPgPool: ownerPool,
-      replicationSlotName: config.dbLocalizationReplicationSlot,
-      publicationName: PG_LOCALIZATION_PUBLICATION,
-      tableNames: localizationTableNames,
-      schemaName: 'app_public',
-      logger,
-    });
-  }
-
   // Sync defined permissions to the ID service.
   await syncPermissions(config, logger);
 
@@ -153,17 +139,6 @@ async function bootstrap(): Promise<void> {
   if (config.isLocalizationEnabled) {
     // Register localization entity definitions for the media service localizable entities.
     await registerLocalizationEntityDefinitions(broker, config);
-
-    // Starting up the logical replication service to monitor and handle changes
-    // on tables related to passed publications
-    const shutdown = await createLogicalReplicationService({
-      connectionString: config.dbOwnerReplicationConnectionString,
-      publicationNames: [PG_LOCALIZATION_PUBLICATION],
-      replicationSlotName: config.dbLocalizationReplicationSlot,
-      messageHandler: syncSourcesWithLocalization(ownerPool, broker, config),
-      logger: new Logger({ context: 'LocalizationLogicalReplication' }),
-    });
-    shutdownActions.push(shutdown);
   }
 
   // Populate the DB with some initial seed data

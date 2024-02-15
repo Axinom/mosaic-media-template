@@ -21,7 +21,6 @@ regularVariables:
   PGSSLMODE: '${__ax_hosted__.pg.sslmode}'
   POSTGRESQL_HOST: '${__ax_hosted__.pg.host}'
   POSTGRESQL_PORT: '${__ax_hosted__.pg.port}'
-  POSTGRESQL_REPLICATION_PORT: '${__ax_hosted__.pg.replication_port}'
   POSTGRESQL_USER_SUFFIX: '${__ax_hosted__.pg.user_suffix}'
 
   # Database Variables
@@ -51,10 +50,6 @@ regularVariables:
   LOCALIZATION_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-localization-service.management_base_url}'
 
   IS_LOCALIZATION_ENABLED: false
-
-  # Use `yarn util:generate-replication-slot-name` to generate an unique value
-  # for your environment. Must be set if IS_LOCALIZATION_ENABLED is true.
-  DATABASE_LOCALIZATION_REPLICATION_SLOT:
 
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
