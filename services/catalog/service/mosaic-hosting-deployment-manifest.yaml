@@ -3,7 +3,7 @@
 # Refer to the README.md file for instructions on how to use this.
 
 version: '1.0'
-serviceId: 'mosaic-catalog-service'
+serviceId: 'mosaic-catalog'
 
 regularVariables:
   # Service General Variables
