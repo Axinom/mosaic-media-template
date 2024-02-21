@@ -1,5 +1,4 @@
-import { ActionType, FormActionData } from '@axinom/mosaic-ui';
-import { useHistory } from 'react-router';
+import { FormActionData } from '@axinom/mosaic-ui';
 import { client } from '../../../apolloClient';
 import {
   usePublishTvShowGenresMutation,
@@ -10,8 +9,6 @@ import { TvShowGenresFormData } from './TvShowGenres.types';
 export function useTvShowGenresActions(): {
   readonly actions: FormActionData<TvShowGenresFormData>[];
 } {
-  const history = useHistory();
-
   const [publishTvShowGenresMutation] = usePublishTvShowGenresMutation({
     client,
     fetchPolicy: 'no-cache',
@@ -26,20 +23,17 @@ export function useTvShowGenresActions(): {
     {
       label: 'Publish Now',
       confirmationMode: 'Simple',
-      actionType: ActionType.Context,
       onActionSelected: async () => {
         await publishTvShowGenresMutation();
       },
     },
     {
       label: 'Publishing Snapshots',
-      onActionSelected: () =>
-        history.push(`/settings/media/tvshowgenres/snapshots`),
+      path: `/settings/media/tvshowgenres/snapshots`,
     },
     {
       label: 'Unpublish',
       confirmationMode: 'Simple',
-      actionType: ActionType.Context,
       onActionSelected: async () => {
         await unpublishTvShowGenresMutation();
       },

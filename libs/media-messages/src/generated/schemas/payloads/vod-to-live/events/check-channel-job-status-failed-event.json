@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "check_channel_job_status_failed_event",
+  "description": "Channel has failed processing. The live stream was not created.",
+  "additionalProperties": true,
+  "required": [
+    "channel_id",
+    "message"
+  ],
+  "properties": {
+    "channel_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*",
+      "description": "A string with at least one character and not only whitespace characters."
+    },
+    "message": {
+      "type": "string",
+      "description": "Message that describes a reason for command processing failure."
+    }
+  }
+}

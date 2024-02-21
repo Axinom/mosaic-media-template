@@ -20,6 +20,11 @@ export const useTvShowSelectExplorerModal = ({
       excludeItems={excludeItems}
       actions={[
         {
+          label: 'New',
+          openInNewTab: true,
+          path: '/tvshows/create',
+        },
+        {
           label: 'Cancel',
           icon: IconName.X,
           onClick: closeModal,

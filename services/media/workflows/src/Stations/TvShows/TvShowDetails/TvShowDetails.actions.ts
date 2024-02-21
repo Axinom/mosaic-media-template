@@ -1,4 +1,4 @@
-import { ActionType, FormActionData, IconName } from '@axinom/mosaic-ui';
+import { FormActionData, IconName } from '@axinom/mosaic-ui';
 import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
 import {
@@ -8,9 +8,7 @@ import {
 } from '../../../generated/graphql';
 import { TvShowDetailsFormData } from './TvShowDetails.types';
 
-export function useTvShowDetailsActions(
-  id: number,
-): {
+export function useTvShowDetailsActions(id: number): {
   readonly actions: FormActionData<TvShowDetailsFormData>[];
 } {
   const history = useHistory();
@@ -38,36 +36,34 @@ export function useTvShowDetailsActions(
   const actions: FormActionData<TvShowDetailsFormData>[] = [
     {
       label: 'Manage Seasons',
-      onActionSelected: () => history.push(`/tvshows/${id}/seasons`),
+      path: `/tvshows/${id}/seasons`,
     },
     {
       label: 'Manage Trailers',
-      onActionSelected: () => history.push(`/tvshows/${id}/videos`),
+      path: `/tvshows/${id}/videos`,
     },
     {
       label: 'Manage Images',
-      onActionSelected: () => history.push(`/tvshows/${id}/images`),
+      path: `/tvshows/${id}/images`,
     },
     {
       label: 'Licensing',
-      onActionSelected: () => history.push(`/tvshows/${id}/licenses`),
+      path: `/tvshows/${id}/licenses`,
     },
     {
       label: 'Publish Now',
       confirmationMode: 'Simple',
-      actionType: ActionType.Context,
       onActionSelected: async () => {
         await publishTvShowMutation({ variables: { id } });
       },
     },
     {
       label: 'Publishing Snapshots',
-      onActionSelected: () => history.push(`/tvshows/${id}/snapshots`),
+      path: `/tvshows/${id}/snapshots`,
     },
     {
       label: 'Unpublish',
       confirmationMode: 'Simple',
-      actionType: ActionType.Context,
       onActionSelected: async () => {
         await unpublishTvShowMutation({ variables: { id } });
       },

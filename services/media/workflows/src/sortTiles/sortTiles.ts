@@ -6,11 +6,11 @@ import { HomeTileData } from '@axinom/mosaic-portal';
  */
 const tilesOrder = [
   'Movies',
-  'Videos',
-  'Images',
   'TV Shows',
   'Seasons',
   'Episodes',
+  'Videos',
+  'Images',
   'Collections',
   'Ingest',
   'Snapshot Registry',

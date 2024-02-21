@@ -8,6 +8,7 @@ import * as db from 'zapatos/db';
 import {
   episode_images,
   episode_licenses,
+  episode_video_cue_points,
   episode_video_streams,
 } from 'zapatos/schema';
 import { Config } from '../../../common';
@@ -50,7 +51,7 @@ export class EpisodePublishedEventHandler extends MessageHandler<EpisodePublishe
 
         if (payload.videos) {
           for (const video of payload.videos) {
-            const { video_streams, ...videoToInsert } = video;
+            const { video_streams, cue_points, ...videoToInsert } = video;
 
             const episodeVideo = await db
               .insert('episode_videos', {
@@ -66,6 +67,20 @@ export class EpisodePublishedEventHandler extends MessageHandler<EpisodePublishe
                     (videoStream): episode_video_streams.Insertable => ({
                       episode_video_id: episodeVideo.id,
                       ...videoStream,
+                    }),
+                  ),
+                )
+                .run(txnClient);
+            }
+
+            if (cue_points !== undefined) {
+              await db
+                .insert(
+                  'episode_video_cue_points',
+                  cue_points.map(
+                    (cuePoint): episode_video_cue_points.Insertable => ({
+                      episode_video_id: episodeVideo.id,
+                      ...cuePoint,
                     }),
                   ),
                 )

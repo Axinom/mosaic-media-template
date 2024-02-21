@@ -15,6 +15,7 @@ import {
   transaction,
 } from 'zapatos/db';
 import { collections } from 'zapatos/schema';
+import { getValidatedExtendedContext } from '../../../graphql';
 import { insertImages, insertTags, splitCount } from '../../common';
 
 const insertRelations = async (
@@ -101,7 +102,8 @@ export const PopulateEndpointPlugin = makeExtendSchemaPlugin((build) => {
       `,
     resolvers: {
       Mutation: {
-        populateCollections: async (_query, args, { ownerPool }) => {
+        populateCollections: async (_query, args, context) => {
+          const { ownerPool } = getValidatedExtendedContext(context);
           const movieIds = (
             await select('movies', all, { columns: ['id'] }).run(ownerPool)
           ).map((r) => r.id);

@@ -29,8 +29,8 @@ export const getConfigDefinitions = (
     ...getBasicRabbitMqConfigDefinitions(variables),
     ...getBasicCustomizableConfigDefinitions(variables),
 
-    encodingServiceBaseUrl: () =>
-      env.get('ENCODING_SERVICE_BASE_URL').required().asUrlString(),
+    videoServiceBaseUrl: () =>
+      env.get('VIDEO_SERVICE_BASE_URL').required().asUrlString(),
 
     imageServiceBaseUrl: () =>
       env.get('IMAGE_SERVICE_BASE_URL').required().asUrlString(),

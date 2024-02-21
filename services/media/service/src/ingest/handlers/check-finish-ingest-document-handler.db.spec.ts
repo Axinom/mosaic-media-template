@@ -36,7 +36,11 @@ describe('Check Finish Ingest Document Handler', () => {
   beforeAll(async () => {
     ctx = await createTestContext();
     const broker = stub<Broker>({
-      publish: (_key: string, message: StartIngestItemCommand) => {
+      publish: (
+        _id: string,
+        _settings: unknown,
+        message: StartIngestItemCommand,
+      ) => {
         messages.push(message);
       },
     });

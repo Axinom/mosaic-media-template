@@ -20,6 +20,11 @@ export const useEpisodeSelectExplorerModal = ({
       excludeItems={excludeItems}
       actions={[
         {
+          label: 'New',
+          openInNewTab: true,
+          path: '/episodes/create',
+        },
+        {
           label: 'Cancel',
           icon: IconName.X,
           onClick: closeModal,

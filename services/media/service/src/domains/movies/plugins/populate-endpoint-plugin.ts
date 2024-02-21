@@ -4,6 +4,7 @@ import { gql as gqlExtended, makeExtendSchemaPlugin } from 'graphile-utils';
 import { PublishStatusEnum } from 'zapatos/custom';
 import { all, insert, IsolationLevel, select, transaction } from 'zapatos/db';
 import { movies } from 'zapatos/schema';
+import { getValidatedExtendedContext } from '../../../graphql';
 import {
   insertCasts,
   insertGenres,
@@ -63,7 +64,8 @@ export const PopulateEndpointPlugin = makeExtendSchemaPlugin((build) => {
     `,
     resolvers: {
       Mutation: {
-        populateMovies: async (_query, args, { ownerPool }) => {
+        populateMovies: async (_query, args, context) => {
+          const { ownerPool } = getValidatedExtendedContext(context);
           const genreIdsResult = await select('movie_genres', all, {
             columns: ['id'],
           }).run(ownerPool);

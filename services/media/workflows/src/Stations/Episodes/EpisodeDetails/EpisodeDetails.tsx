@@ -1,3 +1,4 @@
+import { ID } from '@axinom/mosaic-managed-workflow-integration';
 import {
   createUpdateGQLFragmentGenerator,
   CustomTagsField,
@@ -14,6 +15,7 @@ import {
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
+import clsx from 'clsx';
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
@@ -21,7 +23,8 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
-import { ExtensionsContext, ImageID } from '../../../externals';
+import { InfoPanelParent } from '../../../components';
+import { ExtensionsContext } from '../../../externals';
 import {
   Episode,
   EpisodeImageType,
@@ -34,7 +37,6 @@ import {
   MutationDeleteEpisodesProductionCountryArgs,
   MutationDeleteEpisodesTagArgs,
   MutationDeleteEpisodesTvshowGenreArgs,
-  PublishStatus,
   SearchEpisodeCastDocument,
   SearchEpisodeCastQuery,
   SearchEpisodeCastQueryVariables,
@@ -252,11 +254,11 @@ export const EpisodeDetails: React.FC = () => {
 };
 
 const Panel: React.FC = () => {
-  const { ImageCover } = useContext(ExtensionsContext);
+  const { ImageCover, ImagePreview } = useContext(ExtensionsContext);
   const { values } = useFormikContext<Episode>();
 
   return useMemo(() => {
-    let coverImageId: ImageID;
+    let coverImageId: ID;
     let coverImageCount = 0;
     let teaserImageCount = 0;
 
@@ -277,9 +279,9 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover params={{ id: coverImageId }} />
+          <ImageCover id={coverImageId} />
         </Section>
-        <Section title="Episode Entity">
+        <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
@@ -287,24 +289,53 @@ const Panel: React.FC = () => {
           <Paragraph title="Last Modified">
             {formatDateTime(values.updatedDate)} by {values.updatedUser}
           </Paragraph>
+          <Paragraph title="Publishing Status">
+            {getEnumLabel(values.publishStatus)}
+          </Paragraph>
+          {values.publishedDate ? (
+            <Paragraph title="Last Published">
+              {formatDateTime(values.publishedDate)} by {values.publishedUser}
+            </Paragraph>
+          ) : null}
         </Section>
-        <Section title="Assigned Items">
-          <Paragraph title="Videos">
+        <Section title="Assignments">
+          <Paragraph title="Parent Entity">
+            {values?.season ? (
+              <InfoPanelParent
+                Thumbnail={ImagePreview}
+                imageId={values.season?.seasonsImages?.nodes?.[0]?.imageId}
+                path={`/seasons/${values.season?.id}`}
+                label="Open Details"
+                title={
+                  typeof values.season?.index === 'number'
+                    ? `S${values.season?.index}` +
+                      (values.season?.tvshow?.title
+                        ? `: ${values.season?.tvshow?.title}`
+                        : '')
+                    : ''
+                }
+              />
+            ) : (
+              <div>not assigned</div>
+            )}
+          </Paragraph>
+          <Paragraph title="Assigned items">
             <div className={classes.datalist}>
               <div>Main Video</div>
               <div className={classes.rightAlignment}>
                 {values.mainVideoId ? 1 : 0}/1
               </div>
-              <div>Trailers</div>{' '}
+              <div>Trailers</div>
               <div className={classes.rightAlignment}>
                 {values.episodesTrailers?.totalCount}/many
               </div>
-            </div>
-          </Paragraph>
-          <Paragraph title="Images">
-            <div className={classes.datalist}>
-              <div>Cover</div>
-              <div className={classes.rightAlignment}>
+              <div className={classes.assignedItemsSpacing}>Cover</div>
+              <div
+                className={clsx(
+                  classes.rightAlignment,
+                  classes.assignedItemsSpacing,
+                )}
+              >
                 {coverImageCount} / 1
               </div>
               <div>Teaser</div>
@@ -314,20 +345,11 @@ const Panel: React.FC = () => {
             </div>
           </Paragraph>
         </Section>
-        <Section title="Additional Information">
-          <Paragraph title="Publishing Status">
-            {getEnumLabel(values.publishStatus)}
-          </Paragraph>
-          {values.publishStatus === PublishStatus.Published ? (
-            <Paragraph title="Last Published">
-              {formatDateTime(values.publishedDate)} by {values.publishedUser}
-            </Paragraph>
-          ) : null}
-        </Section>
       </InfoPanel>
     );
   }, [
     ImageCover,
+    ImagePreview,
     values.createdDate,
     values.createdUser,
     values.episodesImages?.nodes,
@@ -337,6 +359,7 @@ const Panel: React.FC = () => {
     values.publishStatus,
     values.publishedDate,
     values.publishedUser,
+    values.season,
     values.updatedDate,
     values.updatedUser,
   ]);

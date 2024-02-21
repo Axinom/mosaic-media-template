@@ -1,6 +1,5 @@
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -99,16 +98,12 @@ export const MovieLicensing: React.FC = () => {
           await deleteMoviesLicenseMutation({ variables: { input: { id } } });
           history.push(`/movies/${movieId}/licenses`);
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () =>
-          history.push(`/movies/${movieId}/licenses/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/movies/${movieId}/licenses/${id}`,
       },
     ];
   };
@@ -120,7 +115,7 @@ export const MovieLicensing: React.FC = () => {
       columns={explorerColumns}
       dataProvider={dataProvider}
       calculateNavigateUrl={(item) => `/movies/${movieId}/licenses/${item.id}`}
-      onCreateAction={() => history.push(`/movies/${movieId}/licenses/create`)}
+      onCreateAction={`/movies/${movieId}/licenses/create`}
       inlineMenuActions={generateInlineMenuActions}
     />
   );

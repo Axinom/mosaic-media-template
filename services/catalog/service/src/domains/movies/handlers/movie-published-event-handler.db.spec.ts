@@ -70,7 +70,7 @@ describe('MoviePublishEventHandler', () => {
       const expectedVideos = message.videos.map((video) => {
         return Object.fromEntries(
           Object.entries(video).filter(
-            ([key, _value]) => key !== 'video_streams',
+            ([key, _value]) => key !== 'video_streams' && key !== 'cue_points',
           ),
         );
       });
@@ -86,6 +86,15 @@ describe('MoviePublishEventHandler', () => {
       ).map(({ id, movie_video_id, ...stream }) => stream);
       expect(movieVideoStreams).toIncludeSameMembers(
         message.videos[0].video_streams!,
+      );
+
+      const videoCuePoints = (
+        await select('movie_video_cue_points', {
+          movie_video_id: videos[0].id,
+        }).run(ctx.ownerPool)
+      ).map(({ id, movie_video_id, ...cuePoint }) => cuePoint);
+      expect(videoCuePoints).toIncludeSameMembers(
+        message.videos[0].cue_points!,
       );
 
       const licenses = await select('movie_licenses', {

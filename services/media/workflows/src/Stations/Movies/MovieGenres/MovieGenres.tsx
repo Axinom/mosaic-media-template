@@ -39,9 +39,8 @@ export const MovieGenres: React.FC = () => {
       formData: MovieGenresFormData,
       initialData: DetailsProps<MovieGenresFormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const mutations = generateArrayMutationsWithUpdates({
         current: formData.genres,
@@ -138,11 +137,11 @@ const Panel: React.FC<{ data?: MovieGenresQuery }> = ({ data }) => {
           <Paragraph title="Statistic">
             <div className={classes.datalist}>
               <div>Items Total</div>
-              <div>{data?.movieGenres?.totalCount}</div>
+              <div className={classes.rightAlignment}>
+                {data?.movieGenres?.totalCount}
+              </div>
             </div>
           </Paragraph>
-        </Section>
-        <Section title="Publishing Info">
           <Paragraph title="Publishing Status">
             {data?.snapshots?.nodes[0]?.snapshotState ===
             SnapshotState.Published

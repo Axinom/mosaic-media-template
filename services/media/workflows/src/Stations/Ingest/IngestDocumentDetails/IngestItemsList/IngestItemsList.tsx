@@ -1,5 +1,5 @@
-import { Accordion, AccordionItem } from '@axinom/mosaic-ui';
-import React, { ReactNode } from 'react';
+import { Accordion, AccordionItem, Tags } from '@axinom/mosaic-ui';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import {
   StatusIcon,
   StatusIcons,
@@ -19,31 +19,78 @@ interface IngestItemsListProps {
   items: IngestItems;
 }
 
+const StatusLabels = {
+  [IngestItemStatus.Success]: 'Success',
+  [IngestItemStatus.Error]: 'Error',
+  [IngestItemStatus.InProgress]: 'In Progress',
+};
+
 export const IngestItemsList: React.FC<IngestItemsListProps> = ({ items }) => {
+  const [filterOptions, setFilterOptions] = useState<
+    { label: string; value: IngestItemStatus }[]
+  >([]);
+
+  const [filter, setFilter] = useState<IngestItemStatus[]>([]);
+  const filterInitialized = useRef(false);
+
+  useEffect(() => {
+    const statuses = new Set<IngestItemStatus>();
+    items.forEach((item) => statuses.add(item.status));
+    setFilterOptions([
+      ...[...statuses].map((s) => {
+        return {
+          label: StatusLabels[s] ?? s,
+          value: s,
+        };
+      }),
+    ]);
+    if (!filterInitialized.current && statuses.size > 0) {
+      // initialize filters only once, not on every data update
+      filterInitialized.current = true;
+      setFilter([...statuses]);
+    }
+  }, [items]);
+
   // TODO: Subscription to update the ingest items details goes here
 
   return (
-    <Accordion alignAccordionItem={false}>
-      {items.map((item) => (
-        <AccordionItem
-          key={item.id}
-          header={
-            <div className={classes.header}>
-              {getStatusIcon(item.status)}
-              <div className={classes.externalID}>
-                External ID: {item.externalId},
-              </div>
-              <div>{item.displayTitle}</div>
-              <div className={classes.status}>
-                {item.type} {getExistStatusText(item.existsStatus)}
-              </div>
-            </div>
-          }
-        >
-          <IngestItemSteps item={item} />
-        </AccordionItem>
-      ))}
-    </Accordion>
+    <>
+      {filterOptions.length > 1 && (
+        <Tags
+          name="status"
+          inlineMode={true}
+          tagsOptions={filterOptions}
+          value={filter}
+          onChange={(value) => setFilter(value.currentTarget.value as any)}
+          displayKey="label"
+          valueKey="value"
+          dropDownLabel="Add filter"
+        />
+      )}
+      <Accordion alignAccordionItem={false}>
+        {items.map((item) =>
+          filter.indexOf(item.status) !== -1 ? (
+            <AccordionItem
+              key={item.id}
+              header={
+                <div className={classes.header}>
+                  {getStatusIcon(item.status)}
+                  <div className={classes.externalID}>
+                    External ID: {item.externalId},
+                  </div>
+                  <div>{item.displayTitle}</div>
+                  <div className={classes.status}>
+                    {item.type} {getExistStatusText(item.existsStatus)}
+                  </div>
+                </div>
+              }
+            >
+              <IngestItemSteps item={item} />
+            </AccordionItem>
+          ) : null,
+        )}
+      </Accordion>
+    </>
   );
 };
 

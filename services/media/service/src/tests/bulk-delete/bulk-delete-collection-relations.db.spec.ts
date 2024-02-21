@@ -1,4 +1,5 @@
 import { Broker } from '@axinom/mosaic-message-bus';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
@@ -43,8 +44,12 @@ describe('CollectionRelations Bulk Delete endpoint', () => {
 
   beforeAll(async () => {
     const broker = stub<Broker>({
-      publish: (key: string, message: DeleteEntityCommand) => {
-        messages.push({ messageType: key, message });
+      publish: (
+        _id: string,
+        settings: MessagingSettings,
+        message: DeleteEntityCommand,
+      ) => {
+        messages.push({ messageType: settings.messageType, message });
       },
     });
     ctx = await createTestContext({}, broker);

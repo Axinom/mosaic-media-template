@@ -44,7 +44,11 @@ describe('ImageSucceededHandler', () => {
   beforeAll(async () => {
     ctx = await createTestContext();
     const broker = stub<Broker>({
-      publish: (_key: string, message: CheckFinishIngestItemCommand) => {
+      publish: (
+        _id: string,
+        _settings: unknown,
+        message: CheckFinishIngestItemCommand,
+      ) => {
         messages.push(message);
       },
     });

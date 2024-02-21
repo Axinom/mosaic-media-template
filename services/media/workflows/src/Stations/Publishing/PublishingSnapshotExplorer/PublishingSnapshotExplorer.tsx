@@ -1,6 +1,5 @@
 import {
   ActionData,
-  ActionType,
   Column,
   DateRenderer,
   ExplorerDataProvider,
@@ -151,16 +150,12 @@ export const PublishingSnapshotExplorer: React.FC<
           });
           history.push(`/movies/${movieId}/snapshots`);
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () =>
-          history.push(`/movies/${movieId}/snapshots/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/movies/${movieId}/snapshots/${id}`,
       },
     ];
   };

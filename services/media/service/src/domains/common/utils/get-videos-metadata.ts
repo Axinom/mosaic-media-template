@@ -4,10 +4,11 @@ import {
 } from '@axinom/mosaic-service-common';
 import { GraphQLClient } from 'graphql-request';
 import { capitalize } from 'inflection';
-import { VideoStream } from 'media-messages';
+import { CuePoint, VideoStream } from 'media-messages';
 import urljoin from 'url-join';
 import { CommonErrors } from '../../../common';
-import { getSdk, GetVideosQuery } from '../../../generated/graphql/encoding';
+import { videoCuePointTypes } from '../../../domains/register-video-cue-point-types';
+import { getSdk, GetVideosQuery } from '../../../generated/graphql/video';
 import { SnapshotValidationResult } from '../../../publishing';
 import { PublishVideo, TrailerJSONSelectable } from '../models';
 
@@ -70,6 +71,13 @@ const processVideo = (
       language_name: s.languageName,
     };
   });
+  const cuePoints: CuePoint[] = gqlVideo.cuePoints.nodes.map((cp) => {
+    return {
+      cue_point_type_key: cp.cuePointTypeKey,
+      time_in_seconds: cp.timeInSeconds,
+      value: cp.value,
+    };
+  });
 
   if (
     tags.length > 0 &&
@@ -120,11 +128,12 @@ const processVideo = (
     subtitle_languages: gqlVideo.subtitleLanguages.filter(Boolean) as string[],
     caption_languages: gqlVideo.captionLanguages.filter(Boolean) as string[],
     video_streams: videoStreams,
+    cue_points: cuePoints,
   });
 };
 
 export const getVideosMetadata = async (
-  encodingServiceBaseUrl: string,
+  videoServiceBaseUrl: string,
   authToken: string,
   mainVideoId: string | null,
   trailers: TrailerJSONSelectable[],
@@ -139,12 +148,15 @@ export const getVideosMetadata = async (
   }
 
   try {
-    const client = new GraphQLClient(
-      urljoin(encodingServiceBaseUrl, 'graphql'),
-    );
+    const client = new GraphQLClient(urljoin(videoServiceBaseUrl, 'graphql'));
     const { GetVideos } = getSdk(client);
     const { data } = await GetVideos(
-      { filter: { id: { in: videoIds } } },
+      {
+        filter: { id: { in: videoIds } },
+        cuePointFilter: {
+          cuePointTypeKey: { in: videoCuePointTypes.map((t) => t.key) },
+        },
+      },
       { Authorization: `Bearer ${authToken}` },
     );
 
@@ -153,7 +165,7 @@ export const getVideosMetadata = async (
         ...CommonErrors.PublishVideosMetadataRequestError,
         logInfo: {
           reason:
-            'The request to the Encoding Service succeeded, but no videos were returned and an explicit error was not thrown.',
+            'The request to the Video Service succeeded, but no videos were returned and an explicit error was not thrown.',
         },
       });
     }

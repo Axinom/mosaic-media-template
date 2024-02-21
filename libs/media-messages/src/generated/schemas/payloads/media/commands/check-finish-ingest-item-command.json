@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "title": "check_finish_ingest_item_command",
   "description": "Check finish ingest item command schema.",
@@ -10,10 +10,10 @@
   ],
   "properties": {
     "ingest_item_step_id": {
-      "description": "A unique identifier that is used to track ingest messages for a single document to keep ingest document status up-to-date.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^$|.*\\S.*"
+      "pattern": "^$|.*\\S.*",
+      "description": "A string with at least one character and not only whitespace characters."
     },
     "ingest_item_id": {
       "type": "integer",

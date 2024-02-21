@@ -1,4 +1,10 @@
-import { formatDateTime, GenericField, ReadOnlyField } from '@axinom/mosaic-ui';
+import {
+  Divider,
+  formatDateTime,
+  FormGroupTitle,
+  GenericField,
+  ReadOnlyField,
+} from '@axinom/mosaic-ui';
 import { Field } from 'formik';
 import React from 'react';
 import { client } from '../../../../apolloClient';
@@ -55,6 +61,8 @@ export const IngestStatus: React.FC<IngestStatusProps> = ({ initialData }) => {
         as={ReadOnlyField}
         transform={formatDateTime}
       />
+      <Divider />
+      <FormGroupTitle title="Ingest Items" />
       <IngestItemsList items={data?.ingestItems?.nodes ?? []} />
     </>
   );

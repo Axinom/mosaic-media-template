@@ -39,6 +39,7 @@ describe('Start Ingest Item Handler', () => {
     settings: MessagingSettings,
   ): OrchestrationData => {
     return {
+      aggregateId: itemId.toString(),
       messagingSettings: settings,
       messagePayload: { test: 'payload' },
       messageContext: { test: 'context' },
@@ -55,12 +56,18 @@ describe('Start Ingest Item Handler', () => {
     ctx = await createTestContext();
     const broker = stub<Broker>({
       publish: (
-        key: string,
+        _id: string,
+        settings: MessagingSettings,
         payload: unknown,
-        context: unknown,
+        overrides: unknown,
         config: unknown,
       ) => {
-        messages.push({ key, payload, context, config });
+        messages.push({
+          key: settings.messageType,
+          payload,
+          overrides,
+          config,
+        });
       },
     });
     const user = createTestUser(ctx.config.serviceId);
@@ -162,7 +169,7 @@ describe('Start Ingest Item Handler', () => {
         {
           key: MediaServiceMessagingSettings.UpdateMetadata.messageType,
           payload: { test: 'payload' },
-          context: {
+          overrides: {
             auth_token: 'test',
             message_context: { test: 'context' },
           },
@@ -221,7 +228,7 @@ describe('Start Ingest Item Handler', () => {
         {
           key: MediaServiceMessagingSettings.UpdateMetadata.messageType,
           payload: { test: 'payload' },
-          context: {
+          overrides: {
             auth_token: 'test',
             message_context: { test: 'context' },
           },
@@ -231,7 +238,7 @@ describe('Start Ingest Item Handler', () => {
           key: VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
             .messageType,
           payload: { test: 'payload' },
-          context: {
+          overrides: {
             auth_token: 'test',
             message_context: { test: 'context' },
           },

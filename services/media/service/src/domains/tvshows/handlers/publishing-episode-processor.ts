@@ -61,7 +61,7 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
 
   const { result: videos, validation: videosValidation } =
     await getVideosMetadata(
-      config.encodingServiceBaseUrl,
+      config.videoServiceBaseUrl,
       authToken,
       episode.main_video_id,
       episode.trailers,

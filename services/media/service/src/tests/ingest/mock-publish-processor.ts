@@ -3,7 +3,7 @@ import { PublishServiceMessagingSettings } from 'media-messages';
 import { EntityPublishingProcessor } from '../../publishing';
 
 export const testAllowAllSchema = {
-  $schema: 'http://json-schema.org/draft-04/schema#',
+  $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'allow_all_published_event',
   description: 'This is a mock schema that allows any json.',
   properties: {},

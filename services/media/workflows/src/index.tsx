@@ -15,7 +15,10 @@ import { register as registerMovies } from './Stations/Movies/registrations';
 import { register as registerSnapshotRegistry } from './Stations/Publishing/registrations';
 import { register as registerSeasons } from './Stations/Seasons/registrations';
 import { register as registerTvShows } from './Stations/TvShows/registrations';
-import { transformNavigationItems } from './transformNavigation/transformNavigation';
+import {
+  transformNavigationItems,
+  transformNavigationTree,
+} from './transformNavigation/transformNavigation';
 
 export const settingsGroupName = 'Media Management';
 export const mediaManagementParentName = 'media-management';
@@ -39,6 +42,8 @@ export function setup(app: PiletApi): void {
   app.setHomeTileSorter(sortTiles);
 
   app.setNavigationItemsTransformer(transformNavigationItems);
+
+  app.setNavigationTreeTransformer(transformNavigationTree);
 
   app.registerNavigationItem({
     icon: <MediaIcons icon={MediaIconName.Movie} />,

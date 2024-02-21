@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "title": "unpublish_entity_command",
   "description": "Unpublish a single entity command schema.",
@@ -10,10 +10,10 @@
   ],
   "properties": {
     "table_name": {
-      "description": "The name of the database table to use.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^$|.*\\S.*"
+      "pattern": "^$|.*\\S.*",
+      "description": "A string with at least one character and not only whitespace characters."
     },
     "entity_id": {
       "type": "integer",

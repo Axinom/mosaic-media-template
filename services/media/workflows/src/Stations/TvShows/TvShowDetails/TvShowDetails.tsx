@@ -1,3 +1,4 @@
+import { ID } from '@axinom/mosaic-managed-workflow-integration';
 import {
   createUpdateGQLFragmentGenerator,
   CustomTagsField,
@@ -14,6 +15,7 @@ import {
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
+import clsx from 'clsx';
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
@@ -21,7 +23,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
-import { ExtensionsContext, ImageID } from '../../../externals';
+import { ExtensionsContext } from '../../../externals';
 import {
   Mutation,
   MutationCreateTvshowsCastArgs,
@@ -32,7 +34,6 @@ import {
   MutationDeleteTvshowsProductionCountryArgs,
   MutationDeleteTvshowsTagArgs,
   MutationDeleteTvshowsTvshowGenreArgs,
-  PublishStatus,
   SearchTvShowCastDocument,
   SearchTvShowCastQuery,
   SearchTvShowCastQueryVariables,
@@ -56,9 +57,7 @@ import { TvShowDetailsFormData } from './TvShowDetails.types';
 const tvShowDetailSchema = Yup.object().shape<
   ObjectSchemaDefinition<TvShowDetailsFormData>
 >({
-  title: Yup.string()
-    .required('Title is a required field')
-    .max(100),
+  title: Yup.string().required('Title is a required field').max(100),
 });
 
 export const TvShowDetails: React.FC = () => {
@@ -102,9 +101,8 @@ export const TvShowDetails: React.FC = () => {
       formData: TvShowDetailsFormData,
       initialData: DetailsProps<TvShowDetailsFormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const tagAssignmentMutations = generateArrayMutations({
         current: formData.tags,
@@ -129,16 +127,17 @@ export const TvShowDetails: React.FC = () => {
           const tvshowGenresId = allGenres[name].id;
 
           if (tvshowGenresId) {
-            return generateUpdateGQLFragment<
-              MutationCreateTvshowsTvshowGenreArgs
-            >('createTvshowsTvshowGenre', {
-              input: {
-                tvshowsTvshowGenre: {
-                  tvshowId,
-                  tvshowGenresId,
+            return generateUpdateGQLFragment<MutationCreateTvshowsTvshowGenreArgs>(
+              'createTvshowsTvshowGenre',
+              {
+                input: {
+                  tvshowsTvshowGenre: {
+                    tvshowId,
+                    tvshowGenresId,
+                  },
                 },
               },
-            });
+            );
           } else {
             return '';
           }
@@ -146,11 +145,12 @@ export const TvShowDetails: React.FC = () => {
         generateDeleteMutation: (name) => {
           const tvshowGenresId = allGenres[name].id;
           if (tvshowGenresId) {
-            return generateUpdateGQLFragment<
-              MutationDeleteTvshowsTvshowGenreArgs
-            >('deleteTvshowsTvshowGenre', {
-              input: { tvshowId, tvshowGenresId },
-            });
+            return generateUpdateGQLFragment<MutationDeleteTvshowsTvshowGenreArgs>(
+              'deleteTvshowsTvshowGenre',
+              {
+                input: { tvshowId, tvshowGenresId },
+              },
+            );
           } else {
             return '';
           }
@@ -249,7 +249,7 @@ const Panel: React.FC = () => {
   const { values } = useFormikContext<Tvshow>();
 
   return useMemo(() => {
-    let coverImageId: ImageID;
+    let coverImageId: ID;
     let coverImageCount = 0;
     let teaserImageCount = 0;
 
@@ -270,9 +270,9 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover params={{ id: coverImageId }} />
+          <ImageCover id={coverImageId} />
         </Section>
-        <Section title="Tv Show Entity">
+        <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
@@ -280,9 +280,17 @@ const Panel: React.FC = () => {
           <Paragraph title="Last Modified">
             {formatDateTime(values.updatedDate)} by {values.updatedUser}
           </Paragraph>
+          <Paragraph title="Publishing Status">
+            {getEnumLabel(values.publishStatus)}
+          </Paragraph>
+          {values.publishedDate ? (
+            <Paragraph title="Last Published">
+              {formatDateTime(values.publishedDate)} by {values.publishedUser}
+            </Paragraph>
+          ) : null}
         </Section>
-        <Section title="Assigned Items">
-          <Paragraph title="Videos">
+        <Section title="Assignments">
+          <Paragraph title="Assigned items">
             <div className={classes.datalist}>
               <div>Seasons</div>
               <div className={classes.rightAlignment}>
@@ -292,12 +300,13 @@ const Panel: React.FC = () => {
               <div className={classes.rightAlignment}>
                 {values.tvshowsTrailers?.totalCount}/many
               </div>
-            </div>
-          </Paragraph>
-          <Paragraph title="Images">
-            <div className={classes.datalist}>
-              <div>Cover</div>
-              <div className={classes.rightAlignment}>
+              <div className={classes.assignedItemsSpacing}>Cover</div>
+              <div
+                className={clsx(
+                  classes.rightAlignment,
+                  classes.assignedItemsSpacing,
+                )}
+              >
                 {coverImageCount} / 1
               </div>
               <div>Teaser</div>
@@ -306,16 +315,6 @@ const Panel: React.FC = () => {
               </div>
             </div>
           </Paragraph>
-        </Section>
-        <Section title="Additional Information">
-          <Paragraph title="Publishing Status">
-            {getEnumLabel(values.publishStatus)}
-          </Paragraph>
-          {values.publishStatus === PublishStatus.Published ? (
-            <Paragraph title="Last Published">
-              {formatDateTime(values.publishedDate)} by {values.publishedUser}
-            </Paragraph>
-          ) : null}
         </Section>
       </InfoPanel>
     );

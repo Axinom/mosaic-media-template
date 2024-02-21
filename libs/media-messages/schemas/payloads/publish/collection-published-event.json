@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "title": "collection_published_event",
   "description": "Definition of the collection publish format.",
@@ -28,6 +28,7 @@
     "related_items": {
       "description": "Array of content related items metadata.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "description": "Related item metadata.",
         "type": "object",

@@ -12,9 +12,9 @@ generates:
       withHOC: false
       withComponent: false
       withMutationFn: false
-  src/generated/graphql/encoding.ts:
-    schema: '${ENCODING_SERVICE_BASE_URL}/graphql'
-    documents: 'src/graphql/documents/encoding-*.graphql'
+  src/generated/graphql/video.ts:
+    schema: '${VIDEO_SERVICE_BASE_URL}/graphql'
+    documents: 'src/graphql/documents/video-*.graphql'
     plugins:
       - 'typescript'
       - 'typescript-operations'

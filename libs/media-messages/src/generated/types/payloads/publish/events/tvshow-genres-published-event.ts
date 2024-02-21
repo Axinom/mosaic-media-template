@@ -6,5 +6,5 @@ export interface TvshowGenresPublishedEvent {
   /**
    * List of TV show genres.
    */
-  genres: Array<Genre>;
+  genres: Genre[];
 }

@@ -6,5 +6,5 @@ export interface MovieGenresPublishedEvent {
   /**
    * List of movie genres.
    */
-  genres: Array<Genre>;
+  genres: Genre[];
 }

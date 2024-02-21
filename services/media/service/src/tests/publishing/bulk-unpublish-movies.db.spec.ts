@@ -1,4 +1,5 @@
 import { Broker } from '@axinom/mosaic-message-bus';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
@@ -39,7 +40,11 @@ describe('Movies Bulk Unpublish endpoint', () => {
 
   beforeAll(async () => {
     const broker = stub<Broker>({
-      publish: (messageType: string, message: UnpublishEntityCommand) => {
+      publish: (
+        _id: string,
+        { messageType }: MessagingSettings,
+        message: UnpublishEntityCommand,
+      ) => {
         messages.push({ messageType, message });
       },
     });

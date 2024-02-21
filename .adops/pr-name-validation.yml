@@ -1,0 +1,47 @@
+trigger: none
+
+pr:
+  branches:
+    include:
+      - dev
+
+jobs:
+  - job: VerifyPrName
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - checkout: none
+      - script: |
+          prNumber=$(System.PullRequest.PullRequestNumber)
+          prDetailsFile=$(Agent.TempDirectory)/prDetails.json
+          dependabotUser="dependabot[bot]"
+
+          echo "Pull Request Number: $prNumber"
+
+          repoUrl=$(System.PullRequest.SourceRepositoryURI)
+
+          # extract org and repo name from repoUrl
+          orgRepo=$(echo "$repoUrl" | sed -e 's/.*github.com\/\(.*\)/\1/')
+          echo "Organization & Repository: $orgRepo"
+
+          expectedPattern="^\[AB#([0-9]+)\]"
+
+          # load pull request title from Github API
+          url="https://api.github.com/repos/$orgRepo/pulls/$prNumber"
+          curl -s -H "Authorization: token $GITHUB_TOKEN" $url > $prDetailsFile
+          prTitle=$(cat $prDetailsFile | jq -r '.title')
+          prUser=$(cat $prDetailsFile | jq -r '.user.login')
+
+          echo "PR title: '$prTitle'"
+          echo "PR user: '$prUser'"
+
+          #check if PR title matches expected pattern
+          if [[ "$prUser" != "$dependabotUser" ]] && [[ ! "$prTitle" =~ $expectedPattern ]]; then
+              echo "Error: Pull request title must start with '[AB#]' followed by a numeric value."
+              echo "Example: [AB#12345] Your pull request title"
+              echo "PR title '$prTitle' does not match expected pattern."
+              exit 1
+          fi
+        env:
+          GITHUB_TOKEN: $(GITHUB_TOKEN)
+        displayName: 'Verify Pull Request Name'

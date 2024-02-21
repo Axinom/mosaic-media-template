@@ -4,6 +4,13 @@ fragment EpisodeExplorerProperties on Episode {
   index
   externalId
   mainVideoId
+  season {
+    id
+    index
+    tvshow {
+      title
+    }
+  }
   episodesImages(condition: { imageType: COVER }) {
     nodes {
       imageId

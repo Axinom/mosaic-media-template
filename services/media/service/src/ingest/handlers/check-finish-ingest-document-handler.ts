@@ -125,7 +125,8 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedMessageHandler
 
     await sleep(5000);
     await this.broker.publish<CheckFinishIngestDocumentCommand>(
-      MediaServiceMessagingSettings.CheckFinishIngestDocument.messageType,
+      ingest_document_id.toString(),
+      MediaServiceMessagingSettings.CheckFinishIngestDocument,
       {
         ingest_document_id,
         seconds_without_progress,

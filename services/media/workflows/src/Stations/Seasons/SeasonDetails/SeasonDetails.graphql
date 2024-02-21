@@ -48,6 +48,15 @@ query Season($id: Int!) {
     publishStatus
     publishedDate
     publishedUser
+    tvshow {
+      id
+      title
+      tvshowsImages(condition: {imageType: COVER}, first: 1) {
+        nodes {
+            imageId
+        }
+      }
+    }
   }
 
   tvshowGenres {

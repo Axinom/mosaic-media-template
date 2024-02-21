@@ -1,3 +1,4 @@
+import { ID } from '@axinom/mosaic-managed-workflow-integration';
 import {
   createUpdateGQLFragmentGenerator,
   Details,
@@ -11,7 +12,7 @@ import React, { useCallback, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
-import { ExtensionsContext, VideoID } from '../../../externals';
+import { ExtensionsContext } from '../../../externals';
 import {
   Mutation,
   MutationCreateEpisodesTrailerArgs,
@@ -21,16 +22,14 @@ import {
 } from '../../../generated/graphql';
 
 interface FormData {
-  mainVideo: VideoID[];
-  trailerVideos: VideoID[];
+  mainVideo: ID[];
+  trailerVideos: ID[];
 }
 
 const episodeVideoManagementSchema = Yup.object().shape<
   ObjectSchemaDefinition<FormData>
 >({
-  mainVideo: Yup.array()
-    .of(Yup.mixed())
-    .max(1),
+  mainVideo: Yup.array().of(Yup.mixed()).max(1),
   trailerVideos: Yup.array().of(Yup.mixed()),
 });
 
@@ -54,9 +53,8 @@ export const EpisodeVideoManagement: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const trailerAssignmentMutations = generateArrayMutations({
         current: formData.trailerVideos,

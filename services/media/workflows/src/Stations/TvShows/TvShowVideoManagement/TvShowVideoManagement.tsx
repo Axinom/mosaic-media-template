@@ -1,3 +1,4 @@
+import { ID } from '@axinom/mosaic-managed-workflow-integration';
 import {
   createUpdateGQLFragmentGenerator,
   Details,
@@ -11,7 +12,7 @@ import React, { useCallback, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
-import { ExtensionsContext, VideoID } from '../../../externals';
+import { ExtensionsContext } from '../../../externals';
 import {
   Mutation,
   MutationCreateTvshowsTrailerArgs,
@@ -20,7 +21,7 @@ import {
 } from '../../../generated/graphql';
 
 interface FormData {
-  trailerVideos: VideoID[];
+  trailerVideos: ID[];
 }
 
 const tvShowVideoManagementSchema = Yup.object<

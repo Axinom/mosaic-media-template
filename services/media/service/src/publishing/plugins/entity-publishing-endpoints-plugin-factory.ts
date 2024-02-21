@@ -14,7 +14,6 @@ import {
   PublishEntityCommand,
   UnpublishEntityCommand,
 } from 'media-messages';
-import { Client } from 'pg';
 import { IsolationLevel } from 'zapatos/db';
 import { Table } from 'zapatos/schema';
 import {
@@ -22,7 +21,10 @@ import {
   getLongLivedToken,
   getMediaMappedError,
 } from '../../common';
-import { ExtendedGraphQLContext } from '../../graphql';
+import {
+  ExtendedGraphQLContext,
+  getValidatedExtendedContext,
+} from '../../graphql';
 import {
   createSnapshotWithRelation,
   findTable,
@@ -91,16 +93,23 @@ export const EntityPublishingEndpointsPluginFactory = (
             ) => {
               const entityId = args[idArgName];
               try {
+                const {
+                  subject,
+                  ownerPool,
+                  jwtToken,
+                  config,
+                  messagingBroker,
+                } = getValidatedExtendedContext(context);
                 const pgSettings = buildPgSettings(
-                  context.subject,
-                  context.config.dbGqlRole,
-                  context.config.serviceId,
+                  subject,
+                  config.dbGqlRole,
+                  config.serviceId,
                 );
 
                 // A new transaction is started and committed to make sure the snapshot
                 // exists before the 'PublishEntityCommand' message is published.
                 const snapshot = await transactionWithContext(
-                  context.ownerPool,
+                  ownerPool,
                   IsolationLevel.Serializable,
                   pgSettings,
                   async (ctx) => {
@@ -113,8 +122,9 @@ export const EntityPublishingEndpointsPluginFactory = (
                   },
                 );
 
-                await context.messagingBroker.publish<PublishEntityCommand>(
-                  MediaServiceMessagingSettings.PublishEntity.messageType,
+                await messagingBroker.publish<PublishEntityCommand>(
+                  snapshot.id.toString(),
+                  MediaServiceMessagingSettings.PublishEntity,
                   {
                     table_name: 'snapshots',
                     entity_id: snapshot.id,
@@ -123,10 +133,7 @@ export const EntityPublishingEndpointsPluginFactory = (
                     },
                   },
                   {
-                    auth_token: await getLongLivedToken(
-                      context.jwtToken ?? '',
-                      context.config,
-                    ),
+                    auth_token: await getLongLivedToken(jwtToken, config),
                   },
                 );
 
@@ -160,10 +167,12 @@ export const EntityPublishingEndpointsPluginFactory = (
             ) => {
               const entityId = args[idArgName];
               try {
+                const { pgClient, jwtToken, config, messagingBroker } =
+                  getValidatedExtendedContext(context);
                 const snapshot = await getPublishedSnapshot(
                   tableName,
                   entityId,
-                  context.pgClient as Client,
+                  pgClient,
                 );
 
                 if (!snapshot) {
@@ -173,17 +182,15 @@ export const EntityPublishingEndpointsPluginFactory = (
                   });
                 }
 
-                await context.messagingBroker.publish<UnpublishEntityCommand>(
-                  MediaServiceMessagingSettings.UnpublishEntity.messageType,
+                await messagingBroker.publish<UnpublishEntityCommand>(
+                  entityId.toString(),
+                  MediaServiceMessagingSettings.UnpublishEntity,
                   {
                     entity_id: entityId,
                     table_name: tableName,
                   },
                   {
-                    auth_token: await getLongLivedToken(
-                      context.jwtToken ?? '',
-                      context.config,
-                    ),
+                    auth_token: await getLongLivedToken(jwtToken, config),
                   },
                 );
 
@@ -217,16 +224,23 @@ export const EntityPublishingEndpointsPluginFactory = (
             ) => {
               const entityId = args[idArgName];
               try {
+                const {
+                  subject,
+                  ownerPool,
+                  jwtToken,
+                  config,
+                  messagingBroker,
+                } = getValidatedExtendedContext(context);
                 const pgSettings = buildPgSettings(
-                  context.subject,
-                  context.config.dbGqlRole,
-                  context.config.serviceId,
+                  subject,
+                  config.dbGqlRole,
+                  config.serviceId,
                 );
 
                 // A new transaction is started and committed to make sure the snapshot
                 // exists before the 'PublishEntityCommand' message is published.
                 const snapshot = await transactionWithContext(
-                  context.ownerPool,
+                  ownerPool,
                   IsolationLevel.Serializable,
                   pgSettings,
                   async (ctx) => {
@@ -239,8 +253,9 @@ export const EntityPublishingEndpointsPluginFactory = (
                   },
                 );
 
-                await context.messagingBroker.publish<PublishEntityCommand>(
-                  MediaServiceMessagingSettings.PublishEntity.messageType,
+                await messagingBroker.publish<PublishEntityCommand>(
+                  snapshot.id.toString(),
+                  MediaServiceMessagingSettings.PublishEntity,
                   {
                     table_name: 'snapshots',
                     entity_id: snapshot.id,
@@ -249,10 +264,7 @@ export const EntityPublishingEndpointsPluginFactory = (
                     },
                   },
                   {
-                    auth_token: await getLongLivedToken(
-                      context.jwtToken ?? '',
-                      context.config,
-                    ),
+                    auth_token: await getLongLivedToken(jwtToken, config),
                   },
                 );
 

@@ -1,13 +1,20 @@
 import { getLoginPgPool } from '@axinom/mosaic-db-common';
 import { Broker, RascalConfigBuilder } from '@axinom/mosaic-message-bus';
-import { ImageServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
+import {
+  ImageServiceMultiTenantMessagingSettings,
+  VideoServiceMultiTenantMessagingSettings,
+} from '@axinom/mosaic-messages';
 import { Express } from 'express';
 import {
   DeleteEntityCommand,
   MediaServiceMessagingSettings,
 } from 'media-messages';
 import { Config } from '../../common';
-import { DeleteEntityCommandHandler } from './handlers';
+import {
+  CuePointTypesDeclaredHandler,
+  CuePointTypesDeclareFailedHandler,
+  DeleteEntityCommandHandler,
+} from './handlers';
 
 export const registerCommonMessaging = (
   app: Express,
@@ -29,5 +36,19 @@ export const registerCommonMessaging = (
       MediaServiceMessagingSettings.EntityDeleted,
       config,
     ).publishEvent(),
+
+    // Video Cue Point types
+    new RascalConfigBuilder(
+      VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes,
+      config,
+    ).sendCommand(),
+    new RascalConfigBuilder(
+      VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclared,
+      config,
+    ).subscribeForEvent(() => new CuePointTypesDeclaredHandler(config)),
+    new RascalConfigBuilder(
+      VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclareFailed,
+      config,
+    ).subscribeForEvent(() => new CuePointTypesDeclareFailedHandler(config)),
   ];
 };

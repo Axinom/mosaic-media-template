@@ -125,58 +125,86 @@ channels:
 components:
   messages:
     collection-published-event:
+      tags:
+        - name: aggregate-type:collection
       contentType: application/json
       payload:
         $ref: 'collection-published-event.json'
     collection-unpublished-event:
+      tags:
+        - name: aggregate-type:collection
       contentType: application/json
       payload:
         $ref: 'collection-unpublished-event.json'
     episode-published-event:
+      tags:
+        - name: aggregate-type:episode
       contentType: application/json
       payload:
         $ref: 'episode-published-event.json'
     episode-unpublished-event:
+      tags:
+        - name: aggregate-type:episode
       contentType: application/json
       payload:
         $ref: 'episode-unpublished-event.json'
     movie-genres-published-event:
+      tags:
+        - name: aggregate-type:movie-genres
       contentType: application/json
       payload:
         $ref: 'movie-genres-published-event.json'
     movie-genres-unpublished-event:
+      tags:
+        - name: aggregate-type:movie-genres
       contentType: application/json
       payload:
         $ref: 'movie-genres-unpublished-event.json'
     movie-published-event:
+      tags:
+        - name: aggregate-type:movie
       contentType: application/json
       payload:
         $ref: 'movie-published-event.json'
     movie-unpublished-event:
+      tags:
+        - name: aggregate-type:movie
       contentType: application/json
       payload:
         $ref: 'movie-unpublished-event.json'
     season-published-event:
+      tags:
+        - name: aggregate-type:season
       contentType: application/json
       payload:
         $ref: 'season-published-event.json'
     season-unpublished-event:
+      tags:
+        - name: aggregate-type:season
       contentType: application/json
       payload:
         $ref: 'season-unpublished-event.json'
     tvshow-genres-published-event:
+      tags:
+        - name: aggregate-type:tvshow-genres
       contentType: application/json
       payload:
         $ref: 'tvshow-genres-published-event.json'
     tvshow-genres-unpublished-event:
+      tags:
+        - name: aggregate-type:tvshow-genres
       contentType: application/json
       payload:
         $ref: 'tvshow-genres-unpublished-event.json'
     tvshow-published-event:
+      tags:
+        - name: aggregate-type:tvshow
       contentType: application/json
       payload:
         $ref: 'tvshow-published-event.json'
     tvshow-unpublished-event:
+      tags:
+        - name: aggregate-type:tvshow
       contentType: application/json
       payload:
         $ref: 'tvshow-unpublished-event.json'

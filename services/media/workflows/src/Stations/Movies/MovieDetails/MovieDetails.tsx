@@ -1,3 +1,4 @@
+import { ID } from '@axinom/mosaic-managed-workflow-integration';
 import {
   createUpdateGQLFragmentGenerator,
   CustomTagsField,
@@ -21,7 +22,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
-import { ExtensionsContext, ImageID } from '../../../externals';
+import { ExtensionsContext } from '../../../externals';
 import {
   Movie,
   MovieGenre,
@@ -35,7 +36,6 @@ import {
   MutationDeleteMoviesMovieGenreArgs,
   MutationDeleteMoviesProductionCountryArgs,
   MutationDeleteMoviesTagArgs,
-  PublishStatus,
   SearchMovieCastDocument,
   SearchMovieCastQuery,
   SearchMovieCastQueryVariables,
@@ -248,7 +248,7 @@ const Panel: React.FC = () => {
   const { values } = useFormikContext<Movie>();
 
   return useMemo(() => {
-    let coverImageId: ImageID;
+    let coverImageId: ID;
     let coverImageCount = 0;
     let teaserImageCount = 0;
 
@@ -269,9 +269,9 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover params={{ id: coverImageId }} />
+          <ImageCover id={coverImageId} />
         </Section>
-        <Section title="Movie Entity">
+        <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
@@ -279,6 +279,14 @@ const Panel: React.FC = () => {
           <Paragraph title="Last Modified">
             {formatDateTime(values.updatedDate)} by {values.updatedUser}
           </Paragraph>
+          <Paragraph title="Publishing Status">
+            {getEnumLabel(values.publishStatus)}
+          </Paragraph>
+          {values.publishedDate ? (
+            <Paragraph title="Last Published">
+              {formatDateTime(values.publishedDate)} by {values.publishedUser}
+            </Paragraph>
+          ) : null}
         </Section>
         <Section title="Assigned Items">
           <Paragraph title="Videos">
@@ -305,16 +313,6 @@ const Panel: React.FC = () => {
               </div>
             </div>
           </Paragraph>
-        </Section>
-        <Section title="Additional Information">
-          <Paragraph title="Publishing Status">
-            {getEnumLabel(values.publishStatus)}
-          </Paragraph>
-          {values.publishStatus === PublishStatus.Published ? (
-            <Paragraph title="Last Published">
-              {formatDateTime(values.publishedDate)} by {values.publishedUser}
-            </Paragraph>
-          ) : null}
         </Section>
       </InfoPanel>
     );

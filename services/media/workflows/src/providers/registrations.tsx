@@ -13,12 +13,17 @@ export function register(app: PiletApi): void {
         kind="SelectionExplorer"
         title="Select Movie"
         stationKey="FASTMovieSelection"
-        allowBulkSelect={false}
+        allowBulkSelect={true}
         enableSelectAll={false}
         defaultFilterValues={{
           mainVideoId: true,
         }}
         actions={[
+          {
+            label: 'New',
+            openInNewTab: true,
+            path: '/movies/create',
+          },
           {
             label: 'Cancel',
             icon: IconName.X,
@@ -50,12 +55,17 @@ export function register(app: PiletApi): void {
         kind="SelectionExplorer"
         title="Select Episode"
         stationKey="FASTEpisodeSelection"
-        allowBulkSelect={false}
+        allowBulkSelect={true}
         enableSelectAll={false}
         defaultFilterValues={{
           mainVideoId: true,
         }}
         actions={[
+          {
+            label: 'New',
+            openInNewTab: true,
+            path: '/episodes/create',
+          },
           {
             label: 'Cancel',
             icon: IconName.X,

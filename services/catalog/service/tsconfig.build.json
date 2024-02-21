@@ -4,5 +4,12 @@
   "compilerOptions": {
     "noEmit": false
   },
-  "exclude": ["node_modules", "dist", "scripts", "**/tests", "**/*spec.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "scripts",
+    "**/tests",
+    "**/*spec.ts",
+    "jest.*"
+  ]
 }

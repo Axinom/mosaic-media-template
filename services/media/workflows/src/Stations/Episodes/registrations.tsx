@@ -17,6 +17,7 @@ import { EpisodeVideoManagement } from './EpisodeVideoManagement/EpisodeVideoMan
 
 export function register(app: PiletApi, extensions: Extensions): void {
   const episodesNav = {
+    name: 'episodes',
     path: '/episodes',
     label: 'Episodes',
     icon: <MediaIcons icon={MediaIconName.Episodes} />,

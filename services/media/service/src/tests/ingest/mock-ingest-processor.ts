@@ -29,6 +29,7 @@ export class MockIngestProcessor implements IngestEntityProcessor {
   ): OrchestrationData[] {
     return [
       {
+        aggregateId: 'unit-test-id',
         messagingSettings: stub<MessagingSettings>(),
         messagePayload: {},
         messageContext: {},

@@ -1,0 +1,10 @@
+.container {
+  display: grid;
+  grid: 50px / 50px 1fr 50px;
+
+  align-items: center;
+
+  p {
+    padding-left: 16px;
+  }
+}

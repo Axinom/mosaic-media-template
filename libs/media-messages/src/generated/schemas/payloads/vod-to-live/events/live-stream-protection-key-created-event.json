@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "live_stream_protection_key_created_event",
+  "description": "DRM protection key for Channel was created.",
+  "additionalProperties": false,
+  "required": [
+    "channel_id",
+    "key_id"
+  ],
+  "properties": {
+    "channel_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*",
+      "description": "A string with at least one character and not only whitespace characters."
+    },
+    "key_id": {
+      "type": "string",
+      "minLength": 32,
+      "maxLength": 36,
+      "format": "uuid",
+      "description": "A UUID."
+    }
+  }
+}

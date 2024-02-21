@@ -1,4 +1,4 @@
-import { ActionType, FormActionData, IconName } from '@axinom/mosaic-ui';
+import { FormActionData, IconName } from '@axinom/mosaic-ui';
 import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
 import {
@@ -8,9 +8,7 @@ import {
 } from '../../../generated/graphql';
 import { MovieDetailsFormData } from './MovieDetails.types';
 
-export function useMovieDetailsActions(
-  id: number,
-): {
+export function useMovieDetailsActions(id: number): {
   readonly actions: FormActionData<MovieDetailsFormData>[];
 } {
   const history = useHistory();
@@ -38,32 +36,30 @@ export function useMovieDetailsActions(
   const actions: FormActionData<MovieDetailsFormData>[] = [
     {
       label: 'Manage Videos',
-      onActionSelected: () => history.push(`/movies/${id}/videos`),
+      path: `/movies/${id}/videos`,
     },
     {
       label: 'Manage Images',
-      onActionSelected: () => history.push(`/movies/${id}/images`),
+      path: `/movies/${id}/images`,
     },
     {
       label: 'Licensing',
-      onActionSelected: () => history.push(`/movies/${id}/licenses`),
+      path: `/movies/${id}/licenses`,
     },
     {
       label: 'Publish Now',
       confirmationMode: 'Simple',
-      actionType: ActionType.Context,
       onActionSelected: async () => {
         await publishMovieMutation({ variables: { id } });
       },
     },
     {
       label: 'Publishing Snapshots',
-      onActionSelected: () => history.push(`/movies/${id}/snapshots`),
+      path: `/movies/${id}/snapshots`,
     },
     {
       label: 'Unpublish',
       confirmationMode: 'Simple',
-      actionType: ActionType.Context,
       onActionSelected: async () => {
         await unpublishMovieMutation({ variables: { id } });
       },

@@ -14,7 +14,8 @@ export const registerImageTypes = async (
 ): Promise<void> => {
   const serviceAccountToken = await requestServiceAccountToken(config);
   await broker.publish<DeclareImageTypesCommand>(
-    ImageServiceMultiTenantMessagingSettings.DeclareImageTypes.messageType,
+    config.environmentId,
+    ImageServiceMultiTenantMessagingSettings.DeclareImageTypes,
     {
       service_id: config.serviceId,
       image_types: [

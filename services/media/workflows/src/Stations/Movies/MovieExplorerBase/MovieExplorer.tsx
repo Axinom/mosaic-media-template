@@ -1,6 +1,6 @@
+import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -13,7 +13,6 @@ import {
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { client } from '../../../apolloClient';
-import { getThumbnailAndStateRenderer } from '../../../externals';
 import {
   MoviesCastsConnection,
   MoviesDocument,
@@ -157,7 +156,6 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           });
           history.push('/movies');
         },
-        actionType: ActionType.Context,
         icon: IconName.Snapshot,
       },
       {
@@ -166,7 +164,6 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           await publishMovieMutation({ variables: { id } });
           history.push('/movies');
         },
-        actionType: ActionType.Context,
         icon: IconName.Publish,
         confirmationMode: 'Simple',
       },
@@ -176,7 +173,6 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           await unpublishMovieMutation({ variables: { id } });
           history.push('/movies');
         },
-        actionType: ActionType.Context,
         icon: IconName.Unpublish,
         confirmationMode: 'Simple',
       },
@@ -186,15 +182,12 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           await deleteMovieMutation({ variables: { input: { id } } });
           history.push('/movies');
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(`/movies/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/movies/${id}`,
       },
     ];
   };
@@ -219,6 +212,7 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           dataProvider={dataProvider}
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
+          generateItemLink={(item) => `/movies/${item.id}`}
         />
       );
     default:

@@ -1,6 +1,6 @@
 query CollectionRelatedEntities($id: Int!) {
   collection(id: $id) {
-    collectionRelations {
+    collectionRelations(orderBy: SORT_ORDER_ASC) {
       nodes {
         movie {
           entityId: id

@@ -17,16 +17,33 @@ export function useSeasonsFilters(): {
     excludeItems?: number[],
   ) => SeasonFilter | undefined;
 } {
-  const [
-    createFromDateFilterValidator,
-    createToDateFilterValidator,
-  ] = createDateRangeFilterValidators<SeasonData>();
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<SeasonData>();
 
-  const filterOptions: FilterType<SeasonData>[] = [
+  const filterOptions: FilterType<
+    SeasonData & {
+      tvshowExists?: boolean;
+    }
+  >[] = [
     {
       label: 'Season Index',
       property: 'index',
       type: FilterTypes.Numeric,
+    },
+    {
+      label: 'Parent Entity',
+      property: 'tvshowExists',
+      type: FilterTypes.Options,
+      options: [
+        {
+          label: 'true',
+          value: true,
+        },
+        {
+          label: 'false',
+          value: false,
+        },
+      ],
     },
     {
       label: 'External ID',
@@ -145,6 +162,7 @@ export function useSeasonsFilters(): {
       released: transformRange,
       createdDate: transformRange,
       publishedDate: transformRange,
+      tvshowExists: (value) => value as boolean,
     });
   };
 

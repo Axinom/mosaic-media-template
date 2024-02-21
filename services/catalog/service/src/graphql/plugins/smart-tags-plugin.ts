@@ -172,6 +172,41 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
       },
+      movie_video_cue_points: {
+        description: 'Video cue point metadata',
+        attribute: {
+          cue_point_type_key: {
+            description: 'Type of the cue point',
+            ...disableFilterAndOrder,
+          },
+          time_in_seconds: {
+            description:
+              'Time in seconds at which the cue point is set within the video',
+            ...disableFilterAndOrder,
+          },
+          value: {
+            description: 'Additional information associated with the cue point',
+            ...disableFilterAndOrder,
+          },
+          movie_video_id: {
+            tags: {
+              name: 'videoId',
+            },
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          movie_video_cue_points_movie_video_id_fkey: {
+            tags: {
+              foreignFieldName: 'cuePoints',
+              fieldName: 'video',
+            },
+          },
+        },
+      },
       movie_video_streams: {
         description: 'Video stream DRM metadata',
         attribute: {
@@ -451,6 +486,41 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           tvshow_videos_tvshow_id_fkey: {
             tags: {
               foreignFieldName: 'videos',
+            },
+          },
+        },
+      },
+      tvshow_video_cue_points: {
+        description: 'Video cue point metadata',
+        attribute: {
+          cue_point_type_key: {
+            description: 'Type of the cue point',
+            ...disableFilterAndOrder,
+          },
+          time_in_seconds: {
+            description:
+              'Time in seconds at which the cue point is set within the video',
+            ...disableFilterAndOrder,
+          },
+          value: {
+            description: 'Additional information associated with the cue point',
+            ...disableFilterAndOrder,
+          },
+          tvshow_video_id: {
+            tags: {
+              name: 'videoId',
+            },
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          tvshow_video_cue_points_tvshow_video_id_fkey: {
+            tags: {
+              foreignFieldName: 'cuePoints',
+              fieldName: 'video',
             },
           },
         },
@@ -736,6 +806,41 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
       },
+      season_video_cue_points: {
+        description: 'Video cue point metadata',
+        attribute: {
+          cue_point_type_key: {
+            description: 'Type of the cue point',
+            ...disableFilterAndOrder,
+          },
+          time_in_seconds: {
+            description:
+              'Time in seconds at which the cue point is set within the video',
+            ...disableFilterAndOrder,
+          },
+          value: {
+            description: 'Additional information associated with the cue point',
+            ...disableFilterAndOrder,
+          },
+          season_video_id: {
+            tags: {
+              name: 'videoId',
+            },
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          season_video_cue_points_season_video_id_fkey: {
+            tags: {
+              foreignFieldName: 'cuePoints',
+              fieldName: 'video',
+            },
+          },
+        },
+      },
       season_video_streams: {
         description: 'Video stream DRM metadata',
         attribute: {
@@ -1009,6 +1114,41 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
       },
+      episode_video_cue_points: {
+        description: 'Video cue point metadata',
+        attribute: {
+          cue_point_type_key: {
+            description: 'Type of the cue point',
+            ...disableFilterAndOrder,
+          },
+          time_in_seconds: {
+            description:
+              'Time in seconds at which the cue point is set within the video',
+            ...disableFilterAndOrder,
+          },
+          value: {
+            description: 'Additional information associated with the cue point',
+            ...disableFilterAndOrder,
+          },
+          episode_video_id: {
+            tags: {
+              name: 'videoId',
+            },
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          episode_video_cue_points_episode_video_id_fkey: {
+            tags: {
+              foreignFieldName: 'cuePoints',
+              fieldName: 'video',
+            },
+          },
+        },
+      },
       episode_video_streams: {
         description: 'Video stream DRM metadata',
         attribute: {
@@ -1190,6 +1330,66 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           collection_items_relation_collection_id_fkey: {
             tags: {
               foreignFieldName: 'items',
+            },
+          },
+        },
+      },
+      channel: {
+        description: 'Definition of the channel publish format.',
+        attribute: {
+          title: {
+            description: 'Title of the channel.',
+            ...disableFilterAndOrder,
+          },
+          description: {
+            description: 'Description of the channel.',
+            ...disableFilterAndOrder,
+          },
+          hls_stream_url: {
+            description: 'HLS stream URL of the channel.',
+            ...disableFilterAndOrder,
+          },
+          dash_stream_url: {
+            description: 'DASH stream URL of the channel.',
+            ...disableFilterAndOrder,
+          },
+          key_id: {
+            description: 'Key identifier for DRM protected streams.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omit: 'create,update,delete',
+        },
+      },
+      channel_images: {
+        description: 'Asset image metadata.',
+        attribute: {
+          type: {
+            description: 'Type of the image.',
+            ...disableFilterAndOrder,
+          },
+          path: {
+            description: 'URI to the image file.',
+            ...disableFilterAndOrder,
+          },
+          width: {
+            description: 'Width of the image in pixels.',
+            ...disableFilterAndOrder,
+          },
+          height: {
+            description: 'Height of the image in pixels.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+        },
+        constraint: {
+          channel_images_channel_id_fkey: {
+            tags: {
+              foreignFieldName: 'images',
             },
           },
         },

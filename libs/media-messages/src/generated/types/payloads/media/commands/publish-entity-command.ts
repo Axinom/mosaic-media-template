@@ -4,7 +4,7 @@ import { PublishOptions } from '../types/publish-options';
  */
 export interface PublishEntityCommand {
   /**
-   * The name of the database table to use.
+   * A string with at least one character and not only whitespace characters.
    */
   table_name: string;
   /**

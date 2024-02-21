@@ -52,7 +52,7 @@ export class PublishEntityCommandHandler extends MediaGuardedMessageHandler<Publ
   ): Promise<void> {
     await transactionWithContext(
       this.loginPool,
-      IsolationLevel.Serializable,
+      IsolationLevel.RepeatableRead,
       await this.getPgSettings(messageInfo),
       async (tnxClient) => {
         const payloadTable = payload.table_name as Table;

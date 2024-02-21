@@ -313,17 +313,17 @@ describe('publishingEpisodeProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'images' is required.`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
           message: `Property 'licenses' is required.`,
           severity: 'ERROR',
         },
         {
           context: 'METADATA',
           message: `Property 'genre_ids' is required.`,
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message: `Property 'images' is required.`,
           severity: 'ERROR',
         },
         {
@@ -413,7 +413,7 @@ describe('publishingEpisodeProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'index' should be a positive number.`,
+          message: `Property 'index' should be greater than 1.`,
           severity: 'ERROR',
         },
         {
@@ -433,12 +433,12 @@ describe('publishingEpisodeProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'is_protected' of the first video is required.`,
+          message: `Property 'output_format' of the first video is required.`,
           severity: 'ERROR',
         },
         {
           context: 'METADATA',
-          message: `Property 'output_format' of the first video is required.`,
+          message: `Property 'is_protected' of the first video is required.`,
           severity: 'ERROR',
         },
       ]);
@@ -606,7 +606,7 @@ describe('publishingEpisodeProcessor', () => {
                 title: 'a',
                 output_format: 'DASH',
                 length_in_seconds: 1,
-                audio_languages: ['en'], // Trusting encoding service
+                audio_languages: ['en'], // Trusting Video Service
                 subtitle_languages: [],
                 caption_languages: [],
                 dash_manifest:

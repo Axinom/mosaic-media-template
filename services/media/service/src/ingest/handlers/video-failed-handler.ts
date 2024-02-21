@@ -42,7 +42,8 @@ export class VideoFailedHandler extends MediaGuardedMessageHandler<EnsureVideoEx
       .message_context as VideoMessageContext;
 
     await this.broker.publish<CheckFinishIngestItemCommand>(
-      MediaServiceMessagingSettings.CheckFinishIngestItem.messageType,
+      messageContext.ingestItemId.toString(),
+      MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,

@@ -1,6 +1,6 @@
+import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -13,7 +13,6 @@ import {
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { client } from '../../../apolloClient';
-import { getThumbnailAndStateRenderer } from '../../../externals';
 import {
   TvShowsDocument,
   TvShowsMutatedDocument,
@@ -149,7 +148,6 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
           });
           history.push('/tvshows');
         },
-        actionType: ActionType.Context,
         icon: IconName.Snapshot,
       },
       {
@@ -158,7 +156,6 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
           await publishTvShowMutation({ variables: { id } });
           history.push('/tvshows');
         },
-        actionType: ActionType.Context,
         icon: IconName.Publish,
         confirmationMode: 'Simple',
       },
@@ -168,7 +165,6 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
           await unpublishTvShowMutation({ variables: { id } });
           history.push('/tvshows');
         },
-        actionType: ActionType.Context,
         icon: IconName.Unpublish,
         confirmationMode: 'Simple',
       },
@@ -178,15 +174,12 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
           await deleteTvShowMutation({ variables: { input: { id } } });
           history.push('/tvshows');
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(`/tvshows/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/tvshows/${id}`,
       },
     ];
   };
@@ -211,6 +204,7 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
           dataProvider={dataProvider}
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
+          generateItemLink={(item) => `/tvshows/${item.id}`}
         />
       );
     default:

@@ -648,13 +648,13 @@ const getGenres = async (
 
 /**
  * Retrieves development jwt from ID service.
- * Makes a request with said token to configured encoding service URL to retrieve existing processing profile titles.
+ * Makes a request with said token to the configured Video Service URL to retrieve existing processing profile titles.
  */
 const getProcessingProfiles = async (
   devServiceAccountClientId: string | undefined,
   devServiceAccountClientSecret: string | undefined,
   idServiceAuthBaseUrl: string | undefined,
-  encodingBaseUrl: string,
+  videoBaseUrl: string,
 ): Promise<string[]> => {
   try {
     const idJwt = await getIdToken(
@@ -664,7 +664,7 @@ const getProcessingProfiles = async (
       idServiceAuthBaseUrl,
     );
     const result = await axios.post(
-      urljoin(encodingBaseUrl, 'graphql'),
+      urljoin(videoBaseUrl, 'graphql'),
       {
         query: print(gql`
           query GetProcessingProfileTitles {
@@ -685,12 +685,12 @@ const getProcessingProfiles = async (
       );
     if (!profiles) {
       throw new Error(
-        'Unable to retrieve encoding processing profiles! It is possible that Encoding Service API has changed.',
+        'Unable to retrieve encoding processing profiles! It is possible that the Video Service API has changed.',
       );
     }
     if (profiles.length === 0) {
       throw new Error(
-        'Encoding service has no processing profiles! Please make sure that at least one is created.',
+        'The Video Service has no processing profiles! Please make sure that at least one is created.',
       );
     }
 
@@ -861,7 +861,7 @@ async function main(): Promise<void> {
       'devImageBlobStorageContainer',
       'devVideoBlobStorageConnectionString',
       'devVideoBlobStorageContainer',
-      'encodingServiceBaseUrl',
+      'videoServiceBaseUrl',
       'devServiceAccountClientId',
       'devServiceAccountClientSecret',
       'idServiceAuthBaseUrl',
@@ -888,7 +888,7 @@ async function main(): Promise<void> {
           config.devServiceAccountClientId,
           config.devServiceAccountClientSecret,
           config.idServiceAuthBaseUrl,
-          config.encodingServiceBaseUrl,
+          config.videoServiceBaseUrl,
         )
       : [];
 

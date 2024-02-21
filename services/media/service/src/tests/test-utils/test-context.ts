@@ -7,6 +7,7 @@ import {
   runCurrentSql,
   transactionWithContext,
 } from '@axinom/mosaic-db-common';
+import { enhanceGraphqlErrors } from '@axinom/mosaic-graphql-common';
 import {
   AuthenticatedManagementSubject,
   ManagementAuthenticationContext,
@@ -14,11 +15,12 @@ import {
 import { Broker } from '@axinom/mosaic-message-bus';
 import {
   assertError,
+  customizeGraphQlErrorFields,
   defaultWriteLogMapper,
   Dict,
   GraphQLErrorEnhanced,
-  graphqlErrorsHandler,
   Logger,
+  logGraphQlError,
   MosaicError,
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
@@ -87,11 +89,11 @@ const runGqlQuery = async function (
 
       // Transform errors
       if (result.errors) {
-        result.errors = graphqlErrorsHandler(
+        result.errors = enhanceGraphqlErrors(
           result.errors,
-          mediaPgErrorMapper,
-          defaultWriteLogMapper,
-          this.logger,
+          req.body?.operationName,
+          customizeGraphQlErrorFields(mediaPgErrorMapper),
+          logGraphQlError(defaultWriteLogMapper, this.logger),
         );
       }
       return result;
@@ -121,6 +123,7 @@ export interface ITestContext {
 
 export interface TestRequestContext {
   authContext: ManagementAuthenticationContext;
+  token?: string;
 }
 
 export const createTestRequestContext = (
@@ -131,6 +134,7 @@ export const createTestRequestContext = (
     authContext: {
       subject: subject ?? createTestUser(serviceId),
     },
+    token: 'mock_token',
   };
 };
 

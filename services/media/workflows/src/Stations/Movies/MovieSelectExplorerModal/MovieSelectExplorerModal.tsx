@@ -20,6 +20,11 @@ export const useMovieSelectExplorerModal = ({
       excludeItems={excludeItems}
       actions={[
         {
+          label: 'New',
+          openInNewTab: true,
+          path: '/movies/create',
+        },
+        {
           label: 'Cancel',
           icon: IconName.X,
           onClick: closeModal,

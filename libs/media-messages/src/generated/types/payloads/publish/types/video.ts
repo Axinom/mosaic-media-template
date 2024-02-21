@@ -1,3 +1,4 @@
+import { CuePoint } from './cue-point';
 import { Format } from './format';
 import { VideoStream } from './video-stream';
 import { VideoUsageType } from './video-usage-type';
@@ -10,7 +11,7 @@ export interface Video {
    */
   type: VideoUsageType;
   /**
-   * String of minimum length of 1 character, which is also cannot consist of only whitespace characters.
+   * A string with at least one character and not only whitespace characters.
    */
   title: string;
   /**
@@ -20,15 +21,15 @@ export interface Video {
   /**
    * Array of audio languages available in the stream.
    */
-  audio_languages?: Array<string>;
+  audio_languages?: string[];
   /**
    * Array of subtitle languages available in the stream.
    */
-  subtitle_languages?: Array<string>;
+  subtitle_languages?: string[];
   /**
    * Array of caption languages available in the stream.
    */
-  caption_languages?: Array<string>;
+  caption_languages?: string[];
   /**
    * URI to a DASH manifest.
    */
@@ -40,7 +41,11 @@ export interface Video {
   /**
    * Video Streams
    */
-  video_streams?: Array<VideoStream>;
+  video_streams?: VideoStream[];
+  /**
+   * Cue points associated with video.
+   */
+  cue_points?: CuePoint[];
   /**
    * Indicates whether a stream is protected with DRM.
    */

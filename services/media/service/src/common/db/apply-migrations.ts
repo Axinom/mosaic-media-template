@@ -6,6 +6,7 @@ import {
 import {
   Dict,
   Logger,
+  migrationsSkipMaskMiddleware,
   MosaicError,
   mosaicErrorMappingFactory,
   MosaicErrors,
@@ -22,7 +23,10 @@ const getMappedMigrationsError = mosaicErrorMappingFactory((_error: Error) => {
 });
 
 export const applyMigrations = async (config: Config): Promise<void> => {
-  const logger = new Logger({ context: 'Migrations' });
+  const logger = new Logger({
+    context: applyMigrations.name,
+    skipMaskMiddleware: migrationsSkipMaskMiddleware,
+  });
   // Migrate to the latest committed state if we are in a non-dev environment.
   if (!config.isDev) {
     try {

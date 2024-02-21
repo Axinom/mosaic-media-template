@@ -70,7 +70,7 @@ describe('TvshowPublishEventHandler', () => {
       const expectedVideos = message.videos.map((video) => {
         return Object.fromEntries(
           Object.entries(video).filter(
-            ([key, _value]) => key !== 'video_streams',
+            ([key, _value]) => key !== 'video_streams' && key !== 'cue_points',
           ),
         );
       });
@@ -86,6 +86,14 @@ describe('TvshowPublishEventHandler', () => {
       ).map(({ id, tvshow_video_id, ...stream }) => stream);
       expect(tvshowVideoStreams).toIncludeSameMembers(
         message.videos[0].video_streams!,
+      );
+      const videoCuePoints = (
+        await select('tvshow_video_cue_points', {
+          tvshow_video_id: videos[0].id,
+        }).run(ctx.ownerPool)
+      ).map(({ id, tvshow_video_id, ...cuePoint }) => cuePoint);
+      expect(videoCuePoints).toIncludeSameMembers(
+        message.videos[0].cue_points!,
       );
 
       const licenses = await select('tvshow_licenses', {

@@ -8,7 +8,7 @@
     "permissions": ["IMAGES_EDIT"]
   },
   {
-    "serviceId": "ax-encoding-service",
+    "serviceId": "ax-video-service",
     "permissions": ["VIDEOS_ENCODE"]
   }
 ]

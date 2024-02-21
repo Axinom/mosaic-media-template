@@ -7,7 +7,7 @@ const jestConfig: JestConfigWithTsJest = {
   setupFilesAfterEnv: ['jest-expect-message', 'jest-extended/all'],
   projects: [
     '<rootDir>/scripts/jest.config.ts',
-    '<rootDir>/services/**/jest.config.ts',
+    '<rootDir>/services/!(vod-to-live)/**/jest.config.ts',
     //'<rootDir>/libs/**/jest.config.ts',
   ],
   collectCoverageFrom: [

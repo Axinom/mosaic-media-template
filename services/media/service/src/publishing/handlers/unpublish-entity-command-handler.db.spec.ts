@@ -1,4 +1,5 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
   createOffsetDate,
   dateToBeInRange,
@@ -30,12 +31,18 @@ describe('UnpublishEntityCommandHandler', () => {
     ctx = await createTestContext();
     const broker = stub<Broker>({
       publish: (
-        messageType: string,
+        _id: string,
+        settings: MessagingSettings,
         message: unknown,
-        context: unknown,
+        overrides: unknown,
         options: unknown,
       ) => {
-        messages.push({ message, messageType, context, options });
+        messages.push({
+          message,
+          messageType: settings.messageType,
+          overrides,
+          options,
+        });
       },
     });
     const user = createTestUser(ctx.config.serviceId);
@@ -125,7 +132,7 @@ describe('UnpublishEntityCommandHandler', () => {
       ]);
       expect(messages).toIncludeSameMembers([
         {
-          context: {
+          overrides: {
             auth_token:
               'some token value which is not used because we are substituting getPgSettings method and using a stub user',
           },
@@ -173,7 +180,7 @@ describe('UnpublishEntityCommandHandler', () => {
       ]);
       expect(messages).toIncludeSameMembers([
         {
-          context: {
+          overrides: {
             auth_token:
               'some token value which is not used because we are substituting getPgSettings method and using a stub user',
           },

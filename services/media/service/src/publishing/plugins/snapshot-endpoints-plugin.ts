@@ -6,7 +6,7 @@ import {
 } from 'media-messages';
 import { gql as gqlExtended, makeExtendSchemaPlugin } from 'postgraphile';
 import { CommonErrors, getLongLivedToken } from '../../common';
-import { ExtendedGraphQLContext } from '../../graphql';
+import { getValidatedExtendedContext } from '../../graphql';
 import { getSnapshotPgField } from '../utils';
 
 /**
@@ -24,7 +24,8 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
       Mutation: {
         publishSnapshot: async (_query, args, context, { graphile }) => {
           const snapshotId: number = args['snapshotId'];
-          const { messagingBroker } = context as ExtendedGraphQLContext;
+          const { messagingBroker, jwtToken, config } =
+            getValidatedExtendedContext(context);
 
           const snapshot = await getSnapshotPgField(
             snapshotId,
@@ -40,7 +41,8 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
           }
 
           await messagingBroker.publish<PublishEntityCommand>(
-            MediaServiceMessagingSettings.PublishEntity.messageType,
+            snapshotId.toString(),
+            MediaServiceMessagingSettings.PublishEntity,
             {
               entity_id: snapshotId,
               table_name: 'snapshots',
@@ -49,10 +51,7 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
               },
             },
             {
-              auth_token: await getLongLivedToken(
-                context.jwtToken ?? '',
-                context.config,
-              ),
+              auth_token: await getLongLivedToken(jwtToken, config),
             },
           );
 
@@ -61,7 +60,8 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
 
         unpublishSnapshot: async (_query, args, context, { graphile }) => {
           const snapshotId: number = args['snapshotId'];
-          const { messagingBroker } = context as ExtendedGraphQLContext;
+          const { messagingBroker, jwtToken, config } =
+            getValidatedExtendedContext(context);
 
           const snapshot = await getSnapshotPgField(
             snapshotId,
@@ -77,16 +77,14 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
           }
 
           await messagingBroker.publish<UnpublishEntityCommand>(
-            MediaServiceMessagingSettings.UnpublishEntity.messageType,
+            snapshotId.toString(),
+            MediaServiceMessagingSettings.UnpublishEntity,
             {
               entity_id: snapshotId,
               table_name: 'snapshots',
             },
             {
-              auth_token: await getLongLivedToken(
-                context.jwtToken ?? '',
-                context.config,
-              ),
+              auth_token: await getLongLivedToken(jwtToken, config),
             },
           );
 

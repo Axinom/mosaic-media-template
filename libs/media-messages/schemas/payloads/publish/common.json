@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "common",
   "description": "Common definitions in published feed metadata.",
   "definitions": {
@@ -41,6 +41,7 @@
     "tags": {
       "description": "Array of tags associated with the content.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "string"
       }
@@ -48,6 +49,7 @@
     "production_countries": {
       "description": "Array of production countries",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "type": "string"
       }
@@ -60,6 +62,7 @@
         "countries": {
           "description": "Array of countries where the license applies.",
           "type": "array",
+          "additionalItems": false,
           "items": {
             "$ref": "../common.json#/definitions/non_empty_string"
           }
@@ -80,6 +83,7 @@
     "licenses": {
       "description": "Array of licenses assigned to the content.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "$ref": "#/definitions/license"
       }
@@ -115,6 +119,7 @@
     "images": {
       "description": "Array of images associated with the content.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "$ref": "#/definitions/image"
       }
@@ -199,6 +204,27 @@
         }
       }
     },
+    "cue_point": {
+      "description": "Cue point metadata.",
+      "type": "object",
+      "title": "cue_point",
+      "additionalProperties": false,
+      "required": ["cue_point_type_key", "time_in_seconds"],
+      "properties": {
+        "cue_point_type_key": {
+          "description": "Key of the cue point type.",
+          "type": "string"
+        },
+        "time_in_seconds": {
+          "description": "Time in seconds at which the cue point is triggered within the video.",
+          "type": "number"
+        },
+        "value": {
+          "description": "Additional data associated with the cue point.",
+          "type": ["string", "null"]
+        }
+      }
+    },
     "video": {
       "description": "Video metadata.",
       "type": "object",
@@ -221,6 +247,7 @@
         "audio_languages": {
           "description": "Array of audio languages available in the stream.",
           "type": "array",
+          "additionalItems": false,
           "items": {
             "type": "string"
           }
@@ -228,6 +255,7 @@
         "subtitle_languages": {
           "description": "Array of subtitle languages available in the stream.",
           "type": "array",
+          "additionalItems": false,
           "items": {
             "type": "string"
           }
@@ -235,6 +263,7 @@
         "caption_languages": {
           "description": "Array of caption languages available in the stream.",
           "type": "array",
+          "additionalItems": false,
           "items": {
             "type": "string"
           }
@@ -250,8 +279,17 @@
         "video_streams": {
           "description": "Video Streams",
           "type": "array",
+          "additionalItems": false,
           "items": {
             "$ref": "#/definitions/video_stream"
+          }
+        },
+        "cue_points": {
+          "description": "Cue points associated with video.",
+          "type": "array",
+          "additionalItems": false,
+          "items": {
+            "$ref": "#/definitions/cue_point"
           }
         },
         "is_protected": {
@@ -271,6 +309,7 @@
     "videos": {
       "description": "Array of video streams associated with movie or episode.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "$ref": "#/definitions/video"
       }
@@ -297,6 +336,7 @@
         "audio_languages": {
           "description": "Array of audio languages available in the stream.",
           "type": "array",
+          "additionalItems": false,
           "items": {
             "type": "string"
           }
@@ -304,6 +344,7 @@
         "subtitle_languages": {
           "description": "Array of subtitle languages available in the stream.",
           "type": "array",
+          "additionalItems": false,
           "items": {
             "type": "string"
           }
@@ -311,6 +352,7 @@
         "caption_languages": {
           "description": "Array of caption languages available in the stream.",
           "type": "array",
+          "additionalItems": false,
           "items": {
             "type": "string"
           }
@@ -326,8 +368,17 @@
         "video_streams": {
           "description": "Video Streams",
           "type": "array",
+          "additionalItems": false,
           "items": {
             "$ref": "#/definitions/video_stream"
+          }
+        },
+        "cue_points": {
+          "description": "Cue points associated with video.",
+          "type": "array",
+          "additionalItems": false,
+          "items": {
+            "$ref": "#/definitions/cue_point"
           }
         },
         "is_protected": {
@@ -347,6 +398,7 @@
     "trailers": {
       "description": "Array of video streams associated with tv show or season.",
       "type": "array",
+      "additionalItems": false,
       "items": {
         "$ref": "#/definitions/trailer"
       }

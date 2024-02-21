@@ -200,7 +200,8 @@ export class StartIngestHandler extends MediaGuardedMessageHandler<StartIngestCo
   ): Promise<void> {
     for (const ingestItem of ingestItems) {
       await this.broker.publish<StartIngestItemCommand>(
-        MediaServiceMessagingSettings.StartIngestItem.messageType,
+        ingestItem.id.toString(),
+        MediaServiceMessagingSettings.StartIngestItem,
         {
           ingest_item_id: ingestItem.id,
           entity_id: ingestItem.entity_id,
@@ -211,7 +212,8 @@ export class StartIngestHandler extends MediaGuardedMessageHandler<StartIngestCo
     }
 
     await this.broker.publish<CheckFinishIngestDocumentCommand>(
-      MediaServiceMessagingSettings.CheckFinishIngestDocument.messageType,
+      documentId.toString(),
+      MediaServiceMessagingSettings.CheckFinishIngestDocument,
       {
         ingest_document_id: documentId,
         seconds_without_progress: 0,

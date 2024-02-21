@@ -42,7 +42,8 @@ export class ImageFailedHandler extends MediaGuardedMessageHandler<EnsureImageEx
       .message_context as ImageMessageContext;
 
     await this.broker.publish<CheckFinishIngestItemCommand>(
-      MediaServiceMessagingSettings.CheckFinishIngestItem.messageType,
+      messageContext.ingestItemId.toString(),
+      MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,

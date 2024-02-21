@@ -12,6 +12,7 @@ import { IngestDocumentUpload } from './IngestDocumentUpload/IngestDocumentUploa
 
 export function register(app: PiletApi, extensions: Extensions): void {
   const ingestNav = {
+    name: 'ingest',
     path: '/ingest',
     label: 'Ingest',
     icon: <MediaIcons icon={MediaIconName.Ingest} />,

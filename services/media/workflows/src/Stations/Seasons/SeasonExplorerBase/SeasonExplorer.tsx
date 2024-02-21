@@ -1,6 +1,6 @@
+import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -13,7 +13,6 @@ import {
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { client } from '../../../apolloClient';
-import { getThumbnailAndStateRenderer } from '../../../externals';
 import {
   SeasonsDocument,
   SeasonsMutatedDocument,
@@ -28,6 +27,8 @@ import {
   useUnpublishSeasonMutation,
 } from '../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
+import { SeasonIndexRenderer } from './renderers/SeasonIndexRenderer';
+import { SeasonParentRenderer } from './renderers/SeasonParentRenderer';
 import { useSeasonsFilters } from './SeasonExplorer.filters';
 import { SeasonData, SeasonExplorerProps } from './SeasonExplorer.types';
 
@@ -62,7 +63,13 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
       ),
       size: '80px',
     },
-    { label: 'Season Index', propertyName: 'index' },
+    { label: 'Index', propertyName: 'index', render: SeasonIndexRenderer },
+    {
+      label: 'Parent Entity',
+      propertyName: 'tvshow',
+      render: SeasonParentRenderer,
+      sortable: false,
+    },
     { label: 'External ID', propertyName: 'externalId' },
     {
       label: 'Genres',
@@ -140,6 +147,7 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
 
   const generateInlineMenuActions: (data: SeasonData) => ActionData[] = ({
     id,
+    tvshow,
   }) => {
     return [
       {
@@ -150,7 +158,6 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           });
           history.push('/seasons');
         },
-        actionType: ActionType.Context,
         icon: IconName.Snapshot,
       },
       {
@@ -159,7 +166,6 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           await publishSeasonMutation({ variables: { id } });
           history.push('/seasons');
         },
-        actionType: ActionType.Context,
         icon: IconName.Publish,
         confirmationMode: 'Simple',
       },
@@ -169,7 +175,6 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           await unpublishSeasonMutation({ variables: { id } });
           history.push('/seasons');
         },
-        actionType: ActionType.Context,
         icon: IconName.Unpublish,
         confirmationMode: 'Simple',
       },
@@ -179,16 +184,22 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           await deleteSeasonMutation({ variables: { input: { id } } });
           history.push('/seasons');
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(`/seasons/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/seasons/${id}`,
       },
+      ...(tvshow
+        ? [
+            {
+              label: 'Open Parent Entity',
+              path: `/tvshows/${tvshow?.id}`,
+              openInNewTab: true,
+            },
+          ]
+        : []),
     ];
   };
 
@@ -212,6 +223,7 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           dataProvider={dataProvider}
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
+          generateItemLink={(item) => `/seasons/${item.id}`}
         />
       );
     default:

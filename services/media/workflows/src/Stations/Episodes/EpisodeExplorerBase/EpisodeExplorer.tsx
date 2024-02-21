@@ -1,6 +1,6 @@
+import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
-  ActionType,
   Column,
   createConnectionRenderer,
   DateRenderer,
@@ -13,7 +13,6 @@ import {
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { client } from '../../../apolloClient';
-import { getThumbnailAndStateRenderer } from '../../../externals';
 import {
   EpisodesDocument,
   EpisodesMutatedDocument,
@@ -30,6 +29,8 @@ import {
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
 import { useEpisodesFilters } from './EpisodeExplorer.filters';
 import { EpisodeData, EpisodeExplorerProps } from './EpisodeExplorer.types';
+import { ExplorerIndexRenderer } from './renderers/ExplorerIndexRenderer';
+import { ExplorerParentRenderer } from './renderers/ExplorerParentRenderer';
 
 export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
   const { filterOptions, transformFilters } = useEpisodesFilters();
@@ -63,7 +64,13 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
       size: '80px',
     },
     { label: 'Title', propertyName: 'title', size: '2fr' },
-    { label: 'Episode Index', propertyName: 'index' },
+    { label: 'Index', propertyName: 'index', render: ExplorerIndexRenderer },
+    {
+      label: 'Parent Entity',
+      propertyName: 'season',
+      render: ExplorerParentRenderer,
+      sortable: false,
+    },
     { label: 'External ID', propertyName: 'externalId' },
     {
       label: 'Genres',
@@ -142,6 +149,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
 
   const generateInlineMenuActions: (data: EpisodeData) => ActionData[] = ({
     id,
+    season,
   }) => {
     return [
       {
@@ -152,7 +160,6 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           });
           history.push('/episodes');
         },
-        actionType: ActionType.Context,
         icon: IconName.Snapshot,
       },
       {
@@ -161,7 +168,6 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           await publishEpisodeMutation({ variables: { id } });
           history.push('/episodes');
         },
-        actionType: ActionType.Context,
         icon: IconName.Publish,
         confirmationMode: 'Simple',
       },
@@ -171,7 +177,6 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           await unpublishEpisodeMutation({ variables: { id } });
           history.push('/episodes');
         },
-        actionType: ActionType.Context,
         icon: IconName.Unpublish,
         confirmationMode: 'Simple',
       },
@@ -181,16 +186,22 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           await deleteEpisodeMutation({ variables: { input: { id } } });
           history.push('/episodes');
         },
-        actionType: ActionType.Context,
         icon: IconName.Delete,
         confirmationMode: 'Simple',
       },
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(`/episodes/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/episodes/${id}`,
       },
+      ...(season
+        ? [
+            {
+              label: 'Open Parent Entity',
+              path: `/seasons/${season?.id}`,
+              openInNewTab: true,
+            },
+          ]
+        : []),
     ];
   };
 
@@ -214,6 +225,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           dataProvider={dataProvider}
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
+          generateItemLink={(item) => `/episodes/${item.id}`}
         />
       );
     default:

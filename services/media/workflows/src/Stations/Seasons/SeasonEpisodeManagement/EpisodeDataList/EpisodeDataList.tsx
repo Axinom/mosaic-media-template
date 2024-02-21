@@ -1,6 +1,5 @@
 import {
   ActionData,
-  ActionType,
   DynamicDataList,
   DynamicListColumn,
   IconName,
@@ -63,13 +62,11 @@ export const EpisodeDataList: React.FC<EpisodeDataListProps> = ({
       {
         label: 'Unassign',
         onActionSelected: () => handleUnassign(id),
-        actionType: ActionType.Context,
         icon: IconName.X,
       },
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(`/episodes/${id}`),
-        actionType: ActionType.Navigation,
+        path: `/episodes/${id}`,
         icon: IconName.NavigateRight,
       },
     ];

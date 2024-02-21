@@ -23,14 +23,14 @@ Media service has a dedicated script to generate working ingest document files:
 
 If simplified, the script execution process looks like this:
 
-- Request existing encoding processing profiles from configured encoding service
-  URL
+- Request existing encoding processing profiles from configured the video
+  service URL
 - Request existing genres from the media service database
 - Generate random image files and put them into the configured blob storage
   container
 - Make multiple copies of the sample video file and put them into the configured
   blob storage container
-- Generate Ingest Document JSON file using data from requested encoding
+- Generate a ingest document JSON file using data from requested encoding
   profiles, genres, generated videos, images, and pseudo-random metadata
 - Save this file into the `services/media/service/ingest-gen` folder, which is
   excluded from source control by default.
@@ -52,8 +52,8 @@ DEV_VIDEO_BLOB_STORAGE_CONTAINER=source-videos
 - Connection string value can also be a SAS connection string of the following
   format:
   `BlobEndpoint=https://myaccount.blob.core.windows.net/;QueueEndpoint=https://myaccount.queue.core.windows.net/;FileEndpoint=https://myaccount.file.core.windows.net/;TableEndpoint=https://myaccount.table.core.windows.net/;SharedAccessSignature=sasString`
-- Because the script also makes requests to encoding service API and media
-  service database - appropriate values must be configured as well, but they
+- Because the script also makes requests to the Video Service API and Media
+  Service database - appropriate values must be configured as well, but they
   should have default values. Otherwise - errors would be thrown, indicating the
   problem.
 

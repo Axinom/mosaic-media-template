@@ -1,7 +1,7 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.organizeImports": false
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
   },
   "jestrunner.jestCommand": "yarn util:load-vars jest",
   "files.associations": {
@@ -12,6 +12,8 @@
   "cSpell.words": [
     "Axinom",
     "Axinom's",
+    "CMAF",
+    "CPIX",
     "codegen",
     "Dockerized",
     "Downloadability",
@@ -27,6 +29,8 @@
     "postgraphile",
     "prefetch",
     "RABBITMQ",
+    "SMIL",
+    "SPEKE",
     "unassignment",
     "uncommit",
     "unpublish",

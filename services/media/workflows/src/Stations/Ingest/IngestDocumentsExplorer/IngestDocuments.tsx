@@ -1,15 +1,12 @@
 import {
   ActionData,
-  ActionType,
   Column,
   DateRenderer,
   ExplorerDataProvider,
-  IconName,
   NavigationExplorer,
   sortToPostGraphileOrderBy,
 } from '@axinom/mosaic-ui';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { client } from '../../../apolloClient';
 import {
   IngestDocumentsDocument,
@@ -26,8 +23,6 @@ type IngestDocumentsData = NonNullable<
 >['nodes'][number];
 
 export const IngestDocuments: React.FC = () => {
-  const history = useHistory();
-
   // Columns
   const explorerColumns: Column<IngestDocumentsData>[] = [
     {
@@ -123,9 +118,7 @@ export const IngestDocuments: React.FC = () => {
     return [
       {
         label: 'Open Details',
-        onActionSelected: () => history.push(`/ingest/${id}`),
-        actionType: ActionType.Navigation,
-        icon: IconName.ChevronRight,
+        path: `/ingest/${id}`,
       },
     ];
   };
@@ -138,7 +131,7 @@ export const IngestDocuments: React.FC = () => {
       dataProvider={dataProvider}
       calculateNavigateUrl={(item) => `/ingest/${item.id}`}
       defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
-      onCreateAction={() => history.push(`/ingest/upload`)}
+      onCreateAction="/ingest/upload"
       inlineMenuActions={generateInlineMenuActions}
     />
   );

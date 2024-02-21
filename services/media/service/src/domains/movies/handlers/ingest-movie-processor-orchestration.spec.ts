@@ -1,3 +1,4 @@
+import { UNKNOWN_AGGREGATE_ID } from '@axinom/mosaic-message-bus';
 import {
   ImageServiceMultiTenantMessagingSettings,
   VideoServiceMultiTenantMessagingSettings,
@@ -20,6 +21,7 @@ describe('IngestMovieProcessor', () => {
   const mediaId = 2;
 
   const metaData = (item: StartIngestItemCommand['item']) => ({
+    aggregateId: mediaId.toString(),
     ingestItemStep: {
       id: ingestStepId,
       ingest_item_id: ingestItemId,
@@ -38,6 +40,7 @@ describe('IngestMovieProcessor', () => {
     messagingSettings: MediaServiceMessagingSettings.UpdateMetadata,
   });
   const videoData = (item: StartIngestItemCommand['item']) => ({
+    aggregateId: UNKNOWN_AGGREGATE_ID,
     ingestItemStep: {
       id: ingestStepId,
       ingest_item_id: ingestItemId,
@@ -58,6 +61,7 @@ describe('IngestMovieProcessor', () => {
       VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
   });
   const trailer1Data = (item: StartIngestItemCommand['item']) => ({
+    aggregateId: UNKNOWN_AGGREGATE_ID,
     ingestItemStep: {
       id: ingestStepId,
       ingest_item_id: ingestItemId,
@@ -78,6 +82,7 @@ describe('IngestMovieProcessor', () => {
       VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
   });
   const trailer2Data = (item: StartIngestItemCommand['item']) => ({
+    aggregateId: UNKNOWN_AGGREGATE_ID,
     ingestItemStep: {
       id: ingestStepId,
       ingest_item_id: ingestItemId,
@@ -98,6 +103,7 @@ describe('IngestMovieProcessor', () => {
       VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
   });
   const teaserData = () => ({
+    aggregateId: UNKNOWN_AGGREGATE_ID,
     ingestItemStep: {
       id: ingestStepId,
       ingest_item_id: ingestItemId,
@@ -117,6 +123,7 @@ describe('IngestMovieProcessor', () => {
       ImageServiceMultiTenantMessagingSettings.EnsureImageExists,
   });
   const coverData = () => ({
+    aggregateId: UNKNOWN_AGGREGATE_ID,
     ingestItemStep: {
       id: ingestStepId,
       ingest_item_id: ingestItemId,

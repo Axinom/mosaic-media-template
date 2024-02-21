@@ -1,3 +1,4 @@
+import { UNKNOWN_AGGREGATE_ID } from '@axinom/mosaic-message-bus';
 import {
   EnsureImageExistsCommand,
   EnsureVideoExistsCommand,
@@ -157,6 +158,7 @@ export abstract class DefaultIngestEntityProcessor
     };
     return [
       {
+        aggregateId: entity_id.toString(),
         messagingSettings: MediaServiceMessagingSettings.UpdateMetadata,
         messageContext,
         messagePayload,
@@ -191,6 +193,7 @@ export abstract class DefaultIngestEntityProcessor
       };
       return [
         {
+          aggregateId: UNKNOWN_AGGREGATE_ID,
           messagingSettings:
             VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
           messagePayload,
@@ -230,6 +233,7 @@ export abstract class DefaultIngestEntityProcessor
         videoType: type,
       };
       orchestrationData.push({
+        aggregateId: UNKNOWN_AGGREGATE_ID,
         messagingSettings:
           VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
         messagePayload,
@@ -268,6 +272,7 @@ export abstract class DefaultIngestEntityProcessor
         imageType: image.type,
       };
       orchestrationData.push({
+        aggregateId: UNKNOWN_AGGREGATE_ID,
         messagingSettings:
           ImageServiceMultiTenantMessagingSettings.EnsureImageExists,
         messagePayload,

@@ -1,5 +1,5 @@
 import {
-  CreatePostgresPoolConnectivityMetric,
+  createPostgresPoolConnectivityMetric,
   getLoginPgPool,
   getOwnerPgPool,
   initMessagingCounter,
@@ -7,7 +7,7 @@ import {
   setupOwnerPgPool,
 } from '@axinom/mosaic-db-common';
 import {
-  CreateRabbitMQConnectivityMetric,
+  createRabbitMQConnectivityMetric,
   envelopeLoggingMiddleware,
   setupMessagingBroker,
 } from '@axinom/mosaic-message-bus';
@@ -20,10 +20,12 @@ import {
   setupGlobalLogMiddleware,
   setupLivenessAndReadiness,
   setupMonitoring,
+  setupServiceHealthEndpoint,
   setupShutdownActions,
   tenantEnvironmentIdsLogMiddleware,
 } from '@axinom/mosaic-service-common';
 import express from 'express';
+import { PoolConfig } from 'pg';
 import { postgraphile } from 'postgraphile';
 import { applyMigrations, getFullConfig } from './common';
 import { registerMessaging } from './domains/register-messaging';
@@ -41,19 +43,25 @@ async function bootstrap(): Promise<void> {
 
   const { readiness } = setupLivenessAndReadiness(config);
 
+  // Register service health endpoint
+  setupServiceHealthEndpoint(app);
+
   await applyMigrations(config);
   const shutdownActions = setupShutdownActions(app, logger);
+  const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
   setupOwnerPgPool(
     app,
     config.dbOwnerConnectionString,
     logger,
     shutdownActions,
+    poolConfig,
   );
-  setupLoginPgPool(
+  const loginPool = setupLoginPgPool(
     app,
     config.dbLoginConnectionString,
     logger,
     shutdownActions,
+    poolConfig,
   );
   const counter = initMessagingCounter(getOwnerPgPool(app));
   const broker = await setupMessagingBroker({
@@ -69,19 +77,13 @@ async function bootstrap(): Promise<void> {
 
   setupMonitoring(config, {
     metrics: [
-      CreatePostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
-      CreateRabbitMQConnectivityMetric(broker),
+      createPostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
+      createRabbitMQConnectivityMetric(broker),
     ],
   });
 
   app.use(
-    postgraphile(
-      {
-        connectionString: config.dbLoginConnectionString,
-      },
-      'app_public',
-      buildPostgraphileOptions(config),
-    ),
+    postgraphile(loginPool, 'app_public', buildPostgraphileOptions(config)),
   );
 
   const server = app.listen(config.port, () => {

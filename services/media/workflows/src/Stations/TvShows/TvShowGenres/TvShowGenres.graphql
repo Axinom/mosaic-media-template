@@ -1,5 +1,5 @@
 query TvShowGenres {
-  tvshowGenres(orderBy: UPDATED_DATE_DESC) {
+  tvshowGenres(orderBy: SORT_ORDER_ASC) {
     nodes {
       sortOrder
       title

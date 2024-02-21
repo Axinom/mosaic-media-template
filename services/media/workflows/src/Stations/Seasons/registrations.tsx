@@ -18,6 +18,7 @@ import { SeasonVideoManagement } from './SeasonVideoManagement/SeasonVideoManage
 
 export function register(app: PiletApi, extensions: Extensions): void {
   const seasonsNav = {
+    name: 'seasons',
     path: '/seasons',
     label: 'Seasons',
     icon: <MediaIcons icon={MediaIconName.Seasons} />,

@@ -17,8 +17,8 @@ export type Scalars = {
   BigFloat: any;
   Cursor: any;
   Datetime: any;
-  UUID: any;
   Upload: any;
+  UUID: any;
 };
 
 export enum AmazonS3Region {
@@ -32,20 +32,20 @@ export enum AmazonS3Region {
   ApNortheast_2 = 'AP_NORTHEAST_2',
   /** Asia Pacific (Osaka) ap-northeast-3 */
   ApNortheast_3 = 'AP_NORTHEAST_3',
+  /** Asia Pacific (Mumbai) ap-south-1 */
+  ApSouth_1 = 'AP_SOUTH_1',
   /** Asia Pacific (Singapore) ap-southeast-1 */
   ApSoutheast_1 = 'AP_SOUTHEAST_1',
   /** Asia Pacific (Sydney) ap-southeast-2 */
   ApSoutheast_2 = 'AP_SOUTHEAST_2',
   /** Asia Pacific (Jakarta) ap-southeast-3 */
   ApSoutheast_3 = 'AP_SOUTHEAST_3',
-  /** Asia Pacific (Mumbai) ap-south-1 */
-  ApSouth_1 = 'AP_SOUTH_1',
   /** Canada (Central) ca-central-1 */
   CaCentral_1 = 'CA_CENTRAL_1',
-  /** China (Ningxia) cn-northwest-1 */
-  CnNorthwest_1 = 'CN_NORTHWEST_1',
   /** China (Beijing) cn-north-1 */
   CnNorth_1 = 'CN_NORTH_1',
+  /** China (Ningxia) cn-northwest-1 */
+  CnNorthwest_1 = 'CN_NORTHWEST_1',
   /** Europe (Frankfurt) eu-central-1 */
   EuCentral_1 = 'EU_CENTRAL_1',
   /** Europe (Stockholm) eu-north-1 */
@@ -248,6 +248,7 @@ export type DeleteImagesTagPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
+  /** @deprecated The field is obsolete. */
   deletedImagesTagNodeId?: Maybe<Scalars['ID']>;
   /** Reads a single `Image` that is related to this `ImagesTag`. */
   image?: Maybe<Image>;
@@ -297,6 +298,12 @@ export enum ErrorCodesEnum {
   AssertionFailed = 'ASSERTION_FAILED',
   /** Auth config is invalid. */
   AuthConfigInvalid = 'AUTH_CONFIG_INVALID',
+  /** Authenticated End User not found. */
+  AuthenticatedEndUserNotFound = 'AUTHENTICATED_END_USER_NOT_FOUND',
+  /** Authenticated Management Subject not found. */
+  AuthenticatedManagementSubjectNotFound = 'AUTHENTICATED_MANAGEMENT_SUBJECT_NOT_FOUND',
+  /** A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue. */
+  AuthorizationOptionsMisconfigured = 'AUTHORIZATION_OPTIONS_MISCONFIGURED',
   /** Unable to authenticate access to the Azure Blob Storage. The Account Key from Acquisition Profile might be invalid. */
   AzureBlobAuthenticationFailed = 'AZURE_BLOB_AUTHENTICATION_FAILED',
   /** The image was not found in acquisition storage. Please confirm that the image file exists and that path is correct. Azure blob storage paths are case sensitive. */
@@ -317,6 +324,8 @@ export enum ErrorCodesEnum {
   DatabasePermissionsCheckFailed = 'DATABASE_PERMISSIONS_CHECK_FAILED',
   /** An expected and handled database constraint error has occurred. The actual message will have more information. */
   DatabaseValidationFailed = 'DATABASE_VALIDATION_FAILED',
+  /** Unable to declare image types as at least one other image type is already used by a different service. Please check the error details for the list of already declared image types and their service IDs. */
+  DeclareImageTypesDuplicate = 'DECLARE_IMAGE_TYPES_DUPLICATE',
   /** Could not process the ensure image exists command after multiple retries. */
   EnsureImageExistsFailed = 'ENSURE_IMAGE_EXISTS_FAILED',
   /** This is a wrapper error for the original unhandled error of unsupported type. */
@@ -379,7 +388,7 @@ export enum ErrorCodesEnum {
   StartupError = 'STARTUP_ERROR',
   /** User is authenticated, but subject information was not found. Please contact Axinom Support. */
   SubjectInformationNotFound = 'SUBJECT_INFORMATION_NOT_FOUND',
-  /** An unhandled database-related has occurred. Please contact the service support. */
+  /** An unhandled database-related error has occurred. Please contact the service support. */
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
@@ -388,7 +397,9 @@ export enum ErrorCodesEnum {
   /** User is not authorized to access the operation. */
   UserNotAuthorized = 'USER_NOT_AUTHORIZED',
   /** The User service is not accessible. Please contact Axinom support. */
-  UserServiceNotAccessible = 'USER_SERVICE_NOT_ACCESSIBLE'
+  UserServiceNotAccessible = 'USER_SERVICE_NOT_ACCESSIBLE',
+  /** Websocket not found in ExtendedGraphQLContext. This is a development time issue. A reference to the websocket must be included in Postgraphile build options. */
+  WebsocketNotFound = 'WEBSOCKET_NOT_FOUND'
 }
 
 /** A `String` edge in the connection. */
@@ -416,17 +427,17 @@ export type Image = {
   __typename?: 'Image';
   createdDate: Scalars['Datetime'];
   createdUser: Scalars['String'];
-  fileSizeInBytes?: Maybe<Scalars['Int']>;
   filename: Scalars['String'];
+  fileSizeInBytes?: Maybe<Scalars['Int']>;
   focalX?: Maybe<Scalars['BigFloat']>;
   focalY?: Maybe<Scalars['BigFloat']>;
   height?: Maybe<Scalars['Int']>;
   id: Scalars['UUID'];
+  /** Reads and enables pagination through a set of `ImagesTag`. */
+  imagesTags: ImagesTagsConnection;
   /** Reads a single `ImageType` that is related to this `Image`. */
   imageType?: Maybe<ImageType>;
   imageTypeKey: Scalars['String'];
-  /** Reads and enables pagination through a set of `ImagesTag`. */
-  imagesTags: ImagesTagsConnection;
   isArchived: Scalars['Boolean'];
   originalSourceLocation?: Maybe<Scalars['String']>;
   previewPath: Scalars['String'];
@@ -706,10 +717,10 @@ export type ImageCondition = {
   createdDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `createdUser` field. */
   createdUser?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `fileSizeInBytes` field. */
-  fileSizeInBytes?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `filename` field. */
   filename?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `fileSizeInBytes` field. */
+  fileSizeInBytes?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `focalX` field. */
   focalX?: InputMaybe<Scalars['BigFloat']>;
   /** Checks for equality with the object’s `focalY` field. */
@@ -750,10 +761,10 @@ export type ImageFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `fileSizeInBytes` field. */
-  fileSizeInBytes?: InputMaybe<IntFilter>;
   /** Filter by the object’s `filename` field. */
   filename?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `fileSizeInBytes` field. */
+  fileSizeInBytes?: InputMaybe<IntFilter>;
   /** Filter by the object’s `focalX` field. */
   focalX?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `focalY` field. */
@@ -762,14 +773,14 @@ export type ImageFilter = {
   height?: InputMaybe<IntFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `imageType` relation. */
-  imageType?: InputMaybe<ImageTypeFilter>;
-  /** Filter by the object’s `imageTypeKey` field. */
-  imageTypeKey?: InputMaybe<StringFilter>;
   /** Filter by the object’s `imagesTags` relation. */
   imagesTags?: InputMaybe<ImageToManyImagesTagFilter>;
   /** Some related `imagesTags` exist. */
   imagesTagsExist?: InputMaybe<Scalars['Boolean']>;
+  /** Filter by the object’s `imageType` relation. */
+  imageType?: InputMaybe<ImageTypeFilter>;
+  /** Filter by the object’s `imageTypeKey` field. */
+  imageTypeKey?: InputMaybe<StringFilter>;
   /** Filter by the object’s `isArchived` field. */
   isArchived?: InputMaybe<BooleanFilter>;
   /** Negates the expression. */
@@ -804,168 +815,6 @@ export type ImagePatch = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type ImageSubscriptionPayload = {
-  __typename?: 'ImageSubscriptionPayload';
-  event?: Maybe<Scalars['String']>;
-  id: Scalars['UUID'];
-  image?: Maybe<Image>;
-};
-
-/** A filter to be used against many `ImagesTag` object types. All fields are combined with a logical ‘and.’ */
-export type ImageToManyImagesTagFilter = {
-  /** Every related `ImagesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<ImagesTagFilter>;
-  /** No related `ImagesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<ImagesTagFilter>;
-  /** Some related `ImagesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<ImagesTagFilter>;
-};
-
-/** @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN,IMAGE_TYPES_DECLARE */
-export type ImageType = {
-  __typename?: 'ImageType';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  imageType: Scalars['String'];
-  /** Reads and enables pagination through a set of `Image`. */
-  images: ImagesConnection;
-  isArchived: Scalars['Boolean'];
-  serviceId: Scalars['String'];
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
-};
-
-
-/** @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN,IMAGE_TYPES_DECLARE */
-export type ImageTypeImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<ImageCondition>;
-  filter?: InputMaybe<ImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<ImagesOrderBy>>;
-};
-
-/**
- * A condition to be used against `ImageType` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type ImageTypeCondition = {
-  /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
-  /**
-   * Checks for equality with the object’s `imageType` field.
-   * @isTrimmed()
-   * @notEmpty()
-   */
-  imageType?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `isArchived` field. */
-  isArchived?: InputMaybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `serviceId` field. */
-  serviceId?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `title` field. */
-  title?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
-};
-
-/** A filter to be used against `ImageType` object types. All fields are combined with a logical ‘and.’ */
-export type ImageTypeFilter = {
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<ImageTypeFilter>>;
-  /** Filter by the object’s `createdDate` field. */
-  createdDate?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `createdUser` field. */
-  createdUser?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `imageType` field. */
-  imageType?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `images` relation. */
-  images?: InputMaybe<ImageTypeToManyImageFilter>;
-  /** Some related `images` exist. */
-  imagesExist?: InputMaybe<Scalars['Boolean']>;
-  /** Filter by the object’s `isArchived` field. */
-  isArchived?: InputMaybe<BooleanFilter>;
-  /** Negates the expression. */
-  not?: InputMaybe<ImageTypeFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<ImageTypeFilter>>;
-  /** Filter by the object’s `serviceId` field. */
-  serviceId?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<StringFilter>;
-};
-
-/** A filter to be used against many `Image` object types. All fields are combined with a logical ‘and.’ */
-export type ImageTypeToManyImageFilter = {
-  /** Every related `Image` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<ImageFilter>;
-  /** No related `Image` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<ImageFilter>;
-  /** Some related `Image` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<ImageFilter>;
-};
-
-/**
- * A connection to a list of `ImageType` values.
- * @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN,IMAGE_TYPES_DECLARE
- */
-export type ImageTypesConnection = {
-  __typename?: 'ImageTypesConnection';
-  /** A list of edges which contains the `ImageType` and cursor to aid in pagination. */
-  edges: Array<ImageTypesEdge>;
-  /** A list of `ImageType` objects. */
-  nodes: Array<ImageType>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ImageType` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `ImageType` edge in the connection. */
-export type ImageTypesEdge = {
-  __typename?: 'ImageTypesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ImageType` at the end of the edge. */
-  node: ImageType;
-};
-
-/** Methods to use when ordering `ImageType`. */
-export enum ImageTypesOrderBy {
-  CreatedDateAsc = 'CREATED_DATE_ASC',
-  CreatedDateDesc = 'CREATED_DATE_DESC',
-  CreatedUserAsc = 'CREATED_USER_ASC',
-  CreatedUserDesc = 'CREATED_USER_DESC',
-  ImagesByImageTypeKeyCountAsc = 'IMAGES_BY_IMAGE_TYPE_KEY__COUNT_ASC',
-  ImagesByImageTypeKeyCountDesc = 'IMAGES_BY_IMAGE_TYPE_KEY__COUNT_DESC',
-  ImageTypeAsc = 'IMAGE_TYPE_ASC',
-  ImageTypeDesc = 'IMAGE_TYPE_DESC',
-  IsArchivedAsc = 'IS_ARCHIVED_ASC',
-  IsArchivedDesc = 'IS_ARCHIVED_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  ServiceIdAsc = 'SERVICE_ID_ASC',
-  ServiceIdDesc = 'SERVICE_ID_DESC',
-  TitleAsc = 'TITLE_ASC',
-  TitleDesc = 'TITLE_DESC',
-  UpdatedDateAsc = 'UPDATED_DATE_ASC',
-  UpdatedDateDesc = 'UPDATED_DATE_DESC',
-  UpdatedUserAsc = 'UPDATED_USER_ASC',
-  UpdatedUserDesc = 'UPDATED_USER_DESC'
-}
-
 /**
  * A connection to a list of `Image` values.
  * @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN
@@ -997,10 +846,10 @@ export enum ImagesOrderBy {
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
-  FilenameAsc = 'FILENAME_ASC',
-  FilenameDesc = 'FILENAME_DESC',
   FileSizeInBytesAsc = 'FILE_SIZE_IN_BYTES_ASC',
   FileSizeInBytesDesc = 'FILE_SIZE_IN_BYTES_DESC',
+  FilenameAsc = 'FILENAME_ASC',
+  FilenameDesc = 'FILENAME_DESC',
   FocalXAsc = 'FOCAL_X_ASC',
   FocalXDesc = 'FOCAL_X_DESC',
   FocalYAsc = 'FOCAL_Y_ASC',
@@ -1009,8 +858,6 @@ export enum ImagesOrderBy {
   HeightDesc = 'HEIGHT_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  ImagesTagsByImageIdCountAsc = 'IMAGES_TAGS_BY_IMAGE_ID__COUNT_ASC',
-  ImagesTagsByImageIdCountDesc = 'IMAGES_TAGS_BY_IMAGE_ID__COUNT_DESC',
   ImageTypeByImageTypeKeyCreatedDateAsc = 'IMAGE_TYPE_BY_IMAGE_TYPE_KEY__CREATED_DATE_ASC',
   ImageTypeByImageTypeKeyCreatedDateDesc = 'IMAGE_TYPE_BY_IMAGE_TYPE_KEY__CREATED_DATE_DESC',
   ImageTypeByImageTypeKeyCreatedUserAsc = 'IMAGE_TYPE_BY_IMAGE_TYPE_KEY__CREATED_USER_ASC',
@@ -1029,6 +876,8 @@ export enum ImagesOrderBy {
   ImageTypeByImageTypeKeyUpdatedUserDesc = 'IMAGE_TYPE_BY_IMAGE_TYPE_KEY__UPDATED_USER_DESC',
   ImageTypeKeyAsc = 'IMAGE_TYPE_KEY_ASC',
   ImageTypeKeyDesc = 'IMAGE_TYPE_KEY_DESC',
+  ImagesTagsByImageIdCountAsc = 'IMAGES_TAGS_BY_IMAGE_ID__COUNT_ASC',
+  ImagesTagsByImageIdCountDesc = 'IMAGES_TAGS_BY_IMAGE_ID__COUNT_DESC',
   IsArchivedAsc = 'IS_ARCHIVED_ASC',
   IsArchivedDesc = 'IS_ARCHIVED_DESC',
   Natural = 'NATURAL',
@@ -1133,10 +982,10 @@ export enum ImagesTagsOrderBy {
   ImageByImageIdCreatedDateDesc = 'IMAGE_BY_IMAGE_ID__CREATED_DATE_DESC',
   ImageByImageIdCreatedUserAsc = 'IMAGE_BY_IMAGE_ID__CREATED_USER_ASC',
   ImageByImageIdCreatedUserDesc = 'IMAGE_BY_IMAGE_ID__CREATED_USER_DESC',
-  ImageByImageIdFilenameAsc = 'IMAGE_BY_IMAGE_ID__FILENAME_ASC',
-  ImageByImageIdFilenameDesc = 'IMAGE_BY_IMAGE_ID__FILENAME_DESC',
   ImageByImageIdFileSizeInBytesAsc = 'IMAGE_BY_IMAGE_ID__FILE_SIZE_IN_BYTES_ASC',
   ImageByImageIdFileSizeInBytesDesc = 'IMAGE_BY_IMAGE_ID__FILE_SIZE_IN_BYTES_DESC',
+  ImageByImageIdFilenameAsc = 'IMAGE_BY_IMAGE_ID__FILENAME_ASC',
+  ImageByImageIdFilenameDesc = 'IMAGE_BY_IMAGE_ID__FILENAME_DESC',
   ImageByImageIdFocalXAsc = 'IMAGE_BY_IMAGE_ID__FOCAL_X_ASC',
   ImageByImageIdFocalXDesc = 'IMAGE_BY_IMAGE_ID__FOCAL_X_DESC',
   ImageByImageIdFocalYAsc = 'IMAGE_BY_IMAGE_ID__FOCAL_Y_ASC',
@@ -1172,6 +1021,168 @@ export enum ImagesTagsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export type ImageSubscriptionPayload = {
+  __typename?: 'ImageSubscriptionPayload';
+  event?: Maybe<Scalars['String']>;
+  id: Scalars['UUID'];
+  image?: Maybe<Image>;
+};
+
+/** A filter to be used against many `ImagesTag` object types. All fields are combined with a logical ‘and.’ */
+export type ImageToManyImagesTagFilter = {
+  /** Every related `ImagesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<ImagesTagFilter>;
+  /** No related `ImagesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<ImagesTagFilter>;
+  /** Some related `ImagesTag` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<ImagesTagFilter>;
+};
+
+/** @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN,IMAGE_TYPES_DECLARE */
+export type ImageType = {
+  __typename?: 'ImageType';
+  createdDate: Scalars['Datetime'];
+  createdUser: Scalars['String'];
+  /** Reads and enables pagination through a set of `Image`. */
+  images: ImagesConnection;
+  imageType: Scalars['String'];
+  isArchived: Scalars['Boolean'];
+  serviceId: Scalars['String'];
+  title: Scalars['String'];
+  updatedDate: Scalars['Datetime'];
+  updatedUser: Scalars['String'];
+};
+
+
+/** @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN,IMAGE_TYPES_DECLARE */
+export type ImageTypeImagesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ImageCondition>;
+  filter?: InputMaybe<ImageFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ImagesOrderBy>>;
+};
+
+/**
+ * A condition to be used against `ImageType` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type ImageTypeCondition = {
+  /** Checks for equality with the object’s `createdDate` field. */
+  createdDate?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `createdUser` field. */
+  createdUser?: InputMaybe<Scalars['String']>;
+  /**
+   * Checks for equality with the object’s `imageType` field.
+   * @isTrimmed()
+   * @notEmpty()
+   */
+  imageType?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isArchived` field. */
+  isArchived?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `serviceId` field. */
+  serviceId?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<Scalars['String']>;
+};
+
+/** A filter to be used against `ImageType` object types. All fields are combined with a logical ‘and.’ */
+export type ImageTypeFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ImageTypeFilter>>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `images` relation. */
+  images?: InputMaybe<ImageTypeToManyImageFilter>;
+  /** Some related `images` exist. */
+  imagesExist?: InputMaybe<Scalars['Boolean']>;
+  /** Filter by the object’s `imageType` field. */
+  imageType?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `isArchived` field. */
+  isArchived?: InputMaybe<BooleanFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<ImageTypeFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ImageTypeFilter>>;
+  /** Filter by the object’s `serviceId` field. */
+  serviceId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/**
+ * A connection to a list of `ImageType` values.
+ * @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN,IMAGE_TYPES_DECLARE
+ */
+export type ImageTypesConnection = {
+  __typename?: 'ImageTypesConnection';
+  /** A list of edges which contains the `ImageType` and cursor to aid in pagination. */
+  edges: Array<ImageTypesEdge>;
+  /** A list of `ImageType` objects. */
+  nodes: Array<ImageType>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ImageType` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ImageType` edge in the connection. */
+export type ImageTypesEdge = {
+  __typename?: 'ImageTypesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ImageType` at the end of the edge. */
+  node: ImageType;
+};
+
+/** Methods to use when ordering `ImageType`. */
+export enum ImageTypesOrderBy {
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  ImageTypeAsc = 'IMAGE_TYPE_ASC',
+  ImageTypeDesc = 'IMAGE_TYPE_DESC',
+  ImagesByImageTypeKeyCountAsc = 'IMAGES_BY_IMAGE_TYPE_KEY__COUNT_ASC',
+  ImagesByImageTypeKeyCountDesc = 'IMAGES_BY_IMAGE_TYPE_KEY__COUNT_DESC',
+  IsArchivedAsc = 'IS_ARCHIVED_ASC',
+  IsArchivedDesc = 'IS_ARCHIVED_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ServiceIdAsc = 'SERVICE_ID_ASC',
+  ServiceIdDesc = 'SERVICE_ID_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
+
+/** A filter to be used against many `Image` object types. All fields are combined with a logical ‘and.’ */
+export type ImageTypeToManyImageFilter = {
+  /** Every related `Image` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<ImageFilter>;
+  /** No related `Image` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<ImageFilter>;
+  /** Some related `Image` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<ImageFilter>;
+};
+
 /** A filter to be used against Int fields. All fields are combined with a logical ‘and.’ */
 export type IntFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -1206,10 +1217,11 @@ export type Mutation = {
   createImagesTag?: Maybe<CreateImagesTagPayload>;
   /** Deletes a single `ImagesTag` using a unique key. */
   deleteImagesTag?: Maybe<DeleteImagesTagPayload>;
-  populateImageTypes?: Maybe<PopulatePayload>;
   populateImages?: Maybe<PopulatePayload>;
+  populateImageTypes?: Maybe<PopulatePayload>;
   setAmazonS3AcquisitionProfile: ImageAcquisitionProfile;
   setAzureBlobAcquisitionProfile: ImageAcquisitionProfile;
+  truncateImages?: Maybe<TruncateImagesPayload>;
   updateAmazonS3AcquisitionProfile: ImageAcquisitionProfile;
   updateAzureBlobAcquisitionProfile: ImageAcquisitionProfile;
   /** Updates a single `Image` using a unique key and a patch. */
@@ -1299,8 +1311,9 @@ export type PageInfo = {
 };
 
 export type PopulateInput = {
-  clientMutationId?: InputMaybe<Scalars['String']>;
   count: Scalars['Int'];
+  includeImageFiles?: InputMaybe<Scalars['Boolean']>;
+  includeTags?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type PopulatePayload = {
@@ -1317,14 +1330,14 @@ export type Query = {
   imageAcquisitionProfile?: Maybe<ImageAcquisitionProfile>;
   /** Reads and enables pagination through a set of `ImageAcquisitionProfile`. */
   imageAcquisitionProfiles?: Maybe<ImageAcquisitionProfilesConnection>;
-  imageType?: Maybe<ImageType>;
-  /** Reads and enables pagination through a set of `ImageType`. */
-  imageTypes?: Maybe<ImageTypesConnection>;
   /** Reads and enables pagination through a set of `Image`. */
   images?: Maybe<ImagesConnection>;
   imagesTag?: Maybe<ImagesTag>;
   /** Reads and enables pagination through a set of `ImagesTag`. */
   imagesTags?: Maybe<ImagesTagsConnection>;
+  imageType?: Maybe<ImageType>;
+  /** Reads and enables pagination through a set of `ImageType`. */
+  imageTypes?: Maybe<ImageTypesConnection>;
   /**
    * Exposes the root query type nested one level down. This is helpful for Relay 1
    * which can only query top level fields if they are in a particular form.
@@ -1370,25 +1383,6 @@ export type QueryImageAcquisitionProfilesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryImageTypeArgs = {
-  imageType: Scalars['String'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryImageTypesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<ImageTypeCondition>;
-  filter?: InputMaybe<ImageTypeFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<ImageTypesOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryImagesArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -1418,6 +1412,25 @@ export type QueryImagesTagsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<ImagesTagsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryImageTypeArgs = {
+  imageType: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryImageTypesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ImageTypeCondition>;
+  filter?: InputMaybe<ImageTypeFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ImageTypesOrderBy>>;
 };
 
 export type SetAmazonS3AcquisitionProfileInput = {
@@ -1494,12 +1507,12 @@ export type StringFilter = {
   greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
   /** Included in the specified list. */
   in?: InputMaybe<Array<Scalars['String']>>;
-  /** Included in the specified list (case-insensitive). */
-  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Contains the specified string (case-sensitive). */
   includes?: InputMaybe<Scalars['String']>;
   /** Contains the specified string (case-insensitive). */
   includesInsensitive?: InputMaybe<Scalars['String']>;
+  /** Included in the specified list (case-insensitive). */
+  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
   isNull?: InputMaybe<Scalars['Boolean']>;
   /** Less than the specified value. */
@@ -1528,12 +1541,12 @@ export type StringFilter = {
   notEqualToInsensitive?: InputMaybe<Scalars['String']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['String']>>;
-  /** Not included in the specified list (case-insensitive). */
-  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Does not contain the specified string (case-sensitive). */
   notIncludes?: InputMaybe<Scalars['String']>;
   /** Does not contain the specified string (case-insensitive). */
   notIncludesInsensitive?: InputMaybe<Scalars['String']>;
+  /** Not included in the specified list (case-insensitive). */
+  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
   /** Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
   notLike?: InputMaybe<Scalars['String']>;
   /** Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
@@ -1555,30 +1568,9 @@ export type Subscription = {
   imageMutated?: Maybe<ImageSubscriptionPayload>;
 };
 
-/** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
-export type UuidFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['UUID']>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['UUID']>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['UUID']>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['UUID']>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['UUID']>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['UUID']>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['UUID']>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['UUID']>>;
+export type TruncateImagesPayload = {
+  __typename?: 'TruncateImagesPayload';
+  completed: Scalars['Boolean'];
 };
 
 export type UpdateAmazonS3AcquisitionProfileInput = {
@@ -1687,6 +1679,32 @@ export type UploadImagePayload = {
   __typename?: 'UploadImagePayload';
   image?: Maybe<Image>;
   query?: Maybe<Query>;
+};
+
+/** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
+export type UuidFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Scalars['UUID']>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Scalars['UUID']>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Scalars['UUID']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<Scalars['UUID']>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Scalars['UUID']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Scalars['UUID']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Scalars['UUID']>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<Scalars['UUID']>>;
 };
 
 export type GetImagesQueryVariables = Exact<{

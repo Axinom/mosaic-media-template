@@ -1,19 +1,22 @@
 import {
-  CreatePostgresPoolConnectivityMetric,
+  createPostgresPoolConnectivityMetric,
   getLoginPgPool,
   setupLoginPgPool,
   setupOwnerPgPool,
 } from '@axinom/mosaic-db-common';
 import {
   AuthenticationConfig,
+  IdGuardErrors,
   setupManagementAuthentication,
   setupManagementGQLSubscriptionAuthentication,
 } from '@axinom/mosaic-id-guard';
-import { CreateRabbitMQConnectivityMetric } from '@axinom/mosaic-message-bus';
+import { createRabbitMQConnectivityMetric } from '@axinom/mosaic-message-bus';
 import {
   closeHttpServer,
   handleGlobalErrors,
+  isServiceAvailable,
   Logger,
+  MosaicError,
   MosaicErrors,
   setupGlobalConsoleOverride,
   setupGlobalLogMiddleware,
@@ -21,16 +24,19 @@ import {
   setupHttpServerWithWebsockets,
   setupLivenessAndReadiness,
   setupMonitoring,
+  setupServiceHealthEndpoint,
   setupShutdownActions,
   tenantEnvironmentIdsLogMiddleware,
   trimErrorsSkipMaskMiddleware,
 } from '@axinom/mosaic-service-common';
 import express from 'express';
 import { graphqlUploadExpress } from 'graphql-upload';
+import { PoolConfig } from 'pg';
 import { applyMigrations, getFullConfig } from './common';
 import { syncPermissions } from './domains/permission-definition';
 import { populateSeedData } from './domains/populate-seed-data';
 import { registerImageTypes } from './domains/register-image-types';
+import { registerVideoCuePointTypes } from './domains/register-video-cue-point-types';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
 import { registerMessaging } from './messaging/register-messaging';
 
@@ -69,6 +75,14 @@ async function bootstrap(): Promise<void> {
   // Set up liveness and readiness probe endpoints for Kubernetes.
   const { readiness } = setupLivenessAndReadiness(config);
 
+  // Check ID service is available
+  if (!(await isServiceAvailable(config.idServiceAuthBaseUrl))) {
+    throw new MosaicError(IdGuardErrors.IdentityServiceNotAccessible);
+  }
+
+  // Register service health endpoint
+  setupServiceHealthEndpoint(app);
+
   // Enable multipart request support for GQL to support file upload.
   app.use(graphqlUploadExpress());
   // Run database migrations to the latest committed state.
@@ -76,12 +90,14 @@ async function bootstrap(): Promise<void> {
 
   // Register shutdown actions. These actions will be performed on service shutdown; in the order of registration.
   const shutdownActions = setupShutdownActions(app, logger);
+  const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
   // Create environment owner connection pool (internal use).
   setupOwnerPgPool(
     app,
     config.dbOwnerConnectionString,
     logger,
     shutdownActions,
+    poolConfig,
   );
   // Create login connection pool (used by service components, including PostGraphile).
   setupLoginPgPool(
@@ -89,6 +105,7 @@ async function bootstrap(): Promise<void> {
     config.dbLoginConnectionString,
     logger,
     shutdownActions,
+    poolConfig,
   );
 
   // Populate the DB with some initial seed data and sync defined permissions to the ID service.
@@ -103,13 +120,16 @@ async function bootstrap(): Promise<void> {
   // Configure metrics endpoint for Prometheus.
   setupMonitoring(config, {
     metrics: [
-      CreatePostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
-      CreateRabbitMQConnectivityMetric(broker),
+      createPostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
+      createRabbitMQConnectivityMetric(broker),
     ],
   });
 
   // Register image types used in the media service.
   await registerImageTypes(broker, config);
+
+  // Register video cue point types used in media service.
+  await registerVideoCuePointTypes(broker, config);
 
   // Enable authentication middleware for all requests to /graphql.
   setupManagementAuthentication(app, ['/graphql'], authConfig);

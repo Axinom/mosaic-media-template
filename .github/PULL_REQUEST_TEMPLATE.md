@@ -4,8 +4,11 @@
 
 ## Prerequisites
 
-- [ ] My code follows the coding conventions
-- [ ] All tests pass
+- [ ] The PR is targeting the right branch (`dev` for features and `master` for
+      releases)
+- [ ] potential **release notes** to the PR description added
+- [ ] potential **testing notes** to the PR description added
+- [ ] appropriate labels for the PR applied
 
 ## Description
 

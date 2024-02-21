@@ -20,6 +20,11 @@ export const useSeasonSelectExplorerModal = ({
       excludeItems={excludeItems}
       actions={[
         {
+          label: 'New',
+          openInNewTab: true,
+          path: '/seasons/create',
+        },
+        {
           label: 'Cancel',
           icon: IconName.X,
           onClick: closeModal,

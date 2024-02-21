@@ -64,6 +64,7 @@ export const MoviesReadOperations = [
   Sub.moviesSnapshots,
   Sub.snapshotValidationResults,
   S.movieMutated,
+  R.movieGenres,
 ];
 
 export const MoviesMutateOperations = [

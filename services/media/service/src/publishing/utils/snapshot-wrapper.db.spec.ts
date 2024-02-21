@@ -1,5 +1,6 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { Broker } from '@axinom/mosaic-message-bus';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
   createOffsetDate,
   dateToBeInRange,
@@ -51,12 +52,18 @@ describe('SnapshotWrapper', () => {
     user = createTestUser(ctx.config.serviceId);
     broker = stub<Broker>({
       publish: (
-        messageType: string,
+        _id: string,
+        settings: MessagingSettings,
         message: unknown,
-        context: unknown,
+        overrides: unknown,
         options: unknown,
       ) => {
-        messages.push({ message, messageType, context, options });
+        messages.push({
+          message,
+          messageType: settings.messageType,
+          overrides,
+          options,
+        });
       },
     });
   });
@@ -437,7 +444,7 @@ describe('SnapshotWrapper', () => {
           {
             message: json,
             messageType,
-            context: { auth_token: authToken },
+            overrides: { auth_token: authToken },
             options: undefined,
           },
         ]);
@@ -555,7 +562,7 @@ describe('SnapshotWrapper', () => {
         {
           message: json,
           messageType,
-          context: { auth_token: authToken },
+          overrides: { auth_token: authToken },
           options: undefined,
         },
       ]);
@@ -642,7 +649,7 @@ describe('SnapshotWrapper', () => {
           {
             message,
             messageType,
-            context: { auth_token: authToken },
+            overrides: { auth_token: authToken },
             options: undefined,
           },
         ]);

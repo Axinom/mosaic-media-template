@@ -92,7 +92,8 @@ export const bulkPublishingResolverBodyBuilder =
 
     for (const id of ids) {
       await context.messagingBroker.publish<PublishEntityCommand>(
-        MediaServiceMessagingSettings.PublishEntity.messageType,
+        id.toString(),
+        MediaServiceMessagingSettings.PublishEntity,
         {
           table_name: filter.tableName,
           entity_id: id as number,
