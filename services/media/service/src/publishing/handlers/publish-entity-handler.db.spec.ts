@@ -6,12 +6,11 @@ import {
 } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { PublishEntityCommand } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { all, insert, select, update } from 'zapatos/db';
 import { movies } from 'zapatos/schema';
 import { mockPublishingProcessor } from '../../tests/ingest/mock-publish-processor';
@@ -33,7 +32,7 @@ describe('PublishEntityCommandHandler', () => {
   let timestampBeforeTest: Date;
 
   const createMessage = (payload: PublishEntityCommand) =>
-    stub<TransactionalInboxMessage<PublishEntityCommand>>({
+    stub<TypedTransactionalMessage<PublishEntityCommand>>({
       payload,
       metadata: {
         authToken:
@@ -44,21 +43,14 @@ describe('PublishEntityCommandHandler', () => {
   beforeAll(async () => {
     ctx = await createTestContext();
     storeOutboxMessage = jest.fn(
-      async (
-        _aggregateId,
-        { messageType },
-        payload,
-        _client,
-        overrides,
-        options,
-      ) => {
+      async (_aggregateId, { messageType }, payload, _client, optionalData) => {
+        const { envelopeOverrides, options } = optionalData || {};
         messages.push({
           messageType,
           payload,
-          overrides,
+          envelopeOverrides,
           options,
         });
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     user = createTestUser(ctx.config.serviceId);
@@ -146,7 +138,7 @@ describe('PublishEntityCommandHandler', () => {
       ]);
       expect(messages).toIncludeSameMembers([
         {
-          overrides: {
+          envelopeOverrides: {
             auth_token:
               'some token value which is not used because we are substituting getPgSettings method and using a stub user',
           },
@@ -218,7 +210,7 @@ describe('PublishEntityCommandHandler', () => {
       ]);
       expect(messages).toIncludeSameMembers([
         {
-          overrides: {
+          envelopeOverrides: {
             auth_token:
               'some token value which is not used because we are substituting getPgSettings method and using a stub user',
           },
@@ -289,7 +281,7 @@ describe('PublishEntityCommandHandler', () => {
       expect(snapshotValidation).toEqual([]);
       expect(messages).toIncludeSameMembers([
         {
-          overrides: {
+          envelopeOverrides: {
             auth_token:
               'some token value which is not used because we are substituting getPgSettings method and using a stub user',
           },

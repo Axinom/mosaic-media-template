@@ -1,10 +1,15 @@
-import { setupLoginPgPool, setupOwnerPgPool } from '@axinom/mosaic-db-common';
+import {
+  createPostgresPoolConnectivityMetric,
+  setupLoginPgPool,
+  setupOwnerPgPool,
+} from '@axinom/mosaic-db-common';
 import {
   AuthenticationConfig,
   IdGuardErrors,
   setupManagementAuthentication,
   setupManagementGQLSubscriptionAuthentication,
 } from '@axinom/mosaic-id-guard';
+import { createRabbitMQConnectivityMetric } from '@axinom/mosaic-message-bus';
 import {
   closeHttpServer,
   handleGlobalErrors,
@@ -23,10 +28,6 @@ import {
   tenantEnvironmentIdsLogMiddleware,
   trimErrorsSkipMaskMiddleware,
 } from '@axinom/mosaic-service-common';
-import {
-  setupOutboxStorage,
-  setupTransactionalOutboxListener,
-} from '@axinom/mosaic-transactional-inbox-outbox';
 import express from 'express';
 import { graphqlUploadExpress } from 'graphql-upload';
 import { PoolConfig } from 'pg';
@@ -112,27 +113,18 @@ async function bootstrap(): Promise<void> {
   ]);
 
   // Configure messaging: subscribe to topics, create queues, register handlers, start transactional outbox/inbox listeners
-  const storeOutboxMessage = setupOutboxStorage(config);
-  const broker = await registerMessaging(
+  const { broker, storeOutboxMessage } = await registerMessaging(
     app,
     ownerPgPool,
     config,
-    storeOutboxMessage,
-    logger,
     shutdownActions,
   );
-  const shutdownOutbox = await setupTransactionalOutboxListener(
-    config,
-    broker,
-    logger,
-  );
-  shutdownActions.push(shutdownOutbox);
 
   // Configure metrics endpoint for Prometheus.
   setupMonitoring(config, {
     metrics: [
-      CreatePostgresPoolConnectivityMetric(loginPgPool, 'loginPool'),
-      CreateRabbitMQConnectivityMetric(broker),
+      createPostgresPoolConnectivityMetric(loginPgPool, 'loginPool'),
+      createRabbitMQConnectivityMetric(broker),
     ],
   });
 

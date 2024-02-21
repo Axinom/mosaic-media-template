@@ -2,7 +2,7 @@ import { DEFAULT_SYSTEM_USERNAME } from '@axinom/mosaic-db-common';
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
@@ -11,7 +11,6 @@ import {
   StartIngestCommand,
   StartIngestItemCommand,
 } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { all, insert, select } from 'zapatos/db';
 import { ingest_documents } from 'zapatos/schema';
 import { MockIngestProcessor } from '../../tests/ingest/mock-ingest-processor';
@@ -30,7 +29,7 @@ describe('Start Ingest Handler', () => {
   const processor = new MockIngestProcessor();
 
   const createMessage = (payload: StartIngestCommand) =>
-    stub<TransactionalInboxMessage<StartIngestCommand>>({
+    stub<TypedTransactionalMessage<StartIngestCommand>>({
       payload,
     });
 
@@ -54,7 +53,6 @@ describe('Start Ingest Handler', () => {
     const storeOutboxMessage: StoreOutboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as StartIngestItemCommand);
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     user = createTestUser(ctx.config.serviceId);

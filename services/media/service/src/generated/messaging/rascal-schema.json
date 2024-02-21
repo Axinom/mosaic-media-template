@@ -52,42 +52,6 @@
             }
           }
         },
-        "media-service:ingest:start_item": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:ingest:update_metadata": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:ingest:check_finish_item": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:ingest:check_finish_document": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
         "ax-video-service:inbox": {
           "options": {
             "arguments": {
@@ -102,78 +66,6 @@
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
               "x-dead-letter-routing-key": "ax-image-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:image:ensure_exists_already_existed": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:image:ensure_exists_created": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:image:ensure_exists_failed": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:entity:publish_entity": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:entity:unpublish_entity": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:entity:delete": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:cue_point_types:declared": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:cue_point_types:declare_failed": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
               "x-queue-type": "quorum"
             }
           }
@@ -230,11 +122,6 @@
           "bindingKey": "ax-video-service:inbox.#",
           "destination": "ax-video-service:inbox"
         },
-        "retry:media-service:video:ensure_exists_already_existed": {
-          "source": "retry",
-          "bindingKey": "media-service:video:ensure_exists_already_existed.#",
-          "destination": "media-service:video:ensure_exists_already_existed"
-        },
         "ax-video-service.*.*.video.ensure_exists_already_existed": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.video.ensure_exists_already_existed",
@@ -285,10 +172,15 @@
           "bindingKey": "media-service.entity.delete",
           "destination": "media-service:inbox"
         },
-        "retry:media-service:cue_point_types:declared": {
-          "source": "retry",
-          "bindingKey": "media-service:cue_point_types:declared.#",
-          "destination": "media-service:cue_point_types:declared"
+        "ax-image-service.*.*.image_types.declared": {
+          "source": "event",
+          "bindingKey": "ax-image-service.*.*.image_types.declared",
+          "destination": "media-service:inbox"
+        },
+        "ax-image-service.*.*.image_types.declare_failed": {
+          "source": "event",
+          "bindingKey": "ax-image-service.*.*.image_types.declare_failed",
+          "destination": "media-service:inbox"
         },
         "ax-video-service.*.*.cue_point_types.declared": {
           "source": "event",

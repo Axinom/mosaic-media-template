@@ -52,7 +52,9 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
             },
             pgClient,
             {
-              auth_token: await getLongLivedToken(jwtToken, config),
+              envelopeOverrides: {
+                auth_token: await getLongLivedToken(jwtToken, config),
+              },
             },
           );
 
@@ -86,7 +88,9 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
             },
             pgClient,
             {
-              auth_token: await getLongLivedToken(jwtToken, config),
+              envelopeOverrides: {
+                auth_token: await getLongLivedToken(jwtToken, config),
+              },
             },
           );
 

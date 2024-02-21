@@ -1,11 +1,9 @@
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
   DeleteEntityCommand,
   MediaServiceMessagingSettings,
 } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { insert } from 'zapatos/db';
 import { collections, episodes, movies } from 'zapatos/schema';
 import * as tokenHelpers from '../../common/utils/token-utils';
@@ -46,7 +44,6 @@ describe('CollectionRelations Bulk Delete endpoint', () => {
     const storeOutboxMessage: StoreOutboxMessage = jest.fn(
       async (_aggregateId, { messageType }, payload) => {
         messages.push({ payload: payload as DeleteEntityCommand, messageType });
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     ctx = await createTestContext({}, storeOutboxMessage);

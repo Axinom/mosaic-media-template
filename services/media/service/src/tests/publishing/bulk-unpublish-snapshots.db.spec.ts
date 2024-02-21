@@ -1,11 +1,9 @@
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   UnpublishEntityCommand,
 } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { SnapshotStateEnum } from 'zapatos/custom';
 import { insert } from 'zapatos/db';
 import * as tokenHelpers from '../../common/utils/token-utils';
@@ -49,7 +47,6 @@ describe('Snapshots Bulk Unpublish endpoint', () => {
           payload: payload as UnpublishEntityCommand,
           messageType,
         });
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     ctx = await createTestContext({}, storeOutboxMessage);

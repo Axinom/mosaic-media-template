@@ -8,7 +8,6 @@ import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { PublishServiceMessagingSettings } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { SnapshotStateEnum } from 'zapatos/custom';
 import { insert, select, selectExactlyOne, update } from 'zapatos/db';
 import { movies, snapshots } from 'zapatos/schema';
@@ -51,21 +50,14 @@ describe('SnapshotWrapper', () => {
     ctx = await createTestContext();
     user = createTestUser(ctx.config.serviceId);
     storeOutboxMessage = jest.fn(
-      async (
-        _aggregateId,
-        { messageType },
-        payload,
-        _client,
-        overrides,
-        options,
-      ) => {
+      async (_aggregateId, { messageType }, payload, _client, optionalData) => {
+        const { envelopeOverrides, options } = optionalData || {};
         messages.push({
           payload,
           messageType,
-          overrides,
+          envelopeOverrides,
           options,
         });
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
   });
@@ -481,7 +473,7 @@ describe('SnapshotWrapper', () => {
           {
             payload,
             messageType,
-            overrides: { auth_token: authToken },
+            envelopeOverrides: { auth_token: authToken },
             options: undefined,
           },
         ]);
@@ -614,7 +606,7 @@ describe('SnapshotWrapper', () => {
         {
           payload,
           messageType,
-          overrides: { auth_token: authToken },
+          envelopeOverrides: { auth_token: authToken },
           options: undefined,
         },
       ]);
@@ -711,7 +703,7 @@ describe('SnapshotWrapper', () => {
           {
             payload,
             messageType,
-            overrides: { auth_token: authToken },
+            envelopeOverrides: { auth_token: authToken },
             options: undefined,
           },
         ]);

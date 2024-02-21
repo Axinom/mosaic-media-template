@@ -42,9 +42,8 @@ import { ImageCreatedHandler } from '../../ingest/handlers/image-created-handler
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import {
   createTestContext,
   createTestRequestContext,
@@ -92,7 +91,7 @@ describe('Movies GraphQL endpoints', () => {
   let messages: {
     messageType: string;
     payload: any;
-    overrides: MessageEnvelopeOverrides | undefined;
+    envelopeOverrides: MessageEnvelopeOverrides | undefined;
   }[] = []; // We don't care about message types in this context, we just redirect what was sent
   let defaultRequestContext: TestRequestContext;
   let movieGenres: movie_genres.JSONSelectable[];
@@ -100,25 +99,25 @@ describe('Movies GraphQL endpoints', () => {
 
   const createMessage = <T>(
     payload: any,
-    overrides: MessageEnvelopeOverrides | undefined,
+    envelopeOverrides: MessageEnvelopeOverrides | undefined,
   ) =>
-    stub<TransactionalInboxMessage<T>>({
+    stub<TypedTransactionalMessage<T>>({
       payload,
       metadata: {
-        authToken: overrides?.auth_token,
-        messageContext: overrides?.message_context,
+        authToken: envelopeOverrides?.auth_token,
+        messageContext: envelopeOverrides?.message_context,
       },
     });
 
   beforeAll(async () => {
     storeOutboxMessage = jest.fn(
-      async (_aggregateId, { messageType }, payload, _client, overrides) => {
+      async (_aggregateId, { messageType }, payload, _client, optionalData) => {
+        const { envelopeOverrides } = optionalData || {};
         messages.push({
           messageType,
           payload,
-          overrides,
+          envelopeOverrides,
         });
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     ctx = await createTestContext({}, storeOutboxMessage);
@@ -526,19 +525,19 @@ describe('Movies GraphQL endpoints', () => {
           switch (msg.messageType) {
             case MediaServiceMessagingSettings.StartIngest.messageType:
               await startIngest.handleMessage(
-                createMessage(msg.payload, msg.overrides),
+                createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
               break;
             case MediaServiceMessagingSettings.StartIngestItem.messageType:
               await startItem.handleMessage(
-                createMessage(msg.payload, msg.overrides),
+                createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
               break;
             case MediaServiceMessagingSettings.UpdateMetadata.messageType:
               await updateMetadata.handleMessage(
-                createMessage(msg.payload, msg.overrides),
+                createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
               break;
@@ -552,7 +551,7 @@ describe('Movies GraphQL endpoints', () => {
                       '00' + videoId++
                     ).slice(-2)}`,
                   },
-                  msg.overrides,
+                  msg.envelopeOverrides,
                 ),
                 txn,
               );
@@ -564,7 +563,7 @@ describe('Movies GraphQL endpoints', () => {
                   {
                     image_id: `11e1d903-49ed-4d70-8b24-00000000000${imageId++}`,
                   },
-                  msg.overrides,
+                  msg.envelopeOverrides,
                 ),
                 txn,
               );
@@ -572,14 +571,14 @@ describe('Movies GraphQL endpoints', () => {
             case MediaServiceMessagingSettings.CheckFinishIngestItem
               .messageType:
               await checkFinishItem.handleMessage(
-                createMessage(msg.payload, msg.overrides),
+                createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
               break;
             case MediaServiceMessagingSettings.CheckFinishIngestDocument
               .messageType:
               await checkFinishDocument.handleMessage(
-                createMessage(msg.payload, msg.overrides),
+                createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
               break;

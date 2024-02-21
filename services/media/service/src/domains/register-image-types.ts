@@ -28,16 +28,18 @@ export const registerImageTypes = async (
     },
     loginClient,
     {
-      auth_token: serviceAccountToken.accessToken,
-    },
-    {
-      routingKey:
-        ImageServiceMultiTenantMessagingSettings.DeclareImageTypes.getEnvironmentRoutingKey(
-          {
-            tenantId: config.tenantId,
-            environmentId: config.environmentId,
-          },
-        ),
+      envelopeOverrides: {
+        auth_token: serviceAccountToken.accessToken,
+      },
+      options: {
+        routingKey:
+          ImageServiceMultiTenantMessagingSettings.DeclareImageTypes.getEnvironmentRoutingKey(
+            {
+              tenantId: config.tenantId,
+              environmentId: config.environmentId,
+            },
+          ),
+      },
     },
   );
 };

@@ -15,20 +15,22 @@ import {
 } from '@axinom/mosaic-messages';
 import { ShutdownActionsMiddleware } from '@axinom/mosaic-service-common';
 import {
-  getTransactionalInboxConfig,
   RabbitMqInboxWriter,
   RascalTransactionalConfigBuilder,
+  setupOutboxStorage,
+  setupPollingOutboxListener,
   StoreOutboxMessage,
   TransactionalLogMapper,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { MediaServiceMessagingSettings } from 'media-messages';
 import {
-  createMultiConcurrencyController,
-  InboxConfig,
-  InboxMessageHandler,
-  initializeInboxListener,
-  initializeInboxMessageStorage,
+  getInboxPollingListenerSettings,
+  getOutboxPollingListenerSettings,
+  initializeMessageStorage,
+  initializePollingMessageListener,
   IsolationLevel,
+  PollingListenerConfig,
+  TransactionalMessageHandler,
 } from 'pg-transactional-outbox';
 import {
   CuePointTypesDeclaredHandler,
@@ -64,15 +66,34 @@ export const registerMessaging = async (
   app: Express,
   ownerPool: OwnerPgPool,
   config: Config,
-  storeOutboxMessage: StoreOutboxMessage,
-  logger: Logger,
   shutdownActions: ShutdownActionsMiddleware,
-): Promise<Broker> => {
-  const inboxConfig = getTransactionalInboxConfig(
+): Promise<{ broker: Broker; storeOutboxMessage: StoreOutboxMessage }> => {
+  const outboxLogger = new Logger({ context: 'Transactional outbox' });
+  const inboxLogger = new Logger({ context: 'Transactional inbox' });
+
+  const outboxConfig: PollingListenerConfig = {
+    outboxOrInbox: 'outbox',
+    dbListenerConfig: {
+      connectionString: config.dbOwnerConnectionString,
+    },
+    settings: getOutboxPollingListenerSettings(),
+  };
+  const storeOutboxMessage = setupOutboxStorage(
+    outboxConfig,
+    outboxLogger,
     config,
-    config.dbOwnerConnectionString,
   );
-  const logMapper = new TransactionalLogMapper(logger, config.logLevel);
+
+  const inboxConfig: PollingListenerConfig = {
+    outboxOrInbox: 'inbox',
+    dbListenerConfig: {
+      connectionString: config.dbOwnerConnectionString,
+    },
+    dbHandlerConfig: { connectionString: config.dbOwnerConnectionString },
+    settings: getInboxPollingListenerSettings(),
+  };
+
+  const logMapper = new TransactionalLogMapper(inboxLogger, config.logLevel);
   registerTransactionalInboxHandlers(
     config,
     inboxConfig,
@@ -80,25 +101,35 @@ export const registerMessaging = async (
     logMapper,
     shutdownActions,
   );
-  return registerRabbitMqMessaging(
+  const broker = await registerRabbitMqMessaging(
     app,
     ownerPool,
     config,
     inboxConfig,
-    logger,
+    inboxLogger,
     logMapper,
     shutdownActions,
   );
+
+  const shutdownOutbox = setupPollingOutboxListener(
+    outboxConfig,
+    broker,
+    outboxLogger,
+    config,
+  );
+  shutdownActions.push(shutdownOutbox);
+
+  return { broker, storeOutboxMessage };
 };
 
 const registerTransactionalInboxHandlers = (
   config: Config,
-  inboxConfig: InboxConfig,
+  inboxConfig: PollingListenerConfig,
   storeOutboxMessage: StoreOutboxMessage,
   logMapper: TransactionalLogMapper,
   shutdownActions: ShutdownActionsMiddleware,
 ): void => {
-  const publishMessageHandlers: InboxMessageHandler[] = [
+  const publishMessageHandlers: TransactionalMessageHandler[] = [
     new PublishEntityHandler(publishingProcessors, storeOutboxMessage, config),
     new UnpublishEntityCommandHandler(
       publishingProcessors,
@@ -106,7 +137,7 @@ const registerTransactionalInboxHandlers = (
       config,
     ),
   ];
-  const ingestMessageHandlers: InboxMessageHandler[] = [
+  const ingestMessageHandlers: TransactionalMessageHandler[] = [
     new StartIngestHandler(ingestProcessors, storeOutboxMessage, config),
     new StartIngestItemHandler(ingestProcessors, storeOutboxMessage, config),
     new UpdateMetadataHandler(ingestProcessors, storeOutboxMessage, config),
@@ -131,49 +162,14 @@ const registerTransactionalInboxHandlers = (
     new ImageCreatedHandler(ingestProcessors, storeOutboxMessage, config),
     new ImageFailedHandler(storeOutboxMessage, config),
   ];
-  const commonMessageHandlers: InboxMessageHandler[] = [
+  const commonMessageHandlers: TransactionalMessageHandler[] = [
     new DeleteEntityHandler(storeOutboxMessage, config),
     new CuePointTypesDeclaredHandler(config),
     new CuePointTypesDeclareFailedHandler(config),
     new ImageTypesDeclaredHandler(config),
     new ImageTypesDeclareFailedHandler(config),
   ];
-  const concurrencyStrategy = createMultiConcurrencyController((message) => {
-    switch (message.messageType) {
-      case MediaServiceMessagingSettings.StartIngest.messageType:
-      case MediaServiceMessagingSettings.StartIngestItem.messageType:
-      case MediaServiceMessagingSettings.UpdateMetadata.messageType:
-      case MediaServiceMessagingSettings.CheckFinishIngestItem.messageType:
-      case MediaServiceMessagingSettings.CheckFinishIngestDocument.messageType:
-      case VideoServiceMultiTenantMessagingSettings
-        .EnsureVideoExistsAlreadyExisted.messageType:
-      case VideoServiceMultiTenantMessagingSettings
-        .EnsureVideoExistsCreationStarted.messageType:
-      case VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed
-        .messageType:
-      case ImageServiceMultiTenantMessagingSettings
-        .EnsureImageExistsAlreadyExisted.messageType:
-      case ImageServiceMultiTenantMessagingSettings
-        .EnsureImageExistsImageCreated.messageType:
-      case ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed
-        .messageType:
-      case MediaServiceMessagingSettings.PublishEntity.messageType:
-      case MediaServiceMessagingSettings.UnpublishEntity.messageType:
-      case MediaServiceMessagingSettings.DeleteEntity.messageType:
-      case ImageServiceMultiTenantMessagingSettings.ImageTypesDeclared
-        .messageType:
-      case ImageServiceMultiTenantMessagingSettings.ImageTypesDeclareFailed
-        .messageType:
-      case VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclared
-        .messageType:
-      case VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclareFailed
-        .messageType:
-        return 'full-concurrency';
-      default: // especially the "common" and "publish" ones are safer with a mutex
-        return 'mutex';
-    }
-  });
-  const [shutdownInSrv] = initializeInboxListener(
+  const [shutdownInSrv] = initializePollingMessageListener(
     inboxConfig,
     [
       ...publishMessageHandlers,
@@ -182,15 +178,22 @@ const registerTransactionalInboxHandlers = (
     ],
     logMapper,
     {
-      concurrencyStrategy,
       // Allow the ingest start to be processed a bit longer
       messageProcessingTimeoutStrategy: (message) =>
         message.messageType ===
         MediaServiceMessagingSettings.StartIngest.messageType
           ? 30_000
           : 10_000,
-      messageProcessingTransactionLevelStrategy: () =>
-        IsolationLevel.RepeatableRead,
+      messageProcessingTransactionLevelStrategy: (message) => {
+        if (
+          message.messageType ===
+          MediaServiceMessagingSettings.CheckFinishIngestItem.messageType
+        ) {
+          // Ensure no "parallel" updates on the ingest items
+          return IsolationLevel.Serializable;
+        }
+        return IsolationLevel.RepeatableRead;
+      },
     },
   );
   shutdownActions.push(shutdownInSrv);
@@ -200,32 +203,70 @@ const registerRabbitMqMessaging = async (
   app: Express,
   ownerPool: OwnerPgPool,
   config: Config,
-  inboxConfig: InboxConfig,
-  logger: Logger,
+  inboxConfig: PollingListenerConfig,
+  inboxLogger: Logger,
   logMapper: TransactionalLogMapper,
   shutdownActions: ShutdownActionsMiddleware,
 ): Promise<Broker> => {
-  const [storeInboxMessage, shutdownInbox] = initializeInboxMessageStorage(
-    inboxConfig,
-    logMapper,
+  const storeInboxMessage = initializeMessageStorage(inboxConfig, logMapper);
+
+  const inboxWriter = new RabbitMqInboxWriter(
+    storeInboxMessage,
+    ownerPool,
+    inboxLogger,
+    {
+      // temporary backward compatibility until all your services are updated and all current messages are processed
+      acceptedMessageSettings: [
+        MediaServiceMessagingSettings.StartIngest,
+        MediaServiceMessagingSettings.StartIngestItem,
+        MediaServiceMessagingSettings.UpdateMetadata,
+        MediaServiceMessagingSettings.CheckFinishIngestItem,
+        MediaServiceMessagingSettings.CheckFinishIngestDocument,
+        VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsAlreadyExisted,
+        VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsCreationStarted,
+        VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed,
+        ImageServiceMultiTenantMessagingSettings.EnsureImageExistsAlreadyExisted,
+        ImageServiceMultiTenantMessagingSettings.EnsureImageExistsImageCreated,
+        ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed,
+      ],
+      customMessagePreProcessor: (message) => {
+        switch (message.messageType) {
+          case MediaServiceMessagingSettings.StartIngest.messageType:
+          case MediaServiceMessagingSettings.StartIngestItem.messageType:
+          case MediaServiceMessagingSettings.UpdateMetadata.messageType:
+          case MediaServiceMessagingSettings.CheckFinishIngestItem.messageType:
+          case MediaServiceMessagingSettings.CheckFinishIngestDocument
+            .messageType:
+          case VideoServiceMultiTenantMessagingSettings
+            .EnsureVideoExistsAlreadyExisted.messageType:
+          case VideoServiceMultiTenantMessagingSettings
+            .EnsureVideoExistsCreationStarted.messageType:
+          case VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed
+            .messageType:
+          case ImageServiceMultiTenantMessagingSettings
+            .EnsureImageExistsAlreadyExisted.messageType:
+          case ImageServiceMultiTenantMessagingSettings
+            .EnsureImageExistsImageCreated.messageType:
+          case ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed
+            .messageType:
+          case MediaServiceMessagingSettings.DeleteEntity.messageType:
+          case ImageServiceMultiTenantMessagingSettings.ImageTypesDeclared
+            .messageType:
+          case ImageServiceMultiTenantMessagingSettings.ImageTypesDeclareFailed
+            .messageType:
+          case VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclared
+            .messageType:
+          case VideoServiceMultiTenantMessagingSettings
+            .CuePointTypesDeclareFailed.messageType:
+            message.concurrency = 'parallel';
+            break;
+          default: // especially the "common" and "publish" ones are safer with a mutex
+            message.concurrency = 'sequential';
+            break;
+        }
+      },
+    },
   );
-  shutdownActions.push(shutdownInbox);
-  const inboxWriter = new RabbitMqInboxWriter(storeInboxMessage, {
-    // temporary backward compatibility until all your services are updated and all current messages are processed
-    acceptedMessageSettings: [
-      MediaServiceMessagingSettings.StartIngest,
-      MediaServiceMessagingSettings.StartIngestItem,
-      MediaServiceMessagingSettings.UpdateMetadata,
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
-      MediaServiceMessagingSettings.CheckFinishIngestDocument,
-      VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsAlreadyExisted,
-      VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsCreationStarted,
-      VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed,
-      ImageServiceMultiTenantMessagingSettings.EnsureImageExistsAlreadyExisted,
-      ImageServiceMultiTenantMessagingSettings.EnsureImageExistsImageCreated,
-      ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed,
-    ],
-  });
 
   const ingestBuilders: RascalConfigBuilder[] = [
     new RascalTransactionalConfigBuilder(
@@ -352,9 +393,9 @@ const registerRabbitMqMessaging = async (
     app,
     config,
     builders: [...ingestBuilders, ...publishingBuilders, ...commonBuilders],
-    logger,
+    logger: inboxLogger,
     shutdownActions,
-    onMessageMiddleware: getMessagingMiddleware(config, logger),
+    onMessageMiddleware: getMessagingMiddleware(config, inboxLogger),
     components: { counters: { postgresCounter: counter } },
     rascalConfigExportPath: './src/generated/messaging/rascal-schema.json',
   });

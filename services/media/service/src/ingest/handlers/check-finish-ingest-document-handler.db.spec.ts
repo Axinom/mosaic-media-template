@@ -1,13 +1,12 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import { assertNotFalsy, sleep } from '@axinom/mosaic-service-common';
+import { assertNotFalsy } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { CheckFinishIngestDocumentCommand } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { IngestItemStatusEnum } from 'zapatos/custom';
 import { insert, selectOne, update } from 'zapatos/db';
 import { ingest_documents, ingest_items } from 'zapatos/schema';
@@ -33,10 +32,9 @@ describe('Check Finish Ingest Document Handler', () => {
   let item1: ingest_items.JSONSelectable;
   let item2: ingest_items.JSONSelectable;
   let messages: unknown[] = [];
-  let waitingTimeInSeconds = -1;
 
   const createMessage = (payload: CheckFinishIngestDocumentCommand) =>
-    stub<TransactionalInboxMessage<CheckFinishIngestDocumentCommand>>({
+    stub<TypedTransactionalMessage<CheckFinishIngestDocumentCommand>>({
       payload,
     });
 
@@ -45,7 +43,6 @@ describe('Check Finish Ingest Document Handler', () => {
     const storeOutboxMessage: StoreOutboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as CheckFinishIngestDocumentCommand);
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     user = createTestUser(ctx.config.serviceId);
@@ -53,11 +50,6 @@ describe('Check Finish Ingest Document Handler', () => {
       storeOutboxMessage,
       ctx.config,
     );
-
-    (sleep as jest.Mock<any, any>).mockImplementation(async (ms) => {
-      waitingTimeInSeconds = ms / 1000;
-      return;
-    });
   });
 
   beforeEach(async () => {
@@ -108,7 +100,6 @@ describe('Check Finish Ingest Document Handler', () => {
   afterEach(async () => {
     await ctx.truncate('ingest_documents');
     messages = [];
-    waitingTimeInSeconds = -1;
   });
 
   afterAll(async () => {
@@ -144,9 +135,6 @@ describe('Check Finish Ingest Document Handler', () => {
       expect(doc.success_count).toEqual(0);
       expect(doc.status).toEqual('IN_PROGRESS');
       expect(doc.errors).toEqual([]);
-
-      expect(waitingTimeInSeconds).toEqual(5);
-
       expect(messages).toIncludeSameMembers([
         {
           ingest_document_id: doc1.id,
@@ -186,9 +174,6 @@ describe('Check Finish Ingest Document Handler', () => {
         expect(doc.success_count).toEqual(0);
         expect(doc.status).toEqual('IN_PROGRESS');
         expect(doc.errors).toEqual([]);
-
-        expect(waitingTimeInSeconds).toEqual(5);
-
         expect(messages).toIncludeSameMembers([
           {
             ingest_document_id: doc1.id,
@@ -234,9 +219,6 @@ describe('Check Finish Ingest Document Handler', () => {
           source: 'CheckFinishIngestDocumentHandler',
         },
       ]);
-
-      expect(waitingTimeInSeconds).toEqual(-1); // sleep not called
-
       expect(messages).toEqual([]);
     });
 
@@ -277,9 +259,6 @@ describe('Check Finish Ingest Document Handler', () => {
         expect(doc.success_count).toEqual(successCount);
         expect(doc.status).toEqual('IN_PROGRESS');
         expect(doc.errors).toEqual([]);
-
-        expect(waitingTimeInSeconds).toEqual(5);
-
         expect(messages).toIncludeSameMembers([
           {
             ingest_document_id: doc1.id,
@@ -341,9 +320,6 @@ describe('Check Finish Ingest Document Handler', () => {
         expect(doc.success_count).toEqual(successCount);
         expect(doc.status).toEqual(documentResultingStatus);
         expect(doc.errors).toEqual([]);
-
-        expect(waitingTimeInSeconds).toEqual(-1); // sleep not called
-
         expect(messages).toEqual([]);
       },
     );

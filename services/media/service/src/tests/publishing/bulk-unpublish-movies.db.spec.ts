@@ -1,12 +1,10 @@
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   PublishEntityCommand,
   UnpublishEntityCommand,
 } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { insert } from 'zapatos/db';
 import * as tokenHelpers from '../../common/utils/token-utils';
 import {
@@ -46,7 +44,6 @@ describe('Movies Bulk Unpublish endpoint', () => {
           payload: payload as PublishEntityCommand,
           messageType,
         });
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     ctx = await createTestContext({}, storeOutboxMessage);

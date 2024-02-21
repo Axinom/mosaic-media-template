@@ -4,12 +4,15 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
-  TransactionalInboxMessage,
   TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { Config } from '../../../common';
 
-export class CuePointTypesDeclareFailedHandler extends TransactionalInboxMessageHandler<CuePointTypesDeclareFailedEvent> {
+export class CuePointTypesDeclareFailedHandler extends TransactionalInboxMessageHandler<
+  CuePointTypesDeclareFailedEvent,
+  Config
+> {
   constructor(config: Config) {
     super(
       VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclareFailed,
@@ -23,10 +26,12 @@ export class CuePointTypesDeclareFailedHandler extends TransactionalInboxMessage
 
   async handleMessage({
     payload,
-  }: TransactionalInboxMessage<CuePointTypesDeclareFailedEvent>): Promise<void> {
-    this.logger.error({
-      message: 'Cue point types declare command has failed!',
-      details: { ...payload },
-    });
+  }: TypedTransactionalMessage<CuePointTypesDeclareFailedEvent>): Promise<void> {
+    if (payload.service_id === this.config.serviceId) {
+      this.logger.error({
+        message: 'Cue point types declare command has failed!',
+        details: { ...payload },
+      });
+    }
   }
 }

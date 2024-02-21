@@ -6,7 +6,7 @@ import {
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CheckFinishIngestItemCommand,
@@ -18,6 +18,7 @@ import { selectExactlyOne, update } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import { IngestEntityProcessor } from '../models';
+import { getFutureIsoDateInMilliseconds } from '../utils';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 import { getIngestErrorMessage } from '../utils/ingest-validation';
 
@@ -44,7 +45,7 @@ export abstract class VideoSucceededHandler<
   }
 
   override async handleMessage(
-    { payload, metadata, id, aggregateId }: TransactionalInboxMessage<TContent>,
+    { payload, metadata, id, aggregateId }: TypedTransactionalMessage<TContent>,
     loginClient: ClientBase,
   ): Promise<void> {
     if (!checkIsIngestEvent(metadata, this.logger, id, aggregateId)) {
@@ -87,13 +88,16 @@ export abstract class VideoSucceededHandler<
         ingest_item_id: messageContext.ingestItemId,
       },
       loginClient,
-      { auth_token: metadata.authToken },
+      {
+        envelopeOverrides: { auth_token: metadata.authToken },
+        lockedUntil: getFutureIsoDateInMilliseconds(1_000),
+      },
     );
   }
 
   override async handleErrorMessage(
     error: Error,
-    { metadata }: TransactionalInboxMessage<TContent>,
+    { metadata }: TypedTransactionalMessage<TContent>,
     loginClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
@@ -114,7 +118,7 @@ export abstract class VideoSucceededHandler<
         ),
       },
       loginClient,
-      { auth_token: metadata.authToken },
+      { envelopeOverrides: { auth_token: metadata.authToken } },
     );
   }
 }

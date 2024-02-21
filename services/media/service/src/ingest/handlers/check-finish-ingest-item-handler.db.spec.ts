@@ -1,5 +1,5 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import { TransactionalInboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { CheckFinishIngestItemCommand } from 'media-messages';
@@ -26,7 +26,7 @@ describe('Check Finish Ingest Item Handler', () => {
   let step1: ingest_item_steps.JSONSelectable;
 
   const createMessage = (payload: CheckFinishIngestItemCommand) =>
-    stub<TransactionalInboxMessage<CheckFinishIngestItemCommand>>({
+    stub<TypedTransactionalMessage<CheckFinishIngestItemCommand>>({
       payload,
     });
 

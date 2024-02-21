@@ -4,12 +4,15 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
-  TransactionalInboxMessage,
   TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { Config } from '../../../common';
 
-export class ImageTypesDeclaredHandler extends TransactionalInboxMessageHandler<ImageTypesDeclaredEvent> {
+export class ImageTypesDeclaredHandler extends TransactionalInboxMessageHandler<
+  ImageTypesDeclaredEvent,
+  Config
+> {
   constructor(config: Config) {
     super(
       ImageServiceMultiTenantMessagingSettings.ImageTypesDeclared,
@@ -23,10 +26,12 @@ export class ImageTypesDeclaredHandler extends TransactionalInboxMessageHandler<
 
   async handleMessage({
     payload,
-  }: TransactionalInboxMessage<ImageTypesDeclaredEvent>): Promise<void> {
-    this.logger.log({
-      message: 'Image types declare command has succeeded!',
-      details: { ...payload },
-    });
+  }: TypedTransactionalMessage<ImageTypesDeclaredEvent>): Promise<void> {
+    if (payload.service_id === this.config.serviceId) {
+      this.logger.log({
+        message: 'Image types declare command has succeeded!',
+        details: { ...payload },
+      });
+    }
   }
 }

@@ -1,13 +1,12 @@
 import { EnsureVideoExistsFailedEvent } from '@axinom/mosaic-messages';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { CheckFinishIngestItemCommand } from 'media-messages';
 import { ClientBase } from 'pg';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { createTestConfig } from '../../tests/test-utils';
 import { VideoFailedHandler } from './video-failed-handler';
 
@@ -19,7 +18,7 @@ describe('VideoFailedHandler', () => {
     payload: EnsureVideoExistsFailedEvent,
     messageContext: unknown,
   ) =>
-    stub<TransactionalInboxMessage<EnsureVideoExistsFailedEvent>>({
+    stub<TypedTransactionalMessage<EnsureVideoExistsFailedEvent>>({
       payload,
       metadata: {
         messageContext,
@@ -30,7 +29,6 @@ describe('VideoFailedHandler', () => {
     const storeOutboxMessage: StoreOutboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as CheckFinishIngestItemCommand);
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
 

@@ -1,7 +1,7 @@
 import { Logger } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   MediaServiceMessagingSettings,
@@ -41,7 +41,7 @@ export class UnpublishEntityCommandHandler extends MediaGuardedTransactionalInbo
   }
 
   async handleMessage(
-    { payload, metadata }: TransactionalInboxMessage<UnpublishEntityCommand>,
+    { payload, metadata }: TypedTransactionalMessage<UnpublishEntityCommand>,
     loginClient: ClientBase,
   ): Promise<void> {
     const payloadTable = payload.table_name as Table;

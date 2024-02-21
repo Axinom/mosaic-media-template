@@ -5,7 +5,7 @@ import {
 import { Logger } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CheckFinishIngestItemCommand,
@@ -42,7 +42,7 @@ export class VideoFailedHandler extends MediaGuardedTransactionalInboxMessageHan
       metadata,
       id,
       aggregateId,
-    }: TransactionalInboxMessage<EnsureVideoExistsFailedEvent>,
+    }: TypedTransactionalMessage<EnsureVideoExistsFailedEvent>,
     loginClient: ClientBase,
   ): Promise<void> {
     if (!checkIsIngestEvent(metadata, this.logger, id, aggregateId)) {
@@ -60,7 +60,7 @@ export class VideoFailedHandler extends MediaGuardedTransactionalInboxMessageHan
         error_message: payload.message,
       },
       loginClient,
-      { auth_token: metadata.authToken },
+      { envelopeOverrides: { auth_token: metadata.authToken } },
     );
   }
 }

@@ -109,7 +109,7 @@ export const bulkPublishingResolverBodyBuilder =
           },
         },
         pgClient,
-        { auth_token: token },
+        { envelopeOverrides: { auth_token: token } },
       );
     }
 

@@ -146,7 +146,7 @@ export class SnapshotWrapper {
       messagingSettings,
       snapshot.snapshot_json,
       this.anyClient,
-      { auth_token: authToken },
+      { envelopeOverrides: { auth_token: authToken } },
     );
 
     await update(
@@ -180,7 +180,7 @@ export class SnapshotWrapper {
       messagingSettings,
       { content_id: snapshot.publish_id },
       this.anyClient,
-      { auth_token: authToken },
+      { envelopeOverrides: { auth_token: authToken } },
     );
 
     await update(

@@ -1,12 +1,10 @@
 import { toBeUuid } from '@axinom/mosaic-service-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   UnpublishEntityCommand,
 } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { all, select, update } from 'zapatos/db';
 import { snapshots } from 'zapatos/schema';
 import * as tokenHelpers from '../../common/utils/token-utils';
@@ -35,7 +33,6 @@ describe('Movie Unpublish endpoint', () => {
           payload: payload as UnpublishEntityCommand,
           messageType,
         });
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     ctx = await createTestContext({}, storeOutboxMessage);

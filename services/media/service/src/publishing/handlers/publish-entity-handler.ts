@@ -2,7 +2,7 @@ import { GuardedContext } from '@axinom/mosaic-id-guard';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { singularize } from 'graphile-build';
 import {
@@ -45,7 +45,7 @@ export class PublishEntityHandler extends MediaGuardedTransactionalInboxMessageH
   }
 
   override async handleMessage(
-    { payload, metadata }: TransactionalInboxMessage<PublishEntityCommand>,
+    { payload, metadata }: TypedTransactionalMessage<PublishEntityCommand>,
     loginClient: ClientBase,
   ): Promise<void> {
     const payloadTable = payload.table_name as Table;
@@ -106,7 +106,7 @@ export class PublishEntityHandler extends MediaGuardedTransactionalInboxMessageH
   }
   override async handleErrorMessage(
     _error: Error,
-    { payload }: TransactionalInboxMessage<PublishEntityCommand>,
+    { payload }: TypedTransactionalMessage<PublishEntityCommand>,
     loginClient: ClientBase,
     retry: boolean,
     _context?: GuardedContext | undefined,

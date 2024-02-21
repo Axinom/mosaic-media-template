@@ -5,7 +5,7 @@ import {
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   MediaServiceMessagingSettings,
@@ -48,7 +48,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
   }
 
   override async handleMessage(
-    { payload, metadata }: TransactionalInboxMessage<StartIngestItemCommand>,
+    { payload, metadata }: TypedTransactionalMessage<StartIngestItemCommand>,
     loginClient: ClientBase,
   ): Promise<void> {
     const processor = this.entityProcessors.find(
@@ -76,17 +76,19 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
         data.messagePayload,
         loginClient,
         {
-          auth_token: metadata.authToken,
-          message_context: data.messageContext,
+          envelopeOverrides: {
+            auth_token: metadata.authToken,
+            message_context: data.messageContext,
+          },
+          options: data.publicationConfig,
         },
-        data.publicationConfig,
       );
     }
   }
 
   override async handleErrorMessage(
     error: Error,
-    { payload }: TransactionalInboxMessage<StartIngestItemCommand>,
+    { payload }: TypedTransactionalMessage<StartIngestItemCommand>,
     loginClient: ClientBase,
     retry: boolean,
   ): Promise<void> {

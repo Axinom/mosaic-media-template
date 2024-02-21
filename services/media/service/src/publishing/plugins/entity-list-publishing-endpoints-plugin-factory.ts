@@ -108,7 +108,9 @@ export const EntityListPublishingEndpointsPluginFactory = (
                       },
                       ctx,
                       {
-                        auth_token: await getLongLivedToken(jwtToken, config),
+                        envelopeOverrides: {
+                          auth_token: await getLongLivedToken(jwtToken, config),
+                        },
                       },
                     );
                     return snapshot;
@@ -161,7 +163,9 @@ export const EntityListPublishingEndpointsPluginFactory = (
                   },
                   pgClient,
                   {
-                    auth_token: await getLongLivedToken(jwtToken, config),
+                    envelopeOverrides: {
+                      auth_token: await getLongLivedToken(jwtToken, config),
+                    },
                   },
                 );
 
@@ -208,7 +212,9 @@ export const EntityListPublishingEndpointsPluginFactory = (
                   },
                   pgClient,
                   {
-                    auth_token: await getLongLivedToken(jwtToken, config),
+                    envelopeOverrides: {
+                      auth_token: await getLongLivedToken(jwtToken, config),
+                    },
                   },
                 );
 

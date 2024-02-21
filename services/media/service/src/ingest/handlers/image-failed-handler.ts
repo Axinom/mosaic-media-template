@@ -5,7 +5,7 @@ import {
 import { Logger } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CheckFinishIngestItemCommand,
@@ -15,6 +15,7 @@ import {
 import { ClientBase } from 'pg';
 import { Config } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import { getFutureIsoDateInMilliseconds } from '../utils';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
 export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<
@@ -42,7 +43,7 @@ export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHan
       aggregateId,
       payload,
       metadata,
-    }: TransactionalInboxMessage<EnsureImageExistsFailedEvent>,
+    }: TypedTransactionalMessage<EnsureImageExistsFailedEvent>,
     loginClient: ClientBase,
   ): Promise<void> {
     if (!checkIsIngestEvent(metadata, this.logger, id, aggregateId)) {
@@ -59,7 +60,10 @@ export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHan
         error_message: payload.message,
       },
       loginClient,
-      { auth_token: metadata.authToken },
+      {
+        envelopeOverrides: { auth_token: metadata.authToken },
+        lockedUntil: getFutureIsoDateInMilliseconds(1_000),
+      },
     );
   }
 }

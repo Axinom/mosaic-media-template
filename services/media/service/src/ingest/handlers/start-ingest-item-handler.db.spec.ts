@@ -8,7 +8,7 @@ import {
 } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
@@ -17,7 +17,6 @@ import {
   MediaServiceMessagingSettings,
   StartIngestItemCommand,
 } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { all, insert, select } from 'zapatos/db';
 import { ingest_documents, ingest_items } from 'zapatos/schema';
 import { MockIngestProcessor } from '../../tests/ingest/mock-ingest-processor';
@@ -58,7 +57,7 @@ describe('Start Ingest Item Handler', () => {
   };
 
   const createMessage = (payload: StartIngestItemCommand) =>
-    stub<TransactionalInboxMessage<StartIngestItemCommand>>({
+    stub<TypedTransactionalMessage<StartIngestItemCommand>>({
       payload,
       metadata: {
         authToken: 'test',
@@ -73,16 +72,15 @@ describe('Start Ingest Item Handler', () => {
         messagingSettings,
         payload,
         _client,
-        overrides,
-        options,
+        optionalData,
       ) => {
+        const { envelopeOverrides, options } = optionalData || {};
         messages.push({
           key: messagingSettings.messageType,
           payload,
-          overrides,
+          envelopeOverrides,
           options,
         });
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     user = createTestUser(ctx.config.serviceId);
@@ -180,7 +178,7 @@ describe('Start Ingest Item Handler', () => {
         {
           key: MediaServiceMessagingSettings.UpdateMetadata.messageType,
           payload: { test: 'payload' },
-          overrides: {
+          envelopeOverrides: {
             auth_token: 'test',
             message_context: { test: 'context' },
           },
@@ -241,7 +239,7 @@ describe('Start Ingest Item Handler', () => {
         {
           key: MediaServiceMessagingSettings.UpdateMetadata.messageType,
           payload: { test: 'payload' },
-          overrides: {
+          envelopeOverrides: {
             auth_token: 'test',
             message_context: { test: 'context' },
           },
@@ -251,7 +249,7 @@ describe('Start Ingest Item Handler', () => {
           key: VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
             .messageType,
           payload: { test: 'payload' },
-          overrides: {
+          envelopeOverrides: {
             auth_token: 'test',
             message_context: { test: 'context' },
           },

@@ -1,7 +1,7 @@
 import { assertDictionary, Logger } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   DeleteEntityCommand,
@@ -40,7 +40,7 @@ export class DeleteEntityHandler extends MediaGuardedTransactionalInboxMessageHa
   }
 
   override async handleMessage(
-    { payload, metadata }: TransactionalInboxMessage<DeleteEntityCommand>,
+    { payload, metadata }: TypedTransactionalMessage<DeleteEntityCommand>,
     loginClient: ClientBase,
   ): Promise<void> {
     const deletedItems = await deletes(payload.table_name as Table, {
@@ -61,9 +61,7 @@ export class DeleteEntityHandler extends MediaGuardedTransactionalInboxMessageHa
           table_name: payload.table_name,
         },
         loginClient,
-        {
-          auth_token: metadata.authToken,
-        },
+        { envelopeOverrides: { auth_token: metadata.authToken } },
       );
     }
   }

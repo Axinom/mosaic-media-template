@@ -1,5 +1,5 @@
 import { Logger } from '@axinom/mosaic-service-common';
-import { TransactionalInboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CheckFinishIngestItemCommand,
   MediaServiceMessagingSettings,
@@ -28,7 +28,7 @@ export class CheckFinishIngestItemHandler extends MediaGuardedTransactionalInbox
   async handleMessage(
     {
       payload: { ingest_item_id, ingest_item_step_id, error_message },
-    }: TransactionalInboxMessage<CheckFinishIngestItemCommand>,
+    }: TypedTransactionalMessage<CheckFinishIngestItemCommand>,
     loginClient: ClientBase,
   ): Promise<void> {
     const updated = await update(
@@ -51,20 +51,25 @@ export class CheckFinishIngestItemHandler extends MediaGuardedTransactionalInbox
     const steps = await select(
       'ingest_item_steps',
       { ingest_item_id: ingest_item_id },
-      { columns: ['status'] },
+      { columns: ['status', 'id'] },
     ).run(loginClient);
 
-    const stepStates = steps.map((x) => x.status);
-    if (stepStates.some((state) => state === 'IN_PROGRESS')) {
+    const inProgressSteps = steps.filter((r) => r.status === 'IN_PROGRESS');
+    if (inProgressSteps.length > 0) {
+      this.logger.debug({
+        message: 'Ingest item steps still in progress - rechecking.',
+        details: {
+          step_id: ingest_item_step_id,
+          in_progress_steps: inProgressSteps,
+        },
+      });
       return;
     }
 
     await update(
       'ingest_items',
       {
-        status: stepStates.some((state) => state === 'ERROR')
-          ? 'ERROR'
-          : 'SUCCESS',
+        status: steps.some((r) => r.status === 'ERROR') ? 'ERROR' : 'SUCCESS',
       },
       { id: ingest_item_id },
     ).run(loginClient);

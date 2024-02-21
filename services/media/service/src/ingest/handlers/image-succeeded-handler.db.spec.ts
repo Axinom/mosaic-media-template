@@ -2,12 +2,11 @@ import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureImageExistsImageCreatedEvent } from '@axinom/mosaic-messages';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { CheckFinishIngestItemCommand } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { v4 as uuid } from 'uuid';
 import { all, insert, select, selectOne } from 'zapatos/db';
 import {
@@ -39,7 +38,7 @@ describe('ImageSucceededHandler', () => {
     payload: EnsureImageExistsImageCreatedEvent,
     messageContext: unknown,
   ) =>
-    stub<TransactionalInboxMessage<EnsureImageExistsImageCreatedEvent>>({
+    stub<TypedTransactionalMessage<EnsureImageExistsImageCreatedEvent>>({
       payload,
       metadata: {
         messageContext,
@@ -51,7 +50,6 @@ describe('ImageSucceededHandler', () => {
     const storeOutboxMessage: StoreOutboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as CheckFinishIngestItemCommand);
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     user = createTestUser(ctx.config.serviceId);

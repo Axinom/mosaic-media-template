@@ -1,7 +1,7 @@
 import { Logger } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CheckFinishIngestDocumentCommand,
@@ -12,6 +12,7 @@ import { IngestItemStatusEnum, IngestStatusEnum } from 'zapatos/custom';
 import { param, self as value, sql, SQL, update } from 'zapatos/db';
 import { Config } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import { getFutureIsoDateInMilliseconds } from '../utils';
 
 export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalInboxMessageHandler<
   CheckFinishIngestDocumentCommand,
@@ -42,7 +43,7 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
         seconds_without_progress,
       },
       metadata,
-    }: TransactionalInboxMessage<CheckFinishIngestDocumentCommand>,
+    }: TypedTransactionalMessage<CheckFinishIngestDocumentCommand>,
     loginClient: ClientBase,
   ): Promise<void> {
     const countGroups = await sql<SQL, StatusAggregation[]>`
@@ -114,7 +115,10 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
           previous_in_progress_count: updatedDoc.in_progress_count,
         },
         loginClient,
-        { auth_token: metadata.authToken },
+        {
+          envelopeOverrides: { auth_token: metadata.authToken },
+          lockedUntil: getFutureIsoDateInMilliseconds(1_000),
+        },
       );
     }
   }

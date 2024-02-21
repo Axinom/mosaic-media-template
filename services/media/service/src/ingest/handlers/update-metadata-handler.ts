@@ -12,10 +12,11 @@ import { getIngestErrorMessage } from '../utils/ingest-validation';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import { getFutureIsoDateInMilliseconds } from '../utils';
 
 export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessageHandler<
   UpdateMetadataCommand,
@@ -38,7 +39,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
   }
 
   override async handleMessage(
-    { payload, metadata }: TransactionalInboxMessage<UpdateMetadataCommand>,
+    { payload, metadata }: TypedTransactionalMessage<UpdateMetadataCommand>,
     loginClient: ClientBase,
   ): Promise<void> {
     const processor = this.entityProcessors.find(
@@ -63,13 +64,16 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
         ingest_item_id: messageContext.ingestItemId,
       },
       loginClient,
-      { auth_token: metadata.authToken },
+      {
+        envelopeOverrides: { auth_token: metadata.authToken },
+        lockedUntil: getFutureIsoDateInMilliseconds(1_000),
+      },
     );
   }
 
   override async handleErrorMessage(
     error: Error,
-    { metadata }: TransactionalInboxMessage<UpdateMetadataCommand>,
+    { metadata }: TypedTransactionalMessage<UpdateMetadataCommand>,
     loginClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
@@ -90,7 +94,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
         ),
       },
       loginClient,
-      { auth_token: metadata.authToken },
+      { envelopeOverrides: { auth_token: metadata.authToken } },
     );
   }
 }

@@ -104,7 +104,7 @@ export const RecreateSnapshotsPlugin = BulkMutationPluginFactory(
                 },
               },
               ctx,
-              { auth_token: token },
+              { envelopeOverrides: { auth_token: token } },
             );
           }
           return jobId;

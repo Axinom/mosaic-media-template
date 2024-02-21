@@ -39,7 +39,7 @@ export const MediaBulkPluginFactory = (
             input: graphQLAdditionalInput,
           },
           pgClient,
-          { auth_token: token },
+          { envelopeOverrides: { auth_token: token } },
         );
       }
     }

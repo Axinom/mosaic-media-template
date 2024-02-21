@@ -1,12 +1,11 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { DeleteEntityCommand } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { all, insert, select } from 'zapatos/db';
 import { movies } from 'zapatos/schema';
 import {
@@ -26,7 +25,7 @@ describe('Start Ingest Item Handler', () => {
   let messages: unknown[] = [];
 
   const createMessage = (payload: DeleteEntityCommand) =>
-    stub<TransactionalInboxMessage<DeleteEntityCommand>>({
+    stub<TypedTransactionalMessage<DeleteEntityCommand>>({
       payload,
     });
 
@@ -34,7 +33,6 @@ describe('Start Ingest Item Handler', () => {
     const storeOutboxMessage: StoreOutboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message);
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     ctx = await createTestContext({}, storeOutboxMessage);

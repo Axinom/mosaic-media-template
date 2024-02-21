@@ -157,7 +157,7 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
                   MediaServiceMessagingSettings.StartIngest,
                   { doc_id: doc.id },
                   ctx,
-                  { auth_token: token },
+                  { envelopeOverrides: { auth_token: token } },
                 );
                 return doc;
               },

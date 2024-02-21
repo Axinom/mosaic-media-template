@@ -2,12 +2,11 @@ import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureVideoExistsCreationStartedEvent } from '@axinom/mosaic-messages';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { CheckFinishIngestItemCommand } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
 import {
@@ -37,7 +36,7 @@ describe('VideoSucceededHandler', () => {
     payload: EnsureVideoExistsCreationStartedEvent,
     messageContext: unknown,
   ) =>
-    stub<TransactionalInboxMessage<EnsureVideoExistsCreationStartedEvent>>({
+    stub<TypedTransactionalMessage<EnsureVideoExistsCreationStartedEvent>>({
       payload,
       metadata: {
         messageContext,
@@ -49,7 +48,6 @@ describe('VideoSucceededHandler', () => {
     const storeOutboxMessage: StoreOutboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, payload) => {
         payloads.push(payload as CheckFinishIngestItemCommand);
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     user = createTestUser(ctx.config.serviceId);

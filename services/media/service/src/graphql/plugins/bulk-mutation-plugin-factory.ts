@@ -173,7 +173,7 @@ const defaultResolverBodyBuilder =
             input: additionalInput,
           },
           pgClient,
-          { auth_token: token },
+          { envelopeOverrides: { auth_token: token } },
         );
       }
     }

@@ -2,7 +2,7 @@ import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
@@ -10,7 +10,6 @@ import {
   CheckFinishIngestItemCommand,
   UpdateMetadataCommand,
 } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { CommonErrors } from '../../common';
 import { MockIngestProcessor } from '../../tests/ingest/mock-ingest-processor';
 import {
@@ -30,7 +29,7 @@ describe('UpdateMetadataHandler', () => {
     payload: UpdateMetadataCommand,
     messageContext: unknown,
   ) =>
-    stub<TransactionalInboxMessage<UpdateMetadataCommand>>({
+    stub<TypedTransactionalMessage<UpdateMetadataCommand>>({
       payload,
       metadata: {
         messageContext,
@@ -42,7 +41,6 @@ describe('UpdateMetadataHandler', () => {
     const storeOutboxMessage: StoreOutboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, payload) => {
         payloads.push(payload as CheckFinishIngestItemCommand);
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     user = createTestUser(ctx.config.serviceId);

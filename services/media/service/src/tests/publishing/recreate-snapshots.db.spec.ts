@@ -1,11 +1,9 @@
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
   PublishEntityCommand,
 } from 'media-messages';
-import { OutboxMessage } from 'pg-transactional-outbox';
 import { EntityTypeEnum } from 'zapatos/custom';
 import { all, insert, select } from 'zapatos/db';
 import { snapshots } from 'zapatos/schema';
@@ -34,7 +32,6 @@ describe('Recreate snapshots endpoint', () => {
           payload: payload as PublishEntityCommand,
           messageType,
         });
-        return Promise.resolve(stub<OutboxMessage>());
       },
     );
     ctx = await createTestContext({}, storeOutboxMessage);

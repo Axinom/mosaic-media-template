@@ -1,7 +1,7 @@
 import { assertNotFalsy, Logger } from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
-  TransactionalInboxMessage,
+  TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CheckFinishIngestDocumentCommand,
@@ -25,7 +25,10 @@ import {
   IngestItemInsertable,
   IngestMediaItem,
 } from '../models';
-import { getIngestErrorMessage } from '../utils';
+import {
+  getFutureIsoDateInMilliseconds,
+  getIngestErrorMessage,
+} from '../utils';
 
 export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHandler<
   StartIngestCommand,
@@ -48,7 +51,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
   }
 
   override async handleMessage(
-    { payload, metadata }: TransactionalInboxMessage<StartIngestCommand>,
+    { payload, metadata }: TypedTransactionalMessage<StartIngestCommand>,
     loginClient: ClientBase,
   ): Promise<void> {
     // Sending only id in a scenario of detached services is an anti-pattern
@@ -78,7 +81,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
 
   override async handleErrorMessage(
     error: Error,
-    { payload }: TransactionalInboxMessage<StartIngestCommand>,
+    { payload }: TypedTransactionalMessage<StartIngestCommand>,
     loginClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
@@ -202,7 +205,10 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
           item: ingestItem.item,
         },
         loginClient,
-        { auth_token: jwtToken },
+        {
+          envelopeOverrides: { auth_token: jwtToken },
+          lockedUntil: getFutureIsoDateInMilliseconds(5_000),
+        },
       );
     }
 
@@ -217,7 +223,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
         previous_in_progress_count: 0,
       },
       loginClient,
-      { auth_token: jwtToken },
+      { envelopeOverrides: { auth_token: jwtToken } },
     );
   }
 }

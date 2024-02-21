@@ -27,16 +27,18 @@ export const registerVideoCuePointTypes = async (
     },
     loginClient,
     {
-      auth_token: serviceAccountToken.accessToken,
-    },
-    {
-      routingKey:
-        VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes.getEnvironmentRoutingKey(
-          {
-            tenantId: config.tenantId,
-            environmentId: config.environmentId,
-          },
-        ),
+      envelopeOverrides: {
+        auth_token: serviceAccountToken.accessToken,
+      },
+      options: {
+        routingKey:
+          VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes.getEnvironmentRoutingKey(
+            {
+              tenantId: config.tenantId,
+              environmentId: config.environmentId,
+            },
+          ),
+      },
     },
   );
 };
