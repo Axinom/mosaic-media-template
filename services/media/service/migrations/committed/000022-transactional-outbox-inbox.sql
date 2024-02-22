@@ -1,5 +1,5 @@
 --! Previous: sha1:95f2cb8f12acd7bc84f7438f981092e254f74973
---! Hash: sha1:9aa991c53d2e3e092ec649dccb9607102f4928d0
+--! Hash: sha1:644d7152d38373da4e4765685de0d37ea07278a3
 --! Message: transactional-outbox-inbox
 
 --   ___   _   _  _____  ___   ___  __  __
@@ -112,11 +112,11 @@ BEGIN
 END;
 $BODY$;
 
-CREATE INDEX outbox_segment_idx ON app_hidden.outbox (segment);
-CREATE INDEX outbox_created_at_idx ON app_hidden.outbox (created_at);
-CREATE INDEX outbox_processed_at_idx ON app_hidden.outbox (processed_at);
-CREATE INDEX outbox_abandoned_at_idx ON app_hidden.outbox (abandoned_at);
-
+SELECT ax_define.define_index('segment', 'outbox', 'app_hidden');
+SELECT ax_define.define_index('created_at', 'outbox', 'app_hidden');
+SELECT ax_define.define_index('processed_at', 'outbox', 'app_hidden');
+SELECT ax_define.define_index('abandoned_at', 'outbox', 'app_hidden');
+SELECT ax_define.define_index('locked_until', 'outbox', 'app_hidden');
 
 -- ____  _  _  ___   ___  __  __
 -- |_ _|| \| || _ ) / _ \ \ \/ /
@@ -229,7 +229,8 @@ BEGIN
 END;
 $BODY$;
 
-CREATE INDEX inbox_segment_idx ON app_hidden.inbox (segment);
-CREATE INDEX inbox_created_at_idx ON app_hidden.inbox (created_at);
-CREATE INDEX inbox_processed_at_idx ON app_hidden.inbox (processed_at);
-CREATE INDEX inbox_abandoned_at_idx ON app_hidden.inbox (abandoned_at);
+SELECT ax_define.define_index('segment', 'inbox', 'app_hidden');
+SELECT ax_define.define_index('created_at', 'inbox', 'app_hidden');
+SELECT ax_define.define_index('processed_at', 'inbox', 'app_hidden');
+SELECT ax_define.define_index('abandoned_at', 'inbox', 'app_hidden');
+SELECT ax_define.define_index('locked_until', 'inbox', 'app_hidden');

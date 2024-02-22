@@ -6045,59 +6045,73 @@ ALTER TABLE ONLY app_public.collection_relations
 
 
 --
--- Name: inbox_abandoned_at_idx; Type: INDEX; Schema: app_hidden; Owner: -
+-- Name: idx_inbox_abandoned_at; Type: INDEX; Schema: app_hidden; Owner: -
 --
 
-CREATE INDEX inbox_abandoned_at_idx ON app_hidden.inbox USING btree (abandoned_at);
-
-
---
--- Name: inbox_created_at_idx; Type: INDEX; Schema: app_hidden; Owner: -
---
-
-CREATE INDEX inbox_created_at_idx ON app_hidden.inbox USING btree (created_at);
+CREATE INDEX idx_inbox_abandoned_at ON app_hidden.inbox USING btree (abandoned_at);
 
 
 --
--- Name: inbox_processed_at_idx; Type: INDEX; Schema: app_hidden; Owner: -
+-- Name: idx_inbox_created_at; Type: INDEX; Schema: app_hidden; Owner: -
 --
 
-CREATE INDEX inbox_processed_at_idx ON app_hidden.inbox USING btree (processed_at);
-
-
---
--- Name: inbox_segment_idx; Type: INDEX; Schema: app_hidden; Owner: -
---
-
-CREATE INDEX inbox_segment_idx ON app_hidden.inbox USING btree (segment);
+CREATE INDEX idx_inbox_created_at ON app_hidden.inbox USING btree (created_at);
 
 
 --
--- Name: outbox_abandoned_at_idx; Type: INDEX; Schema: app_hidden; Owner: -
+-- Name: idx_inbox_locked_until; Type: INDEX; Schema: app_hidden; Owner: -
 --
 
-CREATE INDEX outbox_abandoned_at_idx ON app_hidden.outbox USING btree (abandoned_at);
-
-
---
--- Name: outbox_created_at_idx; Type: INDEX; Schema: app_hidden; Owner: -
---
-
-CREATE INDEX outbox_created_at_idx ON app_hidden.outbox USING btree (created_at);
+CREATE INDEX idx_inbox_locked_until ON app_hidden.inbox USING btree (locked_until);
 
 
 --
--- Name: outbox_processed_at_idx; Type: INDEX; Schema: app_hidden; Owner: -
+-- Name: idx_inbox_processed_at; Type: INDEX; Schema: app_hidden; Owner: -
 --
 
-CREATE INDEX outbox_processed_at_idx ON app_hidden.outbox USING btree (processed_at);
+CREATE INDEX idx_inbox_processed_at ON app_hidden.inbox USING btree (processed_at);
 
 
 --
--- Name: outbox_segment_idx; Type: INDEX; Schema: app_hidden; Owner: -
+-- Name: idx_inbox_segment; Type: INDEX; Schema: app_hidden; Owner: -
 --
 
-CREATE INDEX outbox_segment_idx ON app_hidden.outbox USING btree (segment);
+CREATE INDEX idx_inbox_segment ON app_hidden.inbox USING btree (segment);
+
+
+--
+-- Name: idx_outbox_abandoned_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_abandoned_at ON app_hidden.outbox USING btree (abandoned_at);
+
+
+--
+-- Name: idx_outbox_created_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_created_at ON app_hidden.outbox USING btree (created_at);
+
+
+--
+-- Name: idx_outbox_locked_until; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_locked_until ON app_hidden.outbox USING btree (locked_until);
+
+
+--
+-- Name: idx_outbox_processed_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_processed_at ON app_hidden.outbox USING btree (processed_at);
+
+
+--
+-- Name: idx_outbox_segment; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_segment ON app_hidden.outbox USING btree (segment);
 
 
 --
