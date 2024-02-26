@@ -46,10 +46,31 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
     }: TypedTransactionalMessage<CheckFinishIngestDocumentCommand>,
     loginClient: ClientBase,
   ): Promise<void> {
+    const docId = param(ingest_document_id);
+    await sql`WITH new_status AS (
+      SELECT 
+        ingest_item_id,
+        CASE
+          WHEN BOOL_OR(app_public.ingest_item_steps.status = 'IN_PROGRESS') THEN NULL
+          WHEN BOOL_OR(app_public.ingest_item_steps.status = 'ERROR') THEN 'ERROR'
+          ELSE 'SUCCESS'
+        END as new_state
+      FROM app_public.ingest_item_steps
+      JOIN app_public.ingest_items ON app_public.ingest_item_steps.ingest_item_id = app_public.ingest_items.id
+      WHERE app_public.ingest_items.ingest_document_id = ${docId}
+      GROUP BY ingest_item_id
+    )
+    UPDATE app_public.ingest_items
+    SET status = new_status.new_state
+    FROM new_status
+    WHERE app_public.ingest_items.id = new_status.ingest_item_id AND new_status.new_state IS NOT NULL;`.run(
+      loginClient,
+    );
+
     const countGroups = await sql<SQL, StatusAggregation[]>`
     SELECT status, COUNT (status)
     FROM app_public.ingest_items
-    WHERE ingest_document_id = ${param(ingest_document_id)}
+    WHERE ingest_document_id = ${docId}
     GROUP BY status;
     `.run(loginClient);
 
