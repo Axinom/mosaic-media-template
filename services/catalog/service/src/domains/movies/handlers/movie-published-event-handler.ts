@@ -44,6 +44,20 @@ export class MoviePublishedEventHandler extends MessageHandler<MoviePublishedEve
             movie_cast: payload.cast,
             studio: payload.studio,
             production_countries: payload.production_countries,
+            audio_languages: payload.audio_languages,
+            caption_languages: payload.caption_languages,
+            subtitle_languages: payload.subtitle_languages,
+            directors: payload.directors,
+            business_type: payload.business_type,
+            credits_start_time: payload.credits_start_time,
+            length_in_seconds: payload.length_in_seconds,
+            dynamic_field: payload.dynamic_field,
+            extended_field: payload.extended_field,
+            rating: payload.rating,
+            custom_rating: payload.custom_rating,
+            age_rating: payload.age_rating,
+            asset_type: payload.asset_type,
+            asset_subtype: payload.asset_subtype,
           })
           .run(txnClient);
 

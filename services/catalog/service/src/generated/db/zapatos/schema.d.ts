@@ -3259,6 +3259,90 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       tags: string[] | null;
+      /**
+      * **movie.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages: string[] | null;
+      /**
+      * **movie.caption_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      caption_languages: string[] | null;
+      /**
+      * **movie.subtitle_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      subtitle_languages: string[] | null;
+      /**
+      * **movie.directors**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      directors: string[] | null;
+      /**
+      * **movie.business_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      business_type: string | null;
+      /**
+      * **movie.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time: string | null;
+      /**
+      * **movie.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **movie.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field: string | null;
+      /**
+      * **movie.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field: string | null;
+      /**
+      * **movie.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating: number | null;
+      /**
+      * **movie.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating: string | null;
+      /**
+      * **movie.age_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      age_rating: string | null;
+      /**
+      * **movie.asset_type**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      asset_type: number | null;
+      /**
+      * **movie.asset_subtype**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      asset_subtype: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -3321,6 +3405,90 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       tags: string[] | null;
+      /**
+      * **movie.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages: string[] | null;
+      /**
+      * **movie.caption_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      caption_languages: string[] | null;
+      /**
+      * **movie.subtitle_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      subtitle_languages: string[] | null;
+      /**
+      * **movie.directors**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      directors: string[] | null;
+      /**
+      * **movie.business_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      business_type: string | null;
+      /**
+      * **movie.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time: string | null;
+      /**
+      * **movie.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **movie.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field: string | null;
+      /**
+      * **movie.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field: string | null;
+      /**
+      * **movie.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating: number | null;
+      /**
+      * **movie.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating: string | null;
+      /**
+      * **movie.age_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      age_rating: string | null;
+      /**
+      * **movie.asset_type**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      asset_type: number | null;
+      /**
+      * **movie.asset_subtype**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      asset_subtype: string | null;
     }
     export interface Whereable {
       /**
@@ -3383,6 +3551,90 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       tags?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.caption_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      caption_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.subtitle_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      subtitle_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.directors**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      directors?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.business_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      business_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.age_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      age_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.asset_type**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      asset_type?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie.asset_subtype**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      asset_subtype?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -3445,6 +3697,90 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       tags?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.caption_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.subtitle_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.directors**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      directors?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.business_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      business_type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.age_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      age_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.asset_type**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      asset_type?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie.asset_subtype**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      asset_subtype?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -3507,6 +3843,90 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       tags?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.caption_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.subtitle_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.directors**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      directors?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.business_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      business_type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.age_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      age_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.asset_type**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      asset_type?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie.asset_subtype**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      asset_subtype?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movie_pkey';
     export type Column = keyof Selectable;
@@ -3995,6 +4415,36 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       end_time: Date | null;
+      /**
+      * **movie_licenses.is_downloadable**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_downloadable: boolean | null;
+      /**
+      * **movie_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      downloaded_asset_lifespan: number | null;
+      /**
+      * **movie_licenses.business_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      business_type: string | null;
+      /**
+      * **movie_licenses.tier**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tier: string | null;
+      /**
+      * **movie_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -4027,6 +4477,36 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       end_time: db.DateString | null;
+      /**
+      * **movie_licenses.is_downloadable**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_downloadable: boolean | null;
+      /**
+      * **movie_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      downloaded_asset_lifespan: number | null;
+      /**
+      * **movie_licenses.business_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      business_type: string | null;
+      /**
+      * **movie_licenses.tier**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tier: string | null;
+      /**
+      * **movie_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -4059,6 +4539,36 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       end_time?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_licenses.is_downloadable**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_licenses.business_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      business_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_licenses.tier**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tier?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -4091,6 +4601,36 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       end_time?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_licenses.is_downloadable**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_licenses.business_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      business_type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_licenses.tier**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tier?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -4123,6 +4663,36 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       end_time?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_licenses.is_downloadable**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_licenses.business_type**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      business_type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_licenses.tier**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tier?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movie_licenses_pkey';
     export type Column = keyof Selectable;
@@ -4964,6 +5534,24 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       output_format: string | null;
+      /**
+      * **movie_videos.drm_key_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      drm_key_id: string | null;
+      /**
+      * **movie_videos.file_size_in_bytes**
+      * - `int8` in database
+      * - Nullable, no default
+      */
+      file_size_in_bytes: db.Int8String | null;
+      /**
+      * **movie_videos.main_url**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      main_url: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -5038,6 +5626,24 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       output_format: string | null;
+      /**
+      * **movie_videos.drm_key_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      drm_key_id: string | null;
+      /**
+      * **movie_videos.file_size_in_bytes**
+      * - `int8` in database
+      * - Nullable, no default
+      */
+      file_size_in_bytes: number | null;
+      /**
+      * **movie_videos.main_url**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      main_url: string | null;
     }
     export interface Whereable {
       /**
@@ -5112,6 +5718,24 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       output_format?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_videos.drm_key_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      drm_key_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_videos.file_size_in_bytes**
+      * - `int8` in database
+      * - Nullable, no default
+      */
+      file_size_in_bytes?: (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_videos.main_url**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      main_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -5186,6 +5810,24 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       output_format?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_videos.drm_key_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      drm_key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_videos.file_size_in_bytes**
+      * - `int8` in database
+      * - Nullable, no default
+      */
+      file_size_in_bytes?: (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_videos.main_url**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      main_url?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -5260,6 +5902,24 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       output_format?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_videos.drm_key_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      drm_key_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_videos.file_size_in_bytes**
+      * - `int8` in database
+      * - Nullable, no default
+      */
+      file_size_in_bytes?: (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_videos.main_url**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      main_url?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movie_videos_pkey';
     export type Column = keyof Selectable;

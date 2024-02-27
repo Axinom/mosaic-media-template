@@ -966,6 +966,20 @@ type Movie {
 
   """Array of tags associated with the content."""
   tags: [String]
+  audioLanguages: [String]
+  captionLanguages: [String]
+  subtitleLanguages: [String]
+  directors: [String]
+  businessType: String
+  creditsStartTime: String
+  lengthInSeconds: Float
+  dynamicField: String
+  extendedField: String
+  rating: BigFloat
+  customRating: String
+  ageRating: String
+  assetType: Int
+  assetSubtype: String
 
   """Reads and enables pagination through a set of `MovieImage`."""
   images(
@@ -1110,6 +1124,11 @@ A point in time as described by the [ISO
 """
 scalar Datetime
 
+"""
+A floating point number that requires more precision than IEEE 754 binary 64
+"""
+scalar BigFloat
+
 """A connection to a list of `MovieImage` values."""
 type MovieImagesConnection {
   """A list of `MovieImage` objects."""
@@ -1232,6 +1251,11 @@ type MovieLicense {
 
   """Time when license becomes invalid."""
   endTime: Datetime
+  isDownloadable: Boolean
+  downloadedAssetLifespan: Int
+  businessType: String
+  tier: String
+  contentOwner: String
 
   """Reads a single `Movie` that is related to this `MovieLicense`."""
   movie: Movie
@@ -1253,6 +1277,16 @@ enum MovieLicensesOrderBy {
   ID_DESC
   MOVIE_ID_ASC
   MOVIE_ID_DESC
+  IS_DOWNLOADABLE_ASC
+  IS_DOWNLOADABLE_DESC
+  DOWNLOADED_ASSET_LIFESPAN_ASC
+  DOWNLOADED_ASSET_LIFESPAN_DESC
+  BUSINESS_TYPE_ASC
+  BUSINESS_TYPE_DESC
+  TIER_ASC
+  TIER_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -1267,6 +1301,21 @@ input MovieLicenseCondition {
 
   """Checks for equality with the object’s `movieId` field."""
   movieId: String
+
+  """Checks for equality with the object’s `isDownloadable` field."""
+  isDownloadable: Boolean
+
+  """Checks for equality with the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: Int
+
+  """Checks for equality with the object’s `businessType` field."""
+  businessType: String
+
+  """Checks for equality with the object’s `tier` field."""
+  tier: String
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
 }
 
 """
@@ -1279,6 +1328,21 @@ input MovieLicenseFilter {
   """Filter by the object’s `movieId` field."""
   movieId: StringFilter
 
+  """Filter by the object’s `isDownloadable` field."""
+  isDownloadable: BooleanFilter
+
+  """Filter by the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: IntFilter
+
+  """Filter by the object’s `businessType` field."""
+  businessType: StringFilter
+
+  """Filter by the object’s `tier` field."""
+  tier: StringFilter
+
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
+
   """Checks for all expressions in this list."""
   and: [MovieLicenseFilter!]
 
@@ -1287,6 +1351,48 @@ input MovieLicenseFilter {
 
   """Negates the expression."""
   not: MovieLicenseFilter
+}
+
+"""
+A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
+"""
+input BooleanFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Boolean
+
+  """Not equal to the specified value."""
+  notEqualTo: Boolean
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Boolean
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Boolean
+
+  """Included in the specified list."""
+  in: [Boolean!]
+
+  """Not included in the specified list."""
+  notIn: [Boolean!]
+
+  """Less than the specified value."""
+  lessThan: Boolean
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Boolean
+
+  """Greater than the specified value."""
+  greaterThan: Boolean
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Boolean
 }
 
 """A connection to a list of `MovieVideo` values."""
@@ -1340,6 +1446,9 @@ type MovieVideo {
 
   """Output format of the stream."""
   outputFormat: String
+  drmKeyId: String
+  fileSizeInBytes: BigInt
+  mainUrl: String
 
   """Reads a single `Movie` that is related to this `MovieVideo`."""
   movie: Movie
@@ -1412,6 +1521,13 @@ type MovieVideo {
     filter: MovieVideoCuePointFilter
   ): MovieVideoCuePointsConnection!
 }
+
+"""
+A signed eight-byte integer. The upper big integer values are greater than the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
+"""
+scalar BigInt
 
 """A connection to a list of `MovieVideoStream` values."""
 type MovieVideoStreamsConnection {
@@ -1719,6 +1835,12 @@ enum MovieVideosOrderBy {
   MOVIE_ID_DESC
   TYPE_ASC
   TYPE_DESC
+  DRM_KEY_ID_ASC
+  DRM_KEY_ID_DESC
+  FILE_SIZE_IN_BYTES_ASC
+  FILE_SIZE_IN_BYTES_DESC
+  MAIN_URL_ASC
+  MAIN_URL_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -1736,6 +1858,15 @@ input MovieVideoCondition {
 
   """Checks for equality with the object’s `type` field."""
   type: String
+
+  """Checks for equality with the object’s `drmKeyId` field."""
+  drmKeyId: String
+
+  """Checks for equality with the object’s `fileSizeInBytes` field."""
+  fileSizeInBytes: BigInt
+
+  """Checks for equality with the object’s `mainUrl` field."""
+  mainUrl: String
 }
 
 """
@@ -1751,6 +1882,15 @@ input MovieVideoFilter {
   """Filter by the object’s `type` field."""
   type: StringFilter
 
+  """Filter by the object’s `drmKeyId` field."""
+  drmKeyId: StringFilter
+
+  """Filter by the object’s `fileSizeInBytes` field."""
+  fileSizeInBytes: BigIntFilter
+
+  """Filter by the object’s `mainUrl` field."""
+  mainUrl: StringFilter
+
   """Checks for all expressions in this list."""
   and: [MovieVideoFilter!]
 
@@ -1759,6 +1899,48 @@ input MovieVideoFilter {
 
   """Negates the expression."""
   not: MovieVideoFilter
+}
+
+"""
+A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’
+"""
+input BigIntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigInt
+
+  """Not equal to the specified value."""
+  notEqualTo: BigInt
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigInt
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigInt
+
+  """Included in the specified list."""
+  in: [BigInt!]
+
+  """Not included in the specified list."""
+  notIn: [BigInt!]
+
+  """Less than the specified value."""
+  lessThan: BigInt
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigInt
+
+  """Greater than the specified value."""
+  greaterThan: BigInt
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigInt
 }
 
 """A connection to a list of `MovieGenresRelation` values."""
@@ -4849,6 +5031,34 @@ enum MoviesOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
+  AUDIO_LANGUAGES_ASC
+  AUDIO_LANGUAGES_DESC
+  CAPTION_LANGUAGES_ASC
+  CAPTION_LANGUAGES_DESC
+  SUBTITLE_LANGUAGES_ASC
+  SUBTITLE_LANGUAGES_DESC
+  DIRECTORS_ASC
+  DIRECTORS_DESC
+  BUSINESS_TYPE_ASC
+  BUSINESS_TYPE_DESC
+  CREDITS_START_TIME_ASC
+  CREDITS_START_TIME_DESC
+  LENGTH_IN_SECONDS_ASC
+  LENGTH_IN_SECONDS_DESC
+  DYNAMIC_FIELD_ASC
+  DYNAMIC_FIELD_DESC
+  EXTENDED_FIELD_ASC
+  EXTENDED_FIELD_DESC
+  RATING_ASC
+  RATING_DESC
+  CUSTOM_RATING_ASC
+  CUSTOM_RATING_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
+  ASSET_TYPE_ASC
+  ASSET_TYPE_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -4859,6 +5069,48 @@ A condition to be used against `Movie` object types. All fields are tested for e
 input MovieCondition {
   """Checks for equality with the object’s `id` field."""
   id: String
+
+  """Checks for equality with the object’s `audioLanguages` field."""
+  audioLanguages: [String]
+
+  """Checks for equality with the object’s `captionLanguages` field."""
+  captionLanguages: [String]
+
+  """Checks for equality with the object’s `subtitleLanguages` field."""
+  subtitleLanguages: [String]
+
+  """Checks for equality with the object’s `directors` field."""
+  directors: [String]
+
+  """Checks for equality with the object’s `businessType` field."""
+  businessType: String
+
+  """Checks for equality with the object’s `creditsStartTime` field."""
+  creditsStartTime: String
+
+  """Checks for equality with the object’s `lengthInSeconds` field."""
+  lengthInSeconds: Float
+
+  """Checks for equality with the object’s `dynamicField` field."""
+  dynamicField: String
+
+  """Checks for equality with the object’s `extendedField` field."""
+  extendedField: String
+
+  """Checks for equality with the object’s `rating` field."""
+  rating: BigFloat
+
+  """Checks for equality with the object’s `customRating` field."""
+  customRating: String
+
+  """Checks for equality with the object’s `ageRating` field."""
+  ageRating: String
+
+  """Checks for equality with the object’s `assetType` field."""
+  assetType: Int
+
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: String
 }
 
 """
@@ -4868,6 +5120,48 @@ input MovieFilter {
   """Filter by the object’s `id` field."""
   id: StringFilter
 
+  """Filter by the object’s `audioLanguages` field."""
+  audioLanguages: StringListFilter
+
+  """Filter by the object’s `captionLanguages` field."""
+  captionLanguages: StringListFilter
+
+  """Filter by the object’s `subtitleLanguages` field."""
+  subtitleLanguages: StringListFilter
+
+  """Filter by the object’s `directors` field."""
+  directors: StringListFilter
+
+  """Filter by the object’s `businessType` field."""
+  businessType: StringFilter
+
+  """Filter by the object’s `creditsStartTime` field."""
+  creditsStartTime: StringFilter
+
+  """Filter by the object’s `lengthInSeconds` field."""
+  lengthInSeconds: FloatFilter
+
+  """Filter by the object’s `dynamicField` field."""
+  dynamicField: StringFilter
+
+  """Filter by the object’s `extendedField` field."""
+  extendedField: StringFilter
+
+  """Filter by the object’s `rating` field."""
+  rating: BigFloatFilter
+
+  """Filter by the object’s `customRating` field."""
+  customRating: StringFilter
+
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
+
+  """Filter by the object’s `assetType` field."""
+  assetType: IntFilter
+
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: StringFilter
+
   """Checks for all expressions in this list."""
   and: [MovieFilter!]
 
@@ -4876,6 +5170,153 @@ input MovieFilter {
 
   """Negates the expression."""
   not: MovieFilter
+}
+
+"""
+A filter to be used against String List fields. All fields are combined with a logical ‘and.’
+"""
+input StringListFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: [String]
+
+  """Not equal to the specified value."""
+  notEqualTo: [String]
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: [String]
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: [String]
+
+  """Less than the specified value."""
+  lessThan: [String]
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: [String]
+
+  """Greater than the specified value."""
+  greaterThan: [String]
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: [String]
+
+  """Contains the specified list of values."""
+  contains: [String]
+
+  """Contained by the specified list of values."""
+  containedBy: [String]
+
+  """Overlaps the specified list of values."""
+  overlaps: [String]
+
+  """Any array item is equal to the specified value."""
+  anyEqualTo: String
+
+  """Any array item is not equal to the specified value."""
+  anyNotEqualTo: String
+
+  """Any array item is less than the specified value."""
+  anyLessThan: String
+
+  """Any array item is less than or equal to the specified value."""
+  anyLessThanOrEqualTo: String
+
+  """Any array item is greater than the specified value."""
+  anyGreaterThan: String
+
+  """Any array item is greater than or equal to the specified value."""
+  anyGreaterThanOrEqualTo: String
+}
+
+"""
+A filter to be used against Float fields. All fields are combined with a logical ‘and.’
+"""
+input FloatFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Float
+
+  """Not equal to the specified value."""
+  notEqualTo: Float
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Float
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Float
+
+  """Included in the specified list."""
+  in: [Float!]
+
+  """Not included in the specified list."""
+  notIn: [Float!]
+
+  """Less than the specified value."""
+  lessThan: Float
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Float
+
+  """Greater than the specified value."""
+  greaterThan: Float
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Float
+}
+
+"""
+A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’
+"""
+input BigFloatFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigFloat
+
+  """Not equal to the specified value."""
+  notEqualTo: BigFloat
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigFloat
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigFloat
+
+  """Included in the specified list."""
+  in: [BigFloat!]
+
+  """Not included in the specified list."""
+  notIn: [BigFloat!]
+
+  """Less than the specified value."""
+  lessThan: BigFloat
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigFloat
+
+  """Greater than the specified value."""
+  greaterThan: BigFloat
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigFloat
 }
 
 """A connection to a list of `MovieGenre` values."""

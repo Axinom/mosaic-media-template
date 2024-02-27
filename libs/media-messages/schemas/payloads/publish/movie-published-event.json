@@ -61,6 +61,52 @@
     },
     "videos": {
       "$ref": "./common.json#/definitions/videos"
+    },
+    "audio_languages": {
+      "description": "Array of audio languages available in the movie.",
+      "$ref": "./common.json#/definitions/audio_languages"
+    },
+    "subtitle_languages": {
+      "description": "Array of subtitle languages available in the movie.",
+      "$ref": "./common.json#/definitions/subtitle_languages"
+    },
+    "caption_languages": {
+      "description": "Array of caption languages available in the movie.",
+      "$ref": "./common.json#/definitions/caption_languages"
+    },
+    "directors": {
+      "description": "Directors or Creators of the movie.",
+      "$ref": "./common.json#/definitions/directors"
+    },
+    "business_type": {
+      "$ref": "./common.json#/definitions/business_type"
+    },
+    "credits_start_time": {
+      "$ref": "./common.json#/definitions/credits_start_time"
+    },
+    "length_in_seconds": {
+      "$ref": "./common.json#/definitions/length_in_seconds"
+    },
+    "dynamic_field": {
+      "$ref": "./common.json#/definitions/dynamic_field"
+    },
+    "extended_field": {
+      "$ref": "./common.json#/definitions/extended_field"
+    },
+    "custom_rating": {
+      "$ref": "./common.json#/definitions/custom_rating"
+    },
+    "rating": {
+      "$ref": "./common.json#/definitions/rating"
+    },
+    "age_rating": {
+      "$ref": "./common.json#/definitions/age_rating"
+    },
+    "asset_type": {
+      "$ref": "./common.json#/definitions/asset_type"
+    },
+    "asset_subtype": {
+      "$ref": "./common.json#/definitions/asset_subtype"
     }
   },
   "required": [
