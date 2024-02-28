@@ -435,6 +435,42 @@
         ],
         "additionalProperties": false
       }
+    },
+    "directors": {
+      "description": "Directors of the media.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "dynamic_field": {
+      "description": "Dynamic field.",
+      "type": "string"
+    },
+    "extended_field": {
+      "description": "List of extended properties (key/value pairs) for an asset. These properties are not used by MS and are simply passed through to the response models.",
+      "type": "string"
+    },
+    "custom_rating": {
+      "description": "Custom rating.",
+      "type": "string"
+    },
+    "rating": {
+      "description": "The rating of the item.",
+      "type": "number"
+    },
+    "age_rating": {
+      "description": "Age rating for parental ratings.",
+      "type": "string"
+    },
+    "asset_type": {
+      "description": "Asset type.",
+      "type": "number"
+    },
+    "asset_subtype": {
+      "description": "Optional asset subtype.",
+      "type": "string"
     }
   },
   "required": [

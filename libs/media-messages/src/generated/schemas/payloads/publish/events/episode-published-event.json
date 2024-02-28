@@ -14,6 +14,11 @@
       "type": "string",
       "pattern": "^(season)-([a-zA-Z0-9_-]+)$"
     },
+    "tvshow_id": {
+      "description": "Content ID of a TV show. Must match the pattern `^(tvshow)-([a-zA-Z0-9_-]+)$`.",
+      "type": "string",
+      "pattern": "^(tvshow)-([a-zA-Z0-9_-]+)$"
+    },
     "index": {
       "description": "Episode number",
       "type": "integer",
@@ -458,6 +463,61 @@
         ],
         "additionalProperties": false
       }
+    },
+    "directors": {
+      "description": "Directors of the media.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "credits_start_time": {
+      "description": "The position of the movies/episodes credits in the format 'HH:MM:SS'.",
+      "type": "string"
+    },
+    "intro_start_time": {
+      "description": "The position of the episode intro start in the format 'HH:MM:SS'.",
+      "type": "string"
+    },
+    "intro_end_time": {
+      "description": "The position of the episode intro end in the format 'HH:MM:SS'.",
+      "type": "string"
+    },
+    "length_in_seconds": {
+      "description": "Video length in seconds.",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "dynamic_field": {
+      "description": "Dynamic field.",
+      "type": "string"
+    },
+    "extended_field": {
+      "description": "List of extended properties (key/value pairs) for an asset. These properties are not used by MS and are simply passed through to the response models.",
+      "type": "string"
+    },
+    "custom_rating": {
+      "description": "Custom rating.",
+      "type": "string"
+    },
+    "rating": {
+      "description": "The rating of the item.",
+      "type": "number"
+    },
+    "age_rating": {
+      "description": "Age rating for parental ratings.",
+      "type": "string"
+    },
+    "asset_type": {
+      "description": "Asset type.",
+      "type": "number"
+    },
+    "asset_subtype": {
+      "description": "Optional asset subtype.",
+      "type": "string"
     }
   },
   "required": [

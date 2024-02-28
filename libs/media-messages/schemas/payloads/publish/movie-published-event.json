@@ -82,6 +82,7 @@
       "$ref": "./common.json#/definitions/business_type"
     },
     "credits_start_time": {
+      "description": "The position of the movie credits in the format 'HH:MM:SS'.",
       "$ref": "./common.json#/definitions/credits_start_time"
     },
     "length_in_seconds": {

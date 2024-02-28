@@ -46,6 +46,19 @@ export class EpisodePublishedEventHandler extends MessageHandler<EpisodePublishe
             episode_cast: payload.cast,
             studio: payload.studio,
             production_countries: payload.production_countries,
+            directors: payload.directors,
+            credits_start_time: payload.credits_start_time,
+            length_in_seconds: payload.length_in_seconds,
+            dynamic_field: payload.dynamic_field,
+            extended_field: payload.extended_field,
+            rating: payload.rating,
+            custom_rating: payload.custom_rating,
+            age_rating: payload.age_rating,
+            asset_type: payload.asset_type,
+            asset_subtype: payload.asset_subtype,
+            intro_start_time: payload.intro_start_time,
+            intro_end_time: payload.intro_end_time,
+            tvshow_id: payload.tvshow_id,
           })
           .run(txnClient);
 

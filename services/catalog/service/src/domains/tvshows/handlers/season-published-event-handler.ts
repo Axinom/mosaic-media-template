@@ -44,6 +44,14 @@ export class SeasonPublishedEventHandler extends MessageHandler<SeasonPublishedE
             season_cast: payload.cast,
             studio: payload.studio,
             production_countries: payload.production_countries,
+            directors: payload.directors,
+            dynamic_field: payload.dynamic_field,
+            extended_field: payload.extended_field,
+            rating: payload.rating,
+            custom_rating: payload.custom_rating,
+            age_rating: payload.age_rating,
+            asset_type: payload.asset_type,
+            asset_subtype: payload.asset_subtype,
           })
           .run(txnClient);
 
