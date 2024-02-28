@@ -19,6 +19,8 @@ jobs:
           echo "Pull Request Number: $prNumber"
 
           repoUrl=$(System.PullRequest.SourceRepositoryURI)
+          # remove .git from repoUrl if present (when raising PRs from vscode, this can happen)
+          repoUrl="${repoUrl%.git}"
 
           # extract org and repo name from repoUrl
           orgRepo=$(echo "$repoUrl" | sed -e 's/.*github.com\/\(.*\)/\1/')
