@@ -251,10 +251,10 @@
     yargs "^16.2.0"
     zapatos "3.6.0"
 
-"@axinom/mosaic-graphql-common@0.8.0-rc.0":
-  version "0.8.0-rc.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-graphql-common/-/mosaic-graphql-common-0.8.0-rc.0.tgz#1156d931b870075938ca10213c30a293cd6b1051"
-  integrity sha512-6MLnHq1pPfygDtl4FL+8G6RnFgMJsTzIFfcoEhgu8dJQbXwDZJ/znBpG+rshnyfTzOyLhWYF2qsCJZ3BF3gQhg==
+"@axinom/mosaic-graphql-common@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-graphql-common/-/mosaic-graphql-common-0.8.0.tgz#345640b1d8548b2e48e02fdc050f9538e79640c9"
+  integrity sha512-h/8FCy1T5mBRz5EOcOtdylKVtfY/gJ6BW6GcpzhXrKIUiJeTR1elLdbgParhhpa4WfI7zr1kUS8JIHvrURBIaQ==
   dependencies:
     "@graphile/pg-pubsub" "^4.12.3"
     endent "^2.1.0"

@@ -6,6 +6,7 @@ import {
   setupLoginPgPool,
   setupOwnerPgPool,
 } from '@axinom/mosaic-db-common';
+import { forwardToGraphiQl } from '@axinom/mosaic-graphql-common';
 import {
   createRabbitMQConnectivityMetric,
   envelopeLoggingMiddleware,
@@ -81,6 +82,10 @@ async function bootstrap(): Promise<void> {
       createRabbitMQConnectivityMetric(broker),
     ],
   });
+
+  if (config.graphqlGuiEnabled) {
+    app.use(forwardToGraphiQl());
+  }
 
   app.use(
     postgraphile(loginPool, 'app_public', buildPostgraphileOptions(config)),
