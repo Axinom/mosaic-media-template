@@ -1,8 +1,9 @@
-import { Broker } from '@axinom/mosaic-message-bus';
 import {
   DeclareCuePointTypesCommand,
   VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { ClientBase } from 'pg';
 import { Config, requestServiceAccountToken } from '../common';
 
 export const videoCuePointTypes = [
@@ -12,28 +13,32 @@ export const videoCuePointTypes = [
 ];
 
 export const registerVideoCuePointTypes = async (
-  broker: Broker,
+  storeOutboxMessage: StoreOutboxMessage,
+  loginClient: ClientBase,
   config: Config,
 ): Promise<void> => {
   const serviceAccountToken = await requestServiceAccountToken(config);
-  await broker.publish<DeclareCuePointTypesCommand>(
+  await storeOutboxMessage<DeclareCuePointTypesCommand>(
     config.environmentId,
     VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes,
     {
       service_id: config.serviceId,
       cue_point_types: videoCuePointTypes,
     },
+    loginClient,
     {
-      auth_token: serviceAccountToken.accessToken,
-    },
-    {
-      routingKey:
-        VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes.getEnvironmentRoutingKey(
-          {
-            tenantId: config.tenantId,
-            environmentId: config.environmentId,
-          },
-        ),
+      envelopeOverrides: {
+        auth_token: serviceAccountToken.accessToken,
+      },
+      options: {
+        routingKey:
+          VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes.getEnvironmentRoutingKey(
+            {
+              tenantId: config.tenantId,
+              environmentId: config.environmentId,
+            },
+          ),
+      },
     },
   );
 };

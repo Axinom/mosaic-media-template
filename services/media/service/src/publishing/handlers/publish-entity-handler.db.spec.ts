@@ -1,11 +1,13 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
   createOffsetDate,
   dateToBeInRange,
   rejectionOf,
 } from '@axinom/mosaic-service-common';
+import {
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { PublishEntityCommand } from 'media-messages';
@@ -18,53 +20,46 @@ import {
   ITestContext,
 } from '../../tests/test-utils';
 import { createSnapshotWithRelation } from '../utils';
-import { PublishEntityCommandHandler } from './publish-entity-command-handler';
+import { PublishEntityHandler } from './publish-entity-handler';
 
 describe('PublishEntityCommandHandler', () => {
   let ctx: ITestContext;
-  let broker: Broker;
+  let storeOutboxMessage: StoreOutboxMessage;
   let user: AuthenticatedManagementSubject;
-  let handler: PublishEntityCommandHandler;
-  let message: MessageInfo<PublishEntityCommand>;
+  let handler: PublishEntityHandler;
   let messages: unknown[] = [];
   let movie1: movies.JSONSelectable;
   let timestampBeforeTest: Date;
 
-  beforeAll(async () => {
-    ctx = await createTestContext();
-    broker = stub<Broker>({
-      publish: (
-        _id: string,
-        settings: MessagingSettings,
-        message: unknown,
-        overrides: unknown,
-        options: unknown,
-      ) => {
-        messages.push({
-          message,
-          messageType: settings.messageType,
-          overrides,
-          options,
-        });
-      },
-    });
-    user = createTestUser(ctx.config.serviceId);
-    message = stub<MessageInfo<PublishEntityCommand>>({
-      envelope: {
-        auth_token:
+  const createMessage = (payload: PublishEntityCommand) =>
+    stub<TypedTransactionalMessage<PublishEntityCommand>>({
+      payload,
+      metadata: {
+        authToken:
           'some token value which is not used because we are substituting getPgSettings method and using a stub user',
       },
     });
-    handler = new PublishEntityCommandHandler(
+
+  beforeAll(async () => {
+    ctx = await createTestContext();
+    storeOutboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload, _client, optionalData) => {
+        const { envelopeOverrides, options } = optionalData || {};
+        messages.push({
+          messageType,
+          payload,
+          envelopeOverrides,
+          options,
+        });
+      },
+    );
+    user = createTestUser(ctx.config.serviceId);
+
+    handler = new PublishEntityHandler(
       [mockPublishingProcessor],
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
       ctx.config,
     );
-
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
   });
 
   beforeEach(async () => {
@@ -89,15 +84,17 @@ describe('PublishEntityCommandHandler', () => {
   describe('onMessage', () => {
     it('message to publish a movie -> snapshot with relation created with correct metadata and publish message sent', async () => {
       // Act
-      await handler.onMessage(
-        {
-          table_name: mockPublishingProcessor.type,
-          job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
-          entity_id: movie1.id,
-          publish_options: { action: 'PUBLISH_NOW' },
-        },
-        message,
-      );
+      await ctx.executeGqlSql(user, async (txn) => {
+        await handler.handleMessage(
+          createMessage({
+            table_name: mockPublishingProcessor.type,
+            job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
+            entity_id: movie1.id,
+            publish_options: { action: 'PUBLISH_NOW' },
+          }),
+          txn,
+        );
+      });
 
       // Assert
       const snapshots = await select('snapshots', all).run(ctx.ownerPool);
@@ -141,11 +138,11 @@ describe('PublishEntityCommandHandler', () => {
       ]);
       expect(messages).toIncludeSameMembers([
         {
-          overrides: {
+          envelopeOverrides: {
             auth_token:
               'some token value which is not used because we are substituting getPgSettings method and using a stub user',
           },
-          message: { content_id: 'test' },
+          payload: { content_id: 'test' },
           messageType: 'mock-publish',
           options: undefined,
         },
@@ -162,15 +159,17 @@ describe('PublishEntityCommandHandler', () => {
       );
 
       // Act
-      await handler.onMessage(
-        {
-          table_name: 'snapshots',
-          job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
-          entity_id: snapshot.id,
-          publish_options: { action: 'PUBLISH_NOW' },
-        },
-        message,
-      );
+      await ctx.executeGqlSql(user, async (txn) => {
+        await handler.handleMessage(
+          createMessage({
+            table_name: 'snapshots',
+            job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
+            entity_id: snapshot.id,
+            publish_options: { action: 'PUBLISH_NOW' },
+          }),
+          txn,
+        );
+      });
 
       // Assert
       const snapshots = await select('snapshots', all).run(ctx.ownerPool);
@@ -211,11 +210,11 @@ describe('PublishEntityCommandHandler', () => {
       ]);
       expect(messages).toIncludeSameMembers([
         {
-          overrides: {
+          envelopeOverrides: {
             auth_token:
               'some token value which is not used because we are substituting getPgSettings method and using a stub user',
           },
-          message: { content_id: 'test' },
+          payload: { content_id: 'test' },
           messageType: 'mock-publish',
           options: undefined,
         },
@@ -238,15 +237,17 @@ describe('PublishEntityCommandHandler', () => {
       ).run(ctx.ownerPool);
 
       // Act
-      await handler.onMessage(
-        {
-          table_name: 'snapshots',
-          job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
-          entity_id: snapshot.id,
-          publish_options: { action: 'PUBLISH_NOW' },
-        },
-        message,
-      );
+      await ctx.executeGqlSql(user, async (txn) => {
+        await handler.handleMessage(
+          createMessage({
+            table_name: 'snapshots',
+            job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
+            entity_id: snapshot.id,
+            publish_options: { action: 'PUBLISH_NOW' },
+          }),
+          txn,
+        );
+      });
 
       // Assert
       const snapshots = await select('snapshots', all).run(ctx.ownerPool);
@@ -280,11 +281,11 @@ describe('PublishEntityCommandHandler', () => {
       expect(snapshotValidation).toEqual([]);
       expect(messages).toIncludeSameMembers([
         {
-          overrides: {
+          envelopeOverrides: {
             auth_token:
               'some token value which is not used because we are substituting getPgSettings method and using a stub user',
           },
-          message: { test: 'test123' },
+          payload: { test: 'test123' },
           messageType: 'mock-publish',
           options: undefined,
         },
@@ -297,15 +298,17 @@ describe('PublishEntityCommandHandler', () => {
 
       // Act
       const error = await rejectionOf(
-        handler.onMessage(
-          {
-            table_name: mockPublishingProcessor.type,
-            job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
-            entity_id: invalidId,
-            publish_options: { action: 'PUBLISH_NOW' },
-          },
-          message,
-        ),
+        ctx.executeGqlSql(user, async (txn) => {
+          await handler.handleMessage(
+            createMessage({
+              table_name: mockPublishingProcessor.type,
+              job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
+              entity_id: invalidId,
+              publish_options: { action: 'PUBLISH_NOW' },
+            }),
+            txn,
+          );
+        }),
       );
 
       // Assert
@@ -329,27 +332,20 @@ describe('PublishEntityCommandHandler', () => {
 
     it('message to publish a movie without matching processor -> snapshot with ERROR state created', async () => {
       // Arrange
-      handler = new PublishEntityCommandHandler(
-        [],
-        broker,
-        ctx.loginPool,
-        ctx.config,
-      );
-
-      jest
-        .spyOn<any, string>(handler, 'getSubject')
-        .mockImplementation(() => user);
+      handler = new PublishEntityHandler([], storeOutboxMessage, ctx.config);
 
       // Act
-      await handler.onMessage(
-        {
-          table_name: 'movies',
-          job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
-          entity_id: movie1.id,
-          publish_options: { action: 'PUBLISH_NOW' },
-        },
-        message,
-      );
+      await ctx.executeGqlSql(user, async (txn) => {
+        await handler.handleMessage(
+          createMessage({
+            table_name: 'movies',
+            job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
+            entity_id: movie1.id,
+            publish_options: { action: 'PUBLISH_NOW' },
+          }),
+          txn,
+        );
+      });
 
       // Assert
       const snapshots = await select('snapshots', all).run(ctx.ownerPool);
@@ -385,15 +381,17 @@ describe('PublishEntityCommandHandler', () => {
   describe('onMessageFailure', () => {
     it('message to publish a movie failed after 10 tries -> snapshot with ERROR state created', async () => {
       // Act
-      await handler.onMessageFailure(
-        {
-          table_name: 'movies',
-          job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
-          entity_id: movie1.id,
-          publish_options: { action: 'PUBLISH_NOW' },
-        },
-        message,
-      );
+      await ctx.executeGqlSql(user, async (txn) => {
+        await handler.handleMessage(
+          createMessage({
+            table_name: 'movies',
+            job_id: '05b9d0f1-08db-43a8-87f3-7c771dc98a0e',
+            entity_id: movie1.id,
+            publish_options: { action: 'PUBLISH_NOW' },
+          }),
+          txn,
+        );
+      });
 
       // Assert
       const snapshots = await select('snapshots', all).run(ctx.ownerPool);
@@ -440,14 +438,16 @@ describe('PublishEntityCommandHandler', () => {
       );
 
       // Act
-      await handler.onMessageFailure(
-        {
-          table_name: 'snapshots',
-          entity_id: snapshot.id,
-          publish_options: { action: 'PUBLISH_NOW' },
-        },
-        message,
-      );
+      await ctx.executeGqlSql(user, async (txn) => {
+        await handler.handleMessage(
+          createMessage({
+            table_name: 'snapshots',
+            entity_id: snapshot.id,
+            publish_options: { action: 'PUBLISH_NOW' },
+          }),
+          txn,
+        );
+      });
 
       // Assert
       const [{ snapshot_state: updatedState, ...updatedSnapshot }] =

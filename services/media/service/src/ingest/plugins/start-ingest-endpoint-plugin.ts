@@ -98,7 +98,7 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
       Mutation: {
         startIngest: async (_query, args, context, { graphile }) => {
           try {
-            const { subject, config, jwtToken, ownerPool, messagingBroker } =
+            const { subject, config, jwtToken, ownerPool, storeOutboxMessage } =
               getValidatedExtendedContext(context);
 
             const file = await args.input.file;
@@ -141,7 +141,7 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
               IsolationLevel.Serializable,
               pgSettings,
               async (ctx) => {
-                return insert('ingest_documents', {
+                const doc = await insert('ingest_documents', {
                   name: document.name,
                   title: document.name,
                   document: document,
@@ -149,19 +149,19 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
                   items_count: document.items.length,
                   in_progress_count: document.items.length,
                 }).run(ctx);
+                // Sending only a database ID in a scenario of detached services is an anti-pattern
+                // Ideally the whole doc should have been sent and message should be self-contained,
+                // but because the document can be quite big we save it to DB and pass only it's ID.
+                await storeOutboxMessage<StartIngestCommand>(
+                  doc.id.toString(),
+                  MediaServiceMessagingSettings.StartIngest,
+                  { doc_id: doc.id },
+                  ctx,
+                  { envelopeOverrides: { auth_token: token } },
+                );
+                return doc;
               },
             );
-
-            // Sending only a database ID in a scenario of detached services is an anti-pattern
-            // Ideally the whole doc should have been sent and message should be self-contained,
-            // but because the document can be quite big we save it to DB and pass only it's ID.
-            await messagingBroker.publish<StartIngestCommand>(
-              doc.id.toString(),
-              MediaServiceMessagingSettings.StartIngest,
-              { doc_id: doc.id },
-              { auth_token: token },
-            );
-
             const data = await getDocumentPgField(doc.id, build, graphile);
             return { data, query: build.$$isQuery };
           } catch (error) {

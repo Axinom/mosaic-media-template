@@ -1,14 +1,9 @@
-import { Broker } from '@axinom/mosaic-message-bus';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { PublishServiceMessagingSettings } from 'media-messages';
+import { ClientBase } from 'pg';
 import * as db from 'zapatos/db';
-import {
-  insert,
-  JSONOnlyColsForTable,
-  Queryable,
-  selectOne,
-  update,
-} from 'zapatos/db';
+import { insert, JSONOnlyColsForTable, selectOne, update } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
 import { EntityPublishingProcessor } from '../models';
 import { commonPublishValidator } from './common-publish-validator';
@@ -26,8 +21,8 @@ export class SnapshotWrapper {
 
   constructor(
     private readonly snapshotId: number,
-    private readonly queryable: Queryable,
-    private broker: Broker,
+    private readonly dbClient: ClientBase,
+    private storeOutboxMessage: StoreOutboxMessage,
     config: Config,
   ) {
     this.logger = new Logger({ config, context: SnapshotWrapper.name });
@@ -57,7 +52,7 @@ export class SnapshotWrapper {
       snapshot.entity_id,
       authToken ?? '',
       config,
-      this.queryable,
+      this.dbClient,
     );
 
     const results = await commonPublishValidator(
@@ -74,7 +69,7 @@ export class SnapshotWrapper {
     }));
 
     await insert('snapshot_validation_results', insertableErrors).run(
-      this.queryable,
+      this.dbClient,
     );
 
     const hasErrors = results.some((r) => r.severity === 'ERROR');
@@ -93,7 +88,7 @@ export class SnapshotWrapper {
         },
         { id: this.snapshotId },
       )
-      .run(this.queryable);
+      .run(this.dbClient);
   }
 
   /**
@@ -129,7 +124,7 @@ export class SnapshotWrapper {
         'snapshots',
         { snapshot_state: 'ERROR' },
         { id: this.snapshotId },
-      ).run(this.queryable);
+      ).run(this.dbClient);
       return;
     }
 
@@ -144,20 +139,21 @@ export class SnapshotWrapper {
         entity_type: snapshot.entity_type,
         snapshot_state: 'PUBLISHED',
       },
-    ).run(this.queryable);
+    ).run(this.dbClient);
 
-    await this.broker.publish(
+    await this.storeOutboxMessage(
       snapshot.entity_id.toString(),
       messagingSettings,
       snapshot.snapshot_json,
-      { auth_token: authToken },
+      this.dbClient,
+      { envelopeOverrides: { auth_token: authToken } },
     );
 
     await update(
       'snapshots',
       { snapshot_state: 'PUBLISHED', published_date: new Date() },
       { id: this.snapshotId },
-    ).run(this.queryable);
+    ).run(this.dbClient);
   }
 
   /**
@@ -179,18 +175,19 @@ export class SnapshotWrapper {
       return;
     }
 
-    await this.broker.publish<UnpublishMessage>(
+    await this.storeOutboxMessage<UnpublishMessage>(
       snapshot.id.toString(),
       messagingSettings,
       { content_id: snapshot.publish_id },
-      { auth_token: authToken },
+      this.dbClient,
+      { envelopeOverrides: { auth_token: authToken } },
     );
 
     await update(
       'snapshots',
       { snapshot_state: 'UNPUBLISHED', unpublished_date: new Date() },
       { id: this.snapshotId },
-    ).run(this.queryable);
+    ).run(this.dbClient);
   }
 
   private async getSnapshot(): Promise<
@@ -219,7 +216,7 @@ export class SnapshotWrapper {
           'entity_id',
         ],
       },
-    ).run(this.queryable);
+    ).run(this.dbClient);
 
     if (!snapshot) {
       throw new MosaicError({

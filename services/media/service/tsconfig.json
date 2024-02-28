@@ -4,6 +4,7 @@
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
     "esModuleInterop": true, // Needed to be able to import 'postgraphile-plugin-connection-filter'
     "allowSyntheticDefaultImports": true, // Needed to be able to import 'ajv' together with esModuleInterop
     "outDir": "./dist",

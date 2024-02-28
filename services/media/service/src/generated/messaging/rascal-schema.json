@@ -43,43 +43,7 @@
             }
           }
         },
-        "media-service:ingest:start": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:ingest:start_item": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:ingest:update_metadata": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:ingest:check_finish_item": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:ingest:check_finish_document": {
+        "media-service:inbox": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
@@ -97,110 +61,11 @@
             }
           }
         },
-        "media-service:video:ensure_exists_already_existed": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:video:ensure_exists_creation_started": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:video:ensure_exists_failed": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
         "ax-image-service:inbox": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
               "x-dead-letter-routing-key": "ax-image-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:image:ensure_exists_already_existed": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:image:ensure_exists_created": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:image:ensure_exists_failed": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:entity:publish_entity": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:entity:unpublish_entity": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:entity:delete": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:cue_point_types:declared": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "media-service:cue_point_types:declare_failed": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
               "x-queue-type": "quorum"
             }
           }
@@ -222,175 +87,110 @@
           "bindingKey": "delay.30sec",
           "destination": "delay:30sec"
         },
-        "retry:media-service:ingest:start": {
+        "retry:media-service:inbox": {
           "source": "retry",
-          "bindingKey": "media-service:ingest:start.#",
-          "destination": "media-service:ingest:start"
+          "bindingKey": "media-service:inbox.#",
+          "destination": "media-service:inbox"
         },
         "media-service.ingest.start": {
           "source": "command",
           "bindingKey": "media-service.ingest.start",
-          "destination": "media-service:ingest:start"
-        },
-        "retry:media-service:ingest:start_item": {
-          "source": "retry",
-          "bindingKey": "media-service:ingest:start_item.#",
-          "destination": "media-service:ingest:start_item"
+          "destination": "media-service:inbox"
         },
         "media-service.ingest.start_item": {
           "source": "command",
           "bindingKey": "media-service.ingest.start_item",
-          "destination": "media-service:ingest:start_item"
-        },
-        "retry:media-service:ingest:update_metadata": {
-          "source": "retry",
-          "bindingKey": "media-service:ingest:update_metadata.#",
-          "destination": "media-service:ingest:update_metadata"
+          "destination": "media-service:inbox"
         },
         "media-service.ingest.update_metadata": {
           "source": "command",
           "bindingKey": "media-service.ingest.update_metadata",
-          "destination": "media-service:ingest:update_metadata"
-        },
-        "retry:media-service:ingest:check_finish_item": {
-          "source": "retry",
-          "bindingKey": "media-service:ingest:check_finish_item.#",
-          "destination": "media-service:ingest:check_finish_item"
+          "destination": "media-service:inbox"
         },
         "media-service.ingest.check_finish_item": {
           "source": "command",
           "bindingKey": "media-service.ingest.check_finish_item",
-          "destination": "media-service:ingest:check_finish_item"
-        },
-        "retry:media-service:ingest:check_finish_document": {
-          "source": "retry",
-          "bindingKey": "media-service:ingest:check_finish_document.#",
-          "destination": "media-service:ingest:check_finish_document"
+          "destination": "media-service:inbox"
         },
         "media-service.ingest.check_finish_document": {
           "source": "command",
           "bindingKey": "media-service.ingest.check_finish_document",
-          "destination": "media-service:ingest:check_finish_document"
+          "destination": "media-service:inbox"
         },
         "retry:ax-video-service:inbox": {
           "source": "retry",
           "bindingKey": "ax-video-service:inbox.#",
           "destination": "ax-video-service:inbox"
         },
-        "retry:media-service:video:ensure_exists_already_existed": {
-          "source": "retry",
-          "bindingKey": "media-service:video:ensure_exists_already_existed.#",
-          "destination": "media-service:video:ensure_exists_already_existed"
-        },
         "ax-video-service.*.*.video.ensure_exists_already_existed": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.video.ensure_exists_already_existed",
-          "destination": "media-service:video:ensure_exists_already_existed"
-        },
-        "retry:media-service:video:ensure_exists_creation_started": {
-          "source": "retry",
-          "bindingKey": "media-service:video:ensure_exists_creation_started.#",
-          "destination": "media-service:video:ensure_exists_creation_started"
+          "destination": "media-service:inbox"
         },
         "ax-video-service.*.*.video.ensure_exists_creation_started": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.video.ensure_exists_creation_started",
-          "destination": "media-service:video:ensure_exists_creation_started"
-        },
-        "retry:media-service:video:ensure_exists_failed": {
-          "source": "retry",
-          "bindingKey": "media-service:video:ensure_exists_failed.#",
-          "destination": "media-service:video:ensure_exists_failed"
+          "destination": "media-service:inbox"
         },
         "ax-video-service.*.*.video.ensure_exists_failed": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.video.ensure_exists_failed",
-          "destination": "media-service:video:ensure_exists_failed"
+          "destination": "media-service:inbox"
         },
         "retry:ax-image-service:inbox": {
           "source": "retry",
           "bindingKey": "ax-image-service:inbox.#",
           "destination": "ax-image-service:inbox"
         },
-        "retry:media-service:image:ensure_exists_already_existed": {
-          "source": "retry",
-          "bindingKey": "media-service:image:ensure_exists_already_existed.#",
-          "destination": "media-service:image:ensure_exists_already_existed"
-        },
         "ax-image-service.*.*.image.ensure_exists_already_existed": {
           "source": "event",
           "bindingKey": "ax-image-service.*.*.image.ensure_exists_already_existed",
-          "destination": "media-service:image:ensure_exists_already_existed"
-        },
-        "retry:media-service:image:ensure_exists_created": {
-          "source": "retry",
-          "bindingKey": "media-service:image:ensure_exists_created.#",
-          "destination": "media-service:image:ensure_exists_created"
+          "destination": "media-service:inbox"
         },
         "ax-image-service.*.*.image.ensure_exists_created": {
           "source": "event",
           "bindingKey": "ax-image-service.*.*.image.ensure_exists_created",
-          "destination": "media-service:image:ensure_exists_created"
-        },
-        "retry:media-service:image:ensure_exists_failed": {
-          "source": "retry",
-          "bindingKey": "media-service:image:ensure_exists_failed.#",
-          "destination": "media-service:image:ensure_exists_failed"
+          "destination": "media-service:inbox"
         },
         "ax-image-service.*.*.image.ensure_exists_failed": {
           "source": "event",
           "bindingKey": "ax-image-service.*.*.image.ensure_exists_failed",
-          "destination": "media-service:image:ensure_exists_failed"
-        },
-        "retry:media-service:entity:publish_entity": {
-          "source": "retry",
-          "bindingKey": "media-service:entity:publish_entity.#",
-          "destination": "media-service:entity:publish_entity"
+          "destination": "media-service:inbox"
         },
         "media-service.entity.publish_entity": {
           "source": "command",
           "bindingKey": "media-service.entity.publish_entity",
-          "destination": "media-service:entity:publish_entity"
-        },
-        "retry:media-service:entity:unpublish_entity": {
-          "source": "retry",
-          "bindingKey": "media-service:entity:unpublish_entity.#",
-          "destination": "media-service:entity:unpublish_entity"
+          "destination": "media-service:inbox"
         },
         "media-service.entity.unpublish_entity": {
           "source": "command",
           "bindingKey": "media-service.entity.unpublish_entity",
-          "destination": "media-service:entity:unpublish_entity"
-        },
-        "retry:media-service:entity:delete": {
-          "source": "retry",
-          "bindingKey": "media-service:entity:delete.#",
-          "destination": "media-service:entity:delete"
+          "destination": "media-service:inbox"
         },
         "media-service.entity.delete": {
           "source": "command",
           "bindingKey": "media-service.entity.delete",
-          "destination": "media-service:entity:delete"
+          "destination": "media-service:inbox"
         },
-        "retry:media-service:cue_point_types:declared": {
-          "source": "retry",
-          "bindingKey": "media-service:cue_point_types:declared.#",
-          "destination": "media-service:cue_point_types:declared"
+        "ax-image-service.*.*.image_types.declared": {
+          "source": "event",
+          "bindingKey": "ax-image-service.*.*.image_types.declared",
+          "destination": "media-service:inbox"
+        },
+        "ax-image-service.*.*.image_types.declare_failed": {
+          "source": "event",
+          "bindingKey": "ax-image-service.*.*.image_types.declare_failed",
+          "destination": "media-service:inbox"
         },
         "ax-video-service.*.*.cue_point_types.declared": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.cue_point_types.declared",
-          "destination": "media-service:cue_point_types:declared"
-        },
-        "retry:media-service:cue_point_types:declare_failed": {
-          "source": "retry",
-          "bindingKey": "media-service:cue_point_types:declare_failed.#",
-          "destination": "media-service:cue_point_types:declare_failed"
+          "destination": "media-service:inbox"
         },
         "ax-video-service.*.*.cue_point_types.declare_failed": {
           "source": "event",
           "bindingKey": "ax-video-service.*.*.cue_point_types.declare_failed",
-          "destination": "media-service:cue_point_types:declare_failed"
+          "destination": "media-service:inbox"
         }
       },
       "publications": {
@@ -520,143 +320,8 @@
         }
       },
       "subscriptions": {
-        "StartIngest": {
-          "queue": "media-service:ingest:start",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "StartIngestItem": {
-          "queue": "media-service:ingest:start_item",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "UpdateMetadata": {
-          "queue": "media-service:ingest:update_metadata",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "CheckFinishIngestItem": {
-          "queue": "media-service:ingest:check_finish_item",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "CheckFinishIngestDocument": {
-          "queue": "media-service:ingest:check_finish_document",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "EnsureVideoExistsAlreadyExisted": {
-          "queue": "media-service:video:ensure_exists_already_existed",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "EnsureVideoExistsCreationStarted": {
-          "queue": "media-service:video:ensure_exists_creation_started",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "EnsureVideoExistsFailed": {
-          "queue": "media-service:video:ensure_exists_failed",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "EnsureImageExistsAlreadyExisted": {
-          "queue": "media-service:image:ensure_exists_already_existed",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "EnsureImageExistsImageCreated": {
-          "queue": "media-service:image:ensure_exists_created",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "EnsureImageExistsFailed": {
-          "queue": "media-service:image:ensure_exists_failed",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "PublishEntity": {
-          "queue": "media-service:entity:publish_entity",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "UnpublishEntity": {
-          "queue": "media-service:entity:unpublish_entity",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "DeleteEntity": {
-          "queue": "media-service:entity:delete",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "CuePointTypesDeclared": {
-          "queue": "media-service:cue_point_types:declared",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "CuePointTypesDeclareFailed": {
-          "queue": "media-service:cue_point_types:declare_failed",
+        "Inbox": {
+          "queue": "media-service:inbox",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {
