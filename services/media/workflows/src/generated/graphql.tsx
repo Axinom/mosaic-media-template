@@ -758,10 +758,27 @@ export enum CollectionsTagsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export enum CollectionSubscriptionEventKey {
+  CollectionChanged = 'COLLECTION_CHANGED',
+  CollectionCreated = 'COLLECTION_CREATED',
+  CollectionDeleted = 'COLLECTION_DELETED',
+  CollectionImageChanged = 'COLLECTION_IMAGE_CHANGED',
+  CollectionImageCreated = 'COLLECTION_IMAGE_CREATED',
+  CollectionImageDeleted = 'COLLECTION_IMAGE_DELETED',
+  CollectionRelationChanged = 'COLLECTION_RELATION_CHANGED',
+  CollectionRelationCreated = 'COLLECTION_RELATION_CREATED',
+  CollectionRelationDeleted = 'COLLECTION_RELATION_DELETED',
+  CollectionTagChanged = 'COLLECTION_TAG_CHANGED',
+  CollectionTagCreated = 'COLLECTION_TAG_CREATED',
+  CollectionTagDeleted = 'COLLECTION_TAG_DELETED'
+}
+
 export type CollectionSubscriptionPayload = {
   __typename?: 'CollectionSubscriptionPayload';
   collection?: Maybe<Collection>;
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<CollectionSubscriptionEventKey>;
   id: Scalars['Int'];
 };
 
@@ -5497,10 +5514,39 @@ export enum EpisodesTvshowGenresOrderBy {
   TvshowGenresIdDesc = 'TVSHOW_GENRES_ID_DESC'
 }
 
+export enum EpisodeSubscriptionEventKey {
+  EpisodeCastChanged = 'EPISODE_CAST_CHANGED',
+  EpisodeCastCreated = 'EPISODE_CAST_CREATED',
+  EpisodeCastDeleted = 'EPISODE_CAST_DELETED',
+  EpisodeChanged = 'EPISODE_CHANGED',
+  EpisodeCreated = 'EPISODE_CREATED',
+  EpisodeDeleted = 'EPISODE_DELETED',
+  EpisodeImageChanged = 'EPISODE_IMAGE_CHANGED',
+  EpisodeImageCreated = 'EPISODE_IMAGE_CREATED',
+  EpisodeImageDeleted = 'EPISODE_IMAGE_DELETED',
+  EpisodeLicenseChanged = 'EPISODE_LICENSE_CHANGED',
+  EpisodeLicenseCreated = 'EPISODE_LICENSE_CREATED',
+  EpisodeLicenseDeleted = 'EPISODE_LICENSE_DELETED',
+  EpisodeProductionCountryChanged = 'EPISODE_PRODUCTION_COUNTRY_CHANGED',
+  EpisodeProductionCountryCreated = 'EPISODE_PRODUCTION_COUNTRY_CREATED',
+  EpisodeProductionCountryDeleted = 'EPISODE_PRODUCTION_COUNTRY_DELETED',
+  EpisodeTagChanged = 'EPISODE_TAG_CHANGED',
+  EpisodeTagCreated = 'EPISODE_TAG_CREATED',
+  EpisodeTagDeleted = 'EPISODE_TAG_DELETED',
+  EpisodeTrailerChanged = 'EPISODE_TRAILER_CHANGED',
+  EpisodeTrailerCreated = 'EPISODE_TRAILER_CREATED',
+  EpisodeTrailerDeleted = 'EPISODE_TRAILER_DELETED',
+  EpisodeTvshowGenreChanged = 'EPISODE_TVSHOW_GENRE_CHANGED',
+  EpisodeTvshowGenreCreated = 'EPISODE_TVSHOW_GENRE_CREATED',
+  EpisodeTvshowGenreDeleted = 'EPISODE_TVSHOW_GENRE_DELETED'
+}
+
 export type EpisodeSubscriptionPayload = {
   __typename?: 'EpisodeSubscriptionPayload';
   episode?: Maybe<Episode>;
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<EpisodeSubscriptionEventKey>;
   id: Scalars['Int'];
 };
 
@@ -5616,6 +5662,8 @@ export enum ErrorCodesEnum {
   AuthorizationOptionsMisconfigured = 'AUTHORIZATION_OPTIONS_MISCONFIGURED',
   /** Attempt to create a media snapshot has failed. */
   CreateSnapshotError = 'CREATE_SNAPSHOT_ERROR',
+  /** A database operation has failed because of a lock timeout. */
+  DatabaseLockTimeoutError = 'DATABASE_LOCK_TIMEOUT_ERROR',
   /** An authorization database error has occurred. The user might not have enough permissions. */
   DatabasePermissionsCheckFailed = 'DATABASE_PERMISSIONS_CHECK_FAILED',
   /** An expected and handled database constraint error has occurred. The actual message will have more information. */
@@ -6175,9 +6223,20 @@ export enum IngestDocumentsOrderBy {
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
 
+export enum IngestDocumentSubscriptionEventKey {
+  IngestDocumentChanged = 'INGEST_DOCUMENT_CHANGED',
+  IngestDocumentCreated = 'INGEST_DOCUMENT_CREATED',
+  IngestDocumentDeleted = 'INGEST_DOCUMENT_DELETED',
+  IngestItemChanged = 'INGEST_ITEM_CHANGED',
+  IngestItemCreated = 'INGEST_ITEM_CREATED',
+  IngestItemDeleted = 'INGEST_ITEM_DELETED'
+}
+
 export type IngestDocumentSubscriptionPayload = {
   __typename?: 'IngestDocumentSubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<IngestDocumentSubscriptionEventKey>;
   id: Scalars['Int'];
   ingestDocument?: Maybe<IngestDocument>;
 };
@@ -7387,7 +7446,7 @@ export type MovieFilter = {
   updatedUser?: InputMaybe<StringFilter>;
 };
 
-/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
+/** @permissions: MOVIES_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type MovieGenre = {
   __typename?: 'MovieGenre';
   createdDate: Scalars['Datetime'];
@@ -7402,7 +7461,7 @@ export type MovieGenre = {
 };
 
 
-/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
+/** @permissions: MOVIES_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type MovieGenreMoviesMovieGenresByMovieGenresIdArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -7492,7 +7551,7 @@ export type MovieGenrePatch = {
 
 /**
  * A connection to a list of `MovieGenre` values.
- * @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
+ * @permissions: MOVIES_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
  */
 export type MovieGenresConnection = {
   __typename?: 'MovieGenresConnection';
@@ -7536,9 +7595,17 @@ export enum MovieGenresOrderBy {
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
 
+export enum MovieGenreSubscriptionEventKey {
+  MovieGenreChanged = 'MOVIE_GENRE_CHANGED',
+  MovieGenreCreated = 'MOVIE_GENRE_CREATED',
+  MovieGenreDeleted = 'MOVIE_GENRE_DELETED'
+}
+
 export type MovieGenreSubscriptionPayload = {
   __typename?: 'MovieGenreSubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<MovieGenreSubscriptionEventKey>;
   id: Scalars['Int'];
   movieGenre?: Maybe<MovieGenre>;
 };
@@ -8501,9 +8568,38 @@ export enum MoviesTrailersOrderBy {
   VideoIdDesc = 'VIDEO_ID_DESC'
 }
 
+export enum MovieSubscriptionEventKey {
+  MovieCastChanged = 'MOVIE_CAST_CHANGED',
+  MovieCastCreated = 'MOVIE_CAST_CREATED',
+  MovieCastDeleted = 'MOVIE_CAST_DELETED',
+  MovieChanged = 'MOVIE_CHANGED',
+  MovieCreated = 'MOVIE_CREATED',
+  MovieDeleted = 'MOVIE_DELETED',
+  MovieImageChanged = 'MOVIE_IMAGE_CHANGED',
+  MovieImageCreated = 'MOVIE_IMAGE_CREATED',
+  MovieImageDeleted = 'MOVIE_IMAGE_DELETED',
+  MovieLicenseChanged = 'MOVIE_LICENSE_CHANGED',
+  MovieLicenseCreated = 'MOVIE_LICENSE_CREATED',
+  MovieLicenseDeleted = 'MOVIE_LICENSE_DELETED',
+  MovieMovieGenreChanged = 'MOVIE_MOVIE_GENRE_CHANGED',
+  MovieMovieGenreCreated = 'MOVIE_MOVIE_GENRE_CREATED',
+  MovieMovieGenreDeleted = 'MOVIE_MOVIE_GENRE_DELETED',
+  MovieProductionCountryChanged = 'MOVIE_PRODUCTION_COUNTRY_CHANGED',
+  MovieProductionCountryCreated = 'MOVIE_PRODUCTION_COUNTRY_CREATED',
+  MovieProductionCountryDeleted = 'MOVIE_PRODUCTION_COUNTRY_DELETED',
+  MovieTagChanged = 'MOVIE_TAG_CHANGED',
+  MovieTagCreated = 'MOVIE_TAG_CREATED',
+  MovieTagDeleted = 'MOVIE_TAG_DELETED',
+  MovieTrailerChanged = 'MOVIE_TRAILER_CHANGED',
+  MovieTrailerCreated = 'MOVIE_TRAILER_CREATED',
+  MovieTrailerDeleted = 'MOVIE_TRAILER_DELETED'
+}
+
 export type MovieSubscriptionPayload = {
   __typename?: 'MovieSubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<MovieSubscriptionEventKey>;
   id: Scalars['Int'];
   movie?: Maybe<Movie>;
 };
@@ -12522,9 +12618,38 @@ export enum SeasonsTvshowGenresOrderBy {
   TvshowGenresIdDesc = 'TVSHOW_GENRES_ID_DESC'
 }
 
+export enum SeasonSubscriptionEventKey {
+  SeasonCastChanged = 'SEASON_CAST_CHANGED',
+  SeasonCastCreated = 'SEASON_CAST_CREATED',
+  SeasonCastDeleted = 'SEASON_CAST_DELETED',
+  SeasonChanged = 'SEASON_CHANGED',
+  SeasonCreated = 'SEASON_CREATED',
+  SeasonDeleted = 'SEASON_DELETED',
+  SeasonImageChanged = 'SEASON_IMAGE_CHANGED',
+  SeasonImageCreated = 'SEASON_IMAGE_CREATED',
+  SeasonImageDeleted = 'SEASON_IMAGE_DELETED',
+  SeasonLicenseChanged = 'SEASON_LICENSE_CHANGED',
+  SeasonLicenseCreated = 'SEASON_LICENSE_CREATED',
+  SeasonLicenseDeleted = 'SEASON_LICENSE_DELETED',
+  SeasonProductionCountryChanged = 'SEASON_PRODUCTION_COUNTRY_CHANGED',
+  SeasonProductionCountryCreated = 'SEASON_PRODUCTION_COUNTRY_CREATED',
+  SeasonProductionCountryDeleted = 'SEASON_PRODUCTION_COUNTRY_DELETED',
+  SeasonTagChanged = 'SEASON_TAG_CHANGED',
+  SeasonTagCreated = 'SEASON_TAG_CREATED',
+  SeasonTagDeleted = 'SEASON_TAG_DELETED',
+  SeasonTrailerChanged = 'SEASON_TRAILER_CHANGED',
+  SeasonTrailerCreated = 'SEASON_TRAILER_CREATED',
+  SeasonTrailerDeleted = 'SEASON_TRAILER_DELETED',
+  SeasonTvshowGenreChanged = 'SEASON_TVSHOW_GENRE_CHANGED',
+  SeasonTvshowGenreCreated = 'SEASON_TVSHOW_GENRE_CREATED',
+  SeasonTvshowGenreDeleted = 'SEASON_TVSHOW_GENRE_DELETED'
+}
+
 export type SeasonSubscriptionPayload = {
   __typename?: 'SeasonSubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<SeasonSubscriptionEventKey>;
   id: Scalars['Int'];
   season?: Maybe<Season>;
 };
@@ -12989,9 +13114,20 @@ export type SnapshotStateFilter = {
   notIn?: InputMaybe<Array<SnapshotState>>;
 };
 
+export enum SnapshotSubscriptionEventKey {
+  SnapshotChanged = 'SNAPSHOT_CHANGED',
+  SnapshotCreated = 'SNAPSHOT_CREATED',
+  SnapshotDeleted = 'SNAPSHOT_DELETED',
+  SnapshotValidationResultChanged = 'SNAPSHOT_VALIDATION_RESULT_CHANGED',
+  SnapshotValidationResultCreated = 'SNAPSHOT_VALIDATION_RESULT_CREATED',
+  SnapshotValidationResultDeleted = 'SNAPSHOT_VALIDATION_RESULT_DELETED'
+}
+
 export type SnapshotSubscriptionPayload = {
   __typename?: 'SnapshotSubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<SnapshotSubscriptionEventKey>;
   id: Scalars['Int'];
   snapshot?: Maybe<Snapshot>;
 };
@@ -13660,7 +13796,7 @@ export type TvshowFilter = {
   updatedUser?: InputMaybe<StringFilter>;
 };
 
-/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
+/** @permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type TvshowGenre = {
   __typename?: 'TvshowGenre';
   createdDate: Scalars['Datetime'];
@@ -13679,7 +13815,7 @@ export type TvshowGenre = {
 };
 
 
-/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
+/** @permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type TvshowGenreEpisodesTvshowGenresByTvshowGenresIdArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -13692,7 +13828,7 @@ export type TvshowGenreEpisodesTvshowGenresByTvshowGenresIdArgs = {
 };
 
 
-/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
+/** @permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type TvshowGenreSeasonsTvshowGenresByTvshowGenresIdArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -13705,7 +13841,7 @@ export type TvshowGenreSeasonsTvshowGenresByTvshowGenresIdArgs = {
 };
 
 
-/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
+/** @permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type TvshowGenreTvshowsTvshowGenresByTvshowGenresIdArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -13803,7 +13939,7 @@ export type TvshowGenrePatch = {
 
 /**
  * A connection to a list of `TvshowGenre` values.
- * @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
+ * @permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
  */
 export type TvshowGenresConnection = {
   __typename?: 'TvshowGenresConnection';
@@ -13847,9 +13983,17 @@ export enum TvshowGenresOrderBy {
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
 
+export enum TvshowGenreSubscriptionEventKey {
+  TvshowGenreChanged = 'TVSHOW_GENRE_CHANGED',
+  TvshowGenreCreated = 'TVSHOW_GENRE_CREATED',
+  TvshowGenreDeleted = 'TVSHOW_GENRE_DELETED'
+}
+
 export type TvshowGenreSubscriptionPayload = {
   __typename?: 'TvshowGenreSubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<TvshowGenreSubscriptionEventKey>;
   id: Scalars['Int'];
   tvshowGenre?: Maybe<TvshowGenre>;
 };
@@ -14828,9 +14972,38 @@ export enum TvshowsTvshowGenresOrderBy {
   TvshowIdDesc = 'TVSHOW_ID_DESC'
 }
 
+export enum TvshowSubscriptionEventKey {
+  TvshowCastChanged = 'TVSHOW_CAST_CHANGED',
+  TvshowCastCreated = 'TVSHOW_CAST_CREATED',
+  TvshowCastDeleted = 'TVSHOW_CAST_DELETED',
+  TvshowChanged = 'TVSHOW_CHANGED',
+  TvshowCreated = 'TVSHOW_CREATED',
+  TvshowDeleted = 'TVSHOW_DELETED',
+  TvshowImageChanged = 'TVSHOW_IMAGE_CHANGED',
+  TvshowImageCreated = 'TVSHOW_IMAGE_CREATED',
+  TvshowImageDeleted = 'TVSHOW_IMAGE_DELETED',
+  TvshowLicenseChanged = 'TVSHOW_LICENSE_CHANGED',
+  TvshowLicenseCreated = 'TVSHOW_LICENSE_CREATED',
+  TvshowLicenseDeleted = 'TVSHOW_LICENSE_DELETED',
+  TvshowProductionCountryChanged = 'TVSHOW_PRODUCTION_COUNTRY_CHANGED',
+  TvshowProductionCountryCreated = 'TVSHOW_PRODUCTION_COUNTRY_CREATED',
+  TvshowProductionCountryDeleted = 'TVSHOW_PRODUCTION_COUNTRY_DELETED',
+  TvshowTagChanged = 'TVSHOW_TAG_CHANGED',
+  TvshowTagCreated = 'TVSHOW_TAG_CREATED',
+  TvshowTagDeleted = 'TVSHOW_TAG_DELETED',
+  TvshowTrailerChanged = 'TVSHOW_TRAILER_CHANGED',
+  TvshowTrailerCreated = 'TVSHOW_TRAILER_CREATED',
+  TvshowTrailerDeleted = 'TVSHOW_TRAILER_DELETED',
+  TvshowTvshowGenreChanged = 'TVSHOW_TVSHOW_GENRE_CHANGED',
+  TvshowTvshowGenreCreated = 'TVSHOW_TVSHOW_GENRE_CREATED',
+  TvshowTvshowGenreDeleted = 'TVSHOW_TVSHOW_GENRE_DELETED'
+}
+
 export type TvshowSubscriptionPayload = {
   __typename?: 'TvshowSubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<TvshowSubscriptionEventKey>;
   id: Scalars['Int'];
   tvshow?: Maybe<Tvshow>;
 };
@@ -16557,7 +16730,7 @@ export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?:
 export type CollectionsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, event?: string | null, collection?: { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null } | null };
+export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null } | null };
 
 export type BulkDeleteCollectionsMutationVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -16674,7 +16847,7 @@ export type EpisodesQuery = { __typename?: 'Query', filtered?: { __typename?: 'E
 export type EpisodesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EpisodesMutatedSubscription = { __typename?: 'Subscription', episodeMutated?: { __typename?: 'EpisodeSubscriptionPayload', id: number, event?: string | null, episode?: { __typename?: 'Episode', publishStatus: PublishStatus, title: string, index: number, externalId?: string | null, mainVideoId?: any | null, createdDate: any, updatedDate: any, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, id: number, season?: { __typename?: 'Season', id: number, index: number, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> } } | null } | null };
+export type EpisodesMutatedSubscription = { __typename?: 'Subscription', episodeMutated?: { __typename?: 'EpisodeSubscriptionPayload', id: number, eventKey?: EpisodeSubscriptionEventKey | null, episode?: { __typename?: 'Episode', publishStatus: PublishStatus, title: string, index: number, externalId?: string | null, mainVideoId?: any | null, createdDate: any, updatedDate: any, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, id: number, season?: { __typename?: 'Season', id: number, index: number, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> } } | null } | null };
 
 export type EpisodeImagesQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -16803,7 +16976,7 @@ export type IngestDocumentsQuery = { __typename?: 'Query', filtered?: { __typena
 export type IngestDocumentsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type IngestDocumentsMutatedSubscription = { __typename?: 'Subscription', ingestDocumentMutated?: { __typename?: 'IngestDocumentSubscriptionPayload', id: number, event?: string | null, ingestDocument?: { __typename?: 'IngestDocument', id: number, title: string, status: IngestStatus, itemsCount: number, errorCount: number, successCount: number, inProgressCount: number, createdDate: any, updatedDate: any } | null } | null };
+export type IngestDocumentsMutatedSubscription = { __typename?: 'Subscription', ingestDocumentMutated?: { __typename?: 'IngestDocumentSubscriptionPayload', id: number, eventKey?: IngestDocumentSubscriptionEventKey | null, ingestDocument?: { __typename?: 'IngestDocument', id: number, title: string, status: IngestStatus, itemsCount: number, errorCount: number, successCount: number, inProgressCount: number, createdDate: any, updatedDate: any } | null } | null };
 
 export type CreateMovieMutationVariables = Exact<{
   input: CreateMovieInput;
@@ -16885,7 +17058,7 @@ export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'Mov
 export type MoviesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, event?: string | null, movie?: { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> } } | null } | null };
+export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> } } | null } | null };
 
 export type MovieGenresQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -17044,7 +17217,7 @@ export type PublishingSnapshotsQuery = { __typename?: 'Query', filtered?: { __ty
 export type PublishingSnapshotMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PublishingSnapshotMutatedSubscription = { __typename?: 'Subscription', snapshotMutated?: { __typename?: 'SnapshotSubscriptionPayload', id: number, event?: string | null, snapshot?: { __typename?: 'Snapshot', entityType: EntityType, entityId: number, id: number, createdDate: any, createdUser: string, snapshotNo: number, snapshotState: SnapshotState, updatedDate: any, updatedUser: string, validationStatus?: SnapshotValidationStatus | null, snapshotValidationResults: { __typename?: 'SnapshotValidationResultsConnection', nodes: Array<{ __typename?: 'SnapshotValidationResult', severity: SnapshotValidationIssueSeverity }> } } | null } | null };
+export type PublishingSnapshotMutatedSubscription = { __typename?: 'Subscription', snapshotMutated?: { __typename?: 'SnapshotSubscriptionPayload', id: number, eventKey?: SnapshotSubscriptionEventKey | null, snapshot?: { __typename?: 'Snapshot', entityType: EntityType, entityId: number, id: number, createdDate: any, createdUser: string, snapshotNo: number, snapshotState: SnapshotState, updatedDate: any, updatedUser: string, validationStatus?: SnapshotValidationStatus | null, snapshotValidationResults: { __typename?: 'SnapshotValidationResultsConnection', nodes: Array<{ __typename?: 'SnapshotValidationResult', severity: SnapshotValidationIssueSeverity }> } } | null } | null };
 
 export type SnapshotExplorerPropertiesFragment = { __typename?: 'Snapshot', id: number, entityId: number, entityType: EntityType, entityTitle?: string | null, jobId: string, createdDate: any, createdUser: string, snapshotState: SnapshotState, updatedDate: any, updatedUser: string, validationStatus?: SnapshotValidationStatus | null, publishedDate?: any | null, unpublishedDate?: any | null, snapshotValidationResults: { __typename?: 'SnapshotValidationResultsConnection', nodes: Array<{ __typename?: 'SnapshotValidationResult', id: number, context: SnapshotValidationIssueContext, message: string, severity: SnapshotValidationIssueSeverity }> } };
 
@@ -17060,7 +17233,7 @@ export type SnapshotsQuery = { __typename?: 'Query', filtered?: { __typename?: '
 export type SnapshotsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SnapshotsMutatedSubscription = { __typename?: 'Subscription', snapshotMutated?: { __typename?: 'SnapshotSubscriptionPayload', id: number, event?: string | null, snapshot?: { __typename?: 'Snapshot', id: number, entityId: number, entityType: EntityType, entityTitle?: string | null, jobId: string, createdDate: any, createdUser: string, snapshotState: SnapshotState, updatedDate: any, updatedUser: string, validationStatus?: SnapshotValidationStatus | null, publishedDate?: any | null, unpublishedDate?: any | null, snapshotValidationResults: { __typename?: 'SnapshotValidationResultsConnection', nodes: Array<{ __typename?: 'SnapshotValidationResult', id: number, context: SnapshotValidationIssueContext, message: string, severity: SnapshotValidationIssueSeverity }> } } | null } | null };
+export type SnapshotsMutatedSubscription = { __typename?: 'Subscription', snapshotMutated?: { __typename?: 'SnapshotSubscriptionPayload', id: number, eventKey?: SnapshotSubscriptionEventKey | null, snapshot?: { __typename?: 'Snapshot', id: number, entityId: number, entityType: EntityType, entityTitle?: string | null, jobId: string, createdDate: any, createdUser: string, snapshotState: SnapshotState, updatedDate: any, updatedUser: string, validationStatus?: SnapshotValidationStatus | null, publishedDate?: any | null, unpublishedDate?: any | null, snapshotValidationResults: { __typename?: 'SnapshotValidationResultsConnection', nodes: Array<{ __typename?: 'SnapshotValidationResult', id: number, context: SnapshotValidationIssueContext, message: string, severity: SnapshotValidationIssueSeverity }> } } | null } | null };
 
 export type BulkDeleteSnapshotsMutationVariables = Exact<{
   filter?: InputMaybe<SnapshotFilter>;
@@ -17177,7 +17350,7 @@ export type SeasonsQuery = { __typename?: 'Query', filtered?: { __typename?: 'Se
 export type SeasonsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SeasonsMutatedSubscription = { __typename?: 'Subscription', seasonMutated?: { __typename?: 'SeasonSubscriptionPayload', id: number, event?: string | null, season?: { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, createdDate: any, updatedDate: any, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } } | null } | null };
+export type SeasonsMutatedSubscription = { __typename?: 'Subscription', seasonMutated?: { __typename?: 'SeasonSubscriptionPayload', id: number, eventKey?: SeasonSubscriptionEventKey | null, season?: { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, createdDate: any, updatedDate: any, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } } | null } | null };
 
 export type SeasonImagesQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -17345,7 +17518,7 @@ export type TvShowsQuery = { __typename?: 'Query', filtered?: { __typename?: 'Tv
 export type TvShowsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TvShowsMutatedSubscription = { __typename?: 'Subscription', tvshowMutated?: { __typename?: 'TvshowSubscriptionPayload', id: number, event?: string | null, tvshow?: { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, createdDate: any, updatedDate: any, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> } } | null } | null };
+export type TvShowsMutatedSubscription = { __typename?: 'Subscription', tvshowMutated?: { __typename?: 'TvshowSubscriptionPayload', id: number, eventKey?: TvshowSubscriptionEventKey | null, tvshow?: { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, createdDate: any, updatedDate: any, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> } } | null } | null };
 
 export type TvShowGenresQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -18201,7 +18374,7 @@ export const CollectionsMutatedDocument = gql`
     subscription CollectionsMutated {
   collectionMutated {
     id
-    event
+    eventKey
     collection {
       ...CollectionExplorerProperties
     }
@@ -18838,7 +19011,7 @@ export const EpisodesMutatedDocument = gql`
     subscription EpisodesMutated {
   episodeMutated {
     id
-    event
+    eventKey
     episode {
       ...EpisodeExplorerProperties
     }
@@ -19524,7 +19697,7 @@ export const IngestDocumentsMutatedDocument = gql`
     subscription IngestDocumentsMutated {
   ingestDocumentMutated {
     id
-    event
+    eventKey
     ingestDocument {
       ...IngestDocumentExplorerProperties
     }
@@ -19973,7 +20146,7 @@ export const MoviesMutatedDocument = gql`
     subscription MoviesMutated {
   movieMutated {
     id
-    event
+    eventKey
     movie {
       ...MovieExplorerProperties
     }
@@ -20832,7 +21005,7 @@ export const PublishingSnapshotMutatedDocument = gql`
     subscription PublishingSnapshotMutated {
   snapshotMutated {
     id
-    event
+    eventKey
     snapshot {
       entityType
       entityId
@@ -20919,7 +21092,7 @@ export const SnapshotsMutatedDocument = gql`
     subscription SnapshotsMutated {
   snapshotMutated {
     id
-    event
+    eventKey
     snapshot {
       ...SnapshotExplorerProperties
     }
@@ -21555,7 +21728,7 @@ export const SeasonsMutatedDocument = gql`
     subscription SeasonsMutated {
   seasonMutated {
     id
-    event
+    eventKey
     season {
       ...SeasonExplorerProperties
     }
@@ -22447,7 +22620,7 @@ export const TvShowsMutatedDocument = gql`
     subscription TVShowsMutated {
   tvshowMutated {
     id
-    event
+    eventKey
     tvshow {
       ...TVShowExplorerProperties
     }

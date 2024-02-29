@@ -1,4 +1,4 @@
-import { ActionData, IconName } from '@axinom/mosaic-ui';
+import { ActionData } from '@axinom/mosaic-ui';
 import { useMemo } from 'react';
 import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
@@ -64,7 +64,6 @@ export function useCollectionDetailsActions(id: number): {
       {
         label: 'Delete',
         confirmationMode: 'Simple',
-        icon: IconName.Delete,
         onActionSelected: deleteCollection,
       },
     ];

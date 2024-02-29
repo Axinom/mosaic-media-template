@@ -36,12 +36,15 @@ export const transformNavigationTree = (
     ({ categoryName }) => categoryName === 'Settings',
   );
 
-  // move Settings to the end of the list
-  const transformedTree = [
-    ...sortedTree.slice(0, settingsIndex),
-    ...sortedTree.slice(settingsIndex + 1),
-    sortedTree[settingsIndex],
-  ];
+  const transformedTree =
+    settingsIndex !== -1
+      ? [
+          ...sortedTree.slice(0, settingsIndex),
+          ...sortedTree.slice(settingsIndex + 1),
+          // move Settings to the end of the list
+          sortedTree[settingsIndex],
+        ]
+      : sortedTree;
 
   // sort items in each category
   transformedTree.forEach(categoryItemSorter);

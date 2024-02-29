@@ -2,15 +2,16 @@
   "Define Subscription Triggers (Ax Define)": {
     "prefix": "ax-define-subscription-triggers",
     "body": [
-      "SELECT ax_define.define_subscription_triggers('id', '${1:table_name}', '${3:app_public}', '${1:table_name}', '${2:SingularTableNameInPascalCase}');",
+      "SELECT ax_define.define_subscription_triggers('id', '${1:table_name}', '${3:app_public}', '${1:table_name}', '${2:SINGULAR_TABLE_NAME_IN_SCREAMING_SNAKE_CASE}');",
       "-- TODO: To enable subscriptions:",
       "-- - Use `setupHttpServerWithWebsockets` with `setupManagementGQLSubscriptionAuthentication` as 3rd parameter to enable authentication.",
-      "-- - Create the plugin via SubscriptionsPluginFactory('${1:table_name}', '${2:SingularTableNameInPascalCase}', '${4|UUID,Int|}')",
+      "-- - Create the plugin via SubscriptionsPluginFactory('${1:table_name}', '${5:SingularTableNameInPascalCase}', '${4|UUID,Int|}')",
       "-- - Use `enableSubscriptions` on the `PostgraphileOptionsBuilder`.",
       "-- - Enhance your HTTP server with websocket support with `enhanceHttpServerWithSubscriptions`."
     ],
     "description": [
       "Defines PostgreSQL triggers for the specified table to enable GraphQL subscriptions functionality.\n",
+      "Adds a comment to the main or relation table with a comma-separated list of possible events that is used by SubscriptionsPluginFactory.\n",
       "3rd parameter of SubscriptionsPluginFactory must be either 'Int' or `UUID' depending on the type of 'id' column."
     ],
     "scope": "sql"
@@ -418,6 +419,37 @@
     ],
     "scope": "sql"
   },
+  "Pgmemento Create Table Audit (Ax Define)": {
+    "prefix": "ax-pgmemento-create-table-audit",
+    "body": [
+      "SELECT ax_define.pgmemento_create_table_audit(",
+      "  table_name:='${1:table_name}',",
+      "  schema_name:='${2:app_public}',",
+      "  log_old_data:='${3|TRUE,FALSE|}',",
+      "  log_new_data:='${4|TRUE,FALSE|}',",
+      "  log_state:='${5|TRUE,FALSE|}');"
+    ],
+    "description": [
+      "Activates audit logging for a table.\n",
+      "It's a simple wrapper around pgmemento.create_table_audit that wraps it with a try/catch to work with our idempotent migrations.\n",
+      "NOTE: This requires pgmemento extension to be installed in the database.\n",
+      "For additional info, see https://github.com/pgMemento/pgMemento/wiki/Initialize-auditing#start-auditing-for-single-tables .\n"
+    ],
+    "scope": "sql"
+  },
+  "Pgmemento Delete Old Logs (Ax Define)": {
+    "prefix": "ax-pgmemento-delete-old-logs",
+    "body": [
+      "SELECT ax_define.pgmemento_delete_old_logs(${age:'30 days'})"
+    ],
+    "description": [
+      "Deletes all audit logs (for all registered tables) older than specified age.\n",
+      "Returns number of table events deleted.\n",
+      "NOTE: This requires pgmemento extension to be installed in the database.\n",
+      "For additional info, see https://github.com/pgMemento/pgMemento/wiki/Delete-logs .\n"
+    ],
+    "scope": "sql"
+  },
   "Raise Error (Ax Utils)": {
     "prefix": "ax-raise-error",
     "body": [
@@ -655,7 +687,7 @@
       "ax_utils.validation_not_empty(${1:column_or_variable})"
     ],
     "description": [
-      "Returns true if the value is not null, not an empty string, and not a whitespace string. Returns true otherwise."
+      "Returns true if the value is not null, not an empty string, and not a whitespace string. Returns false otherwise."
     ],
     "scope": "sql"
   },
