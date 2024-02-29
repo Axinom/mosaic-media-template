@@ -52,9 +52,6 @@ describe('SubscriptionPlanPublishedHandler', () => {
       },
       subject: user,
     });
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
   });
 
   afterEach(async () => {

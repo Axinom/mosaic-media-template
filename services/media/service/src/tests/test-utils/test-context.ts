@@ -12,7 +12,6 @@ import {
   AuthenticatedManagementSubject,
   ManagementAuthenticationContext,
 } from '@axinom/mosaic-id-guard';
-import { Broker } from '@axinom/mosaic-message-bus';
 import {
   assertError,
   customizeGraphQlErrorFields,
@@ -24,11 +23,11 @@ import {
   MosaicError,
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { Request, Response } from 'express';
 import { migrate } from 'graphile-migrate';
 import { DocumentNode, graphql, GraphQLSchema } from 'graphql';
 import { print } from 'graphql/language/printer';
-import { stub } from 'jest-auto-stub';
 import { mockRequest, mockResponse } from 'mock-req-res';
 import { resolve } from 'path';
 import { Pool } from 'pg';
@@ -140,7 +139,7 @@ export const createTestRequestContext = (
 
 export const createTestContext = async (
   configOverrides: Dict<string> = {},
-  broker?: Broker,
+  storeOutboxMsg?: StoreOutboxMessage,
 ): Promise<ITestContext> => {
   //This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
   process.chdir(resolve(__dirname, '../../../'));
@@ -182,12 +181,7 @@ export const createTestContext = async (
   const options = buildPostgraphileOptions(
     config,
     ownerPool,
-    broker ??
-      stub<Broker>({
-        publish: () => {
-          console.log('Publish called');
-        },
-      }),
+    storeOutboxMsg ?? jest.fn(),
   );
 
   const schema = await createPostGraphileSchema(

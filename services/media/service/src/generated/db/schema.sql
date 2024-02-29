@@ -374,6 +374,230 @@ END;
 $$;
 
 
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: inbox; Type: TABLE; Schema: app_hidden; Owner: -
+--
+
+CREATE TABLE app_hidden.inbox (
+    id uuid NOT NULL,
+    aggregate_type text NOT NULL,
+    aggregate_id text NOT NULL,
+    message_type text NOT NULL,
+    segment text,
+    concurrency text DEFAULT 'sequential'::text NOT NULL,
+    payload jsonb NOT NULL,
+    metadata jsonb,
+    locked_until timestamp with time zone DEFAULT to_timestamp((0)::double precision) NOT NULL,
+    created_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
+    processed_at timestamp with time zone,
+    abandoned_at timestamp with time zone,
+    started_attempts smallint DEFAULT 0 NOT NULL,
+    finished_attempts smallint DEFAULT 0 NOT NULL,
+    CONSTRAINT inbox_concurrency_check CHECK ((concurrency = ANY (ARRAY['sequential'::text, 'parallel'::text])))
+);
+
+
+--
+-- Name: next_inbox_messages(integer, integer); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms integer) RETURNS SETOF app_hidden.inbox
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+  loop_row app_hidden.inbox%ROWTYPE;
+  message_row app_hidden.inbox%ROWTYPE;
+  ids uuid[] := '{}';
+BEGIN
+
+  IF max_size < 1 THEN
+    RAISE EXCEPTION 'The max_size for the next messages batch must be at least one.' using errcode = 'MAXNR';
+  END IF;
+
+  -- get (only) the oldest message of every segment but only return it if it is not locked
+  FOR loop_row IN
+    SELECT * FROM app_hidden.inbox m WHERE m.id in (SELECT DISTINCT ON (segment) id
+      FROM app_hidden.inbox
+      WHERE processed_at IS NULL AND abandoned_at IS NULL
+      ORDER BY segment, created_at) order by created_at
+  LOOP
+    BEGIN
+      EXIT WHEN cardinality(ids) >= max_size;
+    
+      SELECT *
+        INTO message_row
+        FROM app_hidden.inbox
+        WHERE id = loop_row.id
+        FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+      
+      IF message_row.locked_until > NOW() THEN
+        CONTINUE;
+      END IF;
+      
+      ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+    END;
+  END LOOP;
+  
+  -- if max_size not reached: get the oldest parallelizable message independent of segment
+  IF cardinality(ids) < max_size THEN
+    FOR loop_row IN
+      SELECT * FROM app_hidden.inbox
+        WHERE concurrency = 'parallel' AND processed_at IS NULL AND abandoned_at IS NULL AND locked_until < NOW() 
+          AND id NOT IN (SELECT UNNEST(ids))
+        order by created_at
+    LOOP
+      BEGIN
+        EXIT WHEN cardinality(ids) >= max_size;
+
+        SELECT *
+          INTO message_row
+          FROM app_hidden.inbox
+          WHERE id = loop_row.id
+          FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+
+        ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+      END;
+    END LOOP;
+  END IF;
+  
+  -- set a short lock value so the the workers can each process a message
+  IF cardinality(ids) > 0 THEN
+
+    RETURN QUERY 
+      UPDATE app_hidden.inbox
+        SET locked_until = clock_timestamp() + (lock_ms || ' milliseconds')::INTERVAL, started_attempts = started_attempts + 1
+        WHERE ID = ANY(ids)
+        RETURNING *;
+
+  END IF;
+END;
+$$;
+
+
+--
+-- Name: outbox; Type: TABLE; Schema: app_hidden; Owner: -
+--
+
+CREATE TABLE app_hidden.outbox (
+    id uuid NOT NULL,
+    aggregate_type text NOT NULL,
+    aggregate_id text NOT NULL,
+    message_type text NOT NULL,
+    segment text,
+    concurrency text DEFAULT 'sequential'::text NOT NULL,
+    payload jsonb NOT NULL,
+    metadata jsonb,
+    locked_until timestamp with time zone DEFAULT to_timestamp((0)::double precision) NOT NULL,
+    created_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
+    processed_at timestamp with time zone,
+    abandoned_at timestamp with time zone,
+    started_attempts smallint DEFAULT 0 NOT NULL,
+    finished_attempts smallint DEFAULT 0 NOT NULL,
+    CONSTRAINT outbox_concurrency_check CHECK ((concurrency = ANY (ARRAY['sequential'::text, 'parallel'::text])))
+);
+
+
+--
+-- Name: next_outbox_messages(integer, integer); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.next_outbox_messages(max_size integer, lock_ms integer) RETURNS SETOF app_hidden.outbox
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+  loop_row app_hidden.outbox%ROWTYPE;
+  message_row app_hidden.outbox%ROWTYPE;
+  ids uuid[] := '{}';
+BEGIN
+
+  IF max_size < 1 THEN
+    RAISE EXCEPTION 'The max_size for the next messages batch must be at least one.' using errcode = 'MAXNR';
+  END IF;
+
+  -- get (only) the oldest message of every segment but only return it if it is not locked
+  FOR loop_row IN
+    SELECT * FROM app_hidden.outbox m WHERE m.id in (SELECT DISTINCT ON (segment) id
+      FROM app_hidden.outbox
+      WHERE processed_at IS NULL AND abandoned_at IS NULL
+      ORDER BY segment, created_at) order by created_at
+  LOOP
+    BEGIN
+      EXIT WHEN cardinality(ids) >= max_size;
+    
+      SELECT *
+        INTO message_row
+        FROM app_hidden.outbox
+        WHERE id = loop_row.id
+        FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+      
+      IF message_row.locked_until > NOW() THEN
+        CONTINUE;
+      END IF;
+      
+      ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+    END;
+  END LOOP;
+  
+  -- if max_size not reached: get the oldest parallelizable message independent of segment
+  IF cardinality(ids) < max_size THEN
+    FOR loop_row IN
+      SELECT * FROM app_hidden.outbox
+        WHERE concurrency = 'parallel' AND processed_at IS NULL AND abandoned_at IS NULL AND locked_until < NOW() 
+          AND id NOT IN (SELECT UNNEST(ids))
+        order by created_at
+    LOOP
+      BEGIN
+        EXIT WHEN cardinality(ids) >= max_size;
+
+        SELECT *
+          INTO message_row
+          FROM app_hidden.outbox
+          WHERE id = loop_row.id
+          FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+
+        ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+      END;
+    END LOOP;
+  END IF;
+  
+  -- set a short lock value so the the workers can each process a message
+  IF cardinality(ids) > 0 THEN
+
+    RETURN QUERY 
+      UPDATE app_hidden.outbox
+        SET locked_until = clock_timestamp() + (lock_ms || ' milliseconds')::INTERVAL, started_attempts = started_attempts + 1
+        WHERE ID = ANY(ids)
+        RETURNING *;
+
+  END IF;
+END;
+$$;
+
+
 --
 -- Name: tg__update_publish_state(); Type: FUNCTION; Schema: app_hidden; Owner: -
 --
@@ -3542,10 +3766,6 @@ end;
 $$;
 
 
-SET default_tablespace = '';
-
-SET default_with_oids = false;
-
 --
 -- Name: messaging_counter; Type: TABLE; Schema: app_private; Owner: -
 --
@@ -5117,6 +5337,22 @@ COMMENT ON TABLE app_public.tvshows_tvshow_genres IS '@subscription_events_tvsho
 
 
 --
+-- Name: inbox inbox_pkey; Type: CONSTRAINT; Schema: app_hidden; Owner: -
+--
+
+ALTER TABLE ONLY app_hidden.inbox
+    ADD CONSTRAINT inbox_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: outbox outbox_pkey; Type: CONSTRAINT; Schema: app_hidden; Owner: -
+--
+
+ALTER TABLE ONLY app_hidden.outbox
+    ADD CONSTRAINT outbox_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: messaging_counter messaging_counter_pkey; Type: CONSTRAINT; Schema: app_private; Owner: -
 --
 
@@ -5818,6 +6054,76 @@ ALTER TABLE ONLY app_public.collection_relations
 
 ALTER TABLE ONLY app_public.collection_relations
     ADD CONSTRAINT unique_tvshow_per_collection UNIQUE (collection_id, tvshow_id);
+
+
+--
+-- Name: idx_inbox_abandoned_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_abandoned_at ON app_hidden.inbox USING btree (abandoned_at);
+
+
+--
+-- Name: idx_inbox_created_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_created_at ON app_hidden.inbox USING btree (created_at);
+
+
+--
+-- Name: idx_inbox_locked_until; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_locked_until ON app_hidden.inbox USING btree (locked_until);
+
+
+--
+-- Name: idx_inbox_processed_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_processed_at ON app_hidden.inbox USING btree (processed_at);
+
+
+--
+-- Name: idx_inbox_segment; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_segment ON app_hidden.inbox USING btree (segment);
+
+
+--
+-- Name: idx_outbox_abandoned_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_abandoned_at ON app_hidden.outbox USING btree (abandoned_at);
+
+
+--
+-- Name: idx_outbox_created_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_created_at ON app_hidden.outbox USING btree (created_at);
+
+
+--
+-- Name: idx_outbox_locked_until; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_locked_until ON app_hidden.outbox USING btree (locked_until);
+
+
+--
+-- Name: idx_outbox_processed_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_processed_at ON app_hidden.outbox USING btree (processed_at);
+
+
+--
+-- Name: idx_outbox_segment; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_segment ON app_hidden.outbox USING btree (segment);
 
 
 --
@@ -11021,6 +11327,106 @@ GRANT ALL ON FUNCTION app_hidden.define_snapshot_authentication(entitytype text,
 
 REVOKE ALL ON FUNCTION app_hidden.drop_snapshot_authentication(entitytype text) FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.drop_snapshot_authentication(entitytype text) TO media_service_gql_role;
+
+
+--
+-- Name: TABLE inbox; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.locked_until; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(locked_until) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.processed_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(processed_at) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.abandoned_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(abandoned_at) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.started_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(started_attempts) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.finished_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(finished_attempts) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION next_inbox_messages(max_size integer, lock_ms integer); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms integer) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms integer) TO media_service_gql_role;
+
+
+--
+-- Name: TABLE outbox; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN outbox.locked_until; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(locked_until) ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN outbox.processed_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(processed_at) ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN outbox.abandoned_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(abandoned_at) ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN outbox.started_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(started_attempts) ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN outbox.finished_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(finished_attempts) ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION next_outbox_messages(max_size integer, lock_ms integer); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.next_outbox_messages(max_size integer, lock_ms integer) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.next_outbox_messages(max_size integer, lock_ms integer) TO media_service_gql_role;
 
 
 --

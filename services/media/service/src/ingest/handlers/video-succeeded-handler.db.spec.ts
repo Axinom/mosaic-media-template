@@ -1,5 +1,9 @@
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureVideoExistsCreationStartedEvent } from '@axinom/mosaic-messages';
+import {
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { CheckFinishIngestItemCommand } from 'media-messages';
@@ -21,44 +25,37 @@ import { VideoCreationStartedHandler } from './video-creation-started-handler';
 // These tests cover logic for both VideoAlreadyExisted and VideoCreationStarted handlers
 describe('VideoSucceededHandler', () => {
   let ctx: ITestContext;
+  let user: AuthenticatedManagementSubject;
   let handler: VideoCreationStartedHandler;
   let step1: ingest_item_steps.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
   let doc1: ingest_documents.JSONSelectable;
-  let messages: CheckFinishIngestItemCommand[] = [];
+  let payloads: CheckFinishIngestItemCommand[] = [];
 
-  const createMessage = (messageContext: unknown = {}): MessageInfo => {
-    return stub<MessageInfo>({
-      envelope: {
-        auth_token:
-          'some token value which is not used because we are substituting getPgSettings method and using a stub user',
-        message_context: messageContext,
+  const createMessage = (
+    payload: EnsureVideoExistsCreationStartedEvent,
+    messageContext: unknown,
+  ) =>
+    stub<TypedTransactionalMessage<EnsureVideoExistsCreationStartedEvent>>({
+      payload,
+      metadata: {
+        messageContext,
       },
     });
-  };
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        _settings: unknown,
-        message: CheckFinishIngestItemCommand,
-      ) => {
-        messages.push(message);
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, _messagingSettings, payload) => {
+        payloads.push(payload as CheckFinishIngestItemCommand);
       },
-    });
-    const user = createTestUser(ctx.config.serviceId);
+    );
+    user = createTestUser(ctx.config.serviceId);
     handler = new VideoCreationStartedHandler(
       [new MockIngestProcessor()],
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
       ctx.config,
     );
-
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
   });
 
   beforeEach(async () => {
@@ -98,7 +95,7 @@ describe('VideoSucceededHandler', () => {
 
   afterEach(async () => {
     await ctx.truncate('ingest_documents');
-    messages = [];
+    payloads = [];
   });
 
   afterAll(async () => {
@@ -109,27 +106,29 @@ describe('VideoSucceededHandler', () => {
   describe('onMessage', () => {
     it('message succeeded without errors -> message without error sent and step updated', async () => {
       // Arrange
-      const content: EnsureVideoExistsCreationStartedEvent = {
+      const payload: EnsureVideoExistsCreationStartedEvent = {
         video_id: '6804e7ff-8bed-42b2-85bf-c1ca5b59c417',
         encoding_state: 'IN_PROGRESS',
       };
-      const message = createMessage({
+      const context = {
         ingestItemStepId: step1.id,
         ingestItemId: item1.id,
         videoType: 'MAIN',
-      });
+      };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload, context), dbCtx),
+      );
 
       // Assert
       const step = await selectOne('ingest_item_steps', {
         id: step1.id,
       }).run(ctx.ownerPool);
 
-      expect(step?.entity_id).toEqual(content.video_id);
+      expect(step?.entity_id).toEqual(payload.video_id);
 
-      expect(messages).toEqual<CheckFinishIngestItemCommand[]>([
+      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
         {
           ingest_item_step_id: step1.id,
           ingest_item_id: item1.id,
@@ -141,21 +140,28 @@ describe('VideoSucceededHandler', () => {
   describe('onMessageFailure', () => {
     it('message failed on all retries -> message with error sent', async () => {
       // Arrange
-      const content: EnsureVideoExistsCreationStartedEvent = {
+      const payload: EnsureVideoExistsCreationStartedEvent = {
         video_id: '6804e7ff-8bed-42b2-85bf-c1ca5b59c417',
         encoding_state: 'IN_PROGRESS',
       };
-      const message = createMessage({
+      const context = {
         ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
         ingestItemId: item1.id,
         videoType: 'MAIN',
-      });
+      };
 
       // Act
-      await handler.onMessageFailure(content, message, new Error('test error'));
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(
+          new Error('test error'),
+          createMessage(payload, context),
+          dbCtx,
+          false,
+        ),
+      );
 
       // Assert
-      expect(messages).toEqual<CheckFinishIngestItemCommand[]>([
+      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
         {
           ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
           ingest_item_id: item1.id,

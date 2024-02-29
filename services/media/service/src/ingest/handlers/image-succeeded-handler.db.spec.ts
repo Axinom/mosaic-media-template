@@ -1,5 +1,9 @@
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureImageExistsImageCreatedEvent } from '@axinom/mosaic-messages';
+import {
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { CheckFinishIngestItemCommand } from 'media-messages';
@@ -22,6 +26,7 @@ import { ImageCreatedHandler } from './image-created-handler';
 // These tests cover logic for both ImageAlreadyExisted and ImageCreated handlers
 describe('ImageSucceededHandler', () => {
   let ctx: ITestContext;
+  let user: AuthenticatedManagementSubject;
   let handler: ImageCreatedHandler;
   let step1: ingest_item_steps.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
@@ -29,40 +34,30 @@ describe('ImageSucceededHandler', () => {
   let movie1: movies.JSONSelectable;
   let messages: CheckFinishIngestItemCommand[] = [];
 
-  const createMessage = <T extends unknown>(
-    messageContext?: T,
-  ): MessageInfo => {
-    return stub<MessageInfo>({
-      envelope: {
-        auth_token:
-          'some token value which is not used because we are substituting getPgSettings method and using a stub user',
-        message_context: messageContext ?? {},
+  const createMessage = (
+    payload: EnsureImageExistsImageCreatedEvent,
+    messageContext: unknown,
+  ) =>
+    stub<TypedTransactionalMessage<EnsureImageExistsImageCreatedEvent>>({
+      payload,
+      metadata: {
+        messageContext,
       },
     });
-  };
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        _settings: unknown,
-        message: CheckFinishIngestItemCommand,
-      ) => {
-        messages.push(message);
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, _messagingSettings, message) => {
+        messages.push(message as CheckFinishIngestItemCommand);
       },
-    });
-    const user = createTestUser(ctx.config.serviceId);
+    );
+    user = createTestUser(ctx.config.serviceId);
     handler = new ImageCreatedHandler(
       [new MockIngestProcessor()],
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
       ctx.config,
     );
-
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
   });
 
   beforeEach(async () => {
@@ -118,24 +113,26 @@ describe('ImageSucceededHandler', () => {
   describe('onMessage', () => {
     it('message succeeded without errors -> message without error sent and step updated', async () => {
       // Arrange
-      const content: EnsureImageExistsImageCreatedEvent = {
+      const payload: EnsureImageExistsImageCreatedEvent = {
         image_id: '11e1d903-49ed-4d70-8b24-90d0824741d0',
       };
-      const message = createMessage({
+      const metadata = {
         ingestItemStepId: step1.id,
         ingestItemId: item1.id,
         imageType: 'COVER',
-      });
+      };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload, metadata), dbCtx),
+      );
 
       // Assert
       const step = await selectOne('ingest_item_steps', {
         id: step1.id,
       }).run(ctx.ownerPool);
 
-      expect(step?.entity_id).toEqual(content.image_id);
+      expect(step?.entity_id).toEqual(payload.image_id);
 
       expect(messages).toEqual<CheckFinishIngestItemCommand[]>([
         {
@@ -149,17 +146,24 @@ describe('ImageSucceededHandler', () => {
   describe('onMessageFailure', () => {
     it('message failed on all retries -> message with error ingestItemStepId sent', async () => {
       // Arrange
-      const content: EnsureImageExistsImageCreatedEvent = {
+      const payload: EnsureImageExistsImageCreatedEvent = {
         image_id: '11e1d903-49ed-4d70-8b24-90d0824741d0',
       };
-      const message = createMessage({
+      const context = {
         ingestItemStepId: '34d91ea5-db63-4e51-b511-ae545d5c669c',
         ingestItemId: item1.id,
         imageType: 'COVER',
-      });
+      };
 
       // Act
-      await handler.onMessageFailure(content, message, new Error('test error'));
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(
+          new Error('test error'),
+          createMessage(payload, context),
+          dbCtx,
+          false,
+        ),
+      );
 
       // Assert
       const movies = await select('movies', all).run(ctx.ownerPool);
