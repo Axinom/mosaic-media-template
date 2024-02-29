@@ -994,8 +994,10 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
         tags: {
           omit: 'create,update,delete',
-          foreignKey:
+          foreignKey: [
             '(season_id) references app_public.season(id)|@fieldName season',
+            '(tvshow_id) references app_public.tvshow(id)|@fieldName tvshow',
+          ],
         },
       },
       episode_images: {

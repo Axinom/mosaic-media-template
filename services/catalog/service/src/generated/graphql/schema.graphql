@@ -2235,6 +2235,40 @@ type Tvshow {
     filter: TvshowGenresRelationFilter
   ): TvshowGenresRelationsConnection!
 
+  """Reads and enables pagination through a set of `Episode`."""
+  episodes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Episode`."""
+    orderBy: [EpisodesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeFilter
+  ): EpisodesConnection!
+
   """Reads and enables pagination through a set of `Season`."""
   seasons(
     """Only read the first `n` values of the set."""
@@ -3044,21 +3078,212 @@ input TvshowGenresRelationFilter {
   not: TvshowGenresRelationFilter
 }
 
-"""A connection to a list of `Season` values."""
-type SeasonsConnection {
-  """A list of `Season` objects."""
-  nodes: [Season!]!
+"""A connection to a list of `Episode` values."""
+type EpisodesConnection {
+  """A list of `Episode` objects."""
+  nodes: [Episode!]!
 
   """
-  A list of edges which contains the `Season` and cursor to aid in pagination.
+  A list of edges which contains the `Episode` and cursor to aid in pagination.
   """
-  edges: [SeasonsEdge!]!
+  edges: [EpisodesEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """The count of *all* `Season` you could get from the connection."""
+  """The count of *all* `Episode` you could get from the connection."""
   totalCount: Int!
+}
+
+"""Definition of the TV show episode publish format."""
+type Episode {
+  id: String!
+  seasonId: String
+
+  """Episode number"""
+  index: Int
+
+  """Title of the episode."""
+  title: String
+
+  """Original title of the episode."""
+  originalTitle: String
+
+  """Short description of the main plot elements."""
+  synopsis: String
+
+  """Extended synopsis."""
+  description: String
+
+  """Name of the producing studio."""
+  studio: String
+
+  """Date of first release."""
+  released: Datetime
+
+  """Cast of the episode."""
+  cast: [String]
+
+  """Array of tags associated with the content."""
+  tags: [String]
+
+  """Array of production countries"""
+  productionCountries: [String]
+  directors: [String]
+  creditsStartTime: String
+  lengthInSeconds: Float
+  dynamicField: String
+  extendedField: String
+  rating: BigFloat
+  customRating: String
+  ageRating: String
+  assetType: Int
+  assetSubtype: String
+  tvshowId: String
+  introStartTime: String
+  introEndTime: String
+
+  """Reads a single `Season` that is related to this `Episode`."""
+  season: Season
+
+  """Reads a single `Tvshow` that is related to this `Episode`."""
+  tvshow: Tvshow
+
+  """Reads and enables pagination through a set of `EpisodeImage`."""
+  images(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodeImage`."""
+    orderBy: [EpisodeImagesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeImageCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeImageFilter
+  ): EpisodeImagesConnection!
+
+  """Reads and enables pagination through a set of `EpisodeLicense`."""
+  licenses(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodeLicense`."""
+    orderBy: [EpisodeLicensesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeLicenseCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeLicenseFilter
+  ): EpisodeLicensesConnection!
+
+  """Reads and enables pagination through a set of `EpisodeVideo`."""
+  videos(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodeVideo`."""
+    orderBy: [EpisodeVideosOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeVideoCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeVideoFilter
+  ): EpisodeVideosConnection!
+
+  """Reads and enables pagination through a set of `EpisodeGenresRelation`."""
+  genres(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodeGenresRelation`."""
+    orderBy: [EpisodeGenresRelationsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeGenresRelationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeGenresRelationFilter
+  ): EpisodeGenresRelationsConnection!
 }
 
 """Definition of the TV show season publish format."""
@@ -4035,209 +4260,297 @@ input SeasonGenresRelationFilter {
   not: SeasonGenresRelationFilter
 }
 
-"""A connection to a list of `Episode` values."""
-type EpisodesConnection {
-  """A list of `Episode` objects."""
-  nodes: [Episode!]!
-
-  """
-  A list of edges which contains the `Episode` and cursor to aid in pagination.
-  """
-  edges: [EpisodesEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Episode` you could get from the connection."""
-  totalCount: Int!
+"""Methods to use when ordering `Episode`."""
+enum EpisodesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  SEASON_ID_ASC
+  SEASON_ID_DESC
+  DIRECTORS_ASC
+  DIRECTORS_DESC
+  CREDITS_START_TIME_ASC
+  CREDITS_START_TIME_DESC
+  LENGTH_IN_SECONDS_ASC
+  LENGTH_IN_SECONDS_DESC
+  DYNAMIC_FIELD_ASC
+  DYNAMIC_FIELD_DESC
+  EXTENDED_FIELD_ASC
+  EXTENDED_FIELD_DESC
+  RATING_ASC
+  RATING_DESC
+  CUSTOM_RATING_ASC
+  CUSTOM_RATING_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
+  ASSET_TYPE_ASC
+  ASSET_TYPE_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
+  TVSHOW_ID_ASC
+  TVSHOW_ID_DESC
+  INTRO_START_TIME_ASC
+  INTRO_START_TIME_DESC
+  INTRO_END_TIME_ASC
+  INTRO_END_TIME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
 }
 
-"""Definition of the TV show episode publish format."""
-type Episode {
-  id: String!
+"""
+A condition to be used against `Episode` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input EpisodeCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: String
+
+  """Checks for equality with the object’s `seasonId` field."""
   seasonId: String
 
-  """Episode number"""
-  index: Int
-
-  """Title of the episode."""
-  title: String
-
-  """Original title of the episode."""
-  originalTitle: String
-
-  """Short description of the main plot elements."""
-  synopsis: String
-
-  """Extended synopsis."""
-  description: String
-
-  """Name of the producing studio."""
-  studio: String
-
-  """Date of first release."""
-  released: Datetime
-
-  """Cast of the episode."""
-  cast: [String]
-
-  """Array of tags associated with the content."""
-  tags: [String]
-
-  """Array of production countries"""
-  productionCountries: [String]
+  """Checks for equality with the object’s `directors` field."""
   directors: [String]
+
+  """Checks for equality with the object’s `creditsStartTime` field."""
   creditsStartTime: String
+
+  """Checks for equality with the object’s `lengthInSeconds` field."""
   lengthInSeconds: Float
+
+  """Checks for equality with the object’s `dynamicField` field."""
   dynamicField: String
+
+  """Checks for equality with the object’s `extendedField` field."""
   extendedField: String
+
+  """Checks for equality with the object’s `rating` field."""
   rating: BigFloat
+
+  """Checks for equality with the object’s `customRating` field."""
   customRating: String
+
+  """Checks for equality with the object’s `ageRating` field."""
   ageRating: String
+
+  """Checks for equality with the object’s `assetType` field."""
   assetType: Int
+
+  """Checks for equality with the object’s `assetSubtype` field."""
   assetSubtype: String
+
+  """Checks for equality with the object’s `tvshowId` field."""
   tvshowId: String
+
+  """Checks for equality with the object’s `introStartTime` field."""
   introStartTime: String
+
+  """Checks for equality with the object’s `introEndTime` field."""
   introEndTime: String
+}
 
-  """Reads a single `Season` that is related to this `Episode`."""
-  season: Season
+"""
+A filter to be used against `Episode` object types. All fields are combined with a logical ‘and.’
+"""
+input EpisodeFilter {
+  """Filter by the object’s `id` field."""
+  id: StringFilter
 
-  """Reads and enables pagination through a set of `EpisodeImage`."""
-  images(
-    """Only read the first `n` values of the set."""
-    first: Int
+  """Filter by the object’s `seasonId` field."""
+  seasonId: StringFilter
 
-    """Only read the last `n` values of the set."""
-    last: Int
+  """Filter by the object’s `directors` field."""
+  directors: StringListFilter
 
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
+  """Filter by the object’s `creditsStartTime` field."""
+  creditsStartTime: StringFilter
 
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
+  """Filter by the object’s `lengthInSeconds` field."""
+  lengthInSeconds: FloatFilter
 
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
+  """Filter by the object’s `dynamicField` field."""
+  dynamicField: StringFilter
 
-    """The method to use when ordering `EpisodeImage`."""
-    orderBy: [EpisodeImagesOrderBy!] = [PRIMARY_KEY_ASC]
+  """Filter by the object’s `extendedField` field."""
+  extendedField: StringFilter
 
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeImageCondition
+  """Filter by the object’s `rating` field."""
+  rating: BigFloatFilter
 
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeImageFilter
-  ): EpisodeImagesConnection!
+  """Filter by the object’s `customRating` field."""
+  customRating: StringFilter
 
-  """Reads and enables pagination through a set of `EpisodeLicense`."""
-  licenses(
-    """Only read the first `n` values of the set."""
-    first: Int
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
 
-    """Only read the last `n` values of the set."""
-    last: Int
+  """Filter by the object’s `assetType` field."""
+  assetType: IntFilter
 
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: StringFilter
 
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
+  """Filter by the object’s `tvshowId` field."""
+  tvshowId: StringFilter
 
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
+  """Filter by the object’s `introStartTime` field."""
+  introStartTime: StringFilter
 
-    """The method to use when ordering `EpisodeLicense`."""
-    orderBy: [EpisodeLicensesOrderBy!] = [PRIMARY_KEY_ASC]
+  """Filter by the object’s `introEndTime` field."""
+  introEndTime: StringFilter
 
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeLicenseCondition
+  """Checks for all expressions in this list."""
+  and: [EpisodeFilter!]
 
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeLicenseFilter
-  ): EpisodeLicensesConnection!
+  """Checks for any expressions in this list."""
+  or: [EpisodeFilter!]
 
-  """Reads and enables pagination through a set of `EpisodeVideo`."""
-  videos(
-    """Only read the first `n` values of the set."""
-    first: Int
+  """Negates the expression."""
+  not: EpisodeFilter
+}
 
-    """Only read the last `n` values of the set."""
-    last: Int
+"""
+A filter to be used against String List fields. All fields are combined with a logical ‘and.’
+"""
+input StringListFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
 
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
+  """Equal to the specified value."""
+  equalTo: [String]
 
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
+  """Not equal to the specified value."""
+  notEqualTo: [String]
 
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: [String]
 
-    """The method to use when ordering `EpisodeVideo`."""
-    orderBy: [EpisodeVideosOrderBy!] = [PRIMARY_KEY_ASC]
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: [String]
 
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeVideoCondition
+  """Less than the specified value."""
+  lessThan: [String]
 
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeVideoFilter
-  ): EpisodeVideosConnection!
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: [String]
 
-  """Reads and enables pagination through a set of `EpisodeGenresRelation`."""
-  genres(
-    """Only read the first `n` values of the set."""
-    first: Int
+  """Greater than the specified value."""
+  greaterThan: [String]
 
-    """Only read the last `n` values of the set."""
-    last: Int
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: [String]
 
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
+  """Contains the specified list of values."""
+  contains: [String]
 
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
+  """Contained by the specified list of values."""
+  containedBy: [String]
 
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
+  """Overlaps the specified list of values."""
+  overlaps: [String]
 
-    """The method to use when ordering `EpisodeGenresRelation`."""
-    orderBy: [EpisodeGenresRelationsOrderBy!] = [PRIMARY_KEY_ASC]
+  """Any array item is equal to the specified value."""
+  anyEqualTo: String
 
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeGenresRelationCondition
+  """Any array item is not equal to the specified value."""
+  anyNotEqualTo: String
 
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeGenresRelationFilter
-  ): EpisodeGenresRelationsConnection!
+  """Any array item is less than the specified value."""
+  anyLessThan: String
+
+  """Any array item is less than or equal to the specified value."""
+  anyLessThanOrEqualTo: String
+
+  """Any array item is greater than the specified value."""
+  anyGreaterThan: String
+
+  """Any array item is greater than or equal to the specified value."""
+  anyGreaterThanOrEqualTo: String
+}
+
+"""
+A filter to be used against Float fields. All fields are combined with a logical ‘and.’
+"""
+input FloatFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Float
+
+  """Not equal to the specified value."""
+  notEqualTo: Float
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Float
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Float
+
+  """Included in the specified list."""
+  in: [Float!]
+
+  """Not included in the specified list."""
+  notIn: [Float!]
+
+  """Less than the specified value."""
+  lessThan: Float
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Float
+
+  """Greater than the specified value."""
+  greaterThan: Float
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Float
+}
+
+"""
+A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’
+"""
+input BigFloatFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigFloat
+
+  """Not equal to the specified value."""
+  notEqualTo: BigFloat
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigFloat
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigFloat
+
+  """Included in the specified list."""
+  in: [BigFloat!]
+
+  """Not included in the specified list."""
+  notIn: [BigFloat!]
+
+  """Less than the specified value."""
+  lessThan: BigFloat
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigFloat
+
+  """Greater than the specified value."""
+  greaterThan: BigFloat
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigFloat
 }
 
 """A connection to a list of `EpisodeImage` values."""
@@ -5020,297 +5333,21 @@ type EpisodesEdge {
   node: Episode!
 }
 
-"""Methods to use when ordering `Episode`."""
-enum EpisodesOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  SEASON_ID_ASC
-  SEASON_ID_DESC
-  DIRECTORS_ASC
-  DIRECTORS_DESC
-  CREDITS_START_TIME_ASC
-  CREDITS_START_TIME_DESC
-  LENGTH_IN_SECONDS_ASC
-  LENGTH_IN_SECONDS_DESC
-  DYNAMIC_FIELD_ASC
-  DYNAMIC_FIELD_DESC
-  EXTENDED_FIELD_ASC
-  EXTENDED_FIELD_DESC
-  RATING_ASC
-  RATING_DESC
-  CUSTOM_RATING_ASC
-  CUSTOM_RATING_DESC
-  AGE_RATING_ASC
-  AGE_RATING_DESC
-  ASSET_TYPE_ASC
-  ASSET_TYPE_DESC
-  ASSET_SUBTYPE_ASC
-  ASSET_SUBTYPE_DESC
-  TVSHOW_ID_ASC
-  TVSHOW_ID_DESC
-  INTRO_START_TIME_ASC
-  INTRO_START_TIME_DESC
-  INTRO_END_TIME_ASC
-  INTRO_END_TIME_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `Episode` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input EpisodeCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: String
-
-  """Checks for equality with the object’s `seasonId` field."""
-  seasonId: String
-
-  """Checks for equality with the object’s `directors` field."""
-  directors: [String]
-
-  """Checks for equality with the object’s `creditsStartTime` field."""
-  creditsStartTime: String
-
-  """Checks for equality with the object’s `lengthInSeconds` field."""
-  lengthInSeconds: Float
-
-  """Checks for equality with the object’s `dynamicField` field."""
-  dynamicField: String
-
-  """Checks for equality with the object’s `extendedField` field."""
-  extendedField: String
-
-  """Checks for equality with the object’s `rating` field."""
-  rating: BigFloat
-
-  """Checks for equality with the object’s `customRating` field."""
-  customRating: String
-
-  """Checks for equality with the object’s `ageRating` field."""
-  ageRating: String
-
-  """Checks for equality with the object’s `assetType` field."""
-  assetType: Int
-
-  """Checks for equality with the object’s `assetSubtype` field."""
-  assetSubtype: String
-
-  """Checks for equality with the object’s `tvshowId` field."""
-  tvshowId: String
-
-  """Checks for equality with the object’s `introStartTime` field."""
-  introStartTime: String
-
-  """Checks for equality with the object’s `introEndTime` field."""
-  introEndTime: String
-}
-
-"""
-A filter to be used against `Episode` object types. All fields are combined with a logical ‘and.’
-"""
-input EpisodeFilter {
-  """Filter by the object’s `id` field."""
-  id: StringFilter
-
-  """Filter by the object’s `seasonId` field."""
-  seasonId: StringFilter
-
-  """Filter by the object’s `directors` field."""
-  directors: StringListFilter
-
-  """Filter by the object’s `creditsStartTime` field."""
-  creditsStartTime: StringFilter
-
-  """Filter by the object’s `lengthInSeconds` field."""
-  lengthInSeconds: FloatFilter
-
-  """Filter by the object’s `dynamicField` field."""
-  dynamicField: StringFilter
-
-  """Filter by the object’s `extendedField` field."""
-  extendedField: StringFilter
-
-  """Filter by the object’s `rating` field."""
-  rating: BigFloatFilter
-
-  """Filter by the object’s `customRating` field."""
-  customRating: StringFilter
-
-  """Filter by the object’s `ageRating` field."""
-  ageRating: StringFilter
-
-  """Filter by the object’s `assetType` field."""
-  assetType: IntFilter
-
-  """Filter by the object’s `assetSubtype` field."""
-  assetSubtype: StringFilter
-
-  """Filter by the object’s `tvshowId` field."""
-  tvshowId: StringFilter
-
-  """Filter by the object’s `introStartTime` field."""
-  introStartTime: StringFilter
-
-  """Filter by the object’s `introEndTime` field."""
-  introEndTime: StringFilter
-
-  """Checks for all expressions in this list."""
-  and: [EpisodeFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [EpisodeFilter!]
-
-  """Negates the expression."""
-  not: EpisodeFilter
-}
-
-"""
-A filter to be used against String List fields. All fields are combined with a logical ‘and.’
-"""
-input StringListFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: [String]
-
-  """Not equal to the specified value."""
-  notEqualTo: [String]
+"""A connection to a list of `Season` values."""
+type SeasonsConnection {
+  """A list of `Season` objects."""
+  nodes: [Season!]!
 
   """
-  Not equal to the specified value, treating null like an ordinary value.
+  A list of edges which contains the `Season` and cursor to aid in pagination.
   """
-  distinctFrom: [String]
+  edges: [SeasonsEdge!]!
 
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: [String]
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
 
-  """Less than the specified value."""
-  lessThan: [String]
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: [String]
-
-  """Greater than the specified value."""
-  greaterThan: [String]
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: [String]
-
-  """Contains the specified list of values."""
-  contains: [String]
-
-  """Contained by the specified list of values."""
-  containedBy: [String]
-
-  """Overlaps the specified list of values."""
-  overlaps: [String]
-
-  """Any array item is equal to the specified value."""
-  anyEqualTo: String
-
-  """Any array item is not equal to the specified value."""
-  anyNotEqualTo: String
-
-  """Any array item is less than the specified value."""
-  anyLessThan: String
-
-  """Any array item is less than or equal to the specified value."""
-  anyLessThanOrEqualTo: String
-
-  """Any array item is greater than the specified value."""
-  anyGreaterThan: String
-
-  """Any array item is greater than or equal to the specified value."""
-  anyGreaterThanOrEqualTo: String
-}
-
-"""
-A filter to be used against Float fields. All fields are combined with a logical ‘and.’
-"""
-input FloatFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Float
-
-  """Not equal to the specified value."""
-  notEqualTo: Float
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Float
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Float
-
-  """Included in the specified list."""
-  in: [Float!]
-
-  """Not included in the specified list."""
-  notIn: [Float!]
-
-  """Less than the specified value."""
-  lessThan: Float
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Float
-
-  """Greater than the specified value."""
-  greaterThan: Float
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Float
-}
-
-"""
-A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’
-"""
-input BigFloatFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: BigFloat
-
-  """Not equal to the specified value."""
-  notEqualTo: BigFloat
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: BigFloat
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: BigFloat
-
-  """Included in the specified list."""
-  in: [BigFloat!]
-
-  """Not included in the specified list."""
-  notIn: [BigFloat!]
-
-  """Less than the specified value."""
-  lessThan: BigFloat
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: BigFloat
-
-  """Greater than the specified value."""
-  greaterThan: BigFloat
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: BigFloat
+  """The count of *all* `Season` you could get from the connection."""
+  totalCount: Int!
 }
 
 """A `Season` edge in the connection."""
