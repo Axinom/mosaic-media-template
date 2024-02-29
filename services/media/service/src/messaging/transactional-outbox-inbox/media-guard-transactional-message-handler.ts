@@ -4,7 +4,6 @@ import {
 } from '@axinom/mosaic-db-common';
 import {
   AuthenticatedManagementSubject,
-  GuardedConfig,
   GuardedTransactionalInboxMessageHandler,
 } from '@axinom/mosaic-id-guard';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
@@ -12,11 +11,6 @@ import { getMappedError, Logger } from '@axinom/mosaic-service-common';
 import { ClientBase } from 'pg';
 import { Config } from '../../common';
 import { PermissionKey } from '../../domains/permission-definition';
-
-export type MediaGuardedConfig = GuardedConfig & {
-  tenantId: string;
-  environmentId: string;
-};
 
 export abstract class MediaGuardedTransactionalInboxMessageHandler<
   T,
