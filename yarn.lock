@@ -252,7 +252,7 @@
     pg "^8.11.3"
     sql-formatter "^4.0.2"
 
-"@axinom/mosaic-core@0.4.16-rc.11", "@axinom/mosaic-core@^0.4.16-rc.11":
+"@axinom/mosaic-core@^0.4.16-rc.11":
   version "0.4.16-rc.11"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.16-rc.11.tgz#b17d278a23343de26e8f5c43cbadfa46e57e7390"
   integrity sha512-LoaDIqQkMO5SY/UTyhXdqXHexCcWbsOYipUmY/c+H3sBqIQF+7g6lHYq16NHqiumVibf3b0Fo06nVF+qHyjW4w==
