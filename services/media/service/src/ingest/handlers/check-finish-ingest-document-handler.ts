@@ -114,7 +114,7 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
         loginClient,
         {
           envelopeOverrides: { auth_token: metadata.authToken },
-          lockedUntil: getFutureIsoDateInMilliseconds(1_000),
+          lockedUntil: getFutureIsoDateInMilliseconds(5_000),
         },
       );
     }
