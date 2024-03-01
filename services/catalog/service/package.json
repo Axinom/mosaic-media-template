@@ -48,6 +48,7 @@
     "@axinom/mosaic-message-bus": "0.24.0-rc.0",
     "@axinom/mosaic-message-bus-abstractions": "0.11.0-rc.0",
     "@axinom/mosaic-service-common": "0.46.0-rc.0",
+    "@axinom/mosaic-transactional-inbox-outbox": "0.6.0-rc.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "add": "^2.0.6",
     "amqplib": "^0.6.0",
