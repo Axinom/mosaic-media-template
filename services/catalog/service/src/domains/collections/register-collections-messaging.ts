@@ -1,6 +1,9 @@
-import { LoginPgPool } from '@axinom/mosaic-db-common';
-import { RascalConfigBuilder } from '@axinom/mosaic-message-bus';
+import {
+  RabbitMqInboxWriter,
+  RascalTransactionalConfigBuilder,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { PublishServiceMessagingSettings } from 'media-messages';
+import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
 import { ContentTypeRegistrant } from '../../messaging';
 import {
@@ -9,21 +12,26 @@ import {
 } from './handlers';
 
 export const registerCollectionsMessaging: ContentTypeRegistrant = function (
+  inboxWriter: RabbitMqInboxWriter,
   config: Config,
-  loginPool: LoginPgPool,
 ) {
   return [
-    new RascalConfigBuilder(
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.CollectionPublished,
       config,
-    ).subscribeForEvent(
-      () => new CollectionPublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.CollectionUnpublished,
       config,
-    ).subscribeForEvent(
-      () => new CollectionUnpublishedEventHandler(loginPool, config),
-    ),
+    ).subscribeForEvent(() => inboxWriter),
+  ];
+};
+
+export const registerCollectionsHandlers = (
+  config: Config,
+): TransactionalMessageHandler[] => {
+  return [
+    new CollectionPublishedEventHandler(config),
+    new CollectionUnpublishedEventHandler(config),
   ];
 };

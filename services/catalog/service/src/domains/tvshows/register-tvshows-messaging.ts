@@ -1,71 +1,73 @@
-import { LoginPgPool } from '@axinom/mosaic-db-common';
-import { RascalConfigBuilder } from '@axinom/mosaic-message-bus';
+import {
+  RabbitMqInboxWriter,
+  RascalTransactionalConfigBuilder,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { PublishServiceMessagingSettings } from 'media-messages';
+import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
 import { ContentTypeRegistrant } from '../../messaging';
 import {
   EpisodePublishedEventHandler,
   EpisodeUnpublishedEventHandler,
-  SeasonPublishedEventHandler,
   SeasonUnpublishedEventHandler,
   TvshowGenresPublishedEventHandler,
   TvshowGenresUnpublishedEventHandler,
   TvshowPublishedEventHandler,
   TvshowUnpublishedEventHandler,
 } from './handlers';
+import { SeasonPublishedEventHandler } from './handlers/season-published-event-handler';
 
 export const registerTvshowsMessaging: ContentTypeRegistrant = function (
+  inboxWriter: RabbitMqInboxWriter,
   config: Config,
-  loginPool: LoginPgPool,
 ) {
   return [
-    new RascalConfigBuilder(
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.TvshowGenresPublished,
       config,
-    ).subscribeForEvent(
-      () => new TvshowGenresPublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.TvshowGenresUnpublished,
       config,
-    ).subscribeForEvent(
-      () => new TvshowGenresUnpublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.TvshowPublished,
       config,
-    ).subscribeForEvent(
-      () => new TvshowPublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.TvshowUnpublished,
       config,
-    ).subscribeForEvent(
-      () => new TvshowUnpublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.SeasonPublished,
       config,
-    ).subscribeForEvent(
-      () => new SeasonPublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.SeasonUnpublished,
       config,
-    ).subscribeForEvent(
-      () => new SeasonUnpublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.EpisodePublished,
       config,
-    ).subscribeForEvent(
-      () => new EpisodePublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.EpisodeUnpublished,
       config,
-    ).subscribeForEvent(
-      () => new EpisodeUnpublishedEventHandler(loginPool, config),
-    ),
+    ).subscribeForEvent(() => inboxWriter),
+  ];
+};
+
+export const registerTvshowsHandlers = (
+  config: Config,
+): TransactionalMessageHandler[] => {
+  return [
+    new TvshowGenresPublishedEventHandler(config),
+    new TvshowGenresUnpublishedEventHandler(config),
+    new TvshowPublishedEventHandler(config),
+    new TvshowUnpublishedEventHandler(config),
+    new SeasonPublishedEventHandler(config),
+    new SeasonUnpublishedEventHandler(config),
+    new EpisodePublishedEventHandler(config),
+    new EpisodeUnpublishedEventHandler(config),
   ];
 };

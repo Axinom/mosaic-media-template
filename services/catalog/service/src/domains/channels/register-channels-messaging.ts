@@ -1,7 +1,11 @@
-import { LoginPgPool } from '@axinom/mosaic-db-common';
 import { RascalConfigBuilder } from '@axinom/mosaic-message-bus';
 import { ChannelServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
+import {
+  RabbitMqInboxWriter,
+  RascalTransactionalConfigBuilder,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { VodToLiveServiceMessagingSettings } from 'media-messages';
+import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
 import { ContentTypeRegistrant } from '../../messaging';
 import {
@@ -13,41 +17,43 @@ import {
 } from './handlers';
 
 export const registerChannelsMessaging: ContentTypeRegistrant = function (
+  inboxWriter: RabbitMqInboxWriter,
   config: Config,
-  loginPool: LoginPgPool,
-) {
+): RascalConfigBuilder[] {
   return [
-    new RascalConfigBuilder(
+    new RascalTransactionalConfigBuilder(
       ChannelServiceMultiTenantMessagingSettings.ChannelPublished,
       config,
-    ).subscribeForEvent(
-      () => new ChannelPublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished,
       config,
-    ).subscribeForEvent(
-      () => new ChannelUnpublishedEventHandler(loginPool, config),
-    ),
+    ).subscribeForEvent(() => inboxWriter),
 
-    new RascalConfigBuilder(
+    new RascalTransactionalConfigBuilder(
       VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded,
       config,
-    ).subscribeForEvent(
-      () => new CheckChannelJobStatusSucceededEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed,
       config,
-    ).subscribeForEvent(
-      () => new CheckChannelJobStatusFailedEventHandler(config),
-    ),
+    ).subscribeForEvent(() => inboxWriter),
 
-    new RascalConfigBuilder(
+    new RascalTransactionalConfigBuilder(
       VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated,
       config,
-    ).subscribeForEvent(
-      () => new LiveStreamProtectionKeyCreatedEventHandler(loginPool, config),
-    ),
+    ).subscribeForEvent(() => inboxWriter),
+  ];
+};
+
+export const registerChannelsHandlers = (
+  config: Config,
+): TransactionalMessageHandler[] => {
+  return [
+    new ChannelPublishedEventHandler(config),
+    new ChannelUnpublishedEventHandler(config),
+    new CheckChannelJobStatusSucceededEventHandler(config),
+    new CheckChannelJobStatusFailedEventHandler(config),
+    new LiveStreamProtectionKeyCreatedEventHandler(config),
   ];
 };

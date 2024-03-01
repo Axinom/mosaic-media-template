@@ -1,25 +1,27 @@
 import { Logger } from '@axinom/mosaic-service-common';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CheckChannelJobStatusFailedEvent,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
 import { Config } from '../../../common';
-import { AuthenticatedMessageHandler } from './authenticated-message-handler';
+import { ChannelGuardedTransactionalMessageHandler } from './channel-guarded-transactional-message-handler';
 
-export class CheckChannelJobStatusFailedEventHandler extends AuthenticatedMessageHandler<CheckChannelJobStatusFailedEvent> {
-  private logger: Logger;
-  constructor(protected readonly config: Config) {
+export class CheckChannelJobStatusFailedEventHandler extends ChannelGuardedTransactionalMessageHandler<CheckChannelJobStatusFailedEvent> {
+  constructor(config: Config) {
     super(
-      VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed.messageType,
+      VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed,
+      new Logger({
+        config,
+        context: CheckChannelJobStatusFailedEventHandler.name,
+      }),
       config,
     );
-    this.logger = new Logger({
-      config,
-      context: CheckChannelJobStatusFailedEventHandler.name,
-    });
   }
 
-  async onMessage(payload: CheckChannelJobStatusFailedEvent): Promise<void> {
+  override async handleMessage({
+    payload,
+  }: TypedTransactionalMessage<CheckChannelJobStatusFailedEvent>): Promise<void> {
     this.logger.error({
       message:
         'Job status check has failed for the channel. See details for more info.',

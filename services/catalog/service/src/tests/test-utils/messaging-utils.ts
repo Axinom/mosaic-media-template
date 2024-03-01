@@ -1,21 +1,25 @@
 import { ChannelPublishedEvent } from '@axinom/mosaic-messages';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CollectionPublishedEvent,
   CuePoint,
   EpisodePublishedEvent,
+  ImageType,
   MovieGenresPublishedEvent,
   MoviePublishedEvent,
+  RelationType,
   SeasonPublishedEvent,
   TvshowGenresPublishedEvent,
   TvshowPublishedEvent,
   VideoStream,
 } from 'media-messages';
+import { v4 as uuid } from 'uuid';
 import { Image, License, Video } from '../../domains/common';
 
-export function createMoviePublishedEvent(
+export function createMoviePublishedMessage(
   contentId: string,
-): MoviePublishedEvent {
-  return {
+): TypedTransactionalMessage<MoviePublishedEvent> {
+  return createMessage({
     content_id: contentId,
     title: 'Movie title',
     description: 'A pretty long description.',
@@ -30,13 +34,13 @@ export function createMoviePublishedEvent(
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
-  };
+  });
 }
 
-export function createTvshowPublishedEvent(
+export function createTvshowPublishedMessage(
   contentId: string,
-): TvshowPublishedEvent {
-  return {
+): TypedTransactionalMessage<TvshowPublishedEvent> {
+  return createMessage({
     content_id: contentId,
     title: 'TV show title',
     description: 'A pretty long description.',
@@ -51,13 +55,13 @@ export function createTvshowPublishedEvent(
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
-  };
+  });
 }
 
-export function createSeasonPublishedEvent(
+export function createSeasonPublishedMessage(
   contentId: string,
-): SeasonPublishedEvent {
-  return {
+): TypedTransactionalMessage<SeasonPublishedEvent> {
+  return createMessage({
     content_id: contentId,
     tvshow_id: 'tvshow-1',
     index: 0,
@@ -72,13 +76,13 @@ export function createSeasonPublishedEvent(
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
-  };
+  });
 }
 
-export function createEpisodePublishedEvent(
+export function createEpisodePublishedMessage(
   contentId: string,
-): EpisodePublishedEvent {
-  return {
+): TypedTransactionalMessage<EpisodePublishedEvent> {
+  return createMessage({
     content_id: contentId,
     season_id: 'season-1',
     title: 'Episode title',
@@ -95,14 +99,16 @@ export function createEpisodePublishedEvent(
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
-  };
+  });
 }
 
-export function createGenrePublishedEvent(
+export function createGenrePublishedMessage(
   contentId: string,
   title = 'Generic genre',
-): MovieGenresPublishedEvent | TvshowGenresPublishedEvent {
-  return {
+): TypedTransactionalMessage<
+  MovieGenresPublishedEvent | TvshowGenresPublishedEvent
+> {
+  return createMessage({
     genres: [
       {
         content_id: contentId,
@@ -110,20 +116,20 @@ export function createGenrePublishedEvent(
         order_no: 0,
       },
     ],
-  };
+  });
 }
 
-export function createCollectionPublishedEvent(
+export function createCollectionPublishedMessage(
   contentId: string,
-): CollectionPublishedEvent {
-  return {
+): TypedTransactionalMessage<CollectionPublishedEvent> {
+  return createMessage({
     content_id: contentId,
     title: 'A collection, yay',
     description: 'This collection is a pretty big one.',
     synopsis: 'Pretty big.',
     images: [
       {
-        type: 'COVER',
+        type: 'COVER' as ImageType,
         width: 480,
         height: 320,
         path: '/some/image/path.png',
@@ -131,18 +137,34 @@ export function createCollectionPublishedEvent(
     ],
     tags: ['tag1', 'tag2'],
     related_items: [
-      { movie_id: 'movie-1', order_no: 1, relation_type: 'MOVIE' },
-      { tvshow_id: 'tvshow-1', order_no: 2, relation_type: 'TVSHOW' },
-      { season_id: 'season-1', order_no: 3, relation_type: 'SEASON' },
-      { episode_id: 'episode-1', order_no: 4, relation_type: 'EPISODE' },
+      {
+        movie_id: 'movie-1',
+        order_no: 1,
+        relation_type: 'MOVIE' as RelationType,
+      },
+      {
+        tvshow_id: 'tvshow-1',
+        order_no: 2,
+        relation_type: 'TVSHOW' as RelationType,
+      },
+      {
+        season_id: 'season-1',
+        order_no: 3,
+        relation_type: 'SEASON' as RelationType,
+      },
+      {
+        episode_id: 'episode-1',
+        order_no: 4,
+        relation_type: 'EPISODE' as RelationType,
+      },
     ],
-  };
+  });
 }
 
-export function createChannelPublishedEvent(
+export function createChannelPublishedMessage(
   channelId: string,
-): ChannelPublishedEvent {
-  return {
+): TypedTransactionalMessage<ChannelPublishedEvent> {
+  return createMessage({
     id: channelId,
     title: 'Another test channel',
     description: 'Good for testing!',
@@ -220,7 +242,7 @@ export function createChannelPublishedEvent(
       videos_tags: ['vod2live'],
     },
     images: [{ id: 'image-1', ...createImage() }],
-  };
+  });
 }
 
 function createImage(): Image {
@@ -328,4 +350,13 @@ function createLicense(): License {
     start_time: '2019-11-13T20:20:39+00:00',
     end_time: '2021-11-13T20:20:39+00:00',
   };
+}
+
+function createMessage<T extends Record<string, unknown>>(
+  payload: T,
+): TypedTransactionalMessage<T> {
+  return {
+    id: uuid(),
+    payload,
+  } as TypedTransactionalMessage<T>;
 }
