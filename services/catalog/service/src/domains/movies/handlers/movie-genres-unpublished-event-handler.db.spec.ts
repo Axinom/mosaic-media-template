@@ -1,3 +1,5 @@
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { MovieGenresUnpublishedEvent } from 'media-messages';
 import { all, insert, select } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
 import { MovieGenresUnpublishedEventHandler } from './movie-genres-unpublished-event-handler';
@@ -8,7 +10,7 @@ describe('MovieGenrePublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new MovieGenresUnpublishedEventHandler(ctx.loginPool, ctx.config);
+    handler = new MovieGenresUnpublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -31,7 +33,12 @@ describe('MovieGenrePublishEventHandler', () => {
       }).run(ctx.ownerPool);
 
       // Act
-      await handler.onMessage();
+      await ctx.executeGqlSql(async (txn) => {
+        await handler.handleMessage(
+          {} as unknown as TypedTransactionalMessage<MovieGenresUnpublishedEvent>,
+          txn,
+        );
+      });
 
       // Assert
       const movieGenre = await select('movie_genre', all).run(ctx.ownerPool);
@@ -53,7 +60,12 @@ describe('MovieGenrePublishEventHandler', () => {
       ]).run(ctx.ownerPool);
 
       // Act
-      await handler.onMessage();
+      await ctx.executeGqlSql(async (txn) => {
+        await handler.handleMessage(
+          {} as unknown as TypedTransactionalMessage<MovieGenresUnpublishedEvent>,
+          txn,
+        );
+      });
 
       // Assert
       const movieGenre = await select('movie_genre', all).run(ctx.ownerPool);
@@ -78,7 +90,12 @@ describe('MovieGenrePublishEventHandler', () => {
       }).run(ctx.ownerPool);
 
       // Act
-      await handler.onMessage();
+      await ctx.executeGqlSql(async (txn) => {
+        await handler.handleMessage(
+          {} as unknown as TypedTransactionalMessage<MovieGenresUnpublishedEvent>,
+          txn,
+        );
+      });
 
       // Assert
       const movieGenre = await select('movie_genre', all).run(ctx.ownerPool);
