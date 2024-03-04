@@ -5,7 +5,7 @@ import {
 import { PublishServiceMessagingSettings } from 'media-messages';
 import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
-import { ContentTypeRegistrant } from '../../messaging';
+import { RegisterContentTypeMessaging } from '../../messaging';
 import {
   EpisodePublishedEventHandler,
   EpisodeUnpublishedEventHandler,
@@ -17,7 +17,7 @@ import {
 } from './handlers';
 import { SeasonPublishedEventHandler } from './handlers/season-published-event-handler';
 
-export const registerTvshowsMessaging: ContentTypeRegistrant = function (
+export const registerTvshowsMessaging: RegisterContentTypeMessaging = function (
   inboxWriter: RabbitMqInboxWriter,
   config: Config,
 ) {

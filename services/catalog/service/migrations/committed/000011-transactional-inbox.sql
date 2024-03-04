@@ -1,6 +1,6 @@
 --! Previous: sha1:c9457b917399b9a43ac0fc04d0e130cf728bfcb7
 --! Hash: sha1:a588014c99783319a56e38380e970b4877d2257c
---! Message: transactional-outbox-inbox
+--! Message: transactional-inbox
 
 -- ____  _  _  ___   ___  __  __
 -- |_ _|| \| || _ ) / _ \ \ \/ /

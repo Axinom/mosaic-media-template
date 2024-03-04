@@ -5,27 +5,25 @@ import {
 import { PublishServiceMessagingSettings } from 'media-messages';
 import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
-import { ContentTypeRegistrant } from '../../messaging';
+import { RegisterContentTypeMessaging } from '../../messaging';
 import {
   CollectionPublishedEventHandler,
   CollectionUnpublishedEventHandler,
 } from './handlers';
 
-export const registerCollectionsMessaging: ContentTypeRegistrant = function (
-  inboxWriter: RabbitMqInboxWriter,
-  config: Config,
-) {
-  return [
-    new RascalTransactionalConfigBuilder(
-      PublishServiceMessagingSettings.CollectionPublished,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      PublishServiceMessagingSettings.CollectionUnpublished,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-  ];
-};
+export const registerCollectionsMessaging: RegisterContentTypeMessaging =
+  function (inboxWriter: RabbitMqInboxWriter, config: Config) {
+    return [
+      new RascalTransactionalConfigBuilder(
+        PublishServiceMessagingSettings.CollectionPublished,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
+      new RascalTransactionalConfigBuilder(
+        PublishServiceMessagingSettings.CollectionUnpublished,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
+    ];
+  };
 
 export const registerCollectionsHandlers = (
   config: Config,

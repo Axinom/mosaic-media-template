@@ -7,7 +7,7 @@ import {
 import { VodToLiveServiceMessagingSettings } from 'media-messages';
 import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
-import { ContentTypeRegistrant } from '../../messaging';
+import { RegisterContentTypeMessaging } from '../../messaging';
 import {
   ChannelPublishedEventHandler,
   ChannelUnpublishedEventHandler,
@@ -16,35 +16,36 @@ import {
   LiveStreamProtectionKeyCreatedEventHandler,
 } from './handlers';
 
-export const registerChannelsMessaging: ContentTypeRegistrant = function (
-  inboxWriter: RabbitMqInboxWriter,
-  config: Config,
-): RascalConfigBuilder[] {
-  return [
-    new RascalTransactionalConfigBuilder(
-      ChannelServiceMultiTenantMessagingSettings.ChannelPublished,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
+export const registerChannelsMessaging: RegisterContentTypeMessaging =
+  function (
+    inboxWriter: RabbitMqInboxWriter,
+    config: Config,
+  ): RascalConfigBuilder[] {
+    return [
+      new RascalTransactionalConfigBuilder(
+        ChannelServiceMultiTenantMessagingSettings.ChannelPublished,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
+      new RascalTransactionalConfigBuilder(
+        ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
 
-    new RascalTransactionalConfigBuilder(
-      VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
+      new RascalTransactionalConfigBuilder(
+        VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
+      new RascalTransactionalConfigBuilder(
+        VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
 
-    new RascalTransactionalConfigBuilder(
-      VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-  ];
-};
+      new RascalTransactionalConfigBuilder(
+        VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
+    ];
+  };
 
 export const registerChannelsHandlers = (
   config: Config,

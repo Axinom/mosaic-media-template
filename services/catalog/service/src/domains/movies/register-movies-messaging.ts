@@ -5,7 +5,7 @@ import {
 import { PublishServiceMessagingSettings } from 'media-messages';
 import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
-import { ContentTypeRegistrant } from '../../messaging';
+import { RegisterContentTypeMessaging } from '../../messaging';
 import {
   MovieGenresPublishedEventHandler,
   MovieGenresUnpublishedEventHandler,
@@ -13,7 +13,7 @@ import {
   MovieUnpublishedEventHandler,
 } from './handlers';
 
-export const registerMoviesMessaging: ContentTypeRegistrant = function (
+export const registerMoviesMessaging: RegisterContentTypeMessaging = function (
   inboxWriter: RabbitMqInboxWriter,
   config: Config,
 ) {

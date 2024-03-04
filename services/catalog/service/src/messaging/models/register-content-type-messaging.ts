@@ -2,7 +2,7 @@ import { RascalConfigBuilder } from '@axinom/mosaic-message-bus';
 import { RabbitMqInboxWriter } from '@axinom/mosaic-transactional-inbox-outbox';
 import { Config } from '../../common';
 
-export interface ContentTypeRegistrant {
+export interface RegisterContentTypeMessaging {
   /**
    * Registers all message handlers associated with a content type.
    * Typically there are two: one for handling published events and one for handling unpublished events.
