@@ -1,9 +1,11 @@
 import {
+  buildPgSettings,
   compareMigrationHashes,
   LoginPgPool,
   MigrationRecord,
   OwnerPgPool,
   runCurrentSql,
+  transactionWithContext,
 } from '@axinom/mosaic-db-common';
 import { enhanceGraphqlErrors } from '@axinom/mosaic-graphql-common';
 import {
@@ -29,11 +31,12 @@ import {
   PostGraphileOptions,
   withPostGraphileContext,
 } from 'postgraphile';
-import { truncate } from 'zapatos/db';
+import { IsolationLevel, truncate, TxnClient } from 'zapatos/db';
 import { Table } from 'zapatos/schema';
 import { catalogLogMapper, Config, getMigrationSettings } from '../../common';
 import { buildPostgraphileOptions } from '../../graphql/postgraphile-options';
 import { createTestConfig } from './test-config';
+import { createTestUser } from './test-user';
 
 interface IExecutionResult {
   errors?: readonly GraphQLErrorEnhanced[];
@@ -111,6 +114,9 @@ export interface ITestContext {
     variables?: Dict<any>,
     requestContext?: TestRequestContext,
   ): Promise<IExecutionResult>;
+  executeGqlSql<T>(
+    callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
+  ): Promise<T>;
 }
 
 export const createTestContext = async (
@@ -161,6 +167,22 @@ export const createTestContext = async (
     options,
   );
 
+  const executeGqlSql = async <T>(
+    callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
+  ): Promise<T> => {
+    const pgSettings = buildPgSettings(
+      createTestUser(config.serviceId),
+      config.dbGqlRole,
+      config.serviceId,
+    );
+    return transactionWithContext(
+      loginPool,
+      IsolationLevel.Serializable,
+      pgSettings,
+      async (dbContext) => callback(dbContext),
+    );
+  };
+
   return {
     ownerPool,
     loginPool,
@@ -169,6 +191,7 @@ export const createTestContext = async (
     options,
     schema,
     runGqlQuery,
+    executeGqlSql,
     truncate: async function (tableName: Table): Promise<void> {
       try {
         await truncate(tableName, 'CASCADE').run(this.ownerPool);

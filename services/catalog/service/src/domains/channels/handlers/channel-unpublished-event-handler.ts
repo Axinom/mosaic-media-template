@@ -1,37 +1,32 @@
-import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
-import { MessageInfo } from '@axinom/mosaic-message-bus';
 import {
   ChannelServiceMultiTenantMessagingSettings,
   ChannelUnpublishedEvent,
 } from '@axinom/mosaic-messages';
+import { Logger } from '@axinom/mosaic-service-common';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { ClientBase } from 'pg';
 import * as db from 'zapatos/db';
 import { Config } from '../../../common';
 import { getChannelId } from '../common';
-import { AuthenticatedMessageHandler } from './authenticated-message-handler';
+import { ChannelGuardedTransactionalMessageHandler } from './channel-guarded-transactional-message-handler';
 
-export class ChannelUnpublishedEventHandler extends AuthenticatedMessageHandler<ChannelUnpublishedEvent> {
-  constructor(
-    private readonly loginPool: LoginPgPool,
-    protected readonly config: Config,
-  ) {
+export class ChannelUnpublishedEventHandler extends ChannelGuardedTransactionalMessageHandler<ChannelUnpublishedEvent> {
+  constructor(config: Config) {
     super(
-      ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished.messageType,
+      ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished,
+      new Logger({
+        config,
+        context: ChannelUnpublishedEventHandler.name,
+      }),
       config,
     );
   }
 
-  async onMessage(
-    payload: ChannelUnpublishedEvent,
-    _message: MessageInfo<ChannelUnpublishedEvent>,
+  override async handleMessage(
+    { payload }: TypedTransactionalMessage<ChannelUnpublishedEvent>,
+    txnClient: ClientBase,
   ): Promise<void> {
     const channelId = getChannelId(payload.id);
-    await transactionWithContext(
-      this.loginPool,
-      db.IsolationLevel.Serializable,
-      { role: this.config.dbGqlRole },
-      async (txnClient) => {
-        await db.deletes('channel', { id: channelId }).run(txnClient);
-      },
-    );
+    await db.deletes('channel', { id: channelId }).run(txnClient);
   }
 }

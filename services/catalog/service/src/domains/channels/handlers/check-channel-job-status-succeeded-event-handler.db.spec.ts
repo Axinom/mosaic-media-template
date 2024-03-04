@@ -1,4 +1,5 @@
 import { rejectionOf } from '@axinom/mosaic-service-common';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { CheckChannelJobStatusSucceededEvent } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
@@ -12,10 +13,7 @@ describe('CheckChannelJobStatusSucceededEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new CheckChannelJobStatusSucceededEventHandler(
-      ctx.loginPool,
-      ctx.config,
-    );
+    handler = new CheckChannelJobStatusSucceededEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -32,14 +30,18 @@ describe('CheckChannelJobStatusSucceededEventHandler', () => {
       // Arrange
       const originalId = uuid();
       const channelId = getChannelId(originalId);
-      const message: CheckChannelJobStatusSucceededEvent = {
-        channel_id: originalId,
-        dash_stream_url: 'https://axinom-test-origin.com/channel.isml/.mpd',
-        hls_stream_url: 'https://axinom-test-origin.com/channel.isml/.m3u8',
-      };
+      const message = {
+        payload: {
+          channel_id: originalId,
+          dash_stream_url: 'https://axinom-test-origin.com/channel.isml/.mpd',
+          hls_stream_url: 'https://axinom-test-origin.com/channel.isml/.m3u8',
+        },
+      } as unknown as TypedTransactionalMessage<CheckChannelJobStatusSucceededEvent>;
 
       // Act
-      const error = await rejectionOf(handler.onMessage(message));
+      const error = await ctx.executeGqlSql(async (txn) => {
+        return rejectionOf(handler.handleMessage(message, txn));
+      });
 
       // Assert
       expect(error).toMatchObject({
@@ -62,22 +64,26 @@ describe('CheckChannelJobStatusSucceededEventHandler', () => {
         dash_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.mpd',
         hls_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.m3u8',
       }).run(ctx.ownerPool);
-      const message: CheckChannelJobStatusSucceededEvent = {
-        channel_id: originalId,
-        dash_stream_url: 'https://axinom-test-origin.com/channel.isml/.mpd',
-        hls_stream_url: 'https://axinom-test-origin.com/channel.isml/.m3u8',
-      };
+      const message = {
+        payload: {
+          channel_id: originalId,
+          dash_stream_url: 'https://axinom-test-origin.com/channel.isml/.mpd',
+          hls_stream_url: 'https://axinom-test-origin.com/channel.isml/.m3u8',
+        },
+      } as unknown as TypedTransactionalMessage<CheckChannelJobStatusSucceededEvent>;
 
       // Act
-      await handler.onMessage(message);
+      await ctx.executeGqlSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
       // Assert
       const channel = await selectOne('channel', {
         id: channelId,
       }).run(ctx.ownerPool);
 
-      expect(channel?.dash_stream_url).toEqual(message.dash_stream_url);
-      expect(channel?.hls_stream_url).toEqual(message.hls_stream_url);
+      expect(channel?.dash_stream_url).toEqual(message.payload.dash_stream_url);
+      expect(channel?.hls_stream_url).toEqual(message.payload.hls_stream_url);
     });
   });
 });

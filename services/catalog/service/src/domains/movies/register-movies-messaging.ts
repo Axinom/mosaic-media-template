@@ -1,8 +1,11 @@
-import { LoginPgPool } from '@axinom/mosaic-db-common';
-import { RascalConfigBuilder } from '@axinom/mosaic-message-bus';
+import {
+  RabbitMqInboxWriter,
+  RascalTransactionalConfigBuilder,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { PublishServiceMessagingSettings } from 'media-messages';
+import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
-import { ContentTypeRegistrant } from '../../messaging';
+import { RegisterContentTypeMessaging } from '../../messaging';
 import {
   MovieGenresPublishedEventHandler,
   MovieGenresUnpublishedEventHandler,
@@ -10,34 +13,37 @@ import {
   MovieUnpublishedEventHandler,
 } from './handlers';
 
-export const registerMoviesMessaging: ContentTypeRegistrant = function (
+export const registerMoviesMessaging: RegisterContentTypeMessaging = function (
+  inboxWriter: RabbitMqInboxWriter,
   config: Config,
-  loginPool: LoginPgPool,
 ) {
   return [
-    new RascalConfigBuilder(
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.MoviePublished,
       config,
-    ).subscribeForEvent(
-      () => new MoviePublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.MovieUnpublished,
       config,
-    ).subscribeForEvent(
-      () => new MovieUnpublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.MovieGenresPublished,
       config,
-    ).subscribeForEvent(
-      () => new MovieGenresPublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
       PublishServiceMessagingSettings.MovieGenresUnpublished,
       config,
-    ).subscribeForEvent(
-      () => new MovieGenresUnpublishedEventHandler(loginPool, config),
-    ),
+    ).subscribeForEvent(() => inboxWriter),
+  ];
+};
+
+export const registerMoviesHandlers = (
+  config: Config,
+): TransactionalMessageHandler[] => {
+  return [
+    new MoviePublishedEventHandler(config),
+    new MovieUnpublishedEventHandler(config),
+    new MovieGenresPublishedEventHandler(config),
+    new MovieGenresUnpublishedEventHandler(config),
   ];
 };

@@ -1,5 +1,4 @@
-import { MessageInfo } from '@axinom/mosaic-message-bus';
-import { stub } from 'jest-auto-stub';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { SeasonUnpublishedEvent } from 'media-messages';
 import { insert, selectOne } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
@@ -11,7 +10,7 @@ describe('SeasonPublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new SeasonUnpublishedEventHandler(ctx.loginPool, ctx.config);
+    handler = new SeasonUnpublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -31,21 +30,18 @@ describe('SeasonPublishEventHandler', () => {
         description: 'Some description',
       }).run(ctx.ownerPool);
 
-      const message: SeasonUnpublishedEvent = { content_id: 'season-1' };
-      const messageInfo = stub<MessageInfo<SeasonUnpublishedEvent>>({
-        envelope: {
-          auth_token: 'no-token',
-          payload: message,
-        },
-      });
+      const message = {
+        payload: { content_id: 'season-1' },
+      } as unknown as TypedTransactionalMessage<SeasonUnpublishedEvent>;
 
       // Act
-      await handler.onMessage(message, messageInfo);
-
+      await ctx.executeGqlSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
       // Assert
-      const season = await selectOne('season', { id: message.content_id }).run(
-        ctx.ownerPool,
-      );
+      const season = await selectOne('season', {
+        id: message.payload.content_id,
+      }).run(ctx.ownerPool);
 
       expect(season).toBeUndefined();
     });
