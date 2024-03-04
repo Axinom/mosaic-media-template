@@ -289,7 +289,7 @@ describe('Start Ingest Item Handler', () => {
         .spyOn(processor, 'getOrchestrationData')
         .mockImplementation(() => [mockItem, mockItem2, mockItem3]);
 
-      const content: StartIngestItemCommand = {
+      const payload: StartIngestItemCommand = {
         ingest_item_id: item1.id,
         entity_id: 1,
         item: {
@@ -300,7 +300,9 @@ describe('Start Ingest Item Handler', () => {
       };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx),
+      );
 
       // Assert
       const items = await select('ingest_items', all, { columns: ['id'] }).run(
@@ -324,21 +326,21 @@ describe('Start Ingest Item Handler', () => {
         {
           key: MediaServiceMessagingSettings.UpdateMetadata.messageType,
           payload: { test: 'payload' },
-          overrides: {
+          envelopeOverrides: {
             auth_token: 'test',
             message_context: { test: 'context' },
           },
-          config: undefined,
+          options: undefined,
         },
         {
           key: VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
             .messageType,
           payload: { test: 'payload' },
-          overrides: {
+          envelopeOverrides: {
             auth_token: 'test',
             message_context: { test: 'context' },
           },
-          config: {
+          options: {
             routingKey: `${
               VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
                 .serviceId

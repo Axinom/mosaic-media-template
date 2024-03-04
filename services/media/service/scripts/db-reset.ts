@@ -11,6 +11,7 @@ async function main(): Promise<void> {
   console.log('1. Validating Config...');
 
   const config = getValidatedConfig(getBasicDbConfigDefinitions());
+
   console.log('2. Initializing ROOT Database Connection...');
   const rootPgPool = await initializePgPool(config.pgRootConnectionString);
 
@@ -23,8 +24,6 @@ async function main(): Promise<void> {
     config.dbLoginPassword,
     config.dbOwner,
     config.dbOwnerPassword,
-    undefined,
-    true,
   );
 
   console.log('4. Closing ROOT Database Connection...');

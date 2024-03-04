@@ -21,7 +21,7 @@ async function main(): Promise<void> {
   };
 
   const migrationSettings = await getMigrationSettings(testConfig);
-  await recreateTestDbTemplate(testDbConfig, migrationSettings, true);
+  await recreateTestDbTemplate(testDbConfig, migrationSettings);
   await createTestDbs(testDbConfig, projectRoot, migrationSettings);
 }
 

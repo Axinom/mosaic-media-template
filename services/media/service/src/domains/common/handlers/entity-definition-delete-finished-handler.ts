@@ -1,29 +1,36 @@
-import { MessageHandler } from '@axinom/mosaic-message-bus';
 import {
   EntityDefinitionDeleteFinishedEvent,
   LocalizationServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { Config } from '../../../common';
 
-export class EntityDefinitionDeleteFinishedHandler extends MessageHandler<EntityDefinitionDeleteFinishedEvent> {
-  private logger: Logger;
-  constructor(private config: Config) {
+export class EntityDefinitionDeleteFinishedHandler extends TransactionalInboxMessageHandler<
+  EntityDefinitionDeleteFinishedEvent,
+  Config
+> {
+  constructor(config: Config) {
     super(
-      LocalizationServiceMultiTenantMessagingSettings
-        .EntityDefinitionDeleteFinished.messageType,
-    );
-    this.logger = new Logger({
+      LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeleteFinished,
+      new Logger({
+        config,
+        context: EntityDefinitionDeleteFinishedHandler.name,
+      }),
       config,
-      context: EntityDefinitionDeleteFinishedHandler.name,
-    });
+    );
   }
 
-  async onMessage(content: EntityDefinitionDeleteFinishedEvent): Promise<void> {
-    if (content.service_id === this.config.serviceId) {
+  async handleMessage({
+    payload,
+  }: TypedTransactionalMessage<EntityDefinitionDeleteFinishedEvent>): Promise<void> {
+    if (payload.service_id === this.config.serviceId) {
       this.logger.log({
         message: 'Entity Definition delete command has succeeded!',
-        details: { ...content },
+        details: { ...payload },
       });
     }
   }
