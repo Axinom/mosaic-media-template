@@ -386,10 +386,10 @@
     pg "^8.11.3"
     pg-transactional-outbox "^0.5.1"
 
-"@axinom/mosaic-ui@0.43.0":
-  version "0.43.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.43.0.tgz#895a247df511c5b16ba1cce2314399d29331a3e4"
-  integrity sha512-3GmoXtmcXeZboRouEa+MBXg0PvS07Cu7X8/6f2HM+pMuqxMRSJHQ5AOgFasRhNgNDRY/1TIgcgYki7/eEsyrxQ==
+"@axinom/mosaic-ui@0.43.1":
+  version "0.43.1"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.43.1.tgz#3fae14078e8c37f64ec7af8afc4855d89f7ddc7c"
+  integrity sha512-ttW8tBT9pUpLePPq+lAfjZoizjmbR6M7wIoQCT209W5a7Ym2s0cMn73qNDPHj9kokyf4H5t9C4tP9Q3DEKmJ7g==
   dependencies:
     "@axinom/mosaic-core" "^0.4.16"
     "@faker-js/faker" "^7.4.0"
