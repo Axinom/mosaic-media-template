@@ -2,7 +2,9 @@ import {
   AuthenticatedManagementSubject,
   AuthenticatedManagementSubjectMessageInfo,
 } from '@axinom/mosaic-id-guard';
+import { ClaimSetPublishedEvent } from '@axinom/mosaic-messages';
 import { rejectionOf } from '@axinom/mosaic-service-common';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { all, insert, select } from 'zapatos/db';
@@ -21,7 +23,7 @@ describe('ClaimSetPublishedHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new ClaimSetPublishedHandler(ctx.ownerPool, ctx.config);
+    handler = new ClaimSetPublishedHandler(ctx.config);
     user = createTestUser({ name: 'Monetization Admin' });
     message = stub<AuthenticatedManagementSubjectMessageInfo>({
       envelope: {
@@ -42,16 +44,20 @@ describe('ClaimSetPublishedHandler', () => {
   });
 
   it('new claim set received - claim set saved', async () => {
-    // Act
-    await handler.onMessage(
-      {
+    // Arrange
+    const message = {
+      payload: {
         key: 'PREMIUM',
         title: 'Premium',
         claims: ['ENABLE_VIDEOS_DOWNLOAD'],
         custom_unsupported_property:
           'control case to make sure create/update works as expected even with updated message.',
-      } as any,
-      message,
+      },
+    } as unknown as TypedTransactionalMessage<ClaimSetPublishedEvent>;
+
+    // Act
+    await ctx.executeOwnerSql(user, async (dbCtx) =>
+      handler.handleMessage(message, dbCtx),
     );
 
     // Assert
@@ -78,18 +84,20 @@ describe('ClaimSetPublishedHandler', () => {
       description: 'Desc 1',
       claims: ['ENTITY_TYPE_MOVIES'],
     }).run(ctx.ownerPool);
-
-    // Act
-    await handler.onMessage(
-      {
+    const message = {
+      payload: {
         key: 'BASIC',
         title: 'Default',
         description: 'Desc 2',
         claims: ['ENTITY_TYPE_EPISODES'],
         custom_unsupported_property:
           'control case to make sure create/update works as expected even with updated message.',
-      } as any,
-      message,
+      },
+    } as unknown as TypedTransactionalMessage<ClaimSetPublishedEvent>;
+
+    // Act
+    await ctx.executeOwnerSql(user, async (dbCtx) =>
+      handler.handleMessage(message, dbCtx),
     );
 
     // Assert
@@ -110,26 +118,30 @@ describe('ClaimSetPublishedHandler', () => {
 
   it('claim set with invalid claim - error thrown', async () => {
     // Arrange
-    const content = {
-      key: 'PREMIUM',
-      title: 'Premium',
-      claims: [
-        'ENTITY_TYPE_MOVIES',
-        'ENTITY_TYPE_EPISODES',
-        'TEST_VALUE',
-        'ENABLE_VIDEOS_DOWNLOAD',
-      ],
-    };
+    const message = {
+      payload: {
+        key: 'PREMIUM',
+        title: 'Premium',
+        claims: [
+          'ENTITY_TYPE_MOVIES',
+          'ENTITY_TYPE_EPISODES',
+          'TEST_VALUE',
+          'ENABLE_VIDEOS_DOWNLOAD',
+        ],
+      },
+    } as unknown as TypedTransactionalMessage<ClaimSetPublishedEvent>;
 
     // Act
-    const error = await rejectionOf(handler.onMessage(content, message));
+    const error = await ctx.executeOwnerSql(user, async (dbCtx) => {
+      return rejectionOf(handler.handleMessage(message, dbCtx));
+    });
 
     // Assert
     expect(error.message).toEqual(
       'Unable to create or update claims set, because it contains invalid claims.',
     );
     expect(error.details).toEqual({
-      content,
+      payload: message.payload,
       invalidClaims: ['TEST_VALUE'],
     });
 

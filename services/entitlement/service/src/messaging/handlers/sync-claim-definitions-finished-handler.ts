@@ -1,30 +1,31 @@
-import { MessageHandler } from '@axinom/mosaic-message-bus';
 import {
   MonetizationGrantsServiceMultiTenantMessagingSettings,
   SynchronizeClaimDefinitionsFinishedEvent,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { Config } from '../../common';
+import { EntitlementAuthenticatedTransactionalMessageHandler } from './entitlement-authenticated-message-handler';
 
-export class SyncClaimDefinitionsFinishedHandler extends MessageHandler<SynchronizeClaimDefinitionsFinishedEvent> {
-  private logger: Logger;
+export class SyncClaimDefinitionsFinishedHandler extends EntitlementAuthenticatedTransactionalMessageHandler<SynchronizeClaimDefinitionsFinishedEvent> {
   constructor(config: Config) {
     super(
-      MonetizationGrantsServiceMultiTenantMessagingSettings
-        .SynchronizeClaimDefinitionsFinished.messageType,
-    );
-    this.logger = new Logger({
+      MonetizationGrantsServiceMultiTenantMessagingSettings.SynchronizeClaimDefinitionsFinished,
+      new Logger({
+        config,
+        context: SyncClaimDefinitionsFinishedHandler.name,
+      }),
+      'ax-monetization-grants-service',
       config,
-      context: SyncClaimDefinitionsFinishedHandler.name,
-    });
+    );
   }
 
-  async onMessage(
-    content: SynchronizeClaimDefinitionsFinishedEvent,
-  ): Promise<void> {
+  override async handleMessage({
+    payload,
+  }: TypedTransactionalMessage<SynchronizeClaimDefinitionsFinishedEvent>): Promise<void> {
     this.logger.log({
       message: 'Claim Definitions synchronization has succeeded!',
-      details: { ...content },
+      details: { ...payload },
     });
   }
 }

@@ -1,8 +1,6 @@
 import {
   createPostgresPoolConnectivityMetric,
   getLoginPgPool,
-  getOwnerPgPool,
-  initMessagingCounter,
   setupLoginPgPool,
   setupOwnerPgPool,
 } from '@axinom/mosaic-db-common';
@@ -11,10 +9,7 @@ import {
   IdGuardErrors,
   setupEndUserAuthentication,
 } from '@axinom/mosaic-id-guard';
-import {
-  createRabbitMQConnectivityMetric,
-  setupMessagingBroker,
-} from '@axinom/mosaic-message-bus';
+import { createRabbitMQConnectivityMetric } from '@axinom/mosaic-message-bus';
 import {
   closeHttpServer,
   handleGlobalErrors,
@@ -41,7 +36,6 @@ import {
   syncClaimDefinitions,
 } from './domains';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
-import { getMessagingMiddleware } from './messaging';
 import { registerMessaging } from './messaging/register-messaging';
 import { updateGeoDatabase } from './update-geo-database';
 
@@ -73,7 +67,7 @@ async function bootstrap(): Promise<void> {
 
   const shutdownActions = setupShutdownActions(app, logger);
   const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
-  setupOwnerPgPool(
+  const ownerPgPool = setupOwnerPgPool(
     app,
     config.dbOwnerConnectionString,
     logger,
@@ -88,17 +82,13 @@ async function bootstrap(): Promise<void> {
     poolConfig,
   );
 
-  const counter = initMessagingCounter(getOwnerPgPool(app));
-  const broker = await setupMessagingBroker({
+  // Configure messaging: subscribe to topics, create queues, register handlers, start transactional outbox/inbox listeners
+  const { broker, storeOutboxMessage } = await registerMessaging(
     app,
+    ownerPgPool,
     config,
-    builders: registerMessaging(app, config),
-    logger,
     shutdownActions,
-    onMessageMiddleware: getMessagingMiddleware(config, logger),
-    components: { counters: { postgresCounter: counter } },
-    rascalConfigExportPath: './src/generated/messaging/rascal-schema.json',
-  });
+  );
 
   setupMonitoring(config, {
     metrics: [
@@ -107,7 +97,7 @@ async function bootstrap(): Promise<void> {
     ],
   });
 
-  await syncClaimDefinitions(broker, config);
+  await syncClaimDefinitions(storeOutboxMessage, ownerPgPool, config);
 
   const authConfig: AuthenticationConfig = {
     tenantId: config.tenantId,
