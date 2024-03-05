@@ -3099,6 +3099,13 @@ CREATE INDEX idx_episode_videos_type ON app_public.episode_videos USING btree (t
 
 
 --
+-- Name: idx_movie_audio_languages; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_audio_languages ON app_public.movie USING btree (audio_languages);
+
+
+--
 -- Name: idx_movie_genre_order_no; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -3127,10 +3134,45 @@ CREATE INDEX idx_movie_genres_relation_order_no ON app_public.movie_genres_relat
 
 
 --
+-- Name: idx_movie_licenses_countries; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_licenses_countries ON app_public.movie_licenses USING btree (countries);
+
+
+--
+-- Name: idx_movie_licenses_end_time; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_licenses_end_time ON app_public.movie_licenses USING btree (end_time);
+
+
+--
 -- Name: idx_movie_licenses_movie_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
 CREATE INDEX idx_movie_licenses_movie_id ON app_public.movie_licenses USING btree (movie_id);
+
+
+--
+-- Name: idx_movie_licenses_start_time; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_licenses_start_time ON app_public.movie_licenses USING btree (start_time);
+
+
+--
+-- Name: idx_movie_movie_cast; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_movie_cast ON app_public.movie USING btree (movie_cast);
+
+
+--
+-- Name: idx_movie_tags; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_tags ON app_public.movie USING btree (tags);
 
 
 --
@@ -3239,6 +3281,41 @@ CREATE INDEX idx_season_videos_season_id ON app_public.season_videos USING btree
 
 
 --
+-- Name: idx_trgm_movie_extended_field; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_movie_extended_field ON app_public.movie USING gin (extended_field public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_movie_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_movie_title ON app_public.movie USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_tvshow_extended_field; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_tvshow_extended_field ON app_public.tvshow USING gin (extended_field public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_tvshow_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_tvshow_title ON app_public.tvshow USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_tvshow_audio_languages; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_audio_languages ON app_public.tvshow USING btree (audio_languages);
+
+
+--
 -- Name: idx_tvshow_genre_order_no; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -3274,10 +3351,45 @@ CREATE INDEX idx_tvshow_images_tvshow_id ON app_public.tvshow_images USING btree
 
 
 --
+-- Name: idx_tvshow_licenses_countries; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_licenses_countries ON app_public.tvshow_licenses USING btree (countries);
+
+
+--
+-- Name: idx_tvshow_licenses_end_time; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_licenses_end_time ON app_public.tvshow_licenses USING btree (end_time);
+
+
+--
+-- Name: idx_tvshow_licenses_start_time; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_licenses_start_time ON app_public.tvshow_licenses USING btree (start_time);
+
+
+--
 -- Name: idx_tvshow_licenses_tvshow_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
 CREATE INDEX idx_tvshow_licenses_tvshow_id ON app_public.tvshow_licenses USING btree (tvshow_id);
+
+
+--
+-- Name: idx_tvshow_tags; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_tags ON app_public.tvshow USING btree (tags);
+
+
+--
+-- Name: idx_tvshow_tvshow_cast; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_tvshow_cast ON app_public.tvshow USING btree (tvshow_cast);
 
 
 --
