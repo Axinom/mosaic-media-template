@@ -1,46 +1,42 @@
-import { OwnerPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
-import { MessageInfo } from '@axinom/mosaic-message-bus';
 import {
   ClaimSetPublishedEvent,
   MonetizationGrantsServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
-import { difference, MosaicError } from '@axinom/mosaic-service-common';
-import { IsolationLevel, upsert } from 'zapatos/db';
+import { difference, Logger, MosaicError } from '@axinom/mosaic-service-common';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { ClientBase } from 'pg';
+import { upsert } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
 import { validClaims } from '../../domains';
-import { EntitlementAuthenticatedMessageHandler } from './entitlement-authenticated-message-handler';
+import { EntitlementAuthenticatedTransactionalMessageHandler } from './entitlement-authenticated-message-handler';
 
-export class ClaimSetPublishedHandler extends EntitlementAuthenticatedMessageHandler<ClaimSetPublishedEvent> {
-  constructor(private readonly ownerPool: OwnerPgPool, config: Config) {
+export class ClaimSetPublishedHandler extends EntitlementAuthenticatedTransactionalMessageHandler<ClaimSetPublishedEvent> {
+  constructor(config: Config) {
     super(
-      MonetizationGrantsServiceMultiTenantMessagingSettings.ClaimSetPublished
-        .messageType,
+      MonetizationGrantsServiceMultiTenantMessagingSettings.ClaimSetPublished,
+      new Logger({
+        config,
+        context: ClaimSetPublishedHandler.name,
+      }),
       config,
     );
   }
 
-  async onMessage(
-    content: ClaimSetPublishedEvent,
-    message: MessageInfo,
+  override async handleMessage(
+    { payload }: TypedTransactionalMessage<ClaimSetPublishedEvent>,
+    ownerClient: ClientBase,
   ): Promise<void> {
-    const invalidClaims = difference(content.claims, validClaims);
+    const invalidClaims = difference(payload.claims, validClaims);
     if (invalidClaims.length > 0) {
       throw new MosaicError({
         ...CommonErrors.InvalidClaimsInClaimSet,
-        details: { invalidClaims, content },
+        details: { invalidClaims, payload },
       });
     }
 
-    const { key, title, description, claims } = content;
-    await transactionWithContext(
-      this.ownerPool,
-      IsolationLevel.Serializable,
-      this.getPgSettings(message),
-      async (ctx) => {
-        await upsert('claim_sets', { key, title, description, claims }, [
-          'key',
-        ]).run(ctx);
-      },
-    );
+    const { key, title, description, claims } = payload;
+    await upsert('claim_sets', { key, title, description, claims }, [
+      'key',
+    ]).run(ownerClient);
   }
 }

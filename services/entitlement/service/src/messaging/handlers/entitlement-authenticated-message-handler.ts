@@ -1,48 +1,75 @@
-import { buildAuthPgSettings } from '@axinom/mosaic-db-common';
 import {
-  AuthenticatedManagementSubject,
-  authenticationMiddleware,
-  getMessageInfoManagementSubject,
+  buildAuthPgSettings,
+  setPgSettingsConfig,
+} from '@axinom/mosaic-db-common';
+import {
+  getAuthenticatedManagementSubject,
+  GuardedContext,
+  IdGuardErrors,
 } from '@axinom/mosaic-id-guard';
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
-  MessageHandler,
-  MessageInfo,
-  OnMessageMiddleware,
-} from '@axinom/mosaic-message-bus';
-import { Dict } from '@axinom/mosaic-service-common';
-import { SubscriptionConfig } from 'rascal';
+  Logger,
+  MosaicError,
+  MosaicErrors,
+} from '@axinom/mosaic-service-common';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
+import { DatabaseClient } from 'pg-transactional-outbox';
 import { Config } from '../../common';
 
 /**
- * Guard a message handler by getting and verifying the JWT token. It changes
- * the `MessageInfo` parameter to `AuthenticatedMessageInfo` which contains the
- * JWT token subject.
- * In addition it checks that the subjects permission match the required ones.
+ * Abstract message handler to verify permissions of the message producing service
  */
-export abstract class EntitlementAuthenticatedMessageHandler<
-  TContent,
-> extends MessageHandler<TContent> {
+export abstract class EntitlementAuthenticatedTransactionalMessageHandler<
+  T,
+> extends TransactionalInboxMessageHandler<T, Config> {
   constructor(
-    messagingKey: string,
-    protected readonly config: Config,
-    overrides?: SubscriptionConfig,
-    middleware: OnMessageMiddleware[] = [],
+    messagingSettings: MessagingSettings,
+    logger: Logger,
+    config: Config,
   ) {
-    super(messagingKey, overrides, [
-      ...middleware,
-      authenticationMiddleware({
-        tenantId: config.tenantId,
-        environmentId: config.environmentId,
-        authEndpoint: config.idServiceAuthBaseUrl,
-      }),
-    ]);
-  }
+    const messageProducerServiceId = messagingSettings.serviceId;
+    if (!messageProducerServiceId) {
+      throw new MosaicError({
+        message:
+          'The service ID was not provided for the EntitlementAuthenticatedTransactionalMessageHandler messaging settings.',
+        code: MosaicErrors.AssertionFailed.code,
+      });
+    }
 
-  protected getPgSettings(message: MessageInfo): Dict<string> {
-    return buildAuthPgSettings(this.getSubject(message), this.config.serviceId);
-  }
+    const authWrapper = async <TMessage>(
+      message: TypedTransactionalMessage<TMessage>,
+      dbClient: DatabaseClient,
+    ): Promise<GuardedContext> => {
+      const token = message.metadata.authToken;
+      if (token === undefined) {
+        throw new MosaicError(IdGuardErrors.AccessTokenRequired);
+      }
+      const subject = await getAuthenticatedManagementSubject(token, {
+        tenantId: this.config.tenantId,
+        environmentId: this.config.environmentId,
+        authEndpoint: this.config.idServiceAuthBaseUrl,
+      });
+      // Check that the message producer had permissions on that service
+      const subjectPermissions =
+        subject.permissions?.[messageProducerServiceId];
+      if (
+        subjectPermissions === undefined ||
+        !Array.isArray(subjectPermissions)
+      ) {
+        throw new MosaicError({
+          code: IdGuardErrors.Unauthorized.code,
+          message: `Permission check failed as the subject has no permissions for the ${messageProducerServiceId} service.`,
+        });
+      }
+      const pgSettings = buildAuthPgSettings(subject, messageProducerServiceId);
+      await setPgSettingsConfig(pgSettings, dbClient);
+      return { subject };
+    };
 
-  protected getSubject(message: MessageInfo): AuthenticatedManagementSubject {
-    return getMessageInfoManagementSubject(message);
+    super(messagingSettings, logger, config, authWrapper);
   }
 }
