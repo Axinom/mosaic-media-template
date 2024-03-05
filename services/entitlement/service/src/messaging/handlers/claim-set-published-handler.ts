@@ -18,7 +18,6 @@ export class ClaimSetPublishedHandler extends EntitlementAuthenticatedTransactio
         config,
         context: ClaimSetPublishedHandler.name,
       }),
-      'ax-monetization-grants-service',
       config,
     );
   }

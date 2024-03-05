@@ -72,7 +72,6 @@ export const registerMessaging = async (
   registerTransactionalInboxHandlers(
     config,
     inboxConfig,
-    storeOutboxMessage,
     logMapper,
     shutdownActions,
   );
@@ -100,7 +99,6 @@ export const registerMessaging = async (
 const registerTransactionalInboxHandlers = (
   config: Config,
   inboxConfig: PollingListenerConfig,
-  storeOutboxMessage: StoreOutboxMessage,
   logMapper: TransactionalLogMapper,
   shutdownActions: ShutdownActionsMiddleware,
 ): void => {

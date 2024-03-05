@@ -15,7 +15,6 @@ export class SyncClaimDefinitionsFailedHandler extends EntitlementAuthenticatedT
         config,
         context: SyncClaimDefinitionsFailedHandler.name,
       }),
-      'ax-monetization-grants-service',
       config,
     );
   }

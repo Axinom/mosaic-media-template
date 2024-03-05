@@ -17,7 +17,6 @@ export class SubscriptionPlanPublishedHandler extends EntitlementAuthenticatedTr
         config,
         context: SubscriptionPlanPublishedHandler.name,
       }),
-      'ax-subscription-monetization-service',
       config,
     );
   }

@@ -17,7 +17,6 @@ export class ClaimSetUnpublishedHandler extends EntitlementAuthenticatedTransact
         config,
         context: ClaimSetUnpublishedHandler.name,
       }),
-      'ax-monetization-grants-service',
       config,
     );
   }

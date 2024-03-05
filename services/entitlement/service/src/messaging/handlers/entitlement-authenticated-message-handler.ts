@@ -8,7 +8,11 @@ import {
   IdGuardErrors,
 } from '@axinom/mosaic-id-guard';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { Logger, MosaicError } from '@axinom/mosaic-service-common';
+import {
+  Logger,
+  MosaicError,
+  MosaicErrors,
+} from '@axinom/mosaic-service-common';
 import {
   TransactionalInboxMessageHandler,
   TypedTransactionalMessage,
@@ -17,7 +21,7 @@ import { DatabaseClient } from 'pg-transactional-outbox';
 import { Config } from '../../common';
 
 /**
- * Custom channel message handler to verify channel permissions
+ * Abstract message handler to verify permissions of the message producing service
  */
 export abstract class EntitlementAuthenticatedTransactionalMessageHandler<
   T,
@@ -25,11 +29,17 @@ export abstract class EntitlementAuthenticatedTransactionalMessageHandler<
   constructor(
     messagingSettings: MessagingSettings,
     logger: Logger,
-    messageProducerService:
-      | 'ax-monetization-grants-service'
-      | 'ax-subscription-monetization-service',
     config: Config,
   ) {
+    const messageProducerServiceId = messagingSettings.serviceId;
+    if (!messageProducerServiceId) {
+      throw new MosaicError({
+        message:
+          'The service ID was not provided for the EntitlementAuthenticatedTransactionalMessageHandler messaging settings.',
+        code: MosaicErrors.AssertionFailed.code,
+      });
+    }
+
     const authWrapper = async <TMessage>(
       message: TypedTransactionalMessage<TMessage>,
       dbClient: DatabaseClient,
@@ -43,23 +53,23 @@ export abstract class EntitlementAuthenticatedTransactionalMessageHandler<
         environmentId: this.config.environmentId,
         authEndpoint: this.config.idServiceAuthBaseUrl,
       });
-
       // Check that the message producer had permissions on that service
-      const subjectPermissions = subject.permissions?.[messageProducerService];
+      const subjectPermissions =
+        subject.permissions?.[messageProducerServiceId];
       if (
         subjectPermissions === undefined ||
         !Array.isArray(subjectPermissions)
       ) {
         throw new MosaicError({
           code: IdGuardErrors.Unauthorized.code,
-          message: `Permission check failed as the subject has no permissions for the Channel Service.`,
+          message: `Permission check failed as the subject has no permissions for the ${messageProducerServiceId} service.`,
         });
       }
-
-      const pgSettings = buildAuthPgSettings(subject, messageProducerService);
+      const pgSettings = buildAuthPgSettings(subject, messageProducerServiceId);
       await setPgSettingsConfig(pgSettings, dbClient);
       return { subject };
     };
+
     super(messagingSettings, logger, config, authWrapper);
   }
 }
