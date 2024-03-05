@@ -1754,7 +1754,20 @@ CREATE TABLE app_public.episode (
     released timestamp with time zone,
     episode_cast text[],
     tags text[],
-    production_countries text[]
+    production_countries text[],
+    directors text[],
+    credits_start_time text,
+    length_in_seconds numeric(13,5),
+    dynamic_field text,
+    extended_field text,
+    rating numeric(18,2),
+    custom_rating text,
+    age_rating text,
+    asset_type integer,
+    asset_subtype text,
+    tvshow_id text,
+    intro_start_time text,
+    intro_end_time text
 );
 
 
@@ -1821,7 +1834,12 @@ CREATE TABLE app_public.episode_licenses (
     episode_id text,
     countries text[],
     start_time timestamp with time zone,
-    end_time timestamp with time zone
+    end_time timestamp with time zone,
+    is_downloadable boolean,
+    downloaded_asset_lifespan integer,
+    business_type text,
+    tier text,
+    content_owner text
 );
 
 
@@ -1923,7 +1941,10 @@ CREATE TABLE app_public.episode_videos (
     dash_manifest text,
     hls_manifest text,
     is_protected boolean,
-    output_format text
+    output_format text,
+    drm_key_id text,
+    file_size_in_bytes bigint,
+    main_url text
 );
 
 
@@ -1955,7 +1976,21 @@ CREATE TABLE app_public.movie (
     released timestamp with time zone,
     movie_cast text[],
     production_countries text[],
-    tags text[]
+    tags text[],
+    audio_languages text[],
+    caption_languages text[],
+    subtitle_languages text[],
+    directors text[],
+    business_type text,
+    credits_start_time text,
+    length_in_seconds numeric(13,5),
+    dynamic_field text,
+    extended_field text,
+    rating numeric(18,2),
+    custom_rating text,
+    age_rating text,
+    asset_type integer,
+    asset_subtype text
 );
 
 
@@ -2033,7 +2068,12 @@ CREATE TABLE app_public.movie_licenses (
     movie_id text,
     countries text[],
     start_time timestamp with time zone,
-    end_time timestamp with time zone
+    end_time timestamp with time zone,
+    is_downloadable boolean,
+    downloaded_asset_lifespan integer,
+    business_type text,
+    tier text,
+    content_owner text
 );
 
 
@@ -2135,7 +2175,10 @@ CREATE TABLE app_public.movie_videos (
     dash_manifest text,
     hls_manifest text,
     is_protected boolean,
-    output_format text
+    output_format text,
+    drm_key_id text,
+    file_size_in_bytes bigint,
+    main_url text
 );
 
 
@@ -2167,7 +2210,15 @@ CREATE TABLE app_public.season (
     released timestamp with time zone,
     season_cast text[],
     production_countries text[],
-    tags text[]
+    tags text[],
+    directors text[],
+    dynamic_field text,
+    extended_field text,
+    rating numeric(18,2),
+    custom_rating text,
+    age_rating text,
+    asset_type integer,
+    asset_subtype text
 );
 
 
@@ -2234,7 +2285,12 @@ CREATE TABLE app_public.season_licenses (
     season_id text,
     countries text[],
     start_time timestamp with time zone,
-    end_time timestamp with time zone
+    end_time timestamp with time zone,
+    is_downloadable boolean,
+    downloaded_asset_lifespan integer,
+    business_type text,
+    tier text,
+    content_owner text
 );
 
 
@@ -2336,7 +2392,10 @@ CREATE TABLE app_public.season_videos (
     dash_manifest text,
     hls_manifest text,
     is_protected boolean,
-    output_format text
+    output_format text,
+    drm_key_id text,
+    file_size_in_bytes bigint,
+    main_url text
 );
 
 
@@ -2368,7 +2427,19 @@ CREATE TABLE app_public.tvshow (
     released timestamp with time zone,
     tvshow_cast text[],
     production_countries text[],
-    tags text[]
+    tags text[],
+    audio_languages text[],
+    caption_languages text[],
+    subtitle_languages text[],
+    directors text[],
+    business_type text,
+    dynamic_field text,
+    extended_field text,
+    rating numeric(18,2),
+    custom_rating text,
+    age_rating text,
+    asset_type integer,
+    asset_subtype text
 );
 
 
@@ -2446,7 +2517,12 @@ CREATE TABLE app_public.tvshow_licenses (
     tvshow_id text,
     countries text[],
     start_time timestamp with time zone,
-    end_time timestamp with time zone
+    end_time timestamp with time zone,
+    is_downloadable boolean,
+    downloaded_asset_lifespan integer,
+    business_type text,
+    tier text,
+    content_owner text
 );
 
 
@@ -2548,7 +2624,10 @@ CREATE TABLE app_public.tvshow_videos (
     dash_manifest text,
     hls_manifest text,
     is_protected boolean,
-    output_format text
+    output_format text,
+    drm_key_id text,
+    file_size_in_bytes bigint,
+    main_url text
 );
 
 
@@ -2975,6 +3054,13 @@ CREATE INDEX idx_episode_licenses_episode_id ON app_public.episode_licenses USIN
 --
 
 CREATE INDEX idx_episode_season_id ON app_public.episode USING btree (season_id);
+
+
+--
+-- Name: idx_episode_tvshow_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_episode_tvshow_id ON app_public.episode USING btree (tvshow_id);
 
 
 --
@@ -4182,6 +4268,97 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode TO catalog_service
 
 
 --
+-- Name: COLUMN episode.directors; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(directors),UPDATE(directors) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.credits_start_time; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(credits_start_time),UPDATE(credits_start_time) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.length_in_seconds; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(length_in_seconds),UPDATE(length_in_seconds) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.dynamic_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.extended_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.custom_rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.age_rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(age_rating),UPDATE(age_rating) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.asset_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.asset_subtype; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.tvshow_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(tvshow_id),UPDATE(tvshow_id) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.intro_start_time; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(intro_start_time),UPDATE(intro_start_time) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode.intro_end_time; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(intro_end_time),UPDATE(intro_end_time) ON TABLE app_public.episode TO catalog_service_gql_role;
+
+
+--
 -- Name: TABLE episode_genres_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -4214,6 +4391,41 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_images_id_seq TO catalog_servi
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode_licenses.business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode_licenses.tier; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(tier),UPDATE(tier) ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode_licenses.content_owner; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
 
 
 --
@@ -4259,6 +4471,27 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_videos TO catalog_
 
 
 --
+-- Name: COLUMN episode_videos.drm_key_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(drm_key_id),UPDATE(drm_key_id) ON TABLE app_public.episode_videos TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode_videos.file_size_in_bytes; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(file_size_in_bytes),UPDATE(file_size_in_bytes) ON TABLE app_public.episode_videos TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN episode_videos.main_url; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(main_url),UPDATE(main_url) ON TABLE app_public.episode_videos TO catalog_service_gql_role;
+
+
+--
 -- Name: SEQUENCE episode_videos_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -4270,6 +4503,104 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_videos_id_seq TO catalog_servi
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.audio_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(audio_languages),UPDATE(audio_languages) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.caption_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(caption_languages),UPDATE(caption_languages) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.subtitle_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(subtitle_languages),UPDATE(subtitle_languages) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.directors; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(directors),UPDATE(directors) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.credits_start_time; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(credits_start_time),UPDATE(credits_start_time) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.length_in_seconds; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(length_in_seconds),UPDATE(length_in_seconds) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.dynamic_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.extended_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.custom_rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.age_rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(age_rating),UPDATE(age_rating) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.asset_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.movie TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie.asset_subtype; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.movie TO catalog_service_gql_role;
 
 
 --
@@ -4315,6 +4646,41 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_licenses TO catalog_
 
 
 --
+-- Name: COLUMN movie_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie_licenses.business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie_licenses.tier; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(tier),UPDATE(tier) ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie_licenses.content_owner; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
+
+
+--
 -- Name: SEQUENCE movie_licenses_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -4357,6 +4723,27 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_videos TO catalog_se
 
 
 --
+-- Name: COLUMN movie_videos.drm_key_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(drm_key_id),UPDATE(drm_key_id) ON TABLE app_public.movie_videos TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie_videos.file_size_in_bytes; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(file_size_in_bytes),UPDATE(file_size_in_bytes) ON TABLE app_public.movie_videos TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN movie_videos.main_url; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(main_url),UPDATE(main_url) ON TABLE app_public.movie_videos TO catalog_service_gql_role;
+
+
+--
 -- Name: SEQUENCE movie_videos_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -4368,6 +4755,62 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_videos_id_seq TO catalog_service
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season.directors; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(directors),UPDATE(directors) ON TABLE app_public.season TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season.dynamic_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.season TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season.extended_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.season TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season.rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.season TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season.custom_rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.season TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season.age_rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(age_rating),UPDATE(age_rating) ON TABLE app_public.season TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season.asset_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.season TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season.asset_subtype; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.season TO catalog_service_gql_role;
 
 
 --
@@ -4403,6 +4846,41 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_images_id_seq TO catalog_servic
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.season_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.season_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season_licenses.business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.season_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season_licenses.tier; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(tier),UPDATE(tier) ON TABLE app_public.season_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season_licenses.content_owner; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.season_licenses TO catalog_service_gql_role;
 
 
 --
@@ -4448,6 +4926,27 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_videos TO catalog_s
 
 
 --
+-- Name: COLUMN season_videos.drm_key_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(drm_key_id),UPDATE(drm_key_id) ON TABLE app_public.season_videos TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season_videos.file_size_in_bytes; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(file_size_in_bytes),UPDATE(file_size_in_bytes) ON TABLE app_public.season_videos TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season_videos.main_url; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(main_url),UPDATE(main_url) ON TABLE app_public.season_videos TO catalog_service_gql_role;
+
+
+--
 -- Name: SEQUENCE season_videos_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -4459,6 +4958,90 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_videos_id_seq TO catalog_servic
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.audio_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(audio_languages),UPDATE(audio_languages) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.caption_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(caption_languages),UPDATE(caption_languages) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.subtitle_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(subtitle_languages),UPDATE(subtitle_languages) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.directors; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(directors),UPDATE(directors) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.dynamic_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.extended_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.custom_rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.age_rating; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(age_rating),UPDATE(age_rating) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.asset_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow.asset_subtype; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.tvshow TO catalog_service_gql_role;
 
 
 --
@@ -4504,6 +5087,41 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_licenses TO catalog
 
 
 --
+-- Name: COLUMN tvshow_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow_licenses.business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow_licenses.tier; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(tier),UPDATE(tier) ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow_licenses.content_owner; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
+
+
+--
 -- Name: SEQUENCE tvshow_licenses_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -4543,6 +5161,27 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_video_streams_id_seq TO catalog
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow_videos.drm_key_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(drm_key_id),UPDATE(drm_key_id) ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow_videos.file_size_in_bytes; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(file_size_in_bytes),UPDATE(file_size_in_bytes) ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshow_videos.main_url; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(main_url),UPDATE(main_url) ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
 
 
 --
