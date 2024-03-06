@@ -31,8 +31,6 @@ export const createTestConfig = (
     DATABASE_LOGIN: createTestDbIdentifier(process.env.DATABASE_LOGIN),
     DATABASE_GQL_ROLE: createTestDbIdentifier(process.env.DATABASE_GQL_ROLE),
     IS_LOCALIZATION_ENABLED: 'TRUE',
-    DATABASE_LOCALIZATION_REPLICATION_SLOT:
-      'must-be-defined-to-pass-config-validation',
   };
 
   return getValidatedConfig(

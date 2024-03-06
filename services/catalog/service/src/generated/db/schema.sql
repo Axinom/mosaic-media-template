@@ -4472,6 +4472,13 @@ GRANT ALL ON FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms i
 
 
 --
+-- Name: FUNCTION define_localization_view(localizablefields text[], tablename text, localizationstablename text, fkcolumn text); Type: ACL; Schema: app_private; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_private.define_localization_view(localizablefields text[], tablename text, localizationstablename text, fkcolumn text) FROM PUBLIC;
+
+
+--
 -- Name: FUNCTION column_exists(columnname text, tablename text, schemaname text); Type: ACL; Schema: ax_define; Owner: -
 --
 

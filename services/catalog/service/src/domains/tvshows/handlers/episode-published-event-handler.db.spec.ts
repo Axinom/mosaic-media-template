@@ -1,6 +1,7 @@
 import 'jest-extended';
 import { insert, select, selectOne } from 'zapatos/db';
 import { episode } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   createEpisodePublishedMessage,
   createTestContext,
@@ -95,7 +96,7 @@ describe('EpisodePublishEventHandler', () => {
       expect(licenses).toMatchObject(licenses);
       const localizations = await select(
         'episode_localizations',
-        { episode_id: message.content_id },
+        { episode_id: message.payload.content_id },
         {
           columns: [
             'title',
@@ -107,7 +108,7 @@ describe('EpisodePublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.localizations.map(({ language_tag, ...other }) => ({
+        message.payload.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),

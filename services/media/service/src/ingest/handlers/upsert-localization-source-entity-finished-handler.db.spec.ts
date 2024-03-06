@@ -1,9 +1,13 @@
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import {
   LocalizeEntityCommand,
   UpsertLocalizationSourceEntityFinishedEvent,
 } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
+import {
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { CheckFinishIngestItemCommand, IngestItem } from 'media-messages';
@@ -31,39 +35,34 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
   let step1: ingest_item_steps.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
   let doc1: ingest_documents.JSONSelectable;
-  let messages: CheckFinishIngestItemCommand[] = [];
+  let payloads: CheckFinishIngestItemCommand[] = [];
+  let user: AuthenticatedManagementSubject;
 
-  const createMessage = (messageContext: unknown = {}): MessageInfo => {
-    return stub<MessageInfo>({
-      envelope: {
-        auth_token:
-          'some token value which is not used because we are substituting getPgSettings method and using a stub user',
-        message_context: messageContext,
+  const createMessage = (
+    payload: UpsertLocalizationSourceEntityFinishedEvent,
+    messageContext: unknown,
+  ) =>
+    stub<
+      TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>
+    >({
+      payload,
+      metadata: {
+        messageContext,
       },
     });
-  };
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        _settings: unknown,
-        message: CheckFinishIngestItemCommand,
-      ) => {
-        messages.push(message);
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, _messagingSettings, payload) => {
+        payloads.push(payload as CheckFinishIngestItemCommand);
       },
-    });
-    const user = createTestUser(ctx.config.serviceId);
+    );
+    user = createTestUser(ctx.config.serviceId);
     handler = new UpsertLocalizationSourceEntityFinishedHandler(
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
       ctx.config,
     );
-
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
   });
 
   beforeEach(async () => {
@@ -120,7 +119,7 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
 
   afterEach(async () => {
     await ctx.truncate('ingest_documents');
-    messages = [];
+    payloads = [];
   });
 
   afterAll(async () => {
@@ -131,25 +130,27 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
   describe('onMessage', () => {
     it('message succeeded without errors -> localize entity message sent', async () => {
       // Arrange
-      const content: UpsertLocalizationSourceEntityFinishedEvent = {
+      const payload: UpsertLocalizationSourceEntityFinishedEvent = {
         service_id: ctx.config.serviceId,
         entity_id: '1',
         entity_type: 'movie',
       };
-      const message = createMessage({
+      const context = {
         ingestItemStepId: step1.id,
         ingestItemId: item1.id,
-      });
+      };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload, context), dbCtx),
+      );
 
       // Assert
-      expect(messages).toEqual<LocalizeEntityCommand[]>([
+      expect(payloads).toEqual<LocalizeEntityCommand[]>([
         {
           service_id: ctx.config.serviceId,
-          entity_type: content.entity_type,
-          entity_id: content.entity_id,
+          entity_type: payload.entity_type,
+          entity_id: payload.entity_id,
           localizations: [
             {
               fields: [
@@ -204,15 +205,15 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
   describe('onMessageFailure', () => {
     it('message failed on all retries -> message with error sent', async () => {
       // Arrange
-      const content: UpsertLocalizationSourceEntityFinishedEvent = {
+      const payload: UpsertLocalizationSourceEntityFinishedEvent = {
         service_id: ctx.config.serviceId,
         entity_id: '1',
         entity_type: 'movie',
       };
-      const message = createMessage({
+      const context = {
         ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
         ingestItemId: item1.id,
-      });
+      };
       const error = new MosaicError({
         message:
           'An error occurred while trying to process a response event from the localization service.',
@@ -220,7 +221,14 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
       });
 
       // Act
-      await handler.onMessageFailure(content, message, error);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(
+          error,
+          createMessage(payload, context),
+          dbCtx,
+          false,
+        ),
+      );
 
       // Assert
       const docs = await select('ingest_documents', all).run(ctx.ownerPool);

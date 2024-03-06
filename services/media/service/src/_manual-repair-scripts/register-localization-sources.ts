@@ -6,15 +6,16 @@ import {
   OwnerPgPool,
 } from '@axinom/mosaic-db-common';
 import {
-  RascalConfigBuilder,
-  setupMessagingBroker,
-} from '@axinom/mosaic-message-bus';
-import {
   LocalizationServiceMultiTenantMessagingSettings,
   UpsertLocalizationSourceEntityCommand,
 } from '@axinom/mosaic-messages';
-import { Logger, ShutdownAction, sleep } from '@axinom/mosaic-service-common';
+import { Logger, ShutdownAction } from '@axinom/mosaic-service-common';
+import { setupOutboxStorage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { singularize } from 'inflection';
+import {
+  getOutboxPollingListenerSettings,
+  PollingListenerConfig,
+} from 'pg-transactional-outbox';
 import { all, conditions, parent, select, selectOne } from 'zapatos/db';
 import {
   collections,
@@ -59,11 +60,8 @@ const logger = new Logger({
  * Entities are processed in batches of 1000, queried by ID, starting with the
  * oldest.
  *
- * Before sending out messages, this script will create corresponding localization
- * command queues and bindings (if they do not already exist).
- *
- * This script only sends out messages and does not modify any database rows in
- * the media service.
+ * The messages are stored in the outbox same as all other messages and the
+ * service will handle sending them out during its runtime.
  *
  * Local script call:
  * yarn util:load-vars node dist/_manual-repair-scripts/register-localization-sources.js
@@ -74,19 +72,15 @@ async function main(): Promise<void> {
   const shutdownActions: ShutdownAction[] = [];
 
   logger.log('Creating messaging and DB components...');
-  const builders = [
-    new RascalConfigBuilder(
-      LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
-      config,
-    ).sendCommand(),
-  ];
 
-  const broker = await setupMessagingBroker({
-    config,
-    builders,
-    logger,
-    shutdownActions,
-  });
+  const outboxConfig: PollingListenerConfig = {
+    outboxOrInbox: 'outbox',
+    dbListenerConfig: {
+      connectionString: config.dbOwnerConnectionString,
+    },
+    settings: getOutboxPollingListenerSettings(),
+  };
+  const storeOutboxMessage = setupOutboxStorage(outboxConfig, logger, config);
 
   const ownerPool = createOwnerPgPool(
     config.dbOwnerConnectionString,
@@ -213,22 +207,21 @@ async function main(): Promise<void> {
     const settings =
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity;
     for await (const payload of payloads) {
-      await broker.publish<UpsertLocalizationSourceEntityCommand>(
+      await storeOutboxMessage<UpsertLocalizationSourceEntityCommand>(
         payload.entity_id,
         settings,
         payload,
-        { auth_token: accessToken },
+        ownerPool,
         {
-          routingKey: settings.getEnvironmentRoutingKey({
-            tenantId: config.tenantId,
-            environmentId: config.environmentId,
-          }),
+          envelopeOverrides: { auth_token: accessToken },
+          options: {
+            routingKey: settings.getEnvironmentRoutingKey({
+              tenantId: config.tenantId,
+              environmentId: config.environmentId,
+            }),
+          },
         },
       );
-      // Waiting a little for each message to be sent to make sure that all are
-      // sent before the shutdown actions are initiated, since it might take a
-      // bit of time for broker to actually send out the message.
-      await sleep(100);
     }
   } while (continueMigration);
 
@@ -237,7 +230,7 @@ async function main(): Promise<void> {
   }
 
   logger.log({
-    message: `Migration script finished. See details for summary of sent messages for each entity type.`,
+    message: `Migration script finished. The service will send out the stored messages when its running.`,
     details: { summary: typeMapping },
   });
 }
