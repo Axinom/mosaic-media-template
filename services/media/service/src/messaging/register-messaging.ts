@@ -11,6 +11,7 @@ import { getMessagingMiddleware } from './middleware';
 
 import {
   ImageServiceMultiTenantMessagingSettings,
+  LocalizationServiceMultiTenantMessagingSettings,
   VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { ShutdownActionsMiddleware } from '@axinom/mosaic-service-common';
@@ -33,26 +34,76 @@ import {
   TransactionalMessageHandler,
 } from 'pg-transactional-outbox';
 import {
+  LocalizableCollectionCreatedDbMessageHandler,
+  LocalizableCollectionDeletedDbMessageHandler,
+  LocalizableCollectionImageCreatedDbMessageHandler,
+  LocalizableCollectionImageDeletedDbMessageHandler,
+  LocalizableCollectionImageUpdatedDbMessageHandler,
+  LocalizableCollectionUpdatedDbMessageHandler,
+} from '../domains/collections';
+import {
   CuePointTypesDeclaredHandler,
   CuePointTypesDeclareFailedHandler,
   DeleteEntityHandler,
+  EntityDefinitionDeclareFailedHandler,
+  EntityDefinitionDeclareFinishedHandler,
+  EntityDefinitionDeleteFailedHandler,
+  EntityDefinitionDeleteFinishedHandler,
   ImageTypesDeclaredHandler,
   ImageTypesDeclareFailedHandler,
 } from '../domains/common';
 import { getIngestProcessors } from '../domains/get-ingest-processors';
 import {
+  LocalizableMovieCreatedDbMessageHandler,
+  LocalizableMovieDeletedDbMessageHandler,
+  LocalizableMovieGenreCreatedDbMessageHandler,
+  LocalizableMovieGenreDeletedDbMessageHandler,
+  LocalizableMovieGenreUpdatedDbMessageHandler,
+  LocalizableMovieImageCreatedDbMessageHandler,
+  LocalizableMovieImageDeletedDbMessageHandler,
+  LocalizableMovieImageUpdatedDbMessageHandler,
+  LocalizableMovieUpdatedDbMessageHandler,
+} from '../domains/movies';
+import {
   entityPublishEventSettings,
   publishingProcessors,
 } from '../domains/publishing-definition';
+import {
+  LocalizableEpisodeCreatedDbMessageHandler,
+  LocalizableEpisodeDeletedDbMessageHandler,
+  LocalizableEpisodeImageCreatedDbMessageHandler,
+  LocalizableEpisodeImageDeletedDbMessageHandler,
+  LocalizableEpisodeImageUpdatedDbMessageHandler,
+  LocalizableEpisodeUpdatedDbMessageHandler,
+  LocalizableSeasonCreatedDbMessageHandler,
+  LocalizableSeasonDeletedDbMessageHandler,
+  LocalizableSeasonImageCreatedDbMessageHandler,
+  LocalizableSeasonImageDeletedDbMessageHandler,
+  LocalizableSeasonImageUpdatedDbMessageHandler,
+  LocalizableSeasonUpdatedDbMessageHandler,
+  LocalizableTvshowCreatedDbMessageHandler,
+  LocalizableTvshowDeletedDbMessageHandler,
+  LocalizableTvshowGenreCreatedDbMessageHandler,
+  LocalizableTvshowGenreDeletedDbMessageHandler,
+  LocalizableTvshowGenreUpdatedDbMessageHandler,
+  LocalizableTvshowImageCreatedDbMessageHandler,
+  LocalizableTvshowImageDeletedDbMessageHandler,
+  LocalizableTvshowImageUpdatedDbMessageHandler,
+  LocalizableTvshowUpdatedDbMessageHandler,
+} from '../domains/tvshows';
 import {
   CheckFinishIngestDocumentHandler,
   CheckFinishIngestItemHandler,
   ImageAlreadyExistedHandler,
   ImageCreatedHandler,
   ImageFailedHandler,
+  LocalizeEntityFailedHandler,
+  LocalizeEntityFinishedHandler,
   StartIngestHandler,
   StartIngestItemHandler,
   UpdateMetadataHandler,
+  UpsertLocalizationSourceEntityFailedHandler,
+  UpsertLocalizationSourceEntityFinishedHandler,
   VideoAlreadyExistedHandler,
   VideoCreationStartedHandler,
   VideoFailedHandler,
@@ -130,6 +181,116 @@ const registerTransactionalInboxHandlers = (
   shutdownActions: ShutdownActionsMiddleware,
 ): void => {
   const ingestProcessors = getIngestProcessors(config);
+  const dbMessageHandlers: TransactionalMessageHandler[] = [
+    new LocalizableCollectionCreatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableCollectionUpdatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableCollectionDeletedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableCollectionImageCreatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableCollectionImageUpdatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableCollectionImageDeletedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableMovieCreatedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableMovieUpdatedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableMovieDeletedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableMovieGenreCreatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableMovieGenreUpdatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableMovieGenreDeletedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableMovieImageCreatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableMovieImageUpdatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableMovieImageDeletedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableTvshowCreatedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableTvshowUpdatedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableTvshowDeletedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableTvshowGenreCreatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableTvshowGenreUpdatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableTvshowGenreDeletedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableTvshowImageCreatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableTvshowImageUpdatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableTvshowImageDeletedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableSeasonCreatedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableSeasonUpdatedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableSeasonDeletedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableSeasonImageCreatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableSeasonImageUpdatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableSeasonImageDeletedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableEpisodeCreatedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableEpisodeUpdatedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableEpisodeDeletedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableEpisodeImageCreatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableEpisodeImageUpdatedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new LocalizableEpisodeImageDeletedDbMessageHandler(
+      storeOutboxMessage,
+      config,
+    ),
+  ];
   const publishMessageHandlers: TransactionalMessageHandler[] = [
     new PublishEntityHandler(publishingProcessors, storeOutboxMessage, config),
     new UnpublishEntityHandler(
@@ -162,6 +323,13 @@ const registerTransactionalInboxHandlers = (
     ),
     new ImageCreatedHandler(ingestProcessors, storeOutboxMessage, config),
     new ImageFailedHandler(storeOutboxMessage, config),
+    new UpsertLocalizationSourceEntityFinishedHandler(
+      storeOutboxMessage,
+      config,
+    ),
+    new UpsertLocalizationSourceEntityFailedHandler(storeOutboxMessage, config),
+    new LocalizeEntityFinishedHandler(storeOutboxMessage, config),
+    new LocalizeEntityFailedHandler(storeOutboxMessage, config),
   ];
   const commonMessageHandlers: TransactionalMessageHandler[] = [
     new DeleteEntityHandler(storeOutboxMessage, config),
@@ -169,10 +337,15 @@ const registerTransactionalInboxHandlers = (
     new CuePointTypesDeclareFailedHandler(config),
     new ImageTypesDeclaredHandler(config),
     new ImageTypesDeclareFailedHandler(config),
+    new EntityDefinitionDeclareFailedHandler(config),
+    new EntityDefinitionDeclareFinishedHandler(config),
+    new EntityDefinitionDeleteFailedHandler(config),
+    new EntityDefinitionDeleteFinishedHandler(config),
   ];
   const [shutdownInSrv] = initializePollingMessageListener(
     inboxConfig,
     [
+      ...dbMessageHandlers,
       ...publishMessageHandlers,
       ...ingestMessageHandlers,
       ...commonMessageHandlers,
@@ -229,6 +402,14 @@ const registerRabbitMqMessaging = async (
         ImageServiceMultiTenantMessagingSettings.EnsureImageExistsAlreadyExisted,
         ImageServiceMultiTenantMessagingSettings.EnsureImageExistsImageCreated,
         ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed,
+        LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFinished,
+        LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFailed,
+        LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFinished,
+        LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFailed,
+        LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeleteFinished,
+        LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeleteFailed,
+        LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeclareFinished,
+        LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeclareFailed,
       ],
       customMessagePreProcessor: (message) => {
         switch (message.messageType) {
@@ -259,6 +440,22 @@ const registerRabbitMqMessaging = async (
             .messageType:
           case VideoServiceMultiTenantMessagingSettings
             .CuePointTypesDeclareFailed.messageType:
+          case LocalizationServiceMultiTenantMessagingSettings
+            .EntityDefinitionDeclareFailed.messageType:
+          case LocalizationServiceMultiTenantMessagingSettings
+            .EntityDefinitionDeclareFinished.messageType:
+          case LocalizationServiceMultiTenantMessagingSettings
+            .EntityDefinitionDeleteFailed.messageType:
+          case LocalizationServiceMultiTenantMessagingSettings
+            .EntityDefinitionDeleteFinished.messageType:
+          case LocalizationServiceMultiTenantMessagingSettings
+            .UpsertLocalizationSourceEntityFinished.messageType:
+          case LocalizationServiceMultiTenantMessagingSettings
+            .UpsertLocalizationSourceEntityFailed.messageType:
+          case LocalizationServiceMultiTenantMessagingSettings
+            .LocalizeEntityFinished.messageType:
+          case LocalizationServiceMultiTenantMessagingSettings
+            .LocalizeEntityFailed.messageType:
             message.concurrency = 'parallel';
             break;
           default: // especially the "common" and "publish" ones are safer processed in sequential order
@@ -332,6 +529,27 @@ const registerRabbitMqMessaging = async (
       ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed,
       config,
     ).subscribeForEvent(() => inboxWriter),
+
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFinished,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFailed,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.LocalizeEntity,
+      config,
+    ).sendCommand(),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFinished,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFailed,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
   ];
 
   const publishingBuilders: RascalConfigBuilder[] = [
@@ -387,6 +605,38 @@ const registerRabbitMqMessaging = async (
       VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclareFailed,
       config,
     ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.DeclareEntityDefinition,
+      config,
+    ).sendCommand(),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeclareFailed,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeclareFinished,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.DeleteEntityDefinition,
+      config,
+    ).sendCommand(),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeleteFailed,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeleteFinished,
+      config,
+    ).subscribeForEvent(() => inboxWriter),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
+      config,
+    ).sendCommand(),
+    new RascalTransactionalConfigBuilder(
+      LocalizationServiceMultiTenantMessagingSettings.DeleteLocalizationSourceEntity,
+      config,
+    ).sendCommand(),
   ];
 
   const counter = initMessagingCounter(ownerPool);

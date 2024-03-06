@@ -47,14 +47,16 @@ describe('TvshowGenrePublishEventHandler', () => {
       ]);
       const localizations = await select(
         'tvshow_genre_localizations',
-        { tvshow_genre_id: message.genres[0].content_id },
+        { tvshow_genre_id: message.payload.genres[0].content_id },
         { columns: ['title', 'locale', 'is_default_locale'] },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.genres[0].localizations.map(({ language_tag, ...other }) => ({
-          ...other,
-          locale: language_tag,
-        })),
+        message.payload.genres[0].localizations.map(
+          ({ language_tag, ...other }) => ({
+            ...other,
+            locale: language_tag,
+          }),
+        ),
       );
     });
 
@@ -86,14 +88,16 @@ describe('TvshowGenrePublishEventHandler', () => {
       expect(tvshowGenre?.order_no).toEqual(0);
       const localizations = await select(
         'tvshow_genre_localizations',
-        { tvshow_genre_id: message.genres[0].content_id },
+        { tvshow_genre_id: message.payload.genres[0].content_id },
         { columns: ['title', 'locale', 'is_default_locale'] },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.genres[0].localizations.map(({ language_tag, ...other }) => ({
-          ...other,
-          locale: language_tag,
-        })),
+        message.payload.genres[0].localizations.map(
+          ({ language_tag, ...other }) => ({
+            ...other,
+            locale: language_tag,
+          }),
+        ),
       );
     });
 
@@ -125,10 +129,12 @@ describe('TvshowGenrePublishEventHandler', () => {
         columns: ['title', 'locale', 'is_default_locale'],
       }).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.genres[0].localizations.map(({ language_tag, ...other }) => ({
-          ...other,
-          locale: language_tag,
-        })),
+        message.payload.genres[0].localizations.map(
+          ({ language_tag, ...other }) => ({
+            ...other,
+            locale: language_tag,
+          }),
+        ),
       );
     });
   });

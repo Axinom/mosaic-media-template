@@ -71,9 +71,9 @@ describe('UpdateMetadataHandler', () => {
   describe('onMessage', () => {
     it('message succeeded without errors -> message without error sent', async () => {
       // Arrange
-      const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
+      const payload = {
         item: { type: 'MOVIE' },
-      });
+      } as unknown as UpdateMetadataCommand;
       const context = {
         ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
         ingestItemId: 1,
@@ -105,9 +105,9 @@ describe('UpdateMetadataHandler', () => {
         external_id: 'externalId',
         data: { title: 'title' },
       };
-      const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
+      const payload = {
         item,
-      });
+      } as unknown as UpdateMetadataCommand;
       const doc = await insert('ingest_documents', {
         name: 'test1',
         title: 'test1',

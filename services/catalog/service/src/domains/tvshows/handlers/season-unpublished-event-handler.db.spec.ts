@@ -69,9 +69,9 @@ describe('SeasonPublishEventHandler', () => {
         await handler.handleMessage(message, txn);
       });
       // Assert
-      const season = await selectOne('season', { id: message.content_id }).run(
-        ctx.ownerPool,
-      );
+      const season = await selectOne('season', {
+        id: message.payload.content_id,
+      }).run(ctx.ownerPool);
       const localizationsCount = await count('season_localizations', all).run(
         ctx.ownerPool,
       );

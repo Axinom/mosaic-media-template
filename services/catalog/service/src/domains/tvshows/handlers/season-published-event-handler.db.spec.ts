@@ -111,26 +111,13 @@ describe('SeasonPublishEventHandler', () => {
       );
       const localizations = await select(
         'season_localizations',
-        { season_id: message.content_id },
+        { season_id: message.payload.content_id },
         {
           columns: ['description', 'synopsis', 'locale', 'is_default_locale'],
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.localizations.map(({ language_tag, ...other }) => ({
-          ...other,
-          locale: language_tag,
-        })),
-      );
-      const localizations = await select(
-        'season_localizations',
-        { season_id: message.content_id },
-        {
-          columns: ['description', 'synopsis', 'locale', 'is_default_locale'],
-        },
-      ).run(ctx.ownerPool);
-      expect(localizations).toIncludeSameMembers(
-        message.localizations.map(({ language_tag, ...other }) => ({
+        message.payload.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),
@@ -161,7 +148,7 @@ describe('SeasonPublishEventHandler', () => {
         id: message.payload.content_id,
       }).run(ctx.ownerPool);
 
-      expect(season?.studio).toEqual(message.studio);
+      expect(season?.studio).toEqual(message.payload.studio);
       const localizations = await select(
         'season_localizations',
         { season_id: 'season-1' },
@@ -170,7 +157,7 @@ describe('SeasonPublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.localizations.map(({ language_tag, ...other }) => ({
+        message.payload.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),

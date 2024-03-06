@@ -564,9 +564,9 @@ export abstract class DefaultIngestEntityProcessor
   }
 
   /*
-   * Ingest correlation id is initially set to make sure that logical
-   * replication would recognize that update is done within the context of
-   * ingest operation and would attach the id to the
+   * Ingest correlation id is initially set to make sure that db message
+   * handlers would recognize that update is done within the context of
+   * ingest operation and would attach the ingestItemId to the
    * UpsertLocalizationSourceEntity message context, making sure that the
    * response event would be sent, so that the ingest processing can use said
    * event to continue processing localizations.

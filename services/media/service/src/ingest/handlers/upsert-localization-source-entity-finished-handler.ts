@@ -1,5 +1,3 @@
-import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import {
   EntityLocalization,
   EntityLocalizationFieldState,
@@ -7,20 +5,16 @@ import {
   LocalizeEntityCommand,
   UpsertLocalizationSourceEntityFinishedEvent,
 } from '@axinom/mosaic-messages';
-import { MosaicError } from '@axinom/mosaic-service-common';
-import { IngestLocalization, IngestMessageContext } from 'media-messages';
-import { SubscriptionConfig } from 'rascal';
+import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  IsolationLevel,
-  param,
-  selectOne,
-  self as value,
-  SQL,
-  sql,
-  update,
-} from 'zapatos/db';
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
+import { IngestLocalization, IngestMessageContext } from 'media-messages';
+import { ClientBase } from 'pg';
+import { param, selectOne, self as value, SQL, sql, update } from 'zapatos/db';
 import { CommonErrors, Config, getMediaMappedError } from '../../common';
-import { MediaGuardedMessageHandler } from '../../messaging';
+import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 
 /**
  * Every localization field will have this state set by default in the command
@@ -31,60 +25,53 @@ import { MediaGuardedMessageHandler } from '../../messaging';
 export const DEFAULT_LOCALIZATION_STATE: EntityLocalizationFieldState =
   'APPROVED';
 
-export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedMessageHandler<UpsertLocalizationSourceEntityFinishedEvent> {
+export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFinishedEvent> {
   constructor(
-    private broker: Broker,
-    private loginPool: LoginPgPool,
+    private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
-    overrides?: SubscriptionConfig,
   ) {
     super(
-      LocalizationServiceMultiTenantMessagingSettings
-        .UpsertLocalizationSourceEntityFinished.messageType,
+      LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFinished,
       ['INGESTS_EDIT', 'ADMIN'],
+      new Logger({
+        config,
+        context: UpsertLocalizationSourceEntityFinishedHandler.name,
+      }),
       config,
-      overrides,
     );
   }
-
-  async onMessage(
-    content: UpsertLocalizationSourceEntityFinishedEvent,
-    message: MessageInfo,
+  override async handleMessage(
+    {
+      payload,
+      metadata,
+    }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>,
+    loginClient: ClientBase,
   ): Promise<void> {
-    const messageContext = message.envelope.message_context as Pick<
+    const messageContext = metadata.messageContext as Pick<
       IngestMessageContext,
       'ingestItemId'
     >;
     if (
       !messageContext?.ingestItemId ||
-      content.service_id !== this.config.serviceId
+      payload.service_id !== this.config.serviceId
     ) {
       // skipping message without ingest context or for entity types from different services
       return;
     }
 
-    const pgSettings = await this.getPgSettings(message);
-    const { ingestItem, localizationStep } = await transactionWithContext(
-      this.loginPool,
-      IsolationLevel.Serializable,
-      pgSettings,
-      async (ctx) => {
-        const ingestItem = await selectOne(
-          'ingest_items',
-          { id: messageContext.ingestItemId },
-          { columns: ['item'] },
-        ).run(ctx);
-        const localizationStep = await selectOne(
-          'ingest_item_steps',
-          {
-            ingest_item_id: messageContext.ingestItemId,
-            type: 'LOCALIZATIONS',
-          },
-          { columns: ['id'] },
-        ).run(ctx);
-        return { ingestItem, localizationStep };
+    const ingestItem = await selectOne(
+      'ingest_items',
+      { id: messageContext.ingestItemId },
+      { columns: ['item'] },
+    ).run(loginClient);
+    const localizationStep = await selectOne(
+      'ingest_item_steps',
+      {
+        ingest_item_id: messageContext.ingestItemId,
+        type: 'LOCALIZATIONS',
       },
-    );
+      { columns: ['id'] },
+    ).run(loginClient);
 
     if (!ingestItem || !localizationStep) {
       throw new MosaicError({
@@ -110,8 +97,8 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedM
       LocalizationServiceMultiTenantMessagingSettings.LocalizeEntity;
     const messagePayload: LocalizeEntityCommand = {
       service_id: this.config.serviceId,
-      entity_type: content.entity_type,
-      entity_id: content.entity_id,
+      entity_type: payload.entity_type,
+      entity_id: payload.entity_id,
       localizations,
     };
 
@@ -120,24 +107,27 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedM
       ingestItemStepId: localizationStep.id,
     };
 
-    await this.broker.publish<LocalizeEntityCommand>(
-      content.entity_id,
+    await this.storeOutboxMessage<LocalizeEntityCommand>(
+      payload.entity_id,
       messageSettings,
       messagePayload,
+      loginClient,
       {
-        auth_token: message.envelope.auth_token,
-        message_context: localizationMessageContext,
-      },
-      {
-        routingKey: messageSettings.getEnvironmentRoutingKey({
-          tenantId: this.config.tenantId,
-          environmentId: this.config.environmentId,
-        }),
+        envelopeOverrides: {
+          auth_token: metadata.authToken,
+          message_context: localizationMessageContext,
+        },
+        options: {
+          routingKey: messageSettings.getEnvironmentRoutingKey({
+            tenantId: this.config.tenantId,
+            environmentId: this.config.environmentId,
+          }),
+        },
       },
     );
   }
 
-  public mapError(error: unknown): Error {
+  public override mapError(error: unknown): Error {
     return getMediaMappedError(error, {
       message:
         'An error occurred while trying to process a response event from the localization service.',
@@ -145,34 +135,32 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedM
     });
   }
 
-  public async onMessageFailure(
-    _content: UpsertLocalizationSourceEntityFinishedEvent,
-    message: MessageInfo,
-    finalError: Error,
+  override async handleErrorMessage(
+    error: Error,
+    {
+      metadata,
+    }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>,
+    loginClient: ClientBase,
+    retry: boolean,
   ): Promise<void> {
-    const messageContext = message.envelope.message_context as Pick<
+    if (retry) {
+      return;
+    }
+    const messageContext = metadata.messageContext as Pick<
       IngestMessageContext,
       'ingestItemId'
     >;
-    const pgSettings = await this.getPgSettings(message);
-    await transactionWithContext(
-      this.loginPool,
-      IsolationLevel.Serializable,
-      pgSettings,
-      async (ctx) => {
-        const error = param({
-          message: finalError.message,
-          source: UpsertLocalizationSourceEntityFinishedHandler.name,
-        });
-        await update(
-          'ingest_items',
-          {
-            status: 'ERROR',
-            errors: sql<SQL>`${value} || ${error}::jsonb`,
-          },
-          { id: messageContext.ingestItemId },
-        ).run(ctx);
+    const err = param({
+      message: error.message,
+      source: UpsertLocalizationSourceEntityFinishedHandler.name,
+    });
+    await update(
+      'ingest_items',
+      {
+        status: 'ERROR',
+        errors: sql<SQL>`${value} || ${err}::jsonb`,
       },
-    );
+      { id: messageContext.ingestItemId },
+    ).run(loginClient);
   }
 }

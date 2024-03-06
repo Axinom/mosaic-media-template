@@ -66,7 +66,7 @@ describe('ChannelPublishEventHandler', () => {
     test('An existing channel is republished', async () => {
       // Arrange
       const message = createChannelPublishedMessage(uuid());
-      const channelId = getChannelId(message.id);
+      const channelId = getChannelId(message.payload.id);
       await insert('channel', {
         id: channelId,
         title: 'Old title',
