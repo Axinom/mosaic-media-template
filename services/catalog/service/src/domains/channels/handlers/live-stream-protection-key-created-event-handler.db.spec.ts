@@ -38,7 +38,7 @@ describe('LiveStreamProtectionKeyCreatedEventHandler', () => {
       } as unknown as TypedTransactionalMessage<LiveStreamProtectionKeyCreatedEvent>;
 
       // Act
-      const error = await ctx.executeGqlSql(async (txn) => {
+      const error = await ctx.executeOwnerSql(async (txn) => {
         return rejectionOf(handler.handleMessage(message, txn));
       });
 
@@ -71,7 +71,7 @@ describe('LiveStreamProtectionKeyCreatedEventHandler', () => {
       } as unknown as TypedTransactionalMessage<LiveStreamProtectionKeyCreatedEvent>;
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
 

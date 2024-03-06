@@ -34,7 +34,7 @@ describe('TvshowPublishEventHandler', () => {
       } as unknown as TypedTransactionalMessage<TvshowUnpublishedEvent>;
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
       // Assert

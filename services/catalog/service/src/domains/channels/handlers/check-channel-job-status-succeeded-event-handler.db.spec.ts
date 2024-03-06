@@ -39,7 +39,7 @@ describe('CheckChannelJobStatusSucceededEventHandler', () => {
       } as unknown as TypedTransactionalMessage<CheckChannelJobStatusSucceededEvent>;
 
       // Act
-      const error = await ctx.executeGqlSql(async (txn) => {
+      const error = await ctx.executeOwnerSql(async (txn) => {
         return rejectionOf(handler.handleMessage(message, txn));
       });
 
@@ -73,7 +73,7 @@ describe('CheckChannelJobStatusSucceededEventHandler', () => {
       } as unknown as TypedTransactionalMessage<CheckChannelJobStatusSucceededEvent>;
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
 

@@ -34,7 +34,7 @@ describe('TvshowGenrePublishEventHandler', () => {
       );
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
       // TODO: Consider verifying via the GQL API.
@@ -59,7 +59,7 @@ describe('TvshowGenrePublishEventHandler', () => {
       const message = createGenrePublishedMessage(contentId, 'New title');
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
 
@@ -83,7 +83,7 @@ describe('TvshowGenrePublishEventHandler', () => {
       );
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
       // Assert
