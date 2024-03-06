@@ -35,7 +35,7 @@ describe('CollectionPublishEventHandler', () => {
       } as unknown as TypedTransactionalMessage<CollectionUnpublishedEvent>;
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
 

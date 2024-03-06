@@ -35,7 +35,7 @@ describe('SeasonPublishEventHandler', () => {
       } as unknown as TypedTransactionalMessage<SeasonUnpublishedEvent>;
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
       // Assert

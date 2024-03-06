@@ -34,7 +34,7 @@ describe('MoviePublishEventHandler', () => {
       } as unknown as TypedTransactionalMessage<MovieUnpublishedEvent>;
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
 

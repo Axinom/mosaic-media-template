@@ -114,7 +114,7 @@ export interface ITestContext {
     variables?: Dict<any>,
     requestContext?: TestRequestContext,
   ): Promise<IExecutionResult>;
-  executeGqlSql<T>(
+  executeOwnerSql<T>(
     callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
   ): Promise<T>;
 }
@@ -167,16 +167,16 @@ export const createTestContext = async (
     options,
   );
 
-  const executeGqlSql = async <T>(
+  const executeOwnerSql = async <T>(
     callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
   ): Promise<T> => {
     const pgSettings = buildPgSettings(
       createTestUser(config.serviceId),
-      config.dbGqlRole,
+      config.dbOwner,
       config.serviceId,
     );
     return transactionWithContext(
-      loginPool,
+      ownerPool,
       IsolationLevel.Serializable,
       pgSettings,
       async (dbContext) => callback(dbContext),
@@ -191,7 +191,7 @@ export const createTestContext = async (
     options,
     schema,
     runGqlQuery,
-    executeGqlSql,
+    executeOwnerSql,
     truncate: async function (tableName: Table): Promise<void> {
       try {
         await truncate(tableName, 'CASCADE').run(this.ownerPool);

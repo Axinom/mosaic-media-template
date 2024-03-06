@@ -33,7 +33,7 @@ describe('MovieGenrePublishEventHandler', () => {
       }).run(ctx.ownerPool);
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(
           {} as unknown as TypedTransactionalMessage<MovieGenresUnpublishedEvent>,
           txn,
@@ -60,7 +60,7 @@ describe('MovieGenrePublishEventHandler', () => {
       ]).run(ctx.ownerPool);
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(
           {} as unknown as TypedTransactionalMessage<MovieGenresUnpublishedEvent>,
           txn,
@@ -90,7 +90,7 @@ describe('MovieGenrePublishEventHandler', () => {
       }).run(ctx.ownerPool);
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(
           {} as unknown as TypedTransactionalMessage<MovieGenresUnpublishedEvent>,
           txn,

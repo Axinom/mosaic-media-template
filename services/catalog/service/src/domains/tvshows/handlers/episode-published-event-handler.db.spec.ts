@@ -33,7 +33,7 @@ describe('EpisodePublishEventHandler', () => {
       const payload = message.payload;
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
 
@@ -108,7 +108,7 @@ describe('EpisodePublishEventHandler', () => {
       message.payload.title = 'New title';
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
 
