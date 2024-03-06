@@ -1,12 +1,17 @@
-import { Broker } from '@axinom/mosaic-message-bus';
-import { LocalizationServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
+import {
+  DeclareEntityDefinitionCommand,
+  LocalizationServiceMultiTenantMessagingSettings,
+} from '@axinom/mosaic-messages';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { ClientBase } from 'pg';
 import { Config, requestServiceAccountToken } from '../common';
 import { getCollectionLocalizationEntityDefinitions } from './collections';
 import { getMovieLocalizationEntityDefinitions } from './movies';
 import { getTvshowLocalizationEntityDefinitions } from './tvshows';
 
 export const registerLocalizationEntityDefinitions = async (
-  broker: Broker,
+  storeOutboxMessage: StoreOutboxMessage,
+  loginClient: ClientBase,
   config: Config,
 ): Promise<void> => {
   const accessToken = await requestServiceAccountToken(config);
@@ -27,16 +32,21 @@ export const registerLocalizationEntityDefinitions = async (
     ...collectionDefinitions,
   ];
   for (const definition of definitions) {
-    await broker.publish(
+    await storeOutboxMessage<DeclareEntityDefinitionCommand>(
       config.environmentId,
       settings,
       definition,
-      { auth_token: accessToken },
+      loginClient,
       {
-        routingKey: settings.getEnvironmentRoutingKey({
-          tenantId: config.tenantId,
-          environmentId: config.environmentId,
-        }),
+        envelopeOverrides: {
+          auth_token: accessToken,
+        },
+        options: {
+          routingKey: settings.getEnvironmentRoutingKey({
+            tenantId: config.tenantId,
+            environmentId: config.environmentId,
+          }),
+        },
       },
     );
   }

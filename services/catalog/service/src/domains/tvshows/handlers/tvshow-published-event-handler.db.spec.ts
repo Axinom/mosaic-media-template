@@ -109,7 +109,7 @@ describe('TvshowPublishEventHandler', () => {
       );
       const localizations = await select(
         'tvshow_localizations',
-        { tvshow_id: message.payload.content_id },
+        { tvshow_id: payload.content_id },
         {
           columns: [
             'title',
@@ -121,7 +121,7 @@ describe('TvshowPublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.payload.localizations.map(({ language_tag, ...other }) => ({
+        payload.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),

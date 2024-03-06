@@ -16,6 +16,7 @@ export type Scalars = {
   Float: number;
   BigInt: any;
   Cursor: any;
+  Date: any;
   Datetime: any;
   JSON: any;
   UUID: any;
@@ -368,7 +369,7 @@ export type CreateVideosTagPayloadVideosTagEdgeArgs = {
 
 /**
  * All input for the create `VideoStream` mutation.
- * @permissions: VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,ADMIN
+ * @permissions: VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
  */
 export type CreateVideoStreamInput = {
   /**
@@ -736,6 +737,32 @@ export type CustomVideoPatch = {
   videoBitrates?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
 
+/** A filter to be used against Date fields. All fields are combined with a logical ‘and.’ */
+export type DateFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Scalars['Date']>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Scalars['Date']>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Scalars['Date']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Date']>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<Scalars['Date']>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Scalars['Date']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Scalars['Date']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Scalars['Date']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Scalars['Date']>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<Scalars['Date']>>;
+};
+
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -789,8 +816,6 @@ export type DeleteCuePointPayload = {
   cuePointEdge?: Maybe<CuePointsEdge>;
   /** Reads a single `CuePointType` that is related to this `CuePoint`. */
   cuePointType?: Maybe<CuePointType>;
-  /** @deprecated The field is obsolete. */
-  deletedCuePointNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Video` that is related to this `CuePoint`. */
@@ -824,8 +849,6 @@ export type DeleteEncodingProcessingProfilePayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** @deprecated The field is obsolete. */
-  deletedEncodingProcessingProfileNodeId?: Maybe<Scalars['ID']>;
   /** The `EncodingProcessingProfile` that was deleted by this mutation. */
   encodingProcessingProfile?: Maybe<EncodingProcessingProfile>;
   /** An edge for our `EncodingProcessingProfile`. May be used by Relay 1. */
@@ -861,8 +884,6 @@ export type DeleteEncodingVideoRepresentationPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** @deprecated The field is obsolete. */
-  deletedEncodingVideoRepresentationNodeId?: Maybe<Scalars['ID']>;
   /** Reads a single `EncodingProcessingProfile` that is related to this `EncodingVideoRepresentation`. */
   encodingProcessingProfile?: Maybe<EncodingProcessingProfile>;
   /** The `EncodingVideoRepresentation` that was deleted by this mutation. */
@@ -914,8 +935,6 @@ export type DeleteVideosTagPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** @deprecated The field is obsolete. */
-  deletedVideosTagNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Video` that is related to this `VideosTag`. */
@@ -934,7 +953,7 @@ export type DeleteVideosTagPayloadVideosTagEdgeArgs = {
 
 /**
  * All input for the `deleteCustomVideoStream` mutation.
- * @permissions: VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,ADMIN
+ * @permissions: VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
  */
 export type DeleteVideoStreamInput = {
   /**
@@ -953,8 +972,6 @@ export type DeleteVideoStreamPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** @deprecated The field is obsolete. */
-  deletedVideoStreamNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Video` that is related to this `VideoStream`. */
@@ -1113,6 +1130,54 @@ export type EncodingAcquisitionAzureBlobSettingFilter = {
 };
 
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,VIDEOS_ENCODE,ADMIN */
+export type EncodingAcquisitionHostingAzureSetting = {
+  __typename?: 'EncodingAcquisitionHostingAzureSetting';
+  accountName: Scalars['String'];
+  containerName: Scalars['String'];
+  createdDate: Scalars['Datetime'];
+  createdUser: Scalars['String'];
+  /** Reads a single `EncodingAcquisitionProfile` that is related to this `EncodingAcquisitionHostingAzureSetting`. */
+  encodingAcquisitionProfile?: Maybe<EncodingAcquisitionProfile>;
+  encodingAcquisitionProfileId: Scalars['UUID'];
+  fullSourcePath: Scalars['String'];
+  managementSasTokenIsSet: Scalars['Boolean'];
+  managementSasTokenValidUntil: Scalars['Date'];
+  rootFolderPath?: Maybe<Scalars['String']>;
+  updatedDate: Scalars['Datetime'];
+  updatedUser: Scalars['String'];
+};
+
+/** A filter to be used against `EncodingAcquisitionHostingAzureSetting` object types. All fields are combined with a logical ‘and.’ */
+export type EncodingAcquisitionHostingAzureSettingFilter = {
+  /** Filter by the object’s `accountName` field. */
+  accountName?: InputMaybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EncodingAcquisitionHostingAzureSettingFilter>>;
+  /** Filter by the object’s `containerName` field. */
+  containerName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `encodingAcquisitionProfile` relation. */
+  encodingAcquisitionProfile?: InputMaybe<EncodingAcquisitionProfileFilter>;
+  /** Filter by the object’s `encodingAcquisitionProfileId` field. */
+  encodingAcquisitionProfileId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `managementSasTokenValidUntil` field. */
+  managementSasTokenValidUntil?: InputMaybe<DateFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EncodingAcquisitionHostingAzureSettingFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EncodingAcquisitionHostingAzureSettingFilter>>;
+  /** Filter by the object’s `rootFolderPath` field. */
+  rootFolderPath?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type EncodingAcquisitionProfile = {
   __typename?: 'EncodingAcquisitionProfile';
   /** Reads a single `EncodingAcquisitionAmazonS3Setting` that is related to this `EncodingAcquisitionProfile`. */
@@ -1121,6 +1186,8 @@ export type EncodingAcquisitionProfile = {
   azureBlobSetting?: Maybe<EncodingAcquisitionAzureBlobSetting>;
   createdDate: Scalars['Datetime'];
   createdUser: Scalars['String'];
+  /** Reads a single `EncodingAcquisitionHostingAzureSetting` that is related to this `EncodingAcquisitionProfile`. */
+  hostingAzureSetting?: Maybe<EncodingAcquisitionHostingAzureSetting>;
   id: Scalars['UUID'];
   provider: StorageProvider;
   title: Scalars['String'];
@@ -1170,6 +1237,10 @@ export type EncodingAcquisitionProfileFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `hostingAzureSetting` relation. */
+  hostingAzureSetting?: InputMaybe<EncodingAcquisitionHostingAzureSettingFilter>;
+  /** A related `hostingAzureSetting` exists. */
+  hostingAzureSettingExists?: InputMaybe<Scalars['Boolean']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
@@ -2147,6 +2218,47 @@ export type EncodingPublishingAzureBlobSettingFilter = {
 };
 
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,VIDEOS_ENCODE,ADMIN */
+export type EncodingPublishingHostingAzureSetting = {
+  __typename?: 'EncodingPublishingHostingAzureSetting';
+  accountName: Scalars['String'];
+  containerName: Scalars['String'];
+  createdDate: Scalars['Datetime'];
+  createdUser: Scalars['String'];
+  /** Reads a single `EncodingPublishingProfile` that is related to this `EncodingPublishingHostingAzureSetting`. */
+  encodingPublishingProfile?: Maybe<EncodingPublishingProfile>;
+  encodingPublishingProfileId: Scalars['UUID'];
+  fullTargetPath: Scalars['String'];
+  updatedDate: Scalars['Datetime'];
+  updatedUser: Scalars['String'];
+};
+
+/** A filter to be used against `EncodingPublishingHostingAzureSetting` object types. All fields are combined with a logical ‘and.’ */
+export type EncodingPublishingHostingAzureSettingFilter = {
+  /** Filter by the object’s `accountName` field. */
+  accountName?: InputMaybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EncodingPublishingHostingAzureSettingFilter>>;
+  /** Filter by the object’s `containerName` field. */
+  containerName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `encodingPublishingProfile` relation. */
+  encodingPublishingProfile?: InputMaybe<EncodingPublishingProfileFilter>;
+  /** Filter by the object’s `encodingPublishingProfileId` field. */
+  encodingPublishingProfileId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EncodingPublishingHostingAzureSettingFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EncodingPublishingHostingAzureSettingFilter>>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type EncodingPublishingProfile = {
   __typename?: 'EncodingPublishingProfile';
   /** Reads a single `EncodingPublishingAmazonS3Setting` that is related to this `EncodingPublishingProfile`. */
@@ -2155,6 +2267,8 @@ export type EncodingPublishingProfile = {
   azureBlobSetting?: Maybe<EncodingPublishingAzureBlobSetting>;
   createdDate: Scalars['Datetime'];
   createdUser: Scalars['String'];
+  /** Reads a single `EncodingPublishingHostingAzureSetting` that is related to this `EncodingPublishingProfile`. */
+  hostingAzureSetting?: Maybe<EncodingPublishingHostingAzureSetting>;
   id: Scalars['UUID'];
   provider: StorageProvider;
   title: Scalars['String'];
@@ -2204,6 +2318,10 @@ export type EncodingPublishingProfileFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `hostingAzureSetting` relation. */
+  hostingAzureSetting?: InputMaybe<EncodingPublishingHostingAzureSettingFilter>;
+  /** A related `hostingAzureSetting` exists. */
+  hostingAzureSettingExists?: InputMaybe<Scalars['Boolean']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
@@ -2495,6 +2613,8 @@ export enum ErrorCodesEnum {
   CannotReEncodeProcessingVideos = 'CANNOT_RE_ENCODE_PROCESSING_VIDEOS',
   /** Encoding already succeeded. */
   CannotReEncodeSucceededVideos = 'CANNOT_RE_ENCODE_SUCCEEDED_VIDEOS',
+  /** A database operation has failed because of a lock timeout. */
+  DatabaseLockTimeoutError = 'DATABASE_LOCK_TIMEOUT_ERROR',
   /** An authorization database error has occurred. The user might not have enough permissions. */
   DatabasePermissionsCheckFailed = 'DATABASE_PERMISSIONS_CHECK_FAILED',
   /** An expected and handled database constraint error has occurred. The actual message will have more information. */
@@ -2523,6 +2643,8 @@ export enum ErrorCodesEnum {
   EncoderRequestWrongApi = 'ENCODER_REQUEST_WRONG_API',
   /** The Axinom Encoding Service validation failed with the following messages: %s */
   EncoderValidationFailed = 'ENCODER_VALIDATION_FAILED',
+  /** Encoding certificate endpoint is not accessible. Please contact Axinom support. */
+  EncodingCertEndpointNotAccessible = 'ENCODING_CERT_ENDPOINT_NOT_ACCESSIBLE',
   /** Unable to start the encoding process as there was an authorization issue. Please contact Axinom Support. */
   EncodingJwtNotFound = 'ENCODING_JWT_NOT_FOUND',
   /** This is a wrapper error for the original unhandled error of unsupported type. */
@@ -2583,6 +2705,8 @@ export enum ErrorCodesEnum {
   StartupError = 'STARTUP_ERROR',
   /** User is authenticated, but subject information was not found. Please contact Axinom Support. */
   SubjectInformationNotFound = 'SUBJECT_INFORMATION_NOT_FOUND',
+  /** User is authenticated, but subject information was not found. Please contact Axinom Support. */
+  SubjectNotFound = 'SUBJECT_NOT_FOUND',
   /** An unexpected error has happened. Please try again. */
   TransientError = 'TRANSIENT_ERROR',
   /** Unable to get the %s secret. Please contact Axinom Support. */
@@ -2593,12 +2717,18 @@ export enum ErrorCodesEnum {
   UnableToPlaybackVideoWithFailedEncoding = 'UNABLE_TO_PLAYBACK_VIDEO_WITH_FAILED_ENCODING',
   /** Unable to set the %s secret. Please contact Axinom Support. */
   UnableToSetSecret = 'UNABLE_TO_SET_SECRET',
+  /** The subject has no permissions. */
+  Unauthorized = 'UNAUTHORIZED',
+  /** Unexpected null or undefined value received. */
+  UnexpectedNullUndefined = 'UNEXPECTED_NULL_UNDEFINED',
   /** An unhandled database-related error has occurred. Please contact the service support. */
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
   /** Unrecognized CMAF encoding [%s] found. */
   UnrecognizedCmafEncoding = 'UNRECOGNIZED_CMAF_ENCODING',
+  /** Unsupported storage provider */
+  UnsupportedStorageProvider = 'UNSUPPORTED_STORAGE_PROVIDER',
   /** Unable to update the profile because no update values were provided. */
   UpdateProfileInputIsEmpty = 'UPDATE_PROFILE_INPUT_IS_EMPTY',
   /** User is not authorized to access the operation. */
@@ -2849,6 +2979,8 @@ export type Mutation = {
   setAzureBlobAcquisitionProfile: EncodingAcquisitionProfile;
   setAzureBlobPublishingProfile: EncodingPublishingProfile;
   setGeneralSettings: GeneralSetting;
+  setHostingAzureAcquisitionProfile: EncodingAcquisitionProfile;
+  setHostingAzurePublishingProfile: EncodingPublishingProfile;
   truncateVideos?: Maybe<TruncateVideosPayload>;
   unarchiveVideos?: Maybe<BulkMutationUuidPayload>;
   updateAmazonS3AcquisitionProfile: EncodingAcquisitionProfile;
@@ -2867,6 +2999,8 @@ export type Mutation = {
   updateEncodingProcessingProfile?: Maybe<UpdateEncodingProcessingProfilePayload>;
   /** Updates a single `EncodingVideoRepresentation` using a unique key and a patch. */
   updateEncodingVideoRepresentation?: Maybe<UpdateEncodingVideoRepresentationPayload>;
+  updateHostingAzureAcquisitionProfile: EncodingAcquisitionProfile;
+  updateHostingAzurePublishingProfile: EncodingPublishingProfile;
   /** Updates a single `Video` using a unique key and a patch. */
   updateVideo?: Maybe<UpdateVideoPayload>;
   /** Updates a single `VideosTag` using a unique key and a patch. */
@@ -3001,6 +3135,18 @@ export type MutationSetGeneralSettingsArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationSetHostingAzureAcquisitionProfileArgs = {
+  input: SetHostingAzureAcquisitionProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationSetHostingAzurePublishingProfileArgs = {
+  input: SetHostingAzurePublishingProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUnarchiveVideosArgs = {
   filter?: InputMaybe<VideoFilter>;
 };
@@ -3063,6 +3209,18 @@ export type MutationUpdateEncodingProcessingProfileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateEncodingVideoRepresentationArgs = {
   input: UpdateEncodingVideoRepresentationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateHostingAzureAcquisitionProfileArgs = {
+  input: UpdateHostingAzureAcquisitionProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateHostingAzurePublishingProfileArgs = {
+  input: UpdateHostingAzurePublishingProfileInput;
 };
 
 
@@ -3226,14 +3384,6 @@ export type PreviewStatusFilter = {
   notEqualTo?: InputMaybe<PreviewStatus>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<PreviewStatus>>;
-};
-
-export type QualityLevel = {
-  __typename?: 'QualityLevel';
-  height: Scalars['Int'];
-  kbps: Scalars['Int'];
-  name: Scalars['String'];
-  width: Scalars['Int'];
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -3567,6 +3717,19 @@ export type SetGeneralSettingsInput = {
   videoPlaybackEnabled?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type SetHostingAzureAcquisitionProfileInput = {
+  accountName: Scalars['String'];
+  containerName: Scalars['String'];
+  rootFolderPath?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
+export type SetHostingAzurePublishingProfileInput = {
+  accountName: Scalars['String'];
+  containerName: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type SourceVideo = {
   __typename?: 'SourceVideo';
   isEncoded: Scalars['Boolean'];
@@ -3604,7 +3767,9 @@ export enum StorageProvider {
   /** Amazon S3 */
   AmazonS3 = 'AMAZON_S3',
   /** Azure Blob */
-  AzureBlob = 'AZURE_BLOB'
+  AzureBlob = 'AZURE_BLOB',
+  /** Mosaic Hosting Service - Azure */
+  HostingServiceAzure = 'HOSTING_SERVICE_AZURE'
 }
 
 /** A filter to be used against StorageProvider fields. All fields are combined with a logical ‘and.’ */
@@ -4008,6 +4173,19 @@ export type UpdateEncodingVideoRepresentationPayloadEncodingVideoRepresentationE
   orderBy?: InputMaybe<Array<EncodingVideoRepresentationsOrderBy>>;
 };
 
+export type UpdateHostingAzureAcquisitionProfileInput = {
+  accountName?: InputMaybe<Scalars['String']>;
+  containerName?: InputMaybe<Scalars['String']>;
+  rootFolderPath?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateHostingAzurePublishingProfileInput = {
+  accountName?: InputMaybe<Scalars['String']>;
+  containerName?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
 /**
  * All input for the `updateVideo` mutation.
  * @permissions: VIDEOS_ENCODE,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,ADMIN
@@ -4088,7 +4266,7 @@ export type UpdateVideosTagPayloadVideosTagEdgeArgs = {
 
 /**
  * All input for the `updateCustomVideoStream` mutation.
- * @permissions: VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,ADMIN
+ * @permissions: VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN
  */
 export type UpdateVideoStreamInput = {
   /**
@@ -4167,10 +4345,6 @@ export type Video = {
   customId?: Maybe<Scalars['String']>;
   dashManifestPath?: Maybe<Scalars['String']>;
   dashSizeInBytes?: Maybe<Scalars['BigInt']>;
-  /** @deprecated Use `keyId` in `VideoStreams` instead */
-  drmKeyIds?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** @deprecated Use `lengthInSeconds` instead */
-  durationInSeconds?: Maybe<Scalars['Int']>;
   /** Reads and enables pagination through a set of `EncodingHistory`. */
   encodingHistories: EncodingHistoriesConnection;
   encodingProgress?: Maybe<Scalars['Int']>;
@@ -4188,8 +4362,6 @@ export type Video = {
   overallProgress: Scalars['Float'];
   previewComment?: Maybe<Scalars['String']>;
   previewStatus: PreviewStatus;
-  /** @deprecated Use `videoStreams` of type `VIDEO` instead */
-  qualityLevels?: Maybe<Array<Maybe<QualityLevel>>>;
   sourceFileExtension?: Maybe<Scalars['String']>;
   sourceFileName?: Maybe<Scalars['String']>;
   sourceFullFileName?: Maybe<Scalars['String']>;
@@ -4279,9 +4451,6 @@ export type VideoCondition = {
   dashManifestPath?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `dashSizeInBytes` field. */
   dashSizeInBytes?: InputMaybe<Scalars['BigInt']>;
-  drmKeyIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `durationInSeconds` field. */
-  durationInSeconds?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `encodingProgress` field. */
   encodingProgress?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `encodingState` field. */
@@ -4308,8 +4477,6 @@ export type VideoCondition = {
   previewComment?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `previewStatus` field. */
   previewStatus?: InputMaybe<PreviewStatus>;
-  /** Checks for equality with the object’s `qualityLevels` field. */
-  qualityLevels?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
   /** Checks for equality with the object’s `sourceFileExtension` field. */
   sourceFileExtension?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `sourceFileName` field. */
@@ -4395,10 +4562,6 @@ export type VideoFilter = {
   dashManifestPath?: InputMaybe<StringFilter>;
   /** Filter by the object’s `dashSizeInBytes` field. */
   dashSizeInBytes?: InputMaybe<BigIntFilter>;
-  /** Filter by the object’s `drmKeyIds` field. */
-  drmKeyIds?: InputMaybe<StringListFilter>;
-  /** Filter by the object’s `durationInSeconds` field. */
-  durationInSeconds?: InputMaybe<IntFilter>;
   /** Filter by the object’s `encodingHistories` relation. */
   encodingHistories?: InputMaybe<VideoToManyEncodingHistoryFilter>;
   /** Some related `encodingHistories` exist. */
@@ -4557,10 +4720,6 @@ export enum VideosOrderBy {
   DashManifestPathDesc = 'DASH_MANIFEST_PATH_DESC',
   DashSizeInBytesAsc = 'DASH_SIZE_IN_BYTES_ASC',
   DashSizeInBytesDesc = 'DASH_SIZE_IN_BYTES_DESC',
-  DrmKeyIdsAsc = 'DRM_KEY_IDS_ASC',
-  DrmKeyIdsDesc = 'DRM_KEY_IDS_DESC',
-  DurationInSecondsAsc = 'DURATION_IN_SECONDS_ASC',
-  DurationInSecondsDesc = 'DURATION_IN_SECONDS_DESC',
   EncodingProgressAsc = 'ENCODING_PROGRESS_ASC',
   EncodingProgressDesc = 'ENCODING_PROGRESS_DESC',
   EncodingStateAsc = 'ENCODING_STATE_ASC',
@@ -4590,8 +4749,6 @@ export enum VideosOrderBy {
   PreviewStatusDesc = 'PREVIEW_STATUS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  QualityLevelsAsc = 'QUALITY_LEVELS_ASC',
-  QualityLevelsDesc = 'QUALITY_LEVELS_DESC',
   SourceFileExtensionAsc = 'SOURCE_FILE_EXTENSION_ASC',
   SourceFileExtensionDesc = 'SOURCE_FILE_EXTENSION_DESC',
   SourceFileNameAsc = 'SOURCE_FILE_NAME_ASC',
@@ -4707,8 +4864,6 @@ export enum VideosTagsOrderBy {
 /** @permissions: VIDEOS_VIEW,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,VIDEOS_ENCODE,ADMIN */
 export type VideoStream = {
   __typename?: 'VideoStream';
-  /** @deprecated Use `bitrateInKbps` instead */
-  bandwidthInBps?: Maybe<Scalars['Int']>;
   bitrateInKbps?: Maybe<Scalars['Int']>;
   codecs?: Maybe<Scalars['String']>;
   displayAspectRatio?: Maybe<Scalars['String']>;
@@ -4718,8 +4873,6 @@ export type VideoStream = {
   frameRate?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Int']>;
   id: Scalars['UUID'];
-  /** @deprecated Use `file` instead */
-  initialFile?: Maybe<Scalars['String']>;
   iv?: Maybe<Scalars['String']>;
   keyId?: Maybe<Scalars['String']>;
   label: Scalars['String'];
@@ -4739,8 +4892,6 @@ export type VideoStream = {
  * for equality and combined with a logical ‘and.’
  */
 export type VideoStreamCondition = {
-  /** Checks for equality with the object’s `bandwidthInBps` field. */
-  bandwidthInBps?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `bitrateInKbps` field. */
   bitrateInKbps?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `codecs` field. */
@@ -4759,8 +4910,6 @@ export type VideoStreamCondition = {
   height?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']>;
-  /** Checks for equality with the object’s `initialFile` field. */
-  initialFile?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `iv` field. */
   iv?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `keyId` field. */
@@ -4790,8 +4939,6 @@ export type VideoStreamCondition = {
 export type VideoStreamFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<VideoStreamFilter>>;
-  /** Filter by the object’s `bandwidthInBps` field. */
-  bandwidthInBps?: InputMaybe<IntFilter>;
   /** Filter by the object’s `bitrateInKbps` field. */
   bitrateInKbps?: InputMaybe<IntFilter>;
   /** Filter by the object’s `codecs` field. */
@@ -4810,8 +4957,6 @@ export type VideoStreamFilter = {
   height?: InputMaybe<IntFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `initialFile` field. */
-  initialFile?: InputMaybe<StringFilter>;
   /** Filter by the object’s `iv` field. */
   iv?: InputMaybe<StringFilter>;
   /** Filter by the object’s `keyId` field. */
@@ -4912,8 +5057,6 @@ export type VideoStreamsEdge = {
 
 /** Methods to use when ordering `VideoStream`. */
 export enum VideoStreamsOrderBy {
-  BandwidthInBpsAsc = 'BANDWIDTH_IN_BPS_ASC',
-  BandwidthInBpsDesc = 'BANDWIDTH_IN_BPS_DESC',
   BitrateInKbpsAsc = 'BITRATE_IN_KBPS_ASC',
   BitrateInKbpsDesc = 'BITRATE_IN_KBPS_DESC',
   CodecsAsc = 'CODECS_ASC',
@@ -4932,8 +5075,6 @@ export enum VideoStreamsOrderBy {
   HeightDesc = 'HEIGHT_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  InitialFileAsc = 'INITIAL_FILE_ASC',
-  InitialFileDesc = 'INITIAL_FILE_DESC',
   IvAsc = 'IV_ASC',
   IvDesc = 'IV_DESC',
   KeyIdAsc = 'KEY_ID_ASC',
@@ -4996,9 +5137,23 @@ export type VideoStreamTypeFilter = {
   notIn?: InputMaybe<Array<VideoStreamType>>;
 };
 
+export enum VideoSubscriptionEventKey {
+  CuePointChanged = 'CUE_POINT_CHANGED',
+  CuePointCreated = 'CUE_POINT_CREATED',
+  CuePointDeleted = 'CUE_POINT_DELETED',
+  VideoChanged = 'VIDEO_CHANGED',
+  VideoCreated = 'VIDEO_CREATED',
+  VideoDeleted = 'VIDEO_DELETED',
+  VideoTagChanged = 'VIDEO_TAG_CHANGED',
+  VideoTagCreated = 'VIDEO_TAG_CREATED',
+  VideoTagDeleted = 'VIDEO_TAG_DELETED'
+}
+
 export type VideoSubscriptionPayload = {
   __typename?: 'VideoSubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<VideoSubscriptionEventKey>;
   id: Scalars['UUID'];
   video?: Maybe<Video>;
 };

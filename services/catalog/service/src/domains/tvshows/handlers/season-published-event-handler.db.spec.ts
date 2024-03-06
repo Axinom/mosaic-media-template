@@ -111,13 +111,13 @@ describe('SeasonPublishEventHandler', () => {
       );
       const localizations = await select(
         'season_localizations',
-        { season_id: message.payload.content_id },
+        { season_id: payload.content_id },
         {
           columns: ['description', 'synopsis', 'locale', 'is_default_locale'],
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.payload.localizations.map(({ language_tag, ...other }) => ({
+        payload.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),

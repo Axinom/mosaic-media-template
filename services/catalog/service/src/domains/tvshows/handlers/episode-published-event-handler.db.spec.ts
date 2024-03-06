@@ -96,7 +96,7 @@ describe('EpisodePublishEventHandler', () => {
       expect(licenses).toMatchObject(licenses);
       const localizations = await select(
         'episode_localizations',
-        { episode_id: message.payload.content_id },
+        { episode_id: payload.content_id },
         {
           columns: [
             'title',
@@ -108,7 +108,7 @@ describe('EpisodePublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.payload.localizations.map(({ language_tag, ...other }) => ({
+        payload.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),

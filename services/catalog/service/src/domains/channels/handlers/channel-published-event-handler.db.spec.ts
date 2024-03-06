@@ -45,8 +45,8 @@ describe('ChannelPublishEventHandler', () => {
       }).run(ctx.ownerPool);
       expect(channel).toEqual<channel.JSONSelectable>({
         id: channelId,
-        title: message.payload.title,
-        description: message.payload.description ?? null,
+        title: payload.title,
+        description: payload.description ?? null,
         dash_stream_url: null,
         hls_stream_url: null,
         key_id: null,
@@ -59,21 +59,22 @@ describe('ChannelPublishEventHandler', () => {
         },
         { columns: ['height', 'width', 'path', 'type'] },
       ).run(ctx.ownerPool);
-      const { id: imageId, ...messageImage } = message.payload.images![0];
+      const { id: imageId, ...messageImage } = payload.images![0];
       expect(image).toMatchObject(messageImage);
     });
 
     test('An existing channel is republished', async () => {
       // Arrange
       const message = createChannelPublishedMessage(uuid());
-      const channelId = getChannelId(message.payload.id);
+      const payload = message.payload;
+      const channelId = getChannelId(payload.id);
       await insert('channel', {
         id: channelId,
         title: 'Old title',
         dash_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.mpd',
         hls_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.m3u8',
       }).run(ctx.ownerPool);
-      message.payload.title = 'New title';
+      payload.title = 'New title';
 
       // Act
       await ctx.executeOwnerSql(async (txn) => {

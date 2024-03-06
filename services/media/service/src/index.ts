@@ -38,7 +38,6 @@ import {
 } from './common';
 import { syncPermissions } from './domains/permission-definition';
 import { populateSeedData } from './domains/populate-seed-data';
-import { registerLocalizationEntityDefinitions } from './domains/register-localization-entity-definitions';
 import { registerTypes } from './domains/register-types';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
 import { registerMessaging } from './messaging/register-messaging';
@@ -134,11 +133,6 @@ async function bootstrap(): Promise<void> {
   });
 
   await registerTypes(storeOutboxMessage, loginPgPool, config);
-
-  if (config.isLocalizationEnabled) {
-    // Register localization entity definitions for the media service localizable entities.
-    await registerLocalizationEntityDefinitions(broker, config);
-  }
 
   // Populate the DB with some initial seed data
   await populateSeedData(ownerPgPool, logger);

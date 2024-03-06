@@ -3,8 +3,8 @@ import { all, insert, select, selectOne } from 'zapatos/db';
 import { tvshow_genre } from 'zapatos/schema';
 import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
-  createGenrePublishedMessage,
   createTestContext,
+  createTvshowGenrePublishedMessage,
   ITestContext,
 } from '../../../tests/test-utils';
 import { TvshowGenresPublishedEventHandler } from './tvshow-genres-published-event-handler';
@@ -30,7 +30,7 @@ describe('TvshowGenrePublishEventHandler', () => {
   describe('onMessage', () => {
     test('A new tvshow genre is published', async () => {
       // Arrange
-      const message = createGenrePublishedMessage('tvshow_genre-1');
+      const message = createTvshowGenrePublishedMessage('tvshow_genre-1');
 
       // Act
       await ctx.executeOwnerSql(async (txn) => {
@@ -73,7 +73,7 @@ describe('TvshowGenrePublishEventHandler', () => {
         locale: DEFAULT_LOCALE_TAG,
         is_default_locale: true,
       }).run(ctx.ownerPool);
-      const message = createGenrePublishedMessage(contentId);
+      const message = createTvshowGenrePublishedMessage(contentId);
 
       // Act
       await ctx.executeOwnerSql(async (txn) => {
@@ -113,7 +113,7 @@ describe('TvshowGenrePublishEventHandler', () => {
         locale: DEFAULT_LOCALE_TAG,
         is_default_locale: true,
       }).run(ctx.ownerPool);
-      const message = createGenrePublishedMessage('tvshow_genre-2');
+      const message = createTvshowGenrePublishedMessage('tvshow_genre-2');
 
       // Act
       await ctx.executeOwnerSql(async (txn) => {

@@ -122,7 +122,7 @@ describe('MoviePublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.payload.localizations.map(({ language_tag, ...other }) => ({
+        payload.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),
@@ -142,6 +142,7 @@ describe('MoviePublishEventHandler', () => {
         is_default_locale: true,
       }).run(ctx.ownerPool);
       const message = createMoviePublishedMessage('movie-1');
+      const payload = message.payload;
 
       // Act
       await ctx.executeOwnerSql(async (txn) => {
@@ -150,7 +151,7 @@ describe('MoviePublishEventHandler', () => {
 
       // Assert
       const movie = await selectOne('movie', {
-        id: message.payload.content_id,
+        id: payload.content_id,
       }).run(ctx.ownerPool);
 
       expect(movie?.original_title).toEqual('Movie title');
@@ -168,7 +169,7 @@ describe('MoviePublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.payload.localizations.map(({ language_tag, ...other }) => ({
+        payload.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),
