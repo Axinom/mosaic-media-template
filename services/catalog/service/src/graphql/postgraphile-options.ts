@@ -1,6 +1,7 @@
 import {
   AddErrorCodesEnumPluginFactory,
   enhanceGraphqlErrors,
+  OmitFromQueryRootPlugin,
   PostgraphileOptionsBuilder,
 } from '@axinom/mosaic-graphql-common';
 import {
@@ -16,11 +17,7 @@ import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
 import { catalogLogMapper, CommonErrors, Config } from '../common';
 import { AllMoviePlugins } from '../domains/movies/plugins/all-movie-plugins';
 import { AllTvshowPlugins } from '../domains/tvshows/plugins/all-tvshow-plugins';
-import {
-  OmitFromQueryRootPlugin,
-  PgSmallNumericToFloatPlugin,
-  SmartTagsPlugin,
-} from './plugins';
+import { PgSmallNumericToFloatPlugin, SmartTagsPlugin } from './plugins';
 
 export function buildPostgraphileOptions(
   config: Config,

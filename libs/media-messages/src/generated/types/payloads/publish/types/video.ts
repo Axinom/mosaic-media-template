@@ -15,7 +15,7 @@ export interface Video {
    */
   title: string;
   /**
-   * Video length in seconds
+   * Video length in seconds.
    */
   length_in_seconds?: number | null;
   /**
@@ -54,4 +54,16 @@ export interface Video {
    * Output format of the stream.
    */
   output_format: Format;
+  /**
+   * The main URL for the video.
+   */
+  main_url?: string;
+  /**
+   * The DRM Key ID by which the DRM license server can find the content protection key.
+   */
+  drm_key_id?: string;
+  /**
+   * File size in bytes.
+   */
+  file_size_in_bytes?: number;
 }

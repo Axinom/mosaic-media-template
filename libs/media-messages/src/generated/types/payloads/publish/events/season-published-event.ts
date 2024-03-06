@@ -61,4 +61,36 @@ export interface SeasonPublishedEvent {
    * Array of video streams associated with tv show or season.
    */
   videos: Video[];
+  /**
+   * Directors of the media.
+   */
+  directors?: string[];
+  /**
+   * Dynamic field.
+   */
+  dynamic_field?: string;
+  /**
+   * List of extended properties (key/value pairs) for an asset. These properties are not used by MS and are simply passed through to the response models.
+   */
+  extended_field?: string;
+  /**
+   * Custom rating.
+   */
+  custom_rating?: string;
+  /**
+   * The rating of the item.
+   */
+  rating?: number;
+  /**
+   * Age rating for parental ratings.
+   */
+  age_rating?: string;
+  /**
+   * Asset type.
+   */
+  asset_type?: number;
+  /**
+   * Optional asset subtype.
+   */
+  asset_subtype?: string;
 }

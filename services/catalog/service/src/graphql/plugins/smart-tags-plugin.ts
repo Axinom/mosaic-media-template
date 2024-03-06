@@ -14,7 +14,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the movie.',
-            ...disableFilterAndOrder,
           },
           original_title: {
             description: 'Original title of the movie.',
@@ -40,7 +39,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
             description: 'Cast of the movie.',
             tags: {
               name: 'cast',
-              omit: 'filter,order',
             },
           },
           production_countries: {
@@ -49,7 +47,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
           tags: {
             description: 'Array of tags associated with the content.',
-            ...disableFilterAndOrder,
           },
         },
         tags: {
@@ -94,15 +91,12 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           countries: {
             description: 'Array of countries where the license applies.',
-            ...disableFilterAndOrder,
           },
           start_time: {
             description: 'Time when license becomes valid.',
-            ...disableFilterAndOrder,
           },
           end_time: {
             description: 'Time when license becomes invalid.',
-            ...disableFilterAndOrder,
           },
         },
         tags: {
@@ -316,7 +310,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the genre.',
-            ...disableFilterAndOrder,
           },
           order_no: {
             description: 'Global ordering number for the genre.',
@@ -331,7 +324,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the TV show.',
-            ...disableFilterAndOrder,
           },
           original_title: {
             description: 'Original title of the TV show.',
@@ -357,7 +349,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
             description: 'Cast of the TV show.',
             tags: {
               name: 'cast',
-              omit: 'filter,order',
             },
           },
           production_countries: {
@@ -366,7 +357,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
           tags: {
             description: 'Array of tags associated with the content.',
-            ...disableFilterAndOrder,
           },
         },
         tags: {
@@ -411,15 +401,12 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           countries: {
             description: 'Array of countries where the license applies.',
-            ...disableFilterAndOrder,
           },
           start_time: {
             description: 'Time when license becomes valid.',
-            ...disableFilterAndOrder,
           },
           end_time: {
             description: 'Time when license becomes invalid.',
-            ...disableFilterAndOrder,
           },
         },
         tags: {
@@ -634,7 +621,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the genre.',
-            ...disableFilterAndOrder,
           },
           order_no: {
             description: 'Global ordering number for the genre.',
@@ -994,8 +980,10 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
         tags: {
           omit: 'create,update,delete',
-          foreignKey:
+          foreignKey: [
             '(season_id) references app_public.season(id)|@fieldName season',
+            '(tvshow_id) references app_public.tvshow(id)|@fieldName tvshow',
+          ],
         },
       },
       episode_images: {

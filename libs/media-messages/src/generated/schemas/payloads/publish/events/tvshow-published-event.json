@@ -137,6 +137,26 @@
             "description": "Time when license becomes invalid.",
             "type": "string",
             "format": "date-time"
+          },
+          "is_downloadable": {
+            "description": "This asset can be downloaded for later viewing.",
+            "type": "boolean"
+          },
+          "content_owner": {
+            "description": "The name of the content owner.",
+            "type": "string"
+          },
+          "tier": {
+            "description": "A price tier at which the asset should be available in this country.",
+            "type": "string"
+          },
+          "business_type": {
+            "description": "The business type of this item. It could be an advertisement based AVOD type or a premium SVOD item type.",
+            "type": "string"
+          },
+          "downloaded_asset_lifespan": {
+            "description": "Max duration of keeping the downloaded content.",
+            "type": "number"
           }
         },
         "additionalProperties": false
@@ -176,7 +196,7 @@
             "description": "A string with at least one character and not only whitespace characters."
           },
           "length_in_seconds": {
-            "description": "Video length in seconds",
+            "description": "Video length in seconds.",
             "type": [
               "number",
               "null"
@@ -415,6 +435,70 @@
         ],
         "additionalProperties": false
       }
+    },
+    "audio_languages": {
+      "description": "Array of audio languages available in the stream.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "subtitle_languages": {
+      "description": "Array of subtitle languages available in the stream.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "caption_languages": {
+      "description": "Array of caption languages available in the stream.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "directors": {
+      "description": "Directors of the media.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "business_type": {
+      "description": "The business type of this item. It could be an advertisement based AVOD type or a premium SVOD item type.",
+      "type": "string"
+    },
+    "dynamic_field": {
+      "description": "Dynamic field.",
+      "type": "string"
+    },
+    "extended_field": {
+      "description": "List of extended properties (key/value pairs) for an asset. These properties are not used by MS and are simply passed through to the response models.",
+      "type": "string"
+    },
+    "custom_rating": {
+      "description": "Custom rating.",
+      "type": "string"
+    },
+    "rating": {
+      "description": "The rating of the item.",
+      "type": "number"
+    },
+    "age_rating": {
+      "description": "Age rating for parental ratings.",
+      "type": "string"
+    },
+    "asset_type": {
+      "description": "Asset type.",
+      "type": "number"
+    },
+    "asset_subtype": {
+      "description": "Optional asset subtype.",
+      "type": "string"
     }
   },
   "required": [

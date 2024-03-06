@@ -61,6 +61,31 @@
     },
     "videos": {
       "$ref": "./common.json#/definitions/trailers"
+    },
+    "directors": {
+      "description": "Directors or Creators of the movie.",
+      "$ref": "./common.json#/definitions/directors"
+    },
+    "dynamic_field": {
+      "$ref": "./common.json#/definitions/dynamic_field"
+    },
+    "extended_field": {
+      "$ref": "./common.json#/definitions/extended_field"
+    },
+    "custom_rating": {
+      "$ref": "./common.json#/definitions/custom_rating"
+    },
+    "rating": {
+      "$ref": "./common.json#/definitions/rating"
+    },
+    "age_rating": {
+      "$ref": "./common.json#/definitions/age_rating"
+    },
+    "asset_type": {
+      "$ref": "./common.json#/definitions/asset_type"
+    },
+    "asset_subtype": {
+      "$ref": "./common.json#/definitions/asset_subtype"
     }
   },
   "required": [
