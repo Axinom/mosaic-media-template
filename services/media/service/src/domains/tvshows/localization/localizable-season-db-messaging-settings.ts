@@ -5,7 +5,6 @@ export class LocalizableSeasonDbMessagingSettings implements MessagingSettings {
     new LocalizableSeasonDbMessagingSettings(
       'LocalizableSeasonCreated',
       'inbox',
-      '',
       'event',
       'season',
     );
@@ -13,7 +12,6 @@ export class LocalizableSeasonDbMessagingSettings implements MessagingSettings {
     new LocalizableSeasonDbMessagingSettings(
       'LocalizableSeasonUpdated',
       'inbox',
-      '',
       'event',
       'season',
     );
@@ -21,7 +19,6 @@ export class LocalizableSeasonDbMessagingSettings implements MessagingSettings {
     new LocalizableSeasonDbMessagingSettings(
       'LocalizableSeasonDeleted',
       'inbox',
-      '',
       'event',
       'season',
     );
@@ -29,7 +26,6 @@ export class LocalizableSeasonDbMessagingSettings implements MessagingSettings {
     new LocalizableSeasonDbMessagingSettings(
       'LocalizableSeasonImageCreated',
       'inbox',
-      '',
       'event',
       'season-image',
     );
@@ -37,7 +33,6 @@ export class LocalizableSeasonDbMessagingSettings implements MessagingSettings {
     new LocalizableSeasonDbMessagingSettings(
       'LocalizableSeasonImageUpdated',
       'inbox',
-      '',
       'event',
       'season-image',
     );
@@ -45,7 +40,6 @@ export class LocalizableSeasonDbMessagingSettings implements MessagingSettings {
     new LocalizableSeasonDbMessagingSettings(
       'LocalizableSeasonImageDeleted',
       'inbox',
-      '',
       'event',
       'season-image',
     );
@@ -53,11 +47,11 @@ export class LocalizableSeasonDbMessagingSettings implements MessagingSettings {
   private constructor(
     public readonly messageType: string,
     public readonly queue: string,
-    public readonly routingKey: string,
     public readonly action: 'command' | 'event',
     public readonly aggregateType: string,
   ) {}
 
+  public readonly routingKey: string = '';
   public toString = (): string => {
     return this.messageType;
   };

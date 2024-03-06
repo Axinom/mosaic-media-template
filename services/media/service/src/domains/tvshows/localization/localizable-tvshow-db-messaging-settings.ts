@@ -5,7 +5,6 @@ export class LocalizableTvshowDbMessagingSettings implements MessagingSettings {
     new LocalizableTvshowDbMessagingSettings(
       'LocalizableTvshowCreated',
       'inbox',
-      '',
       'event',
       'tvshow',
     );
@@ -13,7 +12,6 @@ export class LocalizableTvshowDbMessagingSettings implements MessagingSettings {
     new LocalizableTvshowDbMessagingSettings(
       'LocalizableTvshowUpdated',
       'inbox',
-      '',
       'event',
       'tvshow',
     );
@@ -21,7 +19,6 @@ export class LocalizableTvshowDbMessagingSettings implements MessagingSettings {
     new LocalizableTvshowDbMessagingSettings(
       'LocalizableTvshowDeleted',
       'inbox',
-      '',
       'event',
       'tvshow',
     );
@@ -29,7 +26,6 @@ export class LocalizableTvshowDbMessagingSettings implements MessagingSettings {
     new LocalizableTvshowDbMessagingSettings(
       'LocalizableTvshowImageCreated',
       'inbox',
-      '',
       'event',
       'tvshow-image',
     );
@@ -37,7 +33,6 @@ export class LocalizableTvshowDbMessagingSettings implements MessagingSettings {
     new LocalizableTvshowDbMessagingSettings(
       'LocalizableTvshowImageUpdated',
       'inbox',
-      '',
       'event',
       'tvshow-image',
     );
@@ -45,7 +40,6 @@ export class LocalizableTvshowDbMessagingSettings implements MessagingSettings {
     new LocalizableTvshowDbMessagingSettings(
       'LocalizableTvshowImageDeleted',
       'inbox',
-      '',
       'event',
       'tvshow-image',
     );
@@ -53,7 +47,6 @@ export class LocalizableTvshowDbMessagingSettings implements MessagingSettings {
     new LocalizableTvshowDbMessagingSettings(
       'LocalizableTvshowGenreCreated',
       'inbox',
-      '',
       'event',
       'tvshow-genre',
     );
@@ -61,7 +54,6 @@ export class LocalizableTvshowDbMessagingSettings implements MessagingSettings {
     new LocalizableTvshowDbMessagingSettings(
       'LocalizableTvshowGenreUpdated',
       'inbox',
-      '',
       'event',
       'tvshow-genre',
     );
@@ -69,7 +61,6 @@ export class LocalizableTvshowDbMessagingSettings implements MessagingSettings {
     new LocalizableTvshowDbMessagingSettings(
       'LocalizableTvshowGenreDeleted',
       'inbox',
-      '',
       'event',
       'tvshow-genre',
     );
@@ -77,11 +68,11 @@ export class LocalizableTvshowDbMessagingSettings implements MessagingSettings {
   private constructor(
     public readonly messageType: string,
     public readonly queue: string,
-    public readonly routingKey: string,
     public readonly action: 'command' | 'event',
     public readonly aggregateType: string,
   ) {}
 
+  public readonly routingKey: string = '';
   public toString = (): string => {
     return this.messageType;
   };

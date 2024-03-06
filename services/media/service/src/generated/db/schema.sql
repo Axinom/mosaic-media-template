@@ -277,23 +277,23 @@ CREATE FUNCTION app_hidden.create_localizable_entity_triggers(aggregateid text, 
     LANGUAGE plpgsql
     AS $_$
 BEGIN
-    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_insert() RETURNS TRIGGER AS $body$ ' ||
-            'DECLARE ' ||
-              '_jsonb_new jsonb := row_to_json(NEW.*); ' ||
-              '_fields text[] := string_to_array(''' || localizable_fields || ''', '','') || string_to_array(''' || required_fields || ''', '',''); ' ||
-              '_payload jsonb := ''{}''::jsonb; ' ||
-              '_field text; ' ||
-            'BEGIN ' ||
-              'FOREACH _field IN ARRAY _fields ' ||
-              'LOOP ' ||
-                'IF coalesce(_jsonb_new ->> _field, '''') != '''' THEN ' ||
-                  '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); '
-                'END IF; ' ||
-              'END LOOP; ' ||
-              'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) ' ||
-              'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Created'', ''parallel'', _payload, NOW()); ' ||
-              'RETURN NEW; ' ||
-            'END; ' ||
+    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_insert() RETURNS TRIGGER AS $body$' || E'\n' ||
+            'DECLARE' || E'\n' ||
+              E'\t' || '_jsonb_new jsonb := row_to_json(NEW.*);' || E'\n' ||
+              E'\t' || '_fields text[] := string_to_array(''' || localizable_fields || ''', '','') || string_to_array(''' || required_fields || ''', '','');' || E'\n' ||
+              E'\t' || '_payload jsonb := ''{}''::jsonb;' || E'\n' ||
+              E'\t' || '_field text;' || E'\n' ||
+            'BEGIN' || E'\n' ||
+              E'\t' || 'FOREACH _field IN ARRAY _fields' || E'\n' ||
+              E'\t' || 'LOOP' || E'\n' ||
+                E'\t\t' || 'IF coalesce(_jsonb_new ->> _field, '''') != '''' THEN' || E'\n' ||
+                  E'\t\t\t' || '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);' || E'\n' ||
+                E'\t\t' || 'END IF;' || E'\n' ||
+              E'\t' || 'END LOOP;' || E'\n' ||
+              E'\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)' || E'\n' ||
+              E'\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Created'', ''parallel'', _payload, NOW());' || E'\n' ||
+              E'\t' || 'RETURN NEW;' || E'\n' ||
+            'END;' || E'\n' ||
             '$body$ LANGUAGE plpgsql volatile;';
 
     EXECUTE 'DROP trigger IF EXISTS _900_localizable_' || entityType || '_insert on app_public.' || tableName || ';';
@@ -301,35 +301,35 @@ BEGIN
             'AFTER INSERT ON app_public.' || tableName || ' FOR EACH ROW WHEN (app_hidden.is_localization_enabled() IS TRUE) ' ||
             'EXECUTE PROCEDURE app_hidden.localizable_' || entityType || '_insert();';
 
-    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_update() RETURNS TRIGGER AS $body$ ' ||
-            'DECLARE ' ||
-              '_jsonb_old jsonb := row_to_json(OLD.*); ' ||
-              '_jsonb_new jsonb := row_to_json(NEW.*); ' ||
-              '_required_fields text[] := string_to_array(''' || required_fields || ''', '',''); ' ||
-              '_localizable_fields text[] := string_to_array(''' || localizable_fields || ''', '',''); ' ||
-              '_payload jsonb := ''{}''::jsonb; ' ||
-              '_metadata jsonb; ' ||
-              '_field text; ' ||
-            'BEGIN ' ||
-              'FOREACH _field IN ARRAY _localizable_fields ' ||
-              'LOOP ' ||
-                'IF coalesce(_jsonb_old ->> _field, '''') != coalesce(_jsonb_new ->> _field, '''') THEN ' ||
-                  '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); '
-                'END IF; ' ||
-              'END LOOP; ' ||
-              'IF _jsonb_new ->> ''ingest_correlation_id'' IS NOT NULL THEN ' ||
-                  '_metadata := jsonb_build_object(''messageContext'', jsonb_build_object(''ingestItemId'', _jsonb_new -> ''ingest_correlation_id'')); '
-              'END IF; ' ||
-              'IF _payload != ''{}''::jsonb OR _metadata IS NOT NULL THEN ' ||          
-                'FOREACH _field IN ARRAY _required_fields ' ||
-                'LOOP ' ||
-                  '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); '
-                'END LOOP; ' ||
-                'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) ' ||
-                'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Updated'', ''parallel'', _payload, _metadata, NOW()); ' ||
-              'END IF; ' ||
-              'RETURN NEW; ' ||
-            'END; ' ||
+    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_update() RETURNS TRIGGER AS $body$' || E'\n' ||
+            'DECLARE' || E'\n' ||
+              E'\t' || '_jsonb_old jsonb := row_to_json(OLD.*);' || E'\n' ||
+              E'\t' || '_jsonb_new jsonb := row_to_json(NEW.*);' || E'\n' ||
+              E'\t' || '_required_fields text[] := string_to_array(''' || required_fields || ''', '','');' || E'\n' ||
+              E'\t' || '_localizable_fields text[] := string_to_array(''' || localizable_fields || ''', '','');' || E'\n' ||
+              E'\t' || '_payload jsonb := ''{}''::jsonb;' || E'\n' ||
+              E'\t' || '_metadata jsonb;' || E'\n' ||
+              E'\t' || '_field text;' || E'\n' ||
+            'BEGIN' || E'\n' ||
+              E'\t' || 'FOREACH _field IN ARRAY _localizable_fields' || E'\n' ||
+              E'\t' || 'LOOP' || E'\n' ||
+                E'\t\t' || 'IF coalesce(_jsonb_old ->> _field, '''') != coalesce(_jsonb_new ->> _field, '''') THEN' || E'\n' ||
+                  E'\t\t\t' || '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);' || E'\n' ||
+                E'\t\t' || 'END IF;' || E'\n' ||
+              E'\t' || 'END LOOP;' || E'\n' ||
+              E'\t' || 'IF _jsonb_new ->> ''ingest_correlation_id'' IS NOT NULL THEN' || E'\n' ||
+                  E'\t\t\t' || '_metadata := jsonb_build_object(''messageContext'', jsonb_build_object(''ingestItemId'', _jsonb_new -> ''ingest_correlation_id''));' || E'\n' ||
+              E'\t' || 'END IF;' || E'\n' ||
+              E'\t' || 'IF _payload != ''{}''::jsonb OR _metadata IS NOT NULL THEN' ||  E'\n' ||        
+                E'\t\t' || 'FOREACH _field IN ARRAY _required_fields' || E'\n' ||
+                E'\t\t' || 'LOOP' || E'\n' ||
+                  E'\t\t\t' || '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);' || E'\n' ||
+                E'\t\t' || 'END LOOP;' || E'\n' ||
+                E'\t\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)' || E'\n' ||
+                E'\t\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Updated'', ''parallel'', _payload, _metadata, NOW());' || E'\n' ||
+              E'\t' || 'END IF;' || E'\n' ||
+              E'\t' || 'RETURN NEW;' || E'\n' ||
+            'END;' || E'\n' ||
             '$body$ LANGUAGE plpgsql volatile;';
 
     EXECUTE 'DROP trigger IF EXISTS _900_localizable_' || entityType || '_update on app_public.' || tableName || ';';
@@ -337,18 +337,18 @@ BEGIN
             'AFTER UPDATE ON app_public.' || tableName || ' FOR EACH ROW WHEN (app_hidden.is_localization_enabled() IS TRUE) ' ||
             'EXECUTE PROCEDURE app_hidden.localizable_' || entityType || '_update();';
 
-    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_delete() RETURNS TRIGGER AS $body$ ' ||
-            'DECLARE ' ||
-              '_jsonb_old jsonb := row_to_json(OLD.*); ' ||
-              '_fields text[] := string_to_array(''' || required_fields || ''', '',''); ' ||
-              '_payload jsonb := ''{}''::jsonb; ' ||
-            'BEGIN ' ||
-              'SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) ' ||
-              'FROM (SELECT unnest(_fields) AS field) as f INTO _payload; ' ||
-              'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) ' ||
-              'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), OLD.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Deleted'', ''parallel'', _payload, NOW()); ' ||
-              'RETURN OLD; ' ||
-            'END; ' ||
+    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_delete() RETURNS TRIGGER AS $body$' || E'\n' ||
+            'DECLARE' || E'\n' ||
+              E'\t' || '_jsonb_old jsonb := row_to_json(OLD.*);' || E'\n' ||
+              E'\t' || '_fields text[] := string_to_array(''' || required_fields || ''', '','');' || E'\n' ||
+              E'\t' || '_payload jsonb := ''{}''::jsonb;' || E'\n' ||
+            'BEGIN' || E'\n' ||
+              E'\t' || 'SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)' || E'\n' ||
+              E'\t' || 'FROM (SELECT unnest(_fields) AS field) as f INTO _payload;' || E'\n' ||
+              E'\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)' || E'\n' ||
+              E'\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), OLD.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Deleted'', ''parallel'', _payload, NOW());' || E'\n' ||
+              E'\t' || 'RETURN OLD;' || E'\n' ||
+            'END;' || E'\n' ||
             '$body$ LANGUAGE plpgsql volatile;';
 
     EXECUTE 'DROP trigger IF EXISTS _900_localizable_' || entityType || '_delete on app_public.' || tableName || ';';
@@ -479,7 +479,19 @@ CREATE FUNCTION app_hidden.is_localization_enabled() RETURNS boolean
 
 CREATE FUNCTION app_hidden.localizable_collection_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -488,7 +500,19 @@ CREATE FUNCTION app_hidden.localizable_collection_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_collection_image_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('collection_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('collection_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -497,7 +521,24 @@ CREATE FUNCTION app_hidden.localizable_collection_image_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_collection_image_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('image_id', ',') || string_to_array('collection_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('image_id', ',') || string_to_array('collection_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -506,7 +547,36 @@ CREATE FUNCTION app_hidden.localizable_collection_image_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_collection_image_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('collection_id,image_id,image_type', ','); _localizable_fields text[] := string_to_array('image_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('collection_id,image_id,image_type', ',');
+	_localizable_fields text[] := string_to_array('image_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -515,7 +585,24 @@ CREATE FUNCTION app_hidden.localizable_collection_image_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_collection_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -524,7 +611,36 @@ CREATE FUNCTION app_hidden.localizable_collection_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_collection_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id', ','); _localizable_fields text[] := string_to_array('title,synopsis,description', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -533,7 +649,19 @@ CREATE FUNCTION app_hidden.localizable_collection_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_episode_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id,index', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id,index', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -542,7 +670,19 @@ CREATE FUNCTION app_hidden.localizable_episode_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_episode_image_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('episode_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('episode_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -551,7 +691,24 @@ CREATE FUNCTION app_hidden.localizable_episode_image_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_episode_image_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('image_id', ',') || string_to_array('episode_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('image_id', ',') || string_to_array('episode_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -560,7 +717,36 @@ CREATE FUNCTION app_hidden.localizable_episode_image_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_episode_image_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('episode_id,image_id,image_type', ','); _localizable_fields text[] := string_to_array('image_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('episode_id,image_id,image_type', ',');
+	_localizable_fields text[] := string_to_array('image_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -569,7 +755,24 @@ CREATE FUNCTION app_hidden.localizable_episode_image_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_episode_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title,synopsis,description,season_id', ',') || string_to_array('id,index', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title,synopsis,description,season_id', ',') || string_to_array('id,index', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -578,7 +781,36 @@ CREATE FUNCTION app_hidden.localizable_episode_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_episode_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id,index', ','); _localizable_fields text[] := string_to_array('title,synopsis,description,season_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id,index', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,season_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -587,7 +819,19 @@ CREATE FUNCTION app_hidden.localizable_episode_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_movie_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -596,7 +840,19 @@ CREATE FUNCTION app_hidden.localizable_movie_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_movie_genre_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -605,7 +861,24 @@ CREATE FUNCTION app_hidden.localizable_movie_genre_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_movie_genre_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title', ',') || string_to_array('id', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -614,7 +887,36 @@ CREATE FUNCTION app_hidden.localizable_movie_genre_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_movie_genre_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id', ','); _localizable_fields text[] := string_to_array('title', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -623,7 +925,19 @@ CREATE FUNCTION app_hidden.localizable_movie_genre_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_movie_image_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('movie_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('movie_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -632,7 +946,24 @@ CREATE FUNCTION app_hidden.localizable_movie_image_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_movie_image_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('image_id', ',') || string_to_array('movie_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('image_id', ',') || string_to_array('movie_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -641,7 +972,36 @@ CREATE FUNCTION app_hidden.localizable_movie_image_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_movie_image_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('movie_id,image_id,image_type', ','); _localizable_fields text[] := string_to_array('image_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('movie_id,image_id,image_type', ',');
+	_localizable_fields text[] := string_to_array('image_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -650,7 +1010,24 @@ CREATE FUNCTION app_hidden.localizable_movie_image_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_movie_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -659,7 +1036,36 @@ CREATE FUNCTION app_hidden.localizable_movie_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_movie_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id', ','); _localizable_fields text[] := string_to_array('title,synopsis,description', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -668,7 +1074,19 @@ CREATE FUNCTION app_hidden.localizable_movie_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_season_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id,index', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id,index', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -677,7 +1095,19 @@ CREATE FUNCTION app_hidden.localizable_season_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_season_image_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('season_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('season_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -686,7 +1116,24 @@ CREATE FUNCTION app_hidden.localizable_season_image_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_season_image_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('image_id', ',') || string_to_array('season_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('image_id', ',') || string_to_array('season_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -695,7 +1142,36 @@ CREATE FUNCTION app_hidden.localizable_season_image_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_season_image_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('season_id,image_id,image_type', ','); _localizable_fields text[] := string_to_array('image_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('season_id,image_id,image_type', ',');
+	_localizable_fields text[] := string_to_array('image_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -704,7 +1180,24 @@ CREATE FUNCTION app_hidden.localizable_season_image_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_season_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('synopsis,description,tvshow_id', ',') || string_to_array('id,index', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('synopsis,description,tvshow_id', ',') || string_to_array('id,index', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -713,7 +1206,36 @@ CREATE FUNCTION app_hidden.localizable_season_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_season_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id,index', ','); _localizable_fields text[] := string_to_array('synopsis,description,tvshow_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id,index', ',');
+	_localizable_fields text[] := string_to_array('synopsis,description,tvshow_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -722,7 +1244,19 @@ CREATE FUNCTION app_hidden.localizable_season_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_tvshow_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -731,7 +1265,19 @@ CREATE FUNCTION app_hidden.localizable_tvshow_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_tvshow_genre_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('id', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -740,7 +1286,24 @@ CREATE FUNCTION app_hidden.localizable_tvshow_genre_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_tvshow_genre_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title', ',') || string_to_array('id', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -749,7 +1312,36 @@ CREATE FUNCTION app_hidden.localizable_tvshow_genre_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_tvshow_genre_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id', ','); _localizable_fields text[] := string_to_array('title', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -758,7 +1350,19 @@ CREATE FUNCTION app_hidden.localizable_tvshow_genre_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_tvshow_image_delete() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _fields text[] := string_to_array('tvshow_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; BEGIN SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field) FROM (SELECT unnest(_fields) AS field) as f INTO _payload; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Deleted', 'parallel', _payload, NOW()); RETURN OLD; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('tvshow_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
 
 
 --
@@ -767,7 +1371,24 @@ CREATE FUNCTION app_hidden.localizable_tvshow_image_delete() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_tvshow_image_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('image_id', ',') || string_to_array('tvshow_id,image_id,image_type', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('image_id', ',') || string_to_array('tvshow_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -776,7 +1397,36 @@ CREATE FUNCTION app_hidden.localizable_tvshow_image_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_tvshow_image_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('tvshow_id,image_id,image_type', ','); _localizable_fields text[] := string_to_array('image_id', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('tvshow_id,image_id,image_type', ',');
+	_localizable_fields text[] := string_to_array('image_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -785,7 +1435,24 @@ CREATE FUNCTION app_hidden.localizable_tvshow_image_update() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_tvshow_insert() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_new jsonb := row_to_json(NEW.*); _fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ','); _payload jsonb := '{}'::jsonb; _field text; BEGIN FOREACH _field IN ARRAY _fields LOOP IF coalesce(_jsonb_new ->> _field, '') != '' THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Created', 'parallel', _payload, NOW()); RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -794,7 +1461,36 @@ CREATE FUNCTION app_hidden.localizable_tvshow_insert() RETURNS trigger
 
 CREATE FUNCTION app_hidden.localizable_tvshow_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$ DECLARE _jsonb_old jsonb := row_to_json(OLD.*); _jsonb_new jsonb := row_to_json(NEW.*); _required_fields text[] := string_to_array('id', ','); _localizable_fields text[] := string_to_array('title,synopsis,description', ','); _payload jsonb := '{}'::jsonb; _metadata jsonb; _field text; BEGIN FOREACH _field IN ARRAY _localizable_fields LOOP IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END IF; END LOOP; IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN _metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id')); END IF; IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN FOREACH _field IN ARRAY _required_fields LOOP _payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field); END LOOP; INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at) VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Updated', 'parallel', _payload, _metadata, NOW()); END IF; RETURN NEW; END; $$;
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
 
 
 SET default_tablespace = '';

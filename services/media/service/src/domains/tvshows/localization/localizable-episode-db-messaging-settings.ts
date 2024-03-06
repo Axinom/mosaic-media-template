@@ -7,7 +7,6 @@ export class LocalizableEpisodeDbMessagingSettings
     new LocalizableEpisodeDbMessagingSettings(
       'LocalizableEpisodeCreated',
       'inbox',
-      '',
       'event',
       'episode',
     );
@@ -15,7 +14,6 @@ export class LocalizableEpisodeDbMessagingSettings
     new LocalizableEpisodeDbMessagingSettings(
       'LocalizableEpisodeUpdated',
       'inbox',
-      '',
       'event',
       'episode',
     );
@@ -23,7 +21,6 @@ export class LocalizableEpisodeDbMessagingSettings
     new LocalizableEpisodeDbMessagingSettings(
       'LocalizableEpisodeDeleted',
       'inbox',
-      '',
       'event',
       'episode',
     );
@@ -31,7 +28,6 @@ export class LocalizableEpisodeDbMessagingSettings
     new LocalizableEpisodeDbMessagingSettings(
       'LocalizableEpisodeImageCreated',
       'inbox',
-      '',
       'event',
       'episode-image',
     );
@@ -39,7 +35,6 @@ export class LocalizableEpisodeDbMessagingSettings
     new LocalizableEpisodeDbMessagingSettings(
       'LocalizableEpisodeImageUpdated',
       'inbox',
-      '',
       'event',
       'episode-image',
     );
@@ -47,7 +42,6 @@ export class LocalizableEpisodeDbMessagingSettings
     new LocalizableEpisodeDbMessagingSettings(
       'LocalizableEpisodeImageDeleted',
       'inbox',
-      '',
       'event',
       'episode-image',
     );
@@ -55,11 +49,11 @@ export class LocalizableEpisodeDbMessagingSettings
   private constructor(
     public readonly messageType: string,
     public readonly queue: string,
-    public readonly routingKey: string,
     public readonly action: 'command' | 'event',
     public readonly aggregateType: string,
   ) {}
 
+  public readonly routingKey: string = '';
   public toString = (): string => {
     return this.messageType;
   };

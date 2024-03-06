@@ -45,7 +45,7 @@ export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInbo
       !checkIsIngestEvent(metadata, this.logger, id, aggregateId) ||
       payload.service_id !== this.config.serviceId
     ) {
-      // skipping events for entity types from different services
+      // skipping events for entity types from different services and non-ingest events
       return;
     }
 

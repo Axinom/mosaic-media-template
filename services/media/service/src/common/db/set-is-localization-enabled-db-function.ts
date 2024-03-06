@@ -6,6 +6,11 @@ import { raw, sql } from 'zapatos/db';
  * return the value of `IS_LOCALIZATION_ENABLED` variable, enabling or disabling
  * the localizable entity triggers. Call this on every service startup to align
  * with the latest config value.
+ *
+ * Alternatively, if there is no intention to enable or disable localization
+ * dynamically, this function call can be removed from startup logic and an
+ * explicit database migration can be added to set
+ * app_hidden.is_localization_enabled() to return either true or false.
  */
 export const setIsLocalizationEnabledDbFunction = async (
   isLocalizationEnabled: boolean,

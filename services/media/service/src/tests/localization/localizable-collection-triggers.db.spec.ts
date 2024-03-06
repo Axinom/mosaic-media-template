@@ -235,7 +235,6 @@ describe('Collection localizable triggers', () => {
 
   describe('collections_images', () => {
     it('Collection COVER inserted -> inbox entry added', async () => {
-      // TEASER is expected to be skipped in the message handler
       // Act
       const image = await insert('collections_images', {
         collection_id: collection.id,

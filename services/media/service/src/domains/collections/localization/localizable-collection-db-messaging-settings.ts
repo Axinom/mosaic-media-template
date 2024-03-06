@@ -7,7 +7,6 @@ export class LocalizableCollectionDbMessagingSettings
     new LocalizableCollectionDbMessagingSettings(
       'LocalizableCollectionCreated',
       'inbox',
-      '',
       'event',
       'collection',
     );
@@ -15,7 +14,6 @@ export class LocalizableCollectionDbMessagingSettings
     new LocalizableCollectionDbMessagingSettings(
       'LocalizableCollectionUpdated',
       'inbox',
-      '',
       'event',
       'collection',
     );
@@ -23,7 +21,6 @@ export class LocalizableCollectionDbMessagingSettings
     new LocalizableCollectionDbMessagingSettings(
       'LocalizableCollectionDeleted',
       'inbox',
-      '',
       'event',
       'collection',
     );
@@ -31,7 +28,6 @@ export class LocalizableCollectionDbMessagingSettings
     new LocalizableCollectionDbMessagingSettings(
       'LocalizableCollectionImageCreated',
       'inbox',
-      '',
       'event',
       'collection-image',
     );
@@ -39,7 +35,6 @@ export class LocalizableCollectionDbMessagingSettings
     new LocalizableCollectionDbMessagingSettings(
       'LocalizableCollectionImageUpdated',
       'inbox',
-      '',
       'event',
       'collection-image',
     );
@@ -47,7 +42,6 @@ export class LocalizableCollectionDbMessagingSettings
     new LocalizableCollectionDbMessagingSettings(
       'LocalizableCollectionImageDeleted',
       'inbox',
-      '',
       'event',
       'collection-image',
     );
@@ -55,11 +49,11 @@ export class LocalizableCollectionDbMessagingSettings
   private constructor(
     public readonly messageType: string,
     public readonly queue: string,
-    public readonly routingKey: string,
     public readonly action: 'command' | 'event',
     public readonly aggregateType: string,
   ) {}
 
+  public readonly routingKey: string = '';
   public toString = (): string => {
     return this.messageType;
   };

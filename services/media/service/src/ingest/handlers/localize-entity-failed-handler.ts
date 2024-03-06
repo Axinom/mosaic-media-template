@@ -45,7 +45,7 @@ export class LocalizeEntityFailedHandler extends MediaGuardedTransactionalInboxM
       !checkIsIngestEvent(metadata, this.logger, id, aggregateId) ||
       payload.service_id !== this.config.serviceId
     ) {
-      // skipping events for entity types from different services
+      // skipping events for entity types from different services and non-ingest events
       return;
     }
     const messageContext = metadata.messageContext as IngestMessageContext;

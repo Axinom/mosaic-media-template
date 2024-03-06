@@ -5,7 +5,6 @@ export class LocalizableMovieDbMessagingSettings implements MessagingSettings {
     new LocalizableMovieDbMessagingSettings(
       'LocalizableMovieCreated',
       'inbox',
-      '',
       'event',
       'movie',
     );
@@ -13,7 +12,6 @@ export class LocalizableMovieDbMessagingSettings implements MessagingSettings {
     new LocalizableMovieDbMessagingSettings(
       'LocalizableMovieUpdated',
       'inbox',
-      '',
       'event',
       'movie',
     );
@@ -21,7 +19,6 @@ export class LocalizableMovieDbMessagingSettings implements MessagingSettings {
     new LocalizableMovieDbMessagingSettings(
       'LocalizableMovieDeleted',
       'inbox',
-      '',
       'event',
       'movie',
     );
@@ -29,7 +26,6 @@ export class LocalizableMovieDbMessagingSettings implements MessagingSettings {
     new LocalizableMovieDbMessagingSettings(
       'LocalizableMovieImageCreated',
       'inbox',
-      '',
       'event',
       'movie-image',
     );
@@ -37,7 +33,6 @@ export class LocalizableMovieDbMessagingSettings implements MessagingSettings {
     new LocalizableMovieDbMessagingSettings(
       'LocalizableMovieImageUpdated',
       'inbox',
-      '',
       'event',
       'movie-image',
     );
@@ -45,7 +40,6 @@ export class LocalizableMovieDbMessagingSettings implements MessagingSettings {
     new LocalizableMovieDbMessagingSettings(
       'LocalizableMovieImageDeleted',
       'inbox',
-      '',
       'event',
       'movie-image',
     );
@@ -53,7 +47,6 @@ export class LocalizableMovieDbMessagingSettings implements MessagingSettings {
     new LocalizableMovieDbMessagingSettings(
       'LocalizableMovieGenreCreated',
       'inbox',
-      '',
       'event',
       'movie-genre',
     );
@@ -61,7 +54,6 @@ export class LocalizableMovieDbMessagingSettings implements MessagingSettings {
     new LocalizableMovieDbMessagingSettings(
       'LocalizableMovieGenreUpdated',
       'inbox',
-      '',
       'event',
       'movie-genre',
     );
@@ -69,7 +61,6 @@ export class LocalizableMovieDbMessagingSettings implements MessagingSettings {
     new LocalizableMovieDbMessagingSettings(
       'LocalizableMovieGenreDeleted',
       'inbox',
-      '',
       'event',
       'movie-genre',
     );
@@ -77,11 +68,11 @@ export class LocalizableMovieDbMessagingSettings implements MessagingSettings {
   private constructor(
     public readonly messageType: string,
     public readonly queue: string,
-    public readonly routingKey: string,
     public readonly action: 'command' | 'event',
     public readonly aggregateType: string,
   ) {}
 
+  public readonly routingKey: string = '';
   public toString = (): string => {
     return this.messageType;
   };
