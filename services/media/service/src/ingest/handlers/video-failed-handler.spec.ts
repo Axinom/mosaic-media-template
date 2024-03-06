@@ -58,7 +58,7 @@ describe('VideoFailedHandler', () => {
       };
 
       // Act
-      handler.handleMessage(
+      await handler.handleMessage(
         createMessage(payload, context),
         stub<ClientBase>(),
       );

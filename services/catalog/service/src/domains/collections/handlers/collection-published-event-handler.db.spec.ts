@@ -86,7 +86,7 @@ describe('CollectionPublishEventHandler', () => {
 
       const localizations = await select(
         'collection_localizations',
-        { collection_id: message.payload.content_id },
+        { collection_id: payload.content_id },
         {
           columns: [
             'title',
@@ -98,7 +98,7 @@ describe('CollectionPublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.payload.localizations.map(({ language_tag, ...other }) => ({
+        payload.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),
@@ -130,7 +130,7 @@ describe('CollectionPublishEventHandler', () => {
         id: payload.content_id,
       }).run(ctx.ownerPool);
 
-      expect(collection?.tags).toEqual(message.payload.tags);
+      expect(collection?.tags).toEqual(payload.tags);
       const localizations = await select(
         'collection_localizations',
         { collection_id: 'collection-1' },
@@ -145,7 +145,7 @@ describe('CollectionPublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(localizations).toIncludeSameMembers(
-        message.payload.localizations.map(({ language_tag, ...other }) => ({
+        payload.localizations.map(({ language_tag, ...other }) => ({
           ...other,
           locale: language_tag,
         })),

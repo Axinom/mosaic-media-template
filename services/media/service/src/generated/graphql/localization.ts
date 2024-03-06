@@ -90,6 +90,13 @@ export type CreateLocalePayloadLocaleEdgeArgs = {
   orderBy?: InputMaybe<Array<LocalesOrderBy>>;
 };
 
+export enum CreateLocaleState {
+  /** Active */
+  Active = 'ACTIVE',
+  /** Inactive */
+  Inactive = 'INACTIVE'
+}
+
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Equal to the specified value. */
@@ -734,6 +741,8 @@ export enum ErrorCodesEnum {
   AuthorizationOptionsMisconfigured = 'AUTHORIZATION_OPTIONS_MISCONFIGURED',
   /** Cannot change the state of the default locale (tried to update "%s" to "%s"). */
   CannotChangeStateOfDefaultLocale = 'CANNOT_CHANGE_STATE_OF_DEFAULT_LOCALE',
+  /** Cannot delete an active locale (tried to delete "%s"). */
+  CannotDeleteActiveLocale = 'CANNOT_DELETE_ACTIVE_LOCALE',
   /** Cannot delete the default locale when there are still other non-default locales (tried to delete "%s"). */
   CannotDeleteDefaultLocale = 'CANNOT_DELETE_DEFAULT_LOCALE',
   /** A database operation has failed because of a lock timeout. */
@@ -766,8 +775,6 @@ export enum ErrorCodesEnum {
   LocaleAlreadyBeingDeleted = 'LOCALE_ALREADY_BEING_DELETED',
   /** The locale was not found. */
   LocaleNotFound = 'LOCALE_NOT_FOUND',
-  /** Cannot delete an active locale (tried to delete "%s"). */
-  LocaleNotInactive = 'LOCALE_NOT_INACTIVE',
   /** The localization source entity was not found. */
   LocalizationSourceEntityNotFound = 'LOCALIZATION_SOURCE_ENTITY_NOT_FOUND',
   /** Malformed access token received */
@@ -792,6 +799,12 @@ export enum ErrorCodesEnum {
   SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
+  /** User is authenticated, but subject information was not found. Please contact Axinom Support. */
+  SubjectNotFound = 'SUBJECT_NOT_FOUND',
+  /** The subject has no permissions. */
+  Unauthorized = 'UNAUTHORIZED',
+  /** Unexpected null or undefined value received. */
+  UnexpectedNullUndefined = 'UNEXPECTED_NULL_UNDEFINED',
   /** An unhandled database-related error has occurred. Please contact the service support. */
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
@@ -960,6 +973,7 @@ export type LocaleInput = {
    * @notEmpty()
    */
   languageTag: Scalars['String'];
+  state?: InputMaybe<CreateLocaleState>;
   /**
    * @isTrimmed()
    * @notEmpty()
@@ -1284,9 +1298,17 @@ export type LocalizationSourceEntityPatch = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export enum LocalizationSourceEntitySubscriptionEventKey {
+  LocalizationSourceEntityChanged = 'LOCALIZATION_SOURCE_ENTITY_CHANGED',
+  LocalizationSourceEntityCreated = 'LOCALIZATION_SOURCE_ENTITY_CREATED',
+  LocalizationSourceEntityDeleted = 'LOCALIZATION_SOURCE_ENTITY_DELETED'
+}
+
 export type LocalizationSourceEntitySubscriptionPayload = {
   __typename?: 'LocalizationSourceEntitySubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<LocalizationSourceEntitySubscriptionEventKey>;
   id: Scalars['UUID'];
   localizationSourceEntity?: Maybe<LocalizationSourceEntity>;
 };
@@ -1438,9 +1460,17 @@ export type LocalizedEntityFilter = {
   updatedUser?: InputMaybe<StringFilter>;
 };
 
+export enum LocalizedEntitySubscriptionEventKey {
+  LocalizedEntityChanged = 'LOCALIZED_ENTITY_CHANGED',
+  LocalizedEntityCreated = 'LOCALIZED_ENTITY_CREATED',
+  LocalizedEntityDeleted = 'LOCALIZED_ENTITY_DELETED'
+}
+
 export type LocalizedEntitySubscriptionPayload = {
   __typename?: 'LocalizedEntitySubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<LocalizedEntitySubscriptionEventKey>;
   id: Scalars['UUID'];
   localizedEntity?: Maybe<LocalizedEntity>;
 };

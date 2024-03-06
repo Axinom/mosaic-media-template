@@ -114,7 +114,7 @@ export function createMovieGenresPublishedMessage(
   });
 }
 
-export function createGenrePublishedMessage(
+export function createTvshowGenrePublishedMessage(
   contentId: string,
 ): TypedTransactionalMessage<TvshowGenresPublishedEvent> {
   return createMessage({
