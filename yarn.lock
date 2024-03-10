@@ -5201,11 +5201,6 @@ colorette@^2.0.16:
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.19.tgz#cdf044f47ad41a0f4b56b3a0d5b4e6e1a2d5a798"
   integrity sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ==
 
-colors@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
-  integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
-
 combined-stream@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
@@ -6964,13 +6959,12 @@ gensync@^1.0.0-beta.2:
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
   integrity sha1-MqbudsPX9S1GsrGuXZP+qFgKJeA=
 
-geoip-country@^4.1.25:
-  version "4.1.25"
-  resolved "https://registry.yarnpkg.com/geoip-country/-/geoip-country-4.1.25.tgz#26026995073f4fa9fc6b3514302b06a1e14edf2a"
-  integrity sha512-nqPwjW69tgujuIEJKvNXV1M+OftNohAixt/5pIGDweTxkBmwhNaekU6Wyw/bp8DMVI3aN2Rjn4vdb9y9ARboBg==
+geoip-country@^4.2.76:
+  version "4.2.76"
+  resolved "https://registry.yarnpkg.com/geoip-country/-/geoip-country-4.2.76.tgz#9bab0a4e29c6a7d4e6a2d181dc275833a34a2690"
+  integrity sha512-j+sZFeeTUwchkVIsv5pzV5SN1Gf/7pLhIVeNOS3OQErpiyIuehigKDMSvYVl+yxxDaXa6bTfM9HWoEIwFUkcLQ==
   dependencies:
     async "^2.6.4"
-    colors "^1.4.0"
     iconv-lite "^0.5.2"
     ip-address "^6.3.0"
     lazy "^1.0.11"
