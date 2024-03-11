@@ -126,7 +126,7 @@ describe('TvshowGenrePublishEventHandler', () => {
       ]).run(ctx.ownerPool);
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(
           {} as TypedTransactionalMessage<TvshowGenresUnpublishedEvent>,
           txn,

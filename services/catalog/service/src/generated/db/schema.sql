@@ -5122,7 +5122,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.collection_items_relation_id_seq TO ca
 -- Name: TABLE collection_localizations; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.collection_localizations TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.collection_localizations TO catalog_service_gql_role;
 
 
 --
@@ -5192,7 +5192,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_licenses_id_seq TO catalog_ser
 -- Name: TABLE episode_localizations; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_localizations TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_localizations TO catalog_service_gql_role;
 
 
 --
@@ -5269,7 +5269,7 @@ GRANT SELECT ON TABLE app_public.movie_genre TO catalog_service_gql_role;
 -- Name: TABLE movie_genre_localizations; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_genre_localizations TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_genre_localizations TO catalog_service_gql_role;
 
 
 --
@@ -5332,7 +5332,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_licenses_id_seq TO catalog_servi
 -- Name: TABLE movie_localizations; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_localizations TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_localizations TO catalog_service_gql_role;
 
 
 --
@@ -5444,7 +5444,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_licenses_id_seq TO catalog_serv
 -- Name: TABLE season_localizations; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_localizations TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_localizations TO catalog_service_gql_role;
 
 
 --
@@ -5521,7 +5521,7 @@ GRANT SELECT ON TABLE app_public.tvshow_genre TO catalog_service_gql_role;
 -- Name: TABLE tvshow_genre_localizations; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_genre_localizations TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_genre_localizations TO catalog_service_gql_role;
 
 
 --
@@ -5584,7 +5584,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_licenses_id_seq TO catalog_serv
 -- Name: TABLE tvshow_localizations; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_localizations TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_localizations TO catalog_service_gql_role;
 
 
 --

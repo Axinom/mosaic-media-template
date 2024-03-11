@@ -1,5 +1,5 @@
---! Previous: sha1:a588014c99783319a56e38380e970b4877d2257c
---! Hash: sha1:9332bddeaf0d025ebf3036fa97f06e391b4072ca
+--! Previous: sha1:4a82e9d577afc339b96a80e41df75fee7615c479
+--! Hash: sha1:7450cde0cb372030062d77be9527127598e1180f
 --! Message: localizations-added
 
 /*
@@ -68,7 +68,7 @@ SELECT app_private.define_localization_view(
   'movie_localizations',
   'movie_id');
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON app_public.movie_localizations TO ":DATABASE_GQL_ROLE";
+GRANT SELECT ON app_public.movie_localizations TO ":DATABASE_GQL_ROLE";
 
 -- Movie Genres
 CREATE TABLE IF NOT EXISTS app_public.movie_genre_localizations(
@@ -95,7 +95,7 @@ END $$;
 
 ALTER TABLE app_public.movie_genre DROP COLUMN IF EXISTS title;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON app_public.movie_genre_localizations TO ":DATABASE_GQL_ROLE";
+GRANT SELECT ON app_public.movie_genre_localizations TO ":DATABASE_GQL_ROLE";
 
 SELECT app_private.define_localization_view(
   ARRAY['title'],
@@ -132,7 +132,7 @@ ALTER TABLE app_public.tvshow DROP COLUMN IF EXISTS title;
 ALTER TABLE app_public.tvshow DROP COLUMN IF EXISTS description;
 ALTER TABLE app_public.tvshow DROP COLUMN IF EXISTS synopsis;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON app_public.tvshow_localizations TO ":DATABASE_GQL_ROLE";
+GRANT SELECT ON app_public.tvshow_localizations TO ":DATABASE_GQL_ROLE";
 
 SELECT app_private.define_localization_view(
   ARRAY['title', 'description', 'synopsis'],
@@ -165,7 +165,7 @@ END $$;
 
 ALTER TABLE app_public.tvshow_genre DROP COLUMN IF EXISTS title;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON app_public.tvshow_genre_localizations TO ":DATABASE_GQL_ROLE";
+GRANT SELECT ON app_public.tvshow_genre_localizations TO ":DATABASE_GQL_ROLE";
 
 SELECT app_private.define_localization_view(
   ARRAY['title'],
@@ -200,7 +200,7 @@ END $$;
 ALTER TABLE app_public.season DROP COLUMN IF EXISTS description;
 ALTER TABLE app_public.season DROP COLUMN IF EXISTS synopsis;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON app_public.season_localizations TO ":DATABASE_GQL_ROLE";
+GRANT SELECT ON app_public.season_localizations TO ":DATABASE_GQL_ROLE";
 
 SELECT app_private.define_localization_view(
   ARRAY['description', 'synopsis'],
@@ -237,7 +237,7 @@ ALTER TABLE app_public.episode DROP COLUMN IF EXISTS title;
 ALTER TABLE app_public.episode DROP COLUMN IF EXISTS description;
 ALTER TABLE app_public.episode DROP COLUMN IF EXISTS synopsis;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON app_public.episode_localizations TO ":DATABASE_GQL_ROLE";
+GRANT SELECT ON app_public.episode_localizations TO ":DATABASE_GQL_ROLE";
 
 SELECT app_private.define_localization_view(
   ARRAY['title', 'description', 'synopsis'],
@@ -274,7 +274,7 @@ ALTER TABLE app_public.collection DROP COLUMN IF EXISTS title;
 ALTER TABLE app_public.collection DROP COLUMN IF EXISTS description;
 ALTER TABLE app_public.collection DROP COLUMN IF EXISTS synopsis;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON app_public.collection_localizations TO ":DATABASE_GQL_ROLE";
+GRANT SELECT ON app_public.collection_localizations TO ":DATABASE_GQL_ROLE";
 
 SELECT app_private.define_localization_view(
   ARRAY['title', 'description', 'synopsis'],
