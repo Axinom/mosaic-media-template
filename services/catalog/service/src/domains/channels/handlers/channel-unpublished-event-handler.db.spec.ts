@@ -47,7 +47,7 @@ describe('ChannelPublishEventHandler', () => {
       } as unknown as TypedTransactionalMessage<ChannelUnpublishedEvent>;
 
       // Act
-      await ctx.executeGqlSql(async (txn) => {
+      await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
 
