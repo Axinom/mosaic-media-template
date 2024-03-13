@@ -6959,10 +6959,10 @@ gensync@^1.0.0-beta.2:
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
   integrity sha1-MqbudsPX9S1GsrGuXZP+qFgKJeA=
 
-geoip-country@^4.2.76:
-  version "4.2.76"
-  resolved "https://registry.yarnpkg.com/geoip-country/-/geoip-country-4.2.76.tgz#9bab0a4e29c6a7d4e6a2d181dc275833a34a2690"
-  integrity sha512-j+sZFeeTUwchkVIsv5pzV5SN1Gf/7pLhIVeNOS3OQErpiyIuehigKDMSvYVl+yxxDaXa6bTfM9HWoEIwFUkcLQ==
+geoip-country@^4.2.78:
+  version "4.2.78"
+  resolved "https://registry.yarnpkg.com/geoip-country/-/geoip-country-4.2.78.tgz#39a4ce0fc6ecee259855b845c3933f65300ba2ba"
+  integrity sha512-bBXO8saz0N2jIypRZI/pZ/1kefgN88ukqc7BmSXs5i0yIWf3wqGjOYuh36+8xilyzUM8aUhNaI5erVs3CdPxKw==
   dependencies:
     async "^2.6.4"
     iconv-lite "^0.5.2"
