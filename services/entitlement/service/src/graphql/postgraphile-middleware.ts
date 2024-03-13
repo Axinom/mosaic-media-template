@@ -1,4 +1,5 @@
 import { getLoginPgPool, getOwnerPgPool } from '@axinom/mosaic-db-common';
+import { forwardToGraphiQl } from '@axinom/mosaic-graphql-common';
 import { AuthenticationConfig } from '@axinom/mosaic-id-guard';
 import { Express } from 'express';
 import { postgraphile } from 'postgraphile';
@@ -13,6 +14,10 @@ export const setupPostGraphile = async (
   const ownerPool = getOwnerPgPool(app);
   const loginPool = getLoginPgPool(app);
   const options = buildPostgraphileOptions(config, ownerPool, authConfig);
+
+  if (config.graphqlGuiEnabled) {
+    app.use(forwardToGraphiQl());
+  }
 
   const middleware = postgraphile(loginPool, 'app_public', options);
 

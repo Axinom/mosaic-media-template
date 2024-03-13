@@ -1,4 +1,5 @@
 import { getLoginPgPool, getOwnerPgPool } from '@axinom/mosaic-db-common';
+import { forwardToGraphiQl } from '@axinom/mosaic-graphql-common';
 import { AuthenticationConfig } from '@axinom/mosaic-id-guard';
 import { getMessagingBroker } from '@axinom/mosaic-message-bus';
 import {
@@ -28,15 +29,16 @@ export const setupPostGraphile = async (
     authConfig,
   );
 
+  if (config.graphqlGuiEnabled) {
+    app.use(forwardToGraphiQl());
+    app.use('/altair', altairExpress({ endpointURL: '/graphql' }));
+  }
+
   const middleware = postgraphile(loginPool, 'app_public', options);
   app.use(middleware);
 
   const httpServer = getHttpServer(app);
   if (httpServer) {
     await enhanceHttpServerWithSubscriptions(httpServer, middleware);
-  }
-
-  if (config.graphqlGuiEnabled) {
-    app.use('/altair', altairExpress({ endpointURL: '/graphql' }));
   }
 };
