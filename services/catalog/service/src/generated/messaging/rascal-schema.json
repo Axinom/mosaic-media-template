@@ -43,169 +43,7 @@
             }
           }
         },
-        "catalog-service:movie:published": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:movie:unpublished": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:movie-genres:published": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:movie-genres:unpublished": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:tvshow-genres:published": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:tvshow-genres:unpublished": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:tvshow:published": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:tvshow:unpublished": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:season:published": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:season:unpublished": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:episode:published": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:episode:unpublished": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:collection:published": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:collection:unpublished": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:channel:published": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:channel:unpublished": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:channel:check_job_status_succeeded": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:channel:check_job_status_failed": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "catalog-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "catalog-service:channel:protection_key_created": {
+        "catalog-service:inbox": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
@@ -231,195 +69,105 @@
           "bindingKey": "delay.30sec",
           "destination": "delay:30sec"
         },
-        "retry:catalog-service:movie:published": {
+        "retry:catalog-service:inbox": {
           "source": "retry",
-          "bindingKey": "catalog-service:movie:published.#",
-          "destination": "catalog-service:movie:published"
+          "bindingKey": "catalog-service:inbox.#",
+          "destination": "catalog-service:inbox"
         },
         "media-service.movie.published": {
           "source": "event",
           "bindingKey": "media-service.movie.published",
-          "destination": "catalog-service:movie:published"
-        },
-        "retry:catalog-service:movie:unpublished": {
-          "source": "retry",
-          "bindingKey": "catalog-service:movie:unpublished.#",
-          "destination": "catalog-service:movie:unpublished"
+          "destination": "catalog-service:inbox"
         },
         "media-service.movie.unpublished": {
           "source": "event",
           "bindingKey": "media-service.movie.unpublished",
-          "destination": "catalog-service:movie:unpublished"
-        },
-        "retry:catalog-service:movie-genres:published": {
-          "source": "retry",
-          "bindingKey": "catalog-service:movie-genres:published.#",
-          "destination": "catalog-service:movie-genres:published"
+          "destination": "catalog-service:inbox"
         },
         "media-service.movie-genres.published": {
           "source": "event",
           "bindingKey": "media-service.movie-genres.published",
-          "destination": "catalog-service:movie-genres:published"
-        },
-        "retry:catalog-service:movie-genres:unpublished": {
-          "source": "retry",
-          "bindingKey": "catalog-service:movie-genres:unpublished.#",
-          "destination": "catalog-service:movie-genres:unpublished"
+          "destination": "catalog-service:inbox"
         },
         "media-service.movie-genres.unpublished": {
           "source": "event",
           "bindingKey": "media-service.movie-genres.unpublished",
-          "destination": "catalog-service:movie-genres:unpublished"
-        },
-        "retry:catalog-service:tvshow-genres:published": {
-          "source": "retry",
-          "bindingKey": "catalog-service:tvshow-genres:published.#",
-          "destination": "catalog-service:tvshow-genres:published"
+          "destination": "catalog-service:inbox"
         },
         "media-service.tvshow-genres.published": {
           "source": "event",
           "bindingKey": "media-service.tvshow-genres.published",
-          "destination": "catalog-service:tvshow-genres:published"
-        },
-        "retry:catalog-service:tvshow-genres:unpublished": {
-          "source": "retry",
-          "bindingKey": "catalog-service:tvshow-genres:unpublished.#",
-          "destination": "catalog-service:tvshow-genres:unpublished"
+          "destination": "catalog-service:inbox"
         },
         "media-service.tvshow-genres.unpublished": {
           "source": "event",
           "bindingKey": "media-service.tvshow-genres.unpublished",
-          "destination": "catalog-service:tvshow-genres:unpublished"
-        },
-        "retry:catalog-service:tvshow:published": {
-          "source": "retry",
-          "bindingKey": "catalog-service:tvshow:published.#",
-          "destination": "catalog-service:tvshow:published"
+          "destination": "catalog-service:inbox"
         },
         "media-service.tvshow.published": {
           "source": "event",
           "bindingKey": "media-service.tvshow.published",
-          "destination": "catalog-service:tvshow:published"
-        },
-        "retry:catalog-service:tvshow:unpublished": {
-          "source": "retry",
-          "bindingKey": "catalog-service:tvshow:unpublished.#",
-          "destination": "catalog-service:tvshow:unpublished"
+          "destination": "catalog-service:inbox"
         },
         "media-service.tvshow.unpublished": {
           "source": "event",
           "bindingKey": "media-service.tvshow.unpublished",
-          "destination": "catalog-service:tvshow:unpublished"
-        },
-        "retry:catalog-service:season:published": {
-          "source": "retry",
-          "bindingKey": "catalog-service:season:published.#",
-          "destination": "catalog-service:season:published"
+          "destination": "catalog-service:inbox"
         },
         "media-service.season.published": {
           "source": "event",
           "bindingKey": "media-service.season.published",
-          "destination": "catalog-service:season:published"
-        },
-        "retry:catalog-service:season:unpublished": {
-          "source": "retry",
-          "bindingKey": "catalog-service:season:unpublished.#",
-          "destination": "catalog-service:season:unpublished"
+          "destination": "catalog-service:inbox"
         },
         "media-service.season.unpublished": {
           "source": "event",
           "bindingKey": "media-service.season.unpublished",
-          "destination": "catalog-service:season:unpublished"
-        },
-        "retry:catalog-service:episode:published": {
-          "source": "retry",
-          "bindingKey": "catalog-service:episode:published.#",
-          "destination": "catalog-service:episode:published"
+          "destination": "catalog-service:inbox"
         },
         "media-service.episode.published": {
           "source": "event",
           "bindingKey": "media-service.episode.published",
-          "destination": "catalog-service:episode:published"
-        },
-        "retry:catalog-service:episode:unpublished": {
-          "source": "retry",
-          "bindingKey": "catalog-service:episode:unpublished.#",
-          "destination": "catalog-service:episode:unpublished"
+          "destination": "catalog-service:inbox"
         },
         "media-service.episode.unpublished": {
           "source": "event",
           "bindingKey": "media-service.episode.unpublished",
-          "destination": "catalog-service:episode:unpublished"
-        },
-        "retry:catalog-service:collection:published": {
-          "source": "retry",
-          "bindingKey": "catalog-service:collection:published.#",
-          "destination": "catalog-service:collection:published"
+          "destination": "catalog-service:inbox"
         },
         "media-service.collection.published": {
           "source": "event",
           "bindingKey": "media-service.collection.published",
-          "destination": "catalog-service:collection:published"
-        },
-        "retry:catalog-service:collection:unpublished": {
-          "source": "retry",
-          "bindingKey": "catalog-service:collection:unpublished.#",
-          "destination": "catalog-service:collection:unpublished"
+          "destination": "catalog-service:inbox"
         },
         "media-service.collection.unpublished": {
           "source": "event",
           "bindingKey": "media-service.collection.unpublished",
-          "destination": "catalog-service:collection:unpublished"
-        },
-        "retry:catalog-service:channel:published": {
-          "source": "retry",
-          "bindingKey": "catalog-service:channel:published.#",
-          "destination": "catalog-service:channel:published"
+          "destination": "catalog-service:inbox"
         },
         "ax-channel-service.*.*.channel.published": {
           "source": "event",
           "bindingKey": "ax-channel-service.*.*.channel.published",
-          "destination": "catalog-service:channel:published"
-        },
-        "retry:catalog-service:channel:unpublished": {
-          "source": "retry",
-          "bindingKey": "catalog-service:channel:unpublished.#",
-          "destination": "catalog-service:channel:unpublished"
+          "destination": "catalog-service:inbox"
         },
         "ax-channel-service.*.*.channel.unpublished": {
           "source": "event",
           "bindingKey": "ax-channel-service.*.*.channel.unpublished",
-          "destination": "catalog-service:channel:unpublished"
-        },
-        "retry:catalog-service:channel:check_job_status_succeeded": {
-          "source": "retry",
-          "bindingKey": "catalog-service:channel:check_job_status_succeeded.#",
-          "destination": "catalog-service:channel:check_job_status_succeeded"
+          "destination": "catalog-service:inbox"
         },
         "vod-to-live-service.channel.check_job_status_succeeded": {
           "source": "event",
           "bindingKey": "vod-to-live-service.channel.check_job_status_succeeded",
-          "destination": "catalog-service:channel:check_job_status_succeeded"
-        },
-        "retry:catalog-service:channel:check_job_status_failed": {
-          "source": "retry",
-          "bindingKey": "catalog-service:channel:check_job_status_failed.#",
-          "destination": "catalog-service:channel:check_job_status_failed"
+          "destination": "catalog-service:inbox"
         },
         "vod-to-live-service.channel.check_job_status_failed": {
           "source": "event",
           "bindingKey": "vod-to-live-service.channel.check_job_status_failed",
-          "destination": "catalog-service:channel:check_job_status_failed"
-        },
-        "retry:catalog-service:channel:protection_key_created": {
-          "source": "retry",
-          "bindingKey": "catalog-service:channel:protection_key_created.#",
-          "destination": "catalog-service:channel:protection_key_created"
+          "destination": "catalog-service:inbox"
         },
         "vod-to-live-service.channel.protection_key_created": {
           "source": "event",
           "bindingKey": "vod-to-live-service.channel.protection_key_created",
-          "destination": "catalog-service:channel:protection_key_created"
+          "destination": "catalog-service:inbox"
         }
       },
       "publications": {
@@ -441,170 +189,8 @@
         }
       },
       "subscriptions": {
-        "MoviePublished": {
-          "queue": "catalog-service:movie:published",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "MovieUnpublished": {
-          "queue": "catalog-service:movie:unpublished",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "MovieGenresPublished": {
-          "queue": "catalog-service:movie-genres:published",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "MovieGenresUnpublished": {
-          "queue": "catalog-service:movie-genres:unpublished",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "TvshowGenresPublished": {
-          "queue": "catalog-service:tvshow-genres:published",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "TvshowGenresUnpublished": {
-          "queue": "catalog-service:tvshow-genres:unpublished",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "TvshowPublished": {
-          "queue": "catalog-service:tvshow:published",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "TvshowUnpublished": {
-          "queue": "catalog-service:tvshow:unpublished",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "SeasonPublished": {
-          "queue": "catalog-service:season:published",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "SeasonUnpublished": {
-          "queue": "catalog-service:season:unpublished",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "EpisodePublished": {
-          "queue": "catalog-service:episode:published",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "EpisodeUnpublished": {
-          "queue": "catalog-service:episode:unpublished",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "CollectionPublished": {
-          "queue": "catalog-service:collection:published",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "CollectionUnpublished": {
-          "queue": "catalog-service:collection:unpublished",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "ChannelPublished": {
-          "queue": "catalog-service:channel:published",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "ChannelUnpublished": {
-          "queue": "catalog-service:channel:unpublished",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "CheckChannelJobStatusSucceeded": {
-          "queue": "catalog-service:channel:check_job_status_succeeded",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "CheckChannelJobStatusFailed": {
-          "queue": "catalog-service:channel:check_job_status_failed",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic"
-          }
-        },
-        "LiveStreamProtectionKeyCreated": {
-          "queue": "catalog-service:channel:protection_key_created",
+        "Inbox": {
+          "queue": "catalog-service:inbox",
           "prefetch": 10,
           "recovery": "deferred_retry",
           "redeliveries": {

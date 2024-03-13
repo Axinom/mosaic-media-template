@@ -1,5 +1,9 @@
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MosaicError } from '@axinom/mosaic-service-common';
+import {
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
@@ -17,45 +21,38 @@ import { UpdateMetadataHandler } from './update-metadata-handler';
 
 describe('UpdateMetadataHandler', () => {
   let ctx: ITestContext;
+  let user: AuthenticatedManagementSubject;
   let handler: UpdateMetadataHandler;
-  let messages: CheckFinishIngestItemCommand[] = [];
+  let payloads: CheckFinishIngestItemCommand[] = [];
 
-  const createMessage = (messageContext: unknown = {}): MessageInfo => {
-    return stub<MessageInfo>({
-      envelope: {
-        auth_token:
-          'some token value which is not used because we are substituting getPgSettings method and using a stub user',
-        message_context: messageContext,
+  const createMessage = (
+    payload: UpdateMetadataCommand,
+    messageContext: unknown,
+  ) =>
+    stub<TypedTransactionalMessage<UpdateMetadataCommand>>({
+      payload,
+      metadata: {
+        messageContext,
       },
     });
-  };
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        _settings: unknown,
-        message: CheckFinishIngestItemCommand,
-      ) => {
-        messages.push(message);
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, _messagingSettings, payload) => {
+        payloads.push(payload as CheckFinishIngestItemCommand);
       },
-    });
-    const user = createTestUser(ctx.config.serviceId);
+    );
+    user = createTestUser(ctx.config.serviceId);
     handler = new UpdateMetadataHandler(
       [new MockIngestProcessor()],
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
       ctx.config,
     );
-
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
   });
 
   afterEach(async () => {
-    messages = [];
+    payloads = [];
   });
 
   afterAll(async () => {
@@ -66,19 +63,21 @@ describe('UpdateMetadataHandler', () => {
   describe('onMessage', () => {
     it('message succeeded without errors -> message without error sent', async () => {
       // Arrange
-      const content: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
+      const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
         item: { type: 'MOVIE' },
       });
-      const message = createMessage({
+      const context = {
         ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
         ingestItemId: 1,
-      });
+      };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload, context), dbCtx),
+      );
 
       // Assert
-      expect(messages).toEqual<CheckFinishIngestItemCommand[]>([
+      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
         {
           ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
           ingest_item_id: 1,
@@ -90,19 +89,26 @@ describe('UpdateMetadataHandler', () => {
   describe('onMessageFailure', () => {
     it('message failed on all retries with non-ingest error -> message with ingest_item_step_id and generic errorMessage sent', async () => {
       // Arrange
-      const content: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
+      const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
         item: { type: 'MOVIE' },
       });
-      const message = createMessage({
+      const context = {
         ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
         ingestItemId: 1,
-      });
+      };
 
       // Act
-      await handler.onMessageFailure(content, message, new Error('test error'));
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(
+          new Error('test error'),
+          createMessage(payload, context),
+          dbCtx,
+          false,
+        ),
+      );
 
       // Assert
-      expect(messages).toEqual<CheckFinishIngestItemCommand[]>([
+      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
         {
           ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
           ingest_item_id: 1,
@@ -110,30 +116,34 @@ describe('UpdateMetadataHandler', () => {
         },
       ]);
     });
+
     it('message failed on all retries with ingest error -> message with ingest_item_step_id and genre update errorMessage sent', async () => {
       // Arrange
-      const content: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
+      const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
         item: { type: 'MOVIE' },
       });
       const errorMessage =
         'Metadata update has failed because following genres do not exist: Non-existent1, Non-existent2';
-      const message = createMessage({
+      const context = {
         ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
         ingestItemId: 1,
-      });
+      };
 
       // Act
-      await handler.onMessageFailure(
-        content,
-        message,
-        new MosaicError({
-          message: errorMessage,
-          code: CommonErrors.IngestError.code,
-        }),
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(
+          new MosaicError({
+            message: errorMessage,
+            code: CommonErrors.IngestError.code,
+          }),
+          createMessage(payload, context),
+          dbCtx,
+          false,
+        ),
       );
 
       // Assert
-      expect(messages).toEqual<CheckFinishIngestItemCommand[]>([
+      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
         {
           ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
           ingest_item_id: 1,

@@ -1,31 +1,35 @@
-import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
-import { MessageHandler, MessageInfo } from '@axinom/mosaic-message-bus';
+import { Logger } from '@axinom/mosaic-service-common';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   MovieUnpublishedEvent,
   PublishServiceMessagingSettings,
 } from 'media-messages';
+import { ClientBase } from 'pg';
 import * as db from 'zapatos/db';
 import { Config } from '../../../common';
 
-export class MovieUnpublishedEventHandler extends MessageHandler<MovieUnpublishedEvent> {
-  constructor(
-    private readonly loginPool: LoginPgPool,
-    private readonly config: Config,
-  ) {
-    super(PublishServiceMessagingSettings.MovieUnpublished.messageType);
+export class MovieUnpublishedEventHandler extends TransactionalInboxMessageHandler<
+  MovieUnpublishedEvent,
+  Config
+> {
+  constructor(config: Config) {
+    super(
+      PublishServiceMessagingSettings.MovieUnpublished,
+      new Logger({
+        config,
+        context: MovieUnpublishedEventHandler.name,
+      }),
+      config,
+    );
   }
 
-  async onMessage(
-    payload: MovieUnpublishedEvent,
-    _message: MessageInfo<MovieUnpublishedEvent>,
+  override async handleMessage(
+    { payload }: TypedTransactionalMessage<MovieUnpublishedEvent>,
+    txnClient: ClientBase,
   ): Promise<void> {
-    await transactionWithContext(
-      this.loginPool,
-      db.IsolationLevel.Serializable,
-      { role: this.config.dbGqlRole },
-      async (txnClient) => {
-        await db.deletes('movie', { id: payload.content_id }).run(txnClient);
-      },
-    );
+    await db.deletes('movie', { id: payload.content_id }).run(txnClient);
   }
 }

@@ -1,3 +1,5 @@
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { TvshowGenresUnpublishedEvent } from 'media-messages';
 import { all, insert, select } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
 import { TvshowGenresUnpublishedEventHandler } from './tvshow-genres-unpublished-event-handler';
@@ -8,10 +10,7 @@ describe('TvshowGenrePublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new TvshowGenresUnpublishedEventHandler(
-      ctx.loginPool,
-      ctx.config,
-    );
+    handler = new TvshowGenresUnpublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -34,7 +33,12 @@ describe('TvshowGenrePublishEventHandler', () => {
       }).run(ctx.ownerPool);
 
       // Act
-      await handler.onMessage();
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(
+          {} as TypedTransactionalMessage<TvshowGenresUnpublishedEvent>,
+          txn,
+        );
+      });
 
       // Assert
       const tvshowGenre = await select('tvshow_genre', all).run(ctx.ownerPool);
@@ -56,7 +60,12 @@ describe('TvshowGenrePublishEventHandler', () => {
       ]).run(ctx.ownerPool);
 
       // Act
-      await handler.onMessage();
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(
+          {} as TypedTransactionalMessage<TvshowGenresUnpublishedEvent>,
+          txn,
+        );
+      });
 
       // Assert
       const tvshowGenre = await select('tvshow_genre', all).run(ctx.ownerPool);
@@ -81,7 +90,12 @@ describe('TvshowGenrePublishEventHandler', () => {
       }).run(ctx.ownerPool);
 
       // Act
-      await handler.onMessage();
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(
+          {} as TypedTransactionalMessage<TvshowGenresUnpublishedEvent>,
+          txn,
+        );
+      });
 
       // Assert
       const tvshowGenre = await select('tvshow_genre', all).run(ctx.ownerPool);

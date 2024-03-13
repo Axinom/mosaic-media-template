@@ -1,12 +1,17 @@
 import {
+  buildPgSettings,
   compareMigrationHashes,
   LoginPgPool,
   MigrationRecord,
   OwnerPgPool,
   runCurrentSql,
+  transactionWithContext,
 } from '@axinom/mosaic-db-common';
 import { enhanceGraphqlErrors } from '@axinom/mosaic-graphql-common';
-import { EndUserAuthenticationContext } from '@axinom/mosaic-id-guard';
+import {
+  AuthenticatedManagementSubject,
+  EndUserAuthenticationContext,
+} from '@axinom/mosaic-id-guard';
 import {
   assertError,
   customizeGraphQlErrorFields,
@@ -30,7 +35,7 @@ import {
   PostGraphileOptions,
   withPostGraphileContext,
 } from 'postgraphile';
-import { truncate } from 'zapatos/db';
+import { IsolationLevel, truncate, TxnClient } from 'zapatos/db';
 import { Table } from 'zapatos/schema';
 import { Config, getMigrationSettings } from '../../common';
 import { entitlementLogMapper } from '../../common/errors/entitlement-log-mapper';
@@ -115,6 +120,10 @@ export interface ITestContext {
     variables?: Dict<any>,
     requestContext?: TestRequestContext,
   ): Promise<IExecutionResult>;
+  executeOwnerSql<T>(
+    user: AuthenticatedManagementSubject,
+    callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
+  ): Promise<T>;
 }
 
 export const createTestContext = async (
@@ -165,6 +174,19 @@ export const createTestContext = async (
     options,
   );
 
+  const executeOwnerSql = async <T>(
+    user: AuthenticatedManagementSubject,
+    callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
+  ): Promise<T> => {
+    const pgSettings = buildPgSettings(user, config.dbOwner, config.serviceId);
+    return transactionWithContext(
+      ownerPool,
+      IsolationLevel.Serializable,
+      pgSettings,
+      async (dbContext) => callback(dbContext),
+    );
+  };
+
   return {
     ownerPool,
     loginPool,
@@ -173,6 +195,7 @@ export const createTestContext = async (
     options,
     schema,
     runGqlQuery,
+    executeOwnerSql,
     truncate: async function (tableName: Table): Promise<void> {
       try {
         await truncate(tableName, 'CASCADE').run(this.ownerPool);

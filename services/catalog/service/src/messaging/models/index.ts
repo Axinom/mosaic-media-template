@@ -1,1 +1,1 @@
-export * from './handler-registrator';
+export * from './register-content-type-messaging';

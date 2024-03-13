@@ -24,7 +24,7 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
       Mutation: {
         publishSnapshot: async (_query, args, context, { graphile }) => {
           const snapshotId: number = args['snapshotId'];
-          const { messagingBroker, jwtToken, config } =
+          const { storeOutboxMessage, jwtToken, config, pgClient } =
             getValidatedExtendedContext(context);
 
           const snapshot = await getSnapshotPgField(
@@ -40,7 +40,7 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
             });
           }
 
-          await messagingBroker.publish<PublishEntityCommand>(
+          await storeOutboxMessage<PublishEntityCommand>(
             snapshotId.toString(),
             MediaServiceMessagingSettings.PublishEntity,
             {
@@ -50,8 +50,11 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
                 action: 'PUBLISH_NOW',
               },
             },
+            pgClient,
             {
-              auth_token: await getLongLivedToken(jwtToken, config),
+              envelopeOverrides: {
+                auth_token: await getLongLivedToken(jwtToken, config),
+              },
             },
           );
 
@@ -60,7 +63,7 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
 
         unpublishSnapshot: async (_query, args, context, { graphile }) => {
           const snapshotId: number = args['snapshotId'];
-          const { messagingBroker, jwtToken, config } =
+          const { storeOutboxMessage, jwtToken, config, pgClient } =
             getValidatedExtendedContext(context);
 
           const snapshot = await getSnapshotPgField(
@@ -76,15 +79,18 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
             });
           }
 
-          await messagingBroker.publish<UnpublishEntityCommand>(
+          await storeOutboxMessage<UnpublishEntityCommand>(
             snapshotId.toString(),
             MediaServiceMessagingSettings.UnpublishEntity,
             {
               entity_id: snapshotId,
               table_name: 'snapshots',
             },
+            pgClient,
             {
-              auth_token: await getLongLivedToken(jwtToken, config),
+              envelopeOverrides: {
+                auth_token: await getLongLivedToken(jwtToken, config),
+              },
             },
           );
 

@@ -107,6 +107,120 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 CREATE DOMAIN app_public.video_stream_type_enum AS text;
 
 
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: inbox; Type: TABLE; Schema: app_hidden; Owner: -
+--
+
+CREATE TABLE app_hidden.inbox (
+    id uuid NOT NULL,
+    aggregate_type text NOT NULL,
+    aggregate_id text NOT NULL,
+    message_type text NOT NULL,
+    segment text,
+    concurrency text DEFAULT 'sequential'::text NOT NULL,
+    payload jsonb NOT NULL,
+    metadata jsonb,
+    locked_until timestamp with time zone DEFAULT to_timestamp((0)::double precision) NOT NULL,
+    created_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
+    processed_at timestamp with time zone,
+    abandoned_at timestamp with time zone,
+    started_attempts smallint DEFAULT 0 NOT NULL,
+    finished_attempts smallint DEFAULT 0 NOT NULL,
+    CONSTRAINT inbox_concurrency_check CHECK ((concurrency = ANY (ARRAY['sequential'::text, 'parallel'::text])))
+);
+
+
+--
+-- Name: next_inbox_messages(integer, integer); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms integer) RETURNS SETOF app_hidden.inbox
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+  loop_row app_hidden.inbox%ROWTYPE;
+  message_row app_hidden.inbox%ROWTYPE;
+  ids uuid[] := '{}';
+BEGIN
+
+  IF max_size < 1 THEN
+    RAISE EXCEPTION 'The max_size for the next messages batch must be at least one.' using errcode = 'MAXNR';
+  END IF;
+
+  -- get (only) the oldest message of every segment but only return it if it is not locked
+  FOR loop_row IN
+    SELECT * FROM app_hidden.inbox m WHERE m.id in (SELECT DISTINCT ON (segment) id
+      FROM app_hidden.inbox
+      WHERE processed_at IS NULL AND abandoned_at IS NULL
+      ORDER BY segment, created_at) order by created_at
+  LOOP
+    BEGIN
+      EXIT WHEN cardinality(ids) >= max_size;
+    
+      SELECT *
+        INTO message_row
+        FROM app_hidden.inbox
+        WHERE id = loop_row.id
+        FOR NO KEY UPDATE NOWAIT;-- throw/catch error when locked
+      
+      IF message_row.locked_until > NOW() THEN
+        CONTINUE;
+      END IF;
+      
+      ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+    END;
+  END LOOP;
+  
+  -- if max_size not reached: get the oldest parallelizable message independent of segment
+  IF cardinality(ids) < max_size THEN
+    FOR loop_row IN
+      SELECT * FROM app_hidden.inbox
+        WHERE concurrency = 'parallel' AND processed_at IS NULL AND abandoned_at IS NULL AND locked_until < NOW() 
+          AND id NOT IN (SELECT UNNEST(ids))
+        order by created_at
+    LOOP
+      BEGIN
+        EXIT WHEN cardinality(ids) >= max_size;
+
+        SELECT *
+          INTO message_row
+          FROM app_hidden.inbox
+          WHERE id = loop_row.id
+          FOR NO KEY UPDATE NOWAIT;-- throw/catch error when locked
+
+        ids := array_append(ids, message_row.id);
+      EXCEPTION 
+        WHEN lock_not_available THEN
+          CONTINUE;
+        WHEN serialization_failure THEN
+          CONTINUE;
+      END;
+    END LOOP;
+  END IF;
+  
+  -- set a short lock value so the the workers can each process a message
+  IF cardinality(ids) > 0 THEN
+
+    RETURN QUERY 
+      UPDATE app_hidden.inbox
+        SET locked_until = clock_timestamp() + (lock_ms || ' milliseconds')::INTERVAL, started_attempts = started_attempts + 1
+        WHERE ID = ANY(ids)
+        RETURNING *;
+
+  END IF;
+END;
+$$;
+
+
 --
 -- Name: column_exists(text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
 --
@@ -1610,10 +1724,6 @@ end;
 $$;
 
 
-SET default_tablespace = '';
-
-SET default_with_oids = false;
-
 --
 -- Name: messaging_counter; Type: TABLE; Schema: app_private; Owner: -
 --
@@ -2584,6 +2694,14 @@ COMMENT ON TABLE app_public.video_stream_type IS '@enum';
 
 
 --
+-- Name: inbox inbox_pkey; Type: CONSTRAINT; Schema: app_hidden; Owner: -
+--
+
+ALTER TABLE ONLY app_hidden.inbox
+    ADD CONSTRAINT inbox_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: messaging_counter messaging_counter_pkey; Type: CONSTRAINT; Schema: app_private; Owner: -
 --
 
@@ -2877,6 +2995,41 @@ ALTER TABLE ONLY app_public.tvshow_videos
 
 ALTER TABLE ONLY app_public.video_stream_type
     ADD CONSTRAINT video_stream_type_pkey PRIMARY KEY (value);
+
+
+--
+-- Name: idx_inbox_abandoned_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_abandoned_at ON app_hidden.inbox USING btree (abandoned_at);
+
+
+--
+-- Name: idx_inbox_created_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_created_at ON app_hidden.inbox USING btree (created_at);
+
+
+--
+-- Name: idx_inbox_locked_until; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_locked_until ON app_hidden.inbox USING btree (locked_until);
+
+
+--
+-- Name: idx_inbox_processed_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_processed_at ON app_hidden.inbox USING btree (processed_at);
+
+
+--
+-- Name: idx_inbox_segment; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_segment ON app_hidden.inbox USING btree (segment);
 
 
 --
@@ -3535,6 +3688,56 @@ GRANT USAGE ON SCHEMA ax_utils TO catalog_service_gql_role;
 
 
 --
+-- Name: TABLE inbox; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE ON TABLE app_hidden.inbox TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.locked_until; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(locked_until) ON TABLE app_hidden.inbox TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.processed_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(processed_at) ON TABLE app_hidden.inbox TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.abandoned_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(abandoned_at) ON TABLE app_hidden.inbox TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.started_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(started_attempts) ON TABLE app_hidden.inbox TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.finished_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(finished_attempts) ON TABLE app_hidden.inbox TO catalog_service_gql_role;
+
+
+--
+-- Name: FUNCTION next_inbox_messages(max_size integer, lock_ms integer); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms integer) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms integer) TO catalog_service_gql_role;
+
+
+--
 -- Name: FUNCTION column_exists(columnname text, tablename text, schemaname text); Type: ACL; Schema: ax_define; Owner: -
 --
 
@@ -4122,14 +4325,14 @@ GRANT ALL ON FUNCTION ax_utils.validation_valid_url_array(input_value text[]) TO
 -- Name: TABLE channel; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.channel TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.channel TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE channel_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.channel_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.channel_images TO catalog_service_gql_role;
 
 
 --
@@ -4143,14 +4346,14 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.channel_images_id_seq TO catalog_servi
 -- Name: TABLE collection; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.collection TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.collection TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE collection_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.collection_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.collection_images TO catalog_service_gql_role;
 
 
 --
@@ -4164,7 +4367,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.collection_images_id_seq TO catalog_se
 -- Name: TABLE collection_items_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.collection_items_relation TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.collection_items_relation TO catalog_service_gql_role;
 
 
 --
@@ -4178,14 +4381,14 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.collection_items_relation_id_seq TO ca
 -- Name: TABLE episode; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE episode_genres_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_genres_relation TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_genres_relation TO catalog_service_gql_role;
 
 
 --
@@ -4199,7 +4402,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_genres_relation_id_seq TO cata
 -- Name: TABLE episode_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_images TO catalog_service_gql_role;
 
 
 --
@@ -4213,7 +4416,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_images_id_seq TO catalog_servi
 -- Name: TABLE episode_licenses; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
 
 
 --
@@ -4227,7 +4430,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_licenses_id_seq TO catalog_ser
 -- Name: TABLE episode_video_cue_points; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_video_cue_points TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_video_cue_points TO catalog_service_gql_role;
 
 
 --
@@ -4241,7 +4444,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_video_cue_points_id_seq TO cat
 -- Name: TABLE episode_video_streams; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_video_streams TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_video_streams TO catalog_service_gql_role;
 
 
 --
@@ -4255,7 +4458,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_video_streams_id_seq TO catalo
 -- Name: TABLE episode_videos; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_videos TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_videos TO catalog_service_gql_role;
 
 
 --
@@ -4269,21 +4472,21 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_videos_id_seq TO catalog_servi
 -- Name: TABLE movie; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE movie_genre; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_genre TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_genre TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE movie_genres_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_genres_relation TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_genres_relation TO catalog_service_gql_role;
 
 
 --
@@ -4297,7 +4500,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_genres_relation_id_seq TO catalo
 -- Name: TABLE movie_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_images TO catalog_service_gql_role;
 
 
 --
@@ -4311,7 +4514,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_images_id_seq TO catalog_service
 -- Name: TABLE movie_licenses; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
 
 
 --
@@ -4325,7 +4528,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_licenses_id_seq TO catalog_servi
 -- Name: TABLE movie_video_cue_points; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_video_cue_points TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_video_cue_points TO catalog_service_gql_role;
 
 
 --
@@ -4339,7 +4542,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_video_cue_points_id_seq TO catal
 -- Name: TABLE movie_video_streams; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_video_streams TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_video_streams TO catalog_service_gql_role;
 
 
 --
@@ -4353,7 +4556,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_video_streams_id_seq TO catalog_
 -- Name: TABLE movie_videos; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_videos TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_videos TO catalog_service_gql_role;
 
 
 --
@@ -4367,14 +4570,14 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_videos_id_seq TO catalog_service
 -- Name: TABLE season; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE season_genres_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_genres_relation TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_genres_relation TO catalog_service_gql_role;
 
 
 --
@@ -4388,7 +4591,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_genres_relation_id_seq TO catal
 -- Name: TABLE season_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_images TO catalog_service_gql_role;
 
 
 --
@@ -4402,7 +4605,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_images_id_seq TO catalog_servic
 -- Name: TABLE season_licenses; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_licenses TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_licenses TO catalog_service_gql_role;
 
 
 --
@@ -4416,7 +4619,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_licenses_id_seq TO catalog_serv
 -- Name: TABLE season_video_cue_points; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_video_cue_points TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_video_cue_points TO catalog_service_gql_role;
 
 
 --
@@ -4430,7 +4633,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_video_cue_points_id_seq TO cata
 -- Name: TABLE season_video_streams; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_video_streams TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_video_streams TO catalog_service_gql_role;
 
 
 --
@@ -4444,7 +4647,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_video_streams_id_seq TO catalog
 -- Name: TABLE season_videos; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_videos TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_videos TO catalog_service_gql_role;
 
 
 --
@@ -4458,21 +4661,21 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_videos_id_seq TO catalog_servic
 -- Name: TABLE tvshow; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE tvshow_genre; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_genre TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_genre TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE tvshow_genres_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_genres_relation TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_genres_relation TO catalog_service_gql_role;
 
 
 --
@@ -4486,7 +4689,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_genres_relation_id_seq TO catal
 -- Name: TABLE tvshow_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_images TO catalog_service_gql_role;
 
 
 --
@@ -4500,7 +4703,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_images_id_seq TO catalog_servic
 -- Name: TABLE tvshow_licenses; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
 
 
 --
@@ -4514,7 +4717,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_licenses_id_seq TO catalog_serv
 -- Name: TABLE tvshow_video_cue_points; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_video_cue_points TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_video_cue_points TO catalog_service_gql_role;
 
 
 --
@@ -4528,7 +4731,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_video_cue_points_id_seq TO cata
 -- Name: TABLE tvshow_video_streams; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_video_streams TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_video_streams TO catalog_service_gql_role;
 
 
 --
@@ -4542,7 +4745,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_video_streams_id_seq TO catalog
 -- Name: TABLE tvshow_videos; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
 
 
 --

@@ -5130,6 +5130,9 @@ enum ErrorCodesEnum {
   """A database operation has failed because of a lock timeout."""
   DATABASE_LOCK_TIMEOUT_ERROR
 
+  """Unexpected null or undefined value received."""
+  UNEXPECTED_NULL_UNDEFINED
+
   """The %s does not have a license."""
   LICENSE_NOT_FOUND
 

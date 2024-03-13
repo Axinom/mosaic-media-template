@@ -1,5 +1,4 @@
-import { MessageInfo } from '@axinom/mosaic-message-bus';
-import { stub } from 'jest-auto-stub';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { MovieUnpublishedEvent } from 'media-messages';
 import { insert, selectOne } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
@@ -11,7 +10,7 @@ describe('MoviePublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new MovieUnpublishedEventHandler(ctx.loginPool, ctx.config);
+    handler = new MovieUnpublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -30,21 +29,19 @@ describe('MoviePublishEventHandler', () => {
         ctx.ownerPool,
       );
 
-      const message: MovieUnpublishedEvent = { content_id: 'movie-1' };
-      const messageInfo = stub<MessageInfo<MovieUnpublishedEvent>>({
-        envelope: {
-          auth_token: 'no-token',
-          payload: message,
-        },
-      });
+      const message = {
+        payload: { content_id: 'movie-1' },
+      } as unknown as TypedTransactionalMessage<MovieUnpublishedEvent>;
 
       // Act
-      await handler.onMessage(message, messageInfo);
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
       // Assert
-      const movie = await selectOne('movie', { id: message.content_id }).run(
-        ctx.ownerPool,
-      );
+      const movie = await selectOne('movie', {
+        id: message.payload.content_id,
+      }).run(ctx.ownerPool);
 
       expect(movie).toBeUndefined();
     });

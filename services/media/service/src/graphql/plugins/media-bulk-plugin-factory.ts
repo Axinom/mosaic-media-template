@@ -22,13 +22,13 @@ export const MediaBulkPluginFactory = (
     tableName,
     graphQLAdditionalInput,
   }: BulkIdParameters): Promise<void> => {
-    const { jwtToken, config, messagingBroker } =
+    const { jwtToken, config, storeOutboxMessage, pgClient } =
       getValidatedExtendedContext(graphQLContext);
 
     if (entityIds.length > 0) {
       const token = await getLongLivedToken(jwtToken, config);
       for (const id of entityIds) {
-        await messagingBroker.publish(
+        await storeOutboxMessage(
           id.toString(),
           messagingSettings,
           {
@@ -38,7 +38,8 @@ export const MediaBulkPluginFactory = (
             table_name: tableName,
             input: graphQLAdditionalInput,
           },
-          { auth_token: token },
+          pgClient,
+          { envelopeOverrides: { auth_token: token } },
         );
       }
     }
