@@ -279,6 +279,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                       video: {
                         id: scheduleVideoId,
                         title: 'TEST MOVIE',
+                        custom_id: null,
                         source_location: 'test',
                         is_archived: false,
                         videos_tags: [],
@@ -329,6 +330,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
               video: {
                 id: programVideoId,
                 title: 'TEST MOVIE',
+                custom_id: null,
                 source_location: 'test',
                 is_archived: false,
                 videos_tags: [],
@@ -431,6 +433,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                         video: {
                           id: scheduleVideoId,
                           title: 'TEST MOVIE',
+                          custom_id: null,
                           source_location: 'test',
                           is_archived: false,
                           videos_tags: [],
@@ -481,6 +484,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                 video: {
                   id: programVideoId,
                   title: 'TEST MOVIE',
+                  custom_id: null,
                   source_location: 'test',
                   is_archived: false,
                   videos_tags: [],
@@ -629,6 +633,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                       video: {
                         id: scheduleVideoId,
                         title: 'TEST MOVIE',
+                        custom_id: null,
                         source_location: 'test',
                         is_archived: false,
                         videos_tags: [],
@@ -679,6 +684,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
               video: {
                 id: programVideoId,
                 title: 'TEST MOVIE',
+                custom_id: null,
                 source_location: 'test',
                 is_archived: false,
                 videos_tags: [],
@@ -779,6 +785,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
                       video: {
                         id: scheduleVideoId,
                         title: 'TEST MOVIE',
+                        custom_id: null,
                         source_location: 'test',
                         is_archived: false,
                         videos_tags: [],
@@ -820,6 +827,7 @@ describe('PlaylistPublishedValidationWebhookHandler', () => {
               video: {
                 id: programVideoId,
                 title: 'TEST MOVIE',
+                custom_id: null,
                 source_location: 'test',
                 is_archived: false,
                 videos_tags: [],

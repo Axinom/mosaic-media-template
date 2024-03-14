@@ -232,6 +232,7 @@ describe('smil-utils', () => {
       return {
         id: id,
         is_archived: false,
+        custom_id: null,
         source_file_extension: '.mp4',
         source_file_name: `source_${id}`,
         source_full_file_name: `source_${id}.mp4`,

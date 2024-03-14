@@ -1,4 +1,6 @@
+import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
 import {
+  ActionData,
   createInputRenderer,
   createUpdateGQLFragmentGenerator,
   Details,
@@ -103,6 +105,33 @@ export const TvShowGenres: React.FC = () => {
 
 const Form: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<TvShowGenresFormData>();
+  const localizationPath = getLocalizationEntryPoint('tv_show_genre');
+
+  const generateInlineMenuActions: ((data) => ActionData[]) | undefined =
+    localizationPath
+      ? ({ id: genreId }) => {
+          return [
+            {
+              label: 'Localizations',
+              path: localizationPath.replace(':genreId', genreId),
+            },
+            {
+              label: 'Delete',
+              onActionSelected: () => {
+                const removeIndex: number = (values.genres || []).findIndex(
+                  (item) => item.id === genreId,
+                );
+                if (values.genres?.length && removeIndex >= 0) {
+                  setFieldValue('genres', [
+                    ...values.genres.slice(0, removeIndex),
+                    ...values.genres.slice(removeIndex + 1),
+                  ]);
+                }
+              },
+            },
+          ];
+        }
+      : undefined;
   return (
     <DynamicDataList<FormDataGenre>
       columns={[
@@ -119,6 +148,7 @@ const Form: React.FC = () => {
         setFieldValue('genres', v);
       }}
       stickyHeader={false}
+      inlineMenuActions={generateInlineMenuActions}
     />
   );
 };

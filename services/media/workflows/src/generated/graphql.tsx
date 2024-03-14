@@ -5688,6 +5688,8 @@ export enum ErrorCodesEnum {
   MalformedToken = 'MALFORMED_TOKEN',
   /** %s with ID '%s' was not found. */
   MediaNotFound = 'MEDIA_NOT_FOUND',
+  /** The retrieved localizations are missing key properties. Please contact the service support. */
+  MissingKeyLocalizationProperties = 'MISSING_KEY_LOCALIZATION_PROPERTIES',
   /** The token is not an Authenticated End-User */
   NotAuthenticatedEndUser = 'NOT_AUTHENTICATED_END_USER',
   /** The object is not a AuthenticatedManagementSubject */
@@ -5710,14 +5712,24 @@ export enum ErrorCodesEnum {
   PublishError = 'PUBLISH_ERROR',
   /** Unable to retrieve images metadata. */
   PublishImagesMetadataRequestError = 'PUBLISH_IMAGES_METADATA_REQUEST_ERROR',
+  /** Unable to retrieve localizations metadata. */
+  PublishLocalizationsMetadataRequestError = 'PUBLISH_LOCALIZATIONS_METADATA_REQUEST_ERROR',
   /** Unable to retrieve videos metadata. */
   PublishVideosMetadataRequestError = 'PUBLISH_VIDEOS_METADATA_REQUEST_ERROR',
+  /** The %s service is not accessible. Please contact the service support. */
+  ServiceNotAccessible = 'SERVICE_NOT_ACCESSIBLE',
   /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
   SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
   /** The snapshot with ID '%s' was not found. */
   SnapshotNotFound = 'SNAPSHOT_NOT_FOUND',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
+  /** User is authenticated, but subject information was not found. Please contact Axinom Support. */
+  SubjectNotFound = 'SUBJECT_NOT_FOUND',
+  /** The subject has no permissions. */
+  Unauthorized = 'UNAUTHORIZED',
+  /** Unexpected null or undefined value received. */
+  UnexpectedNullUndefined = 'UNEXPECTED_NULL_UNDEFINED',
   /** An unhandled database-related error has occurred. Please contact the service support. */
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
@@ -6714,6 +6726,8 @@ export enum IngestItemStepType {
   Entity = 'ENTITY',
   /** Image */
   Image = 'IMAGE',
+  /** Localizations */
+  Localizations = 'LOCALIZATIONS',
   /** Video */
   Video = 'VIDEO'
 }
@@ -13197,6 +13211,8 @@ export enum SnapshotValidationIssueContext {
   Image = 'IMAGE',
   /** Licensing */
   Licensing = 'LICENSING',
+  /** Localization */
+  Localization = 'LOCALIZATION',
   /** Metadata */
   Metadata = 'METADATA',
   /** Video */

@@ -1,5 +1,6 @@
 import { Image } from '../types/image';
 import { License } from '../types/license';
+import { SeasonLocalization } from '../types/season-localization';
 import { Video } from '../types/video';
 /**
  * Definition of the TV show season publish format.
@@ -17,14 +18,6 @@ export interface SeasonPublishedEvent {
    * Season number
    */
   index: number;
-  /**
-   * A string with at least one character and not only whitespace characters.
-   */
-  synopsis?: string;
-  /**
-   * Extended synopsis.
-   */
-  description?: string;
   /**
    * Name of the producing studio.
    */
@@ -61,4 +54,8 @@ export interface SeasonPublishedEvent {
    * Array of video streams associated with tv show or season.
    */
   videos: Video[];
+  /**
+   * Localizations for every defined locale.
+   */
+  localizations: SeasonLocalization[];
 }

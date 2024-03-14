@@ -1,20 +1,23 @@
 import {
+  MovieGenre,
   MovieGenresPublishedEvent,
   MovieGenresPublishedEventSchema,
   PublishServiceMessagingSettings,
 } from 'media-messages';
 import { all, Queryable, select } from 'zapatos/db';
-import { Config } from '../../../common';
+import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   buildPublishingId,
   EntityPublishingProcessor,
   SnapshotDataAggregator,
+  SnapshotValidationResult,
 } from '../../../publishing';
+import { getMovieGenreLocalizationsMetadata } from '../localization/get-movie-genre-localizations-metadata';
 
 const movieGenresDataAggregator: SnapshotDataAggregator = async (
   _entityId: number,
-  _authToken: string,
-  _config: Config,
+  authToken: string,
+  config: Config,
   queryable: Queryable,
 ) => {
   const genres = await select('movie_genres', all, {
@@ -22,19 +25,39 @@ const movieGenresDataAggregator: SnapshotDataAggregator = async (
     order: { by: 'sort_order', direction: 'ASC' },
   }).run(queryable);
 
-  const snapshotJson: MovieGenresPublishedEvent = {
-    genres: genres.map((genre) => ({
-      title: genre.title,
+  const validations: SnapshotValidationResult[] = [];
+  const mappedGenres: MovieGenre[] = [];
+  for (const genre of genres) {
+    const { result: localizations, validation: localizationsValidation } =
+      await getMovieGenreLocalizationsMetadata(
+        config,
+        authToken,
+        genre.id.toString(),
+        genre.title,
+      );
+    mappedGenres.push({
       order_no: genre.sort_order,
       content_id: buildPublishingId('movie_genres', genre.id),
-    })),
+      localizations: localizations ?? [
+        {
+          is_default_locale: true,
+          language_tag: DEFAULT_LOCALE_TAG,
+          title: genre.title,
+        },
+      ],
+    });
+    validations.push(...localizationsValidation);
+  }
+
+  const snapshotJson: MovieGenresPublishedEvent = {
+    genres: mappedGenres,
   };
 
   return {
     result: snapshotJson,
     validation:
       genres.length > 0
-        ? []
+        ? validations
         : [
             {
               message: 'At least one genre must exist.',

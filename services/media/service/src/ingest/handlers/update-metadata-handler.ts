@@ -5,6 +5,7 @@ import {
   MediaServiceMessagingSettings,
   UpdateMetadataCommand,
 } from 'media-messages';
+import { selectOne } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
 import { IngestEntityProcessor } from '../models';
 import { getIngestErrorMessage } from '../utils/ingest-validation';
@@ -39,6 +40,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
     { payload, metadata }: TypedTransactionalMessage<UpdateMetadataCommand>,
     loginClient: ClientBase,
   ): Promise<void> {
+    const messageContext = metadata.messageContext as IngestMessageContext;
     const processor = this.entityProcessors.find(
       (h) => h.type === payload.item.type,
     );
@@ -49,10 +51,21 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
         code: CommonErrors.IngestError.code,
       });
     }
+    const localizationStep = await selectOne(
+      'ingest_item_steps',
+      {
+        ingest_item_id: messageContext.ingestItemId,
+        type: 'LOCALIZATIONS',
+      },
+      { columns: ['id'] },
+    ).run(loginClient);
 
-    await processor.updateMetadata(payload, loginClient);
+    await processor.updateMetadata(
+      payload,
+      loginClient,
+      localizationStep ? messageContext.ingestItemId : undefined,
+    );
 
-    const messageContext = metadata.messageContext as IngestMessageContext;
     await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
