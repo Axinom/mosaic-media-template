@@ -28,7 +28,7 @@
     "setup:webhook": "yarn util:load-vars ts-node --files scripts/setup-webhook.ts"
   },
   "dependencies": {
-    "@axinom/mosaic-id-guard": "0.29.0",
+    "@axinom/mosaic-id-guard": "0.29.1",
     "@axinom/mosaic-message-bus": "0.24.0",
     "@axinom/mosaic-messages": "0.40.0",
     "@axinom/mosaic-service-common": "0.46.0",

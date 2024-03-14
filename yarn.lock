@@ -289,15 +289,15 @@
     pg "^8.11.3"
     postgraphile "^4.13.0"
 
-"@axinom/mosaic-id-guard@0.29.0":
-  version "0.29.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-guard/-/mosaic-id-guard-0.29.0.tgz#e46a40adccd83276212927dbbfaeae32cf8ba352"
-  integrity sha512-8xog65Xma63r4B+dZG2UUV5Vn07XkKedjomL0NGxdGQW2tEnTy6YM8sHibYDOvRABZmVPyjytE59CNIuZy5IoQ==
+"@axinom/mosaic-id-guard@0.29.1":
+  version "0.29.1"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-guard/-/mosaic-id-guard-0.29.1.tgz#790ace09e3ffaa80e2cd2834ab5cf2b12bb58993"
+  integrity sha512-aobP7M91ToBolmc4FE0dWC0RWOqKismEupJFak/qt7tghsVbzVHQYKCoC+sqV3bjRMCiI9LH61T2wmumMms81A==
   dependencies:
     "@axinom/mosaic-id-utils" "^0.15.14"
     "@axinom/mosaic-message-bus" "^0.24.0"
     "@axinom/mosaic-service-common" "^0.46.0"
-    "@axinom/mosaic-transactional-inbox-outbox" "^0.6.0"
+    "@axinom/mosaic-transactional-inbox-outbox" "^0.6.1"
     amqplib "^0.10.3"
     express "^4.17.1"
     express-bearer-token "^2.4.0"
@@ -395,10 +395,10 @@
     uuid-encoder "^1.2.0"
     verror "^1.10.1"
 
-"@axinom/mosaic-transactional-inbox-outbox@0.6.0", "@axinom/mosaic-transactional-inbox-outbox@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-transactional-inbox-outbox/-/mosaic-transactional-inbox-outbox-0.6.0.tgz#1db095771b49d8c749b38963c1fb6e2947f282a8"
-  integrity sha512-oPIr0dkrbeW7qSmWPaiWyl85ozpEyBeD7g0C3SdaMTa4SJNEQOoprPMqG0cB8A2J6qEauWsxe0RoEXOmsg+u/g==
+"@axinom/mosaic-transactional-inbox-outbox@0.6.1", "@axinom/mosaic-transactional-inbox-outbox@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-transactional-inbox-outbox/-/mosaic-transactional-inbox-outbox-0.6.1.tgz#b1ca4f6b2539eb36d5f7a86525ae1fdbdf2a0a46"
+  integrity sha512-pXJypCXkta+5vP5wjAoaPw/xGNMRaobavNy+O7OtIRq8gFfqpvjVQr0hMKTj+pzBwdnwbLSx2IiEmkbfmPY4Gg==
   dependencies:
     "@axinom/mosaic-message-bus" "^0.24.0"
     "@axinom/mosaic-message-bus-abstractions" "^0.11.0"
