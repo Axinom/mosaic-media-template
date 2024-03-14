@@ -68,7 +68,11 @@ async function bootstrap(): Promise<void> {
 
   setupMonitoring(config, {
     metrics: [
-      createPostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
+      createPostgresPoolConnectivityMetric(
+        logger,
+        getLoginPgPool(app),
+        'loginPool',
+      ),
       createRabbitMQConnectivityMetric(broker),
     ],
   });
