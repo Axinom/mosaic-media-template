@@ -123,7 +123,7 @@ async function bootstrap(): Promise<void> {
   // Configure metrics endpoint for Prometheus.
   setupMonitoring(config, {
     metrics: [
-      createPostgresPoolConnectivityMetric(loginPgPool, 'loginPool'),
+      createPostgresPoolConnectivityMetric(logger, loginPgPool, 'loginPool'),
       createRabbitMQConnectivityMetric(broker),
     ],
   });
