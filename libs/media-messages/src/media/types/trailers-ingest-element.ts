@@ -1,5 +1,5 @@
 import { VideoIngestData } from './video-ingest-data';
 
-export interface ITrailersIngestElement {
+export interface TrailersIngestElement {
   trailers?: VideoIngestData[];
 }

@@ -9,7 +9,7 @@ const jestConfig: JestConfigWithTsJest = {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
-        esModuleInterop: true,
+        diagnostics: { ignoreCodes: ['TS151001'] },
       },
     ],
   },

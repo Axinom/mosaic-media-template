@@ -1,5 +1,7 @@
+import 'jest-extended';
 import { insert, select, selectOne } from 'zapatos/db';
 import { collection } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   createCollectionPublishedMessage,
   createTestContext,
@@ -36,16 +38,12 @@ describe('CollectionPublishEventHandler', () => {
         await handler.handleMessage(message, txn);
       });
 
-      // TODO: Consider verifying via the GQL API.
       // Assert
       const collection = await selectOne('collection', {
         id: payload.content_id,
       }).run(ctx.ownerPool);
       expect(collection).toEqual<collection.JSONSelectable>({
         id: payload.content_id,
-        title: payload.title ?? null,
-        description: payload.description ?? null,
-        synopsis: payload.synopsis ?? null,
         tags: payload.tags ?? null,
       });
 
@@ -85,17 +83,42 @@ describe('CollectionPublishEventHandler', () => {
           relation_type: 'EPISODE',
         },
       ]);
+
+      const localizations = await select(
+        'collection_localizations',
+        { collection_id: payload.content_id },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        payload.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
 
     test('An existing collection is republished', async () => {
       // Arrange
       await insert('collection', {
         id: 'collection-1',
+        tags: ['Old Tag 1', 'Old Tag 2'],
+      }).run(ctx.ownerPool);
+      await insert('collection_localizations', {
+        collection_id: 'collection-1',
         title: 'Old title',
+        locale: DEFAULT_LOCALE_TAG,
+        is_default_locale: true,
       }).run(ctx.ownerPool);
       const message = createCollectionPublishedMessage('collection-1');
       const payload = message.payload;
-      payload.title = 'New title';
 
       // Act
       await ctx.executeOwnerSql(async (txn) => {
@@ -107,7 +130,26 @@ describe('CollectionPublishEventHandler', () => {
         id: payload.content_id,
       }).run(ctx.ownerPool);
 
-      expect(collection?.title).toEqual('New title');
+      expect(collection?.tags).toEqual(payload.tags);
+      const localizations = await select(
+        'collection_localizations',
+        { collection_id: 'collection-1' },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        payload.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
   });
 });

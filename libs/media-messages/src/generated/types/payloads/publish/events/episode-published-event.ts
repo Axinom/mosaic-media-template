@@ -1,3 +1,4 @@
+import { EpisodeLocalization } from '../types/episode-localization';
 import { Image } from '../types/image';
 import { License } from '../types/license';
 import { Video } from '../types/video';
@@ -22,21 +23,9 @@ export interface EpisodePublishedEvent {
    */
   index: number;
   /**
-   * A string with at least one character and not only whitespace characters.
-   */
-  title: string;
-  /**
    * Original title of the episode.
    */
   original_title?: string;
-  /**
-   * A string with at least one character and not only whitespace characters.
-   */
-  synopsis?: string;
-  /**
-   * Extended synopsis.
-   */
-  description?: string;
   /**
    * Name of the producing studio.
    */
@@ -121,4 +110,8 @@ export interface EpisodePublishedEvent {
    * Optional asset subtype.
    */
   asset_subtype?: string;
+  /**
+   * Localizations for every defined locale.
+   */
+  localizations: EpisodeLocalization[];
 }
