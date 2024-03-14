@@ -14,7 +14,7 @@ export const registerImageTypes = async (
   loginClient: ClientBase,
   config: Config,
 ): Promise<void> => {
-  const serviceAccountToken = await requestServiceAccountToken(config);
+  const accessToken = await requestServiceAccountToken(config);
   await storeOutboxMessage<DeclareImageTypesCommand>(
     config.environmentId,
     ImageServiceMultiTenantMessagingSettings.DeclareImageTypes,
@@ -29,7 +29,7 @@ export const registerImageTypes = async (
     loginClient,
     {
       envelopeOverrides: {
-        auth_token: serviceAccountToken.accessToken,
+        auth_token: accessToken,
       },
       options: {
         routingKey:

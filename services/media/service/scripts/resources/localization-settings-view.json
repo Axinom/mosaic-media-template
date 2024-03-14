@@ -1,0 +1,6 @@
+[
+  {
+    "serviceId": "ax-localization-service",
+    "permissions": ["SETTINGS_VIEW"]
+  }
+]

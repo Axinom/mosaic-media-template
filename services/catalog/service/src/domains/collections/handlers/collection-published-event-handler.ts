@@ -9,7 +9,11 @@ import {
 } from 'media-messages';
 import { ClientBase } from 'pg';
 import { deletes, insert } from 'zapatos/db';
-import { collection_images, collection_items_relation } from 'zapatos/schema';
+import {
+  collection_images,
+  collection_items_relation,
+  collection_localizations,
+} from 'zapatos/schema';
 import { Config } from '../../../common';
 
 export class CollectionPublishedEventHandler extends TransactionalInboxMessageHandler<
@@ -35,9 +39,6 @@ export class CollectionPublishedEventHandler extends TransactionalInboxMessageHa
 
     const insertedCollection = await insert('collection', {
       id: payload.content_id,
-      title: payload.title,
-      synopsis: payload.synopsis,
-      description: payload.description,
       tags: payload.tags,
     }).run(txnClient);
 
@@ -60,6 +61,22 @@ export class CollectionPublishedEventHandler extends TransactionalInboxMessageHa
           (relation): collection_items_relation.Insertable => ({
             collection_id: insertedCollection.id,
             ...relation,
+          }),
+        ),
+      ).run(txnClient);
+    }
+
+    if (payload.localizations) {
+      await insert(
+        'collection_localizations',
+        payload.localizations.map(
+          (l): collection_localizations.Insertable => ({
+            collection_id: payload.content_id,
+            is_default_locale: l.is_default_locale,
+            locale: l.language_tag,
+            title: l.title,
+            synopsis: l.synopsis,
+            description: l.description,
           }),
         ),
       ).run(txnClient);

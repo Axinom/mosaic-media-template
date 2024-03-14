@@ -69,6 +69,51 @@
               "x-queue-type": "quorum"
             }
           }
+        },
+        "ax-localization-service:entity:localize": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-localization-service:entity_definition:declare": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-localization-service:entity_definition:delete": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-localization-service:localization_source_entity:upsert": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-localization-service:localization_source_entity:delete": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
         }
       },
       "bindings": {
@@ -157,6 +202,31 @@
           "bindingKey": "ax-image-service.*.*.image.ensure_exists_failed",
           "destination": "media-service:inbox"
         },
+        "ax-localization-service.*.*.localization_source_entity.upsert_finished": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.localization_source_entity.upsert_finished",
+          "destination": "media-service:inbox"
+        },
+        "ax-localization-service.*.*.localization_source_entity.upsert_failed": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.localization_source_entity.upsert_failed",
+          "destination": "media-service:inbox"
+        },
+        "retry:ax-localization-service:entity:localize": {
+          "source": "retry",
+          "bindingKey": "ax-localization-service:entity:localize.#",
+          "destination": "ax-localization-service:entity:localize"
+        },
+        "ax-localization-service.*.*.entity.localize_finished": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity.localize_finished",
+          "destination": "media-service:inbox"
+        },
+        "ax-localization-service.*.*.entity.localize_failed": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity.localize_failed",
+          "destination": "media-service:inbox"
+        },
         "media-service.entity.publish_entity": {
           "source": "command",
           "bindingKey": "media-service.entity.publish_entity",
@@ -191,6 +261,46 @@
           "source": "event",
           "bindingKey": "ax-video-service.*.*.cue_point_types.declare_failed",
           "destination": "media-service:inbox"
+        },
+        "retry:ax-localization-service:entity_definition:declare": {
+          "source": "retry",
+          "bindingKey": "ax-localization-service:entity_definition:declare.#",
+          "destination": "ax-localization-service:entity_definition:declare"
+        },
+        "ax-localization-service.*.*.entity_definition.declare_failed": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity_definition.declare_failed",
+          "destination": "media-service:inbox"
+        },
+        "ax-localization-service.*.*.entity_definition.declare_finished": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity_definition.declare_finished",
+          "destination": "media-service:inbox"
+        },
+        "retry:ax-localization-service:entity_definition:delete": {
+          "source": "retry",
+          "bindingKey": "ax-localization-service:entity_definition:delete.#",
+          "destination": "ax-localization-service:entity_definition:delete"
+        },
+        "ax-localization-service.*.*.entity_definition.delete_failed": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity_definition.delete_failed",
+          "destination": "media-service:inbox"
+        },
+        "ax-localization-service.*.*.entity_definition.delete_finished": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity_definition.delete_finished",
+          "destination": "media-service:inbox"
+        },
+        "retry:ax-localization-service:localization_source_entity:upsert": {
+          "source": "retry",
+          "bindingKey": "ax-localization-service:localization_source_entity:upsert.#",
+          "destination": "ax-localization-service:localization_source_entity:upsert"
+        },
+        "retry:ax-localization-service:localization_source_entity:delete": {
+          "source": "retry",
+          "bindingKey": "ax-localization-service:localization_source_entity:delete.#",
+          "destination": "ax-localization-service:localization_source_entity:delete"
         }
       },
       "publications": {
@@ -237,6 +347,10 @@
         "EnsureImageExists": {
           "exchange": "command",
           "routingKey": "ax-image-service.*.*.image.ensure_exists"
+        },
+        "LocalizeEntity": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.entity.localize"
         },
         "PublishEntity": {
           "exchange": "command",
@@ -317,6 +431,22 @@
         "DeclareCuePointTypes": {
           "exchange": "command",
           "routingKey": "ax-video-service.*.*.cue_point_types.declare"
+        },
+        "DeclareEntityDefinition": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.entity_definition.declare"
+        },
+        "DeleteEntityDefinition": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.entity_definition.delete"
+        },
+        "UpsertLocalizationSourceEntity": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.localization_source_entity.upsert"
+        },
+        "DeleteLocalizationSourceEntity": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.localization_source_entity.delete"
         }
       },
       "subscriptions": {
@@ -326,7 +456,8 @@
           "recovery": "deferred_retry",
           "redeliveries": {
             "limit": 5,
-            "counter": "mosaic"
+            "counter": "mosaic",
+            "timeout": 10000
           }
         }
       }

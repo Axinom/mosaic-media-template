@@ -6,12 +6,10 @@ import {
   pick,
 } from '@axinom/mosaic-service-common';
 import axios from 'axios';
-import { promises as fs } from 'fs';
 import gql from 'graphql-tag';
 import { print } from 'graphql/language/printer';
-import { join, resolve } from 'path';
 import urljoin from 'url-join';
-import { getIdToken } from '../../../../scripts/helpers';
+import { getIdToken, updateEnvFile } from '../../../../scripts/helpers';
 import { getConfigDefinitions } from '../src/common';
 
 const mapAndLogError = mosaicErrorMappingFactory(
@@ -30,26 +28,6 @@ const mapAndLogError = mosaicErrorMappingFactory(
     return undefined;
   },
 );
-
-async function updateEnvFile(webhookSecret: string): Promise<void> {
-  const envVarPath = resolve(join(process.cwd(), '.env'));
-  let envFileContent = await fs.readFile(envVarPath, { encoding: 'utf8' });
-
-  const prePublishingRegex = /^PRE_PUBLISHING_WEBHOOK_SECRET=.*$/gm;
-
-  const prePublishingEnv = 'PRE_PUBLISHING_WEBHOOK_SECRET=' + webhookSecret;
-
-  if (envFileContent.match(prePublishingRegex) !== null) {
-    envFileContent = envFileContent.replace(
-      prePublishingRegex,
-      prePublishingEnv,
-    );
-  } else {
-    envFileContent += '\n' + prePublishingEnv;
-  }
-
-  await fs.writeFile(envVarPath, envFileContent, 'utf8');
-}
 
 async function main(): Promise<void> {
   const config = getValidatedConfig(
@@ -100,9 +78,10 @@ async function main(): Promise<void> {
       { headers: { Authorization: `Bearer ${idJwt}` } },
     );
     if (result.data?.data?.generatePrePublishingWebhookSecret?.secret) {
-      await updateEnvFile(
-        result.data.data.generatePrePublishingWebhookSecret.secret,
-      );
+      await updateEnvFile({
+        PRE_PUBLISHING_WEBHOOK_SECRET:
+          result.data.data.generatePrePublishingWebhookSecret.secret,
+      });
       console.log(
         `Webhook url is set and new webhook secret generated. The following variable was updated in the .env file.`,
       );

@@ -16,6 +16,7 @@ export type Scalars = {
   Float: number;
   BigFloat: any;
   Cursor: any;
+  Date: any;
   Datetime: any;
   Upload: any;
   UUID: any;
@@ -161,6 +162,14 @@ export type BulkMutationUuidPayload = {
   totalCount?: Maybe<Scalars['Int']>;
 };
 
+/** The deleted image upload webhook signing secret. */
+export type ClearImageUploadWebhookSecretPayload = {
+  __typename?: 'ClearImageUploadWebhookSecretPayload';
+  /** Boolean indicating if the secret was deleted */
+  deleted: Scalars['Boolean'];
+  query?: Maybe<Query>;
+};
+
 /**
  * All input for the create `ImagesTag` mutation.
  * @permissions: IMAGES_EDIT,ADMIN
@@ -197,6 +206,32 @@ export type CreateImagesTagPayload = {
 /** The output of our create `ImagesTag` mutation. */
 export type CreateImagesTagPayloadImagesTagEdgeArgs = {
   orderBy?: InputMaybe<Array<ImagesTagsOrderBy>>;
+};
+
+/** A filter to be used against Date fields. All fields are combined with a logical ‘and.’ */
+export type DateFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Scalars['Date']>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Scalars['Date']>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Scalars['Date']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Date']>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<Scalars['Date']>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Scalars['Date']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Scalars['Date']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Scalars['Date']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Scalars['Date']>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<Scalars['Date']>>;
 };
 
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
@@ -248,8 +283,6 @@ export type DeleteImagesTagPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** @deprecated The field is obsolete. */
-  deletedImagesTagNodeId?: Maybe<Scalars['ID']>;
   /** Reads a single `Image` that is related to this `ImagesTag`. */
   image?: Maybe<Image>;
   /** The `ImagesTag` that was deleted by this mutation. */
@@ -264,6 +297,13 @@ export type DeleteImagesTagPayload = {
 /** The output of our delete `ImagesTag` mutation. */
 export type DeleteImagesTagPayloadImagesTagEdgeArgs = {
   orderBy?: InputMaybe<Array<ImagesTagsOrderBy>>;
+};
+
+/** Response when an image upload webhook configuration is deleted. */
+export type DeleteImageUploadWebhookConfigurationPayload = {
+  __typename?: 'DeleteImageUploadWebhookConfigurationPayload';
+  deleted: Scalars['Boolean'];
+  query?: Maybe<Query>;
 };
 
 /** Exposes all error codes and messages for errors that a service requests can throw. In some cases, messages that are actually thrown can be different, since they can include more details or a single code can used for different errors of the same type. */
@@ -320,6 +360,8 @@ export enum ErrorCodesEnum {
   AzureBlobInvalidAccountName = 'AZURE_BLOB_INVALID_ACCOUNT_NAME',
   /** Unable to download the image from the Azure ingest blob storage. This is likely due to an Azure service outage that prevents the image to be downloaded in a reasonable time frame. */
   AzureBlobOperationAborted = 'AZURE_BLOB_OPERATION_ABORTED',
+  /** A database operation has failed because of a lock timeout. */
+  DatabaseLockTimeoutError = 'DATABASE_LOCK_TIMEOUT_ERROR',
   /** An authorization database error has occurred. The user might not have enough permissions. */
   DatabasePermissionsCheckFailed = 'DATABASE_PERMISSIONS_CHECK_FAILED',
   /** An expected and handled database constraint error has occurred. The actual message will have more information. */
@@ -328,8 +370,12 @@ export enum ErrorCodesEnum {
   DeclareImageTypesDuplicate = 'DECLARE_IMAGE_TYPES_DUPLICATE',
   /** Could not process the ensure image exists command after multiple retries. */
   EnsureImageExistsFailed = 'ENSURE_IMAGE_EXISTS_FAILED',
+  /** Unknown error occurred while calling the image upload webhook. */
+  ErrorCallingImageUploadWebhook = 'ERROR_CALLING_IMAGE_UPLOAD_WEBHOOK',
   /** This is a wrapper error for the original unhandled error of unsupported type. */
   ErrorWrapper = 'ERROR_WRAPPER',
+  /** Unable to generate image upload webhook secret. */
+  FailedGenerateImageUploadWebhookSecret = 'FAILED_GENERATE_IMAGE_UPLOAD_WEBHOOK_SECRET',
   /** A GraphQL validation error has occurred. Please make sure that the GraphQL request is made with correct syntax or parameters. */
   GraphqlValidationFailed = 'GRAPHQL_VALIDATION_FAILED',
   /** The Identity service is not accessible. Please contact Axinom support. */
@@ -342,6 +388,10 @@ export enum ErrorCodesEnum {
   ImageMetadataReadingError = 'IMAGE_METADATA_READING_ERROR',
   /** The image was not found. */
   ImageNotFound = 'IMAGE_NOT_FOUND',
+  /** The image resolution exceeds the maximum pixel count of %s. Please retry with a smaller resolution. */
+  ImageResolutionExceeded = 'IMAGE_RESOLUTION_EXCEEDED',
+  /** The image size exceeds %sMB. Please retry with a smaller image. */
+  ImageSizeExceeded = 'IMAGE_SIZE_EXCEEDED',
   /** The provided image type was not found. */
   ImageTypeIncorrect = 'IMAGE_TYPE_INCORRECT',
   /** An image for the specified path already exists with an image type "%s" different to the expected image type "%s". */
@@ -374,6 +424,8 @@ export enum ErrorCodesEnum {
   NotAuthenticatedManagementSubject = 'NOT_AUTHENTICATED_MANAGEMENT_SUBJECT',
   /** The object is not a AuthenticatedRequest */
   NotAuthenticatedRequest = 'NOT_AUTHENTICATED_REQUEST',
+  /** A caught error is not an AxiosError. */
+  NotAxiosError = 'NOT_AXIOS_ERROR',
   /** The token is not an End-User Application */
   NotEndUserApplication = 'NOT_END_USER_APPLICATION',
   /** The object is not an EndUserAuthenticationContext */
@@ -382,25 +434,60 @@ export enum ErrorCodesEnum {
   NotGenericAuthenticatedSubject = 'NOT_GENERIC_AUTHENTICATED_SUBJECT',
   /** The object is not a ManagementAuthenticationContext */
   NotManagementAuthenticationContext = 'NOT_MANAGEMENT_AUTHENTICATION_CONTEXT',
+  /** The %s is missing required properties: %s. */
+  ObjectIsMissingProperties = 'OBJECT_IS_MISSING_PROPERTIES',
+  /** Unable to set the general settings because no input values were provided. */
+  SetSettingsInputIsEmpty = 'SET_SETTINGS_INPUT_IS_EMPTY',
   /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
   SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
   /** User is authenticated, but subject information was not found. Please contact Axinom Support. */
   SubjectInformationNotFound = 'SUBJECT_INFORMATION_NOT_FOUND',
+  /** User is authenticated, but subject information was not found. Please contact Axinom Support. */
+  SubjectNotFound = 'SUBJECT_NOT_FOUND',
+  /** An unexpected error has happened. Please try again. */
+  TransientError = 'TRANSIENT_ERROR',
+  /** The subject has no permissions. */
+  Unauthorized = 'UNAUTHORIZED',
+  /** Unexpected null or undefined value received. */
+  UnexpectedNullUndefined = 'UNEXPECTED_NULL_UNDEFINED',
   /** An unhandled database-related error has occurred. Please contact the service support. */
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
   /** Unable to update the profile because no update values were provided. */
   UpdateInputIsEmpty = 'UPDATE_INPUT_IS_EMPTY',
+  /** The image upload webhook returned errors. */
+  UploadImageWebhookError = 'UPLOAD_IMAGE_WEBHOOK_ERROR',
   /** User is not authorized to access the operation. */
   UserNotAuthorized = 'USER_NOT_AUTHORIZED',
   /** The User service is not accessible. Please contact Axinom support. */
   UserServiceNotAccessible = 'USER_SERVICE_NOT_ACCESSIBLE',
+  /** The %s is not an object. */
+  ValueIsNotObject = 'VALUE_IS_NOT_OBJECT',
   /** Websocket not found in ExtendedGraphQLContext. This is a development time issue. A reference to the websocket must be included in Postgraphile build options. */
   WebsocketNotFound = 'WEBSOCKET_NOT_FOUND'
 }
+
+/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
+export type GeneralSetting = {
+  __typename?: 'GeneralSetting';
+  createdDate: Scalars['Datetime'];
+  createdUser: Scalars['String'];
+  imageUploadWebhookSecretIsSet: Scalars['Boolean'];
+  imageUploadWebhookUrl?: Maybe<Scalars['String']>;
+  updatedDate: Scalars['Datetime'];
+  updatedUser: Scalars['String'];
+};
+
+/** The generated image upload webhook signing secret. */
+export type GenerateImageUploadWebhookSecretPayload = {
+  __typename?: 'GenerateImageUploadWebhookSecretPayload';
+  query?: Maybe<Query>;
+  /** Generated secret. */
+  secret: Scalars['String'];
+};
 
 /** A `String` edge in the connection. */
 export type GetImagesTagsValueEdge = {
@@ -553,6 +640,55 @@ export type ImageAcquisitionAzureBlobSettingFilter = {
   updatedUser?: InputMaybe<StringFilter>;
 };
 
+/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
+export type ImageAcquisitionHostingAzureSetting = {
+  __typename?: 'ImageAcquisitionHostingAzureSetting';
+  accountName: Scalars['String'];
+  containerName: Scalars['String'];
+  createdDate: Scalars['Datetime'];
+  createdUser: Scalars['String'];
+  /** Reads a single `ImageAcquisitionProfile` that is related to this `ImageAcquisitionHostingAzureSetting`. */
+  imageAcquisitionProfile?: Maybe<ImageAcquisitionProfile>;
+  imageAcquisitionProfileId: Scalars['UUID'];
+  readSasToken: Scalars['String'];
+  readSasTokenValidUntil: Scalars['Date'];
+  rootFolderPath?: Maybe<Scalars['String']>;
+  updatedDate: Scalars['Datetime'];
+  updatedUser: Scalars['String'];
+};
+
+/** A filter to be used against `ImageAcquisitionHostingAzureSetting` object types. All fields are combined with a logical ‘and.’ */
+export type ImageAcquisitionHostingAzureSettingFilter = {
+  /** Filter by the object’s `accountName` field. */
+  accountName?: InputMaybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ImageAcquisitionHostingAzureSettingFilter>>;
+  /** Filter by the object’s `containerName` field. */
+  containerName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `imageAcquisitionProfile` relation. */
+  imageAcquisitionProfile?: InputMaybe<ImageAcquisitionProfileFilter>;
+  /** Filter by the object’s `imageAcquisitionProfileId` field. */
+  imageAcquisitionProfileId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<ImageAcquisitionHostingAzureSettingFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ImageAcquisitionHostingAzureSettingFilter>>;
+  /** Filter by the object’s `readSasToken` field. */
+  readSasToken?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `readSasTokenValidUntil` field. */
+  readSasTokenValidUntil?: InputMaybe<DateFilter>;
+  /** Filter by the object’s `rootFolderPath` field. */
+  rootFolderPath?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,IMAGES_EDIT,ADMIN */
 export type ImageAcquisitionProfile = {
   __typename?: 'ImageAcquisitionProfile';
@@ -562,6 +698,8 @@ export type ImageAcquisitionProfile = {
   azureBlobSetting?: Maybe<ImageAcquisitionAzureBlobSetting>;
   createdDate: Scalars['Datetime'];
   createdUser: Scalars['String'];
+  /** Reads a single `ImageAcquisitionHostingAzureSetting` that is related to this `ImageAcquisitionProfile`. */
+  hostingAzureSetting?: Maybe<ImageAcquisitionHostingAzureSetting>;
   id: Scalars['UUID'];
   provider: StorageProvider;
   title: Scalars['String'];
@@ -611,6 +749,10 @@ export type ImageAcquisitionProfileFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `hostingAzureSetting` relation. */
+  hostingAzureSetting?: InputMaybe<ImageAcquisitionHostingAzureSettingFilter>;
+  /** A related `hostingAzureSetting` exists. */
+  hostingAzureSettingExists?: InputMaybe<Scalars['Boolean']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
@@ -698,6 +840,26 @@ export enum ImageAcquisitionProfilesOrderBy {
   ImageAcquisitionAzureBlobSettingByImageAcquisitionProfileIdUpdatedDateDesc = 'IMAGE_ACQUISITION_AZURE_BLOB_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_DATE_DESC',
   ImageAcquisitionAzureBlobSettingByImageAcquisitionProfileIdUpdatedUserAsc = 'IMAGE_ACQUISITION_AZURE_BLOB_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_USER_ASC',
   ImageAcquisitionAzureBlobSettingByImageAcquisitionProfileIdUpdatedUserDesc = 'IMAGE_ACQUISITION_AZURE_BLOB_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_USER_DESC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdAccountNameAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__ACCOUNT_NAME_ASC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdAccountNameDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__ACCOUNT_NAME_DESC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdContainerNameAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__CONTAINER_NAME_ASC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdContainerNameDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__CONTAINER_NAME_DESC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdCreatedDateAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__CREATED_DATE_ASC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdCreatedDateDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__CREATED_DATE_DESC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdCreatedUserAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__CREATED_USER_ASC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdCreatedUserDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__CREATED_USER_DESC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdImageAcquisitionProfileIdAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__IMAGE_ACQUISITION_PROFILE_ID_ASC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdImageAcquisitionProfileIdDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__IMAGE_ACQUISITION_PROFILE_ID_DESC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdReadSasTokenAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__READ_SAS_TOKEN_ASC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdReadSasTokenDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__READ_SAS_TOKEN_DESC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdReadSasTokenValidUntilAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__READ_SAS_TOKEN_VALID_UNTIL_ASC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdReadSasTokenValidUntilDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__READ_SAS_TOKEN_VALID_UNTIL_DESC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdRootFolderPathAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__ROOT_FOLDER_PATH_ASC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdRootFolderPathDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__ROOT_FOLDER_PATH_DESC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdUpdatedDateAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_DATE_ASC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdUpdatedDateDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_DATE_DESC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdUpdatedUserAsc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_USER_ASC',
+  ImageAcquisitionHostingAzureSettingByImageAcquisitionProfileIdUpdatedUserDesc = 'IMAGE_ACQUISITION_HOSTING_AZURE_SETTING_BY_IMAGE_ACQUISITION_PROFILE_ID__UPDATED_USER_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -1021,9 +1183,20 @@ export enum ImagesTagsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export enum ImageSubscriptionEventKey {
+  ImageChanged = 'IMAGE_CHANGED',
+  ImageCreated = 'IMAGE_CREATED',
+  ImageDeleted = 'IMAGE_DELETED',
+  ImageTagChanged = 'IMAGE_TAG_CHANGED',
+  ImageTagCreated = 'IMAGE_TAG_CREATED',
+  ImageTagDeleted = 'IMAGE_TAG_DELETED'
+}
+
 export type ImageSubscriptionPayload = {
   __typename?: 'ImageSubscriptionPayload';
+  /** @deprecated Use 'eventKey' instead. */
   event?: Maybe<Scalars['String']>;
+  eventKey?: Maybe<ImageSubscriptionEventKey>;
   id: Scalars['UUID'];
   image?: Maybe<Image>;
 };
@@ -1213,17 +1386,28 @@ export type IntFilter = {
 export type Mutation = {
   __typename?: 'Mutation';
   archiveImages?: Maybe<BulkMutationUuidPayload>;
+  /** Clear image upload webhook secret for signing. */
+  clearImageUploadWebhookSecret: ClearImageUploadWebhookSecretPayload;
   /** Creates a single `ImagesTag`. */
   createImagesTag?: Maybe<CreateImagesTagPayload>;
   /** Deletes a single `ImagesTag` using a unique key. */
   deleteImagesTag?: Maybe<DeleteImagesTagPayload>;
+  /** Mutation do delete an existing image upload webhook configuration. */
+  deleteImageUploadWebhookConfiguration: DeleteImageUploadWebhookConfigurationPayload;
+  /** Generate a new image upload webhook secret for signing. */
+  generateImageUploadWebhookSecret: GenerateImageUploadWebhookSecretPayload;
   populateImages?: Maybe<PopulatePayload>;
   populateImageTypes?: Maybe<PopulatePayload>;
   setAmazonS3AcquisitionProfile: ImageAcquisitionProfile;
   setAzureBlobAcquisitionProfile: ImageAcquisitionProfile;
+  /** Mutation to set General Settings in Image Service. */
+  setGeneralSettings: GeneralSetting;
+  setHostingAzureAcquisitionProfile: ImageAcquisitionProfile;
   truncateImages?: Maybe<TruncateImagesPayload>;
+  unarchiveImages?: Maybe<BulkMutationUuidPayload>;
   updateAmazonS3AcquisitionProfile: ImageAcquisitionProfile;
   updateAzureBlobAcquisitionProfile: ImageAcquisitionProfile;
+  updateHostingAzureAcquisitionProfile: ImageAcquisitionProfile;
   /** Updates a single `Image` using a unique key and a patch. */
   updateImage?: Maybe<UpdateImagePayload>;
   /** Updates a single `ImagesTag` using a unique key and a patch. */
@@ -1269,6 +1453,24 @@ export type MutationSetAzureBlobAcquisitionProfileArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationSetGeneralSettingsArgs = {
+  input: SetGeneralSettingsInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationSetHostingAzureAcquisitionProfileArgs = {
+  input: SetHostingAzureAcquisitionProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUnarchiveImagesArgs = {
+  filter?: InputMaybe<ImageFilter>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAmazonS3AcquisitionProfileArgs = {
   input: UpdateAmazonS3AcquisitionProfileInput;
 };
@@ -1277,6 +1479,12 @@ export type MutationUpdateAmazonS3AcquisitionProfileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAzureBlobAcquisitionProfileArgs = {
   input: UpdateAzureBlobAcquisitionProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateHostingAzureAcquisitionProfileArgs = {
+  input: UpdateHostingAzureAcquisitionProfileInput;
 };
 
 
@@ -1325,6 +1533,7 @@ export type PopulatePayload = {
 /** The root query type which gives access points into the data universe. */
 export type Query = {
   __typename?: 'Query';
+  getGeneralSettings?: Maybe<GeneralSetting>;
   getImagesTagsValues?: Maybe<GetImagesTagsValuesConnection>;
   image?: Maybe<Image>;
   imageAcquisitionProfile?: Maybe<ImageAcquisitionProfile>;
@@ -1450,11 +1659,25 @@ export type SetAzureBlobAcquisitionProfileInput = {
   title: Scalars['String'];
 };
 
+/** Input for setting General Settings in Image Service. */
+export type SetGeneralSettingsInput = {
+  imageUploadWebhookUrl?: InputMaybe<Scalars['String']>;
+};
+
+export type SetHostingAzureAcquisitionProfileInput = {
+  accountName: Scalars['String'];
+  containerName: Scalars['String'];
+  rootFolderPath?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
 export enum StorageProvider {
   /** Amazon S3 */
   AmazonS3 = 'AMAZON_S3',
   /** Azure Blob */
-  AzureBlob = 'AZURE_BLOB'
+  AzureBlob = 'AZURE_BLOB',
+  /** Mosaic Hosting Service - Azure */
+  HostingServiceAzure = 'HOSTING_SERVICE_AZURE'
 }
 
 /** A filter to be used against StorageProvider fields. All fields are combined with a logical ‘and.’ */
@@ -1585,6 +1808,12 @@ export type UpdateAmazonS3AcquisitionProfileInput = {
 export type UpdateAzureBlobAcquisitionProfileInput = {
   accountKey?: InputMaybe<Scalars['String']>;
   accountName?: InputMaybe<Scalars['String']>;
+  containerName?: InputMaybe<Scalars['String']>;
+  rootFolderPath?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateHostingAzureAcquisitionProfileInput = {
   containerName?: InputMaybe<Scalars['String']>;
   rootFolderPath?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;

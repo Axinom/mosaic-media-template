@@ -1,15 +1,20 @@
 import { ChannelPublishedEvent } from '@axinom/mosaic-messages';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
+  CollectionLocalization,
   CollectionPublishedEvent,
   CuePoint,
+  EpisodeLocalization,
   EpisodePublishedEvent,
   ImageType,
   MovieGenresPublishedEvent,
+  MovieLocalization,
   MoviePublishedEvent,
   RelationType,
+  SeasonLocalization,
   SeasonPublishedEvent,
   TvshowGenresPublishedEvent,
+  TvshowLocalization,
   TvshowPublishedEvent,
   VideoStream,
 } from 'media-messages';
@@ -21,9 +26,6 @@ export function createMoviePublishedMessage(
 ): TypedTransactionalMessage<MoviePublishedEvent> {
   return createMessage({
     content_id: contentId,
-    title: 'Movie title',
-    description: 'A pretty long description.',
-    synopsis: 'A bit shorter description.',
     original_title: 'Movie title',
     tags: ['tag1', 'tag2'],
     cast: ['Actor One', 'Actor Two'],
@@ -34,6 +36,7 @@ export function createMoviePublishedMessage(
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
+    localizations: createGenericLocalizations(),
   });
 }
 
@@ -42,19 +45,17 @@ export function createTvshowPublishedMessage(
 ): TypedTransactionalMessage<TvshowPublishedEvent> {
   return createMessage({
     content_id: contentId,
-    title: 'TV show title',
-    description: 'A pretty long description.',
-    synopsis: 'A bit shorter description.',
     original_title: 'TV show title',
     tags: ['tag1', 'tag2'],
     cast: ['Actor One', 'Actor Two'],
-    genre_ids: ['movie_genre-1', 'movie_genre-2'],
+    genre_ids: ['tvshow_genre-1', 'tvshow_genre-2'],
     production_countries: ['US', 'DK'],
     released: '1999-10-15T00:00:00+00:00',
     studio: 'WB',
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
+    localizations: createGenericLocalizations(),
   });
 }
 
@@ -65,17 +66,16 @@ export function createSeasonPublishedMessage(
     content_id: contentId,
     tvshow_id: 'tvshow-1',
     index: 0,
-    description: 'A pretty long description.',
-    synopsis: 'A bit shorter description.',
     tags: ['tag1', 'tag2'],
     cast: ['Actor One', 'Actor Two'],
-    genre_ids: ['movie_genre-1', 'movie_genre-2'],
+    genre_ids: ['tvshow_genre-1', 'tvshow_genre-2'],
     production_countries: ['US', 'DK'],
     released: '1999-10-15T00:00:00+00:00',
     studio: 'WB',
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
+    localizations: createSeasonLocalizations(),
   });
 }
 
@@ -85,35 +85,44 @@ export function createEpisodePublishedMessage(
   return createMessage({
     content_id: contentId,
     season_id: 'season-1',
-    title: 'Episode title',
     original_title: 'Episode title',
     tags: ['tag1', 'tag2'],
     cast: ['Actor One', 'Actor Two'],
     production_countries: ['US', 'DK'],
-    genre_ids: ['movie_genre-1', 'movie_genre-2'],
+    genre_ids: ['tvshow_genre-1', 'tvshow_genre-2'],
     released: '1999-10-15T00:00:00+00:00',
     studio: 'WB',
     index: 0,
-    description: 'A pretty long description.',
-    synopsis: 'A bit shorter description.',
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
+    localizations: createGenericLocalizations(),
   });
 }
 
-export function createGenrePublishedMessage(
+export function createMovieGenresPublishedMessage(
   contentId: string,
-  title = 'Generic genre',
-): TypedTransactionalMessage<
-  MovieGenresPublishedEvent | TvshowGenresPublishedEvent
-> {
+): TypedTransactionalMessage<MovieGenresPublishedEvent> {
   return createMessage({
     genres: [
       {
         content_id: contentId,
-        title: title,
         order_no: 0,
+        localizations: createGenreLocalizations(),
+      },
+    ],
+  });
+}
+
+export function createTvshowGenrePublishedMessage(
+  contentId: string,
+): TypedTransactionalMessage<TvshowGenresPublishedEvent> {
+  return createMessage({
+    genres: [
+      {
+        content_id: contentId,
+        order_no: 0,
+        localizations: createGenreLocalizations(),
       },
     ],
   });
@@ -124,9 +133,6 @@ export function createCollectionPublishedMessage(
 ): TypedTransactionalMessage<CollectionPublishedEvent> {
   return createMessage({
     content_id: contentId,
-    title: 'A collection, yay',
-    description: 'This collection is a pretty big one.',
-    synopsis: 'Pretty big.',
     images: [
       {
         type: 'COVER' as ImageType,
@@ -158,6 +164,7 @@ export function createCollectionPublishedMessage(
         relation_type: 'EPISODE' as RelationType,
       },
     ],
+    localizations: createGenericLocalizations(),
   });
 }
 
@@ -350,6 +357,79 @@ function createLicense(): License {
     start_time: '2019-11-13T20:20:39+00:00',
     end_time: '2021-11-13T20:20:39+00:00',
   };
+}
+
+function createGenericLocalizations():
+  | MovieLocalization[]
+  | TvshowLocalization[]
+  | EpisodeLocalization[]
+  | CollectionLocalization[] {
+  return [
+    {
+      title: 'source title',
+      synopsis: 'source synopsis',
+      description: 'source description',
+      language_tag: 'en-US',
+      is_default_locale: true,
+    },
+    {
+      title: 'localized title 1',
+      synopsis: 'localized synopsis',
+      description: 'localized description',
+      language_tag: 'de-DE',
+      is_default_locale: false,
+    },
+    {
+      title: 'localized title 2',
+      synopsis: null,
+      description: null,
+      language_tag: 'et-EE',
+      is_default_locale: false,
+    },
+  ];
+}
+
+function createSeasonLocalizations(): SeasonLocalization[] {
+  return [
+    {
+      synopsis: 'source synopsis',
+      description: 'source description',
+      language_tag: 'en-US',
+      is_default_locale: true,
+    },
+    {
+      synopsis: 'localized synopsis',
+      description: 'localized description',
+      language_tag: 'de-DE',
+      is_default_locale: false,
+    },
+    {
+      synopsis: null,
+      description: null,
+      language_tag: 'et-EE',
+      is_default_locale: false,
+    },
+  ];
+}
+
+function createGenreLocalizations(): MovieLocalization[] {
+  return [
+    {
+      title: 'source title',
+      language_tag: 'en-US',
+      is_default_locale: true,
+    },
+    {
+      title: 'localized title 1',
+      language_tag: 'de-DE',
+      is_default_locale: false,
+    },
+    {
+      title: 'localized title 2',
+      language_tag: 'et-EE',
+      is_default_locale: false,
+    },
+  ];
 }
 
 function createMessage<T extends Record<string, unknown>>(

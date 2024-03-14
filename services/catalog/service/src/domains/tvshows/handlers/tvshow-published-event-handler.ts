@@ -8,10 +8,11 @@ import {
   TvshowPublishedEvent,
 } from 'media-messages';
 import { ClientBase } from 'pg';
-import * as db from 'zapatos/db';
+import { deletes, insert } from 'zapatos/db';
 import {
   tvshow_images,
   tvshow_licenses,
+  tvshow_localizations,
   tvshow_video_cue_points,
   tvshow_video_streams,
 } from 'zapatos/schema';
@@ -36,100 +37,99 @@ export class TvshowPublishedEventHandler extends TransactionalInboxMessageHandle
     { payload }: TypedTransactionalMessage<TvshowPublishedEvent>,
     txnClient: ClientBase,
   ): Promise<void> {
-    await db.deletes('tvshow', { id: payload.content_id }).run(txnClient);
+    await deletes('tvshow', { id: payload.content_id }).run(txnClient);
 
-    const insertedTvshow = await db
-      .insert('tvshow', {
-        id: payload.content_id,
-        title: payload.title,
-        original_title: payload.original_title,
-        synopsis: payload.synopsis,
-        description: payload.description,
-        released: payload.released,
-        tags: payload.tags,
-        tvshow_cast: payload.cast,
-        studio: payload.studio,
-        production_countries: payload.production_countries,
-      })
-      .run(txnClient);
+    const insertedTvshow = await insert('tvshow', {
+      id: payload.content_id,
+      original_title: payload.original_title,
+      released: payload.released,
+      tags: payload.tags,
+      tvshow_cast: payload.cast,
+      studio: payload.studio,
+      production_countries: payload.production_countries,
+    }).run(txnClient);
 
     if (payload.videos) {
       for (const video of payload.videos) {
         const { video_streams, cue_points, ...videoToInsert } = video;
 
-        const tvshowVideo = await db
-          .insert('tvshow_videos', {
-            tvshow_id: insertedTvshow.id,
-            ...videoToInsert,
-          })
-          .run(txnClient);
+        const tvshowVideo = await insert('tvshow_videos', {
+          tvshow_id: insertedTvshow.id,
+          ...videoToInsert,
+        }).run(txnClient);
         if (video_streams !== undefined) {
-          await db
-            .insert(
-              'tvshow_video_streams',
-              video_streams.map(
-                (videoStream): tvshow_video_streams.Insertable => ({
-                  tvshow_video_id: tvshowVideo.id,
-                  ...videoStream,
-                }),
-              ),
-            )
-            .run(txnClient);
+          await insert(
+            'tvshow_video_streams',
+            video_streams.map(
+              (videoStream): tvshow_video_streams.Insertable => ({
+                tvshow_video_id: tvshowVideo.id,
+                ...videoStream,
+              }),
+            ),
+          ).run(txnClient);
         }
 
         if (cue_points !== undefined) {
-          await db
-            .insert(
-              'tvshow_video_cue_points',
-              cue_points.map(
-                (cuePoint): tvshow_video_cue_points.Insertable => ({
-                  tvshow_video_id: tvshowVideo.id,
-                  ...cuePoint,
-                }),
-              ),
-            )
-            .run(txnClient);
+          await insert(
+            'tvshow_video_cue_points',
+            cue_points.map(
+              (cuePoint): tvshow_video_cue_points.Insertable => ({
+                tvshow_video_id: tvshowVideo.id,
+                ...cuePoint,
+              }),
+            ),
+          ).run(txnClient);
         }
       }
     }
 
     if (payload.images) {
-      await db
-        .insert(
-          'tvshow_images',
-          payload.images.map(
-            (image): tvshow_images.Insertable => ({
-              tvshow_id: insertedTvshow.id,
-              ...image,
-            }),
-          ),
-        )
-        .run(txnClient);
-    }
-
-    await db
-      .insert(
-        'tvshow_licenses',
-        payload.licenses.map(
-          (license): tvshow_licenses.Insertable => ({
+      await insert(
+        'tvshow_images',
+        payload.images.map(
+          (image): tvshow_images.Insertable => ({
             tvshow_id: insertedTvshow.id,
-            ...license,
+            ...image,
           }),
         ),
-      )
-      .run(txnClient);
+      ).run(txnClient);
+    }
+
+    await insert(
+      'tvshow_licenses',
+      payload.licenses.map(
+        (license): tvshow_licenses.Insertable => ({
+          tvshow_id: insertedTvshow.id,
+          ...license,
+        }),
+      ),
+    ).run(txnClient);
 
     if (payload.genre_ids) {
-      await db
-        .insert(
-          'tvshow_genres_relation',
-          payload.genre_ids.map((genreId, i) => ({
-            tvshow_id: insertedTvshow.id,
-            tvshow_genre_id: genreId,
-            order_no: i,
-          })),
-        )
-        .run(txnClient);
+      await insert(
+        'tvshow_genres_relation',
+        payload.genre_ids.map((genreId, i) => ({
+          tvshow_id: insertedTvshow.id,
+          tvshow_genre_id: genreId,
+          order_no: i,
+        })),
+      ).run(txnClient);
+    }
+
+    if (payload.localizations) {
+      await insert(
+        'tvshow_localizations',
+        payload.localizations.map(
+          (l): tvshow_localizations.Insertable => ({
+            tvshow_id: payload.content_id,
+            is_default_locale: l.is_default_locale,
+            locale: l.language_tag,
+            title: l.title,
+            synopsis: l.synopsis,
+            description: l.description,
+          }),
+        ),
+      ).run(txnClient);
     }
   }
 }

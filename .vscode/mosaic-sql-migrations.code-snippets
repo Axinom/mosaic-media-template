@@ -362,9 +362,7 @@
   },
   "Create Messaging Counter Table (Ax Define)": {
     "prefix": "ax-create-messaging-counter-table",
-    "body": [
-      "SELECT ax_define.create_messaging_counter_table();"
-    ],
+    "body": ["SELECT ax_define.create_messaging_counter_table();"],
     "description": [
       "Creates a table that will count how often a message was already processed via Mosaic-based messaging e.g. multiple retries due to server crashes."
     ],
@@ -439,9 +437,7 @@
   },
   "Pgmemento Delete Old Logs (Ax Define)": {
     "prefix": "ax-pgmemento-delete-old-logs",
-    "body": [
-      "SELECT ax_define.pgmemento_delete_old_logs(${age:'30 days'})"
-    ],
+    "body": ["SELECT ax_define.pgmemento_delete_old_logs(${age:'30 days'})"],
     "description": [
       "Deletes all audit logs (for all registered tables) older than specified age.\n",
       "Returns number of table events deleted.\n",
@@ -471,9 +467,7 @@
   },
   "Validate Identifier Length (Ax Utils)": {
     "prefix": "ax-validate-identifier-length",
-    "body": [
-      "PERFORM ax_utils.validate_identifier_length('${1:identifier}');"
-    ],
+    "body": ["PERFORM ax_utils.validate_identifier_length('${1:identifier}');"],
     "description": [
       "Raises an exception if the provided identifer exceeds the PostgreSQL max length (63 bytes).",
       "This can be useful to prevent name truncation, identifier collisions and silently dropped constraints.",
@@ -683,9 +677,7 @@
   },
   "Validation Not Empty (Ax Utils)": {
     "prefix": "ax-validation-not-empty",
-    "body": [
-      "ax_utils.validation_not_empty(${1:column_or_variable})"
-    ],
+    "body": ["ax_utils.validation_not_empty(${1:column_or_variable})"],
     "description": [
       "Returns true if the value is not null, not an empty string, and not a whitespace string. Returns false otherwise."
     ],
@@ -693,9 +685,7 @@
   },
   "Validation Is Trimmed (Ax Utils)": {
     "prefix": "ax-validation-is-trimmed",
-    "body": [
-      "ax_utils.validation_is_trimmed(${1:column_or_variable})"
-    ],
+    "body": ["ax_utils.validation_is_trimmed(${1:column_or_variable})"],
     "description": [
       "Returns false if the value starts or ends with a whitespace character. Returns true otherwise."
     ],
@@ -703,9 +693,7 @@
   },
   "Validation Is Base64 (Ax Utils)": {
     "prefix": "ax-validation-is-base64",
-    "body": [
-      "ax_utils.validation_is_base64(${1:column_or_variable})"
-    ],
+    "body": ["ax_utils.validation_is_base64(${1:column_or_variable})"],
     "description": [
       "Returns true if the value is a base64 encoded string. Returns false otherwise."
     ],
@@ -713,9 +701,7 @@
   },
   "Validation Is Identifier Key (Ax Utils)": {
     "prefix": "ax-validation-is-identifier-key",
-    "body": [
-      "ax_utils.validation_is_identifier_key(${1:column_or_variable})"
-    ],
+    "body": ["ax_utils.validation_is_identifier_key(${1:column_or_variable})"],
     "description": [
       "Returns true if the value only contains letters, numbers, underscores, and dashes.",
       "Returns false otherwise."
@@ -724,9 +710,7 @@
   },
   "Validation Is Url (Ax Utils)": {
     "prefix": "ax-validation-is-url",
-    "body": [
-      "ax_utils.validation_is_url(${1:column_or_variable})"
-    ],
+    "body": ["ax_utils.validation_is_url(${1:column_or_variable})"],
     "description": [
       "Returns true if the value is a valid URL. Returns false otherwise, including in cases when value is an empty string."
     ],
@@ -734,9 +718,7 @@
   },
   "Validation Is Optional Url (Ax Utils)": {
     "prefix": "ax-validation-is-optional-url",
-    "body": [
-      "ax_utils.validation_is_optional_url(${1:column_or_variable})"
-    ],
+    "body": ["ax_utils.validation_is_optional_url(${1:column_or_variable})"],
     "description": [
       "Returns true if the value is a valid URL or an empty string. Returns false otherwise."
     ],
@@ -754,9 +736,7 @@
   },
   "Validation Not Empty Array (Ax Utils)": {
     "prefix": "ax-validation-not-empty-array",
-    "body": [
-      "ax_utils.validation_not_empty_array(${1:column_or_variable})"
-    ],
+    "body": ["ax_utils.validation_not_empty_array(${1:column_or_variable})"],
     "description": [
       "Returns false if the value is an empty array or an array containing empty elements. Returns true otherwise."
     ],
@@ -764,9 +744,7 @@
   },
   "Validation Valid Url Array (Ax Utils)": {
     "prefix": "ax-validation-valid-url-array",
-    "body": [
-      "ax_utils.validation_valid_url_array(${1:column_or_variable})"
-    ],
+    "body": ["ax_utils.validation_valid_url_array(${1:column_or_variable})"],
     "description": [
       "Returns false if at least one element of an array is not a valid URL or an empty string. Returns true otherwise."
     ],
@@ -798,9 +776,7 @@
   },
   "User Has Tag (Ax Utils)": {
     "prefix": "ax-user-has-tag",
-    "body": [
-      "SELECT ax_utils.user_has_tag(${1:'tag1,tag2'});"
-    ],
+    "body": ["SELECT ax_utils.user_has_tag(${1:'tag1,tag2'});"],
     "description": [
       "Checks if a user has one of the specified tags.\n",
       "Returns true if the user has at least one of the tags from provided comma-separated string. Returns false otherwise."
@@ -822,9 +798,7 @@
   },
   "Current Tenant Id (Ax Utils)": {
     "prefix": "ax-current-tenant-id",
-    "body": [
-      "SELECT ax_utils.current_tenant_id();"
-    ],
+    "body": ["SELECT ax_utils.current_tenant_id();"],
     "description": [
       "Gets the tenant ID from the context of the current user.",
       "This is needed for multitenancy systems."
@@ -833,9 +807,7 @@
   },
   "Current Environment Id (Ax Utils)": {
     "prefix": "ax-current-environment-id",
-    "body": [
-      "SELECT ax_utils.current_environment_id();"
-    ],
+    "body": ["SELECT ax_utils.current_environment_id();"],
     "description": [
       "Gets the environment ID from the context of the current user.",
       "This is needed for multitenancy systems."
@@ -844,9 +816,7 @@
   },
   "Current User Id (Ax Utils)": {
     "prefix": "ax-current-user-id",
-    "body": [
-      "SELECT ax_utils.current_user_id();"
-    ],
+    "body": ["SELECT ax_utils.current_user_id();"],
     "description": [
       "Gets the User ID from the context of the current user.",
       "This is needed when end-user RLS is needed."
@@ -1060,9 +1030,7 @@
   "Drop Table (Ax Custom)": {
     "scope": "sql",
     "prefix": "ax-drop-table",
-    "body": [
-      "DROP TABLE IF EXISTS ${8:app_public}.${1:table_name} CASCADE;"
-    ],
+    "body": ["DROP TABLE IF EXISTS ${8:app_public}.${1:table_name} CASCADE;"],
     "description": "Drops a table."
   },
   "Add Enum and Column (Ax Custom)": {
