@@ -158,6 +158,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           foreignKey: [
             '(movie_id) references app_public.movie_view (id)|@foreignFieldName videos',
           ],
+          unboundedRelationCost: '10',
+          paginationCap: '-1',
         },
       },
       movie_video_cue_points: {

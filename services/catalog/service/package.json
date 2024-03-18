@@ -50,6 +50,8 @@
     "@axinom/mosaic-service-common": "0.47.0-rc.0",
     "@axinom/mosaic-transactional-inbox-outbox": "0.7.0-rc.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
+    "@graphile/persisted-operations": "^0.1.1",
+    "@graphile/pro": "^1.0.4",
     "add": "^2.0.6",
     "amqplib": "^0.6.0",
     "dotenv": "^8.6.0",

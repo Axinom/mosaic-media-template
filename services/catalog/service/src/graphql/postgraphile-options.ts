@@ -10,6 +10,8 @@ import {
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
+import PersistedOperationsPlugin from '@graphile/persisted-operations';
+import { default as graphilePro } from '@graphile/pro';
 import { Request, Response } from 'express';
 import { PostGraphileOptions } from 'postgraphile';
 import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
@@ -59,7 +61,61 @@ export function buildPostgraphileOptions(
       AllCollectionPlugins,
       AddErrorCodesEnumPluginFactory([MosaicErrors, CommonErrors]),
     )
-    .addGraphileBuildOptions({ pgSkipInstallingWatchFixtures: true });
+    .addGraphileBuildOptions({ pgSkipInstallingWatchFixtures: true })
+    // Pro plugin
+    .addHookPlugin(graphilePro)
+    .setProperties({
+      license: process.env.GRAPHILE_LICENSE,
+      // Same as CLI options:
+      defaultPaginationCap: 25, // -1 to disable
+      graphqlDepthLimit: 5, // -1 to disable
+      graphqlCostLimit: 30000, // -1 to disable
+      // If true (default): reveal the query cost to clients to help them optimise queries
+      exposeGraphQLCost: true,
+
+      overrideOptionsForRequest(req) {
+        if (req.header('Authorization') === 'secret') {
+          /* Logged in; raise limits: */
+          return {
+            defaultPaginationCap: 100,
+            graphqlDepthLimit: 8,
+            graphqlCostLimit: 3000,
+            exposeGraphQLCost: true,
+          };
+        } else {
+          return null;
+        }
+      },
+    })
+    // Persisted operations and settings
+    .addHookPlugin(PersistedOperationsPlugin)
+    .setProperties({
+      persistedOperations: {
+        // fake "hash" is "get-movie" that can be sent by Apollo or Relay logic. Can be customized.
+        'get-movie': `query MyQuery {
+          movies {
+            nodes {
+              id
+              title
+              videos {
+                nodes {
+                  id
+                  title
+                }
+              }
+            }
+          }
+        }
+        `,
+      },
+      // Can be customized to retrieve the hash from custom headers or such.
+      // hashFromPayload: (_req) => 'get-movie',
+      allowUnpersistedOperation: (req) => {
+        return (
+          config.isDev && req.headers.referer?.endsWith('/graphiql') === true
+        );
+      },
+    });
 
   options = setCustomCorsHeaders(options);
   return options.build();
