@@ -1,3 +1,4 @@
+import { getAuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { ensureError, Logger } from '@axinom/mosaic-service-common';
 import { Config } from '../config';
 import { requestServiceAccountToken } from './token-utils';
@@ -18,18 +19,22 @@ export const updateConfigWithActualLocalizationAvailability = async (
     return;
   }
 
-  const accessToken = await requestServiceAccountToken(config);
   try {
-    // Check if the token contains the localization service as a permission
-    const parsed = JSON.parse(
-      Buffer.from(accessToken.split('.')[1], 'base64').toString(),
-    );
-    const localizationPermissions: string[] | undefined =
-      parsed.permissions['ax-localization-service'];
+    const accessToken = await requestServiceAccountToken(config);
+    const subject = await getAuthenticatedManagementSubject(accessToken, {
+      tenantId: config.tenantId,
+      environmentId: config.environmentId,
+      authEndpoint: config.idServiceAuthBaseUrl,
+    });
+    const localizationPermissions =
+      subject.permissions['ax-localization-service'];
     if (
       localizationPermissions === undefined ||
       localizationPermissions.length === 0
     ) {
+      logger.warn(
+        'The configuration value states that localization should be enabled but the service account does not have permissions for the localization service. Disabling localizations until the Media Service is restarted and the checks are run again.',
+      );
       config.isLocalizationEnabled = false;
     }
   } catch (e) {
