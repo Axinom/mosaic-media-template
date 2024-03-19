@@ -71,7 +71,7 @@ regularVariables:
   VIDEO_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-video-service.management_base_url}'
   LOCALIZATION_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-localization-service.management_base_url}'
 
-  IS_LOCALIZATION_ENABLED: false
+  IS_LOCALIZATION_ENABLED: true
 
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
