@@ -35,6 +35,7 @@ import {
   applyMigrations,
   getFullConfig,
   setIsLocalizationEnabledDbFunction,
+  updateConfigWithActualLocalizationAvailability,
 } from './common';
 import { syncPermissions } from './domains/permission-definition';
 import { populateSeedData } from './domains/populate-seed-data';
@@ -81,6 +82,9 @@ async function bootstrap(): Promise<void> {
   if (!(await isServiceAvailable(config.idServiceAuthBaseUrl))) {
     throw new MosaicError(IdGuardErrors.IdentityServiceNotAccessible);
   }
+
+  // Check if the Localization Service is enabled and update the config.isLocalizationEnabled value if not
+  await updateConfigWithActualLocalizationAvailability(config, logger);
 
   // Register service health endpoint
   setupServiceHealthEndpoint(app);
