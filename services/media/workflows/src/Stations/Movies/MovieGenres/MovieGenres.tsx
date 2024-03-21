@@ -18,6 +18,7 @@ import React, { useCallback, useMemo } from 'react';
 import { client } from '../../../apolloClient';
 import { Constants } from '../../../constants';
 import {
+  MovieGenresDocument,
   MovieGenresQuery,
   Mutation,
   MutationCreateMovieGenreArgs,
@@ -78,7 +79,11 @@ export const MovieGenres: React.FC = () => {
         ${mutations}
       }`;
 
-      await client.mutate({ mutation: GqlMutationDocument });
+      await client.mutate({
+        mutation: GqlMutationDocument,
+        refetchQueries: [MovieGenresDocument],
+        awaitRefetchQueries: true,
+      });
     },
     [],
   );

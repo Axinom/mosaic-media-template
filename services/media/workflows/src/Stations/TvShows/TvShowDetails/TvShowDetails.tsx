@@ -44,6 +44,7 @@ import {
   SearchTvShowTagsQuery,
   SearchTvShowTagsQueryVariables,
   Tvshow,
+  TvShowDocument,
   TvshowGenre,
   TvshowImageType,
   UpdateTvshowInput,
@@ -211,6 +212,8 @@ export const TvShowDetails: React.FC = () => {
       await client.mutate<unknown, { input: UpdateTvshowInput }>({
         mutation: GqlMutationDocument,
         variables: { input: { id: tvshowId, patch } },
+        refetchQueries: [TvShowDocument],
+        awaitRefetchQueries: true,
       });
     },
     [allGenres, tvshowId],
