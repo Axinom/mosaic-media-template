@@ -7,7 +7,7 @@ export const TvShows: React.FC = () => {
 
   return (
     <TvShowExplorer
-      title="TV Show Explorer"
+      title="TV Shows"
       stationKey="TvShowExplorer"
       kind="NavigationExplorer"
       calculateNavigateUrl={(item) => `/tvshows/${item.id}`}
