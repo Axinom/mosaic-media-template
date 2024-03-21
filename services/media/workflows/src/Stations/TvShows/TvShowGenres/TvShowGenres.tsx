@@ -23,6 +23,7 @@ import {
   MutationDeleteTvshowGenreArgs,
   MutationUpdateTvshowGenreArgs,
   SnapshotState,
+  TvShowGenresDocument,
   TvShowGenresQuery,
   useTvShowGenresQuery,
 } from '../../../generated/graphql';
@@ -78,7 +79,11 @@ export const TvShowGenres: React.FC = () => {
         ${mutations}
       }`;
 
-      await client.mutate({ mutation: GqlMutationDocument });
+      await client.mutate({
+        mutation: GqlMutationDocument,
+        refetchQueries: [TvShowGenresDocument],
+        awaitRefetchQueries: true,
+      });
     },
     [],
   );
