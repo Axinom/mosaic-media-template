@@ -1,17 +1,11 @@
 import {
   createPostgresPoolConnectivityMetric,
   getLoginPgPool,
-  getOwnerPgPool,
-  initMessagingCounter,
   setupLoginPgPool,
   setupOwnerPgPool,
 } from '@axinom/mosaic-db-common';
 import { forwardToGraphiQl } from '@axinom/mosaic-graphql-common';
-import {
-  createRabbitMQConnectivityMetric,
-  envelopeLoggingMiddleware,
-  setupMessagingBroker,
-} from '@axinom/mosaic-message-bus';
+import { createRabbitMQConnectivityMetric } from '@axinom/mosaic-message-bus';
 import {
   closeHttpServer,
   handleGlobalErrors,
@@ -50,7 +44,7 @@ async function bootstrap(): Promise<void> {
   await applyMigrations(config);
   const shutdownActions = setupShutdownActions(app, logger);
   const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
-  setupOwnerPgPool(
+  const ownerPool = setupOwnerPgPool(
     app,
     config.dbOwnerConnectionString,
     logger,
@@ -64,21 +58,21 @@ async function bootstrap(): Promise<void> {
     shutdownActions,
     poolConfig,
   );
-  const counter = initMessagingCounter(getOwnerPgPool(app));
-  const broker = await setupMessagingBroker({
+
+  const broker = await registerMessaging(
     app,
+    ownerPool,
     config,
-    builders: registerMessaging(app, config),
-    logger,
     shutdownActions,
-    onMessageMiddleware: [envelopeLoggingMiddleware(logger)],
-    components: { counters: { postgresCounter: counter } },
-    rascalConfigExportPath: './src/generated/messaging/rascal-schema.json',
-  });
+  );
 
   setupMonitoring(config, {
     metrics: [
-      createPostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
+      createPostgresPoolConnectivityMetric(
+        logger,
+        getLoginPgPool(app),
+        'loginPool',
+      ),
       createRabbitMQConnectivityMetric(broker),
     ],
   });

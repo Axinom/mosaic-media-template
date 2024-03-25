@@ -1,5 +1,4 @@
-import { MessageInfo } from '@axinom/mosaic-message-bus';
-import { stub } from 'jest-auto-stub';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import 'jest-extended';
 import { EpisodeUnpublishedEvent } from 'media-messages';
 import { insert, selectOne } from 'zapatos/db';
@@ -12,7 +11,7 @@ describe('EpisodePublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new EpisodeUnpublishedEventHandler(ctx.loginPool, ctx.config);
+    handler = new EpisodeUnpublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -31,20 +30,18 @@ describe('EpisodePublishEventHandler', () => {
         ctx.ownerPool,
       );
 
-      const message: EpisodeUnpublishedEvent = { content_id: 'episode-1' };
-      const messageInfo = stub<MessageInfo<EpisodeUnpublishedEvent>>({
-        envelope: {
-          auth_token: 'no-token',
-          payload: message,
-        },
-      });
+      const message = {
+        payload: { content_id: 'episode-1' },
+      } as unknown as TypedTransactionalMessage<EpisodeUnpublishedEvent>;
 
       // Act
-      await handler.onMessage(message, messageInfo);
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
       // Assert
       const episode = await selectOne('episode', {
-        id: message.content_id,
+        id: message.payload.content_id,
       }).run(ctx.ownerPool);
 
       expect(episode).toBeUndefined();

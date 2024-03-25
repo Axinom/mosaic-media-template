@@ -72,6 +72,9 @@ enum ErrorCodesEnum {
   """A database operation has failed because of a lock timeout."""
   DATABASE_LOCK_TIMEOUT_ERROR
 
+  """Unexpected null or undefined value received."""
+  UNEXPECTED_NULL_UNDEFINED
+
   """
   The webhook message was generated too long ago (%s seconds) and should not be accepted anymore for security reasons.
   """
@@ -182,6 +185,14 @@ enum ErrorCodesEnum {
   A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue.
   """
   AUTHORIZATION_OPTIONS_MISCONFIGURED
+
+  """The subject has no permissions."""
+  UNAUTHORIZED
+
+  """
+  User is authenticated, but subject information was not found. Please contact Axinom Support.
+  """
+  SUBJECT_NOT_FOUND
 
   """
   Error(s) occurred while trying to retrieve the %s with ID '%s' from the catalog service. Please contact the service support.

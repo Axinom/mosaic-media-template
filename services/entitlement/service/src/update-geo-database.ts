@@ -7,7 +7,7 @@ import {
   removeAnsiColorEscapeCodes,
 } from '@axinom/mosaic-service-common';
 import { updateDatabase } from 'geoip-country';
-import { Config, GEOLITE2_LICENSE_KEY } from './common';
+import { Config, GEOLITE2_DOWNLOAD_URL, GEOLITE2_LICENSE_KEY } from './common';
 
 /**
  * Returns an error to be thrown in case initial (startup) geo database update attempt fails.
@@ -74,14 +74,18 @@ const scheduleUpdate = (config: Config, logger: Logger): void => {
 
 /**
  * Performs a geo database update and schedules recurring updates to happen every day.
- * During development, will not require the license key, but will produce reminder warnings on startup to keep geo databases up-to-date
+ * During development, we will not require the license key/download URL, but will produce a warning on startup to keep the GEO databases up-to-date.
  */
 export const updateGeoDatabase = async (config: Config): Promise<void> => {
   const logger = new Logger({ config, context: updateGeoDatabase.name });
   try {
-    if (config.isDev && isNullOrWhitespace(config.geolite2LicenseKey)) {
+    if (
+      config.isDev &&
+      isNullOrWhitespace(config.geolite2LicenseKey) &&
+      isNullOrWhitespace(config.geolite2DownloadUrl)
+    ) {
       logger.warn(
-        `The '${GEOLITE2_LICENSE_KEY}' env variable is not set. Geolocation databases might be outdated! Please make sure to update the 'geoip-country' npm package at least once every 30 days or enable automatic database updates by setting an env variable for the license key.`,
+        `The '${GEOLITE2_LICENSE_KEY}' or '${GEOLITE2_DOWNLOAD_URL}' env variables are not set. The GEO location databases might be outdated! Please make sure to update the 'geoip-country' npm package at least once every 30 days or enable automatic database updates by setting an env variable for the license key.`,
       );
       return;
     }

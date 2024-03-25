@@ -1,11 +1,12 @@
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
-import { assertNotFalsy, sleep } from '@axinom/mosaic-service-common';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
+import { assertNotFalsy } from '@axinom/mosaic-service-common';
+import {
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
-import {
-  CheckFinishIngestDocumentCommand,
-  StartIngestItemCommand,
-} from 'media-messages';
+import { CheckFinishIngestDocumentCommand } from 'media-messages';
 import { IngestItemStatusEnum } from 'zapatos/custom';
 import { insert, selectOne, update } from 'zapatos/db';
 import { ingest_documents, ingest_items } from 'zapatos/schema';
@@ -25,45 +26,30 @@ jest.mock('@axinom/mosaic-service-common', () => {
 
 describe('Check Finish Ingest Document Handler', () => {
   let ctx: ITestContext;
+  let user: AuthenticatedManagementSubject;
   let handler: CheckFinishIngestDocumentHandler;
   let doc1: ingest_documents.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
   let item2: ingest_items.JSONSelectable;
-  let message: MessageInfo;
   let messages: unknown[] = [];
-  let waitingTimeInSeconds = -1;
+
+  const createMessage = (payload: CheckFinishIngestDocumentCommand) =>
+    stub<TypedTransactionalMessage<CheckFinishIngestDocumentCommand>>({
+      payload,
+    });
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        _settings: unknown,
-        message: StartIngestItemCommand,
-      ) => {
-        messages.push(message);
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, _messagingSettings, message) => {
+        messages.push(message as CheckFinishIngestDocumentCommand);
       },
-    });
-    const user = createTestUser(ctx.config.serviceId);
-    message = stub<MessageInfo>({
-      envelope: {
-        auth_token:
-          'some token value which is not used because we are substituting getPgSettings method and using a stub user',
-      },
-    });
+    );
+    user = createTestUser(ctx.config.serviceId);
     handler = new CheckFinishIngestDocumentHandler(
-      ctx.loginPool,
-      broker,
+      storeOutboxMessage,
       ctx.config,
     );
-
-    (sleep as jest.Mock<any, any>).mockImplementation(async (ms) => {
-      waitingTimeInSeconds = ms / 1000;
-      return;
-    });
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
   });
 
   beforeEach(async () => {
@@ -114,7 +100,6 @@ describe('Check Finish Ingest Document Handler', () => {
   afterEach(async () => {
     await ctx.truncate('ingest_documents');
     messages = [];
-    waitingTimeInSeconds = -1;
   });
 
   afterAll(async () => {
@@ -125,7 +110,7 @@ describe('Check Finish Ingest Document Handler', () => {
   describe('onMessage', () => {
     it('message with all 0 counts for 2 in progress items, initial call -> seconds_without_progress remains the same, waiting 5 sec', async () => {
       // Arrange
-      const content: CheckFinishIngestDocumentCommand = {
+      const payload: CheckFinishIngestDocumentCommand = {
         ingest_document_id: doc1.id,
         seconds_without_progress: 0,
         previous_success_count: 0,
@@ -134,7 +119,9 @@ describe('Check Finish Ingest Document Handler', () => {
       };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx),
+      );
 
       // Assert
       const doc = await selectOne('ingest_documents', { id: doc1.id }).run(
@@ -148,9 +135,6 @@ describe('Check Finish Ingest Document Handler', () => {
       expect(doc.success_count).toEqual(0);
       expect(doc.status).toEqual('IN_PROGRESS');
       expect(doc.errors).toEqual([]);
-
-      expect(waitingTimeInSeconds).toEqual(5);
-
       expect(messages).toIncludeSameMembers([
         {
           ingest_document_id: doc1.id,
@@ -165,7 +149,7 @@ describe('Check Finish Ingest Document Handler', () => {
       'message with same count values and seconds_without_progress %p -> seconds_without_progress increments',
       async (counter) => {
         // Arrange
-        const content: CheckFinishIngestDocumentCommand = {
+        const payload: CheckFinishIngestDocumentCommand = {
           ingest_document_id: doc1.id,
           seconds_without_progress: counter,
           previous_success_count: 0,
@@ -174,7 +158,9 @@ describe('Check Finish Ingest Document Handler', () => {
         };
 
         // Act
-        await handler.onMessage(content, message);
+        await ctx.executeGqlSql(user, async (dbCtx) =>
+          handler.handleMessage(createMessage(payload), dbCtx),
+        );
 
         // Assert
         const doc = await selectOne('ingest_documents', { id: doc1.id }).run(
@@ -188,9 +174,6 @@ describe('Check Finish Ingest Document Handler', () => {
         expect(doc.success_count).toEqual(0);
         expect(doc.status).toEqual('IN_PROGRESS');
         expect(doc.errors).toEqual([]);
-
-        expect(waitingTimeInSeconds).toEqual(5);
-
         expect(messages).toIncludeSameMembers([
           {
             ingest_document_id: doc1.id,
@@ -205,7 +188,7 @@ describe('Check Finish Ingest Document Handler', () => {
 
     it('message with same count values and seconds_without_progress 595 -> seconds_without_progress increments to 600 and ingest fails', async () => {
       // Arrange
-      const content: CheckFinishIngestDocumentCommand = {
+      const payload: CheckFinishIngestDocumentCommand = {
         ingest_document_id: doc1.id,
         seconds_without_progress: 595,
         previous_success_count: 0,
@@ -214,7 +197,9 @@ describe('Check Finish Ingest Document Handler', () => {
       };
 
       // Act
-      await handler.onMessage(content, message);
+      await ctx.executeGqlSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx),
+      );
 
       // Assert
       const doc = await selectOne('ingest_documents', { id: doc1.id }).run(
@@ -234,9 +219,6 @@ describe('Check Finish Ingest Document Handler', () => {
           source: 'CheckFinishIngestDocumentHandler',
         },
       ]);
-
-      expect(waitingTimeInSeconds).toEqual(-1); // sleep not called
-
       expect(messages).toEqual([]);
     });
 
@@ -252,7 +234,7 @@ describe('Check Finish Ingest Document Handler', () => {
           { status: itemStatus as IngestItemStatusEnum },
           { id: item1.id },
         ).run(ctx.ownerPool);
-        const content: CheckFinishIngestDocumentCommand = {
+        const payload: CheckFinishIngestDocumentCommand = {
           ingest_document_id: doc1.id,
           seconds_without_progress: 5,
           previous_success_count: 0,
@@ -261,7 +243,9 @@ describe('Check Finish Ingest Document Handler', () => {
         };
 
         // Act
-        await handler.onMessage(content, message);
+        await ctx.executeGqlSql(user, async (dbCtx) =>
+          handler.handleMessage(createMessage(payload), dbCtx),
+        );
 
         // Assert
         const doc = await selectOne('ingest_documents', { id: doc1.id }).run(
@@ -275,9 +259,6 @@ describe('Check Finish Ingest Document Handler', () => {
         expect(doc.success_count).toEqual(successCount);
         expect(doc.status).toEqual('IN_PROGRESS');
         expect(doc.errors).toEqual([]);
-
-        expect(waitingTimeInSeconds).toEqual(5);
-
         expect(messages).toIncludeSameMembers([
           {
             ingest_document_id: doc1.id,
@@ -314,7 +295,7 @@ describe('Check Finish Ingest Document Handler', () => {
           { status: item2Status as IngestItemStatusEnum },
           { id: item2.id },
         ).run(ctx.ownerPool);
-        const content: CheckFinishIngestDocumentCommand = {
+        const payload: CheckFinishIngestDocumentCommand = {
           ingest_document_id: doc1.id,
           seconds_without_progress: 5,
           previous_success_count: 0,
@@ -323,7 +304,9 @@ describe('Check Finish Ingest Document Handler', () => {
         };
 
         // Act
-        await handler.onMessage(content, message);
+        await ctx.executeGqlSql(user, async (dbCtx) =>
+          handler.handleMessage(createMessage(payload), dbCtx),
+        );
 
         // Assert
         const doc = await selectOne('ingest_documents', { id: doc1.id }).run(
@@ -337,9 +320,6 @@ describe('Check Finish Ingest Document Handler', () => {
         expect(doc.success_count).toEqual(successCount);
         expect(doc.status).toEqual(documentResultingStatus);
         expect(doc.errors).toEqual([]);
-
-        expect(waitingTimeInSeconds).toEqual(-1); // sleep not called
-
         expect(messages).toEqual([]);
       },
     );

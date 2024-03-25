@@ -1,5 +1,4 @@
-import { MessageInfo } from '@axinom/mosaic-message-bus';
-import { stub } from 'jest-auto-stub';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { TvshowUnpublishedEvent } from 'media-messages';
 import { insert, selectOne } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
@@ -11,7 +10,7 @@ describe('TvshowPublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new TvshowUnpublishedEventHandler(ctx.loginPool, ctx.config);
+    handler = new TvshowUnpublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -30,21 +29,18 @@ describe('TvshowPublishEventHandler', () => {
         ctx.ownerPool,
       );
 
-      const message: TvshowUnpublishedEvent = { content_id: 'tvshow-1' };
-      const messageInfo = stub<MessageInfo<TvshowUnpublishedEvent>>({
-        envelope: {
-          auth_token: 'no-token',
-          payload: message,
-        },
-      });
+      const message = {
+        payload: { content_id: 'tvshow-1' },
+      } as unknown as TypedTransactionalMessage<TvshowUnpublishedEvent>;
 
       // Act
-      await handler.onMessage(message, messageInfo);
-
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
       // Assert
-      const tvshow = await selectOne('tvshow', { id: message.content_id }).run(
-        ctx.ownerPool,
-      );
+      const tvshow = await selectOne('tvshow', {
+        id: message.payload.content_id,
+      }).run(ctx.ownerPool);
 
       expect(tvshow).toBeUndefined();
     });

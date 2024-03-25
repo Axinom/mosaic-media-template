@@ -1,7 +1,7 @@
 import { all, insert, select, selectOne } from 'zapatos/db';
 import { tvshow_genre } from 'zapatos/schema';
 import {
-  createGenrePublishedEvent,
+  createGenrePublishedMessage,
   createTestContext,
   ITestContext,
 } from '../../../tests/test-utils';
@@ -13,7 +13,7 @@ describe('TvshowGenrePublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new TvshowGenresPublishedEventHandler(ctx.loginPool, ctx.config);
+    handler = new TvshowGenresPublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -28,19 +28,23 @@ describe('TvshowGenrePublishEventHandler', () => {
   describe('onMessage', () => {
     test('A new tvshow genre is published', async () => {
       // Arrange
-      const message = createGenrePublishedEvent('tvshow_genre-1', 'New title');
+      const message = createGenrePublishedMessage(
+        'tvshow_genre-1',
+        'New title',
+      );
 
       // Act
-      await handler.onMessage(message);
-
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
       // TODO: Consider verifying via the GQL API.
       // Assert
       const tvshowGenre = await select('tvshow_genre', all).run(ctx.ownerPool);
       expect(tvshowGenre).toEqual<tvshow_genre.JSONSelectable[]>([
         {
-          id: message.genres[0].content_id,
-          title: message.genres[0].title,
-          order_no: message.genres[0].order_no,
+          id: message.payload.genres[0].content_id,
+          title: message.payload.genres[0].title,
+          order_no: message.payload.genres[0].order_no,
         },
       ]);
     });
@@ -52,10 +56,12 @@ describe('TvshowGenrePublishEventHandler', () => {
         id: contentId,
         title: 'Old title',
       }).run(ctx.ownerPool);
-      const message = createGenrePublishedEvent(contentId, 'New title');
+      const message = createGenrePublishedMessage(contentId, 'New title');
 
       // Act
-      await handler.onMessage(message);
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
       // Assert
       const tvshowGenre = await selectOne('tvshow_genre', {
@@ -71,11 +77,15 @@ describe('TvshowGenrePublishEventHandler', () => {
         id: 'tvshow_genre-1',
         title: 'Old title',
       }).run(ctx.ownerPool);
-      const message = createGenrePublishedEvent('tvshow_genre-2', 'New title');
+      const message = createGenrePublishedMessage(
+        'tvshow_genre-2',
+        'New title',
+      );
 
       // Act
-      await handler.onMessage(message);
-
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
       // Assert
       const tvshowGenres = await select('tvshow_genre', all).run(ctx.ownerPool);
 

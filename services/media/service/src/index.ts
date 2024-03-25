@@ -1,6 +1,5 @@
 import {
   createPostgresPoolConnectivityMetric,
-  getLoginPgPool,
   setupLoginPgPool,
   setupOwnerPgPool,
 } from '@axinom/mosaic-db-common';
@@ -35,8 +34,7 @@ import { PoolConfig } from 'pg';
 import { applyMigrations, getFullConfig } from './common';
 import { syncPermissions } from './domains/permission-definition';
 import { populateSeedData } from './domains/populate-seed-data';
-import { registerImageTypes } from './domains/register-image-types';
-import { registerVideoCuePointTypes } from './domains/register-video-cue-point-types';
+import { registerTypes } from './domains/register-types';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
 import { registerMessaging } from './messaging/register-messaging';
 
@@ -92,7 +90,7 @@ async function bootstrap(): Promise<void> {
   const shutdownActions = setupShutdownActions(app, logger);
   const poolConfig: PoolConfig = { max: config.pgPoolMaxConnections };
   // Create environment owner connection pool (internal use).
-  setupOwnerPgPool(
+  const ownerPgPool = setupOwnerPgPool(
     app,
     config.dbOwnerConnectionString,
     logger,
@@ -100,7 +98,7 @@ async function bootstrap(): Promise<void> {
     poolConfig,
   );
   // Create login connection pool (used by service components, including PostGraphile).
-  setupLoginPgPool(
+  const loginPgPool = setupLoginPgPool(
     app,
     config.dbLoginConnectionString,
     logger,
@@ -110,32 +108,40 @@ async function bootstrap(): Promise<void> {
 
   // Populate the DB with some initial seed data and sync defined permissions to the ID service.
   await Promise.all([
-    populateSeedData(app, logger),
+    populateSeedData(ownerPgPool, logger),
     syncPermissions(config, logger),
   ]);
 
-  // Configure messaging: subscribe to topics, create queues, register handlers.
-  const broker = await registerMessaging(app, config, logger);
+  // Configure messaging: subscribe to topics, create queues, register handlers, start transactional outbox/inbox listeners
+  const { broker, storeOutboxMessage } = await registerMessaging(
+    app,
+    ownerPgPool,
+    config,
+    shutdownActions,
+  );
 
   // Configure metrics endpoint for Prometheus.
   setupMonitoring(config, {
     metrics: [
-      createPostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
+      createPostgresPoolConnectivityMetric(logger, loginPgPool, 'loginPool'),
       createRabbitMQConnectivityMetric(broker),
     ],
   });
 
-  // Register image types used in the media service.
-  await registerImageTypes(broker, config);
-
-  // Register video cue point types used in media service.
-  await registerVideoCuePointTypes(broker, config);
+  await registerTypes(storeOutboxMessage, loginPgPool, config);
 
   // Enable authentication middleware for all requests to /graphql.
   setupManagementAuthentication(app, ['/graphql'], authConfig);
 
   // Configure the PostGraphile middleware. PostGraphile generates a GraphQL API from the underlying Postgres DB.
-  await setupPostGraphile(app, config, authConfig);
+  await setupPostGraphile(
+    app,
+    ownerPgPool,
+    loginPgPool,
+    config,
+    authConfig,
+    storeOutboxMessage,
+  );
 
   // Add our (already configured) application to the HTTP server.
   httpServer.addListener('request', app);
@@ -144,7 +150,8 @@ async function bootstrap(): Promise<void> {
   httpServer.listen(config.port, () => {
     if (config.isDev) {
       logger.log({
-        message: 'Altair client can be used to upload files',
+        message:
+          '🚀 Server ready and the following endpoints can be used (altair for file uploads)',
         details: {
           graphiql: `http://localhost:${config.port}/graphiql`,
           altair: `http://localhost:${config.port}/altair`,

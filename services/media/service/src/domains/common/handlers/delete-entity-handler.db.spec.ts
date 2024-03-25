@@ -1,4 +1,8 @@
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
+import {
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { DeleteEntityCommand } from 'media-messages';
@@ -9,36 +13,31 @@ import {
   createTestUser,
   ITestContext,
 } from '../../../tests/test-utils';
-import { DeleteEntityCommandHandler } from './delete-entity-command-handler';
+import { DeleteEntityHandler } from './delete-entity-handler';
 
 describe('Start Ingest Item Handler', () => {
   let ctx: ITestContext;
-  let handler: DeleteEntityCommandHandler;
+  let user: AuthenticatedManagementSubject;
+  let handler: DeleteEntityHandler;
   let movie1: movies.JSONSelectable;
   let movie2: movies.JSONSelectable;
   let movie3: movies.JSONSelectable;
-  let message: MessageInfo<DeleteEntityCommand>;
   let messages: unknown[] = [];
 
+  const createMessage = (payload: DeleteEntityCommand) =>
+    stub<TypedTransactionalMessage<DeleteEntityCommand>>({
+      payload,
+    });
+
   beforeAll(async () => {
-    ctx = await createTestContext();
-    const broker = stub<Broker>({
-      publish: (_id: string, _settings: unknown, message: unknown) => {
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, _messagingSettings, message) => {
         messages.push(message);
       },
-    });
-    const user = createTestUser(ctx.config.serviceId);
-    message = stub<MessageInfo<DeleteEntityCommand>>({
-      envelope: {
-        auth_token:
-          'some token value which is not used because we are substituting getPgSettings method and using a stub user',
-      },
-    });
-    handler = new DeleteEntityCommandHandler(broker, ctx.loginPool, ctx.config);
-
-    jest
-      .spyOn<any, string>(handler, 'getSubject')
-      .mockImplementation(() => user);
+    );
+    ctx = await createTestContext({}, storeOutboxMessage);
+    user = createTestUser(ctx.config.serviceId);
+    handler = new DeleteEntityHandler(storeOutboxMessage, ctx.config);
   });
 
   beforeEach(async () => {
@@ -72,14 +71,16 @@ describe('Start Ingest Item Handler', () => {
   test('Make sure the sent item IDs are deleted', async () => {
     // Arrange
     const tableName: movies.Table = 'movies';
-    const content: DeleteEntityCommand = {
+    const payload: DeleteEntityCommand = {
       table_name: tableName,
       entity_id: movie1.id,
       primary_key_name: 'id',
     };
 
     // Act
-    await handler.onMessage(content, message);
+    await ctx.executeGqlSql(user, async (dbCtx) =>
+      handler.handleMessage(createMessage(payload), dbCtx),
+    );
 
     // Assert
     const movies = await select('movies', all).run(ctx.ownerPool);

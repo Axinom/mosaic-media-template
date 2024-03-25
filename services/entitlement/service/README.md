@@ -33,7 +33,10 @@ during service runtime. Please have a look at their EULA
       both values.
   - Sign up for a free GeoLite2 account at
     https://dev.maxmind.com/geoip/geolite2-free-geolocation-data, generate a
-    license key and set it as value for GEOLITE2_LICENSE_KEY
+    license key and set it as the value for the GEOLITE2_LICENSE_KEY. If your
+    service(s) run into the Maxmind daily download limit you can set up your own
+    GEO database (proxy) cache or repository. You can set the URL to this
+    service/DB as the `GEOLITE2_DOWNLOAD_URL` in your environment variables.
   - (Optionally) run `yarn setup:webhooks` to generate webhook secrets and set
     related values in `.env` file. This will enable `/entitlement` and
     `/manifest` webhook endpoints to be able to authenticate requests.

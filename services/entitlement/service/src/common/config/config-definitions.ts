@@ -13,6 +13,7 @@ import {
 import { from } from 'env-var';
 
 export const GEOLITE2_LICENSE_KEY = 'GEOLITE2_LICENSE_KEY';
+export const GEOLITE2_DOWNLOAD_URL = 'GEOLITE2_DOWNLOAD_URL';
 
 /**
  * Get an object that contains all the configuration declaration functions to
@@ -53,6 +54,7 @@ export const getConfigDefinitions = (
     geolite2LicenseKey: function () {
       return env.get(GEOLITE2_LICENSE_KEY).required(!this.isDev()).asString();
     },
+    geolite2DownloadUrl: () => env.get(GEOLITE2_DOWNLOAD_URL).asString(),
 
     drmLicenseCommunicationKeyBuffer: function () {
       return Buffer.from(this.drmLicenseCommunicationKey(), 'base64');

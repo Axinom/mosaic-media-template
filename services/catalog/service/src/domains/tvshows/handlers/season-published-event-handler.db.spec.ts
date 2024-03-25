@@ -1,11 +1,8 @@
-import { MessageInfo } from '@axinom/mosaic-message-bus';
-import { stub } from 'jest-auto-stub';
 import 'jest-extended';
-import { SeasonPublishedEvent } from 'media-messages';
 import { insert, select, selectOne } from 'zapatos/db';
 import { season } from 'zapatos/schema';
 import {
-  createSeasonPublishedEvent,
+  createSeasonPublishedMessage,
   createTestContext,
   ITestContext,
 } from '../../../tests/test-utils';
@@ -17,7 +14,7 @@ describe('SeasonPublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new SeasonPublishedEventHandler(ctx.loginPool, ctx.config);
+    handler = new SeasonPublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -32,42 +29,39 @@ describe('SeasonPublishEventHandler', () => {
   describe('onMessage', () => {
     test('A new season is published', async () => {
       // Arrange
-      const message = createSeasonPublishedEvent('season-1');
-      const messageInfo = stub<MessageInfo<SeasonPublishedEvent>>({
-        envelope: {
-          auth_token: 'no-token',
-          payload: message,
-        },
-      });
+      const message = createSeasonPublishedMessage('season-1');
+      const payload = message.payload;
 
       // Act
-      await handler.onMessage(message, messageInfo);
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
       // TODO: Consider verifying via the GQL API.
       // Assert
       const season = await selectOne('season', {
-        id: message.content_id,
+        id: payload.content_id,
       }).run(ctx.ownerPool);
       expect(season).toEqual<season.JSONSelectable>({
-        id: message.content_id,
-        tvshow_id: message.tvshow_id ?? null,
-        index: message.index,
-        description: message.description ?? null,
-        season_cast: message.cast ?? null,
-        production_countries: message.production_countries ?? null,
-        released: message.released ?? null,
-        studio: message.studio ?? null,
-        synopsis: message.synopsis ?? null,
-        tags: message.tags ?? null,
+        id: payload.content_id,
+        tvshow_id: payload.tvshow_id ?? null,
+        index: payload.index,
+        description: payload.description ?? null,
+        season_cast: payload.cast ?? null,
+        production_countries: payload.production_countries ?? null,
+        released: payload.released ?? null,
+        studio: payload.studio ?? null,
+        synopsis: payload.synopsis ?? null,
+        tags: payload.tags ?? null,
       });
 
       const images = await select('season_images', {
-        season_id: message.content_id,
+        season_id: payload.content_id,
       }).run(ctx.ownerPool);
-      expect(images).toMatchObject(message.images!);
+      expect(images).toMatchObject(payload.images!);
 
       // Remove `video_streams` array from `video` object
-      const expectedVideos = message.videos.map((video) => {
+      const expectedVideos = payload.videos.map((video) => {
         return Object.fromEntries(
           Object.entries(video).filter(
             ([key, _value]) => key !== 'video_streams' && key !== 'cue_points',
@@ -75,7 +69,7 @@ describe('SeasonPublishEventHandler', () => {
         );
       });
       const videos = await select('season_videos', {
-        season_id: message.content_id,
+        season_id: payload.content_id,
       }).run(ctx.ownerPool);
       expect(videos).toMatchObject(expectedVideos);
 
@@ -85,7 +79,7 @@ describe('SeasonPublishEventHandler', () => {
         }).run(ctx.ownerPool)
       ).map(({ id, season_video_id, ...stream }) => stream);
       expect(seasonVideoStreams).toIncludeSameMembers(
-        message.videos[0].video_streams!,
+        payload.videos[0].video_streams!,
       );
 
       const videoCuePoints = (
@@ -94,18 +88,18 @@ describe('SeasonPublishEventHandler', () => {
         }).run(ctx.ownerPool)
       ).map(({ id, season_video_id, ...cuePoint }) => cuePoint);
       expect(videoCuePoints).toIncludeSameMembers(
-        message.videos[0].cue_points!,
+        payload.videos[0].cue_points!,
       );
 
       const licenses = await select('season_licenses', {
-        season_id: message.content_id,
+        season_id: payload.content_id,
       }).run(ctx.ownerPool);
       expect(licenses).toMatchObject(licenses);
 
       const genreRelations = await select(
         'season_genres_relation',
         {
-          season_id: message.content_id,
+          season_id: payload.content_id,
         },
         {
           order: {
@@ -115,7 +109,7 @@ describe('SeasonPublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(genreRelations.map((g) => g.tvshow_genre_id)).toEqual(
-        message.genre_ids,
+        payload.genre_ids,
       );
     });
 
@@ -126,22 +120,18 @@ describe('SeasonPublishEventHandler', () => {
         description: 'Old description',
       }).run(ctx.ownerPool);
 
-      const message = createSeasonPublishedEvent('season-1');
-      message.description = 'New description';
-      const messageInfo = stub<MessageInfo<SeasonPublishedEvent>>({
-        envelope: {
-          auth_token: 'no-token',
-          payload: message,
-        },
-      });
+      const message = createSeasonPublishedMessage('season-1');
+      message.payload.description = 'New description';
 
       // Act
-      await handler.onMessage(message, messageInfo);
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
       // Assert
-      const season = await selectOne('season', { id: message.content_id }).run(
-        ctx.ownerPool,
-      );
+      const season = await selectOne('season', {
+        id: message.payload.content_id,
+      }).run(ctx.ownerPool);
 
       expect(season?.description).toEqual('New description');
     });

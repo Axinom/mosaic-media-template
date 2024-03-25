@@ -12,7 +12,11 @@ import {
   PublishEntityCommand,
 } from 'media-messages';
 import { Table } from 'zapatos/schema';
-import { BulkOperationResult, BulkResolverBodyBuilder } from '../../graphql';
+import {
+  BulkOperationResult,
+  BulkResolverBodyBuilder,
+  getValidatedExtendedContext,
+} from '../../graphql';
 import { generateSnapshotJobId, PublishAction } from './publishing-common';
 
 /**
@@ -89,9 +93,11 @@ export const bulkPublishingResolverBodyBuilder =
     token,
   ): Promise<BulkPublishingResult> => {
     const jobId = generateSnapshotJobId();
+    const { storeOutboxMessage, pgClient } =
+      getValidatedExtendedContext(context);
 
     for (const id of ids) {
-      await context.messagingBroker.publish<PublishEntityCommand>(
+      await storeOutboxMessage<PublishEntityCommand>(
         id.toString(),
         MediaServiceMessagingSettings.PublishEntity,
         {
@@ -102,7 +108,8 @@ export const bulkPublishingResolverBodyBuilder =
             action: publishAction,
           },
         },
-        { auth_token: token },
+        pgClient,
+        { envelopeOverrides: { auth_token: token } },
       );
     }
 

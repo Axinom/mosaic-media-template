@@ -1,12 +1,5 @@
-import {
-  buildPgSettings,
-  DEFAULT_SYSTEM_USERNAME,
-} from '@axinom/mosaic-db-common';
-import {
-  Broker,
-  MessageEnvelopeOverrides,
-  MessageInfo,
-} from '@axinom/mosaic-message-bus';
+import { DEFAULT_SYSTEM_USERNAME } from '@axinom/mosaic-db-common';
+import { MessageEnvelopeOverrides } from '@axinom/mosaic-message-bus';
 import {
   ImageServiceMultiTenantMessagingSettings,
   VideoServiceMultiTenantMessagingSettings,
@@ -46,6 +39,11 @@ import {
 } from '../../ingest';
 import { ImageCreatedHandler } from '../../ingest/handlers/image-created-handler';
 // mock the long lived token call to not call the ID service
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
+import {
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   createTestContext,
   createTestRequestContext,
@@ -81,7 +79,8 @@ const stringToStream = (value: string): Readable => {
 
 describe('Movies GraphQL endpoints', () => {
   let ctx: ITestContext;
-  let broker: Broker;
+  let user: AuthenticatedManagementSubject;
+  let storeOutboxMessage: StoreOutboxMessage;
   let startIngest: StartIngestHandler;
   let startItem: StartIngestItemHandler;
   let updateMetadata: UpdateMetadataHandler;
@@ -91,37 +90,38 @@ describe('Movies GraphQL endpoints', () => {
   let checkFinishDocument: CheckFinishIngestDocumentHandler;
   let messages: {
     messageType: string;
-    message: any;
-    overrides: MessageEnvelopeOverrides;
+    payload: any;
+    envelopeOverrides: MessageEnvelopeOverrides | undefined;
   }[] = []; // We don't care about message types in this context, we just redirect what was sent
   let defaultRequestContext: TestRequestContext;
   let movieGenres: movie_genres.JSONSelectable[];
   let tvshowGenres: tvshow_genres.JSONSelectable[];
 
-  const createMessage = (overrides: MessageEnvelopeOverrides): MessageInfo => {
-    return stub<MessageInfo>({
-      envelope: {
-        ...overrides,
+  const createMessage = <T>(
+    payload: any,
+    envelopeOverrides: MessageEnvelopeOverrides | undefined,
+  ) =>
+    stub<TypedTransactionalMessage<T>>({
+      payload,
+      metadata: {
+        authToken: envelopeOverrides?.auth_token,
+        messageContext: envelopeOverrides?.message_context,
       },
     });
-  };
 
   beforeAll(async () => {
-    broker = stub<Broker>({
-      publish: (
-        _id: string,
-        settings: any,
-        message: unknown,
-        overrides: MessageEnvelopeOverrides,
-      ) => {
+    storeOutboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload, _client, optionalData) => {
+        const { envelopeOverrides } = optionalData || {};
         messages.push({
-          message,
-          messageType: settings.messageType,
-          overrides,
+          messageType,
+          payload,
+          envelopeOverrides,
         });
       },
-    });
-    ctx = await createTestContext({}, broker);
+    );
+    ctx = await createTestContext({}, storeOutboxMessage);
+    user = createTestUser(ctx.config.serviceId);
     const subject = createTestUser(ctx.config.serviceId, {
       permissions: {
         'ax-image-service': ['IMAGES_EDIT', 'IMAGES_VIEW'],
@@ -144,75 +144,42 @@ describe('Movies GraphQL endpoints', () => {
 
     startIngest = new StartIngestHandler(
       ingestProcessors,
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
       ctx.config,
     );
 
     startItem = new StartIngestItemHandler(
       ingestProcessors,
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
       ctx.config,
     );
 
     updateMetadata = new UpdateMetadataHandler(
       ingestProcessors,
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
+
       ctx.config,
     );
 
     videoCreationStarted = new VideoCreationStartedHandler(
       ingestProcessors,
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
+
       ctx.config,
     );
 
     imageCreated = new ImageCreatedHandler(
       ingestProcessors,
-      broker,
-      ctx.loginPool,
+      storeOutboxMessage,
+
       ctx.config,
     );
 
-    checkFinishItem = new CheckFinishIngestItemHandler(
-      ctx.loginPool,
-      ctx.config,
-    );
+    checkFinishItem = new CheckFinishIngestItemHandler(ctx.config);
     checkFinishDocument = new CheckFinishIngestDocumentHandler(
-      ctx.loginPool,
-      broker,
+      storeOutboxMessage,
       ctx.config,
     );
-
-    const pgSettings = buildPgSettings(
-      subject,
-      ctx.config.dbGqlRole,
-      ctx.config.serviceId,
-    );
-    jest
-      .spyOn<any, string>(startIngest, 'getPgSettings')
-      .mockImplementation(() => pgSettings);
-    jest
-      .spyOn<any, string>(startItem, 'getPgSettings')
-      .mockImplementation(() => pgSettings);
-    jest
-      .spyOn<any, string>(updateMetadata, 'getPgSettings')
-      .mockImplementation(() => pgSettings);
-    jest
-      .spyOn<any, string>(videoCreationStarted, 'getPgSettings')
-      .mockImplementation(() => pgSettings);
-    jest
-      .spyOn<any, string>(imageCreated, 'getPgSettings')
-      .mockImplementation(() => pgSettings);
-    jest
-      .spyOn<any, string>(checkFinishItem, 'getPgSettings')
-      .mockImplementation(() => pgSettings);
-    jest
-      .spyOn<any, string>(checkFinishDocument, 'getPgSettings')
-      .mockImplementation(() => pgSettings);
 
     movieGenres = await insert('movie_genres', [
       { title: 'Sci-Fi', sort_order: 1 },
@@ -548,67 +515,78 @@ describe('Movies GraphQL endpoints', () => {
         defaultRequestContext,
       );
 
-      let videoId = 1;
-      let imageId = 1;
-      while (messages.length) {
-        const msg = messages.shift();
-        assertNotFalsy(msg, 'msg');
+      await ctx.executeGqlSql(user, async (txn) => {
+        let videoId = 1;
+        let imageId = 1;
+        while (messages.length) {
+          const msg = messages.shift();
+          assertNotFalsy(msg, 'msg');
 
-        switch (msg.messageType) {
-          case MediaServiceMessagingSettings.StartIngest.messageType:
-            await startIngest.onMessage(
-              msg.message,
-              createMessage(msg.overrides),
-            );
-            break;
-          case MediaServiceMessagingSettings.StartIngestItem.messageType:
-            await startItem.onMessage(
-              msg.message,
-              createMessage(msg.overrides),
-            );
-            break;
-          case MediaServiceMessagingSettings.UpdateMetadata.messageType:
-            await updateMetadata.onMessage(
-              msg.message,
-              createMessage(msg.overrides),
-            );
-            break;
-          case VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
-            .messageType: //EnsureVideoExistsStart is handled in another service, here we will just mock messages from it.
-            await videoCreationStarted.onMessage(
-              {
-                ...msg.message,
-                video_id: `0354c2ac-a6d2-45b4-94dc-0000000000${(
-                  '00' + videoId++
-                ).slice(-2)}`,
-              },
-              createMessage(msg.overrides),
-            );
-            break;
-          case ImageServiceMultiTenantMessagingSettings.EnsureImageExists
-            .messageType: //EnsureImageExistsStart is handled in another service, here we will just mock messages from it.
-            await imageCreated.onMessage(
-              { image_id: `11e1d903-49ed-4d70-8b24-00000000000${imageId++}` },
-              createMessage(msg.overrides),
-            );
-            break;
-          case MediaServiceMessagingSettings.CheckFinishIngestItem.messageType:
-            await checkFinishItem.onMessage(
-              msg.message,
-              createMessage(msg.overrides),
-            );
-            break;
-          case MediaServiceMessagingSettings.CheckFinishIngestDocument
-            .messageType:
-            await checkFinishDocument.onMessage(
-              msg.message,
-              createMessage(msg.overrides),
-            );
-            break;
-          default:
-            break;
+          switch (msg.messageType) {
+            case MediaServiceMessagingSettings.StartIngest.messageType:
+              await startIngest.handleMessage(
+                createMessage(msg.payload, msg.envelopeOverrides),
+                txn,
+              );
+              break;
+            case MediaServiceMessagingSettings.StartIngestItem.messageType:
+              await startItem.handleMessage(
+                createMessage(msg.payload, msg.envelopeOverrides),
+                txn,
+              );
+              break;
+            case MediaServiceMessagingSettings.UpdateMetadata.messageType:
+              await updateMetadata.handleMessage(
+                createMessage(msg.payload, msg.envelopeOverrides),
+                txn,
+              );
+              break;
+            case VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
+              .messageType: //EnsureVideoExistsStart is handled in another service, here we will just mock messages from it.
+              await videoCreationStarted.handleMessage(
+                createMessage(
+                  {
+                    ...msg.payload,
+                    video_id: `0354c2ac-a6d2-45b4-94dc-0000000000${(
+                      '00' + videoId++
+                    ).slice(-2)}`,
+                  },
+                  msg.envelopeOverrides,
+                ),
+                txn,
+              );
+              break;
+            case ImageServiceMultiTenantMessagingSettings.EnsureImageExists
+              .messageType: //EnsureImageExistsStart is handled in another service, here we will just mock messages from it.
+              await imageCreated.handleMessage(
+                createMessage(
+                  {
+                    image_id: `11e1d903-49ed-4d70-8b24-00000000000${imageId++}`,
+                  },
+                  msg.envelopeOverrides,
+                ),
+                txn,
+              );
+              break;
+            case MediaServiceMessagingSettings.CheckFinishIngestItem
+              .messageType:
+              await checkFinishItem.handleMessage(
+                createMessage(msg.payload, msg.envelopeOverrides),
+                txn,
+              );
+              break;
+            case MediaServiceMessagingSettings.CheckFinishIngestDocument
+              .messageType:
+              await checkFinishDocument.handleMessage(
+                createMessage(msg.payload, msg.envelopeOverrides),
+                txn,
+              );
+              break;
+            default:
+              break;
+          }
         }
-      }
+      });
 
       // Assert
       expect(resp.errors).toBeFalsy();
@@ -953,7 +931,6 @@ describe('Movies GraphQL endpoints', () => {
       const seasonImages = await select('seasons_images', all).run(
         ctx.ownerPool,
       );
-
       expect(seasons).toEqual<seasons.JSONSelectable[]>([
         {
           created_date: seasons[0].created_date,
