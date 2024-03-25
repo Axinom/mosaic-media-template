@@ -79,6 +79,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
           placeholder_video: {
             id: uuid(),
             title: 'Channel Spinning LOGO',
+            custom_id: null,
             source_location: 'test',
             is_archived: false,
             videos_tags: [],
@@ -147,6 +148,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
             placeholder_video: {
               id: uuid(),
               title: 'Channel Spinning LOGO',
+              custom_id: null,
               source_location: 'test',
               is_archived: false,
               videos_tags: [],
@@ -214,6 +216,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
           placeholder_video: {
             id: uuid(),
             title: 'Channel Spinning LOGO',
+            custom_id: null,
             source_location: 'test',
             is_archived: false,
             videos_tags: [],
@@ -280,6 +283,7 @@ describe('ChannelPublishedValidationWebhookHandler', () => {
           placeholder_video: {
             id: uuid(),
             title: 'Channel Spinning LOGO',
+            custom_id: null,
             source_location: 'test',
             is_archived: false,
             videos_tags: [],

@@ -38,6 +38,7 @@
     "util:load-vars": "env-cmd -f .env",
     "util:portal-version-check": "ts-node --transpile-only scripts/package-version-check.ts",
     "util:update-mosaic-packages": "ts-node ./scripts/update-mosaic-packages.ts",
+    "util:update-snippets": "mosaic generate-vscode-sql-snippets",
     "build:media-service:prod": "yarn && wsrun -trm -p media-service -c build && yarn install --prod",
     "build:catalog-service:prod": "yarn && wsrun -trm -p catalog-service -c build && yarn install --prod",
     "build:entitlement-service:prod": "yarn && wsrun -trm -p entitlement-service -c build && yarn install --prod",
@@ -47,7 +48,7 @@
     "yarn:de-dupe": "npx yarn-deduplicate yarn.lock"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.30.0",
+    "@axinom/mosaic-cli": "0.31.0-rc.0",
     "@dbeining/react-atom": "^4.1.21",
     "@jest/globals": "^29.5.0",
     "@libre/atom": "^1.3.3",

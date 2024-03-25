@@ -12,6 +12,7 @@ import {
 } from '@axinom/mosaic-service-common';
 import { from } from 'env-var';
 import { updateEnvFile } from './helpers';
+
 async function main(): Promise<void> {
   const env = from(process.env);
 
@@ -89,6 +90,7 @@ const serviceAccountSetup = async (
     MOSAIC_HOSTING_CLIENT_ID: serviceAccount.clientId,
     MOSAIC_HOSTING_CLIENT_SECRET: serviceAccount.clientSecret,
   });
+
   console.log({
     message: `Service account "${serviceAccountName}" successfully created and its credentials added to the .env file.`,
     ...serviceAccount,

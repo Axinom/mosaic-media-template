@@ -15,14 +15,6 @@
       "type": "integer",
       "minimum": 1
     },
-    "synopsis": {
-      "description": "Short description of the main plot elements.",
-      "$ref": "../common.json#/definitions/non_empty_string"
-    },
-    "description": {
-      "description": "Extended synopsis.",
-      "type": "string"
-    },
     "studio": {
       "description": "Name of the producing studio.",
       "type": "string"
@@ -61,6 +53,35 @@
     },
     "videos": {
       "$ref": "./common.json#/definitions/trailers"
+    },
+    "localizations": {
+      "description": "Localizations for every defined locale.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "title": "season_localization",
+        "required": ["is_default_locale", "language_tag"],
+        "properties": {
+          "is_default_locale": {
+            "type": "boolean",
+            "description": "Boolean flag to indicate if locale is default or not."
+          },
+          "language_tag": {
+            "type": "string",
+            "description": "The locale for which the values are localized."
+          },
+          "description": {
+            "type": ["string", "null"],
+            "description": "The localized description of this season."
+          },
+          "synopsis": {
+            "type": ["string", "null"],
+            "description": "The localized synopsis of this season."
+          }
+        }
+      }
     }
   },
   "required": [
@@ -69,7 +90,8 @@
     "licenses",
     "genre_ids",
     "images",
-    "videos"
+    "videos",
+    "localizations"
   ],
   "additionalProperties": false
 }

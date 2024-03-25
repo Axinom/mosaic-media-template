@@ -110,7 +110,7 @@ export const TvShowLicensing: React.FC = () => {
 
   return (
     <NavigationExplorer<TvshowsLicensesData>
-      title="Tvshow Licensing"
+      title="TV Show Licensing"
       stationKey="TvshowsLicenseExplorer"
       columns={explorerColumns}
       dataProvider={dataProvider}

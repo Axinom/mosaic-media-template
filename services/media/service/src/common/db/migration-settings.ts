@@ -4,6 +4,7 @@ import {
   getGraphileBuildPgWatchFixturesPath,
 } from '@axinom/mosaic-db-common';
 import { Logger as MigrateLogger, Settings } from 'graphile-migrate';
+import { localizationDbMigrationPlaceholders } from '../../domains/localization-db-migration-placeholders';
 import { DbConfig } from '../config';
 
 export const getMigrationSettings = async (
@@ -26,6 +27,7 @@ export const getMigrationSettings = async (
       ':DATABASE_LOGIN': config.dbLogin,
       ':DATABASE_GQL_ROLE': config.dbGqlRole,
       ':DEFAULT_USERNAME': DEFAULT_DB_USERNAME,
+      ...localizationDbMigrationPlaceholders,
     },
     afterReset: [
       {

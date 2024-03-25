@@ -8,6 +8,7 @@ import {
   MediaServiceMessagingSettings,
   StartIngestItemCommand,
 } from 'media-messages';
+import { createTestConfig } from '../../../tests/test-utils';
 import { IngestMovieProcessor } from './ingest-movie-processor';
 
 const ingestStepId = '849c11f1-c188-4950-9743-442c45c5c8e5';
@@ -142,9 +143,18 @@ describe('IngestMovieProcessor', () => {
     messagingSettings:
       ImageServiceMultiTenantMessagingSettings.EnsureImageExists,
   });
+  const localizationsData = () => ({
+    ingestItemStep: {
+      id: ingestStepId,
+      ingest_item_id: ingestItemId,
+      sub_type: '',
+      type: 'LOCALIZATIONS',
+    },
+  });
 
   beforeAll(async () => {
-    processor = new IngestMovieProcessor();
+    const config = createTestConfig();
+    processor = new IngestMovieProcessor(config);
   });
 
   afterAll(async () => {
@@ -153,18 +163,30 @@ describe('IngestMovieProcessor', () => {
 
   describe('getOrchestrationData', () => {
     it.each([
-      [undefined, undefined, undefined, [metaData]],
-      [null, null, null, [metaData]],
-      [{ source: 'v1' }, null, null, [metaData, videoData]],
+      [undefined, undefined, undefined, undefined, [metaData]],
+      [null, null, null, null, [metaData]],
+      [{ source: 'v1' }, null, null, null, [metaData, videoData]],
+      [
+        null,
+        null,
+        null,
+        [
+          { language_tag: 'de-DE', title: 'Avatar – Aufbruch nach Pandora' },
+          { language_tag: 'et-EE', title: 'Avatar' },
+        ],
+        [metaData, localizationsData],
+      ],
       [
         { source: 'v1', profile: 'DEFAULT' },
         null,
         [{ path: 'images\\teasers\\test2.jpg', type: 'TEASER' }],
+        [],
         [metaData, videoData, teaserData],
       ],
       [
         { source: 'v1', profile: 'DEFAULT' },
         [{ source: 't1' }],
+        null,
         null,
         [metaData, videoData, trailer1Data],
       ],
@@ -172,6 +194,7 @@ describe('IngestMovieProcessor', () => {
         { source: 'v1', profile: 'DEFAULT' },
         [{ source: 't1', profile: 'DEFAULT' }],
         [{ path: 'images/covers/test.jpg', type: 'COVER' }],
+        null,
         [metaData, videoData, trailer1Data, coverData],
       ],
       [
@@ -185,17 +208,22 @@ describe('IngestMovieProcessor', () => {
           { path: 'images\\teasers\\test2.jpg', type: 'TEASER' },
         ],
         [
+          { language_tag: 'de-DE', title: 'Avatar – Aufbruch nach Pandora' },
+          { language_tag: 'et-EE', title: 'Avatar' },
+        ],
+        [
           metaData,
           videoData,
           trailer1Data,
           trailer2Data,
           coverData,
           teaserData,
+          localizationsData,
         ],
       ],
     ])(
       'full movie message with various relations -> orchestration data with relevant steps',
-      async (mainVideo, trailers, images, dataConstructors) => {
+      async (mainVideo, trailers, images, localizations, dataConstructors) => {
         // Arrange
         const item: StartIngestItemCommand['item'] = {
           type: 'MOVIE',
@@ -205,6 +233,7 @@ describe('IngestMovieProcessor', () => {
             main_video: mainVideo,
             trailers,
             images,
+            localizations,
           },
         };
         const content: StartIngestItemCommand = {

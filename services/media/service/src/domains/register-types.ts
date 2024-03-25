@@ -3,6 +3,7 @@ import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { IsolationLevel } from 'zapatos/db';
 import { Config } from '../common';
 import { registerImageTypes } from './register-image-types';
+import { registerLocalizationEntityDefinitions } from './register-localization-entity-definitions';
 import { registerVideoCuePointTypes } from './register-video-cue-point-types';
 
 export const registerTypes = async (
@@ -20,6 +21,15 @@ export const registerTypes = async (
 
       // Register video cue point types used in media service.
       await registerVideoCuePointTypes(storeOutboxMessage, loginClient, config);
+
+      if (config.isLocalizationEnabled) {
+        // Register localization entity definitions for the media service localizable entities.
+        await registerLocalizationEntityDefinitions(
+          storeOutboxMessage,
+          loginClient,
+          config,
+        );
+      }
     },
   );
 };

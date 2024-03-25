@@ -69,6 +69,9 @@ regularVariables:
   ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
   IMAGE_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-image-service.management_base_url}'
   VIDEO_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-video-service.management_base_url}'
+  LOCALIZATION_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-localization-service.management_base_url}'
+
+  IS_LOCALIZATION_ENABLED: true
 
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
@@ -93,6 +96,13 @@ serviceAccounts:
       - serviceId: 'ax-video-service'
         permissions:
           - 'CUE_POINT_TYPES_DECLARE'
+
+      - serviceId: 'ax-localization-service'
+        permissions:
+          - 'SOURCE_ENTITIES_EDIT'
+          - 'ENTITY_DEFINITIONS_EDIT'
+          - 'LOCALIZED_ENTITIES_EDIT'
+          - 'LOCALIZED_ENTITIES_REVIEW'
 
 pilets:
   # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.

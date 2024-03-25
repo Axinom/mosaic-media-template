@@ -6,6 +6,7 @@ export * from './ingest-document';
 export * from './ingest-item';
 export * from './ingest-message-context';
 export * from './license-data';
+export * from './localizations-ingest-element';
 export * from './main-video-ingest-element';
 export * from './media-entity-type';
 export * from './movie-ingest-data';
