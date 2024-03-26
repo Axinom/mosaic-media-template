@@ -310,7 +310,7 @@
     jwks-rsa "^1.8.1"
     lru-cache "^7.18.3"
     pg "^8.11.3"
-    pg-transactional-outbox "^0.5.3"
+    pg-transactional-outbox "^0.5.5"
     postgraphile "^4.13.0"
     rascal "^14.0.1"
     subscriptions-transport-ws "^0.9.19"
@@ -405,7 +405,8 @@
     async-mutex "^0.4.0"
     env-var "^6.3.0"
     pg "^8.11.3"
-    pg-transactional-outbox "^0.5.3"
+    pg-transactional-outbox "^0.5.5"
+    prom-client "^15.1.0"
 
 "@axinom/mosaic-ui@0.44.0":
   version "0.44.0"
@@ -10288,6 +10289,17 @@ pg-transactional-outbox@^0.5.3:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/pg-transactional-outbox/-/pg-transactional-outbox-0.5.3.tgz#d16b2b641e2861d401835b14684f640d993c21c0"
   integrity sha512-wbGfQ9YSTFfiE2FvrUyIScKiGfPPpzEpArnWVGHzoS476COpULbbcrW+qiTLS7xbtToIfiH2O0yFpAdqtlQdDQ==
+  dependencies:
+    async-mutex "^0.4.0"
+    pg "^8.11.3"
+    pg-logical-replication "^2.0.3"
+    pino "^8.16.2"
+    uuid "^9.0.1"
+
+pg-transactional-outbox@^0.5.5:
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/pg-transactional-outbox/-/pg-transactional-outbox-0.5.5.tgz#8fc6349769e505fea16ee4701f9e87a9ae36e0a2"
+  integrity sha512-1+fVqQoTQShEspTIipC3zND8X7K1mh4WJC7mLcGRnvDJoz2LEl3yrBbSmKIFJb1Heq4AG98OtOGAOjtOy14oJA==
   dependencies:
     async-mutex "^0.4.0"
     pg "^8.11.3"
