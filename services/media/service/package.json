@@ -80,7 +80,7 @@
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.11",
     "pg": "^8.11.0",
-    "pg-transactional-outbox": "0.5.3",
+    "pg-transactional-outbox": "0.5.5",
     "pluralize": "^7.0.0",
     "postgraphile": "4.13.0",
     "postgraphile-plugin-atomic-mutations": "^1.0.4",
