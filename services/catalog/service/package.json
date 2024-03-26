@@ -63,7 +63,7 @@
     "graphql": "^15.4.0",
     "media-messages": "^0.0.1",
     "pg": "^8.11.0",
-    "pg-transactional-outbox": "0.5.3",
+    "pg-transactional-outbox": "0.5.5",
     "postgraphile": "4.13.0",
     "postgraphile-plugin-connection-filter": "^2.3.0",
     "rascal": "^14.4.5",
