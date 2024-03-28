@@ -28,10 +28,10 @@
     "setup:webhook": "yarn util:load-vars ts-node --files scripts/setup-webhook.ts"
   },
   "dependencies": {
-    "@axinom/mosaic-id-guard": "0.30.0-rc.8",
-    "@axinom/mosaic-message-bus": "0.25.0-rc.8",
-    "@axinom/mosaic-messages": "0.41.0-rc.8",
-    "@axinom/mosaic-service-common": "0.47.0-rc.8",
+    "@axinom/mosaic-id-guard": "^0.30.0-rc.8",
+    "@axinom/mosaic-message-bus": "^0.25.0-rc.8",
+    "@axinom/mosaic-messages": "^0.41.0-rc.8",
+    "@axinom/mosaic-service-common": "^0.47.0-rc.8",
     "@azure/storage-blob": "^12.14.0",
     "amqplib": "^0.6.0",
     "axios": "^0.24.0",
