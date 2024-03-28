@@ -25,11 +25,11 @@ import { Logger } from '@axinom/mosaic-service-common';
 import { ShutdownActionsMiddleware } from '@axinom/mosaic-service-common';
 import {
   RabbitMqInboxWriter,
+  setupInboxStorage,
   TransactionalLogMapper,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   getInboxPollingListenerSettings,
-  initializeMessageStorage,
   initializePollingMessageListener,
   PollingListenerConfig,
 } from 'pg-transactional-outbox';
@@ -51,7 +51,7 @@ export const registerMessaging = async (
     settings: getInboxPollingListenerSettings(),
   };
 
-  const storeInboxMessage = initializeMessageStorage(inboxConfig, logMapper);
+  const storeInboxMessage = setupInboxStorage(inboxConfig, inboxLogger, config);
   const inboxWriter = new RabbitMqInboxWriter(
     storeInboxMessage,
     ownerPool,
