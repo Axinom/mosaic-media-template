@@ -17,6 +17,7 @@ import { ShutdownActionsMiddleware } from '@axinom/mosaic-service-common';
 import {
   RabbitMqInboxWriter,
   RascalTransactionalConfigBuilder,
+  setupInboxStorage,
   setupOutboxStorage,
   setupPollingOutboxListener,
   StoreOutboxMessage,
@@ -25,7 +26,6 @@ import {
 import {
   getInboxPollingListenerSettings,
   getOutboxPollingListenerSettings,
-  initializeMessageStorage,
   initializePollingMessageListener,
   PollingListenerConfig,
   TransactionalMessageHandler,
@@ -126,7 +126,7 @@ const registerRabbitMqMessaging = async (
   logMapper: TransactionalLogMapper,
   shutdownActions: ShutdownActionsMiddleware,
 ): Promise<Broker> => {
-  const storeInboxMessage = initializeMessageStorage(inboxConfig, logMapper);
+  const storeInboxMessage = setupInboxStorage(inboxConfig, inboxLogger, config);
 
   const grantsSettings = MonetizationGrantsServiceMultiTenantMessagingSettings;
   const planSettings =
@@ -144,7 +144,7 @@ const registerRabbitMqMessaging = async (
         planSettings.SubscriptionPlanPublished,
       ],
       customMessagePreProcessor: (message) => {
-        switch (message.messageType) {
+        switch (message.messagingSettings.messageType) {
           case grantsSettings.SynchronizeClaimDefinitionsFinished.messageType:
           case grantsSettings.SynchronizeClaimDefinitionsFailed.messageType:
             message.concurrency = 'parallel';

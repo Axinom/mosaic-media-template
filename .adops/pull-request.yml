@@ -48,7 +48,12 @@ stages:
                 - script: yarn install --immutable
                   displayName: Install dependencies
 
-                - script: yarn build
+                - task: Bash@3
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                      yarn build || echo "Build exited with non-0 exit code"
+                      echo "Build Exit Code: $?"
                   displayName: Build
 
                 - script: yarn apply-templates

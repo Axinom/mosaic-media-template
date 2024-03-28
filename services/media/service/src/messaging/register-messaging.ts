@@ -18,6 +18,7 @@ import { ShutdownActionsMiddleware } from '@axinom/mosaic-service-common';
 import {
   RabbitMqInboxWriter,
   RascalTransactionalConfigBuilder,
+  setupInboxStorage,
   setupOutboxStorage,
   setupPollingOutboxListener,
   StoreOutboxMessage,
@@ -27,7 +28,6 @@ import { MediaServiceMessagingSettings } from 'media-messages';
 import {
   getInboxPollingListenerSettings,
   getOutboxPollingListenerSettings,
-  initializeMessageStorage,
   initializePollingMessageListener,
   IsolationLevel,
   PollingListenerConfig,
@@ -382,7 +382,7 @@ const registerRabbitMqMessaging = async (
   logMapper: TransactionalLogMapper,
   shutdownActions: ShutdownActionsMiddleware,
 ): Promise<Broker> => {
-  const storeInboxMessage = initializeMessageStorage(inboxConfig, logMapper);
+  const storeInboxMessage = setupInboxStorage(inboxConfig, inboxLogger, config);
 
   const inboxWriter = new RabbitMqInboxWriter(
     storeInboxMessage,
@@ -412,7 +412,7 @@ const registerRabbitMqMessaging = async (
         LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeclareFailed,
       ],
       customMessagePreProcessor: (message) => {
-        switch (message.messageType) {
+        switch (message.messagingSettings.messageType) {
           case MediaServiceMessagingSettings.StartIngest.messageType:
           case MediaServiceMessagingSettings.StartIngestItem.messageType:
           case MediaServiceMessagingSettings.UpdateMetadata.messageType:
