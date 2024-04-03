@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { PermissionStructure } from '@axinom/mosaic-id-link-be';
 import {
   getValidatedConfig,
   isNullOrWhitespace,
@@ -32,6 +33,23 @@ async function main(): Promise<void> {
     );
   }
 
+  const idServicePermissions: PermissionStructure = {
+    serviceId: 'ax-id-service',
+    permissions: [
+      'PERMISSIONS_SYNCHRONIZE',
+      'ACCESS_TOKENS_GENERATE_LONG_LIVED_TOKEN',
+    ],
+  };
+  const result = await serviceAccountSetup(
+    config.idServiceAuthBaseUrl,
+    config.devServiceAccountClientId,
+    config.devServiceAccountClientSecret,
+    config.serviceId,
+    [idServicePermissions],
+    false,
+  );
+  config.serviceAccountClientId = result.clientId;
+  config.serviceAccountClientSecret = result.clientSecret;
   await syncPermissions(config);
   await serviceAccountSetup(
     config.idServiceAuthBaseUrl,
@@ -39,13 +57,7 @@ async function main(): Promise<void> {
     config.devServiceAccountClientSecret,
     config.serviceId,
     [
-      {
-        serviceId: 'ax-id-service',
-        permissions: [
-          'PERMISSIONS_SYNCHRONIZE',
-          'ACCESS_TOKENS_GENERATE_LONG_LIVED_TOKEN',
-        ],
-      },
+      idServicePermissions,
       {
         serviceId: 'ax-image-service',
         permissions: ['IMAGE_TYPES_DECLARE'],
