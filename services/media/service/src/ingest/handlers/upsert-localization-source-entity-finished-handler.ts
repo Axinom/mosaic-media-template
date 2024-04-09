@@ -1,4 +1,3 @@
-import { getServiceAccountToken } from '@axinom/mosaic-id-link-be';
 import {
   EntityLocalization,
   EntityLocalizationFieldState,
@@ -14,7 +13,12 @@ import {
 import { IngestLocalization, IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { param, selectOne, self as value, SQL, sql, update } from 'zapatos/db';
-import { CommonErrors, Config, getMediaMappedError } from '../../common';
+import {
+  CommonErrors,
+  Config,
+  getMediaMappedError,
+  requestServiceAccountToken,
+} from '../../common';
 import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 
 /**
@@ -108,14 +112,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaTransact
       ingestItemStepId: localizationStep.id,
     };
     const token =
-      metadata.authToken ??
-      (
-        await getServiceAccountToken(
-          this.config.idServiceAuthBaseUrl,
-          this.config.serviceAccountClientId,
-          this.config.serviceAccountClientSecret,
-        )
-      ).accessToken;
+      metadata.authToken ?? (await requestServiceAccountToken(this.config));
     await this.storeOutboxMessage<LocalizeEntityCommand>(
       payload.entity_id,
       messageSettings,
