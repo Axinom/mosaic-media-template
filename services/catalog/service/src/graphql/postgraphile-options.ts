@@ -44,6 +44,9 @@ export function buildPostgraphileOptions(
       AllTvshowPlugins,
       AddErrorCodesEnumPluginFactory([MosaicErrors, CommonErrors]),
     )
-    .addGraphileBuildOptions({ pgSkipInstallingWatchFixtures: true })
+    .addGraphileBuildOptions({
+      pgSkipInstallingWatchFixtures: true,
+      connectionFilterRelations: true,
+    })
     .build();
 }
