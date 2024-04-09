@@ -103,7 +103,7 @@ describe('Start Ingest Handler', () => {
       const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(createMessage(payload), dbCtx),
       );
 
@@ -198,7 +198,7 @@ describe('Start Ingest Handler', () => {
       const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(createMessage(payload), dbCtx),
       );
 
@@ -282,7 +282,7 @@ describe('Start Ingest Handler', () => {
       const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleErrorMessage(
           new Error('test error'),
           createMessage(payload),

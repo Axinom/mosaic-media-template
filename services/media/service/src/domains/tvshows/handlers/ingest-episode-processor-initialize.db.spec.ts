@@ -66,7 +66,7 @@ describe('IngestEpisodeProcessor', () => {
         };
 
         // Act
-        const result = await ctx.executeGqlSql(user, async (dbCtx) => {
+        const result = await ctx.executeOwnerSql(user, async (dbCtx) => {
           return processor.initializeMedia([item], dbCtx);
         });
 

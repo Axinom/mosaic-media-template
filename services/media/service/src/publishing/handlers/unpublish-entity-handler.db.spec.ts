@@ -93,7 +93,7 @@ describe('UnpublishEntityHandler', () => {
   describe('onMessage', () => {
     it('message to publish a movie -> snapshot with relation created with correct metadata and publish message sent', async () => {
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(
           createMessage({
             table_name: mockPublishingProcessor.type,
@@ -143,7 +143,7 @@ describe('UnpublishEntityHandler', () => {
 
     it('message to publish a snapshot -> existing snapshot is updated with correct metadata and publish message sent', async () => {
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(
           createMessage({
             table_name: 'snapshots',

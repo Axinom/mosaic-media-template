@@ -77,7 +77,7 @@ describe('IngestSeasonProcessor', () => {
         const body = createMessageBody(season1, data);
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx);
         });
 
@@ -116,7 +116,7 @@ describe('IngestSeasonProcessor', () => {
       const body = createMessageBody(season1, data);
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
+      await ctx.executeOwnerSql(user, async (dbCtx) => {
         await processor.updateMetadata(body, dbCtx);
       });
 
