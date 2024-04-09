@@ -1,3 +1,4 @@
+import { getServiceAccountToken } from '@axinom/mosaic-id-link-be';
 import {
   EntityLocalization,
   EntityLocalizationFieldState,
@@ -14,7 +15,7 @@ import { IngestLocalization, IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { param, selectOne, self as value, SQL, sql, update } from 'zapatos/db';
 import { CommonErrors, Config, getMediaMappedError } from '../../common';
-import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 
 /**
  * Every localization field will have this state set by default in the command
@@ -25,14 +26,13 @@ import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 export const DEFAULT_LOCALIZATION_STATE: EntityLocalizationFieldState =
   'APPROVED';
 
-export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFinishedEvent> {
+export class UpsertLocalizationSourceEntityFinishedHandler extends MediaTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFinishedEvent> {
   constructor(
     private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
   ) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFinished,
-      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: UpsertLocalizationSourceEntityFinishedHandler.name,
@@ -40,6 +40,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
       config,
     );
   }
+
   override async handleMessage(
     {
       payload,
@@ -106,7 +107,15 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
       ingestItemId: messageContext.ingestItemId,
       ingestItemStepId: localizationStep.id,
     };
-
+    const token =
+      metadata.authToken ??
+      (
+        await getServiceAccountToken(
+          this.config.idServiceAuthBaseUrl,
+          this.config.serviceAccountClientId,
+          this.config.serviceAccountClientSecret,
+        )
+      ).accessToken;
     await this.storeOutboxMessage<LocalizeEntityCommand>(
       payload.entity_id,
       messageSettings,
@@ -114,7 +123,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
       loginClient,
       {
         envelopeOverrides: {
-          auth_token: metadata.authToken,
+          auth_token: token,
           message_context: localizationMessageContext,
         },
         options: {

@@ -13,7 +13,6 @@ export const serviceAccountSetup = async (
   devServiceAccountClientSecret: string,
   serviceId: string,
   permissions: PermissionStructure[],
-  printLog = true,
 ): Promise<ServiceAccountResult> => {
   const tokenResult = await getServiceAccountToken(
     idServiceAuthBaseUrl,
@@ -34,11 +33,9 @@ export const serviceAccountSetup = async (
     SERVICE_ACCOUNT_CLIENT_SECRET: serviceAccount.clientSecret,
   });
 
-  if (printLog) {
-    console.log({
-      message: `Service account "${serviceAccountName}" successfully created and its credentials added to the .env file.`,
-      ...serviceAccount,
-    });
-  }
+  console.log({
+    message: `Service account "${serviceAccountName}" successfully created and its credentials added to the .env file.`,
+    ...serviceAccount,
+  });
   return serviceAccount;
 };
