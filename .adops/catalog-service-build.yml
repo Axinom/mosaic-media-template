@@ -70,7 +70,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                yarn util:load-vars mosaic hosting manifest upload -n "nfn-mosaic-catalog-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
