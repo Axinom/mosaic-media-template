@@ -132,7 +132,7 @@ describe('IngestMovieProcessor', () => {
         };
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.processVideo(movie1.id, newId, messageContext, dbCtx);
         });
 
@@ -177,7 +177,7 @@ describe('IngestMovieProcessor', () => {
         };
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.processVideo(movie1.id, newId, messageContext, dbCtx);
         });
 

@@ -84,7 +84,7 @@ describe('PublishEntityCommandHandler', () => {
   describe('onMessage', () => {
     it('message to publish a movie -> snapshot with relation created with correct metadata and publish message sent', async () => {
       // Act
-      await ctx.executeGqlSql(user, async (txn) => {
+      await ctx.executeOwnerSql(user, async (txn) => {
         await handler.handleMessage(
           createMessage({
             table_name: mockPublishingProcessor.type,
@@ -159,7 +159,7 @@ describe('PublishEntityCommandHandler', () => {
       );
 
       // Act
-      await ctx.executeGqlSql(user, async (txn) => {
+      await ctx.executeOwnerSql(user, async (txn) => {
         await handler.handleMessage(
           createMessage({
             table_name: 'snapshots',
@@ -237,7 +237,7 @@ describe('PublishEntityCommandHandler', () => {
       ).run(ctx.ownerPool);
 
       // Act
-      await ctx.executeGqlSql(user, async (txn) => {
+      await ctx.executeOwnerSql(user, async (txn) => {
         await handler.handleMessage(
           createMessage({
             table_name: 'snapshots',
@@ -298,7 +298,7 @@ describe('PublishEntityCommandHandler', () => {
 
       // Act
       const error = await rejectionOf(
-        ctx.executeGqlSql(user, async (txn) => {
+        ctx.executeOwnerSql(user, async (txn) => {
           await handler.handleMessage(
             createMessage({
               table_name: mockPublishingProcessor.type,
@@ -335,7 +335,7 @@ describe('PublishEntityCommandHandler', () => {
       handler = new PublishEntityHandler([], storeOutboxMessage, ctx.config);
 
       // Act
-      await ctx.executeGqlSql(user, async (txn) => {
+      await ctx.executeOwnerSql(user, async (txn) => {
         await handler.handleMessage(
           createMessage({
             table_name: 'movies',
@@ -381,7 +381,7 @@ describe('PublishEntityCommandHandler', () => {
   describe('onMessageFailure', () => {
     it('message to publish a movie failed after 10 tries -> snapshot with ERROR state created', async () => {
       // Act
-      await ctx.executeGqlSql(user, async (txn) => {
+      await ctx.executeOwnerSql(user, async (txn) => {
         await handler.handleMessage(
           createMessage({
             table_name: 'movies',
@@ -438,7 +438,7 @@ describe('PublishEntityCommandHandler', () => {
       );
 
       // Act
-      await ctx.executeGqlSql(user, async (txn) => {
+      await ctx.executeOwnerSql(user, async (txn) => {
         await handler.handleMessage(
           createMessage({
             table_name: 'snapshots',

@@ -96,7 +96,7 @@ describe('IngestMovieProcessor', () => {
         ).run(ctx.ownerPool);
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx, ingestItemId);
         });
 
@@ -158,7 +158,7 @@ describe('IngestMovieProcessor', () => {
         ).run(ctx.ownerPool);
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx);
         });
 
@@ -210,7 +210,7 @@ describe('IngestMovieProcessor', () => {
       const body = createMessageBody(movie1, data);
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
+      await ctx.executeOwnerSql(user, async (dbCtx) => {
         await processor.updateMetadata(body, dbCtx);
       });
 
@@ -262,7 +262,7 @@ describe('IngestMovieProcessor', () => {
 
       // Act
       const error = await rejectionOf(
-        ctx.executeGqlSql(user, async (dbCtx) => {
+        ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx);
         }),
       );
@@ -295,7 +295,7 @@ describe('IngestMovieProcessor', () => {
 
       // Act
       const error = await rejectionOf(
-        ctx.executeGqlSql(user, async (dbCtx) => {
+        ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx);
         }),
       );
@@ -348,7 +348,7 @@ describe('IngestMovieProcessor', () => {
         const body = createMessageBody(movie1, data);
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx);
         });
 
@@ -387,7 +387,7 @@ describe('IngestMovieProcessor', () => {
       const body = createMessageBody(movie1, data);
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
+      await ctx.executeOwnerSql(user, async (dbCtx) => {
         await processor.updateMetadata(body, dbCtx);
       });
 
@@ -425,7 +425,7 @@ describe('IngestMovieProcessor', () => {
       const body = createMessageBody(movie1, data);
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
+      await ctx.executeOwnerSql(user, async (dbCtx) => {
         await processor.updateMetadata(body, dbCtx);
       });
 
@@ -486,7 +486,7 @@ describe('IngestMovieProcessor', () => {
         const body = createMessageBody(movie1, data);
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx);
         });
 
@@ -548,7 +548,7 @@ describe('IngestMovieProcessor', () => {
         });
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx);
         });
 
@@ -637,7 +637,7 @@ describe('IngestMovieProcessor', () => {
         });
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx);
         });
 
@@ -698,7 +698,7 @@ describe('IngestMovieProcessor', () => {
         });
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx);
         });
 
