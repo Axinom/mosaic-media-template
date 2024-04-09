@@ -26,7 +26,7 @@ export class CheckFinishIngestItemHandler extends MediaGuardedTransactionalInbox
     {
       payload: { ingest_item_id, ingest_item_step_id, error_message },
     }: TypedTransactionalMessage<CheckFinishIngestItemCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const updated = await update(
       'ingest_item_steps',
@@ -35,7 +35,7 @@ export class CheckFinishIngestItemHandler extends MediaGuardedTransactionalInbox
         response_message: error_message,
       },
       { id: ingest_item_step_id, status: 'IN_PROGRESS' },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     if (updated.length === 0) {
       this.logger.debug({
@@ -49,7 +49,7 @@ export class CheckFinishIngestItemHandler extends MediaGuardedTransactionalInbox
       'ingest_item_steps',
       { ingest_item_id: ingest_item_id },
       { columns: ['status', 'id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     const inProgressSteps = steps.filter((r) => r.status === 'IN_PROGRESS');
     if (inProgressSteps.length > 0) {
@@ -69,6 +69,6 @@ export class CheckFinishIngestItemHandler extends MediaGuardedTransactionalInbox
         status: steps.some((r) => r.status === 'ERROR') ? 'ERROR' : 'SUCCESS',
       },
       { id: ingest_item_id },
-    ).run(loginClient);
+    ).run(ownerClient);
   }
 }

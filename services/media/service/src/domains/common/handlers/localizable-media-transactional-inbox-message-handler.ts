@@ -29,14 +29,14 @@ export abstract class LocalizableMediaTransactionalInboxMessageHandler<
 
   abstract getLocalizationCommandData(
     message: TypedTransactionalMessage<T>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined>;
 
   override async handleMessage(
     message: TypedTransactionalMessage<T>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
-    const data = await this.getLocalizationCommandData(message, loginClient);
+    const data = await this.getLocalizationCommandData(message, ownerClient);
     if (!data) {
       return;
     }
@@ -46,7 +46,7 @@ export abstract class LocalizableMediaTransactionalInboxMessageHandler<
       data.payload.entity_id,
       data.settings,
       data.payload,
-      loginClient,
+      ownerClient,
       {
         envelopeOverrides: {
           auth_token: accessToken,

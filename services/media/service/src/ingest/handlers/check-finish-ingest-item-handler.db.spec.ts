@@ -87,7 +87,7 @@ describe('Check Finish Ingest Item Handler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(createMessage(payload), dbCtx),
       );
 
@@ -126,7 +126,7 @@ describe('Check Finish Ingest Item Handler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         Promise.all([
           handler.handleMessage(createMessage(payload), dbCtx),
           handler.handleMessage(createMessage(payload), dbCtx),
@@ -166,7 +166,7 @@ describe('Check Finish Ingest Item Handler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(createMessage(payload), dbCtx),
       );
 
@@ -244,7 +244,7 @@ describe('Check Finish Ingest Item Handler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(createMessage(payload), dbCtx),
       );
 
@@ -345,7 +345,7 @@ describe('Check Finish Ingest Item Handler', () => {
       ]).run(ctx.ownerPool);
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(
           createMessage({
             ingest_item_id: item.id,
@@ -465,7 +465,7 @@ describe('Check Finish Ingest Item Handler', () => {
       ]).run(ctx.ownerPool);
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
+      await ctx.executeOwnerSql(user, async (dbCtx) => {
         await handler.handleMessage(
           createMessage({
             ingest_item_id: item.id,
@@ -614,7 +614,7 @@ describe('Check Finish Ingest Item Handler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
+      await ctx.executeOwnerSql(user, async (dbCtx) => {
         await handler.handleMessage(createMessage(payload1), dbCtx);
         await handler.handleMessage(createMessage(payload2), dbCtx);
       });

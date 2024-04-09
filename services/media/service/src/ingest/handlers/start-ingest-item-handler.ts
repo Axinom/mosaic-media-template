@@ -117,7 +117,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
   override async handleErrorMessage(
     error: Error,
     { payload }: TypedTransactionalMessage<StartIngestItemCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -138,7 +138,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
         errors: sql<SQL>`${value} || ${errorParam}::jsonb`,
       },
       { id: payload.ingest_item_id },
-    ).run(loginClient);
+    ).run(ownerClient);
   }
 
   private getPublicationConfig(

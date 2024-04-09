@@ -164,7 +164,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
   override async handleErrorMessage(
     error: Error,
     { payload }: TypedTransactionalMessage<StartIngestCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -186,17 +186,17 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
         ],
       },
       { id: payload.doc_id },
-    ).run(loginClient);
+    ).run(ownerClient);
   }
 
   private async initializeItems(
     processor: IngestEntityProcessor,
     typedItems: IngestItem[],
     documentId: number,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<ingest_items.JSONSelectable[]> {
     const { existedMedia, createdMedia, displayTitleMappings } =
-      await processor.initializeMedia(typedItems, loginClient);
+      await processor.initializeMedia(typedItems, ownerClient);
 
     const existedItems = this.createIngestItems(
       this.getIngestItemInfo(displayTitleMappings, existedMedia),
@@ -217,7 +217,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
       );
     }
     return insert('ingest_items', [...existedItems, ...createdItems]).run(
-      loginClient,
+      ownerClient,
     );
   }
 
@@ -269,7 +269,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
 
   private async sendCommands(
     ingestItems: ingest_items.JSONSelectable[],
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     jwtToken: string | undefined,
   ): Promise<void> {
     for (const ingestItem of ingestItems) {
@@ -281,7 +281,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
           entity_id: ingestItem.entity_id,
           item: ingestItem.item,
         },
-        loginClient,
+        ownerClient,
         {
           metadata: { authToken: jwtToken },
           lockedUntil: getFutureIsoDateInMilliseconds(5_000),

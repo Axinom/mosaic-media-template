@@ -46,7 +46,7 @@ export abstract class VideoSucceededHandler<
 
   override async handleMessage(
     { payload, metadata, id, aggregateId }: TypedTransactionalMessage<TContent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     if (!checkIsIngestEvent(metadata, this.logger, id, aggregateId)) {
       return;
@@ -54,7 +54,7 @@ export abstract class VideoSucceededHandler<
     const messageContext = metadata.messageContext as VideoMessageContext;
     const ingestItem = await selectExactlyOne('ingest_items', {
       id: messageContext.ingestItemId,
-    }).run(loginClient);
+    }).run(ownerClient);
 
     const processor = this.entityProcessors.find(
       (h) => h.type === ingestItem.type,
@@ -71,14 +71,14 @@ export abstract class VideoSucceededHandler<
       ingestItem.entity_id,
       payload.video_id,
       messageContext,
-      loginClient,
+      ownerClient,
     );
 
     await update(
       'ingest_item_steps',
       { entity_id: payload.video_id },
       { id: messageContext.ingestItemStepId },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
@@ -87,7 +87,7 @@ export abstract class VideoSucceededHandler<
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,
       },
-      loginClient,
+      ownerClient,
       {
         metadata: { authToken: metadata.authToken },
         lockedUntil: getFutureIsoDateInMilliseconds(1_000),

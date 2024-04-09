@@ -41,7 +41,7 @@ describe('IngestMovieProcessor', () => {
   describe('processImage', () => {
     it('new cover image -> image relation created', async () => {
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
+      await ctx.executeOwnerSql(user, async (dbCtx) => {
         await processor.processImage(movie1.id, imageId, 'COVER', dbCtx);
       });
 
@@ -68,7 +68,7 @@ describe('IngestMovieProcessor', () => {
       }).run(ctx.ownerPool);
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
+      await ctx.executeOwnerSql(user, async (dbCtx) => {
         await processor.processImage(movie1.id, imageId, 'TEASER', dbCtx);
       });
 

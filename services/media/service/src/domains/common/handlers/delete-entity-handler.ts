@@ -38,11 +38,11 @@ export class DeleteEntityHandler extends MediaGuardedTransactionalInboxMessageHa
 
   override async handleMessage(
     { payload, metadata }: TypedTransactionalMessage<DeleteEntityCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const deletedItems = await deletes(payload.table_name as Table, {
       [payload.primary_key_name]: payload.entity_id,
-    }).run(loginClient);
+    }).run(ownerClient);
 
     if (deletedItems.length >= 1) {
       const deletedRow = deletedItems[0];
@@ -57,7 +57,7 @@ export class DeleteEntityHandler extends MediaGuardedTransactionalInboxMessageHa
           primary_key_name: payload.primary_key_name,
           table_name: payload.table_name,
         },
-        loginClient,
+        ownerClient,
         { envelopeOverrides: { auth_token: metadata.authToken } },
       );
     }

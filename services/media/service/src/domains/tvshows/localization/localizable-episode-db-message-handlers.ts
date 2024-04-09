@@ -26,7 +26,7 @@ export interface LocalizableEpisodeDbEvent {
 
 const getEntityTitle = async (
   episode: LocalizableEpisodeDbEvent,
-  loginClient: ClientBase,
+  ownerClient: ClientBase,
 ): Promise<string> => {
   const season = episode.season_id
     ? await selectOne(
@@ -42,7 +42,7 @@ const getEntityTitle = async (
             ),
           },
         },
-      ).run(loginClient)
+      ).run(ownerClient)
     : undefined;
   return buildDisplayTitle('EPISODE', episode, season, season?.tvshow);
 };
@@ -58,9 +58,9 @@ export class LocalizableEpisodeCreatedDbMessageHandler extends LocalizableMediaT
 
   override async getLocalizationCommandData(
     { payload }: TypedTransactionalMessage<LocalizableEpisodeDbEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
-    const entityTitle = await getEntityTitle(payload, loginClient);
+    const entityTitle = await getEntityTitle(payload, ownerClient);
     const { id, index, season_id, ...fields } = payload;
     return getUpsertMessageData(
       this.config.serviceId,
@@ -84,9 +84,9 @@ export class LocalizableEpisodeUpdatedDbMessageHandler extends LocalizableMediaT
 
   override async getLocalizationCommandData(
     { payload }: TypedTransactionalMessage<LocalizableEpisodeDbEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
-    const entityTitle = await getEntityTitle(payload, loginClient);
+    const entityTitle = await getEntityTitle(payload, ownerClient);
     const { id, index, season_id, ...fields } = payload;
     return getUpsertMessageData(
       this.config.serviceId,

@@ -141,7 +141,7 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(createMessage(payload, context), dbCtx),
       );
 
@@ -221,7 +221,7 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
       });
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleErrorMessage(
           error,
           createMessage(payload, context),

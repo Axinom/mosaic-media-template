@@ -38,7 +38,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
 
   override async handleMessage(
     { payload, metadata }: TypedTransactionalMessage<UpdateMetadataCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const messageContext = metadata.messageContext as IngestMessageContext;
     const processor = this.entityProcessors.find(
@@ -58,11 +58,11 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
         type: 'LOCALIZATIONS',
       },
       { columns: ['id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     await processor.updateMetadata(
       payload,
-      loginClient,
+      ownerClient,
       localizationStep ? messageContext.ingestItemId : undefined,
     );
 
@@ -73,7 +73,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,
       },
-      loginClient,
+      ownerClient,
       {
         metadata: { authToken: metadata.authToken },
         lockedUntil: getFutureIsoDateInMilliseconds(1_000),

@@ -93,7 +93,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
     {
       metadata,
     }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFailedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -114,6 +114,6 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
         errors: sql<SQL>`${value} || ${err}::jsonb`,
       },
       { id: messageContext.ingestItemId },
-    ).run(loginClient);
+    ).run(ownerClient);
   }
 }
