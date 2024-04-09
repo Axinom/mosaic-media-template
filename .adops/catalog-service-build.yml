@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  serviceId: 'mosaic-catalog-service'
+  serviceId: 'dc-nfn-mosaic-catalog-acc'
   containerRegistry: 'harbor-beyonddutch-automation'
   dockerfilePath: 'Dockerfile'
   packageRoot: 'services/catalog/service'
