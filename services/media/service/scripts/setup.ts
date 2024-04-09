@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { PermissionStructure } from '@axinom/mosaic-id-link-be';
 import {
   getValidatedConfig,
   isNullOrWhitespace,
@@ -7,15 +6,12 @@ import {
 } from '@axinom/mosaic-service-common';
 import { serviceAccountSetup } from '../../../../scripts/helpers';
 import { getConfigDefinitions } from '../src/common';
-import { syncPermissions } from '../src/domains/permission-definition';
 
 async function main(): Promise<void> {
   const config = getValidatedConfig(
     pick(
       getConfigDefinitions(),
       'idServiceAuthBaseUrl',
-      'serviceAccountClientId',
-      'serviceAccountClientSecret',
       'serviceId',
       'tenantId',
       'environmentId',
@@ -33,31 +29,19 @@ async function main(): Promise<void> {
     );
   }
 
-  const idServicePermissions: PermissionStructure = {
-    serviceId: 'ax-id-service',
-    permissions: [
-      'PERMISSIONS_SYNCHRONIZE',
-      'ACCESS_TOKENS_GENERATE_LONG_LIVED_TOKEN',
-    ],
-  };
-  const result = await serviceAccountSetup(
-    config.idServiceAuthBaseUrl,
-    config.devServiceAccountClientId,
-    config.devServiceAccountClientSecret,
-    config.serviceId,
-    [idServicePermissions],
-    false,
-  );
-  config.serviceAccountClientId = result.clientId;
-  config.serviceAccountClientSecret = result.clientSecret;
-  await syncPermissions(config);
   await serviceAccountSetup(
     config.idServiceAuthBaseUrl,
     config.devServiceAccountClientId,
     config.devServiceAccountClientSecret,
     config.serviceId,
     [
-      idServicePermissions,
+      {
+        serviceId: 'ax-id-service',
+        permissions: [
+          'PERMISSIONS_SYNCHRONIZE',
+          'ACCESS_TOKENS_GENERATE_LONG_LIVED_TOKEN',
+        ],
+      },
       {
         serviceId: 'ax-image-service',
         permissions: ['IMAGE_TYPES_DECLARE'],
@@ -74,10 +58,6 @@ async function main(): Promise<void> {
           'LOCALIZED_ENTITIES_EDIT',
           'LOCALIZED_ENTITIES_REVIEW',
         ],
-      },
-      {
-        serviceId: config.serviceId,
-        permissions: ['INGESTS_EDIT'],
       },
     ],
   );

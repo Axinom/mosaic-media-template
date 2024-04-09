@@ -15,16 +15,15 @@ import {
 import { ClientBase } from 'pg';
 import { param, selectOne, self as value, SQL, sql, update } from 'zapatos/db';
 import { CommonErrors, Config, getMediaMappedError } from '../../common';
-import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 
-export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFailedEvent> {
+export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFailedEvent> {
   constructor(
     private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
   ) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFailed,
-      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: UpsertLocalizationSourceEntityFailedHandler.name,
@@ -32,6 +31,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
       config,
     );
   }
+
   override async handleMessage(
     {
       payload,
