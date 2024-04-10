@@ -13,8 +13,13 @@ import {
 import { IngestLocalization, IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { param, selectOne, self as value, SQL, sql, update } from 'zapatos/db';
-import { CommonErrors, Config, getMediaMappedError } from '../../common';
-import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import {
+  CommonErrors,
+  Config,
+  getMediaMappedError,
+  requestServiceAccountToken,
+} from '../../common';
+import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 
 /**
  * Every localization field will have this state set by default in the command
@@ -25,14 +30,13 @@ import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 export const DEFAULT_LOCALIZATION_STATE: EntityLocalizationFieldState =
   'APPROVED';
 
-export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFinishedEvent> {
+export class UpsertLocalizationSourceEntityFinishedHandler extends MediaTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFinishedEvent> {
   constructor(
     private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
   ) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFinished,
-      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: UpsertLocalizationSourceEntityFinishedHandler.name,
@@ -40,12 +44,13 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
       config,
     );
   }
+
   override async handleMessage(
     {
       payload,
       metadata,
     }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const messageContext = metadata.messageContext as Pick<
       IngestMessageContext,
@@ -63,7 +68,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
       'ingest_items',
       { id: messageContext.ingestItemId },
       { columns: ['item'] },
-    ).run(loginClient);
+    ).run(ownerClient);
     const localizationStep = await selectOne(
       'ingest_item_steps',
       {
@@ -71,7 +76,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
         type: 'LOCALIZATIONS',
       },
       { columns: ['id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     if (!ingestItem || !localizationStep) {
       throw new MosaicError({
@@ -106,15 +111,16 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
       ingestItemId: messageContext.ingestItemId,
       ingestItemStepId: localizationStep.id,
     };
-
+    const token =
+      metadata.authToken ?? (await requestServiceAccountToken(this.config));
     await this.storeOutboxMessage<LocalizeEntityCommand>(
       payload.entity_id,
       messageSettings,
       messagePayload,
-      loginClient,
+      ownerClient,
       {
         envelopeOverrides: {
-          auth_token: metadata.authToken,
+          auth_token: token,
           message_context: localizationMessageContext,
         },
         options: {
@@ -140,7 +146,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
     {
       metadata,
     }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -161,6 +167,6 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaGuardedT
         errors: sql<SQL>`${value} || ${err}::jsonb`,
       },
       { id: messageContext.ingestItemId },
-    ).run(loginClient);
+    ).run(ownerClient);
   }
 }

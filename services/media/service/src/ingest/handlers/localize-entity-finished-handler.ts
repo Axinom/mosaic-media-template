@@ -14,17 +14,16 @@ import {
 } from 'media-messages';
 import { ClientBase } from 'pg';
 import { Config } from '../../common';
-import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
-export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInboxMessageHandler<LocalizeEntityFinishedEvent> {
+export class LocalizeEntityFinishedHandler extends MediaTransactionalInboxMessageHandler<LocalizeEntityFinishedEvent> {
   constructor(
     private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
   ) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFinished,
-      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: LocalizeEntityFinishedHandler.name,
@@ -32,6 +31,7 @@ export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInbo
       config,
     );
   }
+
   override async handleMessage(
     {
       payload,
@@ -39,7 +39,7 @@ export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInbo
       id,
       aggregateId,
     }: TypedTransactionalMessage<LocalizeEntityFinishedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     if (
       !checkIsIngestEvent(metadata, this.logger, id, aggregateId) ||
@@ -58,7 +58,7 @@ export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInbo
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,
       },
-      loginClient,
+      ownerClient,
       { envelopeOverrides: { auth_token: metadata.authToken } },
     );
   }

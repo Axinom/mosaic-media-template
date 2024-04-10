@@ -41,7 +41,7 @@ export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHan
       payload,
       metadata,
     }: TypedTransactionalMessage<EnsureImageExistsFailedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     if (!checkIsIngestEvent(metadata, this.logger, id, aggregateId)) {
       return;
@@ -56,7 +56,7 @@ export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHan
         ingest_item_id: messageContext.ingestItemId,
         error_message: payload.message,
       },
-      loginClient,
+      ownerClient,
       {
         envelopeOverrides: { auth_token: metadata.authToken },
         lockedUntil: getFutureIsoDateInMilliseconds(1_000),

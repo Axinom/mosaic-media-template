@@ -123,6 +123,10 @@ export interface ITestContext {
     user: AuthenticatedManagementSubject,
     callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
   ): Promise<T>;
+  executeOwnerSql<T>(
+    user: AuthenticatedManagementSubject,
+    callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
+  ): Promise<T>;
   truncateInbox: () => Promise<void>;
   getInbox: () => Promise<Dict<unknown>[]>;
 }
@@ -217,6 +221,18 @@ export const createTestContext = async (
       async (dbContext) => callback(dbContext),
     );
   };
+  const executeOwnerSql = async <T>(
+    user: AuthenticatedManagementSubject,
+    callback: (client: TxnClient<IsolationLevel>) => Promise<T>,
+  ): Promise<T> => {
+    const pgSettings = buildPgSettings(user, config.dbOwner, config.serviceId);
+    return transactionWithContext(
+      ownerPool,
+      IsolationLevel.Serializable,
+      pgSettings,
+      async (dbContext) => callback(dbContext),
+    );
+  };
 
   return {
     ownerPool,
@@ -250,6 +266,7 @@ export const createTestContext = async (
       }
     },
     executeGqlSql,
+    executeOwnerSql,
     truncateInbox: async function (): Promise<void> {
       await sql`TRUNCATE TABLE app_hidden.inbox CASCADE;`.run(this.ownerPool);
     },

@@ -15,16 +15,15 @@ import {
 import { ClientBase } from 'pg';
 import { param, selectOne, self as value, SQL, sql, update } from 'zapatos/db';
 import { CommonErrors, Config, getMediaMappedError } from '../../common';
-import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 
-export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFailedEvent> {
+export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFailedEvent> {
   constructor(
     private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
   ) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFailed,
-      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: UpsertLocalizationSourceEntityFailedHandler.name,
@@ -32,12 +31,13 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
       config,
     );
   }
+
   override async handleMessage(
     {
       payload,
       metadata,
     }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFailedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const messageContext = metadata.messageContext as Pick<
       IngestMessageContext,
@@ -58,7 +58,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
         type: 'LOCALIZATIONS',
       },
       { columns: ['id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     if (!localizationStep?.id) {
       throw new MosaicError({
@@ -75,7 +75,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
         ingest_item_id: messageContext.ingestItemId,
         error_message: payload.message,
       },
-      loginClient,
+      ownerClient,
       { envelopeOverrides: { auth_token: metadata.authToken } },
     );
   }
@@ -93,7 +93,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
     {
       metadata,
     }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFailedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -114,6 +114,6 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
         errors: sql<SQL>`${value} || ${err}::jsonb`,
       },
       { id: messageContext.ingestItemId },
-    ).run(loginClient);
+    ).run(ownerClient);
   }
 }

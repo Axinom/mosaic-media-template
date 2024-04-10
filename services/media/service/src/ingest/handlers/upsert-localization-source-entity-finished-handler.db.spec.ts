@@ -29,6 +29,10 @@ import {
   UpsertLocalizationSourceEntityFinishedHandler,
 } from './upsert-localization-source-entity-finished-handler';
 
+jest.mock('../../common/utils/token-utils', () => ({
+  requestServiceAccountToken: jest.fn(),
+}));
+
 describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
   let ctx: ITestContext;
   let handler: UpsertLocalizationSourceEntityFinishedHandler;
@@ -141,7 +145,7 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(createMessage(payload, context), dbCtx),
       );
 
@@ -221,7 +225,7 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
       });
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleErrorMessage(
           error,
           createMessage(payload, context),
