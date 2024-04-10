@@ -68,9 +68,14 @@ describe('Episode localizable triggers', () => {
       ]);
     });
 
-    it('Episode inserted with title, description, synopsis -> inbox entry added', async () => {
+    it('Episode inserted with title, description, synopsis, and season relation -> inbox entry added', async () => {
       // Arrange
       await ctx.truncate('episodes');
+      const season = await insert('seasons', {
+        id: 1,
+        index: 2,
+      }).run(ctx.ownerPool);
+      await ctx.truncateInbox();
 
       // Act
       episode = await insert('episodes', {
@@ -79,6 +84,7 @@ describe('Episode localizable triggers', () => {
         title: 'My Episode',
         synopsis: 'My Synopsis',
         description: 'My Description',
+        season_id: season.id,
       }).run(ctx.ownerPool);
 
       // Assert
@@ -100,6 +106,7 @@ describe('Episode localizable triggers', () => {
             title: episode.title,
             synopsis: episode.synopsis,
             description: episode.description,
+            season_id: season.id,
           },
         },
       ]);
@@ -130,12 +137,20 @@ describe('Episode localizable triggers', () => {
             id: episode.id,
             index: episode.index,
             title: updatedEpisode.title,
+            season_id: null,
           },
         },
       ]);
     });
 
-    it('Episode updated with title, description, synopsis -> inbox entry added', async () => {
+    it('Episode updated with title, description, synopsis, and season relation -> inbox entry added', async () => {
+      // Arrange
+      const season = await insert('seasons', {
+        id: 1,
+        index: 2,
+      }).run(ctx.ownerPool);
+      await ctx.truncateInbox();
+
       // Act
       const [updatedEpisode] = await update(
         'episodes',
@@ -143,6 +158,7 @@ describe('Episode localizable triggers', () => {
           title: 'My Edited Episode',
           synopsis: 'My Edited Synopsis',
           description: 'My Edited Description',
+          season_id: season.id,
         },
         { id: episode.id },
       ).run(ctx.ownerPool);
@@ -166,6 +182,7 @@ describe('Episode localizable triggers', () => {
             title: updatedEpisode.title,
             synopsis: updatedEpisode.synopsis,
             description: updatedEpisode.description,
+            season_id: season.id,
           },
         },
       ]);
@@ -285,7 +302,7 @@ describe('Episode localizable triggers', () => {
           // even if no localizable fields are updated - we want to trigger the
           // message to receive the response from Mosaic localization service if
           // this is an update in context of ingest.
-          payload: { id: episode.id, index: episode.index },
+          payload: { id: episode.id, index: episode.index, season_id: null },
         },
       ]);
     });
@@ -318,7 +335,7 @@ describe('Episode localizable triggers', () => {
           // even if no localizable fields are updated - we want to trigger the
           // message to receive the response from Mosaic localization service if
           // this is an update in context of ingest.
-          payload: { id: episode.id, index: episode.index },
+          payload: { id: episode.id, index: episode.index, season_id: null },
         },
       ]);
     });
@@ -343,6 +360,7 @@ describe('Episode localizable triggers', () => {
           payload: {
             id: episode.id,
             index: episode.index,
+            season_id: null,
           },
         },
       ]);
@@ -489,6 +507,7 @@ describe('Episode localizable triggers', () => {
           payload: {
             id: episode.id,
             index: episode.index,
+            season_id: null,
           },
         },
         {
