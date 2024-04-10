@@ -16,7 +16,9 @@ export const localizableSeasonDbMigrationPlaceholders = {
   // update computed entityTitle
   ':SEASON_LOCALIZABLE_FIELDS':
     SeasonFieldDefinitions.map((d) => d.field_name).join(',') + ',tvshow_id',
-  ':SEASON_LOCALIZATION_REQUIRED_FIELDS': 'id,index',
+  // tvshow_id is always included to make sure entityTitle is generated
+  // fully on metadata updates
+  ':SEASON_LOCALIZATION_REQUIRED_FIELDS': 'id,index,tvshow_id',
   ':SEASON_IMAGE_LOCALIZABLE_FIELDS': 'image_id',
   ':SEASON_IMAGE_LOCALIZATION_REQUIRED_FIELDS': 'season_id,image_id,image_type',
 };

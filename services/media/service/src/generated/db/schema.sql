@@ -652,7 +652,7 @@ CREATE FUNCTION app_hidden.localizable_episode_delete() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
-	_fields text[] := string_to_array('id,index', ',');
+	_fields text[] := string_to_array('id,index,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
@@ -758,7 +758,7 @@ CREATE FUNCTION app_hidden.localizable_episode_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,season_id', ',') || string_to_array('id,index', ',');
+	_fields text[] := string_to_array('title,synopsis,description,season_id', ',') || string_to_array('id,index,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -785,7 +785,7 @@ CREATE FUNCTION app_hidden.localizable_episode_update() RETURNS trigger
 DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_required_fields text[] := string_to_array('id,index', ',');
+	_required_fields text[] := string_to_array('id,index,season_id', ',');
 	_localizable_fields text[] := string_to_array('title,synopsis,description,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
@@ -1077,7 +1077,7 @@ CREATE FUNCTION app_hidden.localizable_season_delete() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
-	_fields text[] := string_to_array('id,index', ',');
+	_fields text[] := string_to_array('id,index,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
@@ -1183,7 +1183,7 @@ CREATE FUNCTION app_hidden.localizable_season_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('synopsis,description,tvshow_id', ',') || string_to_array('id,index', ',');
+	_fields text[] := string_to_array('synopsis,description,tvshow_id', ',') || string_to_array('id,index,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1210,7 +1210,7 @@ CREATE FUNCTION app_hidden.localizable_season_update() RETURNS trigger
 DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_required_fields text[] := string_to_array('id,index', ',');
+	_required_fields text[] := string_to_array('id,index,tvshow_id', ',');
 	_localizable_fields text[] := string_to_array('synopsis,description,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
