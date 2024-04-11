@@ -883,10 +883,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       episode_view: {
         description: 'Definition of the TV show episode publish format.',
         attribute: {
-          index: {
-            description: 'Episode number',
-            ...disableFilterAndOrder,
-          },
           title: {
             description: 'Title of the episode.',
             ...disableFilterAndOrder,
@@ -930,7 +926,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omit: 'create,update,delete',
           foreignKey:
-            '(season_id) references app_public.season(id)|@fieldName season',
+            '(season_id) references app_public.season_view (id)|@fieldName season|@foreignFieldName episodes',
         },
       },
       episode_images: {

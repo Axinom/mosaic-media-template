@@ -44,9 +44,6 @@ describe('CollectionPublishEventHandler', () => {
       }).run(ctx.ownerPool);
       expect(collection).toEqual<collection.JSONSelectable>({
         id: payload.content_id,
-        title: payload.title ?? null,
-        description: payload.description ?? null,
-        synopsis: payload.synopsis ?? null,
         tags: payload.tags ?? null,
       });
 
@@ -122,7 +119,6 @@ describe('CollectionPublishEventHandler', () => {
       }).run(ctx.ownerPool);
       const message = createCollectionPublishedMessage('collection-1');
       const payload = message.payload;
-      payload.title = 'New title';
 
       // Act
       await ctx.executeOwnerSql(async (txn) => {

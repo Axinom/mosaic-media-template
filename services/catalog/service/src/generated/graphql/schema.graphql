@@ -2112,6 +2112,12 @@ input SeasonFilter {
   """Some related `collectionItemsRelationsBySeasonId` exist."""
   collectionItemsRelationsBySeasonIdExist: Boolean
 
+  """Filter by the object’s `episodes` relation."""
+  episodes: SeasonToManyEpisodeFilter
+
+  """Some related `episodes` exist."""
+  episodesExist: Boolean
+
   """Filter by the object’s `genres` relation."""
   genres: SeasonToManySeasonGenresRelationFilter
 
@@ -2173,166 +2179,23 @@ input SeasonToManyCollectionItemsRelationFilter {
 }
 
 """
-A filter to be used against many `SeasonGenresRelation` object types. All fields are combined with a logical ‘and.’
+A filter to be used against many `Episode` object types. All fields are combined with a logical ‘and.’
 """
-input SeasonToManySeasonGenresRelationFilter {
+input SeasonToManyEpisodeFilter {
   """
-  Every related `SeasonGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  Every related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  every: SeasonGenresRelationFilter
-
-  """
-  Some related `SeasonGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: SeasonGenresRelationFilter
+  every: EpisodeFilter
 
   """
-  No related `SeasonGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  Some related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  none: SeasonGenresRelationFilter
-}
-
-"""
-A filter to be used against `SeasonGenresRelation` object types. All fields are combined with a logical ‘and.’
-"""
-input SeasonGenresRelationFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `seasonId` field."""
-  seasonId: StringFilter
-
-  """Filter by the object’s `tvshowGenreId` field."""
-  tvshowGenreId: StringFilter
-
-  """Filter by the object’s `orderNo` field."""
-  orderNo: IntFilter
-
-  """Filter by the object’s `tvshowGenre` relation."""
-  tvshowGenre: TvshowGenreFilter
-
-  """A related `tvshowGenre` exists."""
-  tvshowGenreExists: Boolean
-
-  """Filter by the object’s `season` relation."""
-  season: SeasonFilter
-
-  """A related `season` exists."""
-  seasonExists: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [SeasonGenresRelationFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [SeasonGenresRelationFilter!]
-
-  """Negates the expression."""
-  not: SeasonGenresRelationFilter
-}
-
-"""
-A filter to be used against `TvshowGenre` object types. All fields are combined with a logical ‘and.’
-"""
-input TvshowGenreFilter {
-  """Filter by the object’s `id` field."""
-  id: StringFilter
-
-  """Filter by the object’s `orderNo` field."""
-  orderNo: IntFilter
-
-  """Filter by the object’s `title` field."""
-  title: StringFilter
+  some: EpisodeFilter
 
   """
-  Filter by the object’s `episodeGenresRelationsByTvshowGenreId` relation.
+  No related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  episodeGenresRelationsByTvshowGenreId: TvshowGenreToManyEpisodeGenresRelationFilter
-
-  """Some related `episodeGenresRelationsByTvshowGenreId` exist."""
-  episodeGenresRelationsByTvshowGenreIdExist: Boolean
-
-  """
-  Filter by the object’s `seasonGenresRelationsByTvshowGenreId` relation.
-  """
-  seasonGenresRelationsByTvshowGenreId: TvshowGenreToManySeasonGenresRelationFilter
-
-  """Some related `seasonGenresRelationsByTvshowGenreId` exist."""
-  seasonGenresRelationsByTvshowGenreIdExist: Boolean
-
-  """
-  Filter by the object’s `tvshowGenresRelationsByTvshowGenreId` relation.
-  """
-  tvshowGenresRelationsByTvshowGenreId: TvshowGenreToManyTvshowGenresRelationFilter
-
-  """Some related `tvshowGenresRelationsByTvshowGenreId` exist."""
-  tvshowGenresRelationsByTvshowGenreIdExist: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [TvshowGenreFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [TvshowGenreFilter!]
-
-  """Negates the expression."""
-  not: TvshowGenreFilter
-}
-
-"""
-A filter to be used against many `EpisodeGenresRelation` object types. All fields are combined with a logical ‘and.’
-"""
-input TvshowGenreToManyEpisodeGenresRelationFilter {
-  """
-  Every related `EpisodeGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: EpisodeGenresRelationFilter
-
-  """
-  Some related `EpisodeGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: EpisodeGenresRelationFilter
-
-  """
-  No related `EpisodeGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: EpisodeGenresRelationFilter
-}
-
-"""
-A filter to be used against `EpisodeGenresRelation` object types. All fields are combined with a logical ‘and.’
-"""
-input EpisodeGenresRelationFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `episodeId` field."""
-  episodeId: StringFilter
-
-  """Filter by the object’s `tvshowGenreId` field."""
-  tvshowGenreId: StringFilter
-
-  """Filter by the object’s `orderNo` field."""
-  orderNo: IntFilter
-
-  """Filter by the object’s `tvshowGenre` relation."""
-  tvshowGenre: TvshowGenreFilter
-
-  """A related `tvshowGenre` exists."""
-  tvshowGenreExists: Boolean
-
-  """Filter by the object’s `episode` relation."""
-  episode: EpisodeFilter
-
-  """A related `episode` exists."""
-  episodeExists: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [EpisodeGenresRelationFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [EpisodeGenresRelationFilter!]
-
-  """Negates the expression."""
-  not: EpisodeGenresRelationFilter
+  none: EpisodeFilter
 }
 
 """
@@ -2344,6 +2207,9 @@ input EpisodeFilter {
 
   """Filter by the object’s `seasonId` field."""
   seasonId: StringFilter
+
+  """Filter by the object’s `index` field."""
+  index: IntFilter
 
   """Filter by the object’s `directors` field."""
   directors: StringListFilter
@@ -2414,6 +2280,12 @@ input EpisodeFilter {
   """Some related `videos` exist."""
   videosExist: Boolean
 
+  """Filter by the object’s `season` relation."""
+  season: SeasonFilter
+
+  """A related `season` exists."""
+  seasonExists: Boolean
+
   """Checks for all expressions in this list."""
   and: [EpisodeFilter!]
 
@@ -2462,6 +2334,227 @@ input EpisodeToManyEpisodeGenresRelationFilter {
   No related `EpisodeGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: EpisodeGenresRelationFilter
+}
+
+"""
+A filter to be used against `EpisodeGenresRelation` object types. All fields are combined with a logical ‘and.’
+"""
+input EpisodeGenresRelationFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `episodeId` field."""
+  episodeId: StringFilter
+
+  """Filter by the object’s `tvshowGenreId` field."""
+  tvshowGenreId: StringFilter
+
+  """Filter by the object’s `orderNo` field."""
+  orderNo: IntFilter
+
+  """Filter by the object’s `tvshowGenre` relation."""
+  tvshowGenre: TvshowGenreFilter
+
+  """A related `tvshowGenre` exists."""
+  tvshowGenreExists: Boolean
+
+  """Filter by the object’s `episode` relation."""
+  episode: EpisodeFilter
+
+  """A related `episode` exists."""
+  episodeExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [EpisodeGenresRelationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [EpisodeGenresRelationFilter!]
+
+  """Negates the expression."""
+  not: EpisodeGenresRelationFilter
+}
+
+"""
+A filter to be used against `TvshowGenre` object types. All fields are combined with a logical ‘and.’
+"""
+input TvshowGenreFilter {
+  """Filter by the object’s `id` field."""
+  id: StringFilter
+
+  """Filter by the object’s `orderNo` field."""
+  orderNo: IntFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """
+  Filter by the object’s `episodeGenresRelationsByTvshowGenreId` relation.
+  """
+  episodeGenresRelationsByTvshowGenreId: TvshowGenreToManyEpisodeGenresRelationFilter
+
+  """Some related `episodeGenresRelationsByTvshowGenreId` exist."""
+  episodeGenresRelationsByTvshowGenreIdExist: Boolean
+
+  """
+  Filter by the object’s `seasonGenresRelationsByTvshowGenreId` relation.
+  """
+  seasonGenresRelationsByTvshowGenreId: TvshowGenreToManySeasonGenresRelationFilter
+
+  """Some related `seasonGenresRelationsByTvshowGenreId` exist."""
+  seasonGenresRelationsByTvshowGenreIdExist: Boolean
+
+  """
+  Filter by the object’s `tvshowGenresRelationsByTvshowGenreId` relation.
+  """
+  tvshowGenresRelationsByTvshowGenreId: TvshowGenreToManyTvshowGenresRelationFilter
+
+  """Some related `tvshowGenresRelationsByTvshowGenreId` exist."""
+  tvshowGenresRelationsByTvshowGenreIdExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [TvshowGenreFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TvshowGenreFilter!]
+
+  """Negates the expression."""
+  not: TvshowGenreFilter
+}
+
+"""
+A filter to be used against many `EpisodeGenresRelation` object types. All fields are combined with a logical ‘and.’
+"""
+input TvshowGenreToManyEpisodeGenresRelationFilter {
+  """
+  Every related `EpisodeGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: EpisodeGenresRelationFilter
+
+  """
+  Some related `EpisodeGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: EpisodeGenresRelationFilter
+
+  """
+  No related `EpisodeGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: EpisodeGenresRelationFilter
+}
+
+"""
+A filter to be used against many `SeasonGenresRelation` object types. All fields are combined with a logical ‘and.’
+"""
+input TvshowGenreToManySeasonGenresRelationFilter {
+  """
+  Every related `SeasonGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: SeasonGenresRelationFilter
+
+  """
+  Some related `SeasonGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: SeasonGenresRelationFilter
+
+  """
+  No related `SeasonGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: SeasonGenresRelationFilter
+}
+
+"""
+A filter to be used against `SeasonGenresRelation` object types. All fields are combined with a logical ‘and.’
+"""
+input SeasonGenresRelationFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `seasonId` field."""
+  seasonId: StringFilter
+
+  """Filter by the object’s `tvshowGenreId` field."""
+  tvshowGenreId: StringFilter
+
+  """Filter by the object’s `orderNo` field."""
+  orderNo: IntFilter
+
+  """Filter by the object’s `tvshowGenre` relation."""
+  tvshowGenre: TvshowGenreFilter
+
+  """A related `tvshowGenre` exists."""
+  tvshowGenreExists: Boolean
+
+  """Filter by the object’s `season` relation."""
+  season: SeasonFilter
+
+  """A related `season` exists."""
+  seasonExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [SeasonGenresRelationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [SeasonGenresRelationFilter!]
+
+  """Negates the expression."""
+  not: SeasonGenresRelationFilter
+}
+
+"""
+A filter to be used against many `TvshowGenresRelation` object types. All fields are combined with a logical ‘and.’
+"""
+input TvshowGenreToManyTvshowGenresRelationFilter {
+  """
+  Every related `TvshowGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TvshowGenresRelationFilter
+
+  """
+  Some related `TvshowGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TvshowGenresRelationFilter
+
+  """
+  No related `TvshowGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TvshowGenresRelationFilter
+}
+
+"""
+A filter to be used against `TvshowGenresRelation` object types. All fields are combined with a logical ‘and.’
+"""
+input TvshowGenresRelationFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `tvshowId` field."""
+  tvshowId: StringFilter
+
+  """Filter by the object’s `tvshowGenreId` field."""
+  tvshowGenreId: StringFilter
+
+  """Filter by the object’s `orderNo` field."""
+  orderNo: IntFilter
+
+  """Filter by the object’s `tvshowGenre` relation."""
+  tvshowGenre: TvshowGenreFilter
+
+  """A related `tvshowGenre` exists."""
+  tvshowGenreExists: Boolean
+
+  """Filter by the object’s `tvshow` relation."""
+  tvshow: TvshowFilter
+
+  """A related `tvshow` exists."""
+  tvshowExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [TvshowGenresRelationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TvshowGenresRelationFilter!]
+
+  """Negates the expression."""
+  not: TvshowGenresRelationFilter
 }
 
 """
@@ -2745,7 +2838,7 @@ input EpisodeVideoCuePointFilter {
 """
 A filter to be used against many `SeasonGenresRelation` object types. All fields are combined with a logical ‘and.’
 """
-input TvshowGenreToManySeasonGenresRelationFilter {
+input SeasonToManySeasonGenresRelationFilter {
   """
   Every related `SeasonGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
@@ -2760,64 +2853,6 @@ input TvshowGenreToManySeasonGenresRelationFilter {
   No related `SeasonGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: SeasonGenresRelationFilter
-}
-
-"""
-A filter to be used against many `TvshowGenresRelation` object types. All fields are combined with a logical ‘and.’
-"""
-input TvshowGenreToManyTvshowGenresRelationFilter {
-  """
-  Every related `TvshowGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: TvshowGenresRelationFilter
-
-  """
-  Some related `TvshowGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: TvshowGenresRelationFilter
-
-  """
-  No related `TvshowGenresRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: TvshowGenresRelationFilter
-}
-
-"""
-A filter to be used against `TvshowGenresRelation` object types. All fields are combined with a logical ‘and.’
-"""
-input TvshowGenresRelationFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `tvshowId` field."""
-  tvshowId: StringFilter
-
-  """Filter by the object’s `tvshowGenreId` field."""
-  tvshowGenreId: StringFilter
-
-  """Filter by the object’s `orderNo` field."""
-  orderNo: IntFilter
-
-  """Filter by the object’s `tvshowGenre` relation."""
-  tvshowGenre: TvshowGenreFilter
-
-  """A related `tvshowGenre` exists."""
-  tvshowGenreExists: Boolean
-
-  """Filter by the object’s `tvshow` relation."""
-  tvshow: TvshowFilter
-
-  """A related `tvshow` exists."""
-  tvshowExists: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [TvshowGenresRelationFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [TvshowGenresRelationFilter!]
-
-  """Negates the expression."""
-  not: TvshowGenresRelationFilter
 }
 
 """
@@ -4547,6 +4582,40 @@ type Season {
   """Reads a single `Tvshow` that is related to this `Season`."""
   tvshow: Tvshow
 
+  """Reads and enables pagination through a set of `Episode`."""
+  episodes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Episode`."""
+    orderBy: [EpisodesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeFilter
+  ): EpisodesConnection!
+
   """Reads and enables pagination through a set of `SeasonGenresRelation`."""
   genres(
     """Only read the first `n` values of the set."""
@@ -4684,6 +4753,946 @@ type Season {
   ): SeasonVideosConnection!
 }
 
+"""A connection to a list of `Episode` values."""
+type EpisodesConnection {
+  """A list of `Episode` objects."""
+  nodes: [Episode!]!
+
+  """
+  A list of edges which contains the `Episode` and cursor to aid in pagination.
+  """
+  edges: [EpisodesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Episode` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""Definition of the TV show episode publish format."""
+type Episode {
+  id: String!
+  seasonId: String
+  index: Int
+
+  """Original title of the episode."""
+  originalTitle: String
+
+  """Name of the producing studio."""
+  studio: String
+
+  """Date of first release."""
+  released: Datetime
+
+  """Cast of the episode."""
+  cast: [String]
+
+  """Array of tags associated with the content."""
+  tags: [String]
+
+  """Array of production countries"""
+  productionCountries: [String]
+  directors: [String]
+  creditsStartTime: String
+  lengthInSeconds: Float
+  dynamicField: String
+  extendedField: String
+  rating: BigFloat
+  customRating: String
+  ageRating: String
+  assetType: Int
+  assetSubtype: String
+  tvshowId: String
+  introStartTime: String
+  introEndTime: String
+
+  """Title of the episode."""
+  title: String
+
+  """Extended synopsis."""
+  description: String
+
+  """Short description of the main plot elements."""
+  synopsis: String
+
+  """Reads a single `Season` that is related to this `Episode`."""
+  season: Season
+
+  """Reads and enables pagination through a set of `EpisodeGenresRelation`."""
+  genres(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodeGenresRelation`."""
+    orderBy: [EpisodeGenresRelationsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeGenresRelationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeGenresRelationFilter
+  ): EpisodeGenresRelationsConnection!
+
+  """Reads and enables pagination through a set of `EpisodeImage`."""
+  images(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodeImage`."""
+    orderBy: [EpisodeImagesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeImageCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeImageFilter
+  ): EpisodeImagesConnection!
+
+  """Reads and enables pagination through a set of `EpisodeLicense`."""
+  licenses(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodeLicense`."""
+    orderBy: [EpisodeLicensesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeLicenseCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeLicenseFilter
+  ): EpisodeLicensesConnection!
+
+  """Reads and enables pagination through a set of `EpisodeVideo`."""
+  videos(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodeVideo`."""
+    orderBy: [EpisodeVideosOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeVideoCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeVideoFilter
+  ): EpisodeVideosConnection!
+}
+
+"""A connection to a list of `EpisodeGenresRelation` values."""
+type EpisodeGenresRelationsConnection {
+  """A list of `EpisodeGenresRelation` objects."""
+  nodes: [EpisodeGenresRelation!]!
+
+  """
+  A list of edges which contains the `EpisodeGenresRelation` and cursor to aid in pagination.
+  """
+  edges: [EpisodeGenresRelationsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EpisodeGenresRelation` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type EpisodeGenresRelation {
+  id: Int!
+  episodeId: String
+  tvshowGenreId: String
+  orderNo: Int!
+
+  """
+  Reads a single `TvshowGenre` that is related to this `EpisodeGenresRelation`.
+  """
+  tvshowGenre: TvshowGenre
+
+  """
+  Reads a single `Episode` that is related to this `EpisodeGenresRelation`.
+  """
+  episode: Episode
+}
+
+"""Definition of the TV show genre publish format."""
+type TvshowGenre {
+  id: String!
+
+  """Global ordering number for the genre."""
+  orderNo: Int
+
+  """Title of the genre."""
+  title: String
+}
+
+"""A `EpisodeGenresRelation` edge in the connection."""
+type EpisodeGenresRelationsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EpisodeGenresRelation` at the end of the edge."""
+  node: EpisodeGenresRelation!
+}
+
+"""Methods to use when ordering `EpisodeGenresRelation`."""
+enum EpisodeGenresRelationsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  EPISODE_ID_ASC
+  EPISODE_ID_DESC
+  TVSHOW_GENRE_ID_ASC
+  TVSHOW_GENRE_ID_DESC
+  ORDER_NO_ASC
+  ORDER_NO_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `EpisodeGenresRelation` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input EpisodeGenresRelationCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `episodeId` field."""
+  episodeId: String
+
+  """Checks for equality with the object’s `tvshowGenreId` field."""
+  tvshowGenreId: String
+
+  """Checks for equality with the object’s `orderNo` field."""
+  orderNo: Int
+}
+
+"""A connection to a list of `EpisodeImage` values."""
+type EpisodeImagesConnection {
+  """A list of `EpisodeImage` objects."""
+  nodes: [EpisodeImage!]!
+
+  """
+  A list of edges which contains the `EpisodeImage` and cursor to aid in pagination.
+  """
+  edges: [EpisodeImagesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `EpisodeImage` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""Asset image metadata."""
+type EpisodeImage {
+  id: Int!
+  episodeId: String
+
+  """Type of the image."""
+  type: String
+
+  """URI to the image file."""
+  path: String
+
+  """Width of the image in pixels."""
+  width: Int
+
+  """Height of the image in pixels."""
+  height: Int
+
+  """Reads a single `Episode` that is related to this `EpisodeImage`."""
+  episode: Episode
+}
+
+"""A `EpisodeImage` edge in the connection."""
+type EpisodeImagesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EpisodeImage` at the end of the edge."""
+  node: EpisodeImage!
+}
+
+"""Methods to use when ordering `EpisodeImage`."""
+enum EpisodeImagesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  EPISODE_ID_ASC
+  EPISODE_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `EpisodeImage` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EpisodeImageCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `episodeId` field."""
+  episodeId: String
+}
+
+"""A connection to a list of `EpisodeLicense` values."""
+type EpisodeLicensesConnection {
+  """A list of `EpisodeLicense` objects."""
+  nodes: [EpisodeLicense!]!
+
+  """
+  A list of edges which contains the `EpisodeLicense` and cursor to aid in pagination.
+  """
+  edges: [EpisodeLicensesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `EpisodeLicense` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""
+Content metadata license that defines the content availability regions and time frame.
+"""
+type EpisodeLicense {
+  id: Int!
+  episodeId: String
+
+  """Array of countries where the license applies."""
+  countries: [String]
+
+  """Time when license becomes valid."""
+  startTime: Datetime
+
+  """Time when license becomes invalid."""
+  endTime: Datetime
+  isDownloadable: Boolean
+  downloadedAssetLifespan: Int
+  businessType: String
+  tier: String
+  contentOwner: String
+
+  """Reads a single `Episode` that is related to this `EpisodeLicense`."""
+  episode: Episode
+}
+
+"""A `EpisodeLicense` edge in the connection."""
+type EpisodeLicensesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EpisodeLicense` at the end of the edge."""
+  node: EpisodeLicense!
+}
+
+"""Methods to use when ordering `EpisodeLicense`."""
+enum EpisodeLicensesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  EPISODE_ID_ASC
+  EPISODE_ID_DESC
+  START_TIME_ASC
+  START_TIME_DESC
+  END_TIME_ASC
+  END_TIME_DESC
+  IS_DOWNLOADABLE_ASC
+  IS_DOWNLOADABLE_DESC
+  DOWNLOADED_ASSET_LIFESPAN_ASC
+  DOWNLOADED_ASSET_LIFESPAN_DESC
+  BUSINESS_TYPE_ASC
+  BUSINESS_TYPE_DESC
+  TIER_ASC
+  TIER_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `EpisodeLicense` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EpisodeLicenseCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `episodeId` field."""
+  episodeId: String
+
+  """Checks for equality with the object’s `startTime` field."""
+  startTime: Datetime
+
+  """Checks for equality with the object’s `endTime` field."""
+  endTime: Datetime
+
+  """Checks for equality with the object’s `isDownloadable` field."""
+  isDownloadable: Boolean
+
+  """Checks for equality with the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: Int
+
+  """Checks for equality with the object’s `businessType` field."""
+  businessType: String
+
+  """Checks for equality with the object’s `tier` field."""
+  tier: String
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
+}
+
+"""A connection to a list of `EpisodeVideo` values."""
+type EpisodeVideosConnection {
+  """A list of `EpisodeVideo` objects."""
+  nodes: [EpisodeVideo!]!
+
+  """
+  A list of edges which contains the `EpisodeVideo` and cursor to aid in pagination.
+  """
+  edges: [EpisodeVideosEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `EpisodeVideo` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""Video stream metadata."""
+type EpisodeVideo {
+  id: Int!
+  episodeId: String
+
+  """Type of the video stream."""
+  type: String
+
+  """Title of the video stream"""
+  title: String
+
+  """Length of the stream in seconds."""
+  lengthInSeconds: Float
+
+  """Array of audio languages available in the stream."""
+  audioLanguages: [String]
+
+  """Array of subtitle languages available in the stream."""
+  subtitleLanguages: [String]
+
+  """Array of caption languages available in the stream."""
+  captionLanguages: [String]
+
+  """URI to a DASH manifest."""
+  dashManifest: String
+
+  """URI to an HLS manifest."""
+  hlsManifest: String
+
+  """Indicates whether a stream is protected with DRM."""
+  isProtected: Boolean
+
+  """Output format of the stream."""
+  outputFormat: String
+  drmKeyId: String
+  fileSizeInBytes: BigInt
+  mainUrl: String
+
+  """Reads a single `Episode` that is related to this `EpisodeVideo`."""
+  episode: Episode
+
+  """Reads and enables pagination through a set of `EpisodeVideoStream`."""
+  videoStreams(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodeVideoStream`."""
+    orderBy: [EpisodeVideoStreamsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeVideoStreamCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeVideoStreamFilter
+  ): EpisodeVideoStreamsConnection!
+
+  """Reads and enables pagination through a set of `EpisodeVideoCuePoint`."""
+  cuePoints(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodeVideoCuePoint`."""
+    orderBy: [EpisodeVideoCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeVideoCuePointCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeVideoCuePointFilter
+  ): EpisodeVideoCuePointsConnection!
+}
+
+"""A connection to a list of `EpisodeVideoStream` values."""
+type EpisodeVideoStreamsConnection {
+  """A list of `EpisodeVideoStream` objects."""
+  nodes: [EpisodeVideoStream!]!
+
+  """
+  A list of edges which contains the `EpisodeVideoStream` and cursor to aid in pagination.
+  """
+  edges: [EpisodeVideoStreamsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EpisodeVideoStream` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""Video stream DRM metadata"""
+type EpisodeVideoStream {
+  id: Int!
+  videoId: Int
+
+  """Label indicating the type of stream (audio/video)"""
+  label: String
+
+  """DRM Key ID"""
+  keyId: String
+
+  """Packaging format of the stream"""
+  format: String
+
+  """Initialization Vector of the stream"""
+  iv: String
+
+  """File path to the initialization segment"""
+  file: String
+
+  """The language code for audio streams"""
+  languageCode: String
+
+  """Bitrate in kilobits per second"""
+  bitrateInKbps: Int
+
+  """Stream type"""
+  type: VideoStreamType
+
+  """File Template"""
+  fileTemplate: String
+
+  """Codecs"""
+  codecs: String
+
+  """Frame rate of the video stream"""
+  frameRate: Float
+
+  """Height of the video stream"""
+  height: Int
+
+  """Width of the video stream"""
+  width: Int
+
+  """Display aspect ratio for video streams"""
+  displayAspectRatio: String
+
+  """Pixel aspect ratio for video streams"""
+  pixelAspectRatio: String
+
+  """Sampling rate for audio streams"""
+  samplingRate: Int
+
+  """Language name for audio, subtitle, or caption streams"""
+  languageName: String
+
+  """
+  Reads a single `EpisodeVideo` that is related to this `EpisodeVideoStream`.
+  """
+  video: EpisodeVideo
+}
+
+"""A `EpisodeVideoStream` edge in the connection."""
+type EpisodeVideoStreamsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EpisodeVideoStream` at the end of the edge."""
+  node: EpisodeVideoStream!
+}
+
+"""Methods to use when ordering `EpisodeVideoStream`."""
+enum EpisodeVideoStreamsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  VIDEO_ID_ASC
+  VIDEO_ID_DESC
+  TYPE_ASC
+  TYPE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `EpisodeVideoStream` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EpisodeVideoStreamCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `videoId` field."""
+  videoId: Int
+
+  """Checks for equality with the object’s `type` field."""
+  type: VideoStreamType
+}
+
+"""A connection to a list of `EpisodeVideoCuePoint` values."""
+type EpisodeVideoCuePointsConnection {
+  """A list of `EpisodeVideoCuePoint` objects."""
+  nodes: [EpisodeVideoCuePoint!]!
+
+  """
+  A list of edges which contains the `EpisodeVideoCuePoint` and cursor to aid in pagination.
+  """
+  edges: [EpisodeVideoCuePointsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EpisodeVideoCuePoint` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""Video cue point metadata"""
+type EpisodeVideoCuePoint {
+  id: Int!
+  videoId: Int
+
+  """Type of the cue point"""
+  cuePointTypeKey: String!
+
+  """Time in seconds at which the cue point is set within the video"""
+  timeInSeconds: Float!
+
+  """Additional information associated with the cue point"""
+  value: String
+
+  """
+  Reads a single `EpisodeVideo` that is related to this `EpisodeVideoCuePoint`.
+  """
+  video: EpisodeVideo
+}
+
+"""A `EpisodeVideoCuePoint` edge in the connection."""
+type EpisodeVideoCuePointsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EpisodeVideoCuePoint` at the end of the edge."""
+  node: EpisodeVideoCuePoint!
+}
+
+"""Methods to use when ordering `EpisodeVideoCuePoint`."""
+enum EpisodeVideoCuePointsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  VIDEO_ID_ASC
+  VIDEO_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `EpisodeVideoCuePoint` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input EpisodeVideoCuePointCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `videoId` field."""
+  videoId: Int
+}
+
+"""A `EpisodeVideo` edge in the connection."""
+type EpisodeVideosEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EpisodeVideo` at the end of the edge."""
+  node: EpisodeVideo!
+}
+
+"""Methods to use when ordering `EpisodeVideo`."""
+enum EpisodeVideosOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  EPISODE_ID_ASC
+  EPISODE_ID_DESC
+  TYPE_ASC
+  TYPE_DESC
+  DRM_KEY_ID_ASC
+  DRM_KEY_ID_DESC
+  FILE_SIZE_IN_BYTES_ASC
+  FILE_SIZE_IN_BYTES_DESC
+  MAIN_URL_ASC
+  MAIN_URL_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `EpisodeVideo` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EpisodeVideoCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `episodeId` field."""
+  episodeId: String
+
+  """Checks for equality with the object’s `type` field."""
+  type: String
+
+  """Checks for equality with the object’s `drmKeyId` field."""
+  drmKeyId: String
+
+  """Checks for equality with the object’s `fileSizeInBytes` field."""
+  fileSizeInBytes: BigInt
+
+  """Checks for equality with the object’s `mainUrl` field."""
+  mainUrl: String
+}
+
+"""A `Episode` edge in the connection."""
+type EpisodesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Episode` at the end of the edge."""
+  node: Episode!
+}
+
+"""Methods to use when ordering `Episode`."""
+enum EpisodesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  SEASON_ID_ASC
+  SEASON_ID_DESC
+  INDEX_ASC
+  INDEX_DESC
+  DIRECTORS_ASC
+  DIRECTORS_DESC
+  CREDITS_START_TIME_ASC
+  CREDITS_START_TIME_DESC
+  LENGTH_IN_SECONDS_ASC
+  LENGTH_IN_SECONDS_DESC
+  DYNAMIC_FIELD_ASC
+  DYNAMIC_FIELD_DESC
+  EXTENDED_FIELD_ASC
+  EXTENDED_FIELD_DESC
+  RATING_ASC
+  RATING_DESC
+  CUSTOM_RATING_ASC
+  CUSTOM_RATING_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
+  ASSET_TYPE_ASC
+  ASSET_TYPE_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
+  TVSHOW_ID_ASC
+  TVSHOW_ID_DESC
+  INTRO_START_TIME_ASC
+  INTRO_START_TIME_DESC
+  INTRO_END_TIME_ASC
+  INTRO_END_TIME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Episode` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input EpisodeCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: String
+
+  """Checks for equality with the object’s `seasonId` field."""
+  seasonId: String
+
+  """Checks for equality with the object’s `index` field."""
+  index: Int
+
+  """Checks for equality with the object’s `directors` field."""
+  directors: [String]
+
+  """Checks for equality with the object’s `creditsStartTime` field."""
+  creditsStartTime: String
+
+  """Checks for equality with the object’s `lengthInSeconds` field."""
+  lengthInSeconds: Float
+
+  """Checks for equality with the object’s `dynamicField` field."""
+  dynamicField: String
+
+  """Checks for equality with the object’s `extendedField` field."""
+  extendedField: String
+
+  """Checks for equality with the object’s `rating` field."""
+  rating: BigFloat
+
+  """Checks for equality with the object’s `customRating` field."""
+  customRating: String
+
+  """Checks for equality with the object’s `ageRating` field."""
+  ageRating: String
+
+  """Checks for equality with the object’s `assetType` field."""
+  assetType: Int
+
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: String
+
+  """Checks for equality with the object’s `tvshowId` field."""
+  tvshowId: String
+
+  """Checks for equality with the object’s `introStartTime` field."""
+  introStartTime: String
+
+  """Checks for equality with the object’s `introEndTime` field."""
+  introEndTime: String
+}
+
 """A connection to a list of `SeasonGenresRelation` values."""
 type SeasonGenresRelationsConnection {
   """A list of `SeasonGenresRelation` objects."""
@@ -4718,17 +5727,6 @@ type SeasonGenresRelation {
   Reads a single `Season` that is related to this `SeasonGenresRelation`.
   """
   season: Season
-}
-
-"""Definition of the TV show genre publish format."""
-type TvshowGenre {
-  id: String!
-
-  """Global ordering number for the genre."""
-  orderNo: Int
-
-  """Title of the genre."""
-  title: String
 }
 
 """A `SeasonGenresRelation` edge in the connection."""
@@ -6026,816 +7024,6 @@ input TvshowVideoCondition {
   mainUrl: String
 }
 
-"""Definition of the TV show episode publish format."""
-type Episode {
-  id: String!
-  seasonId: String
-
-  """Episode number"""
-  index: Int
-
-  """Original title of the episode."""
-  originalTitle: String
-
-  """Name of the producing studio."""
-  studio: String
-
-  """Date of first release."""
-  released: Datetime
-
-  """Cast of the episode."""
-  cast: [String]
-
-  """Array of tags associated with the content."""
-  tags: [String]
-
-  """Array of production countries"""
-  productionCountries: [String]
-  directors: [String]
-  creditsStartTime: String
-  lengthInSeconds: Float
-  dynamicField: String
-  extendedField: String
-  rating: BigFloat
-  customRating: String
-  ageRating: String
-  assetType: Int
-  assetSubtype: String
-  tvshowId: String
-  introStartTime: String
-  introEndTime: String
-
-  """Title of the episode."""
-  title: String
-
-  """Extended synopsis."""
-  description: String
-
-  """Short description of the main plot elements."""
-  synopsis: String
-
-  """Reads and enables pagination through a set of `EpisodeGenresRelation`."""
-  genres(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `EpisodeGenresRelation`."""
-    orderBy: [EpisodeGenresRelationsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeGenresRelationCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeGenresRelationFilter
-  ): EpisodeGenresRelationsConnection!
-
-  """Reads and enables pagination through a set of `EpisodeImage`."""
-  images(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `EpisodeImage`."""
-    orderBy: [EpisodeImagesOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeImageCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeImageFilter
-  ): EpisodeImagesConnection!
-
-  """Reads and enables pagination through a set of `EpisodeLicense`."""
-  licenses(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `EpisodeLicense`."""
-    orderBy: [EpisodeLicensesOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeLicenseCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeLicenseFilter
-  ): EpisodeLicensesConnection!
-
-  """Reads and enables pagination through a set of `EpisodeVideo`."""
-  videos(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `EpisodeVideo`."""
-    orderBy: [EpisodeVideosOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeVideoCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeVideoFilter
-  ): EpisodeVideosConnection!
-}
-
-"""A connection to a list of `EpisodeGenresRelation` values."""
-type EpisodeGenresRelationsConnection {
-  """A list of `EpisodeGenresRelation` objects."""
-  nodes: [EpisodeGenresRelation!]!
-
-  """
-  A list of edges which contains the `EpisodeGenresRelation` and cursor to aid in pagination.
-  """
-  edges: [EpisodeGenresRelationsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `EpisodeGenresRelation` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-type EpisodeGenresRelation {
-  id: Int!
-  episodeId: String
-  tvshowGenreId: String
-  orderNo: Int!
-
-  """
-  Reads a single `TvshowGenre` that is related to this `EpisodeGenresRelation`.
-  """
-  tvshowGenre: TvshowGenre
-
-  """
-  Reads a single `Episode` that is related to this `EpisodeGenresRelation`.
-  """
-  episode: Episode
-}
-
-"""A `EpisodeGenresRelation` edge in the connection."""
-type EpisodeGenresRelationsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EpisodeGenresRelation` at the end of the edge."""
-  node: EpisodeGenresRelation!
-}
-
-"""Methods to use when ordering `EpisodeGenresRelation`."""
-enum EpisodeGenresRelationsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  EPISODE_ID_ASC
-  EPISODE_ID_DESC
-  TVSHOW_GENRE_ID_ASC
-  TVSHOW_GENRE_ID_DESC
-  ORDER_NO_ASC
-  ORDER_NO_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `EpisodeGenresRelation` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input EpisodeGenresRelationCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `episodeId` field."""
-  episodeId: String
-
-  """Checks for equality with the object’s `tvshowGenreId` field."""
-  tvshowGenreId: String
-
-  """Checks for equality with the object’s `orderNo` field."""
-  orderNo: Int
-}
-
-"""A connection to a list of `EpisodeImage` values."""
-type EpisodeImagesConnection {
-  """A list of `EpisodeImage` objects."""
-  nodes: [EpisodeImage!]!
-
-  """
-  A list of edges which contains the `EpisodeImage` and cursor to aid in pagination.
-  """
-  edges: [EpisodeImagesEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `EpisodeImage` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""Asset image metadata."""
-type EpisodeImage {
-  id: Int!
-  episodeId: String
-
-  """Type of the image."""
-  type: String
-
-  """URI to the image file."""
-  path: String
-
-  """Width of the image in pixels."""
-  width: Int
-
-  """Height of the image in pixels."""
-  height: Int
-
-  """Reads a single `Episode` that is related to this `EpisodeImage`."""
-  episode: Episode
-}
-
-"""A `EpisodeImage` edge in the connection."""
-type EpisodeImagesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EpisodeImage` at the end of the edge."""
-  node: EpisodeImage!
-}
-
-"""Methods to use when ordering `EpisodeImage`."""
-enum EpisodeImagesOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  EPISODE_ID_ASC
-  EPISODE_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `EpisodeImage` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input EpisodeImageCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `episodeId` field."""
-  episodeId: String
-}
-
-"""A connection to a list of `EpisodeLicense` values."""
-type EpisodeLicensesConnection {
-  """A list of `EpisodeLicense` objects."""
-  nodes: [EpisodeLicense!]!
-
-  """
-  A list of edges which contains the `EpisodeLicense` and cursor to aid in pagination.
-  """
-  edges: [EpisodeLicensesEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `EpisodeLicense` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""
-Content metadata license that defines the content availability regions and time frame.
-"""
-type EpisodeLicense {
-  id: Int!
-  episodeId: String
-
-  """Array of countries where the license applies."""
-  countries: [String]
-
-  """Time when license becomes valid."""
-  startTime: Datetime
-
-  """Time when license becomes invalid."""
-  endTime: Datetime
-  isDownloadable: Boolean
-  downloadedAssetLifespan: Int
-  businessType: String
-  tier: String
-  contentOwner: String
-
-  """Reads a single `Episode` that is related to this `EpisodeLicense`."""
-  episode: Episode
-}
-
-"""A `EpisodeLicense` edge in the connection."""
-type EpisodeLicensesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EpisodeLicense` at the end of the edge."""
-  node: EpisodeLicense!
-}
-
-"""Methods to use when ordering `EpisodeLicense`."""
-enum EpisodeLicensesOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  EPISODE_ID_ASC
-  EPISODE_ID_DESC
-  START_TIME_ASC
-  START_TIME_DESC
-  END_TIME_ASC
-  END_TIME_DESC
-  IS_DOWNLOADABLE_ASC
-  IS_DOWNLOADABLE_DESC
-  DOWNLOADED_ASSET_LIFESPAN_ASC
-  DOWNLOADED_ASSET_LIFESPAN_DESC
-  BUSINESS_TYPE_ASC
-  BUSINESS_TYPE_DESC
-  TIER_ASC
-  TIER_DESC
-  CONTENT_OWNER_ASC
-  CONTENT_OWNER_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `EpisodeLicense` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input EpisodeLicenseCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `episodeId` field."""
-  episodeId: String
-
-  """Checks for equality with the object’s `startTime` field."""
-  startTime: Datetime
-
-  """Checks for equality with the object’s `endTime` field."""
-  endTime: Datetime
-
-  """Checks for equality with the object’s `isDownloadable` field."""
-  isDownloadable: Boolean
-
-  """Checks for equality with the object’s `downloadedAssetLifespan` field."""
-  downloadedAssetLifespan: Int
-
-  """Checks for equality with the object’s `businessType` field."""
-  businessType: String
-
-  """Checks for equality with the object’s `tier` field."""
-  tier: String
-
-  """Checks for equality with the object’s `contentOwner` field."""
-  contentOwner: String
-}
-
-"""A connection to a list of `EpisodeVideo` values."""
-type EpisodeVideosConnection {
-  """A list of `EpisodeVideo` objects."""
-  nodes: [EpisodeVideo!]!
-
-  """
-  A list of edges which contains the `EpisodeVideo` and cursor to aid in pagination.
-  """
-  edges: [EpisodeVideosEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `EpisodeVideo` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""Video stream metadata."""
-type EpisodeVideo {
-  id: Int!
-  episodeId: String
-
-  """Type of the video stream."""
-  type: String
-
-  """Title of the video stream"""
-  title: String
-
-  """Length of the stream in seconds."""
-  lengthInSeconds: Float
-
-  """Array of audio languages available in the stream."""
-  audioLanguages: [String]
-
-  """Array of subtitle languages available in the stream."""
-  subtitleLanguages: [String]
-
-  """Array of caption languages available in the stream."""
-  captionLanguages: [String]
-
-  """URI to a DASH manifest."""
-  dashManifest: String
-
-  """URI to an HLS manifest."""
-  hlsManifest: String
-
-  """Indicates whether a stream is protected with DRM."""
-  isProtected: Boolean
-
-  """Output format of the stream."""
-  outputFormat: String
-  drmKeyId: String
-  fileSizeInBytes: BigInt
-  mainUrl: String
-
-  """Reads a single `Episode` that is related to this `EpisodeVideo`."""
-  episode: Episode
-
-  """Reads and enables pagination through a set of `EpisodeVideoStream`."""
-  videoStreams(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `EpisodeVideoStream`."""
-    orderBy: [EpisodeVideoStreamsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeVideoStreamCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeVideoStreamFilter
-  ): EpisodeVideoStreamsConnection!
-
-  """Reads and enables pagination through a set of `EpisodeVideoCuePoint`."""
-  cuePoints(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `EpisodeVideoCuePoint`."""
-    orderBy: [EpisodeVideoCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeVideoCuePointCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeVideoCuePointFilter
-  ): EpisodeVideoCuePointsConnection!
-}
-
-"""A connection to a list of `EpisodeVideoStream` values."""
-type EpisodeVideoStreamsConnection {
-  """A list of `EpisodeVideoStream` objects."""
-  nodes: [EpisodeVideoStream!]!
-
-  """
-  A list of edges which contains the `EpisodeVideoStream` and cursor to aid in pagination.
-  """
-  edges: [EpisodeVideoStreamsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `EpisodeVideoStream` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""Video stream DRM metadata"""
-type EpisodeVideoStream {
-  id: Int!
-  videoId: Int
-
-  """Label indicating the type of stream (audio/video)"""
-  label: String
-
-  """DRM Key ID"""
-  keyId: String
-
-  """Packaging format of the stream"""
-  format: String
-
-  """Initialization Vector of the stream"""
-  iv: String
-
-  """File path to the initialization segment"""
-  file: String
-
-  """The language code for audio streams"""
-  languageCode: String
-
-  """Bitrate in kilobits per second"""
-  bitrateInKbps: Int
-
-  """Stream type"""
-  type: VideoStreamType
-
-  """File Template"""
-  fileTemplate: String
-
-  """Codecs"""
-  codecs: String
-
-  """Frame rate of the video stream"""
-  frameRate: Float
-
-  """Height of the video stream"""
-  height: Int
-
-  """Width of the video stream"""
-  width: Int
-
-  """Display aspect ratio for video streams"""
-  displayAspectRatio: String
-
-  """Pixel aspect ratio for video streams"""
-  pixelAspectRatio: String
-
-  """Sampling rate for audio streams"""
-  samplingRate: Int
-
-  """Language name for audio, subtitle, or caption streams"""
-  languageName: String
-
-  """
-  Reads a single `EpisodeVideo` that is related to this `EpisodeVideoStream`.
-  """
-  video: EpisodeVideo
-}
-
-"""A `EpisodeVideoStream` edge in the connection."""
-type EpisodeVideoStreamsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EpisodeVideoStream` at the end of the edge."""
-  node: EpisodeVideoStream!
-}
-
-"""Methods to use when ordering `EpisodeVideoStream`."""
-enum EpisodeVideoStreamsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  VIDEO_ID_ASC
-  VIDEO_ID_DESC
-  TYPE_ASC
-  TYPE_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `EpisodeVideoStream` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input EpisodeVideoStreamCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `videoId` field."""
-  videoId: Int
-
-  """Checks for equality with the object’s `type` field."""
-  type: VideoStreamType
-}
-
-"""A connection to a list of `EpisodeVideoCuePoint` values."""
-type EpisodeVideoCuePointsConnection {
-  """A list of `EpisodeVideoCuePoint` objects."""
-  nodes: [EpisodeVideoCuePoint!]!
-
-  """
-  A list of edges which contains the `EpisodeVideoCuePoint` and cursor to aid in pagination.
-  """
-  edges: [EpisodeVideoCuePointsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `EpisodeVideoCuePoint` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""Video cue point metadata"""
-type EpisodeVideoCuePoint {
-  id: Int!
-  videoId: Int
-
-  """Type of the cue point"""
-  cuePointTypeKey: String!
-
-  """Time in seconds at which the cue point is set within the video"""
-  timeInSeconds: Float!
-
-  """Additional information associated with the cue point"""
-  value: String
-
-  """
-  Reads a single `EpisodeVideo` that is related to this `EpisodeVideoCuePoint`.
-  """
-  video: EpisodeVideo
-}
-
-"""A `EpisodeVideoCuePoint` edge in the connection."""
-type EpisodeVideoCuePointsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EpisodeVideoCuePoint` at the end of the edge."""
-  node: EpisodeVideoCuePoint!
-}
-
-"""Methods to use when ordering `EpisodeVideoCuePoint`."""
-enum EpisodeVideoCuePointsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  VIDEO_ID_ASC
-  VIDEO_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `EpisodeVideoCuePoint` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input EpisodeVideoCuePointCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `videoId` field."""
-  videoId: Int
-}
-
-"""A `EpisodeVideo` edge in the connection."""
-type EpisodeVideosEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EpisodeVideo` at the end of the edge."""
-  node: EpisodeVideo!
-}
-
-"""Methods to use when ordering `EpisodeVideo`."""
-enum EpisodeVideosOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  EPISODE_ID_ASC
-  EPISODE_ID_DESC
-  TYPE_ASC
-  TYPE_DESC
-  DRM_KEY_ID_ASC
-  DRM_KEY_ID_DESC
-  FILE_SIZE_IN_BYTES_ASC
-  FILE_SIZE_IN_BYTES_DESC
-  MAIN_URL_ASC
-  MAIN_URL_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `EpisodeVideo` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input EpisodeVideoCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `episodeId` field."""
-  episodeId: String
-
-  """Checks for equality with the object’s `type` field."""
-  type: String
-
-  """Checks for equality with the object’s `drmKeyId` field."""
-  drmKeyId: String
-
-  """Checks for equality with the object’s `fileSizeInBytes` field."""
-  fileSizeInBytes: BigInt
-
-  """Checks for equality with the object’s `mainUrl` field."""
-  mainUrl: String
-}
-
 """A `CollectionItemsRelation` edge in the connection."""
 type CollectionItemsRelationsEdge {
   """A cursor for use in pagination."""
@@ -6948,119 +7136,6 @@ input CollectionCondition {
 
   """Checks for equality with the object’s `originalTitle` field."""
   originalTitle: String
-}
-
-"""A connection to a list of `Episode` values."""
-type EpisodesConnection {
-  """A list of `Episode` objects."""
-  nodes: [Episode!]!
-
-  """
-  A list of edges which contains the `Episode` and cursor to aid in pagination.
-  """
-  edges: [EpisodesEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Episode` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Episode` edge in the connection."""
-type EpisodesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Episode` at the end of the edge."""
-  node: Episode!
-}
-
-"""Methods to use when ordering `Episode`."""
-enum EpisodesOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  SEASON_ID_ASC
-  SEASON_ID_DESC
-  DIRECTORS_ASC
-  DIRECTORS_DESC
-  CREDITS_START_TIME_ASC
-  CREDITS_START_TIME_DESC
-  LENGTH_IN_SECONDS_ASC
-  LENGTH_IN_SECONDS_DESC
-  DYNAMIC_FIELD_ASC
-  DYNAMIC_FIELD_DESC
-  EXTENDED_FIELD_ASC
-  EXTENDED_FIELD_DESC
-  RATING_ASC
-  RATING_DESC
-  CUSTOM_RATING_ASC
-  CUSTOM_RATING_DESC
-  AGE_RATING_ASC
-  AGE_RATING_DESC
-  ASSET_TYPE_ASC
-  ASSET_TYPE_DESC
-  ASSET_SUBTYPE_ASC
-  ASSET_SUBTYPE_DESC
-  TVSHOW_ID_ASC
-  TVSHOW_ID_DESC
-  INTRO_START_TIME_ASC
-  INTRO_START_TIME_DESC
-  INTRO_END_TIME_ASC
-  INTRO_END_TIME_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `Episode` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input EpisodeCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: String
-
-  """Checks for equality with the object’s `seasonId` field."""
-  seasonId: String
-
-  """Checks for equality with the object’s `directors` field."""
-  directors: [String]
-
-  """Checks for equality with the object’s `creditsStartTime` field."""
-  creditsStartTime: String
-
-  """Checks for equality with the object’s `lengthInSeconds` field."""
-  lengthInSeconds: Float
-
-  """Checks for equality with the object’s `dynamicField` field."""
-  dynamicField: String
-
-  """Checks for equality with the object’s `extendedField` field."""
-  extendedField: String
-
-  """Checks for equality with the object’s `rating` field."""
-  rating: BigFloat
-
-  """Checks for equality with the object’s `customRating` field."""
-  customRating: String
-
-  """Checks for equality with the object’s `ageRating` field."""
-  ageRating: String
-
-  """Checks for equality with the object’s `assetType` field."""
-  assetType: Int
-
-  """Checks for equality with the object’s `assetSubtype` field."""
-  assetSubtype: String
-
-  """Checks for equality with the object’s `tvshowId` field."""
-  tvshowId: String
-
-  """Checks for equality with the object’s `introStartTime` field."""
-  introStartTime: String
-
-  """Checks for equality with the object’s `introEndTime` field."""
-  introEndTime: String
 }
 
 """A connection to a list of `MovieGenre` values."""

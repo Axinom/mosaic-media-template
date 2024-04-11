@@ -2,6 +2,7 @@
 import {
   devSetupServiceAccountWithPermissions,
   getServiceAccountToken,
+  ServiceAccountResult,
 } from '@axinom/mosaic-id-link-be';
 import { PermissionStructure } from '@axinom/mosaic-id-utils';
 import { updateEnvFile } from './update-env-file';
@@ -12,7 +13,8 @@ export const serviceAccountSetup = async (
   devServiceAccountClientSecret: string,
   serviceId: string,
   permissions: PermissionStructure[],
-): Promise<void> => {
+  printLog = true,
+): Promise<ServiceAccountResult> => {
   const tokenResult = await getServiceAccountToken(
     idServiceAuthBaseUrl,
     devServiceAccountClientId,
@@ -32,8 +34,11 @@ export const serviceAccountSetup = async (
     SERVICE_ACCOUNT_CLIENT_SECRET: serviceAccount.clientSecret,
   });
 
-  console.log({
-    message: `Service account "${serviceAccountName}" successfully created and its credentials added to the .env file.`,
-    ...serviceAccount,
-  });
+  if (printLog) {
+    console.log({
+      message: `Service account "${serviceAccountName}" successfully created and its credentials added to the .env file.`,
+      ...serviceAccount,
+    });
+  }
+  return serviceAccount;
 };
