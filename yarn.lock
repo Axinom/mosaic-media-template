@@ -341,10 +341,10 @@
   dependencies:
     "@axinom/mosaic-core" "^0.4.18"
 
-"@axinom/mosaic-managed-workflow-integration@0.13.0-rc.0":
-  version "0.13.0-rc.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.13.0-rc.0.tgz#c2545cc7d5270378718305b7f93fee73aed6fec6"
-  integrity sha512-KynvQ526URP+PYoA/JAyAxHe+JB+n/mkz2UXZuWvCmZ9v8FEuVBswnuPZuWqa7kWEF6IJ/+IxsH54etgIGM9lw==
+"@axinom/mosaic-managed-workflow-integration@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.13.0.tgz#ba1c5c36fff820f21de76bfc23d71ddc065d43f1"
+  integrity sha512-Pw4GE/fUKskISXQMUbKB2fv7jCMMZiMR/wlzHXAozHf+W7EYH9i0n3iR6lrePZEBAsNBrYDd6rPPSPvn7NA/aQ==
 
 "@axinom/mosaic-message-bus-abstractions@0.12.0-rc.8":
   version "0.12.0-rc.8"
@@ -387,10 +387,10 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-messages/-/mosaic-messages-0.41.0.tgz#fc1d6d964f0b4e4289058a96d47c4d1a11505bb8"
   integrity sha512-htepx5y64sdVq676smb8kNJH5y0kxW6i9UvWDlR+YqVPJwC6mrzxJAMa4RwtcWHdBYogAQxlTCIUoKkt24jmOA==
 
-"@axinom/mosaic-portal@0.29.0-rc.0":
-  version "0.29.0-rc.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.29.0-rc.0.tgz#45bbd86206206434f1a7f6fd2933121766d7a642"
-  integrity sha512-OY1mOcTIFqr8hu1v17wKKXx6B0faH7Q1+ek3V1zPs1k03Qy+ETSJDvhFLO7WfjxFrCNSDbJCubDSz3B2KlUSIA==
+"@axinom/mosaic-portal@0.29.0":
+  version "0.29.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.29.0.tgz#552066ed4a47f5f41377424c679c4888801f59bd"
+  integrity sha512-042Yc427r6XLv6sBxwSG9eBilczmyVafNLAJAO/Q4htgAcfzInfKL+wDFyzefVOEKCVs9Zf+fa9qUuXE17QNeA==
 
 "@axinom/mosaic-service-common@^0.47.0", "@axinom/mosaic-service-common@^0.47.0-rc.8":
   version "0.47.0"
@@ -444,12 +444,12 @@
     pg-transactional-outbox "^0.5.5"
     prom-client "^15.1.0"
 
-"@axinom/mosaic-ui@0.45.0-rc.0":
-  version "0.45.0-rc.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.45.0-rc.0.tgz#6f89e0e3ecb260088ffeb2daf2229d8d86fcbfec"
-  integrity sha512-6fnEWL44lLaYiCpGXztrnsHac/xlnM+aSlHDIRFdr5kttGhXLyBZSx1gQ1UANLahIkN27w7cpXOD2Wtt+Rc0Iw==
+"@axinom/mosaic-ui@0.45.0":
+  version "0.45.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.45.0.tgz#6801e12cf6cf9e3139e7c5380bc9166397a78772"
+  integrity sha512-n9SIiG5fBtgj64dNJkNjIKxEhM0pngEs06j6+EyDBhDwmOV8n2UEhmi1Hc/glCwz5A35UdG+9ZbsXDa6ERY23Q==
   dependencies:
-    "@axinom/mosaic-core" "^0.4.18-rc.0"
+    "@axinom/mosaic-core" "^0.4.18"
     "@faker-js/faker" "^7.4.0"
     "@popperjs/core" "^2.11.8"
     clsx "^1.1.0"

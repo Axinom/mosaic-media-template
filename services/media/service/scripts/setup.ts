@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { PermissionStructure } from '@axinom/mosaic-id-link-be';
 import {
   getValidatedConfig,
   isNullOrWhitespace,
@@ -35,13 +36,7 @@ async function main(): Promise<void> {
     config.devServiceAccountClientSecret,
     config.serviceId,
     [
-      {
-        serviceId: 'ax-id-service',
-        permissions: [
-          'PERMISSIONS_SYNCHRONIZE',
-          'ACCESS_TOKENS_GENERATE_LONG_LIVED_TOKEN',
-        ],
-      },
+      idServicePermissions,
       {
         serviceId: 'ax-image-service',
         permissions: ['IMAGE_TYPES_DECLARE'],
