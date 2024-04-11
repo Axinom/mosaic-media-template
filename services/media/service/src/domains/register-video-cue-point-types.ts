@@ -17,7 +17,7 @@ export const registerVideoCuePointTypes = async (
   loginClient: ClientBase,
   config: Config,
 ): Promise<void> => {
-  const serviceAccountToken = await requestServiceAccountToken(config);
+  const accessToken = await requestServiceAccountToken(config);
   await storeOutboxMessage<DeclareCuePointTypesCommand>(
     config.environmentId,
     VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes,
@@ -28,7 +28,7 @@ export const registerVideoCuePointTypes = async (
     loginClient,
     {
       envelopeOverrides: {
-        auth_token: serviceAccountToken.accessToken,
+        auth_token: accessToken,
       },
       options: {
         routingKey:

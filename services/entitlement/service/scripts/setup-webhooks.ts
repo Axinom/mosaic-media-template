@@ -6,12 +6,10 @@ import {
   pick,
 } from '@axinom/mosaic-service-common';
 import axios from 'axios';
-import { promises as fs } from 'fs';
 import gql from 'graphql-tag';
 import { print } from 'graphql/language/printer';
-import { join, resolve } from 'path';
 import urljoin from 'url-join';
-import { getIdToken } from '../../../../scripts/helpers';
+import { getIdToken, updateEnvFile } from '../../../../scripts/helpers';
 import { getConfigDefinitions } from '../src/common';
 
 const mapAndLogError = mosaicErrorMappingFactory(
@@ -30,34 +28,6 @@ const mapAndLogError = mosaicErrorMappingFactory(
     return undefined;
   },
 );
-
-async function updateEnvFile(
-  entitlementSecret: string,
-  webhookSecret: string,
-): Promise<void> {
-  const envVarPath = resolve(join(process.cwd(), '.env'));
-  let envFileContent = await fs.readFile(envVarPath, { encoding: 'utf8' });
-
-  const entitlementRegex = /^ENTITLEMENT_WEBHOOK_SECRET=.*$/gm;
-  const manifestRegex = /^MANIFEST_WEBHOOK_SECRET=.*$/gm;
-
-  const entitlementEnv = 'ENTITLEMENT_WEBHOOK_SECRET=' + entitlementSecret;
-  const manifestEnv = 'MANIFEST_WEBHOOK_SECRET=' + webhookSecret;
-
-  if (envFileContent.match(entitlementRegex) !== null) {
-    envFileContent = envFileContent.replace(entitlementRegex, entitlementEnv);
-  } else {
-    envFileContent += '\n' + entitlementEnv;
-  }
-
-  if (envFileContent.match(manifestRegex) !== null) {
-    envFileContent = envFileContent.replace(manifestRegex, manifestEnv);
-  } else {
-    envFileContent += '\n' + manifestEnv;
-  }
-
-  await fs.writeFile(envVarPath, envFileContent, 'utf8');
-}
 
 async function main(): Promise<void> {
   const config = getValidatedConfig(
@@ -114,10 +84,12 @@ async function main(): Promise<void> {
       result.data?.data?.generateEntitlementWebhookSecret?.secret &&
       result.data?.data?.generateManifestWebhookSecret?.secret
     ) {
-      await updateEnvFile(
-        result.data.data.generateEntitlementWebhookSecret.secret,
-        result.data.data.generateManifestWebhookSecret.secret,
-      );
+      await updateEnvFile({
+        ENTITLEMENT_WEBHOOK_SECRET:
+          result.data.data.generateEntitlementWebhookSecret.secret,
+        MANIFEST_WEBHOOK_SECRET:
+          result.data.data.generateManifestWebhookSecret.secret,
+      });
       console.log(
         `Webhook urls are set and new webhook secrets generated. The following variables are updated in the .env file.`,
       );

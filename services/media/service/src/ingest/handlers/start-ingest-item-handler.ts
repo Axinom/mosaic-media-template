@@ -24,7 +24,11 @@ import {
 } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
-import { IngestEntityProcessor, OrchestrationData } from '../models';
+import {
+  FullOrchestrationData,
+  IngestEntityProcessor,
+  OrchestrationData,
+} from '../models';
 import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessageHandler<StartIngestItemCommand> {
@@ -44,6 +48,12 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
     );
   }
 
+  private isFullOrchestrationData(
+    data: OrchestrationData,
+  ): data is FullOrchestrationData {
+    return 'messagingSettings' in data;
+  }
+
   override async handleMessage(
     { payload, metadata }: TypedTransactionalMessage<StartIngestItemCommand>,
     loginClient: ClientBase,
@@ -61,10 +71,14 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
 
     const data = processor.getOrchestrationData(payload);
     await this.saveIngestItemSteps(data, loginClient);
-    const orchestrationData = data.map((original) => ({
-      ...original,
-      publicationConfig: this.getPublicationConfig(original.messagingSettings),
-    }));
+    const orchestrationData = data
+      .filter<FullOrchestrationData>(this.isFullOrchestrationData)
+      .map((original) => ({
+        ...original,
+        publicationConfig: this.getPublicationConfig(
+          original.messagingSettings,
+        ),
+      }));
 
     for (const data of orchestrationData) {
       await this.storeOutboxMessage(

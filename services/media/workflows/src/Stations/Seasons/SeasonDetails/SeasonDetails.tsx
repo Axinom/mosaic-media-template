@@ -45,6 +45,7 @@ import {
   SearchSeasonTagsQuery,
   SearchSeasonTagsQueryVariables,
   Season,
+  SeasonDocument,
   SeasonImageType,
   TvshowGenre,
   UpdateSeasonInput,
@@ -215,6 +216,8 @@ export const SeasonDetails: React.FC = () => {
       await client.mutate<unknown, { input: UpdateSeasonInput }>({
         mutation: GqlMutationDocument,
         variables: { input: { id: seasonId, patch } },
+        refetchQueries: [SeasonDocument],
+        awaitRefetchQueries: true,
       });
     },
     [allGenres, seasonId],

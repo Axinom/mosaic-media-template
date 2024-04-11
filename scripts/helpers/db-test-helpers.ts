@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import {
+  assertError,
   createTestDbIdentifier,
   getBasicDbConfigDefinitions,
   ValueObject,
@@ -46,6 +47,10 @@ export async function recreateTestDbTemplate(
 ): Promise<void> {
   const rootPgPool = await initializePgPool(dbConfig.pgRootConnectionString);
 
+  console.log(
+    '-------------------- Dropping test DBs and roles --------------------',
+  );
+
   //Drop all existing test databases and related roles
   await dropDatabasesAndRoles(
     rootPgPool,
@@ -54,9 +59,11 @@ export async function recreateTestDbTemplate(
     dbConfig.dbLogin,
     dbConfig.dbOwner,
   );
-  console.log('---------------------------------------------');
+  console.log(
+    '-------------------- Resetting template test roles --------------------',
+  );
 
-  // Create the template test DB
+  // Resetting the template test roles
   await runResetQueries(
     rootPgPool,
     dbConfig.dbName,
@@ -68,11 +75,15 @@ export async function recreateTestDbTemplate(
     dbConfig.pgRoot,
   );
 
+  console.log(
+    '-------------------- Creating template test DB --------------------',
+  );
+
+  await resetTemplate1Connections(rootPgPool);
+
   await rootPgPool.end();
-  console.log('---------------------------------------------');
 
   await reset(migrationSettings);
-  console.log('---------------------------------------------');
 }
 
 /**
@@ -83,6 +94,9 @@ export async function createTestDbs(
   projectRoot: string,
   migrationSettings: Settings,
 ): Promise<void> {
+  console.log(
+    '-------------------- Creating all test DBs --------------------',
+  );
   //Find all test files which rely on test databases using *.db.spec.* file naming convention
   const testPaths = (
     await readdir.promise(projectRoot, { fileFilter: '*.db.spec.*' })
@@ -189,3 +203,17 @@ export function getSqlStatementsWithDbName(fileContents: string): string[] {
     .filter((l) => l.indexOf(dbNamePlaceholder) >= 0)
     .map((s) => s.trim().concat(';'));
 }
+
+const resetTemplate1Connections = async (rootPgPool: Pool): Promise<void> => {
+  try {
+    const query =
+      "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname = 'template1';";
+    console.log(`Running Query: '${query}'`);
+    await rootPgPool.query(query);
+  } catch (e) {
+    assertError(e);
+    console.warn(
+      `Could not drop connections on the "template1" database: ${e.message}`,
+    );
+  }
+};

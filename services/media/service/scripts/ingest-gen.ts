@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
+import { optional } from '@axinom/mosaic-db-common';
 import {
   assertError,
   Dict,
@@ -163,16 +164,19 @@ const generateIngestItem = (
   processingProfiles: string[],
   trailers: string[],
   genres: string[],
+  languageTags: string[],
   coverPath?: string,
   teaserPath?: string,
 ): IngestItem => {
+  const synopsis = faker.lorem.paragraph(1);
+  const description = faker.lorem.paragraph(5);
   const obj: IngestItem = {
     type,
     external_id: `${ingestName}-${faker.datatype.uuid()}`,
     data: {
       ...nonCommonProperties,
-      synopsis: faker.lorem.paragraph(1),
-      description: faker.lorem.paragraph(5),
+      synopsis,
+      description,
       studio: faker.company.name(),
       released: faker.date.past().toISOString().split('T')[0],
       tags: randomArray(0, 4, () => {
@@ -198,6 +202,17 @@ const generateIngestItem = (
             }))
           : undefined,
       images: coverPath || teaserPath ? [] : undefined,
+      localizations:
+        languageTags.length === 0
+          ? undefined
+          : languageTags.map((languageTag) => ({
+              language_tag: languageTag,
+              ...optional(nonCommonProperties?.title, (title) => ({
+                title: `${languageTag} ${title}`,
+              })),
+              description: `${languageTag} ${description}`,
+              synopsis: `${languageTag} ${synopsis}`,
+            })),
     },
   };
   if (coverPath) {
@@ -224,6 +239,7 @@ const generateMoviesIngestMetadata = (
   images: string[],
   processingProfiles: string[],
   genres: string[],
+  languageTags: string[],
 ): IngestItem[] => {
   const items: IngestItem[] = [];
   for (let i = 1; i <= args.movies; i++) {
@@ -249,6 +265,7 @@ const generateMoviesIngestMetadata = (
         processingProfiles,
         trailers,
         genres,
+        languageTags,
         coverPath,
         teaserPath,
       ),
@@ -266,6 +283,7 @@ const generateTvShowsIngestMetadata = (
   images: string[],
   processingProfiles: string[],
   genres: string[],
+  languageTags: string[],
 ): IngestItem[] => {
   const items: IngestItem[] = [];
   for (let i = 1; i <= args.tvshows; i++) {
@@ -288,6 +306,7 @@ const generateTvShowsIngestMetadata = (
         processingProfiles,
         trailers,
         genres,
+        languageTags,
         coverPath,
         teaserPath,
       ),
@@ -306,6 +325,7 @@ const generateSeasonsIngestMetadata = (
   images: string[],
   processingProfiles: string[],
   genres: string[],
+  languageTags: string[],
 ): IngestItem[] => {
   const items: IngestItem[] = [];
   const parentInfo = tvshows.map((i) => ({
@@ -333,6 +353,7 @@ const generateSeasonsIngestMetadata = (
         processingProfiles,
         trailers,
         genres,
+        languageTags,
         coverPath,
         teaserPath,
       ),
@@ -351,6 +372,7 @@ const generateEpisodesIngestMetadata = (
   images: string[],
   processingProfiles: string[],
   genres: string[],
+  languageTags: string[],
 ): IngestItem[] => {
   const items: IngestItem[] = [];
   const parentInfo = seasons.map((i) => ({
@@ -381,6 +403,7 @@ const generateEpisodesIngestMetadata = (
         processingProfiles,
         trailers,
         genres,
+        languageTags,
         coverPath,
         teaserPath,
       ),
@@ -399,6 +422,7 @@ const generateIngestFileContents = (
   processingProfiles: string[],
   movieGenres: string[],
   tvGenres: string[],
+  languageTags: string[],
 ): IngestDocument => {
   const movies = generateMoviesIngestMetadata(
     args,
@@ -406,6 +430,7 @@ const generateIngestFileContents = (
     images,
     processingProfiles,
     movieGenres,
+    languageTags,
   );
   const tvshows = generateTvShowsIngestMetadata(
     args,
@@ -413,6 +438,7 @@ const generateIngestFileContents = (
     images,
     processingProfiles,
     tvGenres,
+    languageTags,
   );
   const seasons = generateSeasonsIngestMetadata(
     args,
@@ -421,6 +447,7 @@ const generateIngestFileContents = (
     images,
     processingProfiles,
     tvGenres,
+    languageTags,
   );
   const episodes = generateEpisodesIngestMetadata(
     args,
@@ -429,6 +456,7 @@ const generateIngestFileContents = (
     images,
     processingProfiles,
     tvGenres,
+    languageTags,
   );
   return {
     name: args.ingestName,
@@ -706,6 +734,61 @@ const getProcessingProfiles = async (
 };
 
 /**
+ * Retrieves development jwt from ID service.
+ * Makes a request with said token to the configured Localization Service URL to
+ * retrieve configured language tags.
+ */
+const getLanguageTags = async (
+  devServiceAccountClientId: string | undefined,
+  devServiceAccountClientSecret: string | undefined,
+  idServiceAuthBaseUrl: string | undefined,
+  localizationBaseUrl: string,
+): Promise<string[]> => {
+  try {
+    const idJwt = await getIdToken(
+      './scripts/resources/localization-settings-view.json',
+      devServiceAccountClientId,
+      devServiceAccountClientSecret,
+      idServiceAuthBaseUrl,
+    );
+    const result = await axios.post(
+      urljoin(localizationBaseUrl, 'graphql'),
+      {
+        query: print(gql`
+          query GetLanguageTags {
+            locales(
+              filter: {
+                isDefault: { equalTo: false }
+                state: { equalTo: ACTIVE }
+              }
+            ) {
+              nodes {
+                languageTag
+              }
+            }
+          }
+        `),
+      },
+      { headers: { Authorization: `Bearer ${idJwt}` } },
+    );
+
+    const languageTags: string[] =
+      result.data.data?.locales?.nodes?.map(
+        (n: { languageTag: string }) => n.languageTag,
+      ) ?? [];
+
+    return languageTags;
+  } catch (error) {
+    assertError(error);
+    throw new MosaicError({
+      message: `An error occurred trying to retrieve localization language tags`,
+      code: 'INGEST_GEN_LOCALIZATIONS_ERROR',
+      error,
+    });
+  }
+};
+
+/**
  * Parses input arguments and generates pseudo-random numbers for each entity type (number of specific entities, videos by entity and video type, images by entity and image type)
  */
 const parseArgs = (args: CliArgs): ParsedCliArgs => {
@@ -862,6 +945,8 @@ async function main(): Promise<void> {
       'devVideoBlobStorageConnectionString',
       'devVideoBlobStorageContainer',
       'videoServiceBaseUrl',
+      'isLocalizationEnabled',
+      'localizationServiceBaseUrl',
       'devServiceAccountClientId',
       'devServiceAccountClientSecret',
       'idServiceAuthBaseUrl',
@@ -891,6 +976,16 @@ async function main(): Promise<void> {
           config.videoServiceBaseUrl,
         )
       : [];
+
+  console.log(getTimestamp(), `Getting localization language tags.`);
+  const languageTags = config.isLocalizationEnabled
+    ? await getLanguageTags(
+        config.devServiceAccountClientId,
+        config.devServiceAccountClientSecret,
+        config.idServiceAuthBaseUrl,
+        config.localizationServiceBaseUrl,
+      )
+    : [];
 
   console.log(getTimestamp(), `Getting available genres from database.`);
   const { movieGenres, tvGenres } = await getGenres(
@@ -925,6 +1020,7 @@ async function main(): Promise<void> {
     processingProfiles,
     movieGenres,
     tvGenres,
+    languageTags,
   );
 
   console.log(getTimestamp(), `Saving ingest file contents.`);

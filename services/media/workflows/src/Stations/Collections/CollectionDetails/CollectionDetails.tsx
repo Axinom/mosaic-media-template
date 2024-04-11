@@ -22,6 +22,7 @@ import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext } from '../../../externals';
 import {
+  CollectionDocument,
   CollectionImageType,
   CollectionQuery,
   Mutation,
@@ -109,6 +110,8 @@ export const CollectionDetails: React.FC = () => {
       await client.mutate<unknown, { input: UpdateCollectionInput }>({
         mutation: GqlMutationDocument,
         variables: { input: { id: collectionId, patch } },
+        refetchQueries: [CollectionDocument],
+        awaitRefetchQueries: true,
       });
     },
     [collectionId],

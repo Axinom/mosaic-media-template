@@ -1,5 +1,5 @@
 import { ImageIngestData } from './image-ingest-data';
 
-export interface IImagesIngestElement {
+export interface ImagesIngestElement {
   images?: ImageIngestData[];
 }
