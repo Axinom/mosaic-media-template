@@ -257,11 +257,6 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.18.tgz#d16126e270e2863256d5d46c3aaa2ad74652e3c7"
   integrity sha512-BjbtECy6cLMN3B5WcLhdI1rv4DeehEI40KwAoZeBx48HCO74PunR0WjdO2TQ0jUbcklCWP1KsBm2lmkasrHfRg==
 
-"@axinom/mosaic-core@^0.4.18-rc.0":
-  version "0.4.18-rc.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.18-rc.0.tgz#2512d61d92e4eb1bf018bcdb88c536820e4d7fa6"
-  integrity sha512-98N4z885TKEEl6BxKiyVafylDmZXMDG0kQHnV1kDZHzyYBvGflrzQK2UXLUXN6wPurjw50p1dGJLhlgZCMnjew==
-
 "@axinom/mosaic-db-common@^0.35.0-rc.8":
   version "0.35.0"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-db-common/-/mosaic-db-common-0.35.0.tgz#625f515244c4a89bc36d4adb9e179956084e6db2"

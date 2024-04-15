@@ -7,6 +7,7 @@ import {
   settingsGroupName,
 } from '../../index';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
+import { piletConfig } from '../../piletConfig';
 import { MovieCreate } from './MovieCreate/MovieCreate';
 import { MovieDetails } from './MovieDetails/MovieDetails';
 import { MovieDetailsCrumb } from './MovieDetails/MovieDetailsCrumb';
@@ -33,21 +34,23 @@ export function register(app: PiletApi, extensions: Extensions): void {
   };
 
   // Generate entry points to embedded localization stations
-  registerLocalizationEntryPoints(
-    [
-      {
-        root: '/movies/:movieId',
-        entityIdParam: 'movieId',
-        entityType: 'movie',
-      },
-      {
-        root: '/settings/media/moviegenres/:genreId',
-        entityIdParam: 'genreId',
-        entityType: 'movie_genre',
-      },
-    ],
-    app,
-  );
+  if (piletConfig.isLocalizationEnabled) {
+    registerLocalizationEntryPoints(
+      [
+        {
+          root: '/movies/:movieId',
+          entityIdParam: 'movieId',
+          entityType: 'movie',
+        },
+        {
+          root: '/settings/media/moviegenres/:genreId',
+          entityIdParam: 'genreId',
+          entityType: 'movie_genre',
+        },
+      ],
+      app,
+    );
+  }
 
   app.setRouteResolver(
     'movie-details',

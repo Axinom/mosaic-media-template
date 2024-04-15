@@ -3,6 +3,7 @@ import { PiletApi } from '@axinom/mosaic-portal';
 export const piletConfig = {
   mediaManagementHost: 'MEDIA_MANAGEMENT_HOST_NOT_CONFIGURED',
   mediaManagementHttpProtocol: 'MEDIA_MANAGEMENT_HTTP_PROTOCOL_NOT_CONFIGURED',
+  isLocalizationEnabled: true,
 };
 
 export const initializeConfig = (
@@ -19,4 +20,12 @@ export const initializeConfig = (
     customConfig?.MEDIA_MANAGEMENT_HTTP_PROTOCOL ??
     process.env.MEDIA_MANAGEMENT_HTTP_PROTOCOL ??
     piletConfig.mediaManagementHttpProtocol;
+
+  const isLocalizationEnabled =
+    customConfig?.IS_LOCALIZATION_ENABLED ??
+    process.env.IS_LOCALIZATION_ENABLED;
+  piletConfig.isLocalizationEnabled =
+    isLocalizationEnabled === undefined
+      ? piletConfig.isLocalizationEnabled
+      : isLocalizationEnabled.toLowerCase() === 'true';
 };

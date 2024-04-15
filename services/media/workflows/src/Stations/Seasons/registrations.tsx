@@ -3,6 +3,7 @@ import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions, ExtensionsContext } from '../../externals';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
+import { piletConfig } from '../../piletConfig';
 import { SeasonCreate } from './SeasonCreate/SeasonCreate';
 import { SeasonDetails } from './SeasonDetails/SeasonDetails';
 import { SeasonDetailsCrumb } from './SeasonDetails/SeasonDetailsCrumb';
@@ -26,16 +27,18 @@ export function register(app: PiletApi, extensions: Extensions): void {
   };
 
   // Generate entry points to embedded localization stations
-  registerLocalizationEntryPoints(
-    [
-      {
-        root: '/seasons/:seasonId',
-        entityIdParam: 'seasonId',
-        entityType: 'season',
-      },
-    ],
-    app,
-  );
+  if (piletConfig.isLocalizationEnabled) {
+    registerLocalizationEntryPoints(
+      [
+        {
+          root: '/seasons/:seasonId',
+          entityIdParam: 'seasonId',
+          entityType: 'season',
+        },
+      ],
+      app,
+    );
+  }
 
   app.setRouteResolver(
     'season-details',
