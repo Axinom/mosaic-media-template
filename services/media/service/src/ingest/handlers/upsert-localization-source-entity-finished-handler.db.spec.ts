@@ -29,6 +29,10 @@ import {
   UpsertLocalizationSourceEntityFinishedHandler,
 } from './upsert-localization-source-entity-finished-handler';
 
+jest.mock('../../common/utils/token-utils', () => ({
+  requestServiceAccountToken: jest.fn(),
+}));
+
 describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
   let ctx: ITestContext;
   let handler: UpsertLocalizationSourceEntityFinishedHandler;
