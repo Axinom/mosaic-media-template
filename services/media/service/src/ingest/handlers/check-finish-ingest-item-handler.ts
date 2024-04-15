@@ -7,12 +7,13 @@ import {
 import { ClientBase } from 'pg';
 import { select, update } from 'zapatos/db';
 import { Config } from '../../common';
-import { MediaTransactionalInboxMessageHandler } from '../../messaging';
+import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 
-export class CheckFinishIngestItemHandler extends MediaTransactionalInboxMessageHandler<CheckFinishIngestItemCommand> {
+export class CheckFinishIngestItemHandler extends MediaGuardedTransactionalInboxMessageHandler<CheckFinishIngestItemCommand> {
   constructor(config: Config) {
     super(
       MediaServiceMessagingSettings.CheckFinishIngestItem,
+      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: CheckFinishIngestItemHandler.name,

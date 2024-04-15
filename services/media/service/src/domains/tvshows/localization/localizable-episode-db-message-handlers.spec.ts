@@ -62,7 +62,7 @@ describe('Localizable Episode DB trigger events', () => {
     payload:
       | DeleteLocalizationSourceEntityCommand
       | UpsertLocalizationSourceEntityCommand;
-    settings: MessagingSettings;
+    settings: Pick<MessagingSettings, 'aggregateType' | 'messageType'>;
     overrides: MessageEnvelopeOverrides | undefined;
     options: PublicationConfig | undefined;
   }[] = [];
