@@ -117,7 +117,7 @@ describe('VideoSucceededHandler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(createMessage(payload, context), dbCtx),
       );
 
@@ -151,7 +151,7 @@ describe('VideoSucceededHandler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleErrorMessage(
           new Error('test error'),
           createMessage(payload, context),

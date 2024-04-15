@@ -43,26 +43,26 @@ export class PublishEntityHandler extends MediaGuardedTransactionalInboxMessageH
 
   override async handleMessage(
     { payload, metadata }: TypedTransactionalMessage<PublishEntityCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const payloadTable = payload.table_name as Table;
     let snapshot: snapshots.JSONSelectable;
     if (payloadTable === 'snapshots') {
       snapshot = await selectExactlyOne('snapshots', {
         id: payload.entity_id,
-      }).run(loginClient);
+      }).run(ownerClient);
     } else {
       snapshot = await createSnapshotWithRelation(
         singularize(payloadTable).toUpperCase() as EntityTypeEnum,
         payload.entity_id,
         payload.job_id ?? generateSnapshotJobId(),
-        loginClient,
+        ownerClient,
       );
     }
 
     const wrapper = new SnapshotWrapper(
       snapshot.id,
-      loginClient,
+      ownerClient,
       this.storeOutboxMessage,
       this.config,
     );
@@ -75,7 +75,7 @@ export class PublishEntityHandler extends MediaGuardedTransactionalInboxMessageH
         message: `Entity type '${publishType}' is not recognized. Please make sure that a correct publish entity processor is registered for specified type.`,
         details: { payload },
       });
-      await this.setErrorState(snapshot.id, loginClient);
+      await this.setErrorState(snapshot.id, ownerClient);
       return;
     }
 
@@ -104,7 +104,7 @@ export class PublishEntityHandler extends MediaGuardedTransactionalInboxMessageH
   override async handleErrorMessage(
     _error: Error,
     { payload }: TypedTransactionalMessage<PublishEntityCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
     _context?: GuardedContext | undefined,
   ): Promise<void> {
@@ -118,11 +118,11 @@ export class PublishEntityHandler extends MediaGuardedTransactionalInboxMessageH
           singularize(payload.table_name).toUpperCase() as EntityTypeEnum,
           payload.entity_id,
           payload.job_id ?? generateSnapshotJobId(),
-          loginClient,
+          ownerClient,
         )
       ).id;
     }
-    await this.setErrorState(snapshotId, loginClient);
+    await this.setErrorState(snapshotId, ownerClient);
   }
 
   private async setErrorState(

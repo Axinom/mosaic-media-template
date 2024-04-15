@@ -515,7 +515,7 @@ describe('Movies GraphQL endpoints', () => {
         defaultRequestContext,
       );
 
-      await ctx.executeGqlSql(user, async (txn) => {
+      await ctx.executeOwnerSql(user, async (txn) => {
         let videoId = 1;
         let imageId = 1;
         while (messages.length) {

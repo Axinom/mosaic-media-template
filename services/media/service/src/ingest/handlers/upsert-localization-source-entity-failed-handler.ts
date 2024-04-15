@@ -37,7 +37,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
       payload,
       metadata,
     }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFailedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const messageContext = metadata.messageContext as Pick<
       IngestMessageContext,
@@ -58,7 +58,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
         type: 'LOCALIZATIONS',
       },
       { columns: ['id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     if (!localizationStep?.id) {
       throw new MosaicError({
@@ -75,7 +75,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
         ingest_item_id: messageContext.ingestItemId,
         error_message: payload.message,
       },
-      loginClient,
+      ownerClient,
       { envelopeOverrides: { auth_token: metadata.authToken } },
     );
   }
@@ -93,7 +93,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
     {
       metadata,
     }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFailedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -114,6 +114,6 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
         errors: sql<SQL>`${value} || ${err}::jsonb`,
       },
       { id: messageContext.ingestItemId },
-    ).run(loginClient);
+    ).run(ownerClient);
   }
 }

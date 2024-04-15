@@ -89,7 +89,7 @@ describe('IngestEpisodeProcessor', () => {
         const body = createMessageBody(episode1, data);
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) => {
+        await ctx.executeOwnerSql(user, async (dbCtx) => {
           await processor.updateMetadata(body, dbCtx);
         });
 
@@ -128,7 +128,7 @@ describe('IngestEpisodeProcessor', () => {
       const body = createMessageBody(episode1, data);
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
+      await ctx.executeOwnerSql(user, async (dbCtx) => {
         await processor.updateMetadata(body, dbCtx);
       });
 
@@ -166,7 +166,7 @@ describe('IngestEpisodeProcessor', () => {
       const body = createMessageBody(episode1, data);
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
+      await ctx.executeOwnerSql(user, async (dbCtx) => {
         await processor.updateMetadata(body, dbCtx);
       });
 

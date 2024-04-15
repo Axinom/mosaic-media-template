@@ -50,7 +50,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaTransact
       payload,
       metadata,
     }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const messageContext = metadata.messageContext as Pick<
       IngestMessageContext,
@@ -68,7 +68,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaTransact
       'ingest_items',
       { id: messageContext.ingestItemId },
       { columns: ['item'] },
-    ).run(loginClient);
+    ).run(ownerClient);
     const localizationStep = await selectOne(
       'ingest_item_steps',
       {
@@ -76,7 +76,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaTransact
         type: 'LOCALIZATIONS',
       },
       { columns: ['id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     if (!ingestItem || !localizationStep) {
       throw new MosaicError({
@@ -117,7 +117,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaTransact
       payload.entity_id,
       messageSettings,
       messagePayload,
-      loginClient,
+      ownerClient,
       {
         envelopeOverrides: {
           auth_token: token,
@@ -146,7 +146,7 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaTransact
     {
       metadata,
     }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFinishedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -167,6 +167,6 @@ export class UpsertLocalizationSourceEntityFinishedHandler extends MediaTransact
         errors: sql<SQL>`${value} || ${err}::jsonb`,
       },
       { id: messageContext.ingestItemId },
-    ).run(loginClient);
+    ).run(ownerClient);
   }
 }
