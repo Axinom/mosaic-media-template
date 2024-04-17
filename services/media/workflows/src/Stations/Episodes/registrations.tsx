@@ -3,6 +3,7 @@ import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions, ExtensionsContext } from '../../externals';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
+import { piletConfig } from '../../piletConfig';
 import { EpisodeCreate } from './EpisodeCreate/EpisodeCreate';
 import { EpisodeDetails } from './EpisodeDetails/EpisodeDetails';
 import { EpisodeDetailsCrumb } from './EpisodeDetails/EpisodeDetailsCrumb';
@@ -25,16 +26,18 @@ export function register(app: PiletApi, extensions: Extensions): void {
   };
 
   // Generate entry points to embedded localization stations
-  registerLocalizationEntryPoints(
-    [
-      {
-        root: '/episodes/:episodeId',
-        entityIdParam: 'episodeId',
-        entityType: 'episode',
-      },
-    ],
-    app,
-  );
+  if (piletConfig.isLocalizationEnabled) {
+    registerLocalizationEntryPoints(
+      [
+        {
+          root: '/episodes/:episodeId',
+          entityIdParam: 'episodeId',
+          entityType: 'episode',
+        },
+      ],
+      app,
+    );
+  }
 
   app.setRouteResolver(
     'episode-details',

@@ -7,6 +7,7 @@ import {
   settingsGroupName,
 } from '../../index';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
+import { piletConfig } from '../../piletConfig';
 import { TvShowCreate } from './TvShowCreate/TvShowCreate';
 import { TvShowDetails } from './TvShowDetails/TvShowDetails';
 import { TvShowDetailsCrumb } from './TvShowDetails/TvShowDetailsCrumb';
@@ -34,21 +35,23 @@ export function register(app: PiletApi, extensions: Extensions): void {
   };
 
   // Generate entry points to embedded localization stations
-  registerLocalizationEntryPoints(
-    [
-      {
-        root: '/tvshows/:tvshowId',
-        entityIdParam: 'tvshowId',
-        entityType: 'tv_show',
-      },
-      {
-        root: '/settings/media/tvshowgenres/:genreId',
-        entityIdParam: 'genreId',
-        entityType: 'tv_show_genre',
-      },
-    ],
-    app,
-  );
+  if (piletConfig.isLocalizationEnabled) {
+    registerLocalizationEntryPoints(
+      [
+        {
+          root: '/tvshows/:tvshowId',
+          entityIdParam: 'tvshowId',
+          entityType: 'tv_show',
+        },
+        {
+          root: '/settings/media/tvshowgenres/:genreId',
+          entityIdParam: 'genreId',
+          entityType: 'tv_show_genre',
+        },
+      ],
+      app,
+    );
+  }
 
   app.setRouteResolver(
     'tv_show-details',
