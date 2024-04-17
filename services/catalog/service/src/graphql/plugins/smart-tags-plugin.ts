@@ -635,7 +635,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           index: {
             description: 'Season number',
-            ...disableFilterAndOrder,
           },
           synopsis: {
             description: 'Short description of the main plot elements.',
@@ -713,15 +712,12 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           countries: {
             description: 'Array of countries where the license applies.',
-            ...disableFilterAndOrder,
           },
           start_time: {
             description: 'Time when license becomes valid.',
-            ...disableFilterAndOrder,
           },
           end_time: {
             description: 'Time when license becomes invalid.',
-            ...disableFilterAndOrder,
           },
         },
         tags: {
@@ -936,7 +932,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           index: {
             description: 'Episode number',
-            ...disableFilterAndOrder,
           },
           title: {
             description: 'Title of the episode.',
@@ -1028,11 +1023,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
           start_time: {
             description: 'Time when license becomes valid.',
-            ...disableFilterAndOrder,
           },
           end_time: {
             description: 'Time when license becomes invalid.',
-            ...disableFilterAndOrder,
           },
         },
         tags: {
