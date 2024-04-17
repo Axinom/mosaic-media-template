@@ -176,40 +176,6 @@ type Query {
     filter: MovieGenreFilter
   ): MovieGenresConnection
 
-  """Reads and enables pagination through a set of `SearchResult`."""
-  searchResults(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `SearchResult`."""
-    orderBy: [SearchResultsOrderBy!] = [NATURAL]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: SearchResultCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: SearchResultFilter
-  ): SearchResultsConnection
-
   """Reads and enables pagination through a set of `Season`."""
   seasons(
     """Only read the first `n` values of the set."""
@@ -2487,6 +2453,9 @@ input EpisodeFilter {
   """Filter by the object’s `seasonId` field."""
   seasonId: StringFilter
 
+  """Filter by the object’s `index` field."""
+  index: IntFilter
+
   """Filter by the object’s `directors` field."""
   directors: StringListFilter
 
@@ -2653,6 +2622,12 @@ input EpisodeLicenseFilter {
 
   """Filter by the object’s `episodeId` field."""
   episodeId: StringFilter
+
+  """Filter by the object’s `startTime` field."""
+  startTime: DatetimeFilter
+
+  """Filter by the object’s `endTime` field."""
+  endTime: DatetimeFilter
 
   """Filter by the object’s `isDownloadable` field."""
   isDownloadable: BooleanFilter
@@ -2900,6 +2875,9 @@ input SeasonFilter {
   """Filter by the object’s `tvshowId` field."""
   tvshowId: StringFilter
 
+  """Filter by the object’s `index` field."""
+  index: IntFilter
+
   """Filter by the object’s `directors` field."""
   directors: StringListFilter
 
@@ -3051,6 +3029,15 @@ input SeasonLicenseFilter {
 
   """Filter by the object’s `seasonId` field."""
   seasonId: StringFilter
+
+  """Filter by the object’s `countries` field."""
+  countries: StringListFilter
+
+  """Filter by the object’s `startTime` field."""
+  startTime: DatetimeFilter
+
+  """Filter by the object’s `endTime` field."""
+  endTime: DatetimeFilter
 
   """Filter by the object’s `isDownloadable` field."""
   isDownloadable: BooleanFilter
@@ -5752,6 +5739,12 @@ enum SeasonLicensesOrderBy {
   ID_DESC
   SEASON_ID_ASC
   SEASON_ID_DESC
+  COUNTRIES_ASC
+  COUNTRIES_DESC
+  START_TIME_ASC
+  START_TIME_DESC
+  END_TIME_ASC
+  END_TIME_DESC
   IS_DOWNLOADABLE_ASC
   IS_DOWNLOADABLE_DESC
   DOWNLOADED_ASSET_LIFESPAN_ASC
@@ -5776,6 +5769,15 @@ input SeasonLicenseCondition {
 
   """Checks for equality with the object’s `seasonId` field."""
   seasonId: String
+
+  """Checks for equality with the object’s `countries` field."""
+  countries: [String]
+
+  """Checks for equality with the object’s `startTime` field."""
+  startTime: Datetime
+
+  """Checks for equality with the object’s `endTime` field."""
+  endTime: Datetime
 
   """Checks for equality with the object’s `isDownloadable` field."""
   isDownloadable: Boolean
@@ -6241,6 +6243,8 @@ enum EpisodesOrderBy {
   ID_DESC
   SEASON_ID_ASC
   SEASON_ID_DESC
+  INDEX_ASC
+  INDEX_DESC
   DIRECTORS_ASC
   DIRECTORS_DESC
   CREDITS_START_TIME_ASC
@@ -6280,6 +6284,9 @@ input EpisodeCondition {
 
   """Checks for equality with the object’s `seasonId` field."""
   seasonId: String
+
+  """Checks for equality with the object’s `index` field."""
+  index: Int
 
   """Checks for equality with the object’s `directors` field."""
   directors: [String]
@@ -6449,6 +6456,10 @@ enum EpisodeLicensesOrderBy {
   ID_DESC
   EPISODE_ID_ASC
   EPISODE_ID_DESC
+  START_TIME_ASC
+  START_TIME_DESC
+  END_TIME_ASC
+  END_TIME_DESC
   IS_DOWNLOADABLE_ASC
   IS_DOWNLOADABLE_DESC
   DOWNLOADED_ASSET_LIFESPAN_ASC
@@ -6473,6 +6484,12 @@ input EpisodeLicenseCondition {
 
   """Checks for equality with the object’s `episodeId` field."""
   episodeId: String
+
+  """Checks for equality with the object’s `startTime` field."""
+  startTime: Datetime
+
+  """Checks for equality with the object’s `endTime` field."""
+  endTime: Datetime
 
   """Checks for equality with the object’s `isDownloadable` field."""
   isDownloadable: Boolean
@@ -6978,6 +6995,8 @@ enum SeasonsOrderBy {
   ID_DESC
   TVSHOW_ID_ASC
   TVSHOW_ID_DESC
+  INDEX_ASC
+  INDEX_DESC
   DIRECTORS_ASC
   DIRECTORS_DESC
   DYNAMIC_FIELD_ASC
@@ -7007,6 +7026,9 @@ input SeasonCondition {
 
   """Checks for equality with the object’s `tvshowId` field."""
   tvshowId: String
+
+  """Checks for equality with the object’s `index` field."""
+  index: Int
 
   """Checks for equality with the object’s `directors` field."""
   directors: [String]
@@ -7297,188 +7319,6 @@ input MovieGenreCondition {
 
   """Checks for equality with the object’s `orderNo` field."""
   orderNo: Int
-}
-
-"""A connection to a list of `SearchResult` values."""
-type SearchResultsConnection {
-  """A list of `SearchResult` objects."""
-  nodes: [SearchResult!]!
-
-  """
-  A list of edges which contains the `SearchResult` and cursor to aid in pagination.
-  """
-  edges: [SearchResultsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `SearchResult` you could get from the connection."""
-  totalCount: Int!
-}
-
-type SearchResult {
-  id: String
-  assetType: Int
-  assetSubtype: String
-  audioLanguages: [String]
-  businessType: String
-  cast: [String]
-  description: String
-  extendedField: String
-  genres: [String]
-  lengthInSeconds: BigFloat
-  tags: [String]
-  title: String
-  countries: [String]
-  images: JSON
-}
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
-"""A `SearchResult` edge in the connection."""
-type SearchResultsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `SearchResult` at the end of the edge."""
-  node: SearchResult!
-}
-
-"""Methods to use when ordering `SearchResult`."""
-enum SearchResultsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  ASSET_TYPE_ASC
-  ASSET_TYPE_DESC
-  ASSET_SUBTYPE_ASC
-  ASSET_SUBTYPE_DESC
-  AUDIO_LANGUAGES_ASC
-  AUDIO_LANGUAGES_DESC
-  BUSINESS_TYPE_ASC
-  BUSINESS_TYPE_DESC
-  CAST_ASC
-  CAST_DESC
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
-  EXTENDED_FIELD_ASC
-  EXTENDED_FIELD_DESC
-  GENRES_ASC
-  GENRES_DESC
-  LENGTH_IN_SECONDS_ASC
-  LENGTH_IN_SECONDS_DESC
-  TAGS_ASC
-  TAGS_DESC
-  TITLE_ASC
-  TITLE_DESC
-  COUNTRIES_ASC
-  COUNTRIES_DESC
-  IMAGES_ASC
-  IMAGES_DESC
-}
-
-"""
-A condition to be used against `SearchResult` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input SearchResultCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: String
-
-  """Checks for equality with the object’s `assetType` field."""
-  assetType: Int
-
-  """Checks for equality with the object’s `assetSubtype` field."""
-  assetSubtype: String
-
-  """Checks for equality with the object’s `audioLanguages` field."""
-  audioLanguages: [String]
-
-  """Checks for equality with the object’s `businessType` field."""
-  businessType: String
-
-  """Checks for equality with the object’s `cast` field."""
-  cast: [String]
-
-  """Checks for equality with the object’s `description` field."""
-  description: String
-
-  """Checks for equality with the object’s `extendedField` field."""
-  extendedField: String
-
-  """Checks for equality with the object’s `genres` field."""
-  genres: [String]
-
-  """Checks for equality with the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloat
-
-  """Checks for equality with the object’s `tags` field."""
-  tags: [String]
-
-  """Checks for equality with the object’s `title` field."""
-  title: String
-
-  """Checks for equality with the object’s `countries` field."""
-  countries: [String]
-
-  """Checks for equality with the object’s `images` field."""
-  images: JSON
-}
-
-"""
-A filter to be used against `SearchResult` object types. All fields are combined with a logical ‘and.’
-"""
-input SearchResultFilter {
-  """Filter by the object’s `id` field."""
-  id: StringFilter
-
-  """Filter by the object’s `assetType` field."""
-  assetType: IntFilter
-
-  """Filter by the object’s `assetSubtype` field."""
-  assetSubtype: StringFilter
-
-  """Filter by the object’s `audioLanguages` field."""
-  audioLanguages: StringListFilter
-
-  """Filter by the object’s `businessType` field."""
-  businessType: StringFilter
-
-  """Filter by the object’s `cast` field."""
-  cast: StringListFilter
-
-  """Filter by the object’s `description` field."""
-  description: StringFilter
-
-  """Filter by the object’s `extendedField` field."""
-  extendedField: StringFilter
-
-  """Filter by the object’s `genres` field."""
-  genres: StringListFilter
-
-  """Filter by the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloatFilter
-
-  """Filter by the object’s `tags` field."""
-  tags: StringListFilter
-
-  """Filter by the object’s `title` field."""
-  title: StringFilter
-
-  """Filter by the object’s `countries` field."""
-  countries: StringListFilter
-
-  """Checks for all expressions in this list."""
-  and: [SearchResultFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [SearchResultFilter!]
-
-  """Negates the expression."""
-  not: SearchResultFilter
 }
 
 """A connection to a list of `Tvshow` values."""
