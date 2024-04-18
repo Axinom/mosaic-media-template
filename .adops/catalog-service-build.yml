@@ -5,8 +5,11 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+  serviceId: 'dc-nfn-mosaic-catalog-acc'
   containerRegistry: 'harbor-beyonddutch-automation'
   dockerfilePath: 'Dockerfile'
+  packageRoot: 'services/catalog/service'
+  packageBuildCommand: 'build:catalog-service:prod'
   imageRepository: 'beyonddutch-mosaic/mosaic-catalog-service'
   tag: '$(Build.BuildNumber)'
 
@@ -61,3 +64,15 @@ stages:
               mv package.updated.json package.json
               yarn install
             displayName: 'Install Dev Dependencies'
+
+          - task: Bash@3
+            displayName: 'Upload deployment configuration to Acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
