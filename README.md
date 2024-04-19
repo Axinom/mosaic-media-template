@@ -17,6 +17,19 @@ The code included in that repository can be either used as is or customized to
 your specific requirements. The Mosaic libraries and services used by that
 solution will be provided, updated and maintained by Axinom.
 
+## Getting Started
+
+To get started with developing your own customized solution based on the
+Mosaic Media Template, run the following command:
+
+```shell
+npx --package=@axinom/mosaic-cli mosaic create
+```
+
+This process will guide you through the creation of a new Mosaic project based
+on the Mosaic Media Template.  
+See [the CLI documentation](https://portal.axinom.com/mosaic/documentation/axinom-mosaic-cli#_mosaic_create) for more details.
+
 ## Prerequisites
 
 Before using the customizable solution make sure that you have the following
