@@ -89,7 +89,9 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
       return result;
     }, {});
     const notStartedItems: IngestItem[] = document.items.sort(
-      (a, b) => orderedTypes[a.type] - orderedTypes[b.type],
+      (a, b) =>
+        orderedTypes[a.type] - orderedTypes[b.type] ||
+        a.external_id.localeCompare(b.external_id),
     );
 
     // Handle retries by skipping already processed items
