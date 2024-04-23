@@ -1,4 +1,15 @@
-import { assertNotFalsy, Logger } from '@axinom/mosaic-service-common';
+import {
+  buildPgSettings,
+  OwnerPgPool,
+  transactionWithContext,
+} from '@axinom/mosaic-db-common';
+import { GuardedContext } from '@axinom/mosaic-id-guard';
+import {
+  assertNotFalsy,
+  Dict,
+  Logger,
+  MosaicError,
+} from '@axinom/mosaic-service-common';
 import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
@@ -15,9 +26,18 @@ import {
   IngestEntityExistsStatusEnum,
   IngestItemTypeEnum,
 } from 'zapatos/custom';
-import { insert, selectExactlyOne, update } from 'zapatos/db';
+import {
+  insert,
+  IsolationLevel,
+  param,
+  selectExactlyOne,
+  self as value,
+  SQL,
+  sql,
+  update,
+} from 'zapatos/db';
 import { ingest_items } from 'zapatos/schema';
-import { Config } from '../../common';
+import { CommonErrors, Config } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import {
   DisplayTitleMapping,
@@ -34,6 +54,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
   constructor(
     private entityProcessors: IngestEntityProcessor[],
     private readonly storeOutboxMessage: StoreOutboxMessage,
+    private readonly ownerPool: OwnerPgPool,
     config: Config,
   ) {
     super(
@@ -50,30 +71,92 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
   override async handleMessage(
     { payload, metadata }: TypedTransactionalMessage<StartIngestCommand>,
     ownerClient: ClientBase,
+    { subject }: GuardedContext,
   ): Promise<void> {
     // Sending only id in a scenario of detached services is an anti-pattern
     // Ideally the whole doc should have been sent and message should be self-contained, but because doc has a potential to be quite big - we save it to db and pass only it's id
-    const { document, id } = await selectExactlyOne('ingest_documents', {
-      id: payload.doc_id,
-    }).run(ownerClient);
+    const { document, id, started_count } = await selectExactlyOne(
+      'ingest_documents',
+      { id: payload.doc_id },
+    ).run(ownerClient);
 
-    const ingestItems: ingest_items.JSONSelectable[] = [];
-    for (const processor of this.entityProcessors) {
-      ingestItems.push(
-        ...(await this.initializeItems(
-          processor,
-          document.items,
-          id,
-          ownerClient,
-        )),
+    // Establish the order by which items of specific type would be processed,
+    // based on the order of entity processors.
+    const orderedTypes: Dict<number> = this.entityProcessors.reduce<
+      Dict<number>
+    >((result, value, index) => {
+      result[value.type] = index;
+      return result;
+    }, {});
+    const notStartedItems: IngestItem[] = document.items.sort(
+      (a, b) => orderedTypes[a.type] - orderedTypes[b.type],
+    );
+
+    // Handle retries by skipping already processed items
+    if (started_count > 0) {
+      notStartedItems.splice(0, started_count);
+    }
+
+    const pgSettings = buildPgSettings(
+      subject,
+      this.config.dbOwner,
+      this.config.serviceId,
+    );
+    const batchSize = 200;
+    while (notStartedItems.length > 0) {
+      const currentType = notStartedItems[0].type;
+      const batch = notStartedItems
+        .filter((item) => item.type === currentType)
+        .splice(0, batchSize);
+      notStartedItems.splice(0, batch.length);
+      const processor = this.entityProcessors.find(
+        (h) => h.type === currentType,
+      );
+
+      if (!processor) {
+        throw new MosaicError({
+          message: `Entity type '${currentType}' is not recognized. Please make sure that a correct ingest entity processor is registered for specified type.`,
+          code: CommonErrors.IngestError.code,
+        });
+      }
+      await transactionWithContext(
+        this.ownerPool,
+        IsolationLevel.Serializable,
+        pgSettings,
+        async (ctx) => {
+          const ingestItems = await this.initializeItems(
+            processor,
+            batch,
+            id,
+            ctx,
+          );
+
+          await this.sendCommands(ingestItems, ctx, metadata.authToken);
+
+          await update(
+            'ingest_documents',
+            { started_count: sql<SQL>`${value} + ${param(batch.length)}` },
+            { id },
+          ).run(ctx);
+
+          if (notStartedItems.length === 0) {
+            await this.storeOutboxMessage<CheckFinishIngestDocumentCommand>(
+              id.toString(),
+              MediaServiceMessagingSettings.CheckFinishIngestDocument,
+              {
+                ingest_document_id: id,
+                seconds_without_progress: 0,
+                previous_error_count: 0,
+                previous_success_count: 0,
+                previous_in_progress_count: 0,
+              },
+              ctx,
+              { envelopeOverrides: { auth_token: metadata.authToken } },
+            );
+          }
+        },
       );
     }
-    await this.sendCommands(
-      payload.doc_id,
-      ingestItems,
-      ownerClient,
-      metadata.authToken,
-    );
   }
 
   override async handleErrorMessage(
@@ -106,14 +189,10 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
 
   private async initializeItems(
     processor: IngestEntityProcessor,
-    allItems: IngestItem[],
+    typedItems: IngestItem[],
     documentId: number,
     ownerClient: ClientBase,
   ): Promise<ingest_items.JSONSelectable[]> {
-    const typedItems = allItems.filter(
-      (item) => item.type.toLowerCase() === processor.type.toLowerCase(),
-    );
-
     const { existedMedia, createdMedia, displayTitleMappings } =
       await processor.initializeMedia(typedItems, ownerClient);
 
@@ -187,7 +266,6 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
   }
 
   private async sendCommands(
-    documentId: number,
     ingestItems: ingest_items.JSONSelectable[],
     ownerClient: ClientBase,
     jwtToken: string | undefined,
@@ -208,19 +286,5 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
         },
       );
     }
-
-    await this.storeOutboxMessage<CheckFinishIngestDocumentCommand>(
-      documentId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestDocument,
-      {
-        ingest_document_id: documentId,
-        seconds_without_progress: 0,
-        previous_error_count: 0,
-        previous_success_count: 0,
-        previous_in_progress_count: 0,
-      },
-      ownerClient,
-      { envelopeOverrides: { auth_token: jwtToken } },
-    );
   }
 }

@@ -151,6 +151,7 @@ export const registerMessaging = async (
     storeOutboxMessage,
     logMapper,
     shutdownActions,
+    ownerPool,
   );
   const broker = await registerRabbitMqMessaging(
     app,
@@ -179,6 +180,7 @@ const registerTransactionalInboxHandlers = (
   storeOutboxMessage: StoreOutboxMessage,
   logMapper: TransactionalLogMapper,
   shutdownActions: ShutdownActionsMiddleware,
+  ownerPool: OwnerPgPool,
 ): void => {
   const ingestProcessors = getIngestProcessors(config);
   const dbMessageHandlers: TransactionalMessageHandler[] = [
@@ -300,7 +302,12 @@ const registerTransactionalInboxHandlers = (
     ),
   ];
   const ingestMessageHandlers: TransactionalMessageHandler[] = [
-    new StartIngestHandler(ingestProcessors, storeOutboxMessage, config),
+    new StartIngestHandler(
+      ingestProcessors,
+      storeOutboxMessage,
+      ownerPool,
+      config,
+    ),
     new StartIngestItemHandler(ingestProcessors, storeOutboxMessage, config),
     new UpdateMetadataHandler(ingestProcessors, storeOutboxMessage, config),
     new CheckFinishIngestItemHandler(config),
@@ -352,11 +359,11 @@ const registerTransactionalInboxHandlers = (
     ],
     logMapper,
     {
-      // Allow the ingest start to be processed a bit longer
+      // Allow the ingest start to be processed for longer
       messageProcessingTimeoutStrategy: (message) =>
         message.messageType ===
         MediaServiceMessagingSettings.StartIngest.messageType
-          ? 30_000
+          ? 600_000
           : 10_000,
       messageProcessingTransactionLevelStrategy: (message) => {
         if (
