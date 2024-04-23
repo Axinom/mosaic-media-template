@@ -97,6 +97,7 @@ import {
   ImageAlreadyExistedHandler,
   ImageCreatedHandler,
   ImageFailedHandler,
+  ingestMessageRetryStrategy,
   LocalizeEntityFailedHandler,
   LocalizeEntityFinishedHandler,
   StartIngestHandler,
@@ -375,6 +376,12 @@ const registerTransactionalInboxHandlers = (
         }
         return IsolationLevel.RepeatableRead;
       },
+      messageRetryStrategy: ingestMessageRetryStrategy(
+        [...dbMessageHandlers, ...ingestMessageHandlers].map(
+          (x) => x.messageType,
+        ),
+        inboxConfig,
+      ),
     },
   );
   shutdownActions.push(shutdownInSrv);
