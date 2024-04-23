@@ -6,12 +6,11 @@ import NodeCache from 'node-cache';
 import { Config } from '../config';
 
 const tokenExpirationInSeconds = 7 * 24 * 60 * 60; // 7 days
-const refreshBeforeInSeconds = 5 * 60 * 60; // 5 hours
+const refreshAfterInSeconds = 60 * 60; // 1 hour
 
 // We convert service account token to long lived token that is valid for 7 days
-const cache = new NodeCache({
-  stdTTL: tokenExpirationInSeconds - refreshBeforeInSeconds,
-});
+// But refresh it after 1 hour to account for possible permission changes
+const cache = new NodeCache({ stdTTL: refreshAfterInSeconds });
 
 /**
  * Get the access token for the service account of the media service
@@ -36,13 +35,13 @@ export const requestServiceAccountToken = async (
     config.serviceAccountClientSecret,
   );
 
-  const { accessToken, expiresInSeconds } = await generateLongLivedToken(
+  const { accessToken } = await generateLongLivedToken(
     config.idServiceAuthBaseUrl,
     sat.accessToken,
     sat.accessToken,
     tokenExpirationInSeconds,
   );
-  cache.set(cacheKey, accessToken, expiresInSeconds - refreshBeforeInSeconds);
+  cache.set(cacheKey, accessToken, refreshAfterInSeconds);
   return accessToken;
 };
 
