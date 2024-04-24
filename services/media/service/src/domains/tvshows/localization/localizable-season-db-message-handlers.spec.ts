@@ -37,7 +37,14 @@ jest.mock('@axinom/mosaic-id-link-be', () => {
       Promise.resolve<TokenResult>({
         accessToken: serviceAccountToken,
         expiresInSeconds: 600,
-        tokenType: SubjectType.ManagedServiceAccount,
+        tokenType: SubjectType.ServiceAccount,
+      }),
+    ),
+    generateLongLivedToken: jest.fn(() =>
+      Promise.resolve<TokenResult>({
+        accessToken: serviceAccountToken,
+        expiresInSeconds: 600,
+        tokenType: SubjectType.ServiceAccount,
       }),
     ),
   };

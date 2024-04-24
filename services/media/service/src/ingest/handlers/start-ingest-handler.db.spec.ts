@@ -59,6 +59,7 @@ describe('Start Ingest Handler', () => {
     handler = new StartIngestHandler(
       [processor],
       storeOutboxMessage,
+      ctx.ownerPool,
       ctx.config,
     );
   });
@@ -103,8 +104,8 @@ describe('Start Ingest Handler', () => {
       const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
-        handler.handleMessage(createMessage(payload), dbCtx),
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx, { subject: user }),
       );
 
       // Assert
@@ -198,8 +199,8 @@ describe('Start Ingest Handler', () => {
       const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
-        handler.handleMessage(createMessage(payload), dbCtx),
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx, { subject: user }),
       );
 
       // Assert
