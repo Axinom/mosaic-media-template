@@ -59,6 +59,7 @@ describe('Start Ingest Handler', () => {
     handler = new StartIngestHandler(
       [processor],
       storeOutboxMessage,
+      ctx.ownerPool,
       ctx.config,
     );
   });
@@ -104,7 +105,7 @@ describe('Start Ingest Handler', () => {
 
       // Act
       await ctx.executeOwnerSql(user, async (dbCtx) =>
-        handler.handleMessage(createMessage(payload), dbCtx),
+        handler.handleMessage(createMessage(payload), dbCtx, { subject: user }),
       );
 
       // Assert
@@ -199,7 +200,7 @@ describe('Start Ingest Handler', () => {
 
       // Act
       await ctx.executeOwnerSql(user, async (dbCtx) =>
-        handler.handleMessage(createMessage(payload), dbCtx),
+        handler.handleMessage(createMessage(payload), dbCtx, { subject: user }),
       );
 
       // Assert

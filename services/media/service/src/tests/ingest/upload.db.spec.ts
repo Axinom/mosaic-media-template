@@ -145,6 +145,7 @@ describe('Movies GraphQL endpoints', () => {
     startIngest = new StartIngestHandler(
       ingestProcessors,
       storeOutboxMessage,
+      ctx.ownerPool,
       ctx.config,
     );
 
@@ -515,34 +516,41 @@ describe('Movies GraphQL endpoints', () => {
         defaultRequestContext,
       );
 
-      await ctx.executeOwnerSql(user, async (txn) => {
-        let videoId = 1;
-        let imageId = 1;
-        while (messages.length) {
-          const msg = messages.shift();
-          assertNotFalsy(msg, 'msg');
+      let videoId = 1;
+      let imageId = 1;
+      while (messages.length) {
+        const msg = messages.shift();
+        assertNotFalsy(msg, 'msg');
 
-          switch (msg.messageType) {
-            case MediaServiceMessagingSettings.StartIngest.messageType:
+        switch (msg.messageType) {
+          case MediaServiceMessagingSettings.StartIngest.messageType:
+            await ctx.executeOwnerSql(user, async (txn) => {
               await startIngest.handleMessage(
                 createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
+                { subject: user },
               );
-              break;
-            case MediaServiceMessagingSettings.StartIngestItem.messageType:
+            });
+            break;
+          case MediaServiceMessagingSettings.StartIngestItem.messageType:
+            await ctx.executeOwnerSql(user, async (txn) => {
               await startItem.handleMessage(
                 createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
-              break;
-            case MediaServiceMessagingSettings.UpdateMetadata.messageType:
+            });
+            break;
+          case MediaServiceMessagingSettings.UpdateMetadata.messageType:
+            await ctx.executeOwnerSql(user, async (txn) => {
               await updateMetadata.handleMessage(
                 createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
-              break;
-            case VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
-              .messageType: //EnsureVideoExistsStart is handled in another service, here we will just mock messages from it.
+            });
+            break;
+          case VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
+            .messageType: //EnsureVideoExistsStart is handled in another service, here we will just mock messages from it.
+            await ctx.executeOwnerSql(user, async (txn) => {
               await videoCreationStarted.handleMessage(
                 createMessage(
                   {
@@ -555,9 +563,11 @@ describe('Movies GraphQL endpoints', () => {
                 ),
                 txn,
               );
-              break;
-            case ImageServiceMultiTenantMessagingSettings.EnsureImageExists
-              .messageType: //EnsureImageExistsStart is handled in another service, here we will just mock messages from it.
+            });
+            break;
+          case ImageServiceMultiTenantMessagingSettings.EnsureImageExists
+            .messageType: //EnsureImageExistsStart is handled in another service, here we will just mock messages from it.
+            await ctx.executeOwnerSql(user, async (txn) => {
               await imageCreated.handleMessage(
                 createMessage(
                   {
@@ -567,26 +577,29 @@ describe('Movies GraphQL endpoints', () => {
                 ),
                 txn,
               );
-              break;
-            case MediaServiceMessagingSettings.CheckFinishIngestItem
-              .messageType:
+            });
+            break;
+          case MediaServiceMessagingSettings.CheckFinishIngestItem.messageType:
+            await ctx.executeOwnerSql(user, async (txn) => {
               await checkFinishItem.handleMessage(
                 createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
-              break;
-            case MediaServiceMessagingSettings.CheckFinishIngestDocument
-              .messageType:
+            });
+            break;
+          case MediaServiceMessagingSettings.CheckFinishIngestDocument
+            .messageType:
+            await ctx.executeOwnerSql(user, async (txn) => {
               await checkFinishDocument.handleMessage(
                 createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
-              break;
-            default:
-              break;
-          }
+            });
+            break;
+          default:
+            break;
         }
-      });
+      }
 
       // Assert
       expect(resp.errors).toBeFalsy();
@@ -1233,6 +1246,7 @@ describe('Movies GraphQL endpoints', () => {
           name: 'Test Ingest',
           title: 'Test Ingest',
           status: 'SUCCESS',
+          started_count: 4,
           items_count: 4,
           success_count: 4,
           in_progress_count: 0,

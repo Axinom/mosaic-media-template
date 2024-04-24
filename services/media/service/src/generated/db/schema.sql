@@ -5344,6 +5344,7 @@ CREATE TABLE app_public.ingest_documents (
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     status app_public.ingest_status_enum DEFAULT 'IN_PROGRESS'::text NOT NULL,
+    started_count integer DEFAULT 0 NOT NULL,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 50, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );

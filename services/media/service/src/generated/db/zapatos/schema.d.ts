@@ -2813,6 +2813,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'IN_PROGRESS'::text`
       */
       status: c.IngestStatusEnum;
+      /**
+      * **ingest_documents.started_count**
+      * - `int4` in database
+      * - `NOT NULL`, default: `0`
+      */
+      started_count: number;
     }
     export interface JSONSelectable {
       /**
@@ -2905,6 +2911,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'IN_PROGRESS'::text`
       */
       status: c.IngestStatusEnum;
+      /**
+      * **ingest_documents.started_count**
+      * - `int4` in database
+      * - `NOT NULL`, default: `0`
+      */
+      started_count: number;
     }
     export interface Whereable {
       /**
@@ -2997,6 +3009,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'IN_PROGRESS'::text`
       */
       status?: c.IngestStatusEnum | db.Parameter<c.IngestStatusEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.IngestStatusEnum | db.Parameter<c.IngestStatusEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **ingest_documents.started_count**
+      * - `int4` in database
+      * - `NOT NULL`, default: `0`
+      */
+      started_count?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -3089,6 +3107,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'IN_PROGRESS'::text`
       */
       status?: c.IngestStatusEnum | db.Parameter<c.IngestStatusEnum> | db.DefaultType | db.SQLFragment;
+      /**
+      * **ingest_documents.started_count**
+      * - `int4` in database
+      * - `NOT NULL`, default: `0`
+      */
+      started_count?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -3181,6 +3205,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'IN_PROGRESS'::text`
       */
       status?: c.IngestStatusEnum | db.Parameter<c.IngestStatusEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.IngestStatusEnum | db.Parameter<c.IngestStatusEnum> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **ingest_documents.started_count**
+      * - `int4` in database
+      * - `NOT NULL`, default: `0`
+      */
+      started_count?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'ingest_documents_pkey';
     export type Column = keyof Selectable;
