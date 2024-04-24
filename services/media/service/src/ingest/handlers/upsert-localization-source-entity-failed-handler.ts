@@ -4,7 +4,7 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -19,7 +19,7 @@ import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 
 export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFailedEvent> {
   constructor(
-    private readonly storeOutboxMessage: StoreOutboxMessage,
+    private readonly storeInboxMessage: StoreInboxMessage,
     config: Config,
   ) {
     super(
@@ -67,7 +67,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
       });
     }
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -76,7 +76,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
         error_message: payload.message,
       },
       ownerClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
+      { metadata: { authToken: metadata.authToken } },
     );
   }
 

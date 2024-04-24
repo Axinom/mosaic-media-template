@@ -2,7 +2,7 @@ import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { UpsertLocalizationSourceEntityFailedEvent } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -45,14 +45,14 @@ describe('UpsertLocalizationSourceEntityFailedHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, payload) => {
         payloads.push(payload as CheckFinishIngestItemCommand);
       },
     );
     user = createTestUser(ctx.config.serviceId);
     handler = new UpsertLocalizationSourceEntityFailedHandler(
-      storeOutboxMessage,
+      storeInboxMessage,
       ctx.config,
     );
   });

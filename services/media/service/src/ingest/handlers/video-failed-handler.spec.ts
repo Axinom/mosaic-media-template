@@ -1,6 +1,6 @@
 import { EnsureVideoExistsFailedEvent } from '@axinom/mosaic-messages';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -26,13 +26,13 @@ describe('VideoFailedHandler', () => {
     });
 
   beforeAll(() => {
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as CheckFinishIngestItemCommand);
       },
     );
 
-    handler = new VideoFailedHandler(storeOutboxMessage, createTestConfig());
+    handler = new VideoFailedHandler(storeInboxMessage, createTestConfig());
   });
 
   afterEach(async () => {

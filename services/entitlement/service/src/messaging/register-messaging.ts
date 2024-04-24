@@ -81,7 +81,6 @@ export const registerMessaging = async (
     config,
     inboxConfig,
     inboxLogger,
-    logMapper,
     shutdownActions,
   );
 
@@ -123,7 +122,6 @@ const registerRabbitMqMessaging = async (
   config: Config,
   inboxConfig: PollingListenerConfig,
   inboxLogger: Logger,
-  logMapper: TransactionalLogMapper,
   shutdownActions: ShutdownActionsMiddleware,
 ): Promise<Broker> => {
   const storeInboxMessage = setupInboxStorage(inboxConfig, inboxLogger, config);

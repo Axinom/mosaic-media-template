@@ -23,7 +23,10 @@ import {
   MosaicError,
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
-import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  StoreInboxMessage,
+  StoreOutboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { Request, Response } from 'express';
 import { migrate } from 'graphile-migrate';
 import { DocumentNode, graphql, GraphQLSchema } from 'graphql';
@@ -151,6 +154,7 @@ export const createTestRequestContext = (
 export const createTestContext = async (
   configOverrides: Dict<string> = {},
   storeOutboxMsg?: StoreOutboxMessage,
+  storeInboxMsg?: StoreInboxMessage,
 ): Promise<ITestContext> => {
   //This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
   process.chdir(resolve(__dirname, '../../../'));
@@ -197,6 +201,7 @@ export const createTestContext = async (
     config,
     ownerPool,
     storeOutboxMsg ?? jest.fn(),
+    storeInboxMsg ?? jest.fn(),
   );
 
   const schema = await createPostGraphileSchema(

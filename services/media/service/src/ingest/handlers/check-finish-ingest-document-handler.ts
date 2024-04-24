@@ -1,6 +1,6 @@
 import { Logger } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -16,7 +16,7 @@ import { getFutureIsoDateInMilliseconds } from '../utils';
 
 export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalInboxMessageHandler<CheckFinishIngestDocumentCommand> {
   constructor(
-    private readonly storeOutboxMessage: StoreOutboxMessage,
+    private readonly storeInboxMessage: StoreInboxMessage,
     config: Config,
   ) {
     super(
@@ -101,7 +101,7 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
         { id: ingest_document_id },
       ).run(ownerClient);
     } else {
-      await this.storeOutboxMessage<CheckFinishIngestDocumentCommand>(
+      await this.storeInboxMessage<CheckFinishIngestDocumentCommand>(
         ingest_document_id.toString(),
         MediaServiceMessagingSettings.CheckFinishIngestDocument,
         {
@@ -113,7 +113,7 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
         },
         ownerClient,
         {
-          envelopeOverrides: { auth_token: metadata.authToken },
+          metadata: { authToken: metadata.authToken },
           lockedUntil: getFutureIsoDateInMilliseconds(5_000),
         },
       );

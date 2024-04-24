@@ -93,7 +93,7 @@ export const EntityPublishingEndpointsPluginFactory = (
             ) => {
               const entityId = args[idArgName];
               try {
-                const { jwtToken, config, pgClient, storeOutboxMessage } =
+                const { jwtToken, config, pgClient, storeInboxMessage } =
                   getValidatedExtendedContext(context);
 
                 const snapshot = await createSnapshotWithRelation(
@@ -103,7 +103,7 @@ export const EntityPublishingEndpointsPluginFactory = (
                   pgClient,
                 );
 
-                await storeOutboxMessage<PublishEntityCommand>(
+                await storeInboxMessage<PublishEntityCommand>(
                   snapshot.id.toString(),
                   MediaServiceMessagingSettings.PublishEntity,
                   {
@@ -115,8 +115,8 @@ export const EntityPublishingEndpointsPluginFactory = (
                   },
                   pgClient,
                   {
-                    envelopeOverrides: {
-                      auth_token: await getLongLivedToken(jwtToken, config),
+                    metadata: {
+                      authToken: await getLongLivedToken(jwtToken, config),
                     },
                   },
                 );
@@ -151,7 +151,7 @@ export const EntityPublishingEndpointsPluginFactory = (
             ) => {
               const entityId = args[idArgName];
               try {
-                const { pgClient, jwtToken, config, storeOutboxMessage } =
+                const { pgClient, jwtToken, config, storeInboxMessage } =
                   getValidatedExtendedContext(context);
                 const snapshot = await getPublishedSnapshot(
                   tableName,
@@ -166,7 +166,7 @@ export const EntityPublishingEndpointsPluginFactory = (
                   });
                 }
 
-                await storeOutboxMessage<UnpublishEntityCommand>(
+                await storeInboxMessage<UnpublishEntityCommand>(
                   entityId.toString(),
                   MediaServiceMessagingSettings.UnpublishEntity,
                   {
@@ -175,8 +175,8 @@ export const EntityPublishingEndpointsPluginFactory = (
                   },
                   pgClient,
                   {
-                    envelopeOverrides: {
-                      auth_token: await getLongLivedToken(jwtToken, config),
+                    metadata: {
+                      authToken: await getLongLivedToken(jwtToken, config),
                     },
                   },
                 );
@@ -217,7 +217,7 @@ export const EntityPublishingEndpointsPluginFactory = (
                   jwtToken,
                   config,
                   pgClient,
-                  storeOutboxMessage,
+                  storeInboxMessage,
                 } = getValidatedExtendedContext(context);
                 const pgSettings = buildPgSettings(
                   subject,
@@ -241,7 +241,7 @@ export const EntityPublishingEndpointsPluginFactory = (
                   },
                 );
 
-                await storeOutboxMessage<PublishEntityCommand>(
+                await storeInboxMessage<PublishEntityCommand>(
                   snapshot.id.toString(),
                   MediaServiceMessagingSettings.PublishEntity,
                   {
@@ -253,8 +253,8 @@ export const EntityPublishingEndpointsPluginFactory = (
                   },
                   pgClient,
                   {
-                    envelopeOverrides: {
-                      auth_token: await getLongLivedToken(jwtToken, config),
+                    metadata: {
+                      authToken: await getLongLivedToken(jwtToken, config),
                     },
                   },
                 );
