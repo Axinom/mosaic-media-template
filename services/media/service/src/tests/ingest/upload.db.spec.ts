@@ -1,5 +1,4 @@
 import { DEFAULT_SYSTEM_USERNAME } from '@axinom/mosaic-db-common';
-import { MessageEnvelopeOverrides } from '@axinom/mosaic-message-bus';
 import {
   ImageServiceMultiTenantMessagingSettings,
   VideoServiceMultiTenantMessagingSettings,
@@ -41,6 +40,8 @@ import { ImageCreatedHandler } from '../../ingest/handlers/image-created-handler
 // mock the long lived token call to not call the ID service
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import {
+  InboxMessageMetadata,
+  StoreInboxMessage,
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
@@ -81,6 +82,7 @@ describe('Movies GraphQL endpoints', () => {
   let ctx: ITestContext;
   let user: AuthenticatedManagementSubject;
   let storeOutboxMessage: StoreOutboxMessage;
+  let storeInboxMessage: StoreInboxMessage;
   let startIngest: StartIngestHandler;
   let startItem: StartIngestItemHandler;
   let updateMetadata: UpdateMetadataHandler;
@@ -91,7 +93,7 @@ describe('Movies GraphQL endpoints', () => {
   let messages: {
     messageType: string;
     payload: any;
-    envelopeOverrides: MessageEnvelopeOverrides | undefined;
+    envelopeOverrides: InboxMessageMetadata | undefined;
   }[] = []; // We don't care about message types in this context, we just redirect what was sent
   let defaultRequestContext: TestRequestContext;
   let movieGenres: movie_genres.JSONSelectable[];
@@ -99,14 +101,11 @@ describe('Movies GraphQL endpoints', () => {
 
   const createMessage = <T>(
     payload: any,
-    envelopeOverrides: MessageEnvelopeOverrides | undefined,
+    metadata: InboxMessageMetadata | undefined,
   ) =>
     stub<TypedTransactionalMessage<T>>({
       payload,
-      metadata: {
-        authToken: envelopeOverrides?.auth_token,
-        messageContext: envelopeOverrides?.message_context,
-      },
+      metadata,
     });
 
   beforeAll(async () => {
@@ -116,11 +115,24 @@ describe('Movies GraphQL endpoints', () => {
         messages.push({
           messageType,
           payload,
-          envelopeOverrides,
+          envelopeOverrides: {
+            authToken: envelopeOverrides?.auth_token,
+            messageContext: envelopeOverrides?.message_context,
+          },
         });
       },
     );
-    ctx = await createTestContext({}, storeOutboxMessage);
+    storeInboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload, _client, optionalData) => {
+        const { metadata } = optionalData || {};
+        messages.push({
+          messageType,
+          payload,
+          envelopeOverrides: metadata,
+        });
+      },
+    );
+    ctx = await createTestContext({}, storeOutboxMessage, storeInboxMessage);
     user = createTestUser(ctx.config.serviceId);
     const subject = createTestUser(ctx.config.serviceId, {
       permissions: {
@@ -144,41 +156,42 @@ describe('Movies GraphQL endpoints', () => {
     const ingestProcessors = getIngestProcessors(ctx.config);
     startIngest = new StartIngestHandler(
       ingestProcessors,
-      storeOutboxMessage,
+      storeInboxMessage,
       ctx.ownerPool,
       ctx.config,
     );
 
     startItem = new StartIngestItemHandler(
       ingestProcessors,
+      storeInboxMessage,
       storeOutboxMessage,
       ctx.config,
     );
 
     updateMetadata = new UpdateMetadataHandler(
       ingestProcessors,
-      storeOutboxMessage,
+      storeInboxMessage,
 
       ctx.config,
     );
 
     videoCreationStarted = new VideoCreationStartedHandler(
       ingestProcessors,
-      storeOutboxMessage,
+      storeInboxMessage,
 
       ctx.config,
     );
 
     imageCreated = new ImageCreatedHandler(
       ingestProcessors,
-      storeOutboxMessage,
+      storeInboxMessage,
 
       ctx.config,
     );
 
     checkFinishItem = new CheckFinishIngestItemHandler(ctx.config);
     checkFinishDocument = new CheckFinishIngestDocumentHandler(
-      storeOutboxMessage,
+      storeInboxMessage,
       ctx.config,
     );
 

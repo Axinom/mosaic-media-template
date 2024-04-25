@@ -12,7 +12,7 @@ import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 import { Logger } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
@@ -22,7 +22,7 @@ import { getFutureIsoDateInMilliseconds } from '../utils';
 export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessageHandler<UpdateMetadataCommand> {
   constructor(
     private entityProcessors: IngestEntityProcessor[],
-    private readonly storeOutboxMessage: StoreOutboxMessage,
+    private readonly storeInboxMessage: StoreInboxMessage,
     config: Config,
   ) {
     super(
@@ -66,7 +66,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
       localizationStep ? messageContext.ingestItemId : undefined,
     );
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -75,7 +75,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
       },
       ownerClient,
       {
-        envelopeOverrides: { auth_token: metadata.authToken },
+        metadata: { authToken: metadata.authToken },
         lockedUntil: getFutureIsoDateInMilliseconds(1_000),
       },
     );
@@ -92,7 +92,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
     }
     const messageContext = metadata.messageContext as IngestMessageContext;
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -104,7 +104,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
         ),
       },
       ownerClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
+      { metadata: { authToken: metadata.authToken } },
     );
   }
 }

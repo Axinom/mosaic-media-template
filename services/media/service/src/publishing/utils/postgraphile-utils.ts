@@ -93,23 +93,21 @@ export const bulkPublishingResolverBodyBuilder =
     token,
   ): Promise<BulkPublishingResult> => {
     const jobId = generateSnapshotJobId();
-    const { storeOutboxMessage, pgClient } =
+    const { storeInboxMessage, pgClient } =
       getValidatedExtendedContext(context);
 
     for (const id of ids) {
-      await storeOutboxMessage<PublishEntityCommand>(
+      await storeInboxMessage<PublishEntityCommand>(
         id.toString(),
         MediaServiceMessagingSettings.PublishEntity,
         {
           table_name: filter.tableName,
           entity_id: id as number,
           job_id: jobId,
-          publish_options: {
-            action: publishAction,
-          },
+          publish_options: { action: publishAction },
         },
         pgClient,
-        { envelopeOverrides: { auth_token: token } },
+        { metadata: { authToken: token } },
       );
     }
 

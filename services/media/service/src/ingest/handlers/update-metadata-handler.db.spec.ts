@@ -1,7 +1,7 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -43,7 +43,7 @@ describe('UpdateMetadataHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, payload) => {
         payloads.push(payload as CheckFinishIngestItemCommand);
       },
@@ -53,7 +53,7 @@ describe('UpdateMetadataHandler', () => {
     processor.updateMetadata = jest.fn();
     handler = new UpdateMetadataHandler(
       [processor],
-      storeOutboxMessage,
+      storeInboxMessage,
       ctx.config,
     );
   });

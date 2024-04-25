@@ -1,7 +1,7 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { LocalizeEntityFinishedEvent } from '@axinom/mosaic-messages';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -33,13 +33,13 @@ describe('LocalizeEntityFinishedHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, payload) => {
         payloads.push(payload as CheckFinishIngestItemCommand);
       },
     );
     user = createTestUser(ctx.config.serviceId);
-    handler = new LocalizeEntityFinishedHandler(storeOutboxMessage, ctx.config);
+    handler = new LocalizeEntityFinishedHandler(storeInboxMessage, ctx.config);
   });
 
   afterEach(async () => {

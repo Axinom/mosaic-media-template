@@ -11,7 +11,7 @@ import {
   MosaicError,
 } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -53,7 +53,7 @@ import {
 export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHandler<StartIngestCommand> {
   constructor(
     private entityProcessors: IngestEntityProcessor[],
-    private readonly storeOutboxMessage: StoreOutboxMessage,
+    private readonly storeInboxMessage: StoreInboxMessage,
     private readonly ownerPool: OwnerPgPool,
     config: Config,
   ) {
@@ -142,7 +142,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
           ).run(ctx);
 
           if (notStartedItems.length === 0) {
-            await this.storeOutboxMessage<CheckFinishIngestDocumentCommand>(
+            await this.storeInboxMessage<CheckFinishIngestDocumentCommand>(
               id.toString(),
               MediaServiceMessagingSettings.CheckFinishIngestDocument,
               {
@@ -153,7 +153,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
                 previous_in_progress_count: 0,
               },
               ctx,
-              { envelopeOverrides: { auth_token: metadata.authToken } },
+              { metadata: { authToken: metadata.authToken } },
             );
           }
         },
@@ -273,7 +273,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
     jwtToken: string | undefined,
   ): Promise<void> {
     for (const ingestItem of ingestItems) {
-      await this.storeOutboxMessage<StartIngestItemCommand>(
+      await this.storeInboxMessage<StartIngestItemCommand>(
         ingestItem.id.toString(),
         MediaServiceMessagingSettings.StartIngestItem,
         {
@@ -283,7 +283,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
         },
         ownerClient,
         {
-          envelopeOverrides: { auth_token: jwtToken },
+          metadata: { authToken: jwtToken },
           lockedUntil: getFutureIsoDateInMilliseconds(5_000),
         },
       );

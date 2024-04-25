@@ -21,6 +21,7 @@ import {
   setupInboxStorage,
   setupOutboxStorage,
   setupPollingOutboxListener,
+  StoreInboxMessage,
   StoreOutboxMessage,
   TransactionalLogMapper,
 } from '@axinom/mosaic-transactional-inbox-outbox';
@@ -119,7 +120,11 @@ export const registerMessaging = async (
   ownerPool: OwnerPgPool,
   config: Config,
   shutdownActions: ShutdownActionsMiddleware,
-): Promise<{ broker: Broker; storeOutboxMessage: StoreOutboxMessage }> => {
+): Promise<{
+  broker: Broker;
+  storeOutboxMessage: StoreOutboxMessage;
+  storeInboxMessage: StoreInboxMessage;
+}> => {
   const outboxLogger = new Logger({ context: 'Transactional outbox' });
   const inboxLogger = new Logger({ context: 'Transactional inbox' });
 
@@ -145,22 +150,22 @@ export const registerMessaging = async (
     settings: getInboxPollingListenerSettings(),
   };
 
-  const logMapper = new TransactionalLogMapper(inboxLogger, config.logLevel);
+  const storeInboxMessage = setupInboxStorage(inboxConfig, inboxLogger, config);
   registerTransactionalInboxHandlers(
     config,
     inboxConfig,
     storeOutboxMessage,
-    logMapper,
+    storeInboxMessage,
+    inboxLogger,
     shutdownActions,
     ownerPool,
   );
   const broker = await registerRabbitMqMessaging(
     app,
     ownerPool,
+    storeInboxMessage,
     config,
-    inboxConfig,
     inboxLogger,
-    logMapper,
     shutdownActions,
   );
 
@@ -172,14 +177,15 @@ export const registerMessaging = async (
   );
   shutdownActions.push(shutdownOutbox);
 
-  return { broker, storeOutboxMessage };
+  return { broker, storeOutboxMessage, storeInboxMessage };
 };
 
 const registerTransactionalInboxHandlers = (
   config: Config,
   inboxConfig: PollingListenerConfig,
   storeOutboxMessage: StoreOutboxMessage,
-  logMapper: TransactionalLogMapper,
+  storeInboxMessage: StoreInboxMessage,
+  inboxLogger: Logger,
   shutdownActions: ShutdownActionsMiddleware,
   ownerPool: OwnerPgPool,
 ): void => {
@@ -305,39 +311,36 @@ const registerTransactionalInboxHandlers = (
   const ingestMessageHandlers: TransactionalMessageHandler[] = [
     new StartIngestHandler(
       ingestProcessors,
-      storeOutboxMessage,
+      storeInboxMessage,
       ownerPool,
       config,
     ),
-    new StartIngestItemHandler(ingestProcessors, storeOutboxMessage, config),
-    new UpdateMetadataHandler(ingestProcessors, storeOutboxMessage, config),
-    new CheckFinishIngestItemHandler(config),
-    new CheckFinishIngestDocumentHandler(storeOutboxMessage, config),
-    new VideoAlreadyExistedHandler(
+    new StartIngestItemHandler(
       ingestProcessors,
+      storeInboxMessage,
       storeOutboxMessage,
       config,
     ),
+    new UpdateMetadataHandler(ingestProcessors, storeInboxMessage, config),
+    new CheckFinishIngestItemHandler(config),
+    new CheckFinishIngestDocumentHandler(storeInboxMessage, config),
+    new VideoAlreadyExistedHandler(ingestProcessors, storeInboxMessage, config),
     new VideoCreationStartedHandler(
       ingestProcessors,
-      storeOutboxMessage,
+      storeInboxMessage,
       config,
     ),
-    new VideoFailedHandler(storeOutboxMessage, config),
-    new ImageAlreadyExistedHandler(
-      ingestProcessors,
-      storeOutboxMessage,
-      config,
-    ),
-    new ImageCreatedHandler(ingestProcessors, storeOutboxMessage, config),
-    new ImageFailedHandler(storeOutboxMessage, config),
+    new VideoFailedHandler(storeInboxMessage, config),
+    new ImageAlreadyExistedHandler(ingestProcessors, storeInboxMessage, config),
+    new ImageCreatedHandler(ingestProcessors, storeInboxMessage, config),
+    new ImageFailedHandler(storeInboxMessage, config),
     new UpsertLocalizationSourceEntityFinishedHandler(
       storeOutboxMessage,
       config,
     ),
-    new UpsertLocalizationSourceEntityFailedHandler(storeOutboxMessage, config),
-    new LocalizeEntityFinishedHandler(storeOutboxMessage, config),
-    new LocalizeEntityFailedHandler(storeOutboxMessage, config),
+    new UpsertLocalizationSourceEntityFailedHandler(storeInboxMessage, config),
+    new LocalizeEntityFinishedHandler(storeInboxMessage, config),
+    new LocalizeEntityFailedHandler(storeInboxMessage, config),
   ];
   const commonMessageHandlers: TransactionalMessageHandler[] = [
     new DeleteEntityHandler(storeOutboxMessage, config),
@@ -358,23 +361,25 @@ const registerTransactionalInboxHandlers = (
       ...ingestMessageHandlers,
       ...commonMessageHandlers,
     ],
-    logMapper,
+    new TransactionalLogMapper(inboxLogger, config.logLevel),
     {
-      // Allow the ingest start to be processed for longer
-      messageProcessingTimeoutStrategy: (message) =>
-        message.messageType ===
-        MediaServiceMessagingSettings.StartIngest.messageType
-          ? 600_000
-          : 10_000,
-      messageProcessingTransactionLevelStrategy: (message) => {
-        if (
-          message.messageType ===
-          MediaServiceMessagingSettings.CheckFinishIngestItem.messageType
-        ) {
-          // Ensure no "parallel" updates on the ingest items
-          return IsolationLevel.Serializable;
+      // Allow the ingest tasks to be processed for longer
+      messageProcessingTimeoutStrategy: (message) => {
+        switch (message.messageType) {
+          case MediaServiceMessagingSettings.StartIngest.messageType:
+            return 600_000;
+          default:
+            return 15_000;
         }
-        return IsolationLevel.RepeatableRead;
+      },
+      messageProcessingTransactionLevelStrategy: (message) => {
+        switch (message.messageType) {
+          // Ensure no "parallel" updates on the ingest items
+          case MediaServiceMessagingSettings.CheckFinishIngestItem.messageType:
+            return IsolationLevel.Serializable;
+          default:
+            return IsolationLevel.RepeatableRead;
+        }
       },
       messageRetryStrategy: ingestMessageRetryStrategy(
         [...dbMessageHandlers, ...ingestMessageHandlers].map(
@@ -390,14 +395,11 @@ const registerTransactionalInboxHandlers = (
 const registerRabbitMqMessaging = async (
   app: Express,
   ownerPool: OwnerPgPool,
+  storeInboxMessage: StoreInboxMessage,
   config: Config,
-  inboxConfig: PollingListenerConfig,
   inboxLogger: Logger,
-  logMapper: TransactionalLogMapper,
   shutdownActions: ShutdownActionsMiddleware,
 ): Promise<Broker> => {
-  const storeInboxMessage = setupInboxStorage(inboxConfig, inboxLogger, config);
-
   const inboxWriter = new RabbitMqInboxWriter(
     storeInboxMessage,
     ownerPool,
@@ -482,36 +484,6 @@ const registerRabbitMqMessaging = async (
 
   const ingestBuilders: RascalConfigBuilder[] = [
     new RascalTransactionalConfigBuilder(
-      MediaServiceMessagingSettings.StartIngest,
-      config,
-    )
-      .sendCommand()
-      .subscribeForCommand(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      MediaServiceMessagingSettings.StartIngestItem,
-      config,
-    )
-      .sendCommand()
-      .subscribeForCommand(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      MediaServiceMessagingSettings.UpdateMetadata,
-      config,
-    )
-      .sendCommand()
-      .subscribeForCommand(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
-      config,
-    )
-      .sendCommand()
-      .subscribeForCommand(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      MediaServiceMessagingSettings.CheckFinishIngestDocument,
-      config,
-    )
-      .sendCommand()
-      .subscribeForCommand(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
       VideoServiceMultiTenantMessagingSettings.EnsureVideoExists,
       config,
     ).sendCommand(),
@@ -567,30 +539,12 @@ const registerRabbitMqMessaging = async (
   ];
 
   const publishingBuilders: RascalConfigBuilder[] = [
-    new RascalTransactionalConfigBuilder(
-      MediaServiceMessagingSettings.PublishEntity,
-      config,
-    )
-      .sendCommand()
-      .subscribeForCommand(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      MediaServiceMessagingSettings.UnpublishEntity,
-      config,
-    )
-      .sendCommand()
-      .subscribeForCommand(() => inboxWriter),
     ...entityPublishEventSettings.map((settings) =>
       new RascalTransactionalConfigBuilder(settings, config).publishEvent(),
     ),
   ];
 
   const commonBuilders: RascalConfigBuilder[] = [
-    new RascalTransactionalConfigBuilder(
-      MediaServiceMessagingSettings.DeleteEntity,
-      config,
-    )
-      .sendCommand()
-      .subscribeForCommand(() => inboxWriter),
     new RascalTransactionalConfigBuilder(
       ImageServiceMultiTenantMessagingSettings.DeclareImageTypes,
       config,

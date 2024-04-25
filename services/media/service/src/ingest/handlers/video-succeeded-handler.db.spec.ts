@@ -1,7 +1,7 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureVideoExistsCreationStartedEvent } from '@axinom/mosaic-messages';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -45,7 +45,7 @@ describe('VideoSucceededHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, payload) => {
         payloads.push(payload as CheckFinishIngestItemCommand);
       },
@@ -53,7 +53,7 @@ describe('VideoSucceededHandler', () => {
     user = createTestUser(ctx.config.serviceId);
     handler = new VideoCreationStartedHandler(
       [new MockIngestProcessor()],
-      storeOutboxMessage,
+      storeInboxMessage,
       ctx.config,
     );
   });

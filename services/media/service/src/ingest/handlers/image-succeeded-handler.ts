@@ -5,7 +5,7 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -30,7 +30,7 @@ export abstract class ImageSucceededHandler<
   constructor(
     private entityProcessors: IngestEntityProcessor[],
     messagingSettings: MessagingSettings,
-    private storeOutboxMessage: StoreOutboxMessage,
+    private storeInboxMessage: StoreInboxMessage,
     config: Config,
   ) {
     super(
@@ -80,7 +80,7 @@ export abstract class ImageSucceededHandler<
       { id: messageContext.ingestItemStepId },
     ).run(ownerClient);
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -89,7 +89,7 @@ export abstract class ImageSucceededHandler<
       },
       ownerClient,
       {
-        envelopeOverrides: { auth_token: metadata.authToken },
+        metadata: { authToken: metadata.authToken },
         lockedUntil: getFutureIsoDateInMilliseconds(1_000),
       },
     );
@@ -106,7 +106,7 @@ export abstract class ImageSucceededHandler<
     }
     const messageContext = metadata.messageContext as ImageMessageContext;
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -118,7 +118,7 @@ export abstract class ImageSucceededHandler<
         ),
       },
       ownerClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
+      { metadata: { authToken: metadata.authToken } },
     );
   }
 }
