@@ -4,7 +4,7 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -19,7 +19,7 @@ import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
 export class VideoFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<EnsureVideoExistsFailedEvent> {
   constructor(
-    private readonly storeOutboxMessage: StoreOutboxMessage,
+    private readonly storeInboxMessage: StoreInboxMessage,
     config: Config,
   ) {
     super(
@@ -40,7 +40,7 @@ export class VideoFailedHandler extends MediaGuardedTransactionalInboxMessageHan
       id,
       aggregateId,
     }: TypedTransactionalMessage<EnsureVideoExistsFailedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     if (!checkIsIngestEvent(metadata, this.logger, id, aggregateId)) {
       return;
@@ -48,7 +48,7 @@ export class VideoFailedHandler extends MediaGuardedTransactionalInboxMessageHan
 
     const messageContext = metadata.messageContext as VideoMessageContext;
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -56,8 +56,8 @@ export class VideoFailedHandler extends MediaGuardedTransactionalInboxMessageHan
         ingest_item_id: messageContext.ingestItemId,
         error_message: payload.message,
       },
-      loginClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
+      ownerClient,
+      { metadata: { authToken: metadata.authToken } },
     );
   }
 }

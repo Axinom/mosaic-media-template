@@ -4,7 +4,7 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -19,7 +19,7 @@ import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
 export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInboxMessageHandler<LocalizeEntityFinishedEvent> {
   constructor(
-    private readonly storeOutboxMessage: StoreOutboxMessage,
+    private readonly storeInboxMessage: StoreInboxMessage,
     config: Config,
   ) {
     super(
@@ -39,7 +39,7 @@ export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInbo
       id,
       aggregateId,
     }: TypedTransactionalMessage<LocalizeEntityFinishedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     if (
       !checkIsIngestEvent(metadata, this.logger, id, aggregateId) ||
@@ -51,15 +51,15 @@ export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInbo
 
     const messageContext = metadata.messageContext as IngestMessageContext;
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
         ingest_item_step_id: messageContext.ingestItemStepId,
         ingest_item_id: messageContext.ingestItemId,
       },
-      loginClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
+      ownerClient,
+      { metadata: { authToken: metadata.authToken } },
     );
   }
 }

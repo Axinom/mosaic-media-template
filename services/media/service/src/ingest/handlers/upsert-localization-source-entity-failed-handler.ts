@@ -4,7 +4,7 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -19,7 +19,7 @@ import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 
 export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFailedEvent> {
   constructor(
-    private readonly storeOutboxMessage: StoreOutboxMessage,
+    private readonly storeInboxMessage: StoreInboxMessage,
     config: Config,
   ) {
     super(
@@ -37,7 +37,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
       payload,
       metadata,
     }: TypedTransactionalMessage<UpsertLocalizationSourceEntityFailedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const messageContext = metadata.messageContext as Pick<
       IngestMessageContext,
@@ -58,7 +58,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
         type: 'LOCALIZATIONS',
       },
       { columns: ['id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     if (!localizationStep?.id) {
       throw new MosaicError({
@@ -67,7 +67,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
       });
     }
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -75,8 +75,8 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
         ingest_item_id: messageContext.ingestItemId,
         error_message: payload.message,
       },
-      loginClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
+      ownerClient,
+      { metadata: { authToken: metadata.authToken } },
     );
   }
 

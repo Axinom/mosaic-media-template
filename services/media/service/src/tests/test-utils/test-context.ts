@@ -201,6 +201,7 @@ export const createTestContext = async (
     config,
     ownerPool,
     storeOutboxMsg ?? jest.fn(),
+    storeInboxMsg ?? jest.fn(),
   );
 
   const schema = await createPostGraphileSchema(

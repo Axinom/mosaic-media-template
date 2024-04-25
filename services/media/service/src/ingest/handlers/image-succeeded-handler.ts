@@ -5,7 +5,7 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -30,7 +30,7 @@ export abstract class ImageSucceededHandler<
   constructor(
     private entityProcessors: IngestEntityProcessor[],
     messagingSettings: MessagingSettings,
-    private storeOutboxMessage: StoreOutboxMessage,
+    private storeInboxMessage: StoreInboxMessage,
     config: Config,
   ) {
     super(
@@ -80,7 +80,7 @@ export abstract class ImageSucceededHandler<
       { id: messageContext.ingestItemStepId },
     ).run(loginClient);
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -89,7 +89,7 @@ export abstract class ImageSucceededHandler<
       },
       loginClient,
       {
-        envelopeOverrides: { auth_token: metadata.authToken },
+        metadata: { authToken: metadata.authToken },
         lockedUntil: getFutureIsoDateInMilliseconds(1_000),
       },
     );
@@ -98,7 +98,7 @@ export abstract class ImageSucceededHandler<
   override async handleErrorMessage(
     error: Error,
     { metadata }: TypedTransactionalMessage<TContent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -106,7 +106,7 @@ export abstract class ImageSucceededHandler<
     }
     const messageContext = metadata.messageContext as ImageMessageContext;
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -117,8 +117,8 @@ export abstract class ImageSucceededHandler<
           'An unexpected error occurred while trying to update image relations.',
         ),
       },
-      loginClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
+      ownerClient,
+      { metadata: { authToken: metadata.authToken } },
     );
   }
 }

@@ -4,6 +4,7 @@ import {
 } from '@axinom/mosaic-message-bus-abstractions';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
+  StoreInboxMessage,
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
@@ -34,6 +35,7 @@ import { getIngestErrorMessage } from '../utils/ingest-validation';
 export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessageHandler<StartIngestItemCommand> {
   constructor(
     private entityProcessors: IngestEntityProcessor[],
+    private readonly storeInboxMessage: StoreInboxMessage,
     private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
   ) {
@@ -56,7 +58,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
 
   override async handleMessage(
     { payload, metadata }: TypedTransactionalMessage<StartIngestItemCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const processor = this.entityProcessors.find(
       (h) => h.type === payload.item.type,
@@ -70,7 +72,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
     }
 
     const data = processor.getOrchestrationData(payload);
-    await this.saveIngestItemSteps(data, loginClient);
+    await this.saveIngestItemSteps(data, ownerClient);
     const orchestrationData = data
       .filter<FullOrchestrationData>(this.isFullOrchestrationData)
       .map((original) => ({
@@ -81,19 +83,34 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
       }));
 
     for (const data of orchestrationData) {
-      await this.storeOutboxMessage(
-        data.aggregateId,
-        data.messagingSettings,
-        data.messagePayload,
-        loginClient,
-        {
-          envelopeOverrides: {
-            auth_token: metadata.authToken,
-            message_context: data.messageContext,
+      if (data.publicationConfig) {
+        await this.storeOutboxMessage(
+          data.aggregateId,
+          data.messagingSettings,
+          data.messagePayload,
+          ownerClient,
+          {
+            envelopeOverrides: {
+              auth_token: metadata.authToken,
+              message_context: data.messageContext,
+            },
+            options: data.publicationConfig,
           },
-          options: data.publicationConfig,
-        },
-      );
+        );
+      } else {
+        await this.storeInboxMessage(
+          data.aggregateId,
+          data.messagingSettings,
+          data.messagePayload,
+          ownerClient,
+          {
+            metadata: {
+              authToken: metadata.authToken,
+              messageContext: data.messageContext,
+            },
+          },
+        );
+      }
     }
   }
 

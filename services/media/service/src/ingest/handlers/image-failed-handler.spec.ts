@@ -1,6 +1,6 @@
 import { EnsureImageExistsFailedEvent } from '@axinom/mosaic-messages';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -26,12 +26,12 @@ describe('ImageFailedHandler', () => {
     });
 
   beforeAll(async () => {
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as CheckFinishIngestItemCommand);
       },
     );
-    handler = new ImageFailedHandler(storeOutboxMessage, createTestConfig());
+    handler = new ImageFailedHandler(storeInboxMessage, createTestConfig());
   });
 
   afterEach(async () => {

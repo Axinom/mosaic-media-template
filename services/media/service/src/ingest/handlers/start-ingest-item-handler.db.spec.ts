@@ -7,6 +7,7 @@ import {
   dateToBeInRange,
 } from '@axinom/mosaic-service-common';
 import {
+  StoreInboxMessage,
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
@@ -78,14 +79,34 @@ describe('Start Ingest Item Handler', () => {
         messages.push({
           key: messagingSettings.messageType,
           payload,
-          envelopeOverrides,
+          envelopeOverrides: {
+            authToken: envelopeOverrides?.auth_token,
+            messageContext: envelopeOverrides?.message_context,
+          },
           options,
+        });
+      },
+    );
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
+      async (
+        _aggregateId,
+        messagingSettings,
+        payload,
+        _client,
+        optionalData,
+      ) => {
+        const { metadata } = optionalData || {};
+        messages.push({
+          key: messagingSettings.messageType,
+          payload,
+          envelopeOverrides: metadata,
         });
       },
     );
     user = createTestUser(ctx.config.serviceId);
     handler = new StartIngestItemHandler(
       [processor],
+      storeInboxMessage,
       storeOutboxMessage,
       ctx.config,
     );
@@ -179,8 +200,8 @@ describe('Start Ingest Item Handler', () => {
           key: MediaServiceMessagingSettings.UpdateMetadata.messageType,
           payload: { test: 'payload' },
           envelopeOverrides: {
-            auth_token: 'test',
-            message_context: { test: 'context' },
+            authToken: 'test',
+            messageContext: { test: 'context' },
           },
           options: undefined,
         },
@@ -240,8 +261,8 @@ describe('Start Ingest Item Handler', () => {
           key: MediaServiceMessagingSettings.UpdateMetadata.messageType,
           payload: { test: 'payload' },
           envelopeOverrides: {
-            auth_token: 'test',
-            message_context: { test: 'context' },
+            authToken: 'test',
+            messageContext: { test: 'context' },
           },
           options: undefined,
         },
@@ -250,8 +271,8 @@ describe('Start Ingest Item Handler', () => {
             .messageType,
           payload: { test: 'payload' },
           envelopeOverrides: {
-            auth_token: 'test',
-            message_context: { test: 'context' },
+            authToken: 'test',
+            messageContext: { test: 'context' },
           },
           options: {
             routingKey: `${
@@ -327,8 +348,8 @@ describe('Start Ingest Item Handler', () => {
           key: MediaServiceMessagingSettings.UpdateMetadata.messageType,
           payload: { test: 'payload' },
           envelopeOverrides: {
-            auth_token: 'test',
-            message_context: { test: 'context' },
+            authToken: 'test',
+            messageContext: { test: 'context' },
           },
           options: undefined,
         },
@@ -337,8 +358,8 @@ describe('Start Ingest Item Handler', () => {
             .messageType,
           payload: { test: 'payload' },
           envelopeOverrides: {
-            auth_token: 'test',
-            message_context: { test: 'context' },
+            authToken: 'test',
+            messageContext: { test: 'context' },
           },
           options: {
             routingKey: `${

@@ -5,7 +5,7 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -30,7 +30,7 @@ export abstract class VideoSucceededHandler<
   constructor(
     private entityProcessors: IngestEntityProcessor[],
     messagingSettings: MessagingSettings,
-    private readonly storeOutboxMessage: StoreOutboxMessage,
+    private readonly storeInboxMessage: StoreInboxMessage,
     config: Config,
   ) {
     super(
@@ -80,7 +80,7 @@ export abstract class VideoSucceededHandler<
       { id: messageContext.ingestItemStepId },
     ).run(loginClient);
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -89,7 +89,7 @@ export abstract class VideoSucceededHandler<
       },
       loginClient,
       {
-        envelopeOverrides: { auth_token: metadata.authToken },
+        metadata: { authToken: metadata.authToken },
         lockedUntil: getFutureIsoDateInMilliseconds(1_000),
       },
     );
@@ -98,7 +98,7 @@ export abstract class VideoSucceededHandler<
   override async handleErrorMessage(
     error: Error,
     { metadata }: TypedTransactionalMessage<TContent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -106,7 +106,7 @@ export abstract class VideoSucceededHandler<
     }
     const messageContext = metadata.messageContext as VideoMessageContext;
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
+    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
       messageContext.ingestItemId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestItem,
       {
@@ -117,8 +117,8 @@ export abstract class VideoSucceededHandler<
           'An unexpected error occurred while trying to update video relations.',
         ),
       },
-      loginClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
+      ownerClient,
+      { metadata: { authToken: metadata.authToken } },
     );
   }
 }

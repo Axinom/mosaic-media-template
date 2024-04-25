@@ -121,12 +121,8 @@ async function bootstrap(): Promise<void> {
   await syncPermissions(config, logger);
 
   // Configure messaging: subscribe to topics, create queues, register handlers, start transactional outbox/inbox listeners
-  const { broker, storeOutboxMessage } = await registerMessaging(
-    app,
-    ownerPgPool,
-    config,
-    shutdownActions,
-  );
+  const { broker, storeOutboxMessage, storeInboxMessage } =
+    await registerMessaging(app, ownerPgPool, config, shutdownActions);
 
   // Configure metrics endpoint for Prometheus.
   setupMonitoring(config, {
@@ -152,6 +148,7 @@ async function bootstrap(): Promise<void> {
     config,
     authConfig,
     storeOutboxMessage,
+    storeInboxMessage,
   );
 
   // Add our (already configured) application to the HTTP server.

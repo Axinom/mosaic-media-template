@@ -1,5 +1,5 @@
 import { toBeUuid } from '@axinom/mosaic-service-common';
-import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { StoreInboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
@@ -25,7 +25,7 @@ describe('Snapshot Publish endpoint', () => {
   }[] = [];
 
   beforeAll(async () => {
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, { messageType }, payload) => {
         messages.push({
           payload: payload as PublishEntityCommand,
@@ -33,7 +33,7 @@ describe('Snapshot Publish endpoint', () => {
         });
       },
     );
-    ctx = await createTestContext({}, storeOutboxMessage);
+    ctx = await createTestContext({}, undefined, storeInboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
     jest
       .spyOn(tokenHelpers, 'getLongLivedToken')

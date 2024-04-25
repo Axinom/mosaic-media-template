@@ -1,7 +1,7 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { assertNotFalsy } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -40,14 +40,14 @@ describe('Check Finish Ingest Document Handler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as CheckFinishIngestDocumentCommand);
       },
     );
     user = createTestUser(ctx.config.serviceId);
     handler = new CheckFinishIngestDocumentHandler(
-      storeOutboxMessage,
+      storeInboxMessage,
       ctx.config,
     );
   });

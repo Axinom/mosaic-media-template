@@ -22,7 +22,10 @@ import {
   logGraphQlError,
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
-import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  StoreInboxMessage,
+  StoreOutboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import { Request, Response } from 'express';
 import { Middleware, PostGraphileOptions } from 'postgraphile';
@@ -47,6 +50,7 @@ export const buildPostgraphileOptions = (
   config: Config,
   ownerPool: OwnerPgPool,
   storeOutboxMessage: StoreOutboxMessage,
+  storeInboxMessage: StoreInboxMessage,
   websocketMiddlewares: Middleware<Request, Response>[] = [],
   authConfig?: AuthenticationConfig,
 ): PostGraphileOptions<Request, Response> => {
@@ -124,6 +128,7 @@ export const buildPostgraphileOptions = (
         subject,
         ownerPool,
         storeOutboxMessage,
+        storeInboxMessage,
         jwtToken: extendedRequest?.token,
         authErrorInfo,
         mutationAtomicityContext: getMutationAtomicityContext(req, true),

@@ -1,7 +1,7 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureImageExistsImageCreatedEvent } from '@axinom/mosaic-messages';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -47,7 +47,7 @@ describe('ImageSucceededHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as CheckFinishIngestItemCommand);
       },
@@ -55,7 +55,7 @@ describe('ImageSucceededHandler', () => {
     user = createTestUser(ctx.config.serviceId);
     handler = new ImageCreatedHandler(
       [new MockIngestProcessor()],
-      storeOutboxMessage,
+      storeInboxMessage,
       ctx.config,
     );
   });

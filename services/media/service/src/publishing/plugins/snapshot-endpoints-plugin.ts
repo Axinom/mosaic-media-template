@@ -24,7 +24,7 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
       Mutation: {
         publishSnapshot: async (_query, args, context, { graphile }) => {
           const snapshotId: number = args['snapshotId'];
-          const { storeOutboxMessage, jwtToken, config, pgClient } =
+          const { storeInboxMessage, jwtToken, config, pgClient } =
             getValidatedExtendedContext(context);
 
           const snapshot = await getSnapshotPgField(
@@ -40,7 +40,7 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
             });
           }
 
-          await storeOutboxMessage<PublishEntityCommand>(
+          await storeInboxMessage<PublishEntityCommand>(
             snapshotId.toString(),
             MediaServiceMessagingSettings.PublishEntity,
             {
@@ -52,8 +52,8 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
             },
             pgClient,
             {
-              envelopeOverrides: {
-                auth_token: await getLongLivedToken(jwtToken, config),
+              metadata: {
+                authToken: await getLongLivedToken(jwtToken, config),
               },
             },
           );
@@ -63,7 +63,7 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
 
         unpublishSnapshot: async (_query, args, context, { graphile }) => {
           const snapshotId: number = args['snapshotId'];
-          const { storeOutboxMessage, jwtToken, config, pgClient } =
+          const { storeInboxMessage, jwtToken, config, pgClient } =
             getValidatedExtendedContext(context);
 
           const snapshot = await getSnapshotPgField(
@@ -79,7 +79,7 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
             });
           }
 
-          await storeOutboxMessage<UnpublishEntityCommand>(
+          await storeInboxMessage<UnpublishEntityCommand>(
             snapshotId.toString(),
             MediaServiceMessagingSettings.UnpublishEntity,
             {
@@ -88,8 +88,8 @@ export const SnapshotEndpointsPlugin = makeExtendSchemaPlugin((build) => {
             },
             pgClient,
             {
-              envelopeOverrides: {
-                auth_token: await getLongLivedToken(jwtToken, config),
+              metadata: {
+                authToken: await getLongLivedToken(jwtToken, config),
               },
             },
           );
