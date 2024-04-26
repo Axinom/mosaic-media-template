@@ -13,6 +13,10 @@ export interface CollectionPublishedEvent {
    */
   title: string;
   /**
+   * Original title of the season.
+   */
+  original_title?: string;
+  /**
    * Short description.
    */
   synopsis?: string;
@@ -28,6 +32,26 @@ export interface CollectionPublishedEvent {
    * Array of images associated with the content.
    */
   images?: Image[];
+  /**
+   * Asset type.
+   */
+  asset_type?: number;
+  /**
+   * Dynamic field.
+   */
+  dynamic_field?: string;
+  /**
+   * List of extended properties (key/value pairs) for an asset. These properties are not used by MS and are simply passed through to the response models.
+   */
+  extended_field?: string;
+  /**
+   * The countries of the collection.
+   */
+  countries?: string[];
+  /**
+   * The languages of the collection.
+   */
+  languages?: string[];
   /**
    * Array of content related items metadata.
    */

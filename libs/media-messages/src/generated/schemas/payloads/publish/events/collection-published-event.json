@@ -15,6 +15,10 @@
       "pattern": "^$|.*\\S.*",
       "description": "A string with at least one character and not only whitespace characters."
     },
+    "original_title": {
+      "description": "Original title of the season.",
+      "type": "string"
+    },
     "synopsis": {
       "description": "Short description.",
       "type": "string"
@@ -74,6 +78,34 @@
           "path"
         ],
         "additionalProperties": false
+      }
+    },
+    "asset_type": {
+      "description": "Asset type.",
+      "type": "number"
+    },
+    "dynamic_field": {
+      "description": "Dynamic field.",
+      "type": "string"
+    },
+    "extended_field": {
+      "description": "List of extended properties (key/value pairs) for an asset. These properties are not used by MS and are simply passed through to the response models.",
+      "type": "string"
+    },
+    "countries": {
+      "description": "The countries of the collection.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "languages": {
+      "description": "The languages of the collection.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "string"
       }
     },
     "related_items": {

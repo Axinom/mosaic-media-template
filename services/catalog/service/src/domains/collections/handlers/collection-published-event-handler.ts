@@ -30,6 +30,12 @@ export class CollectionPublishedEventHandler extends MessageHandler<CollectionPu
           synopsis: payload.synopsis,
           description: payload.description,
           tags: payload.tags,
+          asset_type: payload.asset_type,
+          languages: payload.languages,
+          countries: payload.countries,
+          dynamic_field: payload.dynamic_field,
+          extended_field: payload.extended_field,
+          original_title: payload.original_title,
         }).run(txnClient);
 
         if (payload.images) {

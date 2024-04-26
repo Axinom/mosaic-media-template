@@ -11,6 +11,10 @@
       "description": "Title of the collection.",
       "$ref": "../common.json#/definitions/non_empty_string"
     },
+    "original_title": {
+      "description": "Original title of the season.",
+      "type": "string"
+    },
     "synopsis": {
       "description": "Short description.",
       "type": "string"
@@ -24,6 +28,31 @@
     },
     "images": {
       "$ref": "./common.json#/definitions/images"
+    },
+    "asset_type": {
+      "$ref": "./common.json#/definitions/asset_type"
+    },
+    "dynamic_field": {
+      "$ref": "./common.json#/definitions/dynamic_field"
+    },
+    "extended_field": {
+      "$ref": "./common.json#/definitions/extended_field"
+    },
+    "countries": {
+      "description": "The countries of the collection.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "languages": {
+      "description": "The languages of the collection.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "string"
+      }
     },
     "related_items": {
       "description": "Array of content related items metadata.",

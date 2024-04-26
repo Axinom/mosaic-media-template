@@ -747,6 +747,12 @@ type Collection {
 
   """Array of tags associated with the content."""
   tags: [String]
+  assetType: Int
+  countries: [String]
+  languages: [String]
+  dynamicField: String
+  extendedField: String
+  originalTitle: String
 
   """Reads and enables pagination through a set of `CollectionImage`."""
   images(
@@ -924,6 +930,24 @@ input CollectionFilter {
   """Filter by the object’s `id` field."""
   id: StringFilter
 
+  """Filter by the object’s `assetType` field."""
+  assetType: IntFilter
+
+  """Filter by the object’s `countries` field."""
+  countries: StringListFilter
+
+  """Filter by the object’s `languages` field."""
+  languages: StringListFilter
+
+  """Filter by the object’s `dynamicField` field."""
+  dynamicField: StringFilter
+
+  """Filter by the object’s `extendedField` field."""
+  extendedField: StringFilter
+
+  """Filter by the object’s `originalTitle` field."""
+  originalTitle: StringFilter
+
   """Filter by the object’s `images` relation."""
   images: CollectionToManyCollectionImageFilter
 
@@ -944,6 +968,69 @@ input CollectionFilter {
 
   """Negates the expression."""
   not: CollectionFilter
+}
+
+"""
+A filter to be used against String List fields. All fields are combined with a logical ‘and.’
+"""
+input StringListFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: [String]
+
+  """Not equal to the specified value."""
+  notEqualTo: [String]
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: [String]
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: [String]
+
+  """Less than the specified value."""
+  lessThan: [String]
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: [String]
+
+  """Greater than the specified value."""
+  greaterThan: [String]
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: [String]
+
+  """Contains the specified list of values."""
+  contains: [String]
+
+  """Contained by the specified list of values."""
+  containedBy: [String]
+
+  """Overlaps the specified list of values."""
+  overlaps: [String]
+
+  """Any array item is equal to the specified value."""
+  anyEqualTo: String
+
+  """Any array item is not equal to the specified value."""
+  anyNotEqualTo: String
+
+  """Any array item is less than the specified value."""
+  anyLessThan: String
+
+  """Any array item is less than or equal to the specified value."""
+  anyLessThanOrEqualTo: String
+
+  """Any array item is greater than the specified value."""
+  anyGreaterThan: String
+
+  """Any array item is greater than or equal to the specified value."""
+  anyGreaterThanOrEqualTo: String
 }
 
 """
@@ -1147,69 +1234,6 @@ input MovieFilter {
 
   """Negates the expression."""
   not: MovieFilter
-}
-
-"""
-A filter to be used against String List fields. All fields are combined with a logical ‘and.’
-"""
-input StringListFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: [String]
-
-  """Not equal to the specified value."""
-  notEqualTo: [String]
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: [String]
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: [String]
-
-  """Less than the specified value."""
-  lessThan: [String]
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: [String]
-
-  """Greater than the specified value."""
-  greaterThan: [String]
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: [String]
-
-  """Contains the specified list of values."""
-  contains: [String]
-
-  """Contained by the specified list of values."""
-  containedBy: [String]
-
-  """Overlaps the specified list of values."""
-  overlaps: [String]
-
-  """Any array item is equal to the specified value."""
-  anyEqualTo: String
-
-  """Any array item is not equal to the specified value."""
-  anyNotEqualTo: String
-
-  """Any array item is less than the specified value."""
-  anyLessThan: String
-
-  """Any array item is less than or equal to the specified value."""
-  anyLessThanOrEqualTo: String
-
-  """Any array item is greater than the specified value."""
-  anyGreaterThan: String
-
-  """Any array item is greater than or equal to the specified value."""
-  anyGreaterThanOrEqualTo: String
 }
 
 """
@@ -2901,6 +2925,12 @@ input SeasonFilter {
 
   """Filter by the object’s `assetSubtype` field."""
   assetSubtype: StringFilter
+
+  """Filter by the object’s `originalTitle` field."""
+  originalTitle: StringFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
 
   """Filter by the object’s `images` relation."""
   images: SeasonToManySeasonImageFilter
@@ -5436,6 +5466,8 @@ type Season {
   ageRating: String
   assetType: Int
   assetSubtype: String
+  originalTitle: String
+  title: String
 
   """Reads a single `Tvshow` that is related to this `Season`."""
   tvshow: Tvshow
@@ -7013,6 +7045,10 @@ enum SeasonsOrderBy {
   ASSET_TYPE_DESC
   ASSET_SUBTYPE_ASC
   ASSET_SUBTYPE_DESC
+  ORIGINAL_TITLE_ASC
+  ORIGINAL_TITLE_DESC
+  TITLE_ASC
+  TITLE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -7053,6 +7089,12 @@ input SeasonCondition {
 
   """Checks for equality with the object’s `assetSubtype` field."""
   assetSubtype: String
+
+  """Checks for equality with the object’s `originalTitle` field."""
+  originalTitle: String
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
 }
 
 """A `CollectionItemsRelation` edge in the connection."""
@@ -7126,6 +7168,18 @@ enum CollectionsOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
+  ASSET_TYPE_ASC
+  ASSET_TYPE_DESC
+  COUNTRIES_ASC
+  COUNTRIES_DESC
+  LANGUAGES_ASC
+  LANGUAGES_DESC
+  DYNAMIC_FIELD_ASC
+  DYNAMIC_FIELD_DESC
+  EXTENDED_FIELD_ASC
+  EXTENDED_FIELD_DESC
+  ORIGINAL_TITLE_ASC
+  ORIGINAL_TITLE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -7137,6 +7191,24 @@ for equality and combined with a logical ‘and.’
 input CollectionCondition {
   """Checks for equality with the object’s `id` field."""
   id: String
+
+  """Checks for equality with the object’s `assetType` field."""
+  assetType: Int
+
+  """Checks for equality with the object’s `countries` field."""
+  countries: [String]
+
+  """Checks for equality with the object’s `languages` field."""
+  languages: [String]
+
+  """Checks for equality with the object’s `dynamicField` field."""
+  dynamicField: String
+
+  """Checks for equality with the object’s `extendedField` field."""
+  extendedField: String
+
+  """Checks for equality with the object’s `originalTitle` field."""
+  originalTitle: String
 }
 
 """A connection to a list of `Movie` values."""

@@ -33,6 +33,16 @@
       "description": "Name of the producing studio.",
       "type": "string"
     },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^$|.*\\S.*",
+      "description": "A string with at least one character and not only whitespace characters."
+    },
+    "original_title": {
+      "description": "Original title of the season.",
+      "type": "string"
+    },
     "released": {
       "description": "Release date of an item.",
       "type": "string",

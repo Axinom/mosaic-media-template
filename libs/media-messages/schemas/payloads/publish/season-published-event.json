@@ -27,6 +27,14 @@
       "description": "Name of the producing studio.",
       "type": "string"
     },
+    "title": {
+      "description": "Title of the season.",
+      "$ref": "../common.json#/definitions/non_empty_string"
+    },
+    "original_title": {
+      "description": "Original title of the season.",
+      "type": "string"
+    },
     "released": {
       "description": "Date of first release.",
       "$ref": "./common.json#/definitions/release_date"

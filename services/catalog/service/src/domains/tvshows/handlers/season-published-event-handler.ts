@@ -52,6 +52,8 @@ export class SeasonPublishedEventHandler extends MessageHandler<SeasonPublishedE
             age_rating: payload.age_rating,
             asset_type: payload.asset_type,
             asset_subtype: payload.asset_subtype,
+            title: payload.title,
+            original_title: payload.original_title,
           })
           .run(txnClient);
 

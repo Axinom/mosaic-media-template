@@ -30,6 +30,14 @@ export interface SeasonPublishedEvent {
    */
   studio?: string;
   /**
+   * A string with at least one character and not only whitespace characters.
+   */
+  title?: string;
+  /**
+   * Original title of the season.
+   */
+  original_title?: string;
+  /**
    * Release date of an item.
    */
   released?: string;
