@@ -1676,7 +1676,13 @@ CREATE TABLE app_public.collection (
     title text,
     synopsis text,
     description text,
-    tags text[]
+    tags text[],
+    asset_type integer,
+    countries text[],
+    languages text[],
+    dynamic_field text,
+    extended_field text,
+    original_title text
 );
 
 
@@ -2218,7 +2224,9 @@ CREATE TABLE app_public.season (
     custom_rating text,
     age_rating text,
     asset_type integer,
-    asset_subtype text
+    asset_subtype text,
+    original_title text,
+    title text
 );
 
 
@@ -4345,6 +4353,48 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.collection TO catalog_serv
 
 
 --
+-- Name: COLUMN collection.asset_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.collection TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN collection.countries; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(countries),UPDATE(countries) ON TABLE app_public.collection TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN collection.languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(languages),UPDATE(languages) ON TABLE app_public.collection TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN collection.dynamic_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.collection TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN collection.extended_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.collection TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN collection.original_title; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(original_title),UPDATE(original_title) ON TABLE app_public.collection TO catalog_service_gql_role;
+
+
+--
 -- Name: TABLE collection_images; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -4923,6 +4973,20 @@ GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.season TO catalo
 --
 
 GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.season TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season.original_title; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(original_title),UPDATE(original_title) ON TABLE app_public.season TO catalog_service_gql_role;
+
+
+--
+-- Name: COLUMN season.title; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(title),UPDATE(title) ON TABLE app_public.season TO catalog_service_gql_role;
 
 
 --
