@@ -1,19 +1,14 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureImageExistsImageCreatedEvent } from '@axinom/mosaic-messages';
-import {
-  StoreInboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
-import { CheckFinishIngestItemCommand } from 'media-messages';
 import { v4 as uuid } from 'uuid';
-import { all, insert, select, selectOne } from 'zapatos/db';
+import { insert, selectOne } from 'zapatos/db';
 import {
   ingest_documents,
   ingest_items,
   ingest_item_steps,
-  movies,
 } from 'zapatos/schema';
 import { MockIngestProcessor } from '../../tests/ingest/mock-ingest-processor';
 import {
@@ -31,8 +26,6 @@ describe('ImageSucceededHandler', () => {
   let step1: ingest_item_steps.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
   let doc1: ingest_documents.JSONSelectable;
-  let movie1: movies.JSONSelectable;
-  let messages: CheckFinishIngestItemCommand[] = [];
 
   const createMessage = (
     payload: EnsureImageExistsImageCreatedEvent,
@@ -47,17 +40,8 @@ describe('ImageSucceededHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
-      async (_aggregateId, _messagingSettings, message) => {
-        messages.push(message as CheckFinishIngestItemCommand);
-      },
-    );
     user = createTestUser(ctx.config.serviceId);
-    handler = new ImageCreatedHandler(
-      [new MockIngestProcessor()],
-      storeInboxMessage,
-      ctx.config,
-    );
+    handler = new ImageCreatedHandler([new MockIngestProcessor()], ctx.config);
   });
 
   beforeEach(async () => {
@@ -71,14 +55,10 @@ describe('ImageSucceededHandler', () => {
       },
       items_count: 0,
     }).run(ctx.ownerPool);
-    movie1 = await insert('movies', {
-      title: 'Entity1',
-      external_id: 'existing1',
-    }).run(ctx.ownerPool);
     item1 = await insert('ingest_items', {
       ingest_document_id: doc1.id,
       external_id: 'externalId',
-      entity_id: movie1.id,
+      entity_id: 1,
       type: 'MOVIE',
       exists_status: 'CREATED',
       display_title: 'title',
@@ -101,8 +81,6 @@ describe('ImageSucceededHandler', () => {
 
   afterEach(async () => {
     await ctx.truncate('ingest_documents');
-    await ctx.truncate('movies');
-    messages = [];
   });
 
   afterAll(async () => {
@@ -133,13 +111,7 @@ describe('ImageSucceededHandler', () => {
       }).run(ctx.ownerPool);
 
       expect(step?.entity_id).toEqual(payload.image_id);
-
-      expect(messages).toEqual<CheckFinishIngestItemCommand[]>([
-        {
-          ingest_item_step_id: step1.id,
-          ingest_item_id: item1.id,
-        },
-      ]);
+      expect(step?.status).toEqual('SUCCESS');
     });
   });
 
@@ -150,7 +122,7 @@ describe('ImageSucceededHandler', () => {
         image_id: '11e1d903-49ed-4d70-8b24-90d0824741d0',
       };
       const context = {
-        ingestItemStepId: '34d91ea5-db63-4e51-b511-ae545d5c669c',
+        ingestItemStepId: step1.id,
         ingestItemId: item1.id,
         imageType: 'COVER',
       };
@@ -166,18 +138,13 @@ describe('ImageSucceededHandler', () => {
       );
 
       // Assert
-      const movies = await select('movies', all).run(ctx.ownerPool);
-
-      expect(movies).toHaveLength(1);
-      expect(movies[0]).toEqual(movie1);
-
-      expect(messages).toHaveLength(1);
-      expect(messages[0]).toEqual<CheckFinishIngestItemCommand>({
-        ingest_item_step_id: '34d91ea5-db63-4e51-b511-ae545d5c669c',
-        ingest_item_id: item1.id,
-        error_message:
-          'An unexpected error occurred while trying to update image relations.',
-      });
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.response_message).toEqual(
+        'An unexpected error occurred while trying to update image relations.',
+      );
+      expect(step?.status).toEqual('ERROR');
     });
   });
 });

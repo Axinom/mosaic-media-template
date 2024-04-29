@@ -43,10 +43,30 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
     }: TypedTransactionalMessage<CheckFinishIngestDocumentCommand>,
     ownerClient: ClientBase,
   ): Promise<void> {
+    const docId = param(ingest_document_id);
+    await sql`WITH updated AS (
+      SELECT
+        iis.ingest_item_id,
+        CASE
+          WHEN BOOL_OR(iis.status = 'IN_PROGRESS') THEN NULL
+          WHEN BOOL_OR(iis.status = 'ERROR') THEN 'ERROR'
+          ELSE 'SUCCESS'
+        END as new_status
+      FROM app_public.ingest_item_steps iis
+      JOIN app_public.ingest_items ii ON iis.ingest_item_id = ii.id
+      WHERE ii.ingest_document_id = ${docId} AND ii.status = 'IN_PROGRESS'
+      GROUP BY iis.ingest_item_id
+    )
+    UPDATE app_public.ingest_items item
+    SET status = updated.new_status
+    FROM updated
+    WHERE item.id = updated.ingest_item_id AND
+          updated.new_status IS NOT NULL;`.run(ownerClient);
+
     const countGroups = await sql<SQL, StatusAggregation[]>`
     SELECT status, COUNT (status)
     FROM app_public.ingest_items
-    WHERE ingest_document_id = ${param(ingest_document_id)}
+    WHERE ingest_document_id = ${docId}
     GROUP BY status;
     `.run(ownerClient);
 
@@ -86,7 +106,13 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
       seconds_without_progress = 0;
     }
 
-    if (seconds_without_progress >= 600) {
+    // At baseline, allow 5 minutes of inactivity for any ingest, no matter the
+    // reason (e.g. services starting up).
+    // Add additional minute of inactivity for every 250 items in the document.
+    const maxSecondsOfInactivity =
+      600 + 60 * Math.round(updatedDoc.items_count / 250);
+
+    if (seconds_without_progress >= maxSecondsOfInactivity) {
       const error = param({
         message:
           'The progress of ingest failed to change for a long period of time. Assuming an unexpected messaging issue and failing the document.',

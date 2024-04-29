@@ -3,25 +3,16 @@ import {
   VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
-import {
-  StoreInboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
-import {
-  CheckFinishIngestItemCommand,
-  MediaServiceMessagingSettings,
-  VideoMessageContext,
-} from 'media-messages';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { VideoMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
+import { update } from 'zapatos/db';
 import { Config } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
 export class VideoFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<EnsureVideoExistsFailedEvent> {
-  constructor(
-    private readonly storeInboxMessage: StoreInboxMessage,
-    config: Config,
-  ) {
+  constructor(config: Config) {
     super(
       VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsFailed,
       ['INGESTS_EDIT', 'ADMIN'],
@@ -48,16 +39,13 @@ export class VideoFailedHandler extends MediaGuardedTransactionalInboxMessageHan
 
     const messageContext = metadata.messageContext as VideoMessageContext;
 
-    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
+    await update(
+      'ingest_item_steps',
       {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-        error_message: payload.message,
+        status: 'ERROR',
+        response_message: payload.message,
       },
-      ownerClient,
-      { metadata: { authToken: metadata.authToken } },
-    );
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
   }
 }

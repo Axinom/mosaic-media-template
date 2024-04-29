@@ -1,5 +1,5 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import { LocalizeEntityFailedEvent } from '@axinom/mosaic-messages';
+import { EnsureImageExistsFailedEvent } from '@axinom/mosaic-messages';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
@@ -15,21 +15,21 @@ import {
   createTestUser,
   ITestContext,
 } from '../../tests/test-utils';
-import { LocalizeEntityFailedHandler } from './localize-entity-failed-handler';
+import { ImageFailedHandler } from './image-failed-handler';
 
-describe('LocalizeEntityFailedHandler', () => {
+describe('ImageFailedHandler', () => {
+  let handler: ImageFailedHandler;
   let ctx: ITestContext;
-  let handler: LocalizeEntityFailedHandler;
-  let user: AuthenticatedManagementSubject;
   let step1: ingest_item_steps.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
   let doc1: ingest_documents.JSONSelectable;
+  let user: AuthenticatedManagementSubject;
 
   const createMessage = (
-    payload: LocalizeEntityFailedEvent,
+    payload: EnsureImageExistsFailedEvent,
     messageContext: unknown,
   ) =>
-    stub<TypedTransactionalMessage<LocalizeEntityFailedEvent>>({
+    stub<TypedTransactionalMessage<EnsureImageExistsFailedEvent>>({
       payload,
       metadata: {
         messageContext,
@@ -39,7 +39,7 @@ describe('LocalizeEntityFailedHandler', () => {
   beforeAll(async () => {
     ctx = await createTestContext();
     user = createTestUser(ctx.config.serviceId);
-    handler = new LocalizeEntityFailedHandler(ctx.config);
+    handler = new ImageFailedHandler(ctx.config);
   });
 
   beforeEach(async () => {
@@ -89,11 +89,10 @@ describe('LocalizeEntityFailedHandler', () => {
   describe('onMessage', () => {
     it('message received -> message with error ingestItemStepId sent', async () => {
       // Arrange
-      const payload: LocalizeEntityFailedEvent = {
+      const payload: EnsureImageExistsFailedEvent = {
         message: 'Test error message',
-        service_id: ctx.config.serviceId,
-        entity_id: '1',
-        entity_type: 'movie',
+        image_location: 'Test',
+        image_type: 'movie_cover',
       };
       const context = {
         ingestItemStepId: step1.id,
@@ -110,7 +109,7 @@ describe('LocalizeEntityFailedHandler', () => {
       const step = await selectOne('ingest_item_steps', {
         id: step1.id,
       }).run(ctx.ownerPool);
-      expect(step?.response_message).toEqual(payload.message);
+      expect(step?.response_message).toEqual('Test error message');
       expect(step?.status).toEqual('ERROR');
     });
   });

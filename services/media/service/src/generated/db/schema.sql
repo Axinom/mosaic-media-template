@@ -1537,11 +1537,33 @@ BEGIN
     RAISE EXCEPTION 'The max_size for the next messages batch must be at least one.' using errcode = 'MAXNR';
   END IF;
 
+  -- get 1 oldest not locked priority ingest message, either StartIngest or CheckFinishIngestDocument
+  BEGIN
+    SELECT *
+      INTO message_row
+      FROM app_hidden.inbox
+      WHERE processed_at IS NULL AND abandoned_at IS NULL AND aggregate_type = 'ingest-document'
+      ORDER BY created_at
+      LIMIT 1
+      FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+    
+    IF FOUND AND message_row.locked_until <= NOW() THEN
+      ids := array_append(ids, message_row.id);
+    END IF;
+  EXCEPTION 
+    WHEN lock_not_available THEN
+        NULL;
+    WHEN serialization_failure THEN
+        NULL;
+    WHEN OTHERS THEN
+        RAISE;
+  END;
+
   -- get (only) the oldest message of every segment but only return it if it is not locked
   FOR loop_row IN
     SELECT * FROM app_hidden.inbox m WHERE m.id in (SELECT DISTINCT ON (segment) id
       FROM app_hidden.inbox
-      WHERE processed_at IS NULL AND abandoned_at IS NULL
+      WHERE processed_at IS NULL AND abandoned_at IS NULL AND id NOT IN (SELECT UNNEST(ids))
       ORDER BY segment, created_at) order by created_at
   LOOP
     BEGIN

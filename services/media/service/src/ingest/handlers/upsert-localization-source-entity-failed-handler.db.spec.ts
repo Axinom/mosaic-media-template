@@ -1,15 +1,12 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { UpsertLocalizationSourceEntityFailedEvent } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
-import {
-  StoreInboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
-import { CheckFinishIngestItemCommand, IngestItem } from 'media-messages';
+import { IngestItem } from 'media-messages';
 import { v4 as uuid } from 'uuid';
-import { all, insert, select } from 'zapatos/db';
+import { all, insert, select, selectOne } from 'zapatos/db';
 import {
   ingest_documents,
   ingest_items,
@@ -29,7 +26,6 @@ describe('UpsertLocalizationSourceEntityFailedHandler', () => {
   let step1: ingest_item_steps.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
   let doc1: ingest_documents.JSONSelectable;
-  let payloads: CheckFinishIngestItemCommand[] = [];
   let user: AuthenticatedManagementSubject;
 
   const createMessage = (
@@ -45,16 +41,8 @@ describe('UpsertLocalizationSourceEntityFailedHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
-      async (_aggregateId, _messagingSettings, payload) => {
-        payloads.push(payload as CheckFinishIngestItemCommand);
-      },
-    );
     user = createTestUser(ctx.config.serviceId);
-    handler = new UpsertLocalizationSourceEntityFailedHandler(
-      storeInboxMessage,
-      ctx.config,
-    );
+    handler = new UpsertLocalizationSourceEntityFailedHandler(ctx.config);
   });
 
   beforeEach(async () => {
@@ -95,7 +83,6 @@ describe('UpsertLocalizationSourceEntityFailedHandler', () => {
 
   afterEach(async () => {
     await ctx.truncate('ingest_documents');
-    payloads = [];
   });
 
   afterAll(async () => {
@@ -123,12 +110,11 @@ describe('UpsertLocalizationSourceEntityFailedHandler', () => {
       );
 
       // Assert
-      expect(payloads).toHaveLength(1);
-      expect(payloads[0]).toEqual<CheckFinishIngestItemCommand>({
-        ingest_item_step_id: step1.id,
-        ingest_item_id: item1.id,
-        error_message: payload.message,
-      });
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.response_message).toEqual(payload.message);
+      expect(step?.status).toEqual('ERROR');
     });
   });
 
