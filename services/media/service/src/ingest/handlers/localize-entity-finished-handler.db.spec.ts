@@ -86,7 +86,7 @@ describe('LocalizeEntityFinishedHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message received -> check ingest item message without error sent', async () => {
       // Arrange
       const payload: LocalizeEntityFinishedEvent = {

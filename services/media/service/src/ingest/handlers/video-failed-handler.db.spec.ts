@@ -86,7 +86,7 @@ describe('VideoFailedHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message received -> message with error ingestItemStepId sent', async () => {
       // Arrange
       const payload: EnsureVideoExistsFailedEvent = {

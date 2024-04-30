@@ -88,7 +88,7 @@ describe('ImageSucceededHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message succeeded without errors -> message without error sent and step updated', async () => {
       // Arrange
       const payload: EnsureImageExistsImageCreatedEvent = {
@@ -115,7 +115,7 @@ describe('ImageSucceededHandler', () => {
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message failed on all retries -> message with error ingestItemStepId sent', async () => {
       // Arrange
       const payload: EnsureImageExistsImageCreatedEvent = {

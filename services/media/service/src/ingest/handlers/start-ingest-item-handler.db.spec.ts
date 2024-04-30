@@ -152,7 +152,7 @@ describe('Start Ingest Item Handler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message for one step -> step is saved and command is sent', async () => {
       // Arrange
       const mockItem = createOrchestrationMock(
@@ -374,7 +374,7 @@ describe('Start Ingest Item Handler', () => {
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message failed on all retries -> item state updated to ERROR', async () => {
       // Arrange
       const payload: StartIngestItemCommand = {

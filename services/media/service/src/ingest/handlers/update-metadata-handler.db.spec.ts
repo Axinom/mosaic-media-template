@@ -94,7 +94,7 @@ describe('UpdateMetadataHandler', () => {
     await ctx.dispose();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message succeeded without errors -> message without error sent', async () => {
       // Arrange
       const payload = {
@@ -162,7 +162,7 @@ describe('UpdateMetadataHandler', () => {
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message failed on all retries with non-ingest error -> message with ingest_item_step_id and generic errorMessage sent', async () => {
       // Arrange
       const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({

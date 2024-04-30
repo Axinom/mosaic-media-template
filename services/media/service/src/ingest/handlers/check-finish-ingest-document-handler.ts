@@ -10,7 +10,7 @@ import {
 import { ClientBase } from 'pg';
 import { IngestItemStatusEnum, IngestStatusEnum } from 'zapatos/custom';
 import { param, self as value, sql, SQL, update } from 'zapatos/db';
-import { Config } from '../../common';
+import { Config, PRIORITY_SEGMENT } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import { getFutureIsoDateInMilliseconds } from '../utils';
 
@@ -141,6 +141,7 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
         {
           metadata: { authToken: metadata.authToken },
           lockedUntil: getFutureIsoDateInMilliseconds(5_000),
+          segment: PRIORITY_SEGMENT,
         },
       );
     }

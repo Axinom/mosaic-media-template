@@ -91,7 +91,7 @@ describe('VideoSucceededHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message succeeded without errors -> message without error sent and step updated', async () => {
       // Arrange
       const payload: EnsureVideoExistsCreationStartedEvent = {
@@ -119,7 +119,7 @@ describe('VideoSucceededHandler', () => {
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message failed on all retries -> message with error sent', async () => {
       // Arrange
       const payload: EnsureVideoExistsCreationStartedEvent = {

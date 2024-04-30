@@ -81,7 +81,7 @@ describe('PublishEntityCommandHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message to publish a movie -> snapshot with relation created with correct metadata and publish message sent', async () => {
       // Act
       await ctx.executeOwnerSql(user, async (txn) => {
@@ -378,7 +378,7 @@ describe('PublishEntityCommandHandler', () => {
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message to publish a movie failed after 10 tries -> snapshot with ERROR state created', async () => {
       // Act
       await ctx.executeOwnerSql(user, async (txn) => {

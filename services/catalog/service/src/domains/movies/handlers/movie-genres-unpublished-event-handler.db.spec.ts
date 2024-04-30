@@ -25,7 +25,7 @@ describe('MovieGenrePublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('Received a movie-genres unpublish message -> the single existing movie-genre is removed', async () => {
       // Arrange
       await insert('movie_genre', {

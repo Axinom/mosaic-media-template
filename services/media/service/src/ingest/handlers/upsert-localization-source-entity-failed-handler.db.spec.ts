@@ -90,7 +90,7 @@ describe('UpsertLocalizationSourceEntityFailedHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message succeeded without errors -> localize entity message sent', async () => {
       // Arrange
       const payload: UpsertLocalizationSourceEntityFailedEvent = {
@@ -118,7 +118,7 @@ describe('UpsertLocalizationSourceEntityFailedHandler', () => {
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message failed on all retries -> message with error sent', async () => {
       // Arrange
       const payload: UpsertLocalizationSourceEntityFailedEvent = {
