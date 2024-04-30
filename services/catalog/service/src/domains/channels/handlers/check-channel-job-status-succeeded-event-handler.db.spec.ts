@@ -25,7 +25,7 @@ describe('CheckChannelJobStatusSucceededEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('live stream is ready, but the channel is not yet registered in catalog -> error is thrown & channel is not created', async () => {
       // Arrange
       const originalId = uuid();

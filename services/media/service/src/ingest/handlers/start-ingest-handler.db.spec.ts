@@ -74,7 +74,7 @@ describe('Start Ingest Handler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message with 1 new movie -> ingest item created and message sent', async () => {
       // Arrange
       jest.spyOn(processor, 'initializeMedia').mockImplementation(async () => ({
@@ -269,7 +269,7 @@ describe('Start Ingest Handler', () => {
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message failed on all retries -> document state updated to ERROR', async () => {
       // Arrange
       const docItems: IngestItem[] = [

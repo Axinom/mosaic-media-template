@@ -3,25 +3,16 @@ import {
   LocalizeEntityFinishedEvent,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
-import {
-  StoreInboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
-import {
-  CheckFinishIngestItemCommand,
-  IngestMessageContext,
-  MediaServiceMessagingSettings,
-} from 'media-messages';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
+import { update } from 'zapatos/db';
 import { Config } from '../../common';
 import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
 export class LocalizeEntityFinishedHandler extends MediaTransactionalInboxMessageHandler<LocalizeEntityFinishedEvent> {
-  constructor(
-    private readonly storeInboxMessage: StoreInboxMessage,
-    config: Config,
-  ) {
+  constructor(config: Config) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFinished,
       new Logger({
@@ -51,15 +42,10 @@ export class LocalizeEntityFinishedHandler extends MediaTransactionalInboxMessag
 
     const messageContext = metadata.messageContext as IngestMessageContext;
 
-    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
-      {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-      },
-      ownerClient,
-      { metadata: { authToken: metadata.authToken } },
-    );
+    await update(
+      'ingest_item_steps',
+      { status: 'SUCCESS' },
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
   }
 }

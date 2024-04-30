@@ -27,7 +27,7 @@ describe('MovieGenrePublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('A new movie genre is published', async () => {
       // Arrange
       const message = createMovieGenresPublishedMessage('movie_genre-1');

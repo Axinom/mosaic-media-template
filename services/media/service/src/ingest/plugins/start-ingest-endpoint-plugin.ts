@@ -21,6 +21,7 @@ import {
   CommonErrors,
   getLongLivedToken,
   getMediaMappedError,
+  PRIORITY_SEGMENT,
   transformAjvErrors,
 } from '../../common';
 import { ingestPermissionMappings } from '../../domains/permission-definition';
@@ -157,7 +158,7 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
                   MediaServiceMessagingSettings.StartIngest,
                   { doc_id: doc.id },
                   ctx,
-                  { metadata: { authToken: token } },
+                  { metadata: { authToken: token }, segment: PRIORITY_SEGMENT },
                 );
                 return doc;
               },

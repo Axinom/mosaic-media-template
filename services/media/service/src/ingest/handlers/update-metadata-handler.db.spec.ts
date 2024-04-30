@@ -1,18 +1,17 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MosaicError } from '@axinom/mosaic-service-common';
-import {
-  StoreInboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
-import {
-  CheckFinishIngestItemCommand,
-  IngestItem,
-  UpdateMetadataCommand,
-} from 'media-messages';
+import { IngestItem, UpdateMetadataCommand } from 'media-messages';
+import { randomUUID } from 'node:crypto';
 import { v4 as uuid } from 'uuid';
-import { insert } from 'zapatos/db';
+import { insert, selectOne } from 'zapatos/db';
+import {
+  ingest_documents,
+  ingest_items,
+  ingest_item_steps,
+} from 'zapatos/schema';
 import { CommonErrors } from '../../common';
 import { MockIngestProcessor } from '../../tests/ingest/mock-ingest-processor';
 import {
@@ -27,8 +26,10 @@ describe('UpdateMetadataHandler', () => {
   let ctx: ITestContext;
   let user: AuthenticatedManagementSubject;
   let handler: UpdateMetadataHandler;
-  let payloads: CheckFinishIngestItemCommand[] = [];
   let processor: IngestEntityProcessor;
+  let step1: ingest_item_steps.JSONSelectable;
+  let item1: ingest_items.JSONSelectable;
+  let doc1: ingest_documents.JSONSelectable;
 
   const createMessage = (
     payload: UpdateMetadataCommand,
@@ -43,24 +44,49 @@ describe('UpdateMetadataHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
-      async (_aggregateId, _messagingSettings, payload) => {
-        payloads.push(payload as CheckFinishIngestItemCommand);
-      },
-    );
     user = createTestUser(ctx.config.serviceId);
     processor = new MockIngestProcessor();
     processor.updateMetadata = jest.fn();
-    handler = new UpdateMetadataHandler(
-      [processor],
-      storeInboxMessage,
-      ctx.config,
-    );
+    handler = new UpdateMetadataHandler([processor], ctx.config);
+  });
+
+  beforeEach(async () => {
+    doc1 = await insert('ingest_documents', {
+      name: 'test1',
+      title: 'test1',
+      document: {
+        name: 'test1',
+        document_created: '2020-08-04T08:57:40.763+00:00',
+        items: [],
+      },
+      items_count: 0,
+    }).run(ctx.ownerPool);
+    item1 = await insert('ingest_items', {
+      ingest_document_id: doc1.id,
+      external_id: 'externalId',
+      entity_id: 1,
+      type: 'MOVIE',
+      exists_status: 'CREATED',
+      display_title: 'title',
+      item: {
+        type: 'MOVIE',
+        external_id: 'externalId',
+        data: {
+          title: 'title',
+          trailers: [{ source: 'test', profile: 'DEFAULT' }],
+        },
+      },
+    }).run(ctx.ownerPool);
+    step1 = await insert('ingest_item_steps', {
+      id: randomUUID(),
+      type: 'IMAGE',
+      ingest_item_id: item1.id,
+      sub_type: 'COVER',
+    }).run(ctx.ownerPool);
   });
 
   afterEach(async () => {
     await ctx.truncate('ingest_documents');
-    payloads = [];
     jest.restoreAllMocks();
   });
 
@@ -68,15 +94,15 @@ describe('UpdateMetadataHandler', () => {
     await ctx.dispose();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message succeeded without errors -> message without error sent', async () => {
       // Arrange
       const payload = {
         item: { type: 'MOVIE' },
       } as unknown as UpdateMetadataCommand;
       const context = {
-        ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
-        ingestItemId: 1,
+        ingestItemStepId: step1.id,
+        ingestItemId: item1.id,
       };
 
       // Act
@@ -85,17 +111,15 @@ describe('UpdateMetadataHandler', () => {
       );
 
       // Assert
-      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
-        {
-          ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
-          ingest_item_id: 1,
-        },
-      ]);
       expect(processor.updateMetadata).toHaveBeenCalledWith(
         payload,
         expect.any(Object),
         undefined,
       );
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.status).toEqual('SUCCESS');
     });
 
     it('message with existing LOCALIZATIONS step succeeded without errors -> message without error sent', async () => {
@@ -108,36 +132,16 @@ describe('UpdateMetadataHandler', () => {
       const payload = {
         item,
       } as unknown as UpdateMetadataCommand;
-      const doc = await insert('ingest_documents', {
-        name: 'test1',
-        title: 'test1',
-        document: {
-          name: 'test1',
-          document_created: '2020-08-04T08:57:40.763+00:00',
-          items: [item],
-        },
-        items_count: 1,
-        in_progress_count: 1,
-      }).run(ctx.ownerPool);
-      const ingestItem = await insert('ingest_items', {
-        ingest_document_id: doc.id,
-        external_id: 'externalId',
-        entity_id: 1,
-        type: 'MOVIE',
-        exists_status: 'CREATED',
-        display_title: 'title',
-        item,
-      }).run(ctx.ownerPool);
 
-      const step = await insert('ingest_item_steps', {
+      await insert('ingest_item_steps', {
         id: uuid(),
         type: 'LOCALIZATIONS',
-        ingest_item_id: ingestItem.id,
+        ingest_item_id: item1.id,
         sub_type: '',
       }).run(ctx.ownerPool);
       const context = {
-        ingestItemStepId: step.id,
-        ingestItemId: ingestItem.id,
+        ingestItemStepId: step1.id,
+        ingestItemId: item1.id,
       };
 
       // Act
@@ -146,29 +150,27 @@ describe('UpdateMetadataHandler', () => {
       );
 
       // Assert
-      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
-        {
-          ingest_item_step_id: step.id,
-          ingest_item_id: ingestItem.id,
-        },
-      ]);
       expect(processor.updateMetadata).toHaveBeenCalledWith(
         payload,
         expect.any(Object),
-        ingestItem.id,
+        item1.id, // Ingest item ID is passed as ingest_correlation_id
       );
+      const updatedStep = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(updatedStep?.status).toEqual('SUCCESS');
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message failed on all retries with non-ingest error -> message with ingest_item_step_id and generic errorMessage sent', async () => {
       // Arrange
       const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
         item: { type: 'MOVIE' },
       });
       const context = {
-        ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
-        ingestItemId: 1,
+        ingestItemStepId: step1.id,
+        ingestItemId: item1.id,
       };
 
       // Act
@@ -182,13 +184,13 @@ describe('UpdateMetadataHandler', () => {
       );
 
       // Assert
-      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
-        {
-          ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
-          ingest_item_id: 1,
-          error_message: 'Unexpected error occurred while updating metadata.',
-        },
-      ]);
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.response_message).toEqual(
+        'Unexpected error occurred while updating metadata.',
+      );
+      expect(step?.status).toEqual('ERROR');
     });
 
     it('message failed on all retries with ingest error -> message with ingest_item_step_id and genre update errorMessage sent', async () => {
@@ -199,8 +201,8 @@ describe('UpdateMetadataHandler', () => {
       const errorMessage =
         'Metadata update has failed because following genres do not exist: Non-existent1, Non-existent2';
       const context = {
-        ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
-        ingestItemId: 1,
+        ingestItemStepId: step1.id,
+        ingestItemId: item1.id,
       };
 
       // Act
@@ -217,13 +219,11 @@ describe('UpdateMetadataHandler', () => {
       );
 
       // Assert
-      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
-        {
-          ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
-          ingest_item_id: 1,
-          error_message: errorMessage,
-        },
-      ]);
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.response_message).toEqual(errorMessage);
+      expect(step?.status).toEqual('ERROR');
     });
   });
 });

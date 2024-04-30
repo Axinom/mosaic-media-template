@@ -27,7 +27,7 @@ describe('TvshowPublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('A new tvshow is published', async () => {
       // Arrange
       const message = createTvshowPublishedMessage('tvshow-1');

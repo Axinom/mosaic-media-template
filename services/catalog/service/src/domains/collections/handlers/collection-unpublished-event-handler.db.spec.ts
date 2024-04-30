@@ -23,7 +23,7 @@ describe('CollectionPublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('An existing collection is unpublished', async () => {
       // Arrange
       const collectionId = 'collection-1';

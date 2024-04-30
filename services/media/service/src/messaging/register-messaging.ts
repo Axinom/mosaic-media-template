@@ -94,7 +94,6 @@ import {
 } from '../domains/tvshows';
 import {
   CheckFinishIngestDocumentHandler,
-  CheckFinishIngestItemHandler,
   ImageAlreadyExistedHandler,
   ImageCreatedHandler,
   ImageFailedHandler,
@@ -321,26 +320,21 @@ const registerTransactionalInboxHandlers = (
       storeOutboxMessage,
       config,
     ),
-    new UpdateMetadataHandler(ingestProcessors, storeInboxMessage, config),
-    new CheckFinishIngestItemHandler(config),
+    new UpdateMetadataHandler(ingestProcessors, config),
     new CheckFinishIngestDocumentHandler(storeInboxMessage, config),
-    new VideoAlreadyExistedHandler(ingestProcessors, storeInboxMessage, config),
-    new VideoCreationStartedHandler(
-      ingestProcessors,
-      storeInboxMessage,
-      config,
-    ),
-    new VideoFailedHandler(storeInboxMessage, config),
-    new ImageAlreadyExistedHandler(ingestProcessors, storeInboxMessage, config),
-    new ImageCreatedHandler(ingestProcessors, storeInboxMessage, config),
-    new ImageFailedHandler(storeInboxMessage, config),
+    new VideoAlreadyExistedHandler(ingestProcessors, config),
+    new VideoCreationStartedHandler(ingestProcessors, config),
+    new VideoFailedHandler(config),
+    new ImageAlreadyExistedHandler(ingestProcessors, config),
+    new ImageCreatedHandler(ingestProcessors, config),
+    new ImageFailedHandler(config),
     new UpsertLocalizationSourceEntityFinishedHandler(
       storeOutboxMessage,
       config,
     ),
-    new UpsertLocalizationSourceEntityFailedHandler(storeInboxMessage, config),
-    new LocalizeEntityFinishedHandler(storeInboxMessage, config),
-    new LocalizeEntityFailedHandler(storeInboxMessage, config),
+    new UpsertLocalizationSourceEntityFailedHandler(config),
+    new LocalizeEntityFinishedHandler(config),
+    new LocalizeEntityFailedHandler(config),
   ];
   const commonMessageHandlers: TransactionalMessageHandler[] = [
     new DeleteEntityHandler(storeOutboxMessage, config),
@@ -372,15 +366,8 @@ const registerTransactionalInboxHandlers = (
             return 15_000;
         }
       },
-      messageProcessingTransactionLevelStrategy: (message) => {
-        switch (message.messageType) {
-          // Ensure no "parallel" updates on the ingest items
-          case MediaServiceMessagingSettings.CheckFinishIngestItem.messageType:
-            return IsolationLevel.Serializable;
-          default:
-            return IsolationLevel.RepeatableRead;
-        }
-      },
+      messageProcessingTransactionLevelStrategy: () =>
+        IsolationLevel.RepeatableRead,
       messageRetryStrategy: ingestMessageRetryStrategy(
         [...dbMessageHandlers, ...ingestMessageHandlers].map(
           (x) => x.messageType,
@@ -410,7 +397,6 @@ const registerRabbitMqMessaging = async (
         MediaServiceMessagingSettings.StartIngest,
         MediaServiceMessagingSettings.StartIngestItem,
         MediaServiceMessagingSettings.UpdateMetadata,
-        MediaServiceMessagingSettings.CheckFinishIngestItem,
         MediaServiceMessagingSettings.CheckFinishIngestDocument,
         VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsAlreadyExisted,
         VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsCreationStarted,
@@ -432,7 +418,6 @@ const registerRabbitMqMessaging = async (
           case MediaServiceMessagingSettings.StartIngest.messageType:
           case MediaServiceMessagingSettings.StartIngestItem.messageType:
           case MediaServiceMessagingSettings.UpdateMetadata.messageType:
-          case MediaServiceMessagingSettings.CheckFinishIngestItem.messageType:
           case MediaServiceMessagingSettings.CheckFinishIngestDocument
             .messageType:
           case VideoServiceMultiTenantMessagingSettings

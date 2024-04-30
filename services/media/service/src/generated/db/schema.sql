@@ -7809,6 +7809,13 @@ CREATE INDEX idx_ingest_items_ingest_document_id ON app_public.ingest_items USIN
 
 
 --
+-- Name: idx_ingest_items_ingest_document_id_and_status; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_ingest_items_ingest_document_id_and_status ON app_public.ingest_items USING btree (ingest_document_id, status);
+
+
+--
 -- Name: idx_ingest_items_status_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
 --
 

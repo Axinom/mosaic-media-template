@@ -10,7 +10,7 @@ import {
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
-import { CheckFinishIngestItemCommand, IngestItem } from 'media-messages';
+import { IngestItem } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { all, insert, select } from 'zapatos/db';
 import {
@@ -39,7 +39,7 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
   let step1: ingest_item_steps.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
   let doc1: ingest_documents.JSONSelectable;
-  let payloads: CheckFinishIngestItemCommand[] = [];
+  let payloads: LocalizeEntityCommand[] = [];
   let user: AuthenticatedManagementSubject;
 
   const createMessage = (
@@ -59,7 +59,7 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
     ctx = await createTestContext();
     const storeOutboxMessage: StoreOutboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, payload) => {
-        payloads.push(payload as CheckFinishIngestItemCommand);
+        payloads.push(payload as LocalizeEntityCommand);
       },
     );
     user = createTestUser(ctx.config.serviceId);
@@ -131,7 +131,7 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message succeeded without errors -> localize entity message sent', async () => {
       // Arrange
       const payload: UpsertLocalizationSourceEntityFinishedEvent = {
@@ -206,7 +206,7 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message failed on all retries -> message with error sent', async () => {
       // Arrange
       const payload: UpsertLocalizationSourceEntityFinishedEvent = {

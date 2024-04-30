@@ -1,12 +1,8 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureVideoExistsCreationStartedEvent } from '@axinom/mosaic-messages';
-import {
-  StoreInboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
-import { CheckFinishIngestItemCommand } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
 import {
@@ -30,7 +26,6 @@ describe('VideoSucceededHandler', () => {
   let step1: ingest_item_steps.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
   let doc1: ingest_documents.JSONSelectable;
-  let payloads: CheckFinishIngestItemCommand[] = [];
 
   const createMessage = (
     payload: EnsureVideoExistsCreationStartedEvent,
@@ -45,15 +40,9 @@ describe('VideoSucceededHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeInboxMessage: StoreInboxMessage = jest.fn(
-      async (_aggregateId, _messagingSettings, payload) => {
-        payloads.push(payload as CheckFinishIngestItemCommand);
-      },
-    );
     user = createTestUser(ctx.config.serviceId);
     handler = new VideoCreationStartedHandler(
       [new MockIngestProcessor()],
-      storeInboxMessage,
       ctx.config,
     );
   });
@@ -95,7 +84,6 @@ describe('VideoSucceededHandler', () => {
 
   afterEach(async () => {
     await ctx.truncate('ingest_documents');
-    payloads = [];
   });
 
   afterAll(async () => {
@@ -103,7 +91,7 @@ describe('VideoSucceededHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message succeeded without errors -> message without error sent and step updated', async () => {
       // Arrange
       const payload: EnsureVideoExistsCreationStartedEvent = {
@@ -127,17 +115,11 @@ describe('VideoSucceededHandler', () => {
       }).run(ctx.ownerPool);
 
       expect(step?.entity_id).toEqual(payload.video_id);
-
-      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
-        {
-          ingest_item_step_id: step1.id,
-          ingest_item_id: item1.id,
-        },
-      ]);
+      expect(step?.status).toEqual('SUCCESS');
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message failed on all retries -> message with error sent', async () => {
       // Arrange
       const payload: EnsureVideoExistsCreationStartedEvent = {
@@ -145,7 +127,7 @@ describe('VideoSucceededHandler', () => {
         encoding_state: 'IN_PROGRESS',
       };
       const context = {
-        ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
+        ingestItemStepId: step1.id,
         ingestItemId: item1.id,
         videoType: 'MAIN',
       };
@@ -161,14 +143,13 @@ describe('VideoSucceededHandler', () => {
       );
 
       // Assert
-      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
-        {
-          ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
-          ingest_item_id: item1.id,
-          error_message:
-            'An unexpected error occurred while trying to update video relations.',
-        },
-      ]);
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.response_message).toEqual(
+        'An unexpected error occurred while trying to update video relations.',
+      );
+      expect(step?.status).toEqual('ERROR');
     });
   });
 });

@@ -24,7 +24,7 @@ describe('MovieUnpublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('An existing movie is unpublished', async () => {
       // Arrange
       const movieId = 'movie-1';
