@@ -90,7 +90,7 @@ describe('UnpublishEntityHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message to publish a movie -> snapshot with relation created with correct metadata and publish message sent', async () => {
       // Act
       await ctx.executeOwnerSql(user, async (dbCtx) =>

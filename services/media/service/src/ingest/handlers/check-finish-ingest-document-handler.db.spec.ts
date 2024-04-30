@@ -107,7 +107,7 @@ describe('Check Finish Ingest Document Handler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message with all 0 counts for 2 in progress items, initial call -> seconds_without_progress remains the same, waiting 5 sec', async () => {
       // Arrange
       const payload: CheckFinishIngestDocumentCommand = {

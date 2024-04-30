@@ -1,5 +1,4 @@
 export * from './check-finish-ingest-document-handler';
-export * from './check-finish-ingest-item-handler';
 export * from './image-already-existed-handler';
 export * from './image-created-handler';
 export * from './image-failed-handler';

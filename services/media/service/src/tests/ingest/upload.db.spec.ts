@@ -30,7 +30,6 @@ import { getLongLivedToken } from '../../common/utils/token-utils';
 import { getIngestProcessors } from '../../domains/get-ingest-processors';
 import {
   CheckFinishIngestDocumentHandler,
-  CheckFinishIngestItemHandler,
   StartIngestHandler,
   StartIngestItemHandler,
   UpdateMetadataHandler,
@@ -88,7 +87,6 @@ describe('Movies GraphQL endpoints', () => {
   let updateMetadata: UpdateMetadataHandler;
   let videoCreationStarted: VideoCreationStartedHandler;
   let imageCreated: ImageCreatedHandler;
-  let checkFinishItem: CheckFinishIngestItemHandler;
   let checkFinishDocument: CheckFinishIngestDocumentHandler;
   let messages: {
     messageType: string;
@@ -168,28 +166,15 @@ describe('Movies GraphQL endpoints', () => {
       ctx.config,
     );
 
-    updateMetadata = new UpdateMetadataHandler(
-      ingestProcessors,
-      storeInboxMessage,
-
-      ctx.config,
-    );
+    updateMetadata = new UpdateMetadataHandler(ingestProcessors, ctx.config);
 
     videoCreationStarted = new VideoCreationStartedHandler(
       ingestProcessors,
-      storeInboxMessage,
-
       ctx.config,
     );
 
-    imageCreated = new ImageCreatedHandler(
-      ingestProcessors,
-      storeInboxMessage,
+    imageCreated = new ImageCreatedHandler(ingestProcessors, ctx.config);
 
-      ctx.config,
-    );
-
-    checkFinishItem = new CheckFinishIngestItemHandler(ctx.config);
     checkFinishDocument = new CheckFinishIngestDocumentHandler(
       storeInboxMessage,
       ctx.config,
@@ -588,14 +573,6 @@ describe('Movies GraphQL endpoints', () => {
                   },
                   msg.envelopeOverrides,
                 ),
-                txn,
-              );
-            });
-            break;
-          case MediaServiceMessagingSettings.CheckFinishIngestItem.messageType:
-            await ctx.executeOwnerSql(user, async (txn) => {
-              await checkFinishItem.handleMessage(
-                createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
             });

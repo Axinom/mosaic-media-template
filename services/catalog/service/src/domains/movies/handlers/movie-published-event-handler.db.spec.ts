@@ -27,7 +27,7 @@ describe('MoviePublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('A new movie is published', async () => {
       // Arrange
       const message = createMoviePublishedMessage('movie-1');

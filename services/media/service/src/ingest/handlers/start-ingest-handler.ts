@@ -37,7 +37,7 @@ import {
   update,
 } from 'zapatos/db';
 import { ingest_items } from 'zapatos/schema';
-import { CommonErrors, Config } from '../../common';
+import { CommonErrors, Config, PRIORITY_SEGMENT } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import {
   DisplayTitleMapping,
@@ -153,7 +153,10 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
                 previous_in_progress_count: 0,
               },
               ctx,
-              { metadata: { authToken: metadata.authToken } },
+              {
+                metadata: { authToken: metadata.authToken },
+                segment: PRIORITY_SEGMENT,
+              },
             );
           }
         },

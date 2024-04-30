@@ -3,25 +3,14 @@ import {
   UpsertLocalizationSourceEntityFailedEvent,
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
-import {
-  StoreInboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
-import {
-  CheckFinishIngestItemCommand,
-  IngestMessageContext,
-  MediaServiceMessagingSettings,
-} from 'media-messages';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { param, selectOne, self as value, SQL, sql, update } from 'zapatos/db';
 import { CommonErrors, Config, getMediaMappedError } from '../../common';
-import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 
-export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFailedEvent> {
-  constructor(
-    private readonly storeInboxMessage: StoreInboxMessage,
-    config: Config,
-  ) {
+export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFailedEvent> {
+  constructor(config: Config) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFailed,
       ['INGESTS_EDIT', 'ADMIN'],
@@ -67,17 +56,14 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaGuardedTra
       });
     }
 
-    await this.storeInboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
+    await update(
+      'ingest_item_steps',
       {
-        ingest_item_step_id: localizationStep?.id,
-        ingest_item_id: messageContext.ingestItemId,
-        error_message: payload.message,
+        status: 'ERROR',
+        response_message: payload.message,
       },
-      ownerClient,
-      { metadata: { authToken: metadata.authToken } },
-    );
+      { id: localizationStep.id },
+    ).run(ownerClient);
   }
 
   public override mapError(error: unknown): Error {
