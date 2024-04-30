@@ -31,7 +31,7 @@
     "@axinom/mosaic-id-guard": "0.31.0",
     "@axinom/mosaic-message-bus": "0.26.0",
     "@axinom/mosaic-messages": "0.42.0",
-    "@axinom/mosaic-service-common": "0.48.1",
+    "@axinom/mosaic-service-common": "0.48.0",
     "@azure/storage-blob": "^12.14.0",
     "amqplib": "^0.6.0",
     "axios": "^0.24.0",

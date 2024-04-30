@@ -52,7 +52,7 @@
     "@axinom/mosaic-id-utils": "0.15.16",
     "@axinom/mosaic-message-bus": "0.26.0",
     "@axinom/mosaic-messages": "0.42.0",
-    "@axinom/mosaic-service-common": "0.48.1",
+    "@axinom/mosaic-service-common": "0.48.0",
     "@axinom/mosaic-transactional-inbox-outbox": "0.8.1",
     "ajv": "^7.2.4",
     "ajv-formats": "^1.6.1",

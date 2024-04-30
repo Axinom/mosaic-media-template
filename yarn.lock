@@ -377,33 +377,7 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.30.0.tgz#eea98c214c3e349c1c82625963f1a2b6317feb54"
   integrity sha512-2PD5noEiQL2yzcMprLZlHZsMJp6BJSZy0GlU9Wvr0GClMu/Nm9Wvlg9S18KHBoFWbmA+2krBtq0rZxIuZ41hqg==
 
-"@axinom/mosaic-service-common@0.48.1":
-  version "0.48.1"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.48.1.tgz#3550096756b9a098d05408a03c6cd21cb6d174aa"
-  integrity sha512-u9LdkvivkuDCWyNvQfgUnRq0RDb4HRkRsF121TtHX3d42CwNid+1BnEun9bsiZUj/96lPEtzhOMjvSe36+zuSw==
-  dependencies:
-    ajv "^7.0.3"
-    ajv-formats "^2.1.1"
-    axios "1.6.3"
-    cockatiel "^3.1.1"
-    endent "^2.1.0"
-    env-var "^6.3.0"
-    express "^4.17.1"
-    express-basic-auth "^1.2.1"
-    fast-stable-stringify "^1.0.0"
-    inflection "^1.12.0"
-    jest "^29"
-    jest-expect-message "^1.1.3"
-    moment "^2.29.1"
-    prom-client "^15.1.0"
-    serialize-error "^7.0.1"
-    serve-favicon "^2.5.0"
-    short-hash "^1.0.0"
-    uuid "^8.3.2"
-    uuid-encoder "^1.2.0"
-    verror "^1.10.1"
-
-"@axinom/mosaic-service-common@^0.48.0":
+"@axinom/mosaic-service-common@0.48.0", "@axinom/mosaic-service-common@^0.48.0":
   version "0.48.0"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.48.0.tgz#bd6feb0fec5590c17a62ed81dd4a70b8a0f33d43"
   integrity sha512-pG+n+0K54hkieO7VEqNaZfm0mSKgA2yeQRWOpO1wybvXCpGv1sWW0S9gzx5Y/RgD3rwGuVN4IiYkkVqD3foWrg==
