@@ -1,7 +1,0 @@
-mutation CreateEpisodesLicense($input: CreateEpisodesLicenseInput!) {
-  createEpisodesLicense(input: $input) {
-    episodesLicense {
-      id
-    }
-  }
-}

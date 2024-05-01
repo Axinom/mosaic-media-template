@@ -1,5 +1,0 @@
-mutation CreateEpisodeSnapshot($episodeId: Int!) {
-  createEpisodeSnapshot(episodeId: $episodeId) {
-    id
-  }
-}

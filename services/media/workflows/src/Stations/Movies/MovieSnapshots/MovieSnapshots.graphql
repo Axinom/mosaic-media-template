@@ -1,5 +1,0 @@
-mutation CreateMovieSnapshot($movieId: Int!) {
-  createMovieSnapshot(movieId: $movieId) {
-    id
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "$schema": "https://docs.piral.io/schemas/pilet-v0.json",
-  "piralInstances": {
-    "@axinom/mosaic-portal": {
-      "selected": true
-    }
-  }
-}

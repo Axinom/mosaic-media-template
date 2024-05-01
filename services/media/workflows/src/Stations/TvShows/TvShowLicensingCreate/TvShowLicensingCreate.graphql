@@ -1,7 +1,0 @@
-mutation CreateTvshowsLicense($input: CreateTvshowsLicenseInput!) {
-  createTvshowsLicense(input: $input) {
-    tvshowsLicense {
-      id
-    }
-  }
-}

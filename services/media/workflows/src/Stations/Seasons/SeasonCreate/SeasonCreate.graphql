@@ -1,8 +1,0 @@
-mutation CreateSeason($input: CreateSeasonInput!) {
-  createSeason(input: $input) {
-    season {
-      id
-      index
-    }
-  }
-}

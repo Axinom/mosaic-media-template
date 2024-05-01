@@ -1,5 +1,0 @@
-mutation CreateSeasonSnapshot($seasonId: Int!) {
-  createSeasonSnapshot(seasonId: $seasonId) {
-    id
-  }
-}

@@ -1,8 +1,0 @@
-mutation CreateTvShow($input: CreateTvshowInput!) {
-  createTvshow(input: $input) {
-    tvshow {
-      id
-      title
-    }
-  }
-}

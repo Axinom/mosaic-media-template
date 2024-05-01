@@ -1,5 +1,0 @@
-mutation CreateCollectionSnapshot($collectionId: Int!) {
-  createCollectionSnapshot(collectionId: $collectionId) {
-    id
-  }
-}
