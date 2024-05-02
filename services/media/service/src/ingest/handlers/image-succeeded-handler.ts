@@ -2,7 +2,6 @@ import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
   EnsureImageExistsAlreadyExistedEvent,
   EnsureImageExistsImageCreatedEvent,
-  ImageServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
@@ -34,6 +33,8 @@ export abstract class ImageSucceededHandler<
       config,
     );
   }
+
+  abstract fallbackErrorMessage: string;
 
   override async handleMessage(
     { payload, metadata, id, aggregateId }: TypedTransactionalMessage<TContent>,
@@ -76,14 +77,8 @@ export abstract class ImageSucceededHandler<
   }
 
   public override mapError(error: unknown): Error {
-    const fallbackMessage =
-      this.messagingSettings.messageType ===
-      ImageServiceMultiTenantMessagingSettings.EnsureImageExistsAlreadyExisted
-        .messageType
-        ? 'The image already existed, but there was an error adding that image to the entity.'
-        : 'The image was correctly imported, but there was an error adding that image to the entity.';
     return getMediaMappedError(error, {
-      message: fallbackMessage,
+      message: this.fallbackErrorMessage,
       code: CommonErrors.IngestError.code,
     });
   }

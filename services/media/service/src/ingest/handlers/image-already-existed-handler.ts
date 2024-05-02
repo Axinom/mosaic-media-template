@@ -14,4 +14,7 @@ export class ImageAlreadyExistedHandler extends ImageSucceededHandler<EnsureImag
       config,
     );
   }
+
+  fallbackErrorMessage =
+    'The image already existed, but there was an error adding that image to the entity.';
 }

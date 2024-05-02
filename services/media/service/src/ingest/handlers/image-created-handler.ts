@@ -14,4 +14,7 @@ export class ImageCreatedHandler extends ImageSucceededHandler<EnsureImageExists
       config,
     );
   }
+
+  fallbackErrorMessage =
+    'The image was correctly imported, but there was an error adding that image to the entity.';
 }

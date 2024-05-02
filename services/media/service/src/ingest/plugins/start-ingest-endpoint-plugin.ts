@@ -123,6 +123,8 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
                 ajv.errors,
                 documentString,
               );
+              // Skip custom errors if schema validation failed, since incorrect
+              // document structure might cause custom validation to fail
               throw new MosaicError({
                 ...CommonErrors.IngestValidationError,
                 details: {
@@ -130,8 +132,6 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
                 },
               });
             }
-            // Skip custom errors if schema validation failed, since incorrect
-            // document structure might cause custom validation to fail
             const customErrors = customIngestValidation(document);
             if (customErrors.length > 0) {
               throw new MosaicError({

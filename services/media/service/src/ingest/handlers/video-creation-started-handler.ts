@@ -14,4 +14,7 @@ export class VideoCreationStartedHandler extends VideoSucceededHandler<EnsureVid
       config,
     );
   }
+
+  fallbackErrorMessage =
+    'The video encoding has started, but there was an error adding that video to the entity.';
 }

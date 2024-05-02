@@ -2,7 +2,6 @@ import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
   EnsureVideoExistsAlreadyExistedEvent,
   EnsureVideoExistsCreationStartedEvent,
-  VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
@@ -34,6 +33,8 @@ export abstract class VideoSucceededHandler<
       config,
     );
   }
+
+  abstract fallbackErrorMessage: string;
 
   override async handleMessage(
     { payload, metadata, id, aggregateId }: TypedTransactionalMessage<TContent>,
@@ -73,14 +74,8 @@ export abstract class VideoSucceededHandler<
   }
 
   public override mapError(error: unknown): Error {
-    const fallbackMessage =
-      this.messagingSettings.messageType ===
-      VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsAlreadyExisted
-        .messageType
-        ? 'The video already existed, but there was an error adding that video to the entity.'
-        : 'The video encoding has started, but there was an error adding that video to the entity.';
     return getMediaMappedError(error, {
-      message: fallbackMessage,
+      message: this.fallbackErrorMessage,
       code: CommonErrors.IngestError.code,
     });
   }
