@@ -3,7 +3,6 @@ import {
   groupBy,
   isEmptyObject,
   isNullOrWhitespace,
-  MosaicError,
 } from '@axinom/mosaic-service-common';
 import {
   ImageIngestData,
@@ -109,15 +108,4 @@ export const customIngestValidation = (
     ...duplicateLicenseErrors,
     ...duplicateImageErrors,
   ];
-};
-
-export const getIngestErrorMessage = (
-  error: Error,
-  defaultMessage: string,
-): string => {
-  if (error instanceof MosaicError) {
-    return error.message;
-  }
-
-  return defaultMessage;
 };

@@ -2,17 +2,17 @@ import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
   EnsureVideoExistsAlreadyExistedEvent,
   EnsureVideoExistsCreationStartedEvent,
+  VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { VideoMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { selectExactlyOne, update } from 'zapatos/db';
-import { CommonErrors, Config } from '../../common';
+import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import { IngestEntityProcessor } from '../models';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
-import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 export abstract class VideoSucceededHandler<
   TContent extends
@@ -72,6 +72,19 @@ export abstract class VideoSucceededHandler<
     ).run(ownerClient);
   }
 
+  public override mapError(error: unknown): Error {
+    const fallbackMessage =
+      this.messagingSettings.messageType ===
+      VideoServiceMultiTenantMessagingSettings.EnsureVideoExistsAlreadyExisted
+        .messageType
+        ? 'The video already existed, but there was an error adding that video to the entity.'
+        : 'The video encoding has started, but there was an error adding that video to the entity.';
+    return getMediaMappedError(error, {
+      message: fallbackMessage,
+      code: CommonErrors.IngestError.code,
+    });
+  }
+
   override async handleErrorMessage(
     error: Error,
     { metadata }: TypedTransactionalMessage<TContent>,
@@ -87,10 +100,7 @@ export abstract class VideoSucceededHandler<
       'ingest_item_steps',
       {
         status: 'ERROR',
-        response_message: getIngestErrorMessage(
-          error,
-          'An unexpected error occurred while trying to update video relations.',
-        ),
+        response_message: error.message,
       },
       { id: messageContext.ingestItemStepId },
     ).run(ownerClient);

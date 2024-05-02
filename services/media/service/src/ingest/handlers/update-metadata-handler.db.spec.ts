@@ -95,7 +95,7 @@ describe('UpdateMetadataHandler', () => {
   });
 
   describe('handleMessage', () => {
-    it('message succeeded without errors -> message without error sent', async () => {
+    it('message succeeded without errors -> step updated', async () => {
       // Arrange
       const payload = {
         item: { type: 'MOVIE' },
@@ -122,7 +122,7 @@ describe('UpdateMetadataHandler', () => {
       expect(step?.status).toEqual('SUCCESS');
     });
 
-    it('message with existing LOCALIZATIONS step succeeded without errors -> message without error sent', async () => {
+    it('message with existing LOCALIZATIONS step succeeded without errors -> step updated and context passed to processor', async () => {
       // Arrange
       const item: IngestItem = {
         type: 'MOVIE',
@@ -162,56 +162,51 @@ describe('UpdateMetadataHandler', () => {
     });
   });
 
-  describe('handleErrorMessage', () => {
-    it('message failed on all retries with non-ingest error -> message with ingest_item_step_id and generic errorMessage sent', async () => {
-      // Arrange
-      const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
-        item: { type: 'MOVIE' },
-      });
-      const context = {
-        ingestItemStepId: step1.id,
-        ingestItemId: item1.id,
-      };
-
+  describe('mapError', () => {
+    it('message failed with non-mosaic error -> default error mapped', async () => {
       // Act
-      await ctx.executeOwnerSql(user, async (dbCtx) =>
-        handler.handleErrorMessage(
-          new Error('test error'),
-          createMessage(payload, context),
-          dbCtx,
-          false,
-        ),
-      );
+      const error = handler.mapError(new Error('Unexpected status code: 404'));
 
       // Assert
-      const step = await selectOne('ingest_item_steps', {
-        id: step1.id,
-      }).run(ctx.ownerPool);
-      expect(step?.response_message).toEqual(
-        'Unexpected error occurred while updating metadata.',
-      );
-      expect(step?.status).toEqual('ERROR');
+      expect(error).toMatchObject({
+        message:
+          'An unexpected error occurred while trying to update the metadata.',
+        code: CommonErrors.IngestError.code,
+      });
     });
 
-    it('message failed on all retries with ingest error -> message with ingest_item_step_id and genre update errorMessage sent', async () => {
+    it('message failed with mosaic error -> thrown error mapped', async () => {
+      // Arrange
+      const testErrorInfo = {
+        message: 'Handled test message',
+        code: 'HANDLED_TEST_CODE',
+      };
+
+      // Act
+      const error = handler.mapError(new MosaicError(testErrorInfo));
+
+      // Assert
+      expect(error).toMatchObject(testErrorInfo);
+    });
+  });
+
+  describe('handleErrorMessage', () => {
+    it('message failed on all retries -> step updated', async () => {
       // Arrange
       const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
         item: { type: 'MOVIE' },
       });
-      const errorMessage =
-        'Metadata update has failed because following genres do not exist: Non-existent1, Non-existent2';
       const context = {
         ingestItemStepId: step1.id,
         ingestItemId: item1.id,
       };
+      // mapError makes sure this error is appropriate
+      const error = new Error('Handled and mapped message');
 
       // Act
       await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleErrorMessage(
-          new MosaicError({
-            message: errorMessage,
-            code: CommonErrors.IngestError.code,
-          }),
+          error,
           createMessage(payload, context),
           dbCtx,
           false,
@@ -222,8 +217,52 @@ describe('UpdateMetadataHandler', () => {
       const step = await selectOne('ingest_item_steps', {
         id: step1.id,
       }).run(ctx.ownerPool);
-      expect(step?.response_message).toEqual(errorMessage);
+      expect(step?.response_message).toEqual(error.message);
       expect(step?.status).toEqual('ERROR');
+    });
+    it('message for metadata with localizations failed on all retries -> both Localizations and Metadata steps updated', async () => {
+      // Arrange
+      const payload: UpdateMetadataCommand = stub<UpdateMetadataCommand>({
+        item: { type: 'MOVIE' },
+      });
+      const context = {
+        ingestItemStepId: step1.id,
+        ingestItemId: item1.id,
+      };
+      await insert('ingest_item_steps', {
+        id: uuid(),
+        type: 'LOCALIZATIONS',
+        ingest_item_id: item1.id,
+        sub_type: '',
+      }).run(ctx.ownerPool);
+      // mapError makes sure this error is appropriate
+      const error = new Error('Handled and mapped message');
+
+      // Act
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(
+          error,
+          createMessage(payload, context),
+          dbCtx,
+          false,
+        ),
+      );
+
+      // Assert
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.response_message).toEqual(error.message);
+      expect(step?.status).toEqual('ERROR');
+
+      const localizationStep = await selectOne('ingest_item_steps', {
+        type: 'LOCALIZATIONS',
+        ingest_item_id: item1.id,
+      }).run(ctx.ownerPool);
+      expect(localizationStep?.response_message).toEqual(
+        'Unable to start the localization step because the metadata update has failed.',
+      );
+      expect(localizationStep?.status).toEqual('ERROR');
     });
   });
 });

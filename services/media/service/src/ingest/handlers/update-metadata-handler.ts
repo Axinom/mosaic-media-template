@@ -5,9 +5,8 @@ import {
   UpdateMetadataCommand,
 } from 'media-messages';
 import { selectOne, update } from 'zapatos/db';
-import { CommonErrors, Config } from '../../common';
+import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { IngestEntityProcessor } from '../models';
-import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 import { Logger } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
@@ -66,6 +65,14 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
     ).run(ownerClient);
   }
 
+  public override mapError(error: unknown): Error {
+    return getMediaMappedError(error, {
+      message:
+        'An unexpected error occurred while trying to update the metadata.',
+      code: CommonErrors.IngestError.code,
+    });
+  }
+
   override async handleErrorMessage(
     error: Error,
     { metadata }: TypedTransactionalMessage<UpdateMetadataCommand>,
@@ -80,12 +87,21 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
       'ingest_item_steps',
       {
         status: 'ERROR',
-        response_message: getIngestErrorMessage(
-          error,
-          'Unexpected error occurred while updating metadata.',
-        ),
+        response_message: error.message,
       },
       { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
+    await update(
+      'ingest_item_steps',
+      {
+        status: 'ERROR',
+        response_message:
+          'Unable to start the localization step because the metadata update has failed.',
+      },
+      {
+        ingest_item_id: messageContext.ingestItemId,
+        type: 'LOCALIZATIONS',
+      },
     ).run(ownerClient);
   }
 }

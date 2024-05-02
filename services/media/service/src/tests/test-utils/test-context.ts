@@ -100,7 +100,7 @@ const runGqlQuery = async function (
           result.errors,
           req.body?.operationName,
           customizeGraphQlErrorFields(mediaPgErrorMapper),
-          logGraphQlError(defaultWriteLogMapper, this.logger),
+          logGraphQlError(defaultWriteLogMapper, undefined, this.logger),
         );
       }
       return result;

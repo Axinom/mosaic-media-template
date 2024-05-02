@@ -2,17 +2,17 @@ import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
   EnsureImageExistsAlreadyExistedEvent,
   EnsureImageExistsImageCreatedEvent,
+  ImageServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ImageMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { selectExactlyOne, update } from 'zapatos/db';
-import { CommonErrors, Config } from '../../common';
+import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import { IngestEntityProcessor } from '../models';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
-import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 export abstract class ImageSucceededHandler<
   TContent extends
@@ -75,6 +75,19 @@ export abstract class ImageSucceededHandler<
     ).run(ownerClient);
   }
 
+  public override mapError(error: unknown): Error {
+    const fallbackMessage =
+      this.messagingSettings.messageType ===
+      ImageServiceMultiTenantMessagingSettings.EnsureImageExistsAlreadyExisted
+        .messageType
+        ? 'The image already existed, but there was an error adding that image to the entity.'
+        : 'The image was correctly imported, but there was an error adding that image to the entity.';
+    return getMediaMappedError(error, {
+      message: fallbackMessage,
+      code: CommonErrors.IngestError.code,
+    });
+  }
+
   override async handleErrorMessage(
     error: Error,
     { metadata }: TypedTransactionalMessage<TContent>,
@@ -90,10 +103,7 @@ export abstract class ImageSucceededHandler<
       'ingest_item_steps',
       {
         status: 'ERROR',
-        response_message: getIngestErrorMessage(
-          error,
-          'An unexpected error occurred while trying to update image relations.',
-        ),
+        response_message: error.message,
       },
       { id: messageContext.ingestItemStepId },
     ).run(ownerClient);
