@@ -1,0 +1,7 @@
+query GetChannelVideo($id: String!) {
+  channel(id: $id) {
+    dashStreamUrl
+    hlsStreamUrl
+    keyId
+  }
+}
