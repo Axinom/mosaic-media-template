@@ -4531,14 +4531,14 @@ GRANT ALL ON FUNCTION ax_utils.validation_valid_url_array(input_value text[]) TO
 -- Name: TABLE channel; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.channel TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.channel TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE channel_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.channel_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.channel_images TO catalog_service_gql_role;
 
 
 --
@@ -4552,56 +4552,14 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.channel_images_id_seq TO catalog_servi
 -- Name: TABLE collection; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.collection TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN collection.asset_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.collection TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN collection.countries; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(countries),UPDATE(countries) ON TABLE app_public.collection TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN collection.languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(languages),UPDATE(languages) ON TABLE app_public.collection TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN collection.dynamic_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.collection TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN collection.extended_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.collection TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN collection.original_title; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(original_title),UPDATE(original_title) ON TABLE app_public.collection TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.collection TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE collection_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.collection_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.collection_images TO catalog_service_gql_role;
 
 
 --
@@ -4615,7 +4573,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.collection_images_id_seq TO catalog_se
 -- Name: TABLE collection_items_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.collection_items_relation TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.collection_items_relation TO catalog_service_gql_role;
 
 
 --
@@ -4629,105 +4587,14 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.collection_items_relation_id_seq TO ca
 -- Name: TABLE episode; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.directors; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(directors),UPDATE(directors) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.credits_start_time; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(credits_start_time),UPDATE(credits_start_time) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.length_in_seconds; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(length_in_seconds),UPDATE(length_in_seconds) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.dynamic_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.extended_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.custom_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.age_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(age_rating),UPDATE(age_rating) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.asset_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.asset_subtype; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.tvshow_id; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(tvshow_id),UPDATE(tvshow_id) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.intro_start_time; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(intro_start_time),UPDATE(intro_start_time) ON TABLE app_public.episode TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode.intro_end_time; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(intro_end_time),UPDATE(intro_end_time) ON TABLE app_public.episode TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE episode_genres_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_genres_relation TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_genres_relation TO catalog_service_gql_role;
 
 
 --
@@ -4741,7 +4608,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_genres_relation_id_seq TO cata
 -- Name: TABLE episode_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_images TO catalog_service_gql_role;
 
 
 --
@@ -4755,42 +4622,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_images_id_seq TO catalog_servi
 -- Name: TABLE episode_licenses; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode_licenses.business_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode_licenses.tier; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(tier),UPDATE(tier) ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode_licenses.content_owner; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_licenses TO catalog_service_gql_role;
 
 
 --
@@ -4804,7 +4636,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_licenses_id_seq TO catalog_ser
 -- Name: TABLE episode_video_cue_points; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_video_cue_points TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_video_cue_points TO catalog_service_gql_role;
 
 
 --
@@ -4818,7 +4650,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_video_cue_points_id_seq TO cat
 -- Name: TABLE episode_video_streams; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_video_streams TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_video_streams TO catalog_service_gql_role;
 
 
 --
@@ -4832,28 +4664,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_video_streams_id_seq TO catalo
 -- Name: TABLE episode_videos; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episode_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode_videos.drm_key_id; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(drm_key_id),UPDATE(drm_key_id) ON TABLE app_public.episode_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode_videos.file_size_in_bytes; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(file_size_in_bytes),UPDATE(file_size_in_bytes) ON TABLE app_public.episode_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN episode_videos.main_url; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(main_url),UPDATE(main_url) ON TABLE app_public.episode_videos TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.episode_videos TO catalog_service_gql_role;
 
 
 --
@@ -4867,119 +4678,21 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_videos_id_seq TO catalog_servi
 -- Name: TABLE movie; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.audio_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(audio_languages),UPDATE(audio_languages) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.caption_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(caption_languages),UPDATE(caption_languages) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.subtitle_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(subtitle_languages),UPDATE(subtitle_languages) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.directors; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(directors),UPDATE(directors) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.business_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.credits_start_time; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(credits_start_time),UPDATE(credits_start_time) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.length_in_seconds; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(length_in_seconds),UPDATE(length_in_seconds) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.dynamic_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.extended_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.custom_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.age_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(age_rating),UPDATE(age_rating) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.asset_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.movie TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie.asset_subtype; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.movie TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE movie_genre; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_genre TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_genre TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE movie_genres_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_genres_relation TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_genres_relation TO catalog_service_gql_role;
 
 
 --
@@ -4993,7 +4706,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_genres_relation_id_seq TO catalo
 -- Name: TABLE movie_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_images TO catalog_service_gql_role;
 
 
 --
@@ -5007,42 +4720,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_images_id_seq TO catalog_service
 -- Name: TABLE movie_licenses; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie_licenses.business_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie_licenses.tier; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(tier),UPDATE(tier) ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie_licenses.content_owner; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_licenses TO catalog_service_gql_role;
 
 
 --
@@ -5056,7 +4734,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_licenses_id_seq TO catalog_servi
 -- Name: TABLE movie_video_cue_points; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_video_cue_points TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_video_cue_points TO catalog_service_gql_role;
 
 
 --
@@ -5070,7 +4748,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_video_cue_points_id_seq TO catal
 -- Name: TABLE movie_video_streams; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_video_streams TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_video_streams TO catalog_service_gql_role;
 
 
 --
@@ -5084,28 +4762,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_video_streams_id_seq TO catalog_
 -- Name: TABLE movie_videos; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movie_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie_videos.drm_key_id; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(drm_key_id),UPDATE(drm_key_id) ON TABLE app_public.movie_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie_videos.file_size_in_bytes; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(file_size_in_bytes),UPDATE(file_size_in_bytes) ON TABLE app_public.movie_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN movie_videos.main_url; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(main_url),UPDATE(main_url) ON TABLE app_public.movie_videos TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.movie_videos TO catalog_service_gql_role;
 
 
 --
@@ -5119,84 +4776,14 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.movie_videos_id_seq TO catalog_service
 -- Name: TABLE season; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season.directors; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(directors),UPDATE(directors) ON TABLE app_public.season TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season.dynamic_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.season TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season.extended_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.season TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season.rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.season TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season.custom_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.season TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season.age_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(age_rating),UPDATE(age_rating) ON TABLE app_public.season TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season.asset_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.season TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season.asset_subtype; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.season TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season.original_title; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(original_title),UPDATE(original_title) ON TABLE app_public.season TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season.title; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(title),UPDATE(title) ON TABLE app_public.season TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE season_genres_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_genres_relation TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_genres_relation TO catalog_service_gql_role;
 
 
 --
@@ -5210,7 +4797,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_genres_relation_id_seq TO catal
 -- Name: TABLE season_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_images TO catalog_service_gql_role;
 
 
 --
@@ -5224,42 +4811,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_images_id_seq TO catalog_servic
 -- Name: TABLE season_licenses; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.season_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.season_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season_licenses.business_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.season_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season_licenses.tier; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(tier),UPDATE(tier) ON TABLE app_public.season_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season_licenses.content_owner; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.season_licenses TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_licenses TO catalog_service_gql_role;
 
 
 --
@@ -5273,7 +4825,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_licenses_id_seq TO catalog_serv
 -- Name: TABLE season_video_cue_points; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_video_cue_points TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_video_cue_points TO catalog_service_gql_role;
 
 
 --
@@ -5287,7 +4839,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_video_cue_points_id_seq TO cata
 -- Name: TABLE season_video_streams; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_video_streams TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_video_streams TO catalog_service_gql_role;
 
 
 --
@@ -5301,28 +4853,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_video_streams_id_seq TO catalog
 -- Name: TABLE season_videos; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.season_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season_videos.drm_key_id; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(drm_key_id),UPDATE(drm_key_id) ON TABLE app_public.season_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season_videos.file_size_in_bytes; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(file_size_in_bytes),UPDATE(file_size_in_bytes) ON TABLE app_public.season_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN season_videos.main_url; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(main_url),UPDATE(main_url) ON TABLE app_public.season_videos TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.season_videos TO catalog_service_gql_role;
 
 
 --
@@ -5336,105 +4867,21 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.season_videos_id_seq TO catalog_servic
 -- Name: TABLE tvshow; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.audio_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(audio_languages),UPDATE(audio_languages) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.caption_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(caption_languages),UPDATE(caption_languages) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.subtitle_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(subtitle_languages),UPDATE(subtitle_languages) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.directors; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(directors),UPDATE(directors) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.business_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.dynamic_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.extended_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.custom_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.age_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(age_rating),UPDATE(age_rating) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.asset_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(asset_type),UPDATE(asset_type) ON TABLE app_public.tvshow TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow.asset_subtype; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.tvshow TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE tvshow_genre; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_genre TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_genre TO catalog_service_gql_role;
 
 
 --
 -- Name: TABLE tvshow_genres_relation; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_genres_relation TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_genres_relation TO catalog_service_gql_role;
 
 
 --
@@ -5448,7 +4895,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_genres_relation_id_seq TO catal
 -- Name: TABLE tvshow_images; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_images TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_images TO catalog_service_gql_role;
 
 
 --
@@ -5462,42 +4909,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_images_id_seq TO catalog_servic
 -- Name: TABLE tvshow_licenses; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow_licenses.business_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow_licenses.tier; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(tier),UPDATE(tier) ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow_licenses.content_owner; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_licenses TO catalog_service_gql_role;
 
 
 --
@@ -5511,7 +4923,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_licenses_id_seq TO catalog_serv
 -- Name: TABLE tvshow_video_cue_points; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_video_cue_points TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_video_cue_points TO catalog_service_gql_role;
 
 
 --
@@ -5525,7 +4937,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_video_cue_points_id_seq TO cata
 -- Name: TABLE tvshow_video_streams; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_video_streams TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_video_streams TO catalog_service_gql_role;
 
 
 --
@@ -5539,28 +4951,7 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.tvshow_video_streams_id_seq TO catalog
 -- Name: TABLE tvshow_videos; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow_videos.drm_key_id; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(drm_key_id),UPDATE(drm_key_id) ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow_videos.file_size_in_bytes; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(file_size_in_bytes),UPDATE(file_size_in_bytes) ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
-
-
---
--- Name: COLUMN tvshow_videos.main_url; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(main_url),UPDATE(main_url) ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
+GRANT SELECT ON TABLE app_public.tvshow_videos TO catalog_service_gql_role;
 
 
 --

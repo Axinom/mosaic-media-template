@@ -195,7 +195,8 @@
           "recovery": "deferred_retry",
           "redeliveries": {
             "limit": 5,
-            "counter": "mosaic"
+            "counter": "mosaic",
+            "timeout": 10000
           }
         }
       }
