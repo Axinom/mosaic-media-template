@@ -1,0 +1,23 @@
+mutation BulkDeleteSeasons($filter: SeasonFilter) {
+  deleteSeasons(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkPublishSeasons($filter: SeasonFilter) {
+  publishSeasons(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkUnpublishSeasons($filter: SeasonFilter) {
+  unpublishSeasons(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkCreateSeasonSnapshots($filter: SeasonFilter) {
+  createSeasonSnapshots(filter: $filter) {
+    affectedIds
+  }
+}

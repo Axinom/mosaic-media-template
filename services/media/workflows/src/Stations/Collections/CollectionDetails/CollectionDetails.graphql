@@ -1,0 +1,74 @@
+query Collection($id: Int!) {
+  collection(id: $id) {
+    title
+    synopsis
+    description
+    externalId
+    collectionsTags {
+      nodes {
+        name
+      }
+    }
+    collectionsImages {
+      nodes {
+        imageType
+        imageId
+      }
+    }
+    id
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+    publishStatus
+    publishedDate
+    publishedUser
+    movies: collectionRelations(filter: {movieExists: true}) {
+      totalCount
+    }
+    tvshows: collectionRelations(filter: {tvshowExists: true}) {
+      totalCount
+    }
+    seasons: collectionRelations(filter: {seasonExists: true}) {
+      totalCount
+    }
+    episodes: collectionRelations(filter: {episodeExists: true}) {
+      totalCount
+    }
+  }
+}
+
+mutation DeleteCollection($input: DeleteCollectionInput!) {
+  deleteCollection(input: $input) {
+    clientMutationId
+  }
+}
+
+
+mutation PublishCollection($id: Int!) {
+  publishCollection(collectionId: $id) {
+    id
+  }
+}
+
+mutation UnpublishCollection($id: Int!) {
+  unpublishCollection(collectionId: $id) {
+    id
+  }
+}
+
+query CollectionTitle($id: Int!) {
+  collection(id: $id) {
+    id
+    title
+  }
+}
+
+query SearchCollectionTags($searchKey: String!, $limit: Int!) {
+  getCollectionsTagsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
+    nodes
+  }
+}

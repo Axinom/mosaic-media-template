@@ -1,0 +1,7 @@
+mutation CreateMoviesLicense($input: CreateMoviesLicenseInput!) {
+  createMoviesLicense(input: $input) {
+    moviesLicense {
+      id
+    }
+  }
+}

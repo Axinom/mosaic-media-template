@@ -1,0 +1,11 @@
+query EpisodeVideos($id: Int!) {
+  episode(id: $id) {
+    episodesTrailers {
+      nodes {
+        videoId
+      }
+    }
+    mainVideoId
+  }
+}
+

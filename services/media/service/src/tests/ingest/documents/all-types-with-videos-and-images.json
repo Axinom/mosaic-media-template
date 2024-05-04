@@ -1,0 +1,181 @@
+{
+  "name": "Test Ingest",
+  "items": [
+    {
+      "type": "MOVIE",
+      "external_id": "avatar67A23",
+      "data": {
+        "title": " Avatar ",
+        "original_title": " James Cameron's Avatar",
+        "description": "Avatar is a 2009 American epic science fiction film... ",
+        "synopsis": " In 2154, humans have depleted Earth's natural resources... ",
+        "released": "2009-12-10",
+        "studio": " 20th Century Fox ",
+        "tags": ["3D ", " SciFi", " Highlight "],
+        "genres": [" Sci-Fi", "Animation "],
+        "cast": [" Sam Worthington", "Zoe Saldana ", " Sigourney Weaver "],
+        "production_countries": [
+          "Estonia ",
+          "Germany ",
+          "COL",
+          " United States of America ",
+          "ESP"
+        ],
+        "licenses": [
+          {
+            "start": "2020-08-01T00:00:00.000+00:00",
+            "end": "2020-08-30T23:59:59.999+00:00",
+            "countries": ["AT", "AW", "FI"]
+          }
+        ],
+        "main_video": {
+          "source": " test-videos/videos/avatar",
+          "profile": "DEFAULT "
+        },
+        "trailers": [
+          { "source": "test-videos/trailers/avatar_1 " },
+          {
+            "source": " test-videos/trailers/avatar_2",
+            "profile": " DEFAULT"
+          }
+        ],
+        "images": [
+          {
+            "path": "test-images/covers/avatar_1.jpg",
+            "type": "COVER"
+          },
+          {
+            "path": "test-images/teasers/avatar_1.jpg",
+            "type": "TEASER"
+          }
+        ]
+      }
+    },
+    {
+      "type": "EPISODE",
+      "external_id": "mandalorian_s2_e1",
+      "data": {
+        "index": 1,
+        "parent_external_id": "mandalorian_s2",
+        "title": "The Marshal",
+        "original_title": "Chapter 9: The Marshal",
+        "description": "After the stories of Jango and Boba Fett, another warrior emerges in the Star Wars universe...",
+        "synopsis": "The Mandalorian is drawn to the Outer Rim in search of others of his kind.",
+        "released": "2020-10-30",
+        "studio": "Lucasfilm",
+        "tags": ["star wars", "mandalorian", "bounty hunter"],
+        "genres": ["Action", "Adventure", "Sci-Fi"],
+        "cast": ["Pedro Pascal", "Carl Weathers", "Gina Carano"],
+        "production_countries": ["USA"],
+        "licenses": [
+          {
+            "start": "2020-08-01T00:00:00.000+00:00",
+            "end": "2020-08-30T23:59:59.999+00:00",
+            "countries": ["AT", "AW", "FI"]
+          }
+        ],
+        "main_video": {
+          "source": " test-videos/videos/mandalorian_s2_e1",
+          "profile": "DEFAULT"
+        },
+        "trailers": [
+          { "source": "test-videos/trailers/mandalorian_s2_e1_t1" },
+          {
+            "source": "test-videos/trailers/mandalorian_s2_e1_t2",
+            "profile": "DEFAULT"
+          }
+        ],
+        "images": [
+          {
+            "path": "test-images/covers/mandalorian_s2_e1_t1.png",
+            "type": "COVER"
+          },
+          {
+            "path": "test-images/teasers/mandalorian_s2_e1_t1.png",
+            "type": "TEASER"
+          }
+        ]
+      }
+    },
+    {
+      "type": "SEASON",
+      "external_id": "mandalorian_s2",
+      "data": {
+        "index": 2,
+        "parent_external_id": "mandalorian",
+        "description": "After the stories of Jango and Boba Fett, another warrior emerges in the Star Wars universe...",
+        "synopsis": "A Mandalorian bounty hunter tracks a target for a well-paying, mysterious client.",
+        "released": "2020-10-30",
+        "studio": "Lucasfilm",
+        "tags": ["star wars", "mandalorian", "bounty hunter"],
+        "genres": ["Action", "Adventure", "Sci-Fi"],
+        "cast": ["Pedro Pascal", "Carl Weathers", "Gina Carano"],
+        "production_countries": ["USA"],
+        "licenses": [
+          {
+            "start": "2020-08-01T00:00:00.000+00:00",
+            "end": "2020-08-30T23:59:59.999+00:00",
+            "countries": ["AT", "AW", "FI"]
+          }
+        ],
+        "trailers": [
+          { "source": "test-videos/trailers/mandalorian_s2_t1" },
+          {
+            "source": "test-videos/trailers/mandalorian_s2_t2",
+            "profile": "DEFAULT"
+          }
+        ],
+        "images": [
+          {
+            "path": "test-images/covers/mandalorian_s2.png",
+            "type": "COVER"
+          },
+          {
+            "path": "test-images/teasers/mandalorian_s2.png",
+            "type": "TEASER"
+          }
+        ]
+      }
+    },
+    {
+      "type": "TVSHOW",
+      "external_id": "mandalorian",
+      "data": {
+        "title": "Mandalorian",
+        "original_title": "The Mandalorian",
+        "description": "After the stories of Jango and Boba Fett, another warrior emerges in the Star Wars universe...",
+        "synopsis": "The travels of a lone bounty hunter in the outer reaches of the galaxy, far from the authority of the New Republic.",
+        "released": "2019-11-12",
+        "studio": "Lucasfilm",
+        "tags": ["star wars", "mandalorian", "bounty hunter"],
+        "genres": ["Action", "Adventure", "Sci-Fi"],
+        "cast": ["Pedro Pascal", "Carl Weathers", "Gina Carano"],
+        "production_countries": ["USA"],
+        "licenses": [
+          {
+            "start": "2020-08-01T00:00:00.000+00:00",
+            "end": "2020-08-30T23:59:59.999+00:00",
+            "countries": ["AT", "AW", "FI"]
+          }
+        ],
+        "trailers": [
+          { "source": "test-videos/trailers/mandalorian_t1" },
+          {
+            "source": "test-videos/trailers/mandalorian_t2",
+            "profile": "DEFAULT"
+          }
+        ],
+        "images": [
+          {
+            "path": "test-images/covers/mandalorian_t1.png",
+            "type": "COVER"
+          },
+          {
+            "path": "test-images/teasers/mandalorian_t1.png",
+            "type": "TEASER"
+          }
+        ]
+      }
+    }
+  ]
+}

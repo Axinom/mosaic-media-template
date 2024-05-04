@@ -1,0 +1,10 @@
+query SeasonVideos($id: Int!) {
+  season(id: $id) {
+    seasonsTrailers {
+      nodes {
+        videoId
+      }
+    }
+  }
+}
+

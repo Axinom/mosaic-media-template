@@ -1,0 +1,6 @@
+[
+  {
+    "serviceId": "ax-video-service",
+    "permissions": ["SETTINGS_VIEW"]
+  }
+]

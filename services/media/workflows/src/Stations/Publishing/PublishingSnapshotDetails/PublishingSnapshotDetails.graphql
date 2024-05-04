@@ -1,0 +1,45 @@
+query PublishingSnapshot($id: Int!) {
+  snapshot(id: $id) {
+    id
+    entityType
+    createdDate
+    createdUser
+    snapshotState
+    updatedDate
+    updatedUser
+    snapshotJson
+    snapshotValidationResults {
+      nodes {
+        id
+        context
+        severity
+        message
+      }
+    }
+  }
+}
+
+query PublishingSnapshotTitle($id: Int!) {
+  snapshot(id: $id) {
+    entityType
+    snapshotNo
+  }
+}
+
+mutation PublishSnapshot($id: Int!) {
+  publishSnapshot(snapshotId: $id) {
+    id
+  }
+}
+
+mutation UnpublishSnapshot($id: Int!) {
+  unpublishSnapshot(snapshotId: $id) {
+    id
+  }
+}
+
+mutation DeleteSnapshot($input: DeleteSnapshotInput!) {
+  deleteSnapshot(input: $input) {
+    clientMutationId
+  }
+}

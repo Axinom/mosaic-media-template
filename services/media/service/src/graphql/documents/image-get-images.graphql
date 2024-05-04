@@ -1,0 +1,11 @@
+query GetImages($filter: ImageFilter) {
+  images(filter: $filter) {
+    nodes {
+      id
+      height
+      width
+      imageTypeKey
+      transformationPath
+    }
+  }
+}

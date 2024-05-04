@@ -1,0 +1,24 @@
+query SeasonsLicense($id: Int!) {
+  seasonsLicense(id: $id) {
+    seasonsLicensesCountries {
+      nodes {
+        code
+      }
+    }
+    licenseEnd
+    licenseStart
+    seasonId
+  }
+}
+
+mutation UpdateSeasonsLicense($input: UpdateSeasonsLicenseInput!) {
+  updateSeasonsLicense(input: $input) {
+    clientMutationId
+  }
+}
+
+mutation DeleteSeasonsLicense($input: DeleteSeasonsLicenseInput!) {
+  deleteSeasonsLicense(input: $input) {
+    clientMutationId
+  }
+}
