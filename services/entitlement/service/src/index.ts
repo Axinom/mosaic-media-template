@@ -1,8 +1,6 @@
 import {
   createPostgresPoolConnectivityMetric,
   getLoginPgPool,
-  getOwnerPgPool,
-  initMessagingCounter,
   setupLoginPgPool,
   setupOwnerPgPool,
 } from '@axinom/mosaic-db-common';
@@ -11,10 +9,6 @@ import {
   IdGuardErrors,
   setupEndUserAuthentication,
 } from '@axinom/mosaic-id-guard';
-import {
-  createRabbitMQConnectivityMetric,
-  setupMessagingBroker,
-} from '@axinom/mosaic-message-bus';
 import {
   closeHttpServer,
   handleGlobalErrors,
@@ -38,12 +32,9 @@ import { applyMigrations, getFullConfig } from './common';
 import {
   setupEntitlementWebhookEndpoint,
   setupManifestWebhookEndpoint,
-  syncClaimDefinitions,
 } from './domains';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
-import { getMessagingMiddleware } from './messaging';
-import { registerMessaging } from './messaging/register-messaging';
-import { setupRestEndpoints } from './rest';
+import { setupRestEndpoints } from './routes';
 import { updateGeoDatabase } from './update-geo-database';
 
 const logger = new Logger({ context: 'bootstrap' });
@@ -89,26 +80,11 @@ async function bootstrap(): Promise<void> {
     poolConfig,
   );
 
-  const counter = initMessagingCounter(getOwnerPgPool(app));
-  const broker = await setupMessagingBroker({
-    app,
-    config,
-    builders: registerMessaging(app, config),
-    logger,
-    shutdownActions,
-    onMessageMiddleware: getMessagingMiddleware(config, logger),
-    components: { counters: { postgresCounter: counter } },
-    rascalConfigExportPath: './src/generated/messaging/rascal-schema.json',
-  });
-
   setupMonitoring(config, {
     metrics: [
       createPostgresPoolConnectivityMetric(getLoginPgPool(app), 'loginPool'),
-      createRabbitMQConnectivityMetric(broker),
     ],
   });
-
-  await syncClaimDefinitions(broker, config);
 
   const authConfig: AuthenticationConfig = {
     tenantId: config.tenantId,
@@ -122,7 +98,7 @@ async function bootstrap(): Promise<void> {
   await setupPostGraphile(app, config, authConfig);
 
   // Configure REST endpoints additionally to GraphQL (auxiliary needs such as file download)
-  setupRestEndpoints(app, config, authConfig);
+  setupRestEndpoints(app);
 
   const server = app.listen(config.port, () => {
     if (config.isDev) {
