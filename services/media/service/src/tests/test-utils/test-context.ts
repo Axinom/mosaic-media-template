@@ -13,10 +13,10 @@ import {
   ManagementAuthenticationContext,
 } from '@axinom/mosaic-id-guard';
 import {
-  assertError,
   customizeGraphQlErrorFields,
   defaultWriteLogMapper,
   Dict,
+  ensureError,
   GraphQLErrorEnhanced,
   Logger,
   logGraphQlError,
@@ -251,9 +251,9 @@ export const createTestContext = async (
       try {
         await truncate(tableName, 'CASCADE').run(this.ownerPool);
       } catch (e) {
-        assertError(e);
+        const error = ensureError(e);
         this.logger.error(
-          e,
+          error,
           'An error occurred while trying to truncate a table using TestContext.',
         );
       }
@@ -263,9 +263,9 @@ export const createTestContext = async (
         await this.ownerPool.end();
         await this.loginPool.end();
       } catch (e) {
-        assertError(e);
+        const error = ensureError(e);
         this.logger.error(
-          e,
+          error,
           'An error occurred while trying to dispose pg pools using TestContext.',
         );
       }
