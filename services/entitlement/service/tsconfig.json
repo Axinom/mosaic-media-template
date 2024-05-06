@@ -17,7 +17,8 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "baseUrl": "./",
-    "preserveWatchOutput": true
+    "preserveWatchOutput": true,
+    "strictPropertyInitialization": false,
   },
   "exclude": ["node_modules", "dist"]
 }

@@ -1,6 +1,11 @@
 import { gql } from '@apollo/client';
 import { Request, Response } from 'express';
-import { getApolloClient, getFullConfig } from '../../common';
+import {
+  AxinomDrmTokenProvider,
+  getApolloClient,
+  getFullConfig,
+  MosaicDrmOptions,
+} from '../../common';
 
 const config = getFullConfig();
 
@@ -49,9 +54,20 @@ export const EntitlementRequestHandling = async (
         message: 'Movie or its DRM keys not found',
       });
     }
+
+    const drmMosaicOptions = new MosaicDrmOptions();
+    drmMosaicOptions.mosaicDrmCommunicationKey =
+      config.drmLicenseCommunicationKey;
+    drmMosaicOptions.mosaicDrmCommunicationKeyId =
+      config.drmLicenseCommunicationKeyId;
+    const _axinomDrmTokenProvider: AxinomDrmTokenProvider =
+      new AxinomDrmTokenProvider(drmMosaicOptions);
+
+    const token = _axinomDrmTokenProvider.getToken(true, 0, mainVideo.drmKeyId);
     return res.send({
       success: true,
       message: 'OK',
+      token,
       value: mainVideo.drmKeyId,
     });
   } catch (error) {
