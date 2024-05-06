@@ -2,8 +2,8 @@
 /* eslint-disable no-console */
 import { optional } from '@axinom/mosaic-db-common';
 import {
-  assertError,
   Dict,
+  ensureError,
   getValidatedConfig,
   isNullOrWhitespace,
   MosaicError,
@@ -489,8 +489,8 @@ const makeVideoCopy = async (
       conditions: { ifNoneMatch: '*' },
     });
     console.log(getTimestamp(), `Copying video: ${videoPath}`);
-  } catch (err) {
-    assertError(err);
+  } catch (e) {
+    const err = ensureError(e);
     const error = err as Error & { code: string };
     if (error.code === 'BlobAlreadyExists') {
       console.log(getTimestamp(), `Video already exists: ${videoPath}`);
@@ -586,8 +586,8 @@ const generateAndUploadImage = async (
   try {
     await blob.uploadData(buffer, { conditions: { ifNoneMatch: '*' } });
     console.log(getTimestamp(), `Image uploaded: ${imagePath}`);
-  } catch (err) {
-    assertError(err);
+  } catch (e) {
+    const err = ensureError(e);
     const error = err as Error & { code: string };
     if (error.code === 'BlobAlreadyExists') {
       console.log(getTimestamp(), `Image already exists: ${imagePath}`);
@@ -723,8 +723,8 @@ const getProcessingProfiles = async (
     }
 
     return profiles;
-  } catch (error) {
-    assertError(error);
+  } catch (e) {
+    const error = ensureError(e);
     throw new MosaicError({
       message: `An error occurred trying to retrieve encoding processing profiles`,
       code: 'INGEST_GEN_PROFILES_ERROR',
@@ -778,8 +778,8 @@ const getLanguageTags = async (
       ) ?? [];
 
     return languageTags;
-  } catch (error) {
-    assertError(error);
+  } catch (e) {
+    const error = ensureError(e);
     throw new MosaicError({
       message: `An error occurred trying to retrieve localization language tags`,
       code: 'INGEST_GEN_LOCALIZATIONS_ERROR',
