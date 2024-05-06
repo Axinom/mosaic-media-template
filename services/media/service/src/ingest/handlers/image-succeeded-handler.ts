@@ -8,11 +8,10 @@ import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-ou
 import { ImageMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { selectExactlyOne, update } from 'zapatos/db';
-import { CommonErrors, Config } from '../../common';
+import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import { IngestEntityProcessor } from '../models';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
-import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 export abstract class ImageSucceededHandler<
   TContent extends
@@ -34,6 +33,8 @@ export abstract class ImageSucceededHandler<
       config,
     );
   }
+
+  abstract fallbackErrorMessage: string;
 
   override async handleMessage(
     { payload, metadata, id, aggregateId }: TypedTransactionalMessage<TContent>,
@@ -75,6 +76,13 @@ export abstract class ImageSucceededHandler<
     ).run(ownerClient);
   }
 
+  public override mapError(error: unknown): Error {
+    return getMediaMappedError(error, {
+      message: this.fallbackErrorMessage,
+      code: CommonErrors.IngestError.code,
+    });
+  }
+
   override async handleErrorMessage(
     error: Error,
     { metadata }: TypedTransactionalMessage<TContent>,
@@ -90,10 +98,7 @@ export abstract class ImageSucceededHandler<
       'ingest_item_steps',
       {
         status: 'ERROR',
-        response_message: getIngestErrorMessage(
-          error,
-          'An unexpected error occurred while trying to update image relations.',
-        ),
+        response_message: error.message,
       },
       { id: messageContext.ingestItemStepId },
     ).run(ownerClient);

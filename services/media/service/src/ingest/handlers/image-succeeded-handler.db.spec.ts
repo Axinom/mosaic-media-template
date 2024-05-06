@@ -1,5 +1,6 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureImageExistsImageCreatedEvent } from '@axinom/mosaic-messages';
+import { MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
@@ -10,6 +11,7 @@ import {
   ingest_items,
   ingest_item_steps,
 } from 'zapatos/schema';
+import { CommonErrors } from '../../common';
 import { MockIngestProcessor } from '../../tests/ingest/mock-ingest-processor';
 import {
   createTestContext,
@@ -89,7 +91,7 @@ describe('ImageSucceededHandler', () => {
   });
 
   describe('handleMessage', () => {
-    it('message succeeded without errors -> message without error sent and step updated', async () => {
+    it('message succeeded without errors -> step updated', async () => {
       // Arrange
       const payload: EnsureImageExistsImageCreatedEvent = {
         image_id: '11e1d903-49ed-4d70-8b24-90d0824741d0',
@@ -115,8 +117,36 @@ describe('ImageSucceededHandler', () => {
     });
   });
 
+  describe('mapError', () => {
+    it('message failed with non-mosaic error -> default error mapped', async () => {
+      // Act
+      const error = handler.mapError(new Error('Unexpected status code: 404'));
+
+      // Assert
+      expect(error).toMatchObject({
+        message:
+          'The image was correctly imported, but there was an error adding that image to the entity.',
+        code: CommonErrors.IngestError.code,
+      });
+    });
+
+    it('message failed with mosaic error -> thrown error mapped', async () => {
+      // Arrange
+      const testErrorInfo = {
+        message: 'Handled test message',
+        code: 'HANDLED_TEST_CODE',
+      };
+
+      // Act
+      const error = handler.mapError(new MosaicError(testErrorInfo));
+
+      // Assert
+      expect(error).toMatchObject(testErrorInfo);
+    });
+  });
+
   describe('handleErrorMessage', () => {
-    it('message failed on all retries -> message with error ingestItemStepId sent', async () => {
+    it('message failed on all retries -> step updated', async () => {
       // Arrange
       const payload: EnsureImageExistsImageCreatedEvent = {
         image_id: '11e1d903-49ed-4d70-8b24-90d0824741d0',
@@ -126,11 +156,14 @@ describe('ImageSucceededHandler', () => {
         ingestItemId: item1.id,
         imageType: 'COVER',
       };
+      // mapError makes sure this error is appropriate
+      const error = new Error('Handled and mapped message');
 
       // Act
       await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleErrorMessage(
-          new Error('test error'),
+          // mapError makes sure this error is appropriate
+          error,
           createMessage(payload, context),
           dbCtx,
           false,
@@ -141,9 +174,7 @@ describe('ImageSucceededHandler', () => {
       const step = await selectOne('ingest_item_steps', {
         id: step1.id,
       }).run(ctx.ownerPool);
-      expect(step?.response_message).toEqual(
-        'An unexpected error occurred while trying to update image relations.',
-      );
+      expect(step?.response_message).toEqual(error.message);
       expect(step?.status).toEqual('ERROR');
     });
   });

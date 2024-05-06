@@ -118,16 +118,26 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
             const ajv = new Ajv({ allErrors: true });
             addFormats(ajv);
             const isValid = ajv.validate(ingestSchema, document);
-            const customErrors = customIngestValidation(document);
-            if (!isValid || customErrors.length > 0) {
+            if (!isValid) {
               const schemaErrors = transformAjvErrors(
                 ajv.errors,
                 documentString,
               );
+              // Skip custom errors if schema validation failed, since incorrect
+              // document structure might cause custom validation to fail
               throw new MosaicError({
                 ...CommonErrors.IngestValidationError,
                 details: {
-                  validationErrors: [...schemaErrors, ...customErrors],
+                  validationErrors: [...schemaErrors],
+                },
+              });
+            }
+            const customErrors = customIngestValidation(document);
+            if (customErrors.length > 0) {
+              throw new MosaicError({
+                ...CommonErrors.IngestValidationError,
+                details: {
+                  validationErrors: customErrors,
                 },
               });
             }

@@ -10,9 +10,19 @@ import {
 import { ClientBase } from 'pg';
 import { IngestItemStatusEnum, IngestStatusEnum } from 'zapatos/custom';
 import { param, self as value, sql, SQL, update } from 'zapatos/db';
-import { Config, PRIORITY_SEGMENT } from '../../common';
+import {
+  CommonErrors,
+  Config,
+  getMediaMappedError,
+  PRIORITY_SEGMENT,
+} from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import { getFutureIsoDateInMilliseconds } from '../utils';
+
+interface StatusAggregation {
+  status: IngestItemStatusEnum;
+  count: number;
+}
 
 export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalInboxMessageHandler<CheckFinishIngestDocumentCommand> {
   constructor(
@@ -146,9 +156,38 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
       );
     }
   }
-}
 
-interface StatusAggregation {
-  status: IngestItemStatusEnum;
-  count: number;
+  public override mapError(error: unknown): Error {
+    return getMediaMappedError(error, {
+      message:
+        'An unexpected error occurred trying to update the ingest document and its relations.',
+      code: CommonErrors.IngestError.code,
+    });
+  }
+
+  override async handleErrorMessage(
+    error: Error,
+    {
+      payload: { ingest_document_id },
+    }: TypedTransactionalMessage<CheckFinishIngestDocumentCommand>,
+    ownerClient: ClientBase,
+    retry: boolean,
+  ): Promise<void> {
+    if (retry) {
+      return;
+    }
+
+    const wrappedError = param({
+      message: error.message,
+      source: CheckFinishIngestDocumentHandler.name,
+    });
+    await update(
+      'ingest_documents',
+      {
+        status: 'ERROR',
+        errors: sql<SQL>`${value} || ${wrappedError}::jsonb`,
+      },
+      { id: ingest_document_id },
+    ).run(ownerClient);
+  }
 }

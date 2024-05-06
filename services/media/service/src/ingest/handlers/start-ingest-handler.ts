@@ -37,7 +37,12 @@ import {
   update,
 } from 'zapatos/db';
 import { ingest_items } from 'zapatos/schema';
-import { CommonErrors, Config, PRIORITY_SEGMENT } from '../../common';
+import {
+  CommonErrors,
+  Config,
+  getMediaMappedError,
+  PRIORITY_SEGMENT,
+} from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import {
   DisplayTitleMapping,
@@ -45,10 +50,7 @@ import {
   IngestItemInsertable,
   IngestMediaItem,
 } from '../models';
-import {
-  getFutureIsoDateInMilliseconds,
-  getIngestErrorMessage,
-} from '../utils';
+import { getFutureIsoDateInMilliseconds } from '../utils';
 
 export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHandler<StartIngestCommand> {
   constructor(
@@ -164,6 +166,13 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
     }
   }
 
+  public override mapError(error: unknown): Error {
+    return getMediaMappedError(error, {
+      message: 'An error occurred while trying to initialize ingest items.',
+      code: CommonErrors.IngestError.code,
+    });
+  }
+
   override async handleErrorMessage(
     error: Error,
     { payload }: TypedTransactionalMessage<StartIngestCommand>,
@@ -173,17 +182,13 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
     if (retry) {
       return;
     }
-    const errorMessage = getIngestErrorMessage(
-      error,
-      'An error occurred while trying to initialize ingest items.',
-    );
     await update(
       'ingest_documents',
       {
         status: 'ERROR',
         errors: [
           {
-            message: errorMessage,
+            message: error.message,
             source: StartIngestHandler.name,
           },
         ],

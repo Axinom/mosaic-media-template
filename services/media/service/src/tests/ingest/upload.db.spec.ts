@@ -359,7 +359,7 @@ describe('Movies GraphQL endpoints', () => {
       expect(docs).toHaveLength(0);
     });
 
-    it('upload an invalid json file with custom and json validation errors -> document is not created and error is returned', async () => {
+    it('upload an invalid json file with custom and json validation errors -> document is not created and schema errors are returned', async () => {
       // Arrange
       const file = createReadStream(
         resolve(__dirname, 'documents/invalid-movie-for-custom-errors.json'),
@@ -411,21 +411,6 @@ describe('Movies GraphQL endpoints', () => {
                 'JSON path "document/items/1" should have required property \'data\' (line: 33, column: 5)',
               schemaPath: '#/properties/items/items/required',
               type: 'JsonSchemaValidation',
-            },
-            {
-              message:
-                'Document has 2 duplicate items with type "MOVIE" and external_id "avatar67A23"',
-              type: 'CustomDataValidation',
-            },
-            {
-              message:
-                'Item with externalId "avatar67A23" is using a video with source "test" more than once.',
-              type: 'CustomDataValidation',
-            },
-            {
-              message:
-                'Item with externalId "avatar67A23" has 2 duplicate licenses "{"start":"2020-08-01T00:00:00.000+00:00","end":"2020-08-30T23:59:59.999+00:00","countries":["AT","AW","FI"]}".',
-              type: 'CustomDataValidation',
             },
           ],
         },

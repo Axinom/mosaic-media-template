@@ -12,7 +12,7 @@ import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { IngestItem } from 'media-messages';
 import { v4 as uuid } from 'uuid';
-import { all, insert, select } from 'zapatos/db';
+import { insert, selectOne } from 'zapatos/db';
 import {
   ingest_documents,
   ingest_items,
@@ -206,8 +206,36 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
     });
   });
 
+  describe('mapError', () => {
+    it('message failed with non-mosaic error -> default error mapped', async () => {
+      // Act
+      const error = handler.mapError(new Error('Unexpected status code: 404'));
+
+      // Assert
+      expect(error).toMatchObject({
+        message:
+          'Processing of localizable source entity was successful, but there was an error updating the ingest item step status.',
+        code: CommonErrors.IngestError.code,
+      });
+    });
+
+    it('message failed with mosaic error -> thrown error mapped', async () => {
+      // Arrange
+      const testErrorInfo = {
+        message: 'Handled test message',
+        code: 'HANDLED_TEST_CODE',
+      };
+
+      // Act
+      const error = handler.mapError(new MosaicError(testErrorInfo));
+
+      // Assert
+      expect(error).toMatchObject(testErrorInfo);
+    });
+  });
+
   describe('handleErrorMessage', () => {
-    it('message failed on all retries -> message with error sent', async () => {
+    it('message failed on all retries -> step updated', async () => {
       // Arrange
       const payload: UpsertLocalizationSourceEntityFinishedEvent = {
         service_id: ctx.config.serviceId,
@@ -215,14 +243,10 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
         entity_type: 'movie',
       };
       const context = {
-        ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
         ingestItemId: item1.id,
       };
-      const error = new MosaicError({
-        message:
-          'An error occurred while trying to process a response event from the localization service.',
-        code: CommonErrors.IngestError.code,
-      });
+      // mapError makes sure this error is appropriate
+      const error = new Error('Handled and mapped message');
 
       // Act
       await ctx.executeOwnerSql(user, async (dbCtx) =>
@@ -235,26 +259,11 @@ describe('UpsertLocalizationSourceEntityFinishedHandler', () => {
       );
 
       // Assert
-      const docs = await select('ingest_documents', all).run(ctx.ownerPool);
-      const items = await select('ingest_items', all).run(ctx.ownerPool);
-
-      expect(docs).toHaveLength(1);
-
-      // Calculation done in separate handler
-      expect(docs[0].status).toEqual('IN_PROGRESS');
-      expect(docs[0].error_count).toEqual(0);
-      expect(docs[0].in_progress_count).toEqual(1);
-      expect(docs[0].success_count).toEqual(0);
-      expect(docs[0].items_count).toEqual(1);
-
-      expect(items).toHaveLength(1);
-      expect(items[0].status).toEqual('ERROR');
-      expect(items[0].errors).toEqual([
-        {
-          message: error.message,
-          source: 'UpsertLocalizationSourceEntityFinishedHandler',
-        },
-      ]);
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.response_message).toEqual(error.message);
+      expect(step?.status).toEqual('ERROR');
     });
   });
 });

@@ -13,4 +13,6 @@ export class VideoAlreadyExistedHandler extends VideoSucceededHandler<EnsureVide
       config,
     );
   }
+  fallbackErrorMessage =
+    'The video already existed, but there was an error adding that video to the entity.';
 }

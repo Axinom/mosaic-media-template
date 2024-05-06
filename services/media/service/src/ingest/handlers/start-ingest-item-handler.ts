@@ -23,14 +23,13 @@ import {
   sql,
   update,
 } from 'zapatos/db';
-import { CommonErrors, Config } from '../../common';
+import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import {
   FullOrchestrationData,
   IngestEntityProcessor,
   OrchestrationData,
 } from '../models';
-import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessageHandler<StartIngestItemCommand> {
   constructor(
@@ -114,6 +113,13 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
     }
   }
 
+  public override mapError(error: unknown): Error {
+    return getMediaMappedError(error, {
+      message: 'An error occurred while trying to orchestrate ingest items.',
+      code: CommonErrors.IngestError.code,
+    });
+  }
+
   override async handleErrorMessage(
     error: Error,
     { payload }: TypedTransactionalMessage<StartIngestItemCommand>,
@@ -123,12 +129,8 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
     if (retry) {
       return;
     }
-    const errorMessage = getIngestErrorMessage(
-      error,
-      'An error occurred while trying to orchestrate ingest items.',
-    );
     const errorParam = param({
-      message: errorMessage,
+      message: error.message,
       source: StartIngestItemHandler.name,
     });
     await update(

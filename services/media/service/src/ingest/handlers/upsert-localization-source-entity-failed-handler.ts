@@ -6,7 +6,7 @@ import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
-import { param, selectOne, self as value, SQL, sql, update } from 'zapatos/db';
+import { selectOne, update } from 'zapatos/db';
 import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 
@@ -70,7 +70,7 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
   public override mapError(error: unknown): Error {
     return getMediaMappedError(error, {
       message:
-        'An error occurred while trying to process a response event from the localization service.',
+        'Processing of localizable source entity has failed and there was an error updating the ingest item step status.',
       code: CommonErrors.IngestError.code,
     });
   }
@@ -90,17 +90,16 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
       IngestMessageContext,
       'ingestItemId'
     >;
-    const err = param({
-      message: error.message,
-      source: UpsertLocalizationSourceEntityFailedHandler.name,
-    });
     await update(
-      'ingest_items',
+      'ingest_item_steps',
       {
         status: 'ERROR',
-        errors: sql<SQL>`${value} || ${err}::jsonb`,
+        response_message: error.message,
       },
-      { id: messageContext.ingestItemId },
+      {
+        ingest_item_id: messageContext.ingestItemId,
+        type: 'LOCALIZATIONS',
+      },
     ).run(ownerClient);
   }
 }

@@ -5,6 +5,7 @@ import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-message
 import {
   createOffsetDate,
   dateToBeInRange,
+  MosaicError,
 } from '@axinom/mosaic-service-common';
 import {
   StoreInboxMessage,
@@ -20,6 +21,7 @@ import {
 } from 'media-messages';
 import { all, insert, select } from 'zapatos/db';
 import { ingest_documents, ingest_items } from 'zapatos/schema';
+import { CommonErrors } from '../../common';
 import { MockIngestProcessor } from '../../tests/ingest/mock-ingest-processor';
 import {
   createTestContext,
@@ -374,6 +376,33 @@ describe('Start Ingest Item Handler', () => {
     });
   });
 
+  describe('mapError', () => {
+    it('message failed with non-mosaic error -> default error mapped', async () => {
+      // Act
+      const error = handler.mapError(new Error('Unexpected status code: 404'));
+
+      // Assert
+      expect(error).toMatchObject({
+        message: 'An error occurred while trying to orchestrate ingest items.',
+        code: CommonErrors.IngestError.code,
+      });
+    });
+
+    it('message failed with mosaic error -> thrown error mapped', async () => {
+      // Arrange
+      const testErrorInfo = {
+        message: 'Handled test message',
+        code: 'HANDLED_TEST_CODE',
+      };
+
+      // Act
+      const error = handler.mapError(new MosaicError(testErrorInfo));
+
+      // Assert
+      expect(error).toMatchObject(testErrorInfo);
+    });
+  });
+
   describe('handleErrorMessage', () => {
     it('message failed on all retries -> item state updated to ERROR', async () => {
       // Arrange
@@ -386,15 +415,12 @@ describe('Start Ingest Item Handler', () => {
           data: { title: 'title' },
         },
       };
+      // mapError makes sure this error is appropriate
+      const error = new Error('Handled and mapped message');
 
       // Act
       await ctx.executeOwnerSql(user, async (dbCtx) =>
-        handler.handleErrorMessage(
-          new Error('test error'),
-          createMessage(payload),
-          dbCtx,
-          false,
-        ),
+        handler.handleErrorMessage(error, createMessage(payload), dbCtx, false),
       );
 
       // Assert
@@ -414,8 +440,7 @@ describe('Start Ingest Item Handler', () => {
       expect(items[0].status).toEqual('ERROR');
       expect(items[0].errors).toEqual([
         {
-          message:
-            'An error occurred while trying to orchestrate ingest items.',
+          message: error.message,
           source: 'StartIngestItemHandler',
         },
       ]);
