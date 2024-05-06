@@ -78,7 +78,7 @@ export const setupPrePublishingValidationWebhook = (
           warnings: [],
         });
       }
-      //returns status code 400, if validation result has any errors, otherwise return 200
+      // returns status code 400, if validation result has any errors, otherwise return 200
       const statusCode = validationResponse.errors.length > 0 ? 400 : 200;
       res.status(statusCode).send(validationResponse);
     },

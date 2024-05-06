@@ -23,7 +23,7 @@ export const Constants = {
   VERSION_MISMATCH: 'Version Mismatch',
   ERROR: 'Error',
 
-  //Ingest Status
+  // Ingest Status
   IN_PROGRESS: 'In Progress',
   SUCCESS: 'Success',
   PARTIAL_SUCCESS: 'Partial Success',

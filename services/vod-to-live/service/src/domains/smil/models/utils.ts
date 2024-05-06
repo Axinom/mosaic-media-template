@@ -63,10 +63,10 @@ export const getDefaultMetadataHeaders = (
       HeaderMetadataNames.Vod2LiveStartTime,
       vod2LiveStartTime.toISOString(),
     ),
-    //TODO: `splice_media` should be set to `true` but is set to `false`
-    //temporary due to internal Origin bug affecting the HLS streams, making
-    //them stutter. Periodically check if this is fixed and change to `true` if
-    //HLS playback is working as expected.
+    // TODO: `splice_media` should be set to `true` but is set to `false`
+    // temporary due to internal Origin bug affecting the HLS streams, making
+    // them stutter. Periodically check if this is fixed and change to `true` if
+    // HLS playback is working as expected.
     createHeaderMetadata(HeaderMetadataNames.SpliceMedia, false),
     createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
     createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),

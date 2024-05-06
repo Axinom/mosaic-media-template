@@ -98,7 +98,7 @@ function getWsLink(getToken: PiletApi['getToken'], url: string): ApolloLink {
               'Timeout Close to Refresh Token.',
             );
           }
-        }, expiresInMs); //in ms
+        }, expiresInMs); // in ms
       },
     },
   });

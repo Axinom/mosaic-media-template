@@ -21,10 +21,8 @@ export function useSnapshotRegistryFilters(): {
     filters: FilterValues<SnapshotData>,
   ) => SnapshotFilter | undefined;
 } {
-  const [
-    createFromDateFilterValidator,
-    createToDateFilterValidator,
-  ] = createDateRangeFilterValidators<SnapshotData>();
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<SnapshotData>();
 
   const filterOptions: FilterType<SnapshotData>[] = [
     {

@@ -34,12 +34,11 @@ export function useCollectionsActions(): {
     fetchPolicy: 'no-cache',
   });
 
-  const [
-    bulkCreateCollectionSnapshots,
-  ] = useBulkCreateCollectionSnapshotsMutation({
-    client: client,
-    fetchPolicy: 'no-cache',
-  });
+  const [bulkCreateCollectionSnapshots] =
+    useBulkCreateCollectionSnapshotsMutation({
+      client: client,
+      fetchPolicy: 'no-cache',
+    });
 
   const createSnapshotsBulkAction: ExplorerBulkAction<CollectionData> = {
     label: 'Create Snapshot(s)',

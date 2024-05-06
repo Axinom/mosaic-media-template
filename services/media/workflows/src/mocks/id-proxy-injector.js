@@ -8,7 +8,7 @@ dotenv.config({
   path: path.join(__dirname, './../../../../../.env'),
 });
 
-module.exports = function(_ctx, _req, _res) {
+module.exports = function (_ctx, _req, _res) {
   // request handler is not used
 };
 

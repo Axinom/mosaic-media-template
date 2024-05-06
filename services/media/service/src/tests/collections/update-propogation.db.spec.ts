@@ -123,7 +123,7 @@ describe('Collections timestamp propagation', () => {
 
   describe('relation changes', () => {
     it('insert -> update propagated', async () => {
-      //Arrange
+      // Arrange
       await insert('movies', movie).run(ctx.ownerPool);
 
       // Act

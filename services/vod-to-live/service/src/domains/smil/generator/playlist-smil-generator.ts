@@ -220,7 +220,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
       parallels.push(...this.processCuePoint(preCuePoint));
     }
 
-    //cutting program video for MID cue points
+    // cutting program video for MID cue points
     const splicedWithCuePoints: {
       parallels: Parallel[];
       lastSpliceTimeInSeconds: number;
@@ -261,7 +261,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
 
     parallels.push(...splicedWithCuePoints.parallels);
 
-    //Program is played from the last MID cue point, or whole program if there is no MID cue points
+    // Program is played from the last MID cue point, or whole program if there is no MID cue points
     parallels.push(
       createParallel(
         programReference,
@@ -376,7 +376,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
         parallels.push(
           createParallel(this.placeholderVideoParallel, eventStream),
         );
-        //The event stream element must be added only for the first ad placeholder
+        // The event stream element must be added only for the first ad placeholder
         eventStream = undefined;
       }
 

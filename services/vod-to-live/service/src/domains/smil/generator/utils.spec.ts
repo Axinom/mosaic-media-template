@@ -24,8 +24,8 @@ describe('smil-utils', () => {
   describe('createPlaylistEventStream', () => {
     it('getting out of network -> changes indicator to 1 and increases splice id', () => {
       // Arrange
-      const previousOutOfNetworkIndicator = 0; //in network
-      const newOutOfNetworkIndicator = 1; //jump out of network
+      const previousOutOfNetworkIndicator = 0; // in network
+      const newOutOfNetworkIndicator = 1; // jump out of network
       const previousSpliceId = 0;
       // Act
       const result = createPlaylistEventStream(
@@ -43,8 +43,8 @@ describe('smil-utils', () => {
     });
     it('getting in to network -> changes indicator to 0 and does not increases splice id', () => {
       // Arrange
-      const previousOutOfNetworkIndicator = 1; //out of network
-      const newOutOfNetworkIndicator = 0; //jump into network
+      const previousOutOfNetworkIndicator = 1; // out of network
+      const newOutOfNetworkIndicator = 0; // jump into network
       const previousSpliceId = 0;
       // Act
       const result = createPlaylistEventStream(
@@ -62,8 +62,8 @@ describe('smil-utils', () => {
     });
     it('staying in network -> does not generate event stream', () => {
       // Arrange
-      const previousOutOfNetworkIndicator = 0; //in network
-      const newOutOfNetworkIndicator = 0; //staying in network
+      const previousOutOfNetworkIndicator = 0; // in network
+      const newOutOfNetworkIndicator = 0; // staying in network
       const previousSpliceId = 0;
       // Act
       const result = createPlaylistEventStream(
@@ -79,7 +79,7 @@ describe('smil-utils', () => {
     it('staying out of network -> does not generate event stream', () => {
       // Arrange
       const previousOutOfNetworkIndicator = 1; // out of network
-      const newOutOfNetworkIndicator = 1; //staying out of network
+      const newOutOfNetworkIndicator = 1; // staying out of network
       const previousSpliceId = 0;
       // Act
       const result = createPlaylistEventStream(

@@ -73,7 +73,7 @@ export const RecreateSnapshotsPlugin = BulkMutationPluginFactory(
             table: buildEntityTableName(group[0].entity_type),
             title:
               group[0].entity_title ??
-              `${group[0].entity_type} snapshot ${group[0].entity_id}`, //TODO Change to a common title generation function when working on seasons
+              `${group[0].entity_type} snapshot ${group[0].entity_id}`, // TODO Change to a common title generation function when working on seasons
             type: group[0].entity_type,
             isListSnapshot: group[0].is_list_snapshot,
           }));

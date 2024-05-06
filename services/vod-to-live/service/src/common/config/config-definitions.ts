@@ -54,7 +54,7 @@ export const getConfigDefinitions = (
     azureBlobContainerName: () =>
       env.get('AZURE_BLOB_CONTAINER_NAME').required().asString(),
 
-    //Key Service Management API
+    // Key Service Management API
     keyServiceApiBaseUrl: () =>
       env.get('KEY_SERVICE_API_BASE_URL').asOptionalUrlString(),
     keyServiceTenantId: () => env.get('KEY_SERVICE_TENANT_ID').asString(),

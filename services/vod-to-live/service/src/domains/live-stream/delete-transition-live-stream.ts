@@ -55,8 +55,8 @@ export const deleteTransitionLiveStream = async (
       },
     });
 
-    //if there is no playlist transitions left in virtual channel - new transition with channel video is created
-    //making sure, that virtual channel will have content playing and that the latest placeholder video is played
+    // if there is no playlist transitions left in virtual channel - new transition with channel video is created
+    // making sure, that virtual channel will have content playing and that the latest placeholder video is played
     if (!(await virtualChannelApi.channelHasPlaylistTransitions(channelId))) {
       const channelLatestJson = await storage.getFileContent(
         generateChannelFilePath(channelId, metadataFileName),

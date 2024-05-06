@@ -54,7 +54,10 @@
     "no-fallthrough": "error",
     "jest/valid-expect": ["error", { "maxArgs": 2 }],
     "jest/require-top-level-describe": "error",
-    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "ignoreRestSiblings": true }], // Allow unused vars when prefixed with underscore
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "ignoreRestSiblings": true }
+    ], // Allow unused vars when prefixed with underscore
 
     "jest/no-commented-out-tests": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
@@ -68,7 +71,8 @@
     ],
     "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
     "curly": ["warn", "all"],
-    "eqeqeq": ["error", "allow-null"]
+    "eqeqeq": ["error", "allow-null"],
+    "spaced-comment": ["error", "always"]
   },
   "overrides": [
     {
@@ -88,7 +92,7 @@
         "@typescript-eslint/explicit-module-boundary-types": "error"
       }
     },
-    { 
+    {
       "files": ["*.js"],
       "rules": {
         "@typescript-eslint/no-var-requires": "off",

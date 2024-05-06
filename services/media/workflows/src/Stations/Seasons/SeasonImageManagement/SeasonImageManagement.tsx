@@ -70,9 +70,8 @@ export const SeasonImageManagement: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const mutations: string[] = [];
 
@@ -94,25 +93,27 @@ export const SeasonImageManagement: React.FC = () => {
         );
 
       const generateDeleteMutation = (imageType: SeasonImageType): string =>
-        generateUpdateGQLFragment<
-          MutationDeleteSeasonsImageBySeasonIdAndImageTypeArgs
-        >('deleteSeasonsImageBySeasonIdAndImageType', {
-          input: { seasonId, imageType: { type: 'enum', value: imageType } },
-        });
+        generateUpdateGQLFragment<MutationDeleteSeasonsImageBySeasonIdAndImageTypeArgs>(
+          'deleteSeasonsImageBySeasonIdAndImageType',
+          {
+            input: { seasonId, imageType: { type: 'enum', value: imageType } },
+          },
+        );
 
       const generateUpdateMutation = (
         imageId: string,
         imageType: SeasonImageType,
       ): string =>
-        generateUpdateGQLFragment<
-          MutationUpdateSeasonsImageBySeasonIdAndImageTypeArgs
-        >('updateSeasonsImageBySeasonIdAndImageType', {
-          input: {
-            patch: { imageId },
-            seasonId,
-            imageType: { type: 'enum', value: imageType },
+        generateUpdateGQLFragment<MutationUpdateSeasonsImageBySeasonIdAndImageTypeArgs>(
+          'updateSeasonsImageBySeasonIdAndImageType',
+          {
+            input: {
+              patch: { imageId },
+              seasonId,
+              imageType: { type: 'enum', value: imageType },
+            },
           },
-        });
+        );
 
       Object.entries(formData ?? {}).forEach(([imageType, imageId], idx) => {
         const [imgId] = imageId;

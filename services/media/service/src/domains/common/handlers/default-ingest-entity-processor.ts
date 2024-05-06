@@ -392,7 +392,7 @@ export abstract class DefaultIngestEntityProcessor
 
       const assignedGenreIds: number[] = existingRelations.map(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (relation) => (relation as any)[relationProperty] as number, //TODO: see if it's possible to get rid of any here, changed with zapatos 3.6.0
+        (relation) => (relation as any)[relationProperty] as number, // TODO: see if it's possible to get rid of any here, changed with zapatos 3.6.0
       );
       const ingestGenreIds = ingestGenres.map((relation) => relation.id);
       const relationsToDelete = difference(assignedGenreIds, ingestGenreIds);

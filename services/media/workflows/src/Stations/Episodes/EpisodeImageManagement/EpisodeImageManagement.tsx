@@ -70,9 +70,8 @@ export const EpisodeImageManagement: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const mutations: string[] = [];
 
@@ -94,25 +93,27 @@ export const EpisodeImageManagement: React.FC = () => {
         );
 
       const generateDeleteMutation = (imageType: EpisodeImageType): string =>
-        generateUpdateGQLFragment<
-          MutationDeleteEpisodesImageByEpisodeIdAndImageTypeArgs
-        >('deleteEpisodesImageByEpisodeIdAndImageType', {
-          input: { episodeId, imageType: { type: 'enum', value: imageType } },
-        });
+        generateUpdateGQLFragment<MutationDeleteEpisodesImageByEpisodeIdAndImageTypeArgs>(
+          'deleteEpisodesImageByEpisodeIdAndImageType',
+          {
+            input: { episodeId, imageType: { type: 'enum', value: imageType } },
+          },
+        );
 
       const generateUpdateMutation = (
         imageId: string,
         imageType: EpisodeImageType,
       ): string =>
-        generateUpdateGQLFragment<
-          MutationUpdateEpisodesImageByEpisodeIdAndImageTypeArgs
-        >('updateEpisodesImageByEpisodeIdAndImageType', {
-          input: {
-            patch: { imageId },
-            episodeId,
-            imageType: { type: 'enum', value: imageType },
+        generateUpdateGQLFragment<MutationUpdateEpisodesImageByEpisodeIdAndImageTypeArgs>(
+          'updateEpisodesImageByEpisodeIdAndImageType',
+          {
+            input: {
+              patch: { imageId },
+              episodeId,
+              imageType: { type: 'enum', value: imageType },
+            },
           },
-        });
+        );
 
       Object.entries(formData ?? {}).forEach(([imageType, imageId], idx) => {
         const [imgId] = imageId;

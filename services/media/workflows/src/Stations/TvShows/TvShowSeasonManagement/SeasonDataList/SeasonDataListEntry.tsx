@@ -18,12 +18,12 @@ interface UseSeasonDataListDataEntryResult {
 export const useSeasonDataListDataEntry = (
   options: UseSeasonDataListDataEntryOptions,
 ): UseSeasonDataListDataEntryResult => {
-  const SeasonDataListDataEntry: React.FC<DynamicListDataEntryProps<
-    TvShowSeason
-  >> = useMemo(() => {
-    const SeasonDataListDataEntry: React.FC<DynamicListDataEntryProps<
-      TvShowSeason
-    >> = (props) => {
+  const SeasonDataListDataEntry: React.FC<
+    DynamicListDataEntryProps<TvShowSeason>
+  > = useMemo(() => {
+    const SeasonDataListDataEntry: React.FC<
+      DynamicListDataEntryProps<TvShowSeason>
+    > = (props) => {
       const { onActionClicked, ...rest } = props;
 
       const {

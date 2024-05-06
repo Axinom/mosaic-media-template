@@ -129,10 +129,10 @@ export interface ITestContext {
 export const createTestContext = async (
   configOverrides: Dict<string> = {},
 ): Promise<ITestContext> => {
-  //This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
+  // This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
   process.chdir(resolve(__dirname, '../../../'));
 
-  //TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
+  // TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
   const config = createTestConfig(configOverrides, expect.getState().testPath);
 
   const settings = await getMigrationSettings(config);

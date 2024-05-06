@@ -62,7 +62,7 @@ describe('CheckChannelJobStatusHandler', () => {
   );
 
   beforeAll(() => {
-    (sleep as jest.Mock<any, any>).mockImplementation(async (ms) => {
+    (sleep as jest.Mock<any, any>).mockImplementation(async () => {
       return;
     });
   });

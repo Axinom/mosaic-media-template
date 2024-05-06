@@ -492,7 +492,7 @@ describe('Movies GraphQL endpoints', () => {
         }),
       );
 
-      //Act
+      // Act
       const resp = await ctx.runGqlQuery(
         START_INGEST,
         { input: { file: upload } },
@@ -532,7 +532,7 @@ describe('Movies GraphQL endpoints', () => {
             });
             break;
           case VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
-            .messageType: //EnsureVideoExistsStart is handled in another service, here we will just mock messages from it.
+            .messageType: // EnsureVideoExistsStart is handled in another service, here we will just mock messages from it.
             await ctx.executeOwnerSql(user, async (txn) => {
               await videoCreationStarted.handleMessage(
                 createMessage(
@@ -549,7 +549,7 @@ describe('Movies GraphQL endpoints', () => {
             });
             break;
           case ImageServiceMultiTenantMessagingSettings.EnsureImageExists
-            .messageType: //EnsureImageExistsStart is handled in another service, here we will just mock messages from it.
+            .messageType: // EnsureImageExistsStart is handled in another service, here we will just mock messages from it.
             await ctx.executeOwnerSql(user, async (txn) => {
               await imageCreated.handleMessage(
                 createMessage(
@@ -582,7 +582,7 @@ describe('Movies GraphQL endpoints', () => {
       assertNotFalsy(resp.data, 'resp.data');
       expect(resp.data.startIngest.ingestDocument.id).toBeTruthy();
 
-      //Movie
+      // Movie
       const movies = await select('movies', all).run(ctx.ownerPool);
       const moviesCasts = await select('movies_casts', all).run(ctx.ownerPool);
       const moviesLicenses = await select('movies_licenses', all).run(
@@ -739,7 +739,7 @@ describe('Movies GraphQL endpoints', () => {
         },
       ]);
 
-      //Tvshow
+      // Tvshow
       const tvshows = await select('tvshows', all).run(ctx.ownerPool);
       const tvshowsCasts = await select('tvshows_casts', all).run(
         ctx.ownerPool,
@@ -892,7 +892,7 @@ describe('Movies GraphQL endpoints', () => {
         },
       ]);
 
-      //Season
+      // Season
       const seasons = await select('seasons', all).run(ctx.ownerPool);
       const seasonsCasts = await select('seasons_casts', all).run(
         ctx.ownerPool,
@@ -1044,7 +1044,7 @@ describe('Movies GraphQL endpoints', () => {
         },
       ]);
 
-      //Episode
+      // Episode
       const episodes = await select('episodes', all).run(ctx.ownerPool);
       const episodesCasts = await select('episodes_casts', all).run(
         ctx.ownerPool,
@@ -1198,7 +1198,7 @@ describe('Movies GraphQL endpoints', () => {
         },
       ]);
 
-      //Ingest
+      // Ingest
       const docs = await select('ingest_documents', all).run(ctx.ownerPool);
       const items = await select('ingest_items', all, {
         order: [{ by: 'id', direction: 'ASC' }],
