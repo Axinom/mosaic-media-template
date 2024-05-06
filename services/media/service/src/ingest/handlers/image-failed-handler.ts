@@ -3,26 +3,16 @@ import {
   ImageServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
-import {
-  StoreOutboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
-import {
-  CheckFinishIngestItemCommand,
-  ImageMessageContext,
-  MediaServiceMessagingSettings,
-} from 'media-messages';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { ImageMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
-import { Config } from '../../common';
+import { update } from 'zapatos/db';
+import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
-import { getFutureIsoDateInMilliseconds } from '../utils';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
 export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<EnsureImageExistsFailedEvent> {
-  constructor(
-    private readonly storeOutboxMessage: StoreOutboxMessage,
-    config: Config,
-  ) {
+  constructor(config: Config) {
     super(
       ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed,
       ['INGESTS_EDIT', 'ADMIN'],
@@ -47,20 +37,42 @@ export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHan
       return;
     }
     const messageContext = metadata.messageContext as ImageMessageContext;
+    await update(
+      'ingest_item_steps',
+      {
+        status: 'ERROR',
+        response_message: payload.message,
+      },
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
+  }
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
+  public override mapError(error: unknown): Error {
+    return getMediaMappedError(error, {
+      message:
+        'Processing of image has failed and there was an error updating the ingest item step status.',
+      code: CommonErrors.IngestError.code,
+    });
+  }
+
+  override async handleErrorMessage(
+    error: Error,
+    { metadata }: TypedTransactionalMessage<EnsureImageExistsFailedEvent>,
+    ownerClient: ClientBase,
+    retry: boolean,
+  ): Promise<void> {
+    if (retry) {
+      return;
+    }
+    const messageContext = metadata.messageContext as ImageMessageContext;
+
+    await update(
+      'ingest_item_steps',
       {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-        error_message: payload.message,
+        status: 'ERROR',
+        response_message: error.message,
       },
-      ownerClient,
-      {
-        envelopeOverrides: { auth_token: metadata.authToken },
-        lockedUntil: getFutureIsoDateInMilliseconds(1_000),
-      },
-    );
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
   }
 }

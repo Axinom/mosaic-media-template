@@ -17,10 +17,8 @@ export function useCollectionsFilters(): {
     excludeItems?: number[],
   ) => CollectionFilter | undefined;
 } {
-  const [
-    createFromDateFilterValidator,
-    createToDateFilterValidator,
-  ] = createDateRangeFilterValidators<CollectionData>();
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<CollectionData>();
 
   const filterOptions: FilterType<CollectionData>[] = [
     {

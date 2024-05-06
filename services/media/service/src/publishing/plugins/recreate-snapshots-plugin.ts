@@ -41,14 +41,15 @@ export const RecreateSnapshotsPlugin = BulkMutationPluginFactory(
       _input,
       token,
     ): Promise<BulkPublishingResult> => {
-      const { subject, config } = getValidatedExtendedContext(context);
+      const { subject, config, ownerPool, storeInboxMessage } =
+        getValidatedExtendedContext(context);
       const pgSettings = buildPgSettings(
         subject,
         config.dbGqlRole,
         config.serviceId,
       );
       const jobId = await transactionWithContext(
-        context.ownerPool,
+        ownerPool,
         IsolationLevel.Serializable,
         pgSettings,
         async (ctx) => {
@@ -72,7 +73,7 @@ export const RecreateSnapshotsPlugin = BulkMutationPluginFactory(
             table: buildEntityTableName(group[0].entity_type),
             title:
               group[0].entity_title ??
-              `${group[0].entity_type} snapshot ${group[0].entity_id}`, //TODO Change to a common title generation function when working on seasons
+              `${group[0].entity_type} snapshot ${group[0].entity_id}`, // TODO Change to a common title generation function when working on seasons
             type: group[0].entity_type,
             isListSnapshot: group[0].is_list_snapshot,
           }));
@@ -92,19 +93,17 @@ export const RecreateSnapshotsPlugin = BulkMutationPluginFactory(
               entityOrSnapshotId = snapshot.id;
             }
 
-            await context.storeOutboxMessage<PublishEntityCommand>(
+            await storeInboxMessage<PublishEntityCommand>(
               entityOrSnapshotId.toString(),
               MediaServiceMessagingSettings.PublishEntity,
               {
                 table_name: tableName,
                 entity_id: entityOrSnapshotId,
                 job_id: jobId,
-                publish_options: {
-                  action: 'NO_PUBLISH',
-                },
+                publish_options: { action: 'NO_PUBLISH' },
               },
               ctx,
-              { envelopeOverrides: { auth_token: token } },
+              { metadata: { authToken: token } },
             );
           }
           return jobId;

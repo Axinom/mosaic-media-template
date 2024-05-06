@@ -3,7 +3,6 @@ import {
   groupBy,
   isEmptyObject,
   isNullOrWhitespace,
-  MosaicError,
 } from '@axinom/mosaic-service-common';
 import {
   ImageIngestData,
@@ -16,7 +15,7 @@ import { IValidationError } from '../../common';
 export const customIngestValidation = (
   document: IngestDocument,
 ): IValidationError[] => {
-  //Make sure that external_id is unique per item type
+  // Make sure that external_id is unique per item type
   const duplicateExternalIdErrors: IValidationError[] = Object.values(
     groupBy(document.items, ['type', 'external_id']),
   )
@@ -26,7 +25,7 @@ export const customIngestValidation = (
       type: 'CustomDataValidation',
     }));
 
-  //Check that main video and trailer sources are unique in context of each item
+  // Check that main video and trailer sources are unique in context of each item
   const itemVideos = document.items
     .filter(
       (item) =>
@@ -58,7 +57,7 @@ export const customIngestValidation = (
     duplicateVideoErrors.push(...errors);
   }
 
-  //Check that licenses are unique in context of each item
+  // Check that licenses are unique in context of each item
   const itemLicenses = document.items
     .filter((item) => item.data?.licenses)
     .map((item) => ({
@@ -84,7 +83,7 @@ export const customIngestValidation = (
     duplicateLicenseErrors.push(...errors);
   }
 
-  //Make sure that image types are not duplicated in context of one ingest item
+  // Make sure that image types are not duplicated in context of one ingest item
   const duplicateImageErrors: IValidationError[] = [];
   for (const itemInfo of document.items) {
     if (itemInfo.data?.images === undefined) {
@@ -109,15 +108,4 @@ export const customIngestValidation = (
     ...duplicateLicenseErrors,
     ...duplicateImageErrors,
   ];
-};
-
-export const getIngestErrorMessage = (
-  error: Error,
-  defaultMessage: string,
-): string => {
-  if (error instanceof MosaicError) {
-    return error.message;
-  }
-
-  return defaultMessage;
 };

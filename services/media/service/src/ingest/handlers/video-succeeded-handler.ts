@@ -4,23 +4,14 @@ import {
   EnsureVideoExistsCreationStartedEvent,
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
-import {
-  StoreOutboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
-import {
-  CheckFinishIngestItemCommand,
-  MediaServiceMessagingSettings,
-  VideoMessageContext,
-} from 'media-messages';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { VideoMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { selectExactlyOne, update } from 'zapatos/db';
-import { CommonErrors, Config } from '../../common';
+import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import { IngestEntityProcessor } from '../models';
-import { getFutureIsoDateInMilliseconds } from '../utils';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
-import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 export abstract class VideoSucceededHandler<
   TContent extends
@@ -30,7 +21,6 @@ export abstract class VideoSucceededHandler<
   constructor(
     private entityProcessors: IngestEntityProcessor[],
     messagingSettings: MessagingSettings,
-    private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
   ) {
     super(
@@ -43,6 +33,8 @@ export abstract class VideoSucceededHandler<
       config,
     );
   }
+
+  abstract fallbackErrorMessage: string;
 
   override async handleMessage(
     { payload, metadata, id, aggregateId }: TypedTransactionalMessage<TContent>,
@@ -76,23 +68,16 @@ export abstract class VideoSucceededHandler<
 
     await update(
       'ingest_item_steps',
-      { entity_id: payload.video_id },
+      { status: 'SUCCESS', entity_id: payload.video_id },
       { id: messageContext.ingestItemStepId },
     ).run(ownerClient);
+  }
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
-      {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-      },
-      ownerClient,
-      {
-        envelopeOverrides: { auth_token: metadata.authToken },
-        lockedUntil: getFutureIsoDateInMilliseconds(1_000),
-      },
-    );
+  public override mapError(error: unknown): Error {
+    return getMediaMappedError(error, {
+      message: this.fallbackErrorMessage,
+      code: CommonErrors.IngestError.code,
+    });
   }
 
   override async handleErrorMessage(
@@ -106,19 +91,13 @@ export abstract class VideoSucceededHandler<
     }
     const messageContext = metadata.messageContext as VideoMessageContext;
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
+    await update(
+      'ingest_item_steps',
       {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-        error_message: getIngestErrorMessage(
-          error,
-          'An unexpected error occurred while trying to update video relations.',
-        ),
+        status: 'ERROR',
+        response_message: error.message,
       },
-      ownerClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
-    );
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
   }
 }

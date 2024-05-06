@@ -27,7 +27,7 @@ describe('CollectionPublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('A new collection is published', async () => {
       // Arrange
       const message = createCollectionPublishedMessage('collection-1');

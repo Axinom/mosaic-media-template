@@ -188,7 +188,7 @@ describe('IngestMovieProcessor', () => {
       });
     });
 
-    //TODO: This should be adjusted in the future, so that first and third movies are added and for invalid movie an ingest item is created with status ERROR. Work item: #27456
+    // TODO: This should be adjusted in the future, so that first and third movies are added and for invalid movie an ingest item is created with status ERROR. Work item: #27456
     it('message with 3 new movies, second being invalid -> no movies are created', async () => {
       // Arrange
       const items: IngestItem[] = [

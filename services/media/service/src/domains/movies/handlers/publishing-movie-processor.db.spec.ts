@@ -42,7 +42,7 @@ describe('publishingMovieProcessor', () => {
 
   describe('aggregator', () => {
     it('minimal movie -> valid result', async () => {
-      //Arrange
+      // Arrange
       jest
         .spyOn(videoMetadata, 'getVideosMetadata')
         .mockImplementation(async () => ({

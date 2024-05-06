@@ -42,7 +42,7 @@ describe('publishingTvshowProcessor', () => {
 
   describe('aggregator', () => {
     it('minimal tvshow -> valid result', async () => {
-      //Arrange
+      // Arrange
       jest
         .spyOn(videoMetadata, 'getVideosMetadata')
         .mockImplementation(async () => ({

@@ -164,7 +164,7 @@ describe('deleteTransitionLiveStream', () => {
 
       // Assert
       if (isDrmProtected) {
-        //if video is drm protected cpix responses are saved to the storage
+        // if video is drm protected cpix responses are saved to the storage
         expect(savedFiles).toHaveLength(1);
         expect(savedFiles).toMatchObject([
           {

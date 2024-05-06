@@ -48,7 +48,7 @@ export const createDecryptionCpix = async (
 
     // Create CPIX for videos decryption, if any of the videos were DRM protected.
     if (drmKeys && drmKeys.length > 0) {
-      //used in the CPIX file as 'contentId' attribute
+      // used in the CPIX file as 'contentId' attribute
       const contentId = playlistId ? `${channelId}-${playlistId}` : channelId;
       const decryptRequest = createDecryptionCpixRequest(contentId, drmKeys);
       const decryptCpixFilePath = playlistId

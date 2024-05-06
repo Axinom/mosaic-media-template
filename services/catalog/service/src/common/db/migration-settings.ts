@@ -57,7 +57,7 @@ export const getMigrationSettings = async (
     ],
     beforeCurrent: beforeAllMigrationsAndCurrent,
     afterCurrent: [
-      //This will only run when NODE_ENV is 'development'
+      // This will only run when NODE_ENV is 'development'
       {
         _: 'command',
         shadow: false,

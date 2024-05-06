@@ -1,28 +1,21 @@
 import { MosaicError } from '@axinom/mosaic-service-common';
 import {
-  CheckFinishIngestItemCommand,
   IngestMessageContext,
   MediaServiceMessagingSettings,
   UpdateMetadataCommand,
 } from 'media-messages';
-import { selectOne } from 'zapatos/db';
-import { CommonErrors, Config } from '../../common';
+import { selectOne, update } from 'zapatos/db';
+import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { IngestEntityProcessor } from '../models';
-import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 import { Logger } from '@axinom/mosaic-service-common';
-import {
-  StoreOutboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
-import { getFutureIsoDateInMilliseconds } from '../utils';
 
 export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessageHandler<UpdateMetadataCommand> {
   constructor(
     private entityProcessors: IngestEntityProcessor[],
-    private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
   ) {
     super(
@@ -65,20 +58,19 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
       ownerClient,
       localizationStep ? messageContext.ingestItemId : undefined,
     );
+    await update(
+      'ingest_item_steps',
+      { status: 'SUCCESS' },
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
+  }
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
-      {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-      },
-      ownerClient,
-      {
-        envelopeOverrides: { auth_token: metadata.authToken },
-        lockedUntil: getFutureIsoDateInMilliseconds(1_000),
-      },
-    );
+  public override mapError(error: unknown): Error {
+    return getMediaMappedError(error, {
+      message:
+        'An unexpected error occurred while trying to update the metadata.',
+      code: CommonErrors.IngestError.code,
+    });
   }
 
   override async handleErrorMessage(
@@ -91,20 +83,25 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
       return;
     }
     const messageContext = metadata.messageContext as IngestMessageContext;
-
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
+    await update(
+      'ingest_item_steps',
       {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-        error_message: getIngestErrorMessage(
-          error,
-          'Unexpected error occurred while updating metadata.',
-        ),
+        status: 'ERROR',
+        response_message: error.message,
       },
-      ownerClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
-    );
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
+    await update(
+      'ingest_item_steps',
+      {
+        status: 'ERROR',
+        response_message:
+          'Unable to start the localization step because the metadata update has failed.',
+      },
+      {
+        ingest_item_id: messageContext.ingestItemId,
+        type: 'LOCALIZATIONS',
+      },
+    ).run(ownerClient);
   }
 }

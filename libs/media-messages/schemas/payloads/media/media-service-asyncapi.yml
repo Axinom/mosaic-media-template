@@ -57,14 +57,6 @@ channels:
     publish:
       message:
         $ref: '#/components/messages/update-metadata-command'
-  'ingest.check_finish_item':
-    bindings:
-      amqp:
-        queue:
-          name: inbox
-    publish:
-      message:
-        $ref: '#/components/messages/check-finish-ingest-item-command'
   'ingest.check_finish_document':
     bindings:
       amqp:
@@ -85,12 +77,6 @@ channels:
         $ref: '#/components/messages/entity-deleted-event'
 components:
   messages:
-    check-finish-ingest-item-command:
-      tags:
-        - name: aggregate-type:ingest-item
-      contentType: application/json
-      payload:
-        $ref: 'commands/check-finish-ingest-item-command.json'
     check-finish-ingest-document-command:
       tags:
         - name: aggregate-type:ingest-document

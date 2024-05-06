@@ -7,7 +7,7 @@ dotenv.config({
   path: path.join(__dirname, './../../../../../.env'),
 });
 
-module.exports = function(ctx, req, res) {
+module.exports = function (ctx, req, res) {
   if (req.url === '/$config') {
     return res({
       headers: {

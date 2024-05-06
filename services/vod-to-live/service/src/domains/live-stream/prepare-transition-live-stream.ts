@@ -23,7 +23,7 @@ export const prepareTransitionLiveStream = async (
     const playlistTransitions: Transition[] =
       await virtualChannelApi.getPlaylistTransitions(channelId, playlistId);
     if (playlistTransitions.length !== 0) {
-      //removing all future transitions for playlist
+      // removing all future transitions for playlist
       const futureTransitions = playlistTransitions.filter((t) =>
         isFutureDate(t.transitionDate),
       );

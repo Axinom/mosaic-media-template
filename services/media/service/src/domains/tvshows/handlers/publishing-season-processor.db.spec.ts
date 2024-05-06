@@ -43,7 +43,7 @@ describe('publishingSeasonProcessor', () => {
 
   describe('aggregator', () => {
     it('minimal season -> valid result', async () => {
-      //Arrange
+      // Arrange
       jest
         .spyOn(videoMetadata, 'getVideosMetadata')
         .mockImplementation(async () => ({

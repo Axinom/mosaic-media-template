@@ -24,7 +24,7 @@ describe('ChannelPublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('An existing channel is unpublished', async () => {
       // Arrange
       const originalId = uuid();

@@ -3,25 +3,16 @@ import {
   LocalizeEntityFailedEvent,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
-import {
-  StoreOutboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
-import {
-  CheckFinishIngestItemCommand,
-  IngestMessageContext,
-  MediaServiceMessagingSettings,
-} from 'media-messages';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { ImageMessageContext, IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
-import { Config } from '../../common';
+import { update } from 'zapatos/db';
+import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
 export class LocalizeEntityFailedHandler extends MediaTransactionalInboxMessageHandler<LocalizeEntityFailedEvent> {
-  constructor(
-    private readonly storeOutboxMessage: StoreOutboxMessage,
-    config: Config,
-  ) {
+  constructor(config: Config) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFailed,
       new Logger({
@@ -49,17 +40,42 @@ export class LocalizeEntityFailedHandler extends MediaTransactionalInboxMessageH
       return;
     }
     const messageContext = metadata.messageContext as IngestMessageContext;
-
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
+    await update(
+      'ingest_item_steps',
       {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-        error_message: payload.message,
+        status: 'ERROR',
+        response_message: payload.message,
       },
-      ownerClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
-    );
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
+  }
+
+  public override mapError(error: unknown): Error {
+    return getMediaMappedError(error, {
+      message:
+        'Processing of localization(s) has failed and there was an error updating the ingest item step status.',
+      code: CommonErrors.IngestError.code,
+    });
+  }
+
+  override async handleErrorMessage(
+    error: Error,
+    { metadata }: TypedTransactionalMessage<LocalizeEntityFailedEvent>,
+    ownerClient: ClientBase,
+    retry: boolean,
+  ): Promise<void> {
+    if (retry) {
+      return;
+    }
+    const messageContext = metadata.messageContext as ImageMessageContext;
+
+    await update(
+      'ingest_item_steps',
+      {
+        status: 'ERROR',
+        response_message: error.message,
+      },
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
   }
 }

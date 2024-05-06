@@ -279,7 +279,7 @@ describe('prepareChannelLiveStream', () => {
             },
           },
         ]);
-        expect(createdContentKeys).toHaveLength(0); //no new key ids were requested
+        expect(createdContentKeys).toHaveLength(0); // no new key ids were requested
         const channelMetadata = {
           ...JSON.parse(channelJson),
           key_id: mockedContentKeyId,
@@ -327,7 +327,7 @@ describe('prepareChannelLiveStream', () => {
         expect(createdVirtualChannels).toHaveLength(0);
         expect(messages).toHaveLength(0);
 
-        expect(createdContentKeys).toHaveLength(0); //no new key ids were requested
+        expect(createdContentKeys).toHaveLength(0); // no new key ids were requested
         const channelMetadata = {
           ...JSON.parse(channelJson),
           key_id: mockedContentKeyId,
@@ -447,7 +447,7 @@ describe('prepareChannelLiveStream', () => {
             },
           },
         ]);
-        expect(createdContentKeys).toHaveLength(0); //no new key ids were requested
+        expect(createdContentKeys).toHaveLength(0); // no new key ids were requested
         const channelMetadata = JSON.parse(channelJson);
 
         expect(filesStoredInStorage).toHaveLength(1);
@@ -492,7 +492,7 @@ describe('prepareChannelLiveStream', () => {
         expect(createdVirtualChannels).toHaveLength(0);
         expect(messages).toHaveLength(0);
 
-        expect(createdContentKeys).toHaveLength(0); //no new key ids were requested
+        expect(createdContentKeys).toHaveLength(0); // no new key ids were requested
         const channelMetadata = JSON.parse(channelJson);
 
         expect(filesStoredInStorage).toHaveLength(1);

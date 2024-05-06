@@ -1,4 +1,4 @@
-import { assertError, Logger } from '@axinom/mosaic-service-common';
+import { ensureError, Logger } from '@axinom/mosaic-service-common';
 import { faker } from '@faker-js/faker';
 import { gql as gqlExtended, makeExtendSchemaPlugin } from 'graphile-utils';
 import { PublishStatusEnum } from 'zapatos/custom';
@@ -213,8 +213,8 @@ export const PopulateEndpointPlugin = makeExtendSchemaPlugin((build) => {
                   count += tvshows.length;
                 },
               );
-            } catch (error) {
-              assertError(error);
+            } catch (e) {
+              const error = ensureError(e);
               logger.warn(
                 error,
                 `An error occurred trying to insert a batch of ${batch} sample TV shows.`,

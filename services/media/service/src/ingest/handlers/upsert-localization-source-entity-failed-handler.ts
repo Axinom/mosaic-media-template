@@ -3,25 +3,15 @@ import {
   UpsertLocalizationSourceEntityFailedEvent,
 } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
-import {
-  StoreOutboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
-import {
-  CheckFinishIngestItemCommand,
-  IngestMessageContext,
-  MediaServiceMessagingSettings,
-} from 'media-messages';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
-import { param, selectOne, self as value, SQL, sql, update } from 'zapatos/db';
+import { selectOne, update } from 'zapatos/db';
 import { CommonErrors, Config, getMediaMappedError } from '../../common';
 import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 
 export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFailedEvent> {
-  constructor(
-    private readonly storeOutboxMessage: StoreOutboxMessage,
-    config: Config,
-  ) {
+  constructor(config: Config) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFailed,
       new Logger({
@@ -67,23 +57,20 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
       });
     }
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
+    await update(
+      'ingest_item_steps',
       {
-        ingest_item_step_id: localizationStep?.id,
-        ingest_item_id: messageContext.ingestItemId,
-        error_message: payload.message,
+        status: 'ERROR',
+        response_message: payload.message,
       },
-      ownerClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
-    );
+      { id: localizationStep.id },
+    ).run(ownerClient);
   }
 
   public override mapError(error: unknown): Error {
     return getMediaMappedError(error, {
       message:
-        'An error occurred while trying to process a response event from the localization service.',
+        'Processing of localizable source entity has failed and there was an error updating the ingest item step status.',
       code: CommonErrors.IngestError.code,
     });
   }
@@ -103,17 +90,16 @@ export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactio
       IngestMessageContext,
       'ingestItemId'
     >;
-    const err = param({
-      message: error.message,
-      source: UpsertLocalizationSourceEntityFailedHandler.name,
-    });
     await update(
-      'ingest_items',
+      'ingest_item_steps',
       {
         status: 'ERROR',
-        errors: sql<SQL>`${value} || ${err}::jsonb`,
+        response_message: error.message,
       },
-      { id: messageContext.ingestItemId },
+      {
+        ingest_item_id: messageContext.ingestItemId,
+        type: 'LOCALIZATIONS',
+      },
     ).run(ownerClient);
   }
 }

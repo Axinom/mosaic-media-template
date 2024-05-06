@@ -1,5 +1,4 @@
 import { DEFAULT_SYSTEM_USERNAME } from '@axinom/mosaic-db-common';
-import { MessageEnvelopeOverrides } from '@axinom/mosaic-message-bus';
 import {
   ImageServiceMultiTenantMessagingSettings,
   VideoServiceMultiTenantMessagingSettings,
@@ -31,7 +30,6 @@ import { getLongLivedToken } from '../../common/utils/token-utils';
 import { getIngestProcessors } from '../../domains/get-ingest-processors';
 import {
   CheckFinishIngestDocumentHandler,
-  CheckFinishIngestItemHandler,
   StartIngestHandler,
   StartIngestItemHandler,
   UpdateMetadataHandler,
@@ -41,6 +39,8 @@ import { ImageCreatedHandler } from '../../ingest/handlers/image-created-handler
 // mock the long lived token call to not call the ID service
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import {
+  InboxMessageMetadata,
+  StoreInboxMessage,
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
@@ -81,17 +81,17 @@ describe('Movies GraphQL endpoints', () => {
   let ctx: ITestContext;
   let user: AuthenticatedManagementSubject;
   let storeOutboxMessage: StoreOutboxMessage;
+  let storeInboxMessage: StoreInboxMessage;
   let startIngest: StartIngestHandler;
   let startItem: StartIngestItemHandler;
   let updateMetadata: UpdateMetadataHandler;
   let videoCreationStarted: VideoCreationStartedHandler;
   let imageCreated: ImageCreatedHandler;
-  let checkFinishItem: CheckFinishIngestItemHandler;
   let checkFinishDocument: CheckFinishIngestDocumentHandler;
   let messages: {
     messageType: string;
     payload: any;
-    envelopeOverrides: MessageEnvelopeOverrides | undefined;
+    envelopeOverrides: InboxMessageMetadata | undefined;
   }[] = []; // We don't care about message types in this context, we just redirect what was sent
   let defaultRequestContext: TestRequestContext;
   let movieGenres: movie_genres.JSONSelectable[];
@@ -99,14 +99,11 @@ describe('Movies GraphQL endpoints', () => {
 
   const createMessage = <T>(
     payload: any,
-    envelopeOverrides: MessageEnvelopeOverrides | undefined,
+    metadata: InboxMessageMetadata | undefined,
   ) =>
     stub<TypedTransactionalMessage<T>>({
       payload,
-      metadata: {
-        authToken: envelopeOverrides?.auth_token,
-        messageContext: envelopeOverrides?.message_context,
-      },
+      metadata,
     });
 
   beforeAll(async () => {
@@ -116,11 +113,24 @@ describe('Movies GraphQL endpoints', () => {
         messages.push({
           messageType,
           payload,
-          envelopeOverrides,
+          envelopeOverrides: {
+            authToken: envelopeOverrides?.auth_token,
+            messageContext: envelopeOverrides?.message_context,
+          },
         });
       },
     );
-    ctx = await createTestContext({}, storeOutboxMessage);
+    storeInboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload, _client, optionalData) => {
+        const { metadata } = optionalData || {};
+        messages.push({
+          messageType,
+          payload,
+          envelopeOverrides: metadata,
+        });
+      },
+    );
+    ctx = await createTestContext({}, storeOutboxMessage, storeInboxMessage);
     user = createTestUser(ctx.config.serviceId);
     const subject = createTestUser(ctx.config.serviceId, {
       permissions: {
@@ -144,40 +154,29 @@ describe('Movies GraphQL endpoints', () => {
     const ingestProcessors = getIngestProcessors(ctx.config);
     startIngest = new StartIngestHandler(
       ingestProcessors,
-      storeOutboxMessage,
+      storeInboxMessage,
+      ctx.ownerPool,
       ctx.config,
     );
 
     startItem = new StartIngestItemHandler(
       ingestProcessors,
+      storeInboxMessage,
       storeOutboxMessage,
       ctx.config,
     );
 
-    updateMetadata = new UpdateMetadataHandler(
-      ingestProcessors,
-      storeOutboxMessage,
-
-      ctx.config,
-    );
+    updateMetadata = new UpdateMetadataHandler(ingestProcessors, ctx.config);
 
     videoCreationStarted = new VideoCreationStartedHandler(
       ingestProcessors,
-      storeOutboxMessage,
-
       ctx.config,
     );
 
-    imageCreated = new ImageCreatedHandler(
-      ingestProcessors,
-      storeOutboxMessage,
+    imageCreated = new ImageCreatedHandler(ingestProcessors, ctx.config);
 
-      ctx.config,
-    );
-
-    checkFinishItem = new CheckFinishIngestItemHandler(ctx.config);
     checkFinishDocument = new CheckFinishIngestDocumentHandler(
-      storeOutboxMessage,
+      storeInboxMessage,
       ctx.config,
     );
 
@@ -360,7 +359,7 @@ describe('Movies GraphQL endpoints', () => {
       expect(docs).toHaveLength(0);
     });
 
-    it('upload an invalid json file with custom and json validation errors -> document is not created and error is returned', async () => {
+    it('upload an invalid json file with custom and json validation errors -> document is not created and schema errors are returned', async () => {
       // Arrange
       const file = createReadStream(
         resolve(__dirname, 'documents/invalid-movie-for-custom-errors.json'),
@@ -412,21 +411,6 @@ describe('Movies GraphQL endpoints', () => {
                 'JSON path "document/items/1" should have required property \'data\' (line: 33, column: 5)',
               schemaPath: '#/properties/items/items/required',
               type: 'JsonSchemaValidation',
-            },
-            {
-              message:
-                'Document has 2 duplicate items with type "MOVIE" and external_id "avatar67A23"',
-              type: 'CustomDataValidation',
-            },
-            {
-              message:
-                'Item with externalId "avatar67A23" is using a video with source "test" more than once.',
-              type: 'CustomDataValidation',
-            },
-            {
-              message:
-                'Item with externalId "avatar67A23" has 2 duplicate licenses "{"start":"2020-08-01T00:00:00.000+00:00","end":"2020-08-30T23:59:59.999+00:00","countries":["AT","AW","FI"]}".',
-              type: 'CustomDataValidation',
             },
           ],
         },
@@ -508,41 +492,48 @@ describe('Movies GraphQL endpoints', () => {
         }),
       );
 
-      //Act
+      // Act
       const resp = await ctx.runGqlQuery(
         START_INGEST,
         { input: { file: upload } },
         defaultRequestContext,
       );
 
-      await ctx.executeOwnerSql(user, async (txn) => {
-        let videoId = 1;
-        let imageId = 1;
-        while (messages.length) {
-          const msg = messages.shift();
-          assertNotFalsy(msg, 'msg');
+      let videoId = 1;
+      let imageId = 1;
+      while (messages.length) {
+        const msg = messages.shift();
+        assertNotFalsy(msg, 'msg');
 
-          switch (msg.messageType) {
-            case MediaServiceMessagingSettings.StartIngest.messageType:
+        switch (msg.messageType) {
+          case MediaServiceMessagingSettings.StartIngest.messageType:
+            await ctx.executeOwnerSql(user, async (txn) => {
               await startIngest.handleMessage(
                 createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
+                { subject: user },
               );
-              break;
-            case MediaServiceMessagingSettings.StartIngestItem.messageType:
+            });
+            break;
+          case MediaServiceMessagingSettings.StartIngestItem.messageType:
+            await ctx.executeOwnerSql(user, async (txn) => {
               await startItem.handleMessage(
                 createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
-              break;
-            case MediaServiceMessagingSettings.UpdateMetadata.messageType:
+            });
+            break;
+          case MediaServiceMessagingSettings.UpdateMetadata.messageType:
+            await ctx.executeOwnerSql(user, async (txn) => {
               await updateMetadata.handleMessage(
                 createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
-              break;
-            case VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
-              .messageType: //EnsureVideoExistsStart is handled in another service, here we will just mock messages from it.
+            });
+            break;
+          case VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
+            .messageType: // EnsureVideoExistsStart is handled in another service, here we will just mock messages from it.
+            await ctx.executeOwnerSql(user, async (txn) => {
               await videoCreationStarted.handleMessage(
                 createMessage(
                   {
@@ -555,9 +546,11 @@ describe('Movies GraphQL endpoints', () => {
                 ),
                 txn,
               );
-              break;
-            case ImageServiceMultiTenantMessagingSettings.EnsureImageExists
-              .messageType: //EnsureImageExistsStart is handled in another service, here we will just mock messages from it.
+            });
+            break;
+          case ImageServiceMultiTenantMessagingSettings.EnsureImageExists
+            .messageType: // EnsureImageExistsStart is handled in another service, here we will just mock messages from it.
+            await ctx.executeOwnerSql(user, async (txn) => {
               await imageCreated.handleMessage(
                 createMessage(
                   {
@@ -567,26 +560,21 @@ describe('Movies GraphQL endpoints', () => {
                 ),
                 txn,
               );
-              break;
-            case MediaServiceMessagingSettings.CheckFinishIngestItem
-              .messageType:
-              await checkFinishItem.handleMessage(
-                createMessage(msg.payload, msg.envelopeOverrides),
-                txn,
-              );
-              break;
-            case MediaServiceMessagingSettings.CheckFinishIngestDocument
-              .messageType:
+            });
+            break;
+          case MediaServiceMessagingSettings.CheckFinishIngestDocument
+            .messageType:
+            await ctx.executeOwnerSql(user, async (txn) => {
               await checkFinishDocument.handleMessage(
                 createMessage(msg.payload, msg.envelopeOverrides),
                 txn,
               );
-              break;
-            default:
-              break;
-          }
+            });
+            break;
+          default:
+            break;
         }
-      });
+      }
 
       // Assert
       expect(resp.errors).toBeFalsy();
@@ -594,7 +582,7 @@ describe('Movies GraphQL endpoints', () => {
       assertNotFalsy(resp.data, 'resp.data');
       expect(resp.data.startIngest.ingestDocument.id).toBeTruthy();
 
-      //Movie
+      // Movie
       const movies = await select('movies', all).run(ctx.ownerPool);
       const moviesCasts = await select('movies_casts', all).run(ctx.ownerPool);
       const moviesLicenses = await select('movies_licenses', all).run(
@@ -751,7 +739,7 @@ describe('Movies GraphQL endpoints', () => {
         },
       ]);
 
-      //Tvshow
+      // Tvshow
       const tvshows = await select('tvshows', all).run(ctx.ownerPool);
       const tvshowsCasts = await select('tvshows_casts', all).run(
         ctx.ownerPool,
@@ -904,7 +892,7 @@ describe('Movies GraphQL endpoints', () => {
         },
       ]);
 
-      //Season
+      // Season
       const seasons = await select('seasons', all).run(ctx.ownerPool);
       const seasonsCasts = await select('seasons_casts', all).run(
         ctx.ownerPool,
@@ -1056,7 +1044,7 @@ describe('Movies GraphQL endpoints', () => {
         },
       ]);
 
-      //Episode
+      // Episode
       const episodes = await select('episodes', all).run(ctx.ownerPool);
       const episodesCasts = await select('episodes_casts', all).run(
         ctx.ownerPool,
@@ -1210,7 +1198,7 @@ describe('Movies GraphQL endpoints', () => {
         },
       ]);
 
-      //Ingest
+      // Ingest
       const docs = await select('ingest_documents', all).run(ctx.ownerPool);
       const items = await select('ingest_items', all, {
         order: [{ by: 'id', direction: 'ASC' }],
@@ -1233,6 +1221,7 @@ describe('Movies GraphQL endpoints', () => {
           name: 'Test Ingest',
           title: 'Test Ingest',
           status: 'SUCCESS',
+          started_count: 4,
           items_count: 4,
           success_count: 4,
           in_progress_count: 0,

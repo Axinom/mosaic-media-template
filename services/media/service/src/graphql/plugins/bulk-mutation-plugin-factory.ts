@@ -155,14 +155,14 @@ export interface BulkOperationResult {
 const defaultResolverBodyBuilder =
   (messagingSettings: MessagingSettings): BulkResolverBodyBuilder =>
   async (ids, filter, context, input, token) => {
-    const { storeOutboxMessage, pgClient } =
+    const { storeInboxMessage, pgClient } =
       getValidatedExtendedContext(context);
 
     if (ids.length > 0) {
       const { input: additionalInput } = input;
 
       for (const id of ids) {
-        await storeOutboxMessage(
+        await storeInboxMessage(
           id.toString(),
           messagingSettings,
           {
@@ -173,7 +173,7 @@ const defaultResolverBodyBuilder =
             input: additionalInput,
           },
           pgClient,
-          { envelopeOverrides: { auth_token: token } },
+          { metadata: { authToken: token } },
         );
       }
     }

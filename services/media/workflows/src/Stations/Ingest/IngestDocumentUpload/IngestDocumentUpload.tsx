@@ -33,12 +33,9 @@ export const IngestDocumentUpload: React.FC = () => {
 
   const saveData = useCallback(
     async (formData: FormData): Promise<SubmitResponse> => {
-      const {
-        file,
-        uploadStarted,
-        uploadProgress,
-        uploadCompleted,
-      } = (formData as FormData).ingest;
+      const { file, uploadStarted, uploadProgress, uploadCompleted } = (
+        formData as FormData
+      ).ingest;
 
       uploadStarted();
 

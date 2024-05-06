@@ -44,7 +44,7 @@ describe('publishingCollectionProcessor', () => {
 
   describe('aggregator', () => {
     it('minimal collection -> valid result', async () => {
-      //Arrange
+      // Arrange
       jest
         .spyOn(imageMetadata, 'getImagesMetadata')
         .mockImplementation(async () => ({

@@ -13,17 +13,20 @@ import {
   ManagementAuthenticationContext,
 } from '@axinom/mosaic-id-guard';
 import {
-  assertError,
   customizeGraphQlErrorFields,
   defaultWriteLogMapper,
   Dict,
+  ensureError,
   GraphQLErrorEnhanced,
   Logger,
   logGraphQlError,
   MosaicError,
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
-import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  StoreInboxMessage,
+  StoreOutboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { Request, Response } from 'express';
 import { migrate } from 'graphile-migrate';
 import { DocumentNode, graphql, GraphQLSchema } from 'graphql';
@@ -97,7 +100,7 @@ const runGqlQuery = async function (
           result.errors,
           req.body?.operationName,
           customizeGraphQlErrorFields(mediaPgErrorMapper),
-          logGraphQlError(defaultWriteLogMapper, this.logger),
+          logGraphQlError(defaultWriteLogMapper, undefined, this.logger),
         );
       }
       return result;
@@ -151,11 +154,12 @@ export const createTestRequestContext = (
 export const createTestContext = async (
   configOverrides: Dict<string> = {},
   storeOutboxMsg?: StoreOutboxMessage,
+  storeInboxMsg?: StoreInboxMessage,
 ): Promise<ITestContext> => {
-  //This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
+  // This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
   process.chdir(resolve(__dirname, '../../../'));
 
-  //TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
+  // TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
   const config = createTestConfig(configOverrides, expect.getState().testPath);
 
   const settings = await getMigrationSettings(config);
@@ -197,6 +201,7 @@ export const createTestContext = async (
     config,
     ownerPool,
     storeOutboxMsg ?? jest.fn(),
+    storeInboxMsg ?? jest.fn(),
   );
 
   const schema = await createPostGraphileSchema(
@@ -246,9 +251,9 @@ export const createTestContext = async (
       try {
         await truncate(tableName, 'CASCADE').run(this.ownerPool);
       } catch (e) {
-        assertError(e);
+        const error = ensureError(e);
         this.logger.error(
-          e,
+          error,
           'An error occurred while trying to truncate a table using TestContext.',
         );
       }
@@ -258,9 +263,9 @@ export const createTestContext = async (
         await this.ownerPool.end();
         await this.loginPool.end();
       } catch (e) {
-        assertError(e);
+        const error = ensureError(e);
         this.logger.error(
-          e,
+          error,
           'An error occurred while trying to dispose pg pools using TestContext.',
         );
       }
