@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import {
-  assertError,
   createTestDbIdentifier,
+  ensureError,
   getBasicDbConfigDefinitions,
   ValueObject,
 } from '@axinom/mosaic-service-common';
@@ -211,9 +211,9 @@ const resetTemplate1Connections = async (rootPgPool: Pool): Promise<void> => {
     console.log(`Running Query: '${query}'`);
     await rootPgPool.query(query);
   } catch (e) {
-    assertError(e);
+    const error = ensureError(e);
     console.warn(
-      `Could not drop connections on the "template1" database: ${e.message}`,
+      `Could not drop connections on the "template1" database: ${error.message}`,
     );
   }
 };
