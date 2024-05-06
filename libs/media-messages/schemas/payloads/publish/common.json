@@ -117,7 +117,7 @@
           "description": "Type of the image.",
           "type": "string",
           "title": "image_type",
-          "enum": ["COVER", "TEASER"]
+          "enum": ["COVER", "TEASER", "CLEAN_COVER"]
         },
         "path": {
           "description": "URI to the image file.",
