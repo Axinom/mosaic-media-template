@@ -11,7 +11,7 @@ import { PublishStatusStateMap } from '../../../../Util/PublishStatusStateMap/Pu
 import { StringEnumRenderer } from '../../../../Util/StringEnumRenderer/StringEnumRenderer';
 import { CollectionRelatedEntity } from '../CollectionEntityManagement.types';
 import { useEntityDataListDataEntry } from './EntityDataListDataEntry/EntityDataListDataEntry';
-//import { useEntityDataListDataEntry2 } from './EntityDataListDataEntry2';
+// import { useEntityDataListDataEntry2 } from './EntityDataListDataEntry2';
 
 interface EntityDataListProps {
   /** Entities of the Collection */

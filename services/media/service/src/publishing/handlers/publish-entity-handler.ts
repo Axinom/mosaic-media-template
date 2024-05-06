@@ -129,7 +129,7 @@ export class PublishEntityHandler extends MediaGuardedTransactionalInboxMessageH
     snapshotId: number,
     queryable: Queryable,
   ): Promise<void> {
-    //TODO: Notifications logic expected in the future
+    // TODO: Notifications logic expected in the future
     await update(
       'snapshots',
       { snapshot_state: 'ERROR' },

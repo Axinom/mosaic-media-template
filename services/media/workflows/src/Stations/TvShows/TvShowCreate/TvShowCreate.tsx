@@ -18,9 +18,7 @@ type SubmitResponse = CreateTvShowMutation['createTvshow'];
 
 const tvShowCreateSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>(
   {
-    title: Yup.string()
-      .required('Title is a required field')
-      .max(100),
+    title: Yup.string().required('Title is a required field').max(100),
   },
 );
 

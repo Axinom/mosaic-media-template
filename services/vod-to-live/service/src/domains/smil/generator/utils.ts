@@ -31,7 +31,7 @@ export const createPlaylistEventStream = (
   previousSpliceEventId: number,
 ): PlaylistEventStream => {
   let spliceEventId = previousSpliceEventId;
-  //event not needed if new OONI matches last OONI
+  // event not needed if new OONI matches last OONI
   if (previousOutOfNetworkIndicator === outOfNetworkIndicator) {
     return {
       eventStream: undefined,
@@ -78,11 +78,11 @@ export const createAdPlaceholders = (
   );
 
   for (let i = 0; i < quotient; i++) {
-    //ad parallels should always have the end-time defined, for proper ad time calculation in HLS manifest
+    // ad parallels should always have the end-time defined, for proper ad time calculation in HLS manifest
     adPlaceholderParallels.push(
       createParallel(parallel, adEventStream, undefined, placeholderLength),
     );
-    //The event stream element must be added only for the first ad placeholder
+    // The event stream element must be added only for the first ad placeholder
     adEventStream = undefined;
   }
 

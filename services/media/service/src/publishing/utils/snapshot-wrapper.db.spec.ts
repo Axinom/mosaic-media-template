@@ -119,8 +119,8 @@ describe('SnapshotWrapper', () => {
       expect(validationResults).toEqual([]);
       expect(updatedSnapshot).toMatchObject({
         // Auto-generated
-        //created_date: '2021-05-26T10:34:53.133+00:00',
-        //updated_date: '2021-05-26T10:34:53.133+00:00',
+        // created_date: '2021-05-26T10:34:53.133+00:00',
+        // updated_date: '2021-05-26T10:34:53.133+00:00',
         validation_status: 'OK',
         snapshot_state: 'READY',
         entity_title: snapshot1.entity_title,
@@ -209,8 +209,8 @@ describe('SnapshotWrapper', () => {
       expect(validationResults).toEqual([]);
       expect(updatedSnapshot).toMatchObject({
         // Auto-generated
-        //created_date: '2021-05-26T10:34:53.133+00:00',
-        //updated_date: '2021-05-26T10:34:53.133+00:00',
+        // created_date: '2021-05-26T10:34:53.133+00:00',
+        // updated_date: '2021-05-26T10:34:53.133+00:00',
         validation_status: 'OK',
         snapshot_state: 'READY',
         entity_title: json.title,
@@ -272,8 +272,8 @@ describe('SnapshotWrapper', () => {
       ]);
       expect(updatedSnapshot).toMatchObject({
         // Auto-generated
-        //created_date: '2021-05-26T10:34:53.133+00:00',
-        //updated_date: '2021-05-26T10:34:53.133+00:00',
+        // created_date: '2021-05-26T10:34:53.133+00:00',
+        // updated_date: '2021-05-26T10:34:53.133+00:00',
         validation_status: 'WARNINGS',
         snapshot_state: 'READY',
         entity_title: snapshot1.entity_title,
@@ -335,8 +335,8 @@ describe('SnapshotWrapper', () => {
       ]);
       expect(updatedSnapshot).toMatchObject({
         // Auto-generated
-        //created_date: '2021-05-26T10:34:53.133+00:00',
-        //updated_date: '2021-05-26T10:34:53.133+00:00',
+        // created_date: '2021-05-26T10:34:53.133+00:00',
+        // updated_date: '2021-05-26T10:34:53.133+00:00',
         validation_status: 'ERRORS',
         snapshot_state: 'INVALID',
         entity_title: snapshot1.entity_title,

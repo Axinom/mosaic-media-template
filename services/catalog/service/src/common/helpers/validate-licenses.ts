@@ -36,7 +36,7 @@ export const isLicenseValid = (
       (!license.countries || // Must have empty countries (valid for all countries), or must include user countryCode
         license.countries.length === 0 ||
         license.countries.includes(countryCode)) &&
-      date >= (license.start_time ? new Date(license.start_time) : minDate) && //Current date must be after license start date
+      date >= (license.start_time ? new Date(license.start_time) : minDate) && // Current date must be after license start date
       date < (license.end_time ? new Date(license.end_time) : maxDate), // Current date must be before license end date
   );
 

@@ -23,9 +23,7 @@ type SubmitResponse = CreateCollectionMutation['createCollection'];
 const collectionCreateSchema = Yup.object().shape<
   ObjectSchemaDefinition<FormData>
 >({
-  title: Yup.string()
-    .required('Title is a required field')
-    .max(100),
+  title: Yup.string().required('Title is a required field').max(100),
 });
 
 export const CollectionCreate: React.FC = () => {

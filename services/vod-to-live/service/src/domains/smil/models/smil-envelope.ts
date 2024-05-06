@@ -85,7 +85,7 @@ export interface SpliceInfoSection {
 }
 
 export interface SpliceInsert {
-  '@outOfNetworkIndicator': OutOfNetworkIndicator; //can be 0|1
+  '@outOfNetworkIndicator': OutOfNetworkIndicator; // can be 0|1
   '@spliceImmediateFlag': number;
   '@spliceEventId'?: string;
   Program: unknown;

@@ -124,6 +124,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           query: EpisodesMutatedDocument,
         })
         .subscribe((e) => {
+          // eslint-disable-next-line no-console
           console.log(e);
           switch (e.data?.episodeMutated?.eventKey) {
             case EpisodeSubscriptionEventKey.EpisodeChanged:

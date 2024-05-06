@@ -1183,7 +1183,7 @@ describe('ingest-validation-schema.json', () => {
         {
           message:
             'JSON path "document/items/0/data/tags" should NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 17)',
-          schemaPath: '#/uniqueItems', //TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
+          schemaPath: '#/uniqueItems', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
@@ -1311,7 +1311,7 @@ describe('ingest-validation-schema.json', () => {
         {
           message:
             'JSON path "document/items/0/data/genres" should NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 19)',
-          schemaPath: '#/uniqueItems', //TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
+          schemaPath: '#/uniqueItems', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
@@ -1439,7 +1439,7 @@ describe('ingest-validation-schema.json', () => {
         {
           message:
             'JSON path "document/items/0/data/cast" should NOT have duplicate items (items ## 0 and 1 are identical) (line: 9, column: 17)',
-          schemaPath: '#/uniqueItems', //TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
+          schemaPath: '#/uniqueItems', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
@@ -1885,7 +1885,7 @@ describe('ingest-validation-schema.json', () => {
         {
           message:
             'JSON path "document/items/0/data/main_video" should have required property \'source\' (line: 9, column: 23)',
-          schemaPath: '#/dependencies/profile/required', //TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
+          schemaPath: '#/dependencies/profile/required', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
@@ -2175,7 +2175,7 @@ describe('ingest-validation-schema.json', () => {
         {
           message:
             'JSON path "document/items/0/data/trailers/0" should be object (line: 10, column: 11)',
-          schemaPath: '#/items/type', //TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
+          schemaPath: '#/items/type', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
           type: 'JsonSchemaValidation',
         },
         {
@@ -2431,7 +2431,7 @@ describe('ingest-validation-schema.json', () => {
           {
             message:
               'JSON path "document/items/0/data/trailers/0" should have required property \'source\' (line: 10, column: 11)',
-            schemaPath: '#/items/required', //TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
+            schemaPath: '#/items/required', // TODO: Open issue: https://github.com/ajv-validator/ajv/issues/512
             type: 'JsonSchemaValidation',
           },
           {
@@ -2468,7 +2468,7 @@ describe('ingest-validation-schema.json', () => {
       expect(errors).toIncludeSameMembers([]);
       expect(isValid).toBe(true);
     });
-    //----------------------------------------------------------------
+    // ----------------------------------------------------------------
 
     it('Data with null image -> document is invalid', () => {
       // Arrange

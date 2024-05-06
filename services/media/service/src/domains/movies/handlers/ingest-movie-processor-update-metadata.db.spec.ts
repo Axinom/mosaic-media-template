@@ -129,7 +129,7 @@ describe('IngestMovieProcessor', () => {
         synopsis: '',
         description: '',
         studio: '',
-        released: null, //Unlike for strings, there is no 'empty/default' value for date types. Therefore we just set it to null to make the test pass.
+        released: null, // Unlike for strings, there is no 'empty/default' value for date types. Therefore we just set it to null to make the test pass.
       },
     ])(
       'message with null or empty regular properties -> original values are updated with null or empty values',
@@ -577,7 +577,7 @@ describe('IngestMovieProcessor', () => {
       },
     );
 
-    //TODO: Also test input duplicate values
+    // TODO: Also test input duplicate values
     it.each`
       ingest                                                                | existing              | expected
       ${undefined}                                                          | ${[]}                 | ${[]}

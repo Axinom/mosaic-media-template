@@ -48,7 +48,7 @@ export class DeleteEntityHandler extends MediaGuardedTransactionalInboxMessageHa
       const deletedRow = deletedItems[0];
       assertDictionary(deletedRow);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const entity_id = (deletedRow as any)[payload.primary_key_name]; //TODO: see if it's possible to get rid of any here, changed with zapatos 3.6.0
+      const entity_id = (deletedRow as any)[payload.primary_key_name]; // TODO: see if it's possible to get rid of any here, changed with zapatos 3.6.0
       await this.storeOutboxMessage<EntityDeletedEvent>(
         entity_id,
         MediaServiceMessagingSettings.EntityDeleted,
