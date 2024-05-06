@@ -37,6 +37,8 @@ import { setupPostGraphile } from './graphql/postgraphile-middleware';
 import { setupRestEndpoints } from './routes';
 import { updateGeoDatabase } from './update-geo-database';
 
+import 'reflect-metadata';
+
 const logger = new Logger({ context: 'bootstrap' });
 
 // Entry point for the service. For annotated version please see /services/media/service/src/index.ts.

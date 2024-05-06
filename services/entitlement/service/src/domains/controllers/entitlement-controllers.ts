@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import { Request, Response } from 'express';
 import {
-  AxinomDrmTokenProvider,
+  EntitlementTokenProvider,
   getApolloClient,
   getFullConfig,
   MosaicDrmOptions,
@@ -21,9 +21,7 @@ export const EntitlementRequestHandling = async (
       message: `Asset ID should not be empty`,
     });
   }
-  // TODO: add missing DRM configurations (communication key, communication key ID) to /src/common/config/config-definitions.ts (follow the pattern there), also to .env.template and to .env
-  // get DRM token generation algorithm from InternalDeviceEntitlementProvider.cs and AxinomDrmTokenProvider.cs
-  // pay attention that _options.DrmMessageOptions is basically a set of defaults such as expiration, etc.
+
   try {
     const results = await client.query({
       query: gql`
@@ -60,10 +58,16 @@ export const EntitlementRequestHandling = async (
       config.drmLicenseCommunicationKey;
     drmMosaicOptions.mosaicDrmCommunicationKeyId =
       config.drmLicenseCommunicationKeyId;
-    const _axinomDrmTokenProvider: AxinomDrmTokenProvider =
-      new AxinomDrmTokenProvider(drmMosaicOptions);
 
-    const token = _axinomDrmTokenProvider.getToken(true, 0, mainVideo.drmKeyId);
+    const _axinomEntitlementTokenProvider = new EntitlementTokenProvider(
+      drmMosaicOptions,
+    );
+
+    const token = _axinomEntitlementTokenProvider.getToken(
+      true,
+      30,
+      mainVideo.drmKeyId,
+    );
     return res.send({
       success: true,
       message: 'OK',

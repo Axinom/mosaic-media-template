@@ -1,2 +1,3 @@
 export * from './drm-options';
-export * from './drm-token-provider';
+export * from './entitlement-message-dto';
+export * from './token-provider';
