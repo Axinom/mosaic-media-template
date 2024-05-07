@@ -54,7 +54,7 @@ describe('IngestMovieProcessor', () => {
       };
 
       // Act
-      const result = await ctx.executeGqlSql(user, async (dbCtx) => {
+      const result = await ctx.executeOwnerSql(user, async (dbCtx) => {
         return processor.initializeMedia([item], dbCtx);
       });
 
@@ -102,7 +102,7 @@ describe('IngestMovieProcessor', () => {
         };
 
         // Act
-        const result = await ctx.executeGqlSql(user, async (dbCtx) => {
+        const result = await ctx.executeOwnerSql(user, async (dbCtx) => {
           return processor.initializeMedia([item], dbCtx);
         });
 
@@ -148,7 +148,7 @@ describe('IngestMovieProcessor', () => {
       ];
 
       // Act
-      const result = await ctx.executeGqlSql(user, async (dbCtx) => {
+      const result = await ctx.executeOwnerSql(user, async (dbCtx) => {
         return processor.initializeMedia(items, dbCtx);
       });
 
@@ -211,7 +211,7 @@ describe('IngestMovieProcessor', () => {
 
       // Act
       const error = await rejectionOf(
-        ctx.executeGqlSql(user, async (dbCtx) => {
+        ctx.executeOwnerSql(user, async (dbCtx) => {
           return processor.initializeMedia(items, dbCtx);
         }),
       );

@@ -92,11 +92,11 @@ export class LocalizableMovieImageDeletedDbMessageHandler extends LocalizableMed
     {
       payload: { image_type, movie_id },
     }: TypedTransactionalMessage<LocalizableMovieImageDbEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
     if (
       image_type !== 'COVER' ||
-      (await this.movieIsDeleted(movie_id, loginClient))
+      (await this.movieIsDeleted(movie_id, ownerClient))
     ) {
       // Ignore any changes to non-cover image relations
       // If image relation is deleted as part of a cascade delete of movie - no need to upsert
@@ -115,13 +115,13 @@ export class LocalizableMovieImageDeletedDbMessageHandler extends LocalizableMed
 
   async movieIsDeleted(
     movieId: number,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<boolean> {
     const data = await selectOne(
       'movies',
       { id: movieId },
       { columns: ['id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
     return !data;
   }
 }

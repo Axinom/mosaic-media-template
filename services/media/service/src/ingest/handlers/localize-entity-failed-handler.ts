@@ -39,7 +39,7 @@ export class LocalizeEntityFailedHandler extends MediaTransactionalInboxMessageH
       id,
       aggregateId,
     }: TypedTransactionalMessage<LocalizeEntityFailedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     if (
       !checkIsIngestEvent(metadata, this.logger, id, aggregateId) ||
@@ -58,7 +58,7 @@ export class LocalizeEntityFailedHandler extends MediaTransactionalInboxMessageH
         ingest_item_id: messageContext.ingestItemId,
         error_message: payload.message,
       },
-      loginClient,
+      ownerClient,
       { envelopeOverrides: { auth_token: metadata.authToken } },
     );
   }

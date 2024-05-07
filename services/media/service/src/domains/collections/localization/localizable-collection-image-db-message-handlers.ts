@@ -92,11 +92,11 @@ export class LocalizableCollectionImageDeletedDbMessageHandler extends Localizab
     {
       payload: { image_type, collection_id },
     }: TypedTransactionalMessage<LocalizableCollectionImageDbEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
     if (
       image_type !== 'COVER' ||
-      (await this.collectionIsDeleted(collection_id, loginClient))
+      (await this.collectionIsDeleted(collection_id, ownerClient))
     ) {
       // Ignore any changes to non-cover image relations
       // If image relation is deleted as part of a cascade delete of collection - no need to upsert
@@ -115,13 +115,13 @@ export class LocalizableCollectionImageDeletedDbMessageHandler extends Localizab
 
   async collectionIsDeleted(
     collectionId: number,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<boolean> {
     const data = await selectOne(
       'collections',
       { id: collectionId },
       { columns: ['id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
     return !data;
   }
 }

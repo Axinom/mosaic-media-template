@@ -49,13 +49,13 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
 
   override async handleMessage(
     { payload, metadata }: TypedTransactionalMessage<StartIngestCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     // Sending only id in a scenario of detached services is an anti-pattern
     // Ideally the whole doc should have been sent and message should be self-contained, but because doc has a potential to be quite big - we save it to db and pass only it's id
     const { document, id } = await selectExactlyOne('ingest_documents', {
       id: payload.doc_id,
-    }).run(loginClient);
+    }).run(ownerClient);
 
     const ingestItems: ingest_items.JSONSelectable[] = [];
     for (const processor of this.entityProcessors) {
@@ -64,14 +64,14 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
           processor,
           document.items,
           id,
-          loginClient,
+          ownerClient,
         )),
       );
     }
     await this.sendCommands(
       payload.doc_id,
       ingestItems,
-      loginClient,
+      ownerClient,
       metadata.authToken,
     );
   }
@@ -79,7 +79,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
   override async handleErrorMessage(
     error: Error,
     { payload }: TypedTransactionalMessage<StartIngestCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -101,21 +101,21 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
         ],
       },
       { id: payload.doc_id },
-    ).run(loginClient);
+    ).run(ownerClient);
   }
 
   private async initializeItems(
     processor: IngestEntityProcessor,
     allItems: IngestItem[],
     documentId: number,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<ingest_items.JSONSelectable[]> {
     const typedItems = allItems.filter(
       (item) => item.type.toLowerCase() === processor.type.toLowerCase(),
     );
 
     const { existedMedia, createdMedia, displayTitleMappings } =
-      await processor.initializeMedia(typedItems, loginClient);
+      await processor.initializeMedia(typedItems, ownerClient);
 
     const existedItems = this.createIngestItems(
       this.getIngestItemInfo(displayTitleMappings, existedMedia),
@@ -136,7 +136,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
       );
     }
     return insert('ingest_items', [...existedItems, ...createdItems]).run(
-      loginClient,
+      ownerClient,
     );
   }
 
@@ -189,7 +189,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
   private async sendCommands(
     documentId: number,
     ingestItems: ingest_items.JSONSelectable[],
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     jwtToken: string | undefined,
   ): Promise<void> {
     for (const ingestItem of ingestItems) {
@@ -201,7 +201,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
           entity_id: ingestItem.entity_id,
           item: ingestItem.item,
         },
-        loginClient,
+        ownerClient,
         {
           envelopeOverrides: { auth_token: jwtToken },
           lockedUntil: getFutureIsoDateInMilliseconds(5_000),
@@ -219,7 +219,7 @@ export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHan
         previous_success_count: 0,
         previous_in_progress_count: 0,
       },
-      loginClient,
+      ownerClient,
       { envelopeOverrides: { auth_token: jwtToken } },
     );
   }

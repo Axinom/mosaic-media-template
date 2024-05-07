@@ -56,7 +56,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
 
   override async handleMessage(
     { payload, metadata }: TypedTransactionalMessage<StartIngestItemCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const processor = this.entityProcessors.find(
       (h) => h.type === payload.item.type,
@@ -70,7 +70,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
     }
 
     const data = processor.getOrchestrationData(payload);
-    await this.saveIngestItemSteps(data, loginClient);
+    await this.saveIngestItemSteps(data, ownerClient);
     const orchestrationData = data
       .filter<FullOrchestrationData>(this.isFullOrchestrationData)
       .map((original) => ({
@@ -85,7 +85,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
         data.aggregateId,
         data.messagingSettings,
         data.messagePayload,
-        loginClient,
+        ownerClient,
         {
           envelopeOverrides: {
             auth_token: metadata.authToken,
@@ -100,7 +100,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
   override async handleErrorMessage(
     error: Error,
     { payload }: TypedTransactionalMessage<StartIngestItemCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
@@ -121,7 +121,7 @@ export class StartIngestItemHandler extends MediaGuardedTransactionalInboxMessag
         errors: sql<SQL>`${value} || ${errorParam}::jsonb`,
       },
       { id: payload.ingest_item_id },
-    ).run(loginClient);
+    ).run(ownerClient);
   }
 
   private getPublicationConfig(

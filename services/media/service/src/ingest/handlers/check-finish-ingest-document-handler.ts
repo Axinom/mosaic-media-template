@@ -41,14 +41,14 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
       },
       metadata,
     }: TypedTransactionalMessage<CheckFinishIngestDocumentCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const countGroups = await sql<SQL, StatusAggregation[]>`
     SELECT status, COUNT (status)
     FROM app_public.ingest_items
     WHERE ingest_document_id = ${param(ingest_document_id)}
     GROUP BY status;
-    `.run(loginClient);
+    `.run(ownerClient);
 
     const error_count =
       countGroups.find((row) => row.status === 'ERROR')?.count ?? 0;
@@ -70,7 +70,7 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
       'ingest_documents',
       { error_count, in_progress_count, success_count, status },
       { id: ingest_document_id },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     if (updatedDoc.status !== 'IN_PROGRESS') {
       // Ingest finished, no need to re-check progress anymore
@@ -99,7 +99,7 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
           errors: sql<SQL>`${value} || ${error}::jsonb`,
         },
         { id: ingest_document_id },
-      ).run(loginClient);
+      ).run(ownerClient);
     } else {
       await this.storeOutboxMessage<CheckFinishIngestDocumentCommand>(
         ingest_document_id.toString(),
@@ -111,7 +111,7 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
           previous_success_count: updatedDoc.success_count,
           previous_in_progress_count: updatedDoc.in_progress_count,
         },
-        loginClient,
+        ownerClient,
         {
           envelopeOverrides: { auth_token: metadata.authToken },
           lockedUntil: getFutureIsoDateInMilliseconds(5_000),
