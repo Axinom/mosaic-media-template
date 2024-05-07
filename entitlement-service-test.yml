@@ -1,0 +1,78 @@
+trigger: none
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  serviceId: 'dc-nfn-entitlement-acc'
+  containerRegistry: 'harbor-beyonddutch-automation'
+  dockerfilePath: 'Dockerfile'
+  packageRoot: 'services/entitlement/service'
+  packageBuildCommand: 'build:entitlement-service:prod'
+  imageRepository: 'beyonddutch-mosaic/mosaic-entitlement-service'
+  tag: '$(Build.BuildNumber)'
+
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+
+stages:
+  - stage: Build
+    displayName: Build and push stage
+    jobs:
+      - job: Build
+        displayName: Build
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '18.x'
+            displayName: 'Install Node.js'
+
+          - task: Cache@2
+            inputs:
+              key: 'yarn | "$(Agent.OS)" | yarn.lock'
+              restoreKeys: |
+                yarn | "$(Agent.OS)"
+                yarn
+              path: $(YARN_CACHE_FOLDER)
+            displayName: Cache Yarn packages
+
+          - task: Docker@2
+            displayName: Build Docker Image
+            inputs:
+              containerRegistry: $(containerRegistry)
+              repository: $(imageRepository)
+              command: 'build'
+              Dockerfile: $(dockerfilePath)
+              buildContext: '.'
+              tags: '$(tag)'
+              arguments:
+                '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg
+                PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
+
+          - task: Docker@2
+            displayName: Push Docker Image to Axinom Container Registry
+            inputs:
+              containerRegistry: $(containerRegistry)
+              repository: $(imageRepository)
+              command: 'push'
+              tags: '$(tag)'
+
+          - bash: |
+              apt install -y jq
+              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
+              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
+              mv package.updated.json package.json
+              yarn install
+            displayName: 'Install Dev Dependencies'
+
+          - task: Bash@3
+            displayName: 'Upload deployment configuration to Acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
