@@ -1,10 +1,7 @@
 import { instanceToPlain } from 'class-transformer';
 import jwt from 'jsonwebtoken';
+import { Entitlement, EntitlementMessage } from '../../common';
 import { MosaicDrmOptions } from './drm-options';
-import {
-  EntitlementMessage,
-  EntitlementMessageDTO,
-} from './entitlement-message-dto';
 
 export class EntitlementTokenProvider {
   private readonly options: MosaicDrmOptions;
@@ -52,7 +49,7 @@ export class EntitlementTokenProvider {
       contentKeyId,
     );
 
-    const entitlementMessage: EntitlementMessageDTO = new EntitlementMessageDTO(
+    const entitlementMessage: Entitlement = new Entitlement(
       1,
       new Date(),
       message.ExpirationDate,
