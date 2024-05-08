@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import {
-  AssetHandler,
   EntitlementTokenProvider,
   getFullConfig,
   MosaicDrmOptions,
@@ -12,36 +11,46 @@ export const EntitlementRequestHandling = async (
   req: Request,
   res: Response,
 ): Promise<Response> => {
-  const input = req.body;
-  if (!input.asset_id || input.asset_id.length < 1) {
+  const requestBody = req.body;
+  if (!requestBody.asset_id || requestBody.asset_id.length < 1) {
     return res.status(400).send({
       success: false,
       message: `Asset ID should not be empty`,
     });
   }
 
-  if (!input.key_id || input.key_id.length < 1) {
+  if (!requestBody.key_id || requestBody.key_id.length < 1) {
     return res.status(400).send({
       success: false,
       message: `Key ID should not be empty`,
     });
   }
 
-  const assertResponse = await AssetHandler(input);
+  // const assertResponse = await AssetHandler(input);
 
-  if (!assertResponse.isValid) {
-    if (assertResponse.error) {
-      return res.status(assertResponse.error.status).send({
-        success: false,
-        message: assertResponse.error.message,
-      });
-    } else {
-      return res.status(500).send({
-        success: false,
-        message: 'Internal Server Error',
-      });
-    }
-  }
+  // Mocking the response of catalog service
+  const assertResponse = {
+    isValid: true,
+    data: {
+      assetId: requestBody.asset_id,
+      keyId: requestBody.key_id,
+      downloadedAssetLifespan: 30,
+    },
+  };
+
+  // if (!assertResponse.isValid) {
+  //   if (assertResponse.error) {
+  //     return res.status(assertResponse.error.status).send({
+  //       success: false,
+  //       message: assertResponse.error.message,
+  //     });
+  //   } else {
+  //     return res.status(500).send({
+  //       success: false,
+  //       message: 'Internal Server Error',
+  //     });
+  //   }
+  // }
 
   const drmMosaicOptions = new MosaicDrmOptions();
   drmMosaicOptions.mosaicDrmCommunicationKey =
