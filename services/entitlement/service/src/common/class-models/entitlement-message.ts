@@ -52,7 +52,7 @@ export class EntitlementMessage {
   }
 }
 
-export class EntitlementMessageDTO {
+export class Entitlement {
   @Expose({ name: 'version' })
   Version = 1; // Default to 1, as a normal class property initialization
 
