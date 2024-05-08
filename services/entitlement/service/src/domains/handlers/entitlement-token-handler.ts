@@ -1,9 +1,9 @@
 import { instanceToPlain } from 'class-transformer';
 import jwt from 'jsonwebtoken';
 import { Entitlement, EntitlementMessage } from '../../common';
-import { MosaicDrmOptions } from './drm-options';
+import { MosaicDrmOptions } from '../../common/entitlement/drm-options';
 
-export class EntitlementTokenProvider {
+export class EntitlementTokenHandler {
   private readonly options: MosaicDrmOptions;
 
   constructor(options: MosaicDrmOptions) {

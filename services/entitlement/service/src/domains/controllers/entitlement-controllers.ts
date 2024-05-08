@@ -1,9 +1,6 @@
 import { Request, Response } from 'express';
-import {
-  EntitlementTokenProvider,
-  getFullConfig,
-  MosaicDrmOptions,
-} from '../../common';
+import { getFullConfig, MosaicDrmOptions } from '../../common';
+import { AssetHandler, EntitlementTokenHandler } from '../../domains';
 
 const config = getFullConfig();
 
@@ -26,31 +23,31 @@ export const EntitlementRequestHandling = async (
     });
   }
 
-  // const assertResponse = await AssetHandler(input);
+  const assertResponse = await AssetHandler(requestBody);
 
   // Mocking the response of catalog service
-  const assertResponse = {
-    isValid: true,
-    data: {
-      assetId: requestBody.asset_id,
-      keyId: requestBody.key_id,
-      downloadedAssetLifespan: 30,
-    },
-  };
+  // const assertResponse = {
+  //   isValid: true,
+  //   data: {
+  //     assetId: requestBody.asset_id,
+  //     keyId: requestBody.key_id,
+  //     downloadedAssetLifespan: 30,
+  //   },
+  // };
 
-  // if (!assertResponse.isValid) {
-  //   if (assertResponse.error) {
-  //     return res.status(assertResponse.error.status).send({
-  //       success: false,
-  //       message: assertResponse.error.message,
-  //     });
-  //   } else {
-  //     return res.status(500).send({
-  //       success: false,
-  //       message: 'Internal Server Error',
-  //     });
-  //   }
-  // }
+  if (!assertResponse.isValid) {
+    if (assertResponse.error) {
+      return res.status(assertResponse.error.status).send({
+        success: false,
+        message: assertResponse.error.message,
+      });
+    } else {
+      return res.status(500).send({
+        success: false,
+        message: 'Internal Server Error',
+      });
+    }
+  }
 
   const drmMosaicOptions = new MosaicDrmOptions();
   drmMosaicOptions.mosaicDrmCommunicationKey =
@@ -58,11 +55,9 @@ export const EntitlementRequestHandling = async (
   drmMosaicOptions.mosaicDrmCommunicationKeyId =
     config.drmLicenseCommunicationKeyId;
 
-  const _axinomEntitlementTokenProvider = new EntitlementTokenProvider(
-    drmMosaicOptions,
-  );
+  const entitlementTokenHandler = new EntitlementTokenHandler(drmMosaicOptions);
 
-  const token = _axinomEntitlementTokenProvider.getToken(
+  const token = entitlementTokenHandler.getToken(
     true,
     assertResponse.data?.downloadedAssetLifespan,
     assertResponse.data?.keyId,

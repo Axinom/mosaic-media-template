@@ -1,4 +1,4 @@
-export enum AssetType {
+export enum AssetTypeEnum {
   Video = 1,
   Audio = 2,
   Image = 3,
@@ -6,29 +6,29 @@ export enum AssetType {
   Unknown = 0,
 }
 
-export class AssetUtils {
+export class AssetTypeProvider {
   private static assetIdPattern = /^[A-Za-z0-9]+-(?<type>[0-9]+)-.+$/;
 
-  private static convertToAssetType(typeNumber: number): AssetType {
-    if (typeNumber in AssetType) {
-      return typeNumber as AssetType;
+  private static convertToAssetType(typeNumber: number): AssetTypeEnum {
+    if (typeNumber in AssetTypeEnum) {
+      return typeNumber as AssetTypeEnum;
     }
-    return AssetType.Unknown;
+    return AssetTypeEnum.Unknown;
   }
 
-  static getAssetType(assetId: string): AssetType {
+  static getAssetType(assetId: string): AssetTypeEnum {
     if (!assetId) {
-      return AssetType.Unknown;
+      return AssetTypeEnum.Unknown;
     }
 
     const match = assetId.match(this.assetIdPattern);
     if (!match || !match.groups || !match.groups['type']) {
-      return AssetType.Unknown;
+      return AssetTypeEnum.Unknown;
     }
 
     const type = parseInt(match.groups['type']);
     if (isNaN(type)) {
-      return AssetType.Unknown;
+      return AssetTypeEnum.Unknown;
     }
 
     return this.convertToAssetType(type);

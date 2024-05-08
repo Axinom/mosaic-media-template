@@ -1,3 +1,2 @@
-export * from './asset-handler';
+export * from './assert-type-provider';
 export * from './drm-options';
-export * from './token-provider';

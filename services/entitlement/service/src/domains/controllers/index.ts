@@ -1,1 +1,1 @@
-export * from '../controllers/entitlement-controllers';
+export * from './entitlement-controllers';
