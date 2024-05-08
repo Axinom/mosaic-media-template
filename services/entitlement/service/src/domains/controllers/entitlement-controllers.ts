@@ -14,14 +14,14 @@ export const EntitlementRequestHandling = async (
   const requestBody = req.body;
   if (!requestBody.asset_id || requestBody.asset_id.length < 1) {
     return res.status(400).send({
-      success: false,
+      code: 0,
       message: `Asset ID should not be empty`,
     });
   }
 
   if (!requestBody.key_id || requestBody.key_id.length < 1) {
     return res.status(400).send({
-      success: false,
+      code: 0,
       message: `Key ID should not be empty`,
     });
   }
@@ -68,8 +68,6 @@ export const EntitlementRequestHandling = async (
     assertResponse.data?.keyId,
   );
   return res.send({
-    success: true,
-    message: 'OK',
-    token,
+    drm: token,
   });
 };
