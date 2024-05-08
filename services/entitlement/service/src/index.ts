@@ -35,7 +35,7 @@ import {
 } from './domains';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
 import { setupRestEndpoints } from './routes';
-import { updateGeoDatabase } from './update-geo-database';
+// import { updateGeoDatabase } from './update-geo-database';
 
 import 'reflect-metadata';
 
@@ -50,8 +50,8 @@ async function bootstrap(): Promise<void> {
   const config = getFullConfig();
   setupGlobalLogMiddleware([tenantEnvironmentIdsLogMiddleware(config)]);
 
-  // intentionally not doing await because this can run for ~1 min
-  updateGeoDatabase(config);
+  // // intentionally not doing await because this can run for ~1 min
+  // updateGeoDatabase(config);
 
   const { readiness } = setupLivenessAndReadiness(config);
 
