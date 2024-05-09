@@ -55,9 +55,3 @@ export class AssetModel {
   @Type(() => Licenses)
   licenses: Licenses;
 }
-
-// class QueryResponse {
-//   @ValidateNested()
-//   @Type(() => Movie)
-//   movie: Movie;
-// }

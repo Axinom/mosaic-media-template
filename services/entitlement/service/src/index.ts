@@ -4,11 +4,7 @@ import {
   setupLoginPgPool,
   setupOwnerPgPool,
 } from '@axinom/mosaic-db-common';
-import {
-  AuthenticationConfig,
-  IdGuardErrors,
-  setupEndUserAuthentication,
-} from '@axinom/mosaic-id-guard';
+import { IdGuardErrors } from '@axinom/mosaic-id-guard';
 import {
   closeHttpServer,
   handleGlobalErrors,
@@ -29,11 +25,10 @@ import {
 import express from 'express';
 import { PoolConfig } from 'pg';
 import { applyMigrations, getFullConfig } from './common';
-import {
-  setupEntitlementWebhookEndpoint,
-  setupManifestWebhookEndpoint,
-} from './domains';
-import { setupPostGraphile } from './graphql/postgraphile-middleware';
+// import {
+//   setupEntitlementWebhookEndpoint,
+//   setupManifestWebhookEndpoint,
+// } from './domains';
 import { setupRestEndpoints } from './routes';
 // import { updateGeoDatabase } from './update-geo-database';
 
@@ -88,16 +83,16 @@ async function bootstrap(): Promise<void> {
     ],
   });
 
-  const authConfig: AuthenticationConfig = {
-    tenantId: config.tenantId,
-    environmentId: config.environmentId,
-    authEndpoint: config.userServiceAuthBaseUrl,
-  };
-  setupEndUserAuthentication(app, ['/graphql'], authConfig);
-  setupEntitlementWebhookEndpoint(app, config);
-  setupManifestWebhookEndpoint(app, config);
+  // const authConfig: AuthenticationConfig = {
+  //   tenantId: config.tenantId,
+  //   environmentId: config.environmentId,
+  //   authEndpoint: config.userServiceAuthBaseUrl,
+  // };
+  // // setupEndUserAuthentication(app, ['/graphql'], authConfig);
+  // // setupEntitlementWebhookEndpoint(app, config);
+  // // setupManifestWebhookEndpoint(app, config);
 
-  await setupPostGraphile(app, config, authConfig);
+  // await setupPostGraphile(app, config, authConfig);
 
   // Configure REST endpoints additionally to GraphQL (auxiliary needs such as file download)
   setupRestEndpoints(app);

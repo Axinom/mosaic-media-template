@@ -1,9 +1,13 @@
-import { gql } from '@apollo/client';
-
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 
-import { AssetModel, getApolloClient, getFullConfig } from '../../common';
+import {
+  AssetModel,
+  AssetTypeProvider,
+  getApolloClient,
+  getFullConfig,
+} from '../../common';
+import { catalogQueries } from './asset-queries';
 
 interface AssetHandlerInput {
   asset_id: string;
@@ -41,28 +45,13 @@ export const AssetHandler = async (
   }
   try {
     const client = await getApolloClient(config);
+    const assetType: number = AssetTypeProvider.getAssetType(
+      assetRequest.asset_id,
+    );
+    const query = catalogQueries[assetType as keyof typeof catalogQueries];
+
     const results = await client.query({
-      query: gql`
-        query GetMovie($id: String!) {
-          movie(id: $id) {
-            videos {
-              nodes {
-                drmKeyId
-                type
-              }
-            }
-            licenses {
-              nodes {
-                isDownloadable
-                countries
-                downloadedAssetLifespan
-                startTime
-                endTime
-              }
-            }
-          }
-        }
-      `,
+      query: query,
       variables: { id: assetRequest.asset_id },
     });
 
@@ -92,7 +81,7 @@ export const AssetHandler = async (
     //   variables: { id: assetRequest.asset_id },
     // });
 
-    const queryResponse = plainToClass(AssetModel, results.data.movie); //Todo: Select type based on asset type extractor.
+    const queryResponse = plainToClass(AssetModel, results.data.asset); //Todo: Select type based on asset type extractor.
     const validationErrors = await validate(queryResponse);
 
     if (validationErrors.length > 0) {

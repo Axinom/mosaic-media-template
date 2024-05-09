@@ -25,16 +25,6 @@ export const EntitlementRequestHandling = async (
 
   const assertResponse = await AssetHandler(requestBody);
 
-  // Mocking the response of catalog service
-  // const assertResponse = {
-  //   isValid: true,
-  //   data: {
-  //     assetId: requestBody.asset_id,
-  //     keyId: requestBody.key_id,
-  //     downloadedAssetLifespan: 30,
-  //   },
-  // };
-
   if (!assertResponse.isValid) {
     if (assertResponse.error) {
       return res.status(assertResponse.error.status).send({

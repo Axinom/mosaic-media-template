@@ -1,22 +1,28 @@
 export enum AssetTypeEnum {
-  Video = 1,
-  Audio = 2,
-  Image = 3,
-  Document = 4,
-  Unknown = 0,
+  Movie = 0,
+  Episode = 1,
+  Season = 2,
+  Album = 3,
+  ContentSet = 4,
+  Track = 5,
+  TvShow = 6,
+  Collection = 8,
+  Channel = 9,
+  EpgProgram = 10,
+  SubscriptionPlan = 11,
+  Notification = 12,
+  PromoCode = 13,
+  LiveEvent = 14,
+  File = 15,
+  GenreList = 16,
+  Unknown = 99,
+  Custom = 100,
 }
 
 export class AssetTypeProvider {
   private static assetIdPattern = /^[A-Za-z0-9]+-(?<type>[0-9]+)-.+$/;
 
-  private static convertToAssetType(typeNumber: number): AssetTypeEnum {
-    if (typeNumber in AssetTypeEnum) {
-      return typeNumber as AssetTypeEnum;
-    }
-    return AssetTypeEnum.Unknown;
-  }
-
-  static getAssetType(assetId: string): AssetTypeEnum {
+  static getAssetType(assetId: string): number {
     if (!assetId) {
       return AssetTypeEnum.Unknown;
     }
@@ -31,6 +37,6 @@ export class AssetTypeProvider {
       return AssetTypeEnum.Unknown;
     }
 
-    return this.convertToAssetType(type);
+    return type;
   }
 }
