@@ -1,4 +1,5 @@
 import { ID } from '@axinom/mosaic-managed-workflow-integration';
+import { PiletApi } from '@axinom/mosaic-portal';
 import {
   createUpdateGQLFragmentGenerator,
   CustomTagsField,
@@ -48,7 +49,13 @@ const collectionDetailSchema = Yup.object().shape<
   externalId: Yup.string().nullable(),
 });
 
-export const CollectionDetails: React.FC = () => {
+interface CollectionDetailsProps {
+  showNotification: PiletApi['showNotification'];
+}
+
+export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
+  showNotification,
+}) => {
   const collectionId = Number(
     useParams<{
       collectionId: string;
@@ -68,7 +75,10 @@ export const CollectionDetails: React.FC = () => {
     [data],
   );
 
-  const { actions } = useCollectionDetailsActions(collectionId);
+  const { actions } = useCollectionDetailsActions(
+    collectionId,
+    showNotification,
+  );
 
   const onSubmit = useCallback(
     async (
