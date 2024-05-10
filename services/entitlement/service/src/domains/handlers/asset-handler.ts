@@ -55,33 +55,8 @@ export const AssetHandler = async (
       variables: { id: assetRequest.asset_id },
     });
 
-    // const results2 = await client.query({
-    //   query: gql`
-    //     query GetMovie($id: String!) {
-    //       episode(id: string) {
-    //         licenses {
-    //           nodes {
-    //             downloadedAssetLifespan
-    //             isDownloadable
-    //             countries
-    //             businessType
-    //             startTime
-    //             endTime
-    //           }
-    //         }
-    //         videos {
-    //           nodes {
-    //             type
-    //             drmKeyId
-    //           }
-    //         }
-    //       }
-    //     }
-    //   `,
-    //   variables: { id: assetRequest.asset_id },
-    // });
-
-    const queryResponse = plainToClass(AssetModel, results.data.asset); //Todo: Select type based on asset type extractor.
+    //Todo: Select type based on asset type extractor.
+    const queryResponse = plainToClass(AssetModel, results.data.asset);
     const validationErrors = await validate(queryResponse);
 
     if (validationErrors.length > 0) {

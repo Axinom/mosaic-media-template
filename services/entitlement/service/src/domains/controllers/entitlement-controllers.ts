@@ -1,6 +1,16 @@
+import { plainToClass } from 'class-transformer';
+import { validate } from 'class-validator';
 import { Request, Response } from 'express';
-import { getFullConfig, MosaicDrmOptions } from '../../common';
-import { AssetHandler, EntitlementTokenHandler } from '../../domains';
+import {
+  EntitlementRequestModel,
+  getFullConfig,
+  MosaicDrmOptions,
+} from '../../common';
+import {
+  AssetHandler,
+  EntitlementTokenHandler,
+  UserTokenHandler,
+} from '../../domains';
 
 const config = getFullConfig();
 
@@ -8,24 +18,29 @@ export const EntitlementRequestHandling = async (
   req: Request,
   res: Response,
 ): Promise<Response> => {
-  const requestBody = req.body;
-  if (!requestBody.asset_id || requestBody.asset_id.length < 1) {
-    return res.status(400).send({
-      code: 0,
-      message: `Asset ID should not be empty`,
+  const entitlementRequest = plainToClass(EntitlementRequestModel, req.body);
+  const validationErrors = await validate(entitlementRequest, {
+    stopAtFirstError: true,
+  });
+  if (validationErrors.length > 0) {
+    return res.status(400).json({
+      message: 'Validation failed',
+      errors: validationErrors.flatMap((error) =>
+        Object.values(error.constraints ?? {}).map(
+          (message) => `${error.property}: ${message}`,
+        ),
+      ),
     });
   }
 
-  if (!requestBody.key_id || requestBody.key_id.length < 1) {
-    return res.status(400).send({
-      code: 0,
-      message: `Key ID should not be empty`,
-    });
-  }
+  const userId = new UserTokenHandler(
+    entitlementRequest.token,
+  ).getUserIdFromToken();
 
-  const assertResponse = await AssetHandler(requestBody);
+  const assertResponse = await AssetHandler(entitlementRequest);
 
   if (!assertResponse.isValid) {
+    // Todo: log the error and send custom error message
     if (assertResponse.error) {
       return res.status(assertResponse.error.status).send({
         success: false,
