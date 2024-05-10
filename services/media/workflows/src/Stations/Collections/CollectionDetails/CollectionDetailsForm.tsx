@@ -37,9 +37,11 @@ import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useCollectionDetailsActions } from './CollectionDetails.actions';
 import classes from './CollectionDetails.module.scss';
 import { CollectionDetailsFormData } from './CollectionDetails.types';
+import { PiletApi } from '@axinom/mosaic-portal';
 
 interface CollectionDetailsFormProps {
   collectionId: number;
+  showNotification: PiletApi['showNotification'];
 }
 
 const collectionDetailSchema = Yup.object().shape<
@@ -53,6 +55,7 @@ const collectionDetailSchema = Yup.object().shape<
 
 export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
   collectionId,
+  showNotification
 }) => {
   const { loading, data, error } = useCollectionQuery({
     client,
@@ -67,7 +70,7 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
     [data],
   );
 
-  const { actions } = useCollectionDetailsActions(collectionId);
+  const { actions } = useCollectionDetailsActions(collectionId, showNotification);
 
   const onSubmit = useCallback(
     async (

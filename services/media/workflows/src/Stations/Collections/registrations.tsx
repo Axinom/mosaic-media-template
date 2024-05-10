@@ -66,7 +66,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
     '/collections',
     () => (
       <ExtensionsContext.Provider value={extensions}>
-        <Collections />
+         <Collections showNotification={app.showNotification} />
       </ExtensionsContext.Provider>
     ),
     {
@@ -88,7 +88,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
     '/collections/:collectionId',
     () => (
       <ExtensionsContext.Provider value={extensions}>
-        <CollectionDetails />
+        <CollectionDetails showNotification={app.showNotification} />
       </ExtensionsContext.Provider>
     ),
     {
