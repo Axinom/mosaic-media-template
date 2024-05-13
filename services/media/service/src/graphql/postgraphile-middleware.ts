@@ -36,7 +36,13 @@ export const setupPostGraphile = async (
 
   if (config.graphqlGuiEnabled) {
     app.use(forwardToGraphiQl());
-    app.use('/altair', altairExpress({ endpointURL: '/graphql' }));
+    app.use(
+      '/altair',
+      altairExpress({
+        endpointURL: '/graphql',
+        serveInitialOptionsInSeperateRequest: true,
+      }),
+    );
   }
 
   const middleware = postgraphile(loginPool, 'app_public', options);

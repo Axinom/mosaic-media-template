@@ -4701,18 +4701,18 @@ ajv@^8.0.0, ajv@^8.0.1, ajv@^8.11.0, ajv@^8.6.0, ajv@^8.6.3, ajv@^8.8.0, ajv@^8.
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-altair-express-middleware@^2.5.2:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/altair-express-middleware/-/altair-express-middleware-2.5.2.tgz#d1c89d081c9928bc0ba2aff8b85ada2d7c07431d"
-  integrity sha512-o0y5CsaWd8Kx3EXOlHeFhJC2xmuDeFBAQ044OCJCm8bf45GWDvD99nWlReOhLAhOrc6AV5FghXBTb040G6It5g==
+altair-express-middleware@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/altair-express-middleware/-/altair-express-middleware-7.0.1.tgz#b89cf7a8b8691b22de192d7f7ecdd2e874b8d8ae"
+  integrity sha512-YB9P3ZSu+VkeGTBu9swsw4iNKUu9TsVHksuXlbCtCYQ9aDovVLFaUVVchQu/AGC+ITjGCF3CEPt1z8RGtBjutQ==
   dependencies:
-    altair-static "^2.5.2"
+    altair-static "^7.0.1"
     express "^4.16.2"
 
-altair-static@^2.5.2:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/altair-static/-/altair-static-2.5.2.tgz#a81e0fdda9739de30a7ba18674e7b4e4bc68598e"
-  integrity sha1-qB4P3alzneMKe6GGdOe05LxoWY4=
+altair-static@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/altair-static/-/altair-static-7.0.1.tgz#38eb28f76b520b54a4f6f24f7a7a3e3a1efb9972"
+  integrity sha512-bUjIOM5PCDkVNivWZGdg2M0Qr+3Py6jAcMTq6q3+3dx4RIQYRWwmbm7jJfuBRtlfm4wdg/bYjL9ItQKl89BkQw==
 
 alterschema@^1.1.2:
   version "1.1.3"

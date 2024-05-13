@@ -59,7 +59,7 @@
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "ajv": "^7.2.4",
     "ajv-formats": "^1.6.1",
-    "altair-express-middleware": "^2.5.2",
+    "altair-express-middleware": "^7.0.1",
     "amqplib": "^0.6.0",
     "axios": "^0.24.0",
     "dotenv": "^8.6.0",
