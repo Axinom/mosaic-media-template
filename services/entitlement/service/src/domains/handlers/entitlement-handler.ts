@@ -8,6 +8,7 @@ import {
 
 import {
   EntitlementRequestModel,
+  EntitlementRequestType,
   EntitlementValidationResponse,
 } from '../../common';
 
@@ -34,6 +35,7 @@ export const EntitlementHandler = async (
     };
   }
 
+  // TODO: Country code should be dynamic and please use request body to get the country code
   const entitlementValidationResult = EntitlementValidation(
     assertResponse.data,
     userId ? true : false,
@@ -64,6 +66,19 @@ export const EntitlementHandler = async (
   }
 
   if (!entitlementValidationResult.data?.Entitled) {
+    if (
+      entitlementRequest.entitlement_provider.toLocaleLowerCase() !==
+      EntitlementRequestType.RECURLY
+    ) {
+      return {
+        isValid: false,
+        error: {
+          status: 400,
+          message: 'Entitlement provider is not valid',
+        },
+        data: entitlementValidationResult.data,
+      };
+    }
     const isUserSubscribed =
       await new RecurlyEntitlementHandler().VerifySubscription(
         userId ? userId : '',
