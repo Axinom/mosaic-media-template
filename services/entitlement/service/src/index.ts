@@ -30,7 +30,6 @@ import { applyMigrations, getFullConfig } from './common';
 //   setupManifestWebhookEndpoint,
 // } from './domains';
 import { setupRestEndpoints } from './routes';
-// import { updateGeoDatabase } from './update-geo-database';
 
 import 'reflect-metadata';
 

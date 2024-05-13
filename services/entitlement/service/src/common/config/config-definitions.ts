@@ -72,6 +72,21 @@ export const getConfigDefinitions = (
     fairplayStreamingCertificateUrl: () =>
       env.get('FAIRPLAY_STREAMING_CERTIFICATE_URL').asUrlString(),
 
+    userSessionPublicKey: () =>
+      env.get('USER_SESSION_PUBLIC_KEY').required().asString(),
+    userSessionPublicKeyRSA: function () {
+      return `-----BEGIN PUBLIC KEY-----\n${this.userSessionPublicKey()}\n-----END PUBLIC KEY-----`;
+    },
+    recurlyEntitlementApiUrl: () =>
+      env.get('RECURLY_ENTITLEMENT_API_URL').asUrlString() ||
+      'MISSING_RECURLY_ENTITLEMENT_API_URL',
+    recurlyEntitlementPlaybackPermission: () =>
+      env.get('RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION').asString() ||
+      'MISSING_RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION',
+    recurlyEntitlementApiKey: () =>
+      env.get('RECURLY_ENTITLEMENT_API_KEY').asString() ||
+      'MISSING_RECURLY_ENTITLEMENT_API_KEY',
+
     /**
      * Optional User Service GraphQL Endpoint, used to get user auth token
      * during development

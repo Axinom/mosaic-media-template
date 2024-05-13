@@ -5,19 +5,23 @@ export const catalogQueries = {
   [AssetTypeEnum.Movie]: gql`
     query GetMovie($id: String!) {
       asset: movie(id: $id) {
-        videos {
-          nodes {
-            drmKeyId
-            type
-          }
-        }
+        id
+        assetType
         licenses {
           nodes {
             isDownloadable
+            businessType
             countries
             downloadedAssetLifespan
             startTime
             endTime
+          }
+        }
+        videos {
+          nodes {
+            drmKeyId
+            type
+            isProtected
           }
         }
       }
@@ -26,23 +30,26 @@ export const catalogQueries = {
   [AssetTypeEnum.Episode]: gql`
     query GetEpisode($id: String!) {
       asset: episode(id: $id) {
-        videos {
-          nodes {
-            drmKeyId
-            type
-          }
-        }
+        id
+        assetType
         licenses {
           nodes {
             isDownloadable
+            businessType
             countries
             downloadedAssetLifespan
             startTime
             endTime
           }
         }
+        videos {
+          nodes {
+            drmKeyId
+            type
+            isProtected
+          }
+        }
       }
     }
   `,
-  // TODO: Add more queries for other asset types....
 };

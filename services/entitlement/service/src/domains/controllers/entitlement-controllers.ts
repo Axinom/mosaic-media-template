@@ -6,11 +6,7 @@ import {
   getFullConfig,
   MosaicDrmOptions,
 } from '../../common';
-import {
-  AssetHandler,
-  EntitlementTokenHandler,
-  UserTokenHandler,
-} from '../../domains';
+import { EntitlementHandler, EntitlementTokenHandler } from '../../domains';
 
 const config = getFullConfig();
 
@@ -33,18 +29,14 @@ export const EntitlementRequestHandling = async (
     });
   }
 
-  const userId = new UserTokenHandler(
-    entitlementRequest.token,
-  ).getUserIdFromToken();
+  const entitlement = await EntitlementHandler(entitlementRequest);
 
-  const assertResponse = await AssetHandler(entitlementRequest);
-
-  if (!assertResponse.isValid) {
+  if (!entitlement.isValid) {
     // Todo: log the error and send custom error message
-    if (assertResponse.error) {
-      return res.status(assertResponse.error.status).send({
+    if (entitlement.error) {
+      return res.status(entitlement.error.status).send({
         success: false,
-        message: assertResponse.error.message,
+        message: entitlement.error.message,
       });
     } else {
       return res.status(500).send({
@@ -64,8 +56,8 @@ export const EntitlementRequestHandling = async (
 
   const token = entitlementTokenHandler.getToken(
     true,
-    assertResponse.data?.downloadedAssetLifespan,
-    assertResponse.data?.keyId,
+    entitlement.data?.DownloadDuration,
+    entitlement.data?.keyId,
   );
   return res.send({
     drm: token,
