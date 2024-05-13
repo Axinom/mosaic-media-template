@@ -8748,7 +8748,7 @@ export type Mutation = {
   /** Creates a single `MovieGenre`. */
   createMovieGenre?: Maybe<CreateMovieGenrePayload>;
   /** Creates a new Movie genres snapshot. */
-  createMovieGenresSnapshot?: Maybe<Snapshot>;
+  createMovieGenresSnapshot: Snapshot;
   /** Creates a single `MoviesCast`. */
   createMoviesCast?: Maybe<CreateMoviesCastPayload>;
   /** Creates a single `MoviesImage`. */
@@ -8794,7 +8794,7 @@ export type Mutation = {
   /** Creates a single `TvshowGenre`. */
   createTvshowGenre?: Maybe<CreateTvshowGenrePayload>;
   /** Creates a new Tvshow genres snapshot. */
-  createTvshowGenresSnapshot?: Maybe<Snapshot>;
+  createTvshowGenresSnapshot: Snapshot;
   /** Creates a single `TvshowsCast`. */
   createTvshowsCast?: Maybe<CreateTvshowsCastPayload>;
   /** Creates a single `TvshowsImage`. */
@@ -8935,7 +8935,7 @@ export type Mutation = {
   /** Creates a Movie snapshot and immediately publishes it if it's valid. */
   publishMovie: Snapshot;
   /** Creates a Movie genres snapshot and immediately publishes it if it's valid. */
-  publishMovieGenres?: Maybe<Snapshot>;
+  publishMovieGenres: Snapshot;
   publishMovies?: Maybe<BulkPublishingPayload>;
   /** Creates a Season snapshot and immediately publishes it if it's valid. */
   publishSeason: Snapshot;
@@ -8945,7 +8945,7 @@ export type Mutation = {
   /** Creates a Tvshow snapshot and immediately publishes it if it's valid. */
   publishTvshow: Snapshot;
   /** Creates a Tvshow genres snapshot and immediately publishes it if it's valid. */
-  publishTvshowGenres?: Maybe<Snapshot>;
+  publishTvshowGenres: Snapshot;
   publishTvshows?: Maybe<BulkPublishingPayload>;
   recreateSnapshots?: Maybe<BulkPublishingPayload>;
   startIngest?: Maybe<StartIngestPayload>;
@@ -8958,7 +8958,7 @@ export type Mutation = {
   /** Unpublishes the currently published Movie snapshot. */
   unpublishMovie: Snapshot;
   /** Unpublishes the currently published Movie genres snapshot. */
-  unpublishMovieGenres?: Maybe<Snapshot>;
+  unpublishMovieGenres: Snapshot;
   unpublishMovies?: Maybe<BulkMutationPayload>;
   /** Unpublishes the currently published Season snapshot. */
   unpublishSeason: Snapshot;
@@ -8968,7 +8968,7 @@ export type Mutation = {
   /** Unpublishes the currently published Tvshow snapshot. */
   unpublishTvshow: Snapshot;
   /** Unpublishes the currently published Tvshow genres snapshot. */
-  unpublishTvshowGenres?: Maybe<Snapshot>;
+  unpublishTvshowGenres: Snapshot;
   unpublishTvshows?: Maybe<BulkMutationPayload>;
   /** Updates a single `Collection` using a unique key and a patch. */
   updateCollection?: Maybe<UpdateCollectionPayload>;
@@ -17084,17 +17084,17 @@ export type MovieGenresQuery = { __typename?: 'Query', movieGenres?: { __typenam
 export type PublishMovieGenresMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PublishMovieGenresMutation = { __typename?: 'Mutation', publishMovieGenres?: { __typename?: 'Snapshot', id: number } | null };
+export type PublishMovieGenresMutation = { __typename?: 'Mutation', publishMovieGenres: { __typename?: 'Snapshot', id: number } };
 
 export type UnpublishMovieGenresMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UnpublishMovieGenresMutation = { __typename?: 'Mutation', unpublishMovieGenres?: { __typename?: 'Snapshot', id: number } | null };
+export type UnpublishMovieGenresMutation = { __typename?: 'Mutation', unpublishMovieGenres: { __typename?: 'Snapshot', id: number } };
 
 export type CreateMovieGenresSnapshotMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CreateMovieGenresSnapshotMutation = { __typename?: 'Mutation', createMovieGenresSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+export type CreateMovieGenresSnapshotMutation = { __typename?: 'Mutation', createMovieGenresSnapshot: { __typename?: 'Snapshot', id: number } };
 
 export type MovieImagesQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -17544,17 +17544,17 @@ export type TvShowGenresQuery = { __typename?: 'Query', tvshowGenres?: { __typen
 export type PublishTvShowGenresMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PublishTvShowGenresMutation = { __typename?: 'Mutation', publishTvshowGenres?: { __typename?: 'Snapshot', id: number } | null };
+export type PublishTvShowGenresMutation = { __typename?: 'Mutation', publishTvshowGenres: { __typename?: 'Snapshot', id: number } };
 
 export type UnpublishTvShowGenresMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UnpublishTvShowGenresMutation = { __typename?: 'Mutation', unpublishTvshowGenres?: { __typename?: 'Snapshot', id: number } | null };
+export type UnpublishTvShowGenresMutation = { __typename?: 'Mutation', unpublishTvshowGenres: { __typename?: 'Snapshot', id: number } };
 
 export type CreateTvShowGenresMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CreateTvShowGenresMutation = { __typename?: 'Mutation', createTvshowGenresSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+export type CreateTvShowGenresMutation = { __typename?: 'Mutation', createTvshowGenresSnapshot: { __typename?: 'Snapshot', id: number } };
 
 export type TvshowImagesQueryVariables = Exact<{
   id: Scalars['Int'];
