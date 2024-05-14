@@ -45,7 +45,7 @@ export const dropDatabasesAndRoles = async (
 ): Promise<void> => {
   const client = await pgPool.connect();
   try {
-    //Drop databases
+    // Drop databases
     const databaseNames = await client.query(
       `SELECT datname FROM pg_database WHERE datname LIKE '${baseDbName}%';`,
     );
@@ -59,7 +59,7 @@ export const dropDatabasesAndRoles = async (
       await client.query(`DROP DATABASE IF EXISTS "${dbToDelete.datname}";`);
     }
 
-    //Drop roles
+    // Drop roles
     for (const baseRoleName of baseRoleNames) {
       const escapedRoleName = baseRoleName.replace(/_/g, '\\_');
       const roleNames = await client.query(
@@ -126,7 +126,18 @@ export const runResetQueries = async (
 
     for await (const command of commands) {
       if (command) {
-        console.log(`Running Query: '${command}'`);
+        const pwdIndex = command.indexOf('PASSWORD');
+        if (pwdIndex >= 0) {
+          console.log(
+            `Running Query: '${command.substring(
+              0,
+              pwdIndex + 'PASSWORD'.length,
+            )} ******'`,
+          );
+        } else {
+          console.log(`Running Query: '${command}'`);
+        }
+
         await client.query(command);
       }
     }
