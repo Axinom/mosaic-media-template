@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.12
--- Dumped by pg_dump version 11.12
+-- Dumped from database version 16.2
+-- Dumped by pg_dump version 16.2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -109,7 +109,7 @@ CREATE DOMAIN app_public.video_stream_type_enum AS text;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: inbox; Type: TABLE; Schema: app_hidden; Owner: -
@@ -1759,7 +1759,7 @@ $$;
 CREATE TABLE app_private.messaging_counter (
     key text NOT NULL,
     counter integer DEFAULT 1,
-    expiration_date timestamp with time zone DEFAULT timezone('utc'::text, (now() + '1 day'::interval)) NOT NULL
+    expiration_date timestamp with time zone DEFAULT ((now() + '1 day'::interval) AT TIME ZONE 'utc'::text) NOT NULL
 );
 
 
@@ -4422,6 +4422,15 @@ GRANT USAGE ON SCHEMA ax_utils TO catalog_service_gql_role;
 
 
 --
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO catalog_service_owner;
+GRANT USAGE ON SCHEMA public TO catalog_service_gql_role;
+
+
+--
 -- Name: TABLE inbox; Type: ACL; Schema: app_hidden; Owner: -
 --
 
@@ -5654,92 +5663,77 @@ GRANT SELECT ON TABLE app_public.video_stream_type TO catalog_service_login;
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden REVOKE ALL ON SEQUENCES  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden GRANT SELECT,USAGE ON SEQUENCES  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden GRANT SELECT,USAGE ON SEQUENCES TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public REVOKE ALL ON SEQUENCES  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public GRANT ALL ON FUNCTIONS  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public GRANT ALL ON FUNCTIONS TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: ax_define; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define REVOKE ALL ON SEQUENCES  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define GRANT SELECT,USAGE ON SEQUENCES  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define GRANT SELECT,USAGE ON SEQUENCES TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: ax_define; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define REVOKE ALL ON FUNCTIONS  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define GRANT ALL ON FUNCTIONS  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define GRANT ALL ON FUNCTIONS TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: ax_utils; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils REVOKE ALL ON SEQUENCES  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils GRANT SELECT,USAGE ON SEQUENCES  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils GRANT SELECT,USAGE ON SEQUENCES TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: ax_utils; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils REVOKE ALL ON FUNCTIONS  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils GRANT ALL ON FUNCTIONS  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils GRANT ALL ON FUNCTIONS TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public GRANT ALL ON FUNCTIONS  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public GRANT ALL ON FUNCTIONS TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: -; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 
 
 --
@@ -5748,7 +5742,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner REVOKE ALL ON FUNCTIONS 
 
 CREATE EVENT TRIGGER postgraphile_watch_ddl ON ddl_command_end
          WHEN TAG IN ('ALTER AGGREGATE', 'ALTER DOMAIN', 'ALTER EXTENSION', 'ALTER FOREIGN TABLE', 'ALTER FUNCTION', 'ALTER POLICY', 'ALTER SCHEMA', 'ALTER TABLE', 'ALTER TYPE', 'ALTER VIEW', 'COMMENT', 'CREATE AGGREGATE', 'CREATE DOMAIN', 'CREATE EXTENSION', 'CREATE FOREIGN TABLE', 'CREATE FUNCTION', 'CREATE INDEX', 'CREATE POLICY', 'CREATE RULE', 'CREATE SCHEMA', 'CREATE TABLE', 'CREATE TABLE AS', 'CREATE VIEW', 'DROP AGGREGATE', 'DROP DOMAIN', 'DROP EXTENSION', 'DROP FOREIGN TABLE', 'DROP FUNCTION', 'DROP INDEX', 'DROP OWNED', 'DROP POLICY', 'DROP RULE', 'DROP SCHEMA', 'DROP TABLE', 'DROP TYPE', 'DROP VIEW', 'GRANT', 'REVOKE', 'SELECT INTO')
-   EXECUTE PROCEDURE postgraphile_watch.notify_watchers_ddl();
+   EXECUTE FUNCTION postgraphile_watch.notify_watchers_ddl();
 
 
 --
@@ -5756,7 +5750,7 @@ CREATE EVENT TRIGGER postgraphile_watch_ddl ON ddl_command_end
 --
 
 CREATE EVENT TRIGGER postgraphile_watch_drop ON sql_drop
-   EXECUTE PROCEDURE postgraphile_watch.notify_watchers_drop();
+   EXECUTE FUNCTION postgraphile_watch.notify_watchers_drop();
 
 
 --

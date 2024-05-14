@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.12
--- Dumped by pg_dump version 11.12
+-- Dumped from database version 16.2
+-- Dumped by pg_dump version 16.2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -102,7 +102,7 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: inbox; Type: TABLE; Schema: app_hidden; Owner: -
@@ -1836,8 +1836,8 @@ CREATE TABLE app_hidden.claim_sets (
     title text NOT NULL,
     description text,
     claims text[] DEFAULT '{}'::text[] NOT NULL,
-    created_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL
 );
@@ -1852,8 +1852,8 @@ CREATE TABLE app_hidden.subscription_plans (
     title text NOT NULL,
     description text,
     claim_set_keys text[] DEFAULT '{}'::text[] NOT NULL,
-    created_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL
 );
@@ -1866,7 +1866,7 @@ CREATE TABLE app_hidden.subscription_plans (
 CREATE TABLE app_private.messaging_counter (
     key text NOT NULL,
     counter integer DEFAULT 1,
-    expiration_date timestamp with time zone DEFAULT timezone('utc'::text, (now() + '1 day'::interval)) NOT NULL
+    expiration_date timestamp with time zone DEFAULT ((now() + '1 day'::interval) AT TIME ZONE 'utc'::text) NOT NULL
 );
 
 
@@ -1991,28 +1991,28 @@ CREATE INDEX idx_subscription_plans_claim_set_keys ON app_hidden.subscription_pl
 -- Name: claim_sets _100_timestamps; Type: TRIGGER; Schema: app_hidden; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_hidden.claim_sets FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_hidden.claim_sets FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__timestamps();
 
 
 --
 -- Name: subscription_plans _100_timestamps; Type: TRIGGER; Schema: app_hidden; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_hidden.subscription_plans FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_hidden.subscription_plans FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__timestamps();
 
 
 --
 -- Name: claim_sets _200_username; Type: TRIGGER; Schema: app_hidden; Owner: -
 --
 
-CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_hidden.claim_sets FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_hidden.claim_sets FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: subscription_plans _200_username; Type: TRIGGER; Schema: app_hidden; Owner: -
 --
 
-CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_hidden.subscription_plans FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_hidden.subscription_plans FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
@@ -2042,6 +2042,13 @@ GRANT USAGE ON SCHEMA ax_define TO entitlement_service_gql_role;
 --
 
 GRANT USAGE ON SCHEMA ax_utils TO entitlement_service_gql_role;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
+--
+
+GRANT USAGE ON SCHEMA public TO entitlement_service_gql_role;
 
 
 --
@@ -2732,92 +2739,77 @@ GRANT ALL ON FUNCTION ax_utils.validation_valid_url_array(input_value text[]) TO
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden REVOKE ALL ON SEQUENCES  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden GRANT SELECT,USAGE ON SEQUENCES  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden GRANT SELECT,USAGE ON SEQUENCES TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public REVOKE ALL ON SEQUENCES  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public GRANT ALL ON FUNCTIONS  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public GRANT ALL ON FUNCTIONS TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: ax_define; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define REVOKE ALL ON SEQUENCES  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define GRANT SELECT,USAGE ON SEQUENCES  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define GRANT SELECT,USAGE ON SEQUENCES TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: ax_define; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define REVOKE ALL ON FUNCTIONS  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define GRANT ALL ON FUNCTIONS  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define GRANT ALL ON FUNCTIONS TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: ax_utils; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils REVOKE ALL ON SEQUENCES  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils GRANT SELECT,USAGE ON SEQUENCES  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils GRANT SELECT,USAGE ON SEQUENCES TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: ax_utils; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils REVOKE ALL ON FUNCTIONS  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils GRANT ALL ON FUNCTIONS  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils GRANT ALL ON FUNCTIONS TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public GRANT ALL ON FUNCTIONS  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public GRANT ALL ON FUNCTIONS TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: -; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 
 
 --
@@ -2826,7 +2818,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner REVOKE ALL ON FUNCTI
 
 CREATE EVENT TRIGGER postgraphile_watch_ddl ON ddl_command_end
          WHEN TAG IN ('ALTER AGGREGATE', 'ALTER DOMAIN', 'ALTER EXTENSION', 'ALTER FOREIGN TABLE', 'ALTER FUNCTION', 'ALTER POLICY', 'ALTER SCHEMA', 'ALTER TABLE', 'ALTER TYPE', 'ALTER VIEW', 'COMMENT', 'CREATE AGGREGATE', 'CREATE DOMAIN', 'CREATE EXTENSION', 'CREATE FOREIGN TABLE', 'CREATE FUNCTION', 'CREATE INDEX', 'CREATE POLICY', 'CREATE RULE', 'CREATE SCHEMA', 'CREATE TABLE', 'CREATE TABLE AS', 'CREATE VIEW', 'DROP AGGREGATE', 'DROP DOMAIN', 'DROP EXTENSION', 'DROP FOREIGN TABLE', 'DROP FUNCTION', 'DROP INDEX', 'DROP OWNED', 'DROP POLICY', 'DROP RULE', 'DROP SCHEMA', 'DROP TABLE', 'DROP TYPE', 'DROP VIEW', 'GRANT', 'REVOKE', 'SELECT INTO')
-   EXECUTE PROCEDURE postgraphile_watch.notify_watchers_ddl();
+   EXECUTE FUNCTION postgraphile_watch.notify_watchers_ddl();
 
 
 --
@@ -2834,7 +2826,7 @@ CREATE EVENT TRIGGER postgraphile_watch_ddl ON ddl_command_end
 --
 
 CREATE EVENT TRIGGER postgraphile_watch_drop ON sql_drop
-   EXECUTE PROCEDURE postgraphile_watch.notify_watchers_drop();
+   EXECUTE FUNCTION postgraphile_watch.notify_watchers_drop();
 
 
 --
