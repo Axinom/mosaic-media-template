@@ -1,5 +1,8 @@
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
-import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CheckChannelJobStatusSucceededEvent,
   VodToLiveServiceMessagingSettings,
@@ -7,10 +10,11 @@ import {
 import { ClientBase } from 'pg';
 import { selectOne, update } from 'zapatos/db';
 import { Config } from '../../../common';
-import { getChannelId } from '../common';
-import { ChannelGuardedTransactionalMessageHandler } from './channel-guarded-transactional-message-handler';
 
-export class CheckChannelJobStatusSucceededEventHandler extends ChannelGuardedTransactionalMessageHandler<CheckChannelJobStatusSucceededEvent> {
+export class CheckChannelJobStatusSucceededEventHandler extends TransactionalInboxMessageHandler<
+  CheckChannelJobStatusSucceededEvent,
+  Config
+> {
   constructor(config: Config) {
     super(
       VodToLiveServiceMessagingSettings.CheckChannelJobStatusSucceeded,
@@ -26,7 +30,7 @@ export class CheckChannelJobStatusSucceededEventHandler extends ChannelGuardedTr
     { payload }: TypedTransactionalMessage<CheckChannelJobStatusSucceededEvent>,
     txnClient: ClientBase,
   ): Promise<void> {
-    const channelId = getChannelId(payload.channel_id);
+    const channelId = payload.channel_id;
     const dbChannel = await selectOne('channel', {
       id: channelId,
     }).run(txnClient);

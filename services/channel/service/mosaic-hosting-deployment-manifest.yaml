@@ -1,0 +1,120 @@
+# This YAML contains the Deployment Manifest for the Channel Service.
+# It is required when deploying the service via the Mosaic Hosting Service.
+# Refer to the README.md file for instructions on how to use this.
+
+version: '1.0'
+serviceId: 'channel-service'
+
+regularVariables:
+  # Service General Variables
+  SERVICE_ID: 'channel-service'
+  NODE_ENV: 'production'
+  LOG_LEVEL: 'DEBUG'
+  GRAPHQL_GUI_ENABLED: true
+  PORT: '${__ax_hosted__.port.api}'
+
+  # Mosaic Environment Info
+  TENANT_ID: '${__ax_hosted__.env.tenant_id}'
+  ENVIRONMENT_ID: '${__ax_hosted__.env.environment_id}'
+
+  # Database Server Variables
+  PGSSLMODE: '${__ax_hosted__.pg.sslmode}'
+  POSTGRESQL_HOST: '${__ax_hosted__.pg.host}'
+  POSTGRESQL_PORT: '${__ax_hosted__.pg.port}'
+  POSTGRESQL_USER_SUFFIX: '${__ax_hosted__.pg.user_suffix}'
+
+  # Database Variables
+  DATABASE_NAME: '${__ax_hosted__.pg.database_name}'
+  DATABASE_OWNER: '${__ax_hosted__.pg.db_owner_role}'
+  DATABASE_OWNER_PASSWORD: '${__ax_hosted__.pg.db_owner_password}'
+  DATABASE_LOGIN: '${__ax_hosted__.pg.db_login_role}'
+  DATABASE_LOGIN_PASSWORD: '${__ax_hosted__.pg.db_login_password}'
+  DATABASE_GQL_ROLE: '${__ax_hosted__.pg.db_gql_role}'
+  PG_POOL_MAX_CONNECTIONS: 25
+
+  # RabbitMQ Variables
+  RABBITMQ_PROTOCOL: '${__ax_hosted__.rmq.protocol}'
+  RABBITMQ_HOST: '${__ax_hosted__.rmq.host}'
+  RABBITMQ_PORT: '${__ax_hosted__.rmq.port}'
+  RABBITMQ_MGMT_PROTOCOL: '${__ax_hosted__.rmq.mgmt_protocol}'
+  RABBITMQ_MGMT_HOST: '${__ax_hosted__.rmq.mgmt_host}'
+  RABBITMQ_MGMT_PORT: '${__ax_hosted__.rmq.mgmt_port}'
+  RABBITMQ_VHOST: '${__ax_hosted__.rmq.vhost}'
+  RABBITMQ_USER: '${__ax_hosted__.rmq.username}'
+  RABBITMQ_PASSWORD: '${__ax_hosted__.rmq.password}'
+
+  # Transactional outbox & inbox
+  TRX_DB_SCHEMA: 'app_hidden'
+  TRX_NEXT_MESSAGES_FUNCTION_SCHEMA: 'app_hidden'
+  TRX_MESSAGE_PROCESSING_TIMEOUT_IN_MS: 15000
+  TRX_NEXT_MESSAGES_LOCK_IN_MS: 15000
+  TRX_MAX_ATTEMPTS: 5
+  TRX_MAX_POISONOUS_ATTEMPTS: 3
+  TRX_MESSAGE_CLEANUP_INTERVAL_IN_MS: 300000
+  TRX_MESSAGE_CLEANUP_PROCESSED_IN_SEC: 604800
+  TRX_MESSAGE_CLEANUP_ABANDONED_IN_SEC: 1209600
+  TRX_MESSAGE_CLEANUP_ALL_IN_SEC: 5184000
+  TRX_NEXT_MESSAGES_BATCH_SIZE: 5
+  TRX_NEXT_MESSAGES_POLLING_INTERVAL_IN_MS: 500
+  TRX_OUTBOX_DB_TABLE: 'outbox'
+  TRX_OUTBOX_NEXT_MESSAGES_FUNCTION_NAME: 'next_outbox_messages'
+  TRX_OUTBOX_ENABLE_MAX_ATTEMPTS_PROTECTION: false
+  TRX_OUTBOX_ENABLE_POISONOUS_MESSAGE_PROTECTION: false
+  TRX_INBOX_DB_TABLE: 'inbox'
+  TRX_INBOX_NEXT_MESSAGES_FUNCTION_NAME: 'next_inbox_messages'
+  TRX_INBOX_ENABLE_MAX_ATTEMPTS_PROTECTION: true
+  TRX_INBOX_ENABLE_POISONOUS_MESSAGE_PROTECTION: true
+
+  # Managed Service URLs
+  ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
+  IMAGE_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-image-service.management_base_url}'
+  VIDEO_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-video-service.management_base_url}'
+  LOCALIZATION_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-localization-service.management_base_url}'
+
+  IS_DRM_ENABLED: false
+  IS_LOCALIZATION_ENABLED: true
+  PLAYLIST_SHOULD_BE_24_HOURS: false
+
+secureVariables:
+  # Use this section to store any custom environment variables which contain sensitive data.
+
+  # Service Account Variables
+  SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
+  SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
+
+serviceAccounts:
+  # Defines the service accounts that will be provisioned for this service.
+  - name: 'primary'
+    permissionStructure:
+      - serviceId: 'ax-id-service'
+        permissions:
+          - 'PERMISSIONS_SYNCHRONIZE'
+          - 'ACCESS_TOKENS_GENERATE_LONG_LIVED_TOKEN'
+
+      - serviceId: 'ax-image-service'
+        permissions:
+          - 'IMAGE_TYPES_DECLARE'
+
+      - serviceId: 'ax-video-service'
+        permissions:
+          - 'CUE_POINT_TYPES_DECLARE'
+
+      - serviceId: 'ax-localization-service'
+        permissions:
+          - 'SOURCE_ENTITIES_EDIT'
+          - 'ENTITY_DEFINITIONS_EDIT'
+          - 'LOCALIZED_ENTITIES_EDIT'
+          - 'LOCALIZED_ENTITIES_REVIEW'
+
+pilets:
+  # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.
+  # Use the pilet's package name as the 'name', and any ENV arguments required by the pilet under 'args'.
+  - name: 'channel-workflows'
+    args:
+      CHANNEL_MANAGEMENT_HOST: '${__ax_hosted__.dns.self.api}'
+      CHANNEL_MANAGEMENT_HTTP_PROTOCOL: 'https'
+
+dnsMappedPorts:
+  # Defines the DNS subdomains that will provisioned and be mapped to the ports exposed by the service
+  - name: 'api'
+    port: '${__ax_hosted__.port.api}'

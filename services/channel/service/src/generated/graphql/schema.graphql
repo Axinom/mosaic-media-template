@@ -1,0 +1,3475 @@
+"""The root query type which gives access points into the data universe."""
+type Query {
+  """
+  Exposes the root query type nested one level down. This is helpful for Relay 1
+  which can only query top level fields if they are in a particular form.
+  """
+  query: Query!
+
+  """Reads and enables pagination through a set of `ChannelImage`."""
+  channelImages(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ChannelImage`."""
+    orderBy: [ChannelImagesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ChannelImageCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ChannelImageFilter
+  ): ChannelImagesConnection
+
+  """Reads and enables pagination through a set of `Channel`."""
+  channels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Channel`."""
+    orderBy: [ChannelsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ChannelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ChannelFilter
+  ): ChannelsConnection
+
+  """Reads and enables pagination through a set of `CuePointSchedule`."""
+  cuePointSchedules(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CuePointSchedule`."""
+    orderBy: [CuePointSchedulesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CuePointScheduleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CuePointScheduleFilter
+  ): CuePointSchedulesConnection
+
+  """Reads and enables pagination through a set of `Playlist`."""
+  playlists(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Playlist`."""
+    orderBy: [PlaylistsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PlaylistCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PlaylistFilter
+  ): PlaylistsConnection
+
+  """Reads and enables pagination through a set of `ProgramCuePoint`."""
+  programCuePoints(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ProgramCuePoint`."""
+    orderBy: [ProgramCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProgramCuePointCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProgramCuePointFilter
+  ): ProgramCuePointsConnection
+
+  """Reads and enables pagination through a set of `Program`."""
+  programs(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Program`."""
+    orderBy: [ProgramsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProgramCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProgramFilter
+  ): ProgramsConnection
+  channelImage(channelId: UUID!, imageType: ChannelImageType!): ChannelImage
+  channel(id: UUID!): Channel
+  cuePointSchedule(id: UUID!): CuePointSchedule
+  playlist(id: UUID!): Playlist
+  programCuePoint(id: UUID!): ProgramCuePoint
+  program(id: UUID!): Program
+
+  """Validate a channel prior to publication."""
+  validateChannel(id: UUID!): ValidationChannelPayload
+
+  """Validate a playlist prior to publication."""
+  validatePlaylist(id: UUID!): ValidationPlaylistPayload
+}
+
+"""
+A connection to a list of `ChannelImage` values.
+@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW
+"""
+type ChannelImagesConnection {
+  """A list of `ChannelImage` objects."""
+  nodes: [ChannelImage!]!
+
+  """
+  A list of edges which contains the `ChannelImage` and cursor to aid in pagination.
+  """
+  edges: [ChannelImagesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ChannelImage` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW"""
+type ChannelImage {
+  channelId: UUID!
+  imageId: UUID!
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  imageType: ChannelImageType!
+
+  """Reads a single `Channel` that is related to this `ChannelImage`."""
+  channel: Channel
+}
+
+"""
+A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
+"""
+scalar UUID
+
+"""
+A point in time as described by the [ISO
+8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+"""
+scalar Datetime
+
+enum ChannelImageType {
+  """Logo"""
+  LOGO
+}
+
+"""@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW"""
+type Channel {
+  id: UUID!
+  title: String!
+  description: String
+  isDrmProtected: Boolean!
+  placeholderVideoId: UUID
+  dashStreamUrl: String
+  hlsStreamUrl: String
+  keyId: String
+  publishedDate: Datetime
+  publishedUser: String
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  publicationState: PublicationState!
+
+  """Reads and enables pagination through a set of `ChannelImage`."""
+  channelImages(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ChannelImage`."""
+    orderBy: [ChannelImagesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ChannelImageCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ChannelImageFilter
+  ): ChannelImagesConnection!
+
+  """Reads and enables pagination through a set of `Playlist`."""
+  playlists(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Playlist`."""
+    orderBy: [PlaylistsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PlaylistCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PlaylistFilter
+  ): PlaylistsConnection!
+}
+
+enum PublicationState {
+  """Published"""
+  PUBLISHED
+
+  """Not Published"""
+  NOT_PUBLISHED
+
+  """Changed"""
+  CHANGED
+}
+
+"""A location in a connection that can be used for resuming pagination."""
+scalar Cursor
+
+"""Methods to use when ordering `ChannelImage`."""
+enum ChannelImagesOrderBy {
+  NATURAL
+  CHANNEL_ID_ASC
+  CHANNEL_ID_DESC
+  IMAGE_ID_ASC
+  IMAGE_ID_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  IMAGE_TYPE_ASC
+  IMAGE_TYPE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `ChannelImage` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ChannelImageCondition {
+  """Checks for equality with the object’s `channelId` field."""
+  channelId: UUID
+
+  """Checks for equality with the object’s `imageId` field."""
+  imageId: UUID
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+
+  """Checks for equality with the object’s `imageType` field."""
+  imageType: ChannelImageType
+}
+
+"""
+A filter to be used against `ChannelImage` object types. All fields are combined with a logical ‘and.’
+"""
+input ChannelImageFilter {
+  """Filter by the object’s `channelId` field."""
+  channelId: UUIDFilter
+
+  """Filter by the object’s `imageId` field."""
+  imageId: UUIDFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `imageType` field."""
+  imageType: ChannelImageTypeFilter
+
+  """Filter by the object’s `channel` relation."""
+  channel: ChannelFilter
+
+  """Checks for all expressions in this list."""
+  and: [ChannelImageFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ChannelImageFilter!]
+
+  """Negates the expression."""
+  not: ChannelImageFilter
+}
+
+"""
+A filter to be used against UUID fields. All fields are combined with a logical ‘and.’
+"""
+input UUIDFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: UUID
+
+  """Not equal to the specified value."""
+  notEqualTo: UUID
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: UUID
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: UUID
+
+  """Included in the specified list."""
+  in: [UUID!]
+
+  """Not included in the specified list."""
+  notIn: [UUID!]
+
+  """Less than the specified value."""
+  lessThan: UUID
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: UUID
+
+  """Greater than the specified value."""
+  greaterThan: UUID
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: UUID
+}
+
+"""
+A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’
+"""
+input DatetimeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Datetime
+
+  """Not equal to the specified value."""
+  notEqualTo: Datetime
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Datetime
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Datetime
+
+  """Included in the specified list."""
+  in: [Datetime!]
+
+  """Not included in the specified list."""
+  notIn: [Datetime!]
+
+  """Less than the specified value."""
+  lessThan: Datetime
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Datetime
+
+  """Greater than the specified value."""
+  greaterThan: Datetime
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Datetime
+}
+
+"""
+A filter to be used against String fields. All fields are combined with a logical ‘and.’
+"""
+input StringFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: String
+
+  """Not equal to the specified value."""
+  notEqualTo: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: String
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: String
+
+  """Included in the specified list."""
+  in: [String!]
+
+  """Not included in the specified list."""
+  notIn: [String!]
+
+  """Less than the specified value."""
+  lessThan: String
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: String
+
+  """Greater than the specified value."""
+  greaterThan: String
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: String
+
+  """Contains the specified string (case-sensitive)."""
+  includes: String
+
+  """Does not contain the specified string (case-sensitive)."""
+  notIncludes: String
+
+  """Contains the specified string (case-insensitive)."""
+  includesInsensitive: String
+
+  """Does not contain the specified string (case-insensitive)."""
+  notIncludesInsensitive: String
+
+  """Starts with the specified string (case-sensitive)."""
+  startsWith: String
+
+  """Does not start with the specified string (case-sensitive)."""
+  notStartsWith: String
+
+  """Starts with the specified string (case-insensitive)."""
+  startsWithInsensitive: String
+
+  """Does not start with the specified string (case-insensitive)."""
+  notStartsWithInsensitive: String
+
+  """Ends with the specified string (case-sensitive)."""
+  endsWith: String
+
+  """Does not end with the specified string (case-sensitive)."""
+  notEndsWith: String
+
+  """Ends with the specified string (case-insensitive)."""
+  endsWithInsensitive: String
+
+  """Does not end with the specified string (case-insensitive)."""
+  notEndsWithInsensitive: String
+
+  """
+  Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  like: String
+
+  """
+  Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLike: String
+
+  """
+  Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  likeInsensitive: String
+
+  """
+  Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLikeInsensitive: String
+
+  """Equal to the specified value (case-insensitive)."""
+  equalToInsensitive: String
+
+  """Not equal to the specified value (case-insensitive)."""
+  notEqualToInsensitive: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  distinctFromInsensitive: String
+
+  """
+  Equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  notDistinctFromInsensitive: String
+
+  """Included in the specified list (case-insensitive)."""
+  inInsensitive: [String!]
+
+  """Not included in the specified list (case-insensitive)."""
+  notInInsensitive: [String!]
+
+  """Less than the specified value (case-insensitive)."""
+  lessThanInsensitive: String
+
+  """Less than or equal to the specified value (case-insensitive)."""
+  lessThanOrEqualToInsensitive: String
+
+  """Greater than the specified value (case-insensitive)."""
+  greaterThanInsensitive: String
+
+  """Greater than or equal to the specified value (case-insensitive)."""
+  greaterThanOrEqualToInsensitive: String
+}
+
+"""
+A filter to be used against ChannelImageType fields. All fields are combined with a logical ‘and.’
+"""
+input ChannelImageTypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: ChannelImageType
+
+  """Not equal to the specified value."""
+  notEqualTo: ChannelImageType
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: ChannelImageType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: ChannelImageType
+
+  """Included in the specified list."""
+  in: [ChannelImageType!]
+
+  """Not included in the specified list."""
+  notIn: [ChannelImageType!]
+
+  """Less than the specified value."""
+  lessThan: ChannelImageType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: ChannelImageType
+
+  """Greater than the specified value."""
+  greaterThan: ChannelImageType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: ChannelImageType
+}
+
+"""
+A filter to be used against `Channel` object types. All fields are combined with a logical ‘and.’
+"""
+input ChannelFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `description` field."""
+  description: StringFilter
+
+  """Filter by the object’s `isDrmProtected` field."""
+  isDrmProtected: BooleanFilter
+
+  """Filter by the object’s `placeholderVideoId` field."""
+  placeholderVideoId: UUIDFilter
+
+  """Filter by the object’s `dashStreamUrl` field."""
+  dashStreamUrl: StringFilter
+
+  """Filter by the object’s `hlsStreamUrl` field."""
+  hlsStreamUrl: StringFilter
+
+  """Filter by the object’s `keyId` field."""
+  keyId: StringFilter
+
+  """Filter by the object’s `publishedDate` field."""
+  publishedDate: DatetimeFilter
+
+  """Filter by the object’s `publishedUser` field."""
+  publishedUser: StringFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `publicationState` field."""
+  publicationState: PublicationStateFilter
+
+  """Filter by the object’s `channelImages` relation."""
+  channelImages: ChannelToManyChannelImageFilter
+
+  """Some related `channelImages` exist."""
+  channelImagesExist: Boolean
+
+  """Filter by the object’s `playlists` relation."""
+  playlists: ChannelToManyPlaylistFilter
+
+  """Some related `playlists` exist."""
+  playlistsExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [ChannelFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ChannelFilter!]
+
+  """Negates the expression."""
+  not: ChannelFilter
+}
+
+"""
+A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
+"""
+input BooleanFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Boolean
+
+  """Not equal to the specified value."""
+  notEqualTo: Boolean
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Boolean
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Boolean
+
+  """Included in the specified list."""
+  in: [Boolean!]
+
+  """Not included in the specified list."""
+  notIn: [Boolean!]
+
+  """Less than the specified value."""
+  lessThan: Boolean
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Boolean
+
+  """Greater than the specified value."""
+  greaterThan: Boolean
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Boolean
+}
+
+"""
+A filter to be used against PublicationState fields. All fields are combined with a logical ‘and.’
+"""
+input PublicationStateFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: PublicationState
+
+  """Not equal to the specified value."""
+  notEqualTo: PublicationState
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: PublicationState
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: PublicationState
+
+  """Included in the specified list."""
+  in: [PublicationState!]
+
+  """Not included in the specified list."""
+  notIn: [PublicationState!]
+
+  """Less than the specified value."""
+  lessThan: PublicationState
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: PublicationState
+
+  """Greater than the specified value."""
+  greaterThan: PublicationState
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: PublicationState
+}
+
+"""
+A filter to be used against many `ChannelImage` object types. All fields are combined with a logical ‘and.’
+"""
+input ChannelToManyChannelImageFilter {
+  """
+  Every related `ChannelImage` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ChannelImageFilter
+
+  """
+  Some related `ChannelImage` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ChannelImageFilter
+
+  """
+  No related `ChannelImage` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ChannelImageFilter
+}
+
+"""
+A filter to be used against many `Playlist` object types. All fields are combined with a logical ‘and.’
+"""
+input ChannelToManyPlaylistFilter {
+  """
+  Every related `Playlist` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PlaylistFilter
+
+  """
+  Some related `Playlist` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PlaylistFilter
+
+  """
+  No related `Playlist` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PlaylistFilter
+}
+
+"""
+A filter to be used against `Playlist` object types. All fields are combined with a logical ‘and.’
+"""
+input PlaylistFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
+
+  """Filter by the object’s `channelId` field."""
+  channelId: UUIDFilter
+
+  """Filter by the object’s `startDateTime` field."""
+  startDateTime: DatetimeFilter
+
+  """Filter by the object’s `calculatedDurationInSeconds` field."""
+  calculatedDurationInSeconds: FloatFilter
+
+  """Filter by the object’s `publishedDate` field."""
+  publishedDate: DatetimeFilter
+
+  """Filter by the object’s `publishedUser` field."""
+  publishedUser: StringFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `publicationState` field."""
+  publicationState: PublicationStateFilter
+
+  """Filter by the object’s `calculatedEndDateTime` field."""
+  calculatedEndDateTime: DatetimeFilter
+
+  """Filter by the object’s `programs` relation."""
+  programs: PlaylistToManyProgramFilter
+
+  """Some related `programs` exist."""
+  programsExist: Boolean
+
+  """Filter by the object’s `channel` relation."""
+  channel: ChannelFilter
+
+  """Checks for all expressions in this list."""
+  and: [PlaylistFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PlaylistFilter!]
+
+  """Negates the expression."""
+  not: PlaylistFilter
+}
+
+"""
+A filter to be used against Float fields. All fields are combined with a logical ‘and.’
+"""
+input FloatFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Float
+
+  """Not equal to the specified value."""
+  notEqualTo: Float
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Float
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Float
+
+  """Included in the specified list."""
+  in: [Float!]
+
+  """Not included in the specified list."""
+  notIn: [Float!]
+
+  """Less than the specified value."""
+  lessThan: Float
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Float
+
+  """Greater than the specified value."""
+  greaterThan: Float
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Float
+}
+
+"""
+A filter to be used against many `Program` object types. All fields are combined with a logical ‘and.’
+"""
+input PlaylistToManyProgramFilter {
+  """
+  Every related `Program` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProgramFilter
+
+  """
+  Some related `Program` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProgramFilter
+
+  """
+  No related `Program` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProgramFilter
+}
+
+"""
+A filter to be used against `Program` object types. All fields are combined with a logical ‘and.’
+"""
+input ProgramFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
+
+  """Filter by the object’s `playlistId` field."""
+  playlistId: UUIDFilter
+
+  """Filter by the object’s `sortIndex` field."""
+  sortIndex: IntFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `imageId` field."""
+  imageId: UUIDFilter
+
+  """Filter by the object’s `videoId` field."""
+  videoId: UUIDFilter
+
+  """Filter by the object’s `videoDurationInSeconds` field."""
+  videoDurationInSeconds: FloatFilter
+
+  """Filter by the object’s `entityId` field."""
+  entityId: StringFilter
+
+  """Filter by the object’s `entityType` field."""
+  entityType: EntityTypeFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `programCuePoints` relation."""
+  programCuePoints: ProgramToManyProgramCuePointFilter
+
+  """Some related `programCuePoints` exist."""
+  programCuePointsExist: Boolean
+
+  """Filter by the object’s `playlist` relation."""
+  playlist: PlaylistFilter
+
+  """Checks for all expressions in this list."""
+  and: [ProgramFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProgramFilter!]
+
+  """Negates the expression."""
+  not: ProgramFilter
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against EntityType fields. All fields are combined with a logical ‘and.’
+"""
+input EntityTypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: EntityType
+
+  """Not equal to the specified value."""
+  notEqualTo: EntityType
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: EntityType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: EntityType
+
+  """Included in the specified list."""
+  in: [EntityType!]
+
+  """Not included in the specified list."""
+  notIn: [EntityType!]
+
+  """Less than the specified value."""
+  lessThan: EntityType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: EntityType
+
+  """Greater than the specified value."""
+  greaterThan: EntityType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: EntityType
+}
+
+enum EntityType {
+  """Movie"""
+  MOVIE
+
+  """Episode"""
+  EPISODE
+}
+
+"""
+A filter to be used against many `ProgramCuePoint` object types. All fields are combined with a logical ‘and.’
+"""
+input ProgramToManyProgramCuePointFilter {
+  """
+  Every related `ProgramCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProgramCuePointFilter
+
+  """
+  Some related `ProgramCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProgramCuePointFilter
+
+  """
+  No related `ProgramCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProgramCuePointFilter
+}
+
+"""
+A filter to be used against `ProgramCuePoint` object types. All fields are combined with a logical ‘and.’
+"""
+input ProgramCuePointFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
+
+  """Filter by the object’s `programId` field."""
+  programId: UUIDFilter
+
+  """Filter by the object’s `timeInSeconds` field."""
+  timeInSeconds: FloatFilter
+
+  """Filter by the object’s `value` field."""
+  value: StringFilter
+
+  """Filter by the object’s `videoCuePointId` field."""
+  videoCuePointId: UUIDFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `type` field."""
+  type: ProgramBreakTypeFilter
+
+  """Filter by the object’s `cuePointSchedules` relation."""
+  cuePointSchedules: ProgramCuePointToManyCuePointScheduleFilter
+
+  """Some related `cuePointSchedules` exist."""
+  cuePointSchedulesExist: Boolean
+
+  """Filter by the object’s `program` relation."""
+  program: ProgramFilter
+
+  """Checks for all expressions in this list."""
+  and: [ProgramCuePointFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProgramCuePointFilter!]
+
+  """Negates the expression."""
+  not: ProgramCuePointFilter
+}
+
+"""
+A filter to be used against ProgramBreakType fields. All fields are combined with a logical ‘and.’
+"""
+input ProgramBreakTypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: ProgramBreakType
+
+  """Not equal to the specified value."""
+  notEqualTo: ProgramBreakType
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: ProgramBreakType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: ProgramBreakType
+
+  """Included in the specified list."""
+  in: [ProgramBreakType!]
+
+  """Not included in the specified list."""
+  notIn: [ProgramBreakType!]
+
+  """Less than the specified value."""
+  lessThan: ProgramBreakType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: ProgramBreakType
+
+  """Greater than the specified value."""
+  greaterThan: ProgramBreakType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: ProgramBreakType
+}
+
+enum ProgramBreakType {
+  """Pre"""
+  PRE
+
+  """Mid"""
+  MID
+
+  """Post"""
+  POST
+}
+
+"""
+A filter to be used against many `CuePointSchedule` object types. All fields are combined with a logical ‘and.’
+"""
+input ProgramCuePointToManyCuePointScheduleFilter {
+  """
+  Every related `CuePointSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CuePointScheduleFilter
+
+  """
+  Some related `CuePointSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CuePointScheduleFilter
+
+  """
+  No related `CuePointSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CuePointScheduleFilter
+}
+
+"""
+A filter to be used against `CuePointSchedule` object types. All fields are combined with a logical ‘and.’
+"""
+input CuePointScheduleFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
+
+  """Filter by the object’s `programCuePointId` field."""
+  programCuePointId: UUIDFilter
+
+  """Filter by the object’s `sortIndex` field."""
+  sortIndex: IntFilter
+
+  """Filter by the object’s `videoId` field."""
+  videoId: UUIDFilter
+
+  """Filter by the object’s `durationInSeconds` field."""
+  durationInSeconds: FloatFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `type` field."""
+  type: CuePointScheduleTypeFilter
+
+  """Filter by the object’s `programCuePoint` relation."""
+  programCuePoint: ProgramCuePointFilter
+
+  """Checks for all expressions in this list."""
+  and: [CuePointScheduleFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CuePointScheduleFilter!]
+
+  """Negates the expression."""
+  not: CuePointScheduleFilter
+}
+
+"""
+A filter to be used against CuePointScheduleType fields. All fields are combined with a logical ‘and.’
+"""
+input CuePointScheduleTypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: CuePointScheduleType
+
+  """Not equal to the specified value."""
+  notEqualTo: CuePointScheduleType
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: CuePointScheduleType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: CuePointScheduleType
+
+  """Included in the specified list."""
+  in: [CuePointScheduleType!]
+
+  """Not included in the specified list."""
+  notIn: [CuePointScheduleType!]
+
+  """Less than the specified value."""
+  lessThan: CuePointScheduleType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: CuePointScheduleType
+
+  """Greater than the specified value."""
+  greaterThan: CuePointScheduleType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: CuePointScheduleType
+}
+
+enum CuePointScheduleType {
+  """Ad pod"""
+  AD_POD
+
+  """Video"""
+  VIDEO
+}
+
+"""
+A connection to a list of `Playlist` values.
+@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW
+"""
+type PlaylistsConnection {
+  """A list of `Playlist` objects."""
+  nodes: [Playlist!]!
+
+  """
+  A list of edges which contains the `Playlist` and cursor to aid in pagination.
+  """
+  edges: [PlaylistsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Playlist` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW"""
+type Playlist {
+  id: UUID!
+  channelId: UUID!
+  startDateTime: Datetime!
+  calculatedDurationInSeconds: Float!
+  publishedDate: Datetime
+  publishedUser: String
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  publicationState: PublicationState!
+
+  """Reads a single `Channel` that is related to this `Playlist`."""
+  channel: Channel
+
+  """Reads and enables pagination through a set of `Program`."""
+  programs(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Program`."""
+    orderBy: [ProgramsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProgramCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProgramFilter
+  ): ProgramsConnection!
+  calculatedEndDateTime: Datetime
+}
+
+"""
+A connection to a list of `Program` values.
+@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW
+"""
+type ProgramsConnection {
+  """A list of `Program` objects."""
+  nodes: [Program!]!
+
+  """
+  A list of edges which contains the `Program` and cursor to aid in pagination.
+  """
+  edges: [ProgramsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Program` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW"""
+type Program {
+  id: UUID!
+  playlistId: UUID!
+  sortIndex: Int!
+  title: String!
+  imageId: UUID
+  videoId: UUID!
+  videoDurationInSeconds: Float!
+  entityId: String!
+  entityType: EntityType!
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+
+  """Reads a single `Playlist` that is related to this `Program`."""
+  playlist: Playlist
+
+  """Reads and enables pagination through a set of `ProgramCuePoint`."""
+  programCuePoints(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ProgramCuePoint`."""
+    orderBy: [ProgramCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProgramCuePointCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProgramCuePointFilter
+  ): ProgramCuePointsConnection!
+}
+
+"""
+A connection to a list of `ProgramCuePoint` values.
+@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW
+"""
+type ProgramCuePointsConnection {
+  """A list of `ProgramCuePoint` objects."""
+  nodes: [ProgramCuePoint!]!
+
+  """
+  A list of edges which contains the `ProgramCuePoint` and cursor to aid in pagination.
+  """
+  edges: [ProgramCuePointsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `ProgramCuePoint` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW"""
+type ProgramCuePoint {
+  id: UUID!
+  programId: UUID!
+  timeInSeconds: Float
+  value: String
+  videoCuePointId: UUID
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  type: ProgramBreakType!
+
+  """Reads a single `Program` that is related to this `ProgramCuePoint`."""
+  program: Program
+
+  """Reads and enables pagination through a set of `CuePointSchedule`."""
+  cuePointSchedules(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CuePointSchedule`."""
+    orderBy: [CuePointSchedulesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CuePointScheduleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CuePointScheduleFilter
+  ): CuePointSchedulesConnection!
+}
+
+"""
+A connection to a list of `CuePointSchedule` values.
+@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW
+"""
+type CuePointSchedulesConnection {
+  """A list of `CuePointSchedule` objects."""
+  nodes: [CuePointSchedule!]!
+
+  """
+  A list of edges which contains the `CuePointSchedule` and cursor to aid in pagination.
+  """
+  edges: [CuePointSchedulesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CuePointSchedule` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW"""
+type CuePointSchedule {
+  id: UUID!
+  programCuePointId: UUID!
+  sortIndex: Int!
+  videoId: UUID
+  durationInSeconds: Float!
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  type: CuePointScheduleType!
+
+  """
+  Reads a single `ProgramCuePoint` that is related to this `CuePointSchedule`.
+  """
+  programCuePoint: ProgramCuePoint
+}
+
+"""A `CuePointSchedule` edge in the connection."""
+type CuePointSchedulesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CuePointSchedule` at the end of the edge."""
+  node: CuePointSchedule!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+}
+
+"""Methods to use when ordering `CuePointSchedule`."""
+enum CuePointSchedulesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PROGRAM_CUE_POINT_ID_ASC
+  PROGRAM_CUE_POINT_ID_DESC
+  SORT_INDEX_ASC
+  SORT_INDEX_DESC
+  VIDEO_ID_ASC
+  VIDEO_ID_DESC
+  DURATION_IN_SECONDS_ASC
+  DURATION_IN_SECONDS_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  TYPE_ASC
+  TYPE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `CuePointSchedule` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CuePointScheduleCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `programCuePointId` field."""
+  programCuePointId: UUID
+
+  """Checks for equality with the object’s `sortIndex` field."""
+  sortIndex: Int
+
+  """Checks for equality with the object’s `videoId` field."""
+  videoId: UUID
+
+  """
+  Checks for equality with the object’s `durationInSeconds` field.
+  @minValue()
+  """
+  durationInSeconds: Float
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+
+  """Checks for equality with the object’s `type` field."""
+  type: CuePointScheduleType
+}
+
+"""A `ProgramCuePoint` edge in the connection."""
+type ProgramCuePointsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ProgramCuePoint` at the end of the edge."""
+  node: ProgramCuePoint!
+}
+
+"""Methods to use when ordering `ProgramCuePoint`."""
+enum ProgramCuePointsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PROGRAM_ID_ASC
+  PROGRAM_ID_DESC
+  TIME_IN_SECONDS_ASC
+  TIME_IN_SECONDS_DESC
+  VALUE_ASC
+  VALUE_DESC
+  VIDEO_CUE_POINT_ID_ASC
+  VIDEO_CUE_POINT_ID_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  TYPE_ASC
+  TYPE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `ProgramCuePoint` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ProgramCuePointCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `programId` field."""
+  programId: UUID
+
+  """Checks for equality with the object’s `timeInSeconds` field."""
+  timeInSeconds: Float
+
+  """Checks for equality with the object’s `value` field."""
+  value: String
+
+  """Checks for equality with the object’s `videoCuePointId` field."""
+  videoCuePointId: UUID
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+
+  """Checks for equality with the object’s `type` field."""
+  type: ProgramBreakType
+}
+
+"""A `Program` edge in the connection."""
+type ProgramsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Program` at the end of the edge."""
+  node: Program!
+}
+
+"""Methods to use when ordering `Program`."""
+enum ProgramsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PLAYLIST_ID_ASC
+  PLAYLIST_ID_DESC
+  SORT_INDEX_ASC
+  SORT_INDEX_DESC
+  TITLE_ASC
+  TITLE_DESC
+  IMAGE_ID_ASC
+  IMAGE_ID_DESC
+  VIDEO_ID_ASC
+  VIDEO_ID_DESC
+  VIDEO_DURATION_IN_SECONDS_ASC
+  VIDEO_DURATION_IN_SECONDS_DESC
+  ENTITY_ID_ASC
+  ENTITY_ID_DESC
+  ENTITY_TYPE_ASC
+  ENTITY_TYPE_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Program` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ProgramCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `playlistId` field."""
+  playlistId: UUID
+
+  """Checks for equality with the object’s `sortIndex` field."""
+  sortIndex: Int
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `imageId` field."""
+  imageId: UUID
+
+  """Checks for equality with the object’s `videoId` field."""
+  videoId: UUID
+
+  """Checks for equality with the object’s `videoDurationInSeconds` field."""
+  videoDurationInSeconds: Float
+
+  """Checks for equality with the object’s `entityId` field."""
+  entityId: String
+
+  """Checks for equality with the object’s `entityType` field."""
+  entityType: EntityType
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+}
+
+"""A `Playlist` edge in the connection."""
+type PlaylistsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Playlist` at the end of the edge."""
+  node: Playlist!
+}
+
+"""Methods to use when ordering `Playlist`."""
+enum PlaylistsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  CHANNEL_ID_ASC
+  CHANNEL_ID_DESC
+  START_DATE_TIME_ASC
+  START_DATE_TIME_DESC
+  CALCULATED_DURATION_IN_SECONDS_ASC
+  CALCULATED_DURATION_IN_SECONDS_DESC
+  PUBLISHED_DATE_ASC
+  PUBLISHED_DATE_DESC
+  PUBLISHED_USER_ASC
+  PUBLISHED_USER_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PUBLICATION_STATE_ASC
+  PUBLICATION_STATE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Playlist` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input PlaylistCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `channelId` field."""
+  channelId: UUID
+
+  """Checks for equality with the object’s `startDateTime` field."""
+  startDateTime: Datetime
+
+  """
+  Checks for equality with the object’s `calculatedDurationInSeconds` field.
+  """
+  calculatedDurationInSeconds: Float
+
+  """Checks for equality with the object’s `publishedDate` field."""
+  publishedDate: Datetime
+
+  """Checks for equality with the object’s `publishedUser` field."""
+  publishedUser: String
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+
+  """Checks for equality with the object’s `publicationState` field."""
+  publicationState: PublicationState
+}
+
+"""A `ChannelImage` edge in the connection."""
+type ChannelImagesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ChannelImage` at the end of the edge."""
+  node: ChannelImage!
+}
+
+"""
+A connection to a list of `Channel` values.
+@permissions: ADMIN,CHANNELS_EDIT,CHANNELS_VIEW
+"""
+type ChannelsConnection {
+  """A list of `Channel` objects."""
+  nodes: [Channel!]!
+
+  """
+  A list of edges which contains the `Channel` and cursor to aid in pagination.
+  """
+  edges: [ChannelsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Channel` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Channel` edge in the connection."""
+type ChannelsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Channel` at the end of the edge."""
+  node: Channel!
+}
+
+"""Methods to use when ordering `Channel`."""
+enum ChannelsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  IS_DRM_PROTECTED_ASC
+  IS_DRM_PROTECTED_DESC
+  PLACEHOLDER_VIDEO_ID_ASC
+  PLACEHOLDER_VIDEO_ID_DESC
+  DASH_STREAM_URL_ASC
+  DASH_STREAM_URL_DESC
+  HLS_STREAM_URL_ASC
+  HLS_STREAM_URL_DESC
+  KEY_ID_ASC
+  KEY_ID_DESC
+  PUBLISHED_DATE_ASC
+  PUBLISHED_DATE_DESC
+  PUBLISHED_USER_ASC
+  PUBLISHED_USER_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PUBLICATION_STATE_ASC
+  PUBLICATION_STATE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Channel` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ChannelCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `isDrmProtected` field."""
+  isDrmProtected: Boolean
+
+  """Checks for equality with the object’s `placeholderVideoId` field."""
+  placeholderVideoId: UUID
+
+  """Checks for equality with the object’s `dashStreamUrl` field."""
+  dashStreamUrl: String
+
+  """Checks for equality with the object’s `hlsStreamUrl` field."""
+  hlsStreamUrl: String
+
+  """Checks for equality with the object’s `keyId` field."""
+  keyId: String
+
+  """Checks for equality with the object’s `publishedDate` field."""
+  publishedDate: Datetime
+
+  """Checks for equality with the object’s `publishedUser` field."""
+  publishedUser: String
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+
+  """Checks for equality with the object’s `publicationState` field."""
+  publicationState: PublicationState
+}
+
+type ValidationChannelPayload {
+  """List of validation messages."""
+  validationMessages: [PublishValidationMessage!]!
+
+  """Status of channel validation."""
+  validationStatus: PublishValidationStatus!
+
+  """Hash of the channel payload for publication."""
+  publishHash: String
+  query: Query
+}
+
+type PublishValidationMessage {
+  severity: PublishValidationSeverity!
+  context: PublishValidationContext!
+  message: String!
+}
+
+enum PublishValidationSeverity {
+  WARNING
+  ERROR
+}
+
+enum PublishValidationContext {
+  METADATA
+  IMAGES
+  VIDEOS
+  LOCALIZATION
+}
+
+enum PublishValidationStatus {
+  OK
+  WARNINGS
+  ERRORS
+}
+
+type ValidationPlaylistPayload {
+  """List of validation messages."""
+  validationMessages: [PublishValidationMessage!]!
+
+  """Status of playlist validation."""
+  validationStatus: PublishValidationStatus!
+
+  """Hash of the playlist payload for publication."""
+  publishHash: String
+  query: Query
+}
+
+"""
+The root mutation type which contains root level fields which mutate data.
+"""
+type Mutation {
+  """Creates a single `ChannelImage`."""
+  createChannelImage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateChannelImageInput!
+  ): CreateChannelImagePayload
+
+  """Creates a single `Channel`."""
+  createChannel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateChannelInput!
+  ): CreateChannelPayload
+
+  """Creates a single `Playlist`."""
+  createPlaylist(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePlaylistInput!
+  ): CreatePlaylistPayload
+
+  """Creates a single `ProgramCuePoint`."""
+  createProgramCuePoint(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProgramCuePointInput!
+  ): CreateProgramCuePointPayload
+
+  """Creates a single `Program`."""
+  createProgram(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProgramInput!
+  ): CreateProgramPayload
+
+  """Updates a single `ChannelImage` using a unique key and a patch."""
+  updateChannelImageByIds(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateChannelImageInput!
+  ): UpdateChannelImagePayload
+
+  """Updates a single `ChannelImage` using a unique key and a patch."""
+  updateChannelImage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateChannelImageByChannelIdAndImageTypeInput!
+  ): UpdateChannelImagePayload
+
+  """Updates a single `Channel` using a unique key and a patch."""
+  updateChannel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateChannelInput!
+  ): UpdateChannelPayload
+
+  """Updates a single `Playlist` using a unique key and a patch."""
+  updatePlaylist(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePlaylistInput!
+  ): UpdatePlaylistPayload
+
+  """Updates a single `ProgramCuePoint` using a unique key and a patch."""
+  updateProgramCuePoint(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProgramCuePointInput!
+  ): UpdateProgramCuePointPayload
+
+  """Updates a single `Program` using a unique key and a patch."""
+  updateProgram(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProgramInput!
+  ): UpdateProgramPayload
+
+  """Deletes a single `ChannelImage` using a unique key."""
+  deleteChannelImageByIds(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteChannelImageInput!
+  ): DeleteChannelImagePayload
+
+  """Deletes a single `ChannelImage` using a unique key."""
+  deleteChannelImage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteChannelImageByChannelIdAndImageTypeInput!
+  ): DeleteChannelImagePayload
+
+  """Deletes a single `Channel` using a unique key."""
+  deleteChannel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteChannelInput!
+  ): DeleteChannelPayload
+
+  """Deletes a single `CuePointSchedule` using a unique key."""
+  deleteCuePointSchedule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCuePointScheduleInput!
+  ): DeleteCuePointSchedulePayload
+
+  """Deletes a single `Playlist` using a unique key."""
+  deletePlaylist(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePlaylistInput!
+  ): DeletePlaylistPayload
+
+  """Deletes a single `ProgramCuePoint` using a unique key."""
+  deleteProgramCuePoint(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProgramCuePointInput!
+  ): DeleteProgramCuePointPayload
+
+  """Deletes a single `Program` using a unique key."""
+  deleteProgram(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProgramInput!
+  ): DeleteProgramPayload
+  createAdCuePointSchedule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAdCuePointScheduleInput!
+  ): CreateAdCuePointSchedulePayload
+  createVideoCuePointSchedule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVideoCuePointScheduleInput!
+  ): CreateVideoCuePointSchedulePayload
+  updateAdCuePointSchedule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAdCuePointScheduleInput!
+  ): UpdateAdCuePointSchedulePayload
+  updateVideoCuePointSchedule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVideoCuePointScheduleInput!
+  ): UpdateVideoCuePointSchedulePayload
+
+  """Publish a channel."""
+  publishChannel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: PublishChannelInput!
+  ): PublishChannelPayload!
+
+  """Publish a playlist."""
+  publishPlaylist(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: PublishPlaylistInput!
+  ): PublishPlaylistPayload!
+
+  """Unpublish a channel. The channel must be published."""
+  unpublishChannel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UnpublishChannelInput!
+  ): UnpublishChannelPayload
+
+  """Unpublish a playlist. The playlist must be published."""
+  unpublishPlaylist(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UnpublishPlaylistInput!
+  ): UnpublishPlaylistPayload
+}
+
+"""The output of our create `ChannelImage` mutation."""
+type CreateChannelImagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ChannelImage` that was created by this mutation."""
+  channelImage: ChannelImage
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Channel` that is related to this `ChannelImage`."""
+  channel: Channel
+
+  """An edge for our `ChannelImage`. May be used by Relay 1."""
+  channelImageEdge(
+    """The method to use when ordering `ChannelImage`."""
+    orderBy: [ChannelImagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ChannelImagesEdge
+}
+
+"""
+All input for the create `ChannelImage` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input CreateChannelImageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ChannelImage` to be created by this mutation."""
+  channelImage: ChannelImageInput!
+}
+
+"""An input for mutations affecting `ChannelImage`"""
+input ChannelImageInput {
+  channelId: UUID!
+  imageId: UUID!
+  imageType: ChannelImageType
+}
+
+"""The output of our create `Channel` mutation."""
+type CreateChannelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Channel` that was created by this mutation."""
+  channel: Channel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Channel`. May be used by Relay 1."""
+  channelEdge(
+    """The method to use when ordering `Channel`."""
+    orderBy: [ChannelsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ChannelsEdge
+}
+
+"""
+All input for the create `Channel` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input CreateChannelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Channel` to be created by this mutation."""
+  channel: ChannelInput!
+}
+
+"""An input for mutations affecting `Channel`"""
+input ChannelInput {
+  title: String!
+  description: String
+  isDrmProtected: Boolean
+  placeholderVideoId: UUID
+}
+
+"""The output of our create `Playlist` mutation."""
+type CreatePlaylistPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Playlist` that was created by this mutation."""
+  playlist: Playlist
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Channel` that is related to this `Playlist`."""
+  channel: Channel
+
+  """An edge for our `Playlist`. May be used by Relay 1."""
+  playlistEdge(
+    """The method to use when ordering `Playlist`."""
+    orderBy: [PlaylistsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PlaylistsEdge
+}
+
+"""
+All input for the create `Playlist` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input CreatePlaylistInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Playlist` to be created by this mutation."""
+  playlist: PlaylistInput!
+}
+
+"""An input for mutations affecting `Playlist`"""
+input PlaylistInput {
+  channelId: UUID!
+  startDateTime: Datetime!
+  calculatedDurationInSeconds: Float!
+}
+
+"""The output of our create `ProgramCuePoint` mutation."""
+type CreateProgramCuePointPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProgramCuePoint` that was created by this mutation."""
+  programCuePoint: ProgramCuePoint
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Program` that is related to this `ProgramCuePoint`."""
+  program: Program
+
+  """An edge for our `ProgramCuePoint`. May be used by Relay 1."""
+  programCuePointEdge(
+    """The method to use when ordering `ProgramCuePoint`."""
+    orderBy: [ProgramCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProgramCuePointsEdge
+}
+
+"""
+All input for the create `ProgramCuePoint` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input CreateProgramCuePointInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ProgramCuePoint` to be created by this mutation."""
+  programCuePoint: ProgramCuePointInput!
+}
+
+"""An input for mutations affecting `ProgramCuePoint`"""
+input ProgramCuePointInput {
+  programId: UUID!
+  timeInSeconds: Float
+  value: String
+  videoCuePointId: UUID
+  type: ProgramBreakType!
+}
+
+"""The output of our create `Program` mutation."""
+type CreateProgramPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Program` that was created by this mutation."""
+  program: Program
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Playlist` that is related to this `Program`."""
+  playlist: Playlist
+
+  """An edge for our `Program`. May be used by Relay 1."""
+  programEdge(
+    """The method to use when ordering `Program`."""
+    orderBy: [ProgramsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProgramsEdge
+}
+
+"""
+All input for the create `Program` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input CreateProgramInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Program` to be created by this mutation."""
+  program: ProgramInput!
+}
+
+"""An input for mutations affecting `Program`"""
+input ProgramInput {
+  playlistId: UUID!
+  sortIndex: Int!
+  title: String!
+  imageId: UUID
+  videoId: UUID!
+  videoDurationInSeconds: Float!
+  entityId: String!
+  entityType: EntityType!
+}
+
+"""The output of our update `ChannelImage` mutation."""
+type UpdateChannelImagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ChannelImage` that was updated by this mutation."""
+  channelImage: ChannelImage
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Channel` that is related to this `ChannelImage`."""
+  channel: Channel
+
+  """An edge for our `ChannelImage`. May be used by Relay 1."""
+  channelImageEdge(
+    """The method to use when ordering `ChannelImage`."""
+    orderBy: [ChannelImagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ChannelImagesEdge
+}
+
+"""
+All input for the `updateChannelImageByIds` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input UpdateChannelImageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ChannelImage` being updated.
+  """
+  patch: ChannelImagePatch!
+  channelId: UUID!
+  imageId: UUID!
+}
+
+"""
+Represents an update to a `ChannelImage`. Fields that are set will be updated.
+"""
+input ChannelImagePatch {
+  imageId: UUID
+}
+
+"""
+All input for the `updateChannelImage` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input UpdateChannelImageByChannelIdAndImageTypeInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ChannelImage` being updated.
+  """
+  patch: ChannelImagePatch!
+  channelId: UUID!
+  imageType: ChannelImageType!
+}
+
+"""The output of our update `Channel` mutation."""
+type UpdateChannelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Channel` that was updated by this mutation."""
+  channel: Channel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Channel`. May be used by Relay 1."""
+  channelEdge(
+    """The method to use when ordering `Channel`."""
+    orderBy: [ChannelsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ChannelsEdge
+}
+
+"""
+All input for the `updateChannel` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input UpdateChannelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Channel` being updated.
+  """
+  patch: ChannelPatch!
+  id: UUID!
+}
+
+"""
+Represents an update to a `Channel`. Fields that are set will be updated.
+"""
+input ChannelPatch {
+  title: String
+  description: String
+  isDrmProtected: Boolean
+  placeholderVideoId: UUID
+}
+
+"""The output of our update `Playlist` mutation."""
+type UpdatePlaylistPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Playlist` that was updated by this mutation."""
+  playlist: Playlist
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Channel` that is related to this `Playlist`."""
+  channel: Channel
+
+  """An edge for our `Playlist`. May be used by Relay 1."""
+  playlistEdge(
+    """The method to use when ordering `Playlist`."""
+    orderBy: [PlaylistsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PlaylistsEdge
+}
+
+"""
+All input for the `updatePlaylist` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input UpdatePlaylistInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Playlist` being updated.
+  """
+  patch: PlaylistPatch!
+  id: UUID!
+}
+
+"""
+Represents an update to a `Playlist`. Fields that are set will be updated.
+"""
+input PlaylistPatch {
+  startDateTime: Datetime
+  calculatedDurationInSeconds: Float
+}
+
+"""The output of our update `ProgramCuePoint` mutation."""
+type UpdateProgramCuePointPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProgramCuePoint` that was updated by this mutation."""
+  programCuePoint: ProgramCuePoint
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Program` that is related to this `ProgramCuePoint`."""
+  program: Program
+
+  """An edge for our `ProgramCuePoint`. May be used by Relay 1."""
+  programCuePointEdge(
+    """The method to use when ordering `ProgramCuePoint`."""
+    orderBy: [ProgramCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProgramCuePointsEdge
+}
+
+"""
+All input for the `updateProgramCuePoint` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input UpdateProgramCuePointInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ProgramCuePoint` being updated.
+  """
+  patch: ProgramCuePointPatch!
+  id: UUID!
+}
+
+"""
+Represents an update to a `ProgramCuePoint`. Fields that are set will be updated.
+"""
+input ProgramCuePointPatch {
+  programId: UUID
+  timeInSeconds: Float
+  value: String
+  videoCuePointId: UUID
+  type: ProgramBreakType
+}
+
+"""The output of our update `Program` mutation."""
+type UpdateProgramPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Program` that was updated by this mutation."""
+  program: Program
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Playlist` that is related to this `Program`."""
+  playlist: Playlist
+
+  """An edge for our `Program`. May be used by Relay 1."""
+  programEdge(
+    """The method to use when ordering `Program`."""
+    orderBy: [ProgramsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProgramsEdge
+}
+
+"""
+All input for the `updateProgram` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input UpdateProgramInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Program` being updated.
+  """
+  patch: ProgramPatch!
+  id: UUID!
+}
+
+"""
+Represents an update to a `Program`. Fields that are set will be updated.
+"""
+input ProgramPatch {
+  sortIndex: Int
+  title: String
+}
+
+"""The output of our delete `ChannelImage` mutation."""
+type DeleteChannelImagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ChannelImage` that was deleted by this mutation."""
+  channelImage: ChannelImage
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Channel` that is related to this `ChannelImage`."""
+  channel: Channel
+
+  """An edge for our `ChannelImage`. May be used by Relay 1."""
+  channelImageEdge(
+    """The method to use when ordering `ChannelImage`."""
+    orderBy: [ChannelImagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ChannelImagesEdge
+}
+
+"""
+All input for the `deleteChannelImageByIds` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input DeleteChannelImageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  channelId: UUID!
+  imageId: UUID!
+}
+
+"""
+All input for the `deleteChannelImage` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input DeleteChannelImageByChannelIdAndImageTypeInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  channelId: UUID!
+  imageType: ChannelImageType!
+}
+
+"""The output of our delete `Channel` mutation."""
+type DeleteChannelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Channel` that was deleted by this mutation."""
+  channel: Channel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Channel`. May be used by Relay 1."""
+  channelEdge(
+    """The method to use when ordering `Channel`."""
+    orderBy: [ChannelsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ChannelsEdge
+}
+
+"""
+All input for the `deleteChannel` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input DeleteChannelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
+"""The output of our delete `CuePointSchedule` mutation."""
+type DeleteCuePointSchedulePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CuePointSchedule` that was deleted by this mutation."""
+  cuePointSchedule: CuePointSchedule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `ProgramCuePoint` that is related to this `CuePointSchedule`.
+  """
+  programCuePoint: ProgramCuePoint
+
+  """An edge for our `CuePointSchedule`. May be used by Relay 1."""
+  cuePointScheduleEdge(
+    """The method to use when ordering `CuePointSchedule`."""
+    orderBy: [CuePointSchedulesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CuePointSchedulesEdge
+}
+
+"""
+All input for the `deleteCuePointSchedule` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input DeleteCuePointScheduleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
+"""The output of our delete `Playlist` mutation."""
+type DeletePlaylistPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Playlist` that was deleted by this mutation."""
+  playlist: Playlist
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Channel` that is related to this `Playlist`."""
+  channel: Channel
+
+  """An edge for our `Playlist`. May be used by Relay 1."""
+  playlistEdge(
+    """The method to use when ordering `Playlist`."""
+    orderBy: [PlaylistsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PlaylistsEdge
+}
+
+"""
+All input for the `deletePlaylist` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input DeletePlaylistInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
+"""The output of our delete `ProgramCuePoint` mutation."""
+type DeleteProgramCuePointPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ProgramCuePoint` that was deleted by this mutation."""
+  programCuePoint: ProgramCuePoint
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Program` that is related to this `ProgramCuePoint`."""
+  program: Program
+
+  """An edge for our `ProgramCuePoint`. May be used by Relay 1."""
+  programCuePointEdge(
+    """The method to use when ordering `ProgramCuePoint`."""
+    orderBy: [ProgramCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProgramCuePointsEdge
+}
+
+"""
+All input for the `deleteProgramCuePoint` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input DeleteProgramCuePointInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
+"""The output of our delete `Program` mutation."""
+type DeleteProgramPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Program` that was deleted by this mutation."""
+  program: Program
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Playlist` that is related to this `Program`."""
+  playlist: Playlist
+
+  """An edge for our `Program`. May be used by Relay 1."""
+  programEdge(
+    """The method to use when ordering `Program`."""
+    orderBy: [ProgramsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProgramsEdge
+}
+
+"""
+All input for the `deleteProgram` mutation.
+@permissions: ADMIN,CHANNELS_EDIT
+"""
+input DeleteProgramInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
+"""The output of our `createAdCuePointSchedule` mutation."""
+type CreateAdCuePointSchedulePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  cuePointSchedule: CuePointSchedule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `ProgramCuePoint` that is related to this `CuePointSchedule`.
+  """
+  programCuePoint: ProgramCuePoint
+
+  """An edge for our `CuePointSchedule`. May be used by Relay 1."""
+  cuePointScheduleEdge(
+    """The method to use when ordering `CuePointSchedule`."""
+    orderBy: [CuePointSchedulesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CuePointSchedulesEdge
+}
+
+"""All input for the `createAdCuePointSchedule` mutation."""
+input CreateAdCuePointScheduleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  sortIndex: Int
+  durationInSeconds: Float
+  programCuePointId: UUID
+}
+
+"""The output of our `createVideoCuePointSchedule` mutation."""
+type CreateVideoCuePointSchedulePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  cuePointSchedule: CuePointSchedule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `ProgramCuePoint` that is related to this `CuePointSchedule`.
+  """
+  programCuePoint: ProgramCuePoint
+
+  """An edge for our `CuePointSchedule`. May be used by Relay 1."""
+  cuePointScheduleEdge(
+    """The method to use when ordering `CuePointSchedule`."""
+    orderBy: [CuePointSchedulesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CuePointSchedulesEdge
+}
+
+"""All input for the `createVideoCuePointSchedule` mutation."""
+input CreateVideoCuePointScheduleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  sortIndex: Int
+  durationInSeconds: Float
+  videoId: UUID
+  programCuePointId: UUID
+}
+
+"""The output of our `updateAdCuePointSchedule` mutation."""
+type UpdateAdCuePointSchedulePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  cuePointSchedule: CuePointSchedule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `ProgramCuePoint` that is related to this `CuePointSchedule`.
+  """
+  programCuePoint: ProgramCuePoint
+
+  """An edge for our `CuePointSchedule`. May be used by Relay 1."""
+  cuePointScheduleEdge(
+    """The method to use when ordering `CuePointSchedule`."""
+    orderBy: [CuePointSchedulesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CuePointSchedulesEdge
+}
+
+"""All input for the `updateAdCuePointSchedule` mutation."""
+input UpdateAdCuePointScheduleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID
+  sortIndex: Int
+  durationInSeconds: Float
+  programCuePointId: UUID
+}
+
+"""The output of our `updateVideoCuePointSchedule` mutation."""
+type UpdateVideoCuePointSchedulePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  cuePointSchedule: CuePointSchedule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `ProgramCuePoint` that is related to this `CuePointSchedule`.
+  """
+  programCuePoint: ProgramCuePoint
+
+  """An edge for our `CuePointSchedule`. May be used by Relay 1."""
+  cuePointScheduleEdge(
+    """The method to use when ordering `CuePointSchedule`."""
+    orderBy: [CuePointSchedulesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CuePointSchedulesEdge
+}
+
+"""All input for the `updateVideoCuePointSchedule` mutation."""
+input UpdateVideoCuePointScheduleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID
+  sortIndex: Int
+  programCuePointId: UUID
+}
+
+"""The published channel."""
+type PublishChannelPayload {
+  """The published channel."""
+  channel: Channel!
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  query: Query
+}
+
+"""The input details to publish the channel."""
+input PublishChannelInput {
+  """Unique Identifier of the channel to publish."""
+  id: UUID!
+
+  """
+  A publish hash to ensure no changes have occurred since the publish validation.
+  """
+  publishHash: String!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The playlist published in defined format."""
+type PublishPlaylistPayload {
+  """The published playlist."""
+  playlist: Playlist!
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  query: Query
+}
+
+"""The input details to publish playlist."""
+input PublishPlaylistInput {
+  """Unique Identifier of the playlist to publish."""
+  id: UUID!
+
+  """A publish hash to ensure no changes have occurred since validation."""
+  publishHash: String!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+type UnpublishChannelPayload {
+  """The unpublished channel."""
+  channel: Channel
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  query: Query
+}
+
+"""The input details to unpublish the channel."""
+input UnpublishChannelInput {
+  """Unique Identifier of the channel to unpublish."""
+  id: UUID!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+type UnpublishPlaylistPayload {
+  """The unpublished playlist."""
+  playlist: Playlist
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  query: Query
+}
+
+"""The input details to unpublish playlist."""
+input UnpublishPlaylistInput {
+  """Unique Identifier of the playlist to unpublish."""
+  id: UUID!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""
+The root subscription type: contains realtime events you can subscribe to with the `subscription` operation.
+"""
+type Subscription {
+  """Triggered when a Channel is mutated (insert, update or delete). """
+  channelMutated: ChannelSubscriptionPayload
+
+  """Triggered when a Playlist is mutated (insert, update or delete). """
+  playlistMutated: PlaylistSubscriptionPayload
+}
+
+type ChannelSubscriptionPayload {
+  id: UUID!
+  channel: Channel
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: ChannelSubscriptionEventKey
+}
+
+enum ChannelSubscriptionEventKey {
+  CHANNEL_IMAGE_CREATED
+  CHANNEL_IMAGE_CHANGED
+  CHANNEL_IMAGE_DELETED
+  CHANNEL_CREATED
+  CHANNEL_CHANGED
+  CHANNEL_DELETED
+}
+
+type PlaylistSubscriptionPayload {
+  id: UUID!
+  playlist: Playlist
+  event: String @deprecated(reason: "Use 'eventKey' instead.")
+  eventKey: PlaylistSubscriptionEventKey
+}
+
+enum PlaylistSubscriptionEventKey {
+  PLAYLIST_CREATED
+  PLAYLIST_CHANGED
+  PLAYLIST_DELETED
+  PLAYLIST_PROGRAM_CREATED
+  PLAYLIST_PROGRAM_CHANGED
+  PLAYLIST_PROGRAM_DELETED
+}

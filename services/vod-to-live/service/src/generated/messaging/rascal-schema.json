@@ -128,9 +128,9 @@
           "bindingKey": "vod-to-live-service:channel:published.#",
           "destination": "vod-to-live-service:channel:published"
         },
-        "vod-to-live-service:channel:published": {
+        "channel-service.channel.published": {
           "source": "event",
-          "bindingKey": "ax-channel-service.*.*.channel.published",
+          "bindingKey": "channel-service.channel.published",
           "destination": "vod-to-live-service:channel:published"
         },
         "retry:vod-to-live-service:channel:unpublished": {
@@ -138,9 +138,9 @@
           "bindingKey": "vod-to-live-service:channel:unpublished.#",
           "destination": "vod-to-live-service:channel:unpublished"
         },
-        "vod-to-live-service:channel:unpublished": {
+        "channel-service.channel.unpublished": {
           "source": "event",
-          "bindingKey": "ax-channel-service.*.*.channel.unpublished",
+          "bindingKey": "channel-service.channel.unpublished",
           "destination": "vod-to-live-service:channel:unpublished"
         },
         "retry:vod-to-live-service:playlist:published": {
@@ -148,9 +148,9 @@
           "bindingKey": "vod-to-live-service:playlist:published.#",
           "destination": "vod-to-live-service:playlist:published"
         },
-        "vod-to-live-service:playlist:published": {
+        "channel-service.playlist.published": {
           "source": "event",
-          "bindingKey": "ax-channel-service.*.*.playlist.published",
+          "bindingKey": "channel-service.playlist.published",
           "destination": "vod-to-live-service:playlist:published"
         },
         "retry:vod-to-live-service:playlist:unpublished": {
@@ -158,9 +158,9 @@
           "bindingKey": "vod-to-live-service:playlist:unpublished.#",
           "destination": "vod-to-live-service:playlist:unpublished"
         },
-        "vod-to-live-service:playlist:unpublished": {
+        "channel-service.playlist.unpublished": {
           "source": "event",
-          "bindingKey": "ax-channel-service.*.*.playlist.unpublished",
+          "bindingKey": "channel-service.playlist.unpublished",
           "destination": "vod-to-live-service:playlist:unpublished"
         },
         "retry:vod-to-live-service:transition:prepare_live_stream": {
@@ -168,7 +168,7 @@
           "bindingKey": "vod-to-live-service:transition:prepare_live_stream.#",
           "destination": "vod-to-live-service:transition:prepare_live_stream"
         },
-        "vod-to-live-service:transition:prepare_live_stream": {
+        "vod-to-live-service.transition.prepare_live_stream": {
           "source": "command",
           "bindingKey": "vod-to-live-service.transition.prepare_live_stream",
           "destination": "vod-to-live-service:transition:prepare_live_stream"
@@ -178,7 +178,7 @@
           "bindingKey": "vod-to-live-service:channel:prepare_live_stream.#",
           "destination": "vod-to-live-service:channel:prepare_live_stream"
         },
-        "vod-to-live-service:channel:prepare_live_stream": {
+        "vod-to-live-service.channel.prepare_live_stream": {
           "source": "command",
           "bindingKey": "vod-to-live-service.channel.prepare_live_stream",
           "destination": "vod-to-live-service:channel:prepare_live_stream"
@@ -188,7 +188,7 @@
           "bindingKey": "vod-to-live-service:channel:check_job_status.#",
           "destination": "vod-to-live-service:channel:check_job_status"
         },
-        "vod-to-live-service:channel:check_job_status": {
+        "vod-to-live-service.channel.check_job_status": {
           "source": "command",
           "bindingKey": "vod-to-live-service.channel.check_job_status",
           "destination": "vod-to-live-service:channel:check_job_status"
@@ -243,7 +243,8 @@
           "recovery": "deferred_retry",
           "redeliveries": {
             "limit": 5,
-            "counter": "mosaic"
+            "counter": "mosaic",
+            "timeout": 10000
           }
         },
         "ChannelUnpublished": {
@@ -252,7 +253,8 @@
           "recovery": "deferred_retry",
           "redeliveries": {
             "limit": 5,
-            "counter": "mosaic"
+            "counter": "mosaic",
+            "timeout": 10000
           }
         },
         "PlaylistPublished": {
@@ -261,7 +263,8 @@
           "recovery": "deferred_retry",
           "redeliveries": {
             "limit": 5,
-            "counter": "mosaic"
+            "counter": "mosaic",
+            "timeout": 10000
           }
         },
         "PlaylistUnpublished": {
@@ -270,7 +273,8 @@
           "recovery": "deferred_retry",
           "redeliveries": {
             "limit": 5,
-            "counter": "mosaic"
+            "counter": "mosaic",
+            "timeout": 10000
           }
         },
         "PrepareTransitionLiveStream": {
@@ -279,7 +283,8 @@
           "recovery": "deferred_retry",
           "redeliveries": {
             "limit": 5,
-            "counter": "mosaic"
+            "counter": "mosaic",
+            "timeout": 10000
           }
         },
         "PrepareChannelLiveStream": {
@@ -288,7 +293,8 @@
           "recovery": "deferred_retry",
           "redeliveries": {
             "limit": 5,
-            "counter": "mosaic"
+            "counter": "mosaic",
+            "timeout": 10000
           }
         },
         "CheckChannelJobStatus": {
@@ -297,7 +303,8 @@
           "recovery": "deferred_retry",
           "redeliveries": {
             "limit": 5,
-            "counter": "mosaic"
+            "counter": "mosaic",
+            "timeout": 10000
           }
         }
       }

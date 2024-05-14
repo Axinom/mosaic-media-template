@@ -166,7 +166,11 @@ const getServiceDefinitionID = async (
  * Validate if the deployment manifest YAML file of the service still has some variables that need to be manually adjusted.
  */
 function validateDeploymentManifestIsModified(
-  serviceId: 'media-service' | 'catalog-service' | 'entitlement-service',
+  serviceId:
+    | 'media-service'
+    | 'catalog-service'
+    | 'entitlement-service'
+    | 'channel-service',
 ): void {
   const servicePrefix = serviceId.split('-service')[0];
 
@@ -206,7 +210,11 @@ function getDockerInfo(): { registry?: string; username?: string } {
 
 function buildDockerImageAndPush(
   username: string,
-  serviceId: 'media-service' | 'catalog-service' | 'entitlement-service',
+  serviceId:
+    | 'media-service'
+    | 'catalog-service'
+    | 'entitlement-service'
+    | 'channel-service',
   uniqueID: string,
 ): void {
   const servicePrefix = serviceId.split('-service')[0];
@@ -238,7 +246,9 @@ function buildDockerImageAndPush(
   }
 }
 
-function buildPiletAndRegister(serviceId: 'media-service'): void {
+function buildPiletAndRegister(
+  serviceId: 'media-service' | 'channel-service',
+): void {
   const servicePrefix = serviceId.split('-service')[0];
 
   const piletBuildCommand = `yarn build:${servicePrefix}-workflows:prod`;
@@ -259,7 +269,11 @@ function buildPiletAndRegister(serviceId: 'media-service'): void {
 }
 
 function uploadDeploymentManifest(
-  serviceId: 'media-service' | 'catalog-service' | 'entitlement-service',
+  serviceId:
+    | 'media-service'
+    | 'catalog-service'
+    | 'entitlement-service'
+    | 'channel-service',
   uniqueID: string,
 ): void {
   const servicePrefix = serviceId.split('-service')[0];
@@ -276,13 +290,21 @@ function uploadDeploymentManifest(
 }
 
 function initiateDeployment(
-  serviceId: 'media-service' | 'catalog-service' | 'entitlement-service',
+  serviceId:
+    | 'media-service'
+    | 'catalog-service'
+    | 'entitlement-service'
+    | 'channel-service',
   dockerImageTag: string,
   uniqueID: string,
 ): void {
-  const deployCommand = `yarn util:load-vars mosaic hosting service deploy -i ${serviceId} -t ${dockerImageTag} ${
-    serviceId === 'media-service' ? '-p media-workflows@1.0.0' : ''
-  } -m ${serviceId}-manifest-${uniqueID} -n ${serviceId}-deployment-${uniqueID}`;
+  const workflows =
+    serviceId === 'media-service'
+      ? '-p media-workflows@1.0.0'
+      : serviceId === 'channel-service'
+      ? '-p channel-workflows@1.0.0'
+      : '';
+  const deployCommand = `yarn util:load-vars mosaic hosting service deploy -i ${serviceId} -t ${dockerImageTag} ${workflows} -m ${serviceId}-manifest-${uniqueID} -n ${serviceId}-deployment-${uniqueID}`;
 
   console.log(`\nRunning Deploy command:\n${chalk.green(deployCommand)}\n`);
 
@@ -334,6 +356,7 @@ async function main(): Promise<void> {
           { title: 'Media Service', value: 'media-service' },
           { title: 'Catalog Service', value: 'catalog-service' },
           { title: 'Entitlement Service', value: 'entitlement-service' },
+          { title: 'Channel Service', value: 'channel-service' },
         ],
       },
       {
@@ -394,7 +417,10 @@ async function main(): Promise<void> {
         );
       }
 
-      if (answers.serviceId === 'media-service') {
+      if (
+        answers.serviceId === 'media-service' ||
+        answers.serviceId === 'channel-service'
+      ) {
         buildPiletAndRegister(answers.serviceId);
       }
 

@@ -1,0 +1,10 @@
+.container {
+  height: '500px';
+  width: '500px';
+
+  display: 'grid';
+  grid: '0.25fr 1fr / 1fr';
+  place-items: 'center';
+
+  background-color: 'white';
+}

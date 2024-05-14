@@ -5,14 +5,18 @@ import {
 } from 'media-messages';
 import { selectOne, update } from 'zapatos/db';
 import { Config } from '../../../common';
-import { getChannelId } from '../common';
 
 import { Logger } from '@axinom/mosaic-service-common';
-import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
-import { ChannelGuardedTransactionalMessageHandler } from './channel-guarded-transactional-message-handler';
 
-export class LiveStreamProtectionKeyCreatedEventHandler extends ChannelGuardedTransactionalMessageHandler<LiveStreamProtectionKeyCreatedEvent> {
+export class LiveStreamProtectionKeyCreatedEventHandler extends TransactionalInboxMessageHandler<
+  LiveStreamProtectionKeyCreatedEvent,
+  Config
+> {
   constructor(config: Config) {
     super(
       VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated,
@@ -28,7 +32,7 @@ export class LiveStreamProtectionKeyCreatedEventHandler extends ChannelGuardedTr
     { payload }: TypedTransactionalMessage<LiveStreamProtectionKeyCreatedEvent>,
     txnClient: ClientBase,
   ): Promise<void> {
-    const channelId = getChannelId(payload.channel_id);
+    const channelId = payload.channel_id;
     const dbChannel = await selectOne('channel', {
       id: channelId,
     }).run(txnClient);

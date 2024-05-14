@@ -1,0 +1,19 @@
+query ValidatePlaylist($id: UUID!) {
+  validatePlaylist(id: $id) {
+    publishHash
+    validationStatus
+    validationMessages {
+      context
+      message
+      severity
+    }
+  }
+}
+
+mutation PublishPlaylist($id: UUID!, $publishHash: String!) {
+  publishPlaylist(input: {id: $id, publishHash: $publishHash}) {
+    playlist {
+        id
+    }
+  }
+}

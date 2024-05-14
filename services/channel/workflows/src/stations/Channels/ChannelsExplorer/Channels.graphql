@@ -1,0 +1,35 @@
+query Channels(
+  $filter: ChannelFilter
+  $orderBy: [ChannelsOrderBy!]
+  $after: Cursor
+) {
+  filtered: channels(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      title
+      createdDate
+      updatedDate
+      publicationState
+      publishedDate
+      channelImages(condition: { imageType: LOGO }) {
+        nodes {
+          imageId
+          imageType
+        }
+      }
+    }
+  }
+  nonFiltered: channels {
+    totalCount
+  }
+}

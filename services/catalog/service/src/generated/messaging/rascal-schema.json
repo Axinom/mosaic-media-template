@@ -144,14 +144,24 @@
           "bindingKey": "media-service.collection.unpublished",
           "destination": "catalog-service:inbox"
         },
-        "ax-channel-service.*.*.channel.published": {
+        "channel-service.channel.published": {
           "source": "event",
-          "bindingKey": "ax-channel-service.*.*.channel.published",
+          "bindingKey": "channel-service.channel.published",
           "destination": "catalog-service:inbox"
         },
-        "ax-channel-service.*.*.channel.unpublished": {
+        "channel-service.channel.unpublished": {
           "source": "event",
-          "bindingKey": "ax-channel-service.*.*.channel.unpublished",
+          "bindingKey": "channel-service.channel.unpublished",
+          "destination": "catalog-service:inbox"
+        },
+        "channel-service.playlist.published": {
+          "source": "event",
+          "bindingKey": "channel-service.playlist.published",
+          "destination": "catalog-service:inbox"
+        },
+        "channel-service.playlist.unpublished": {
+          "source": "event",
+          "bindingKey": "channel-service.playlist.unpublished",
           "destination": "catalog-service:inbox"
         },
         "vod-to-live-service.channel.check_job_status_succeeded": {

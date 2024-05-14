@@ -1,4 +1,4 @@
-import { ChannelPublishedEvent } from '@axinom/mosaic-messages';
+import { ChannelPublishedEvent } from 'media-messages';
 import { CpixSettings } from '../../../domains/cpix';
 import { createTestVideo, getTestMutualStreamParams } from '../../../tests';
 import { createHeaderMetadata, HeaderMetadataNames } from '../models';
@@ -10,8 +10,8 @@ describe('ChannelSmilGenerator', () => {
     isDrmProtected: boolean,
   ): ChannelPublishedEvent => {
     return {
-      description: null,
-      id: 'adbff5f4-fc18-4f4d-818c-91f37ba131ee',
+      content_id: 'channel-adbff5f4-fc18-4f4d-818c-91f37ba131ee',
+      is_drm_protected: isDrmProtected,
       images: [
         {
           height: 646,
@@ -26,22 +26,15 @@ describe('ChannelSmilGenerator', () => {
         '3a8e5dc9-5c91-4d61-bf95-c4e719b705f2',
         62,
       ),
-      title: 'Discovery++',
+      localizations: [
+        {
+          is_default_locale: true,
+          language_tag: 'default',
+          title: 'Discovery++',
+          description: null,
+        },
+      ],
     };
-  };
-  const channelWithoutPlaceholderVideo: ChannelPublishedEvent = {
-    description: null,
-    id: 'adbff5f4-fc18-4f4d-818c-91f37ba131ee',
-    images: [
-      {
-        height: 646,
-        id: 'db561b84-1e78-4f4d-9a3f-446e34db40de',
-        path: '/transform/0-0/U5uZEHhwrXGde33yxwVHx9.png',
-        type: 'channel_logo',
-        width: 860,
-      },
-    ],
-    title: 'Discovery++',
   };
 
   const testCpix =
@@ -96,7 +89,7 @@ describe('ChannelSmilGenerator', () => {
       const headerMetadata = resultSmil.smil.head.meta;
       const expectedHeaders = getExpectedMetadataHeaders(
         isDrmProtected,
-        channelWithPlaceholderVideo.id,
+        channelWithPlaceholderVideo.content_id,
       );
       expect(headerMetadata).toHaveLength(expectedHeaders.length);
       expect(headerMetadata).toMatchObject(expectedHeaders);
@@ -110,19 +103,4 @@ describe('ChannelSmilGenerator', () => {
       ]);
     },
   );
-
-  it('error is thrown if placeholder video is not defined', async () => {
-    // Arrange
-    const generator = new ChannelSmilGenerator({
-      decryptionCpixFile: undefined,
-      encryptionDashCpixFile: undefined,
-      encryptionHlsCpixFile: undefined,
-    });
-    // Act & Assert
-    expect(() => {
-      generator.generate(channelWithoutPlaceholderVideo);
-    }).toThrow(
-      `Channel ${channelWithoutPlaceholderVideo.id} is missing placeholder video. Virtual Channel cannot be created.`,
-    );
-  });
 });

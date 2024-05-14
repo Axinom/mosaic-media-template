@@ -1,7 +1,8 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { DetailedVideo, PlaylistPublishedEvent } from '@axinom/mosaic-messages';
+import { DetailedVideo } from '@axinom/mosaic-messages';
 import { stub } from 'jest-auto-stub';
+import { PlaylistPublishedEvent } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { Config, DAY_IN_SECONDS, SECOND_IN_MILLISECONDS } from '../../common';
 import { AzureStorage, KeyServiceApi } from '../../domains';
@@ -35,7 +36,6 @@ describe('PlaylistPublishedHandler', () => {
     serviceId: 'test-vod-to-live',
     logLevel: 'DEBUG',
     catchUpDurationInMinutes: 60,
-    isDrmEnabled: false,
   });
   beforeEach(async () => {
     createEncryptionCpix = jest
@@ -117,7 +117,7 @@ describe('PlaylistPublishedHandler', () => {
       const scheduleVideo = createTestVideo(isDrmProtected, '1', 10);
       const startDate = new Date();
       const payload: PlaylistPublishedEvent = {
-        id: uuid(),
+        content_id: `playlist-${uuid()}`,
         channel_id: uuid(),
         start_date_time: startDate.toISOString(),
         end_date_time: new Date(
@@ -125,13 +125,11 @@ describe('PlaylistPublishedHandler', () => {
         ).toISOString(),
         programs: [
           {
-            id: uuid(),
+            content_id: `program-${uuid()}`,
             sort_index: 0,
-            title: 'Test',
             video: programVideo,
             video_duration_in_seconds: 600,
-            entity_id: uuid(),
-            entity_type: 'MOVIE',
+            entity_content_id: 'movie-2341',
             program_cue_points: [
               {
                 id: uuid(),
@@ -145,6 +143,13 @@ describe('PlaylistPublishedHandler', () => {
                     video: scheduleVideo,
                   },
                 ],
+              },
+            ],
+            localizations: [
+              {
+                is_default_locale: true,
+                language_tag: 'default',
+                title: `Test`,
               },
             ],
           },

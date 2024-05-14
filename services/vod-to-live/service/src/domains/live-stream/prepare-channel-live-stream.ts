@@ -6,7 +6,6 @@ import {
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
-import { Config } from '../../common';
 import { AzureStorage } from '../azure';
 import { ChannelMetadataModel } from '../common';
 import {
@@ -27,6 +26,7 @@ const logger = new Logger({ context: 'prepare-channel-live-stream' });
 
 export const prepareChannelLiveStream = async (
   channelId: string,
+  isDrmProtected: boolean,
   smil: string,
   json: string,
   virtualChannelApi: VirtualChannelApi,
@@ -34,7 +34,6 @@ export const prepareChannelLiveStream = async (
   keyServiceApi: KeyServiceApi,
   broker: Broker,
   authToken: string | undefined,
-  config: Config,
 ): Promise<void> => {
   try {
     const newChannelMetadata: ChannelMetadataModel = JSON.parse(json);
@@ -56,7 +55,7 @@ export const prepareChannelLiveStream = async (
           },
         );
       }
-      if (config.isDrmEnabled) {
+      if (isDrmProtected) {
         const storedChannelJson = await storage.getFileContent(
           generateChannelFilePath(channelId, metadataFileName),
         );
@@ -65,7 +64,7 @@ export const prepareChannelLiveStream = async (
         newChannelMetadata.key_id = storedChannelMetadata.key_id;
       }
     } else {
-      if (config.isDrmEnabled) {
+      if (isDrmProtected) {
         const channelKey = await keyServiceApi.postContentKey(channelId);
         newChannelMetadata.key_id = channelKey.Id;
         const protectionCpixCreationResult = await createProtectionCpix(

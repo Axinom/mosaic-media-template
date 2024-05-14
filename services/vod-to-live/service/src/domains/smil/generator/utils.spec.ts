@@ -1,8 +1,5 @@
-import {
-  CuePointSchedule,
-  DetailedVideo,
-  Stream,
-} from '@axinom/mosaic-messages';
+import { DetailedVideo, Stream } from '@axinom/mosaic-messages';
+import { CuePointSchedule } from 'media-messages';
 import { URL } from 'url';
 import { v4 as uuid } from 'uuid';
 import { createTestVideo, getTestMutualStreamParams } from '../../../tests';

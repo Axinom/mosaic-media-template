@@ -1,0 +1,50 @@
+query Playlist($id: UUID!) {
+  playlist(id: $id) {
+    id
+    startDateTime
+    calculatedDurationInSeconds
+    calculatedEndDateTime
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+    publishedDate
+    publishedUser
+    publicationState
+    programs {
+      nodes {
+        entityType
+      }
+    }
+  }
+}
+
+mutation UpdatePlaylist($input: UpdatePlaylistInput!) {
+  updatePlaylist(input: $input) {
+    playlist {
+      id
+    }
+  }
+}
+
+mutation DeletePlaylist($input: DeletePlaylistInput!) {
+  deletePlaylist(input: $input) {
+    playlist {
+      id
+    }
+  }
+}
+
+mutation UnpublishPlaylist($input: UnpublishPlaylistInput!) {
+  unpublishPlaylist(input: $input) {
+    playlist {
+      id
+    }
+  }
+}
+
+query PlaylistStartTime($id: UUID!) {
+  playlist(id: $id) {
+    startDateTime
+  }
+}

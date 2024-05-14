@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "channel_published_event",
+  "description": "Publish format for channel.",
+  "additionalProperties": false,
+  "required": [
+    "content_id",
+    "is_drm_protected",
+    "placeholder_video",
+    "images",
+    "localizations"
+  ],
+  "properties": {
+    "content_id": {
+      "$ref": "../common.json#/definitions/channel_id",
+      "description": "Channel unique identifier."
+    },
+    "is_drm_protected": {
+      "type": "boolean",
+      "description": "Apply DRM protection on the output stream."
+    },
+    "images": {
+      "description": "Images defined for the channel.",
+      "type": "array",
+      "additionalItems": false,
+      "minItems": 0,
+      "items": {
+        "$ref": "../common.json#/definitions/image"
+      }
+    },
+    "placeholder_video": {
+      "description": "Placeholder video defined for the channel.",
+      "$ref": "../common.json#/definitions/video"
+    },
+    "localizations": {
+      "description": "Localizations for every active locale.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "title": "channel_localization",
+        "required": ["is_default_locale", "language_tag", "title"],
+        "properties": {
+          "is_default_locale": {
+            "type": "boolean",
+            "description": "Boolean flag to indicate if locale is default or not."
+          },
+          "language_tag": {
+            "type": "string",
+            "description": "The locale for which the values are localized."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the channel."
+          },
+          "description": {
+            "type": ["string", "null"],
+            "description": "Channel's description."
+          }
+        }
+      }
+    }
+  }
+}

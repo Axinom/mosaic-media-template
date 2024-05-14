@@ -1,5 +1,5 @@
-import { ChannelPublishedEvent } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
+import { ChannelPublishedEvent } from 'media-messages';
 import { CpixSettings } from '../../cpix';
 import {
   createHeaderMetadata,
@@ -36,7 +36,7 @@ export class ChannelSmilGenerator extends SmilGenerator<ChannelPublishedEvent> {
     } else {
       // Virtual Channel cannot be created without the SMIL with a valid parallel/video
       throw new MosaicError({
-        message: `Channel ${originalEvent.id} is missing placeholder video. Virtual Channel cannot be created.`,
+        message: `Channel ${originalEvent.content_id} is missing placeholder video. Virtual Channel cannot be created.`,
         code: 'PLACEHOLDER_VIDEO_NOT_ASSIGNED',
       });
     }
@@ -49,7 +49,7 @@ export class ChannelSmilGenerator extends SmilGenerator<ChannelPublishedEvent> {
       ...getDefaultMetadataHeaders(new Date()),
       createHeaderMetadata(
         HeaderMetadataNames.MosaicChannelId,
-        originalEvent.id,
+        originalEvent.content_id,
       ),
     ];
 

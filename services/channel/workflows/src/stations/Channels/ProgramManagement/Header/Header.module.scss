@@ -1,0 +1,55 @@
+@import '../styles.scss';
+
+.container {
+  display: grid;
+  grid: #{$row} #{$row} / 1fr;
+
+  .sections {
+    @include sections;
+
+    .timeSlot {
+      justify-items: center;
+    }
+
+    .columns {
+      @include columns;
+    }
+
+    .chevron {
+      @include chevron;
+
+      margin-top: 8px;
+      transform: rotate(90deg);
+
+      path {
+        stroke: $dark-blue;
+      }
+
+      &.closed {
+        transform: rotate(0deg);
+      }
+    }
+
+    .label,
+    .timeSlot {
+      display: grid;
+      grid: #{$row} / 1fr;
+
+      font-weight: bold;
+      color: $dark-blue;
+
+      &:not(:last-child) {
+        @include inset-border-right;
+      }
+
+      p {
+        padding: 0px;
+        margin: 20px 0 0 0;
+      }
+    }
+  }
+
+  .actions {
+    @include actions;
+  }
+}

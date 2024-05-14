@@ -35,9 +35,6 @@ export const getConfigDefinitions = (
     ...getBasicGraphQlConfigDefinitions(11900, variables),
     ...getBasicRabbitMqConfigDefinitions(variables),
     ...basicCustomizableConfigs,
-    // secret
-    prePublishingWebhookSecret: () =>
-      env.get('PRE_PUBLISHING_WEBHOOK_SECRET').required().asString(),
     virtualChannelManagementApiBaseUrl: () =>
       env
         .get('VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL')
@@ -62,32 +59,6 @@ export const getConfigDefinitions = (
       env.get('KEY_SERVICE_MANAGEMENT_KEY').asString(),
     drmKeySeedId: () => env.get('DRM_KEY_SEED_ID').asString(),
 
-    isDrmEnabled: function () {
-      return this.keyServiceApiBaseUrl() &&
-        this.keyServiceTenantId() &&
-        this.keyServiceManagementKey() &&
-        this.drmKeySeedId()
-        ? true
-        : false;
-    },
-    /**
-     * Optional Service Account Client ID, used to get ID service token that is
-     * required to get User auth token during development
-     */
-    devServiceAccountClientId: () =>
-      env.get('DEV_SERVICE_ACCOUNT_CLIENT_ID').asString(),
-    /**
-     * Optional Service Account Client Secret, used to get ID service token that
-     * is required to get User auth token during development
-     */
-    devServiceAccountClientSecret: () =>
-      env.get('DEV_SERVICE_ACCOUNT_CLIENT_SECRET').asString(),
-    /**
-     * Optional Channel Service GraphQL Endpoint, used to setup webhook url and
-     * secret during development
-     */
-    devChannelServiceBaseUrl: () =>
-      env.get('DEV_CHANNEL_SERVICE_BASE_URL').asUrlString(),
     /**
      * Added to the playlist transition time, when playlist start date is in the PAST.
      * This time frame is added in consideration for playlist videos processing required to create live stream from VOD.
@@ -118,13 +89,6 @@ export const getConfigDefinitions = (
         .get('CHANNEL_PROCESSING_WAIT_TIME_IN_SECONDS')
         .default('600')
         .asIntPositive(),
-
-    /**
-     * Sets the body size limit for the webhook requests, since playlists can be
-     * quite large. Default is 50mb. Examples: https://github.com/visionmedia/bytes.js#bytesparsestringnumber-value-numbernull
-     */
-    webhookBodySizeLimit: () =>
-      env.get('WEBHOOK_BODY_SIZE_LIMIT').default('50mb').asString(),
   };
 };
 

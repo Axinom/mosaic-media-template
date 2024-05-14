@@ -1,5 +1,4 @@
 import { getMappedError, Logger } from '@axinom/mosaic-service-common';
-import { Config } from '../../common';
 import { AzureStorage } from '../azure';
 import { ChannelMetadataModel } from '../common';
 import { KeyServiceApi } from '../key-service';
@@ -12,7 +11,6 @@ export const deleteChannelLiveStream = async (
   virtualChannelApi: VirtualChannelApi,
   storage: AzureStorage,
   keyServiceApi: KeyServiceApi,
-  config: Config,
 ): Promise<void> => {
   try {
     const result = await virtualChannelApi.deleteChannel(channelId);
@@ -20,12 +18,12 @@ export const deleteChannelLiveStream = async (
     const storedChannelJson = await storage.getFileContent(
       generateChannelFilePath(channelId, metadataFileName),
     );
+    const storageFileDeletion = await storage.deleteFolder(channelId);
     const storedChannelMetadata: ChannelMetadataModel =
       JSON.parse(storedChannelJson);
-    if (config.isDrmEnabled && storedChannelMetadata.key_id) {
+    if (storedChannelMetadata.key_id) {
       await keyServiceApi.deleteContentKey(storedChannelMetadata.key_id);
     }
-    const storageFileDeletion = await storage.deleteFolder(channelId);
     logger.log({
       message: 'The result of the channel deletion:',
       details: {

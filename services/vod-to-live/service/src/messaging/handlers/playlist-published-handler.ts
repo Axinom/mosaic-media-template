@@ -1,11 +1,9 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
-import {
-  ChannelServiceMultiTenantMessagingSettings,
-  DetailedVideo,
-  PlaylistPublishedEvent,
-} from '@axinom/mosaic-messages';
+import { DetailedVideo } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
+  ChannelServiceMessagingSettings,
+  PlaylistPublishedEvent,
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
@@ -39,7 +37,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
     private keyServiceApi: KeyServiceApi,
   ) {
     super(
-      ChannelServiceMultiTenantMessagingSettings.PlaylistPublished.messageType,
+      ChannelServiceMessagingSettings.PlaylistPublished.messageType,
       config,
     );
     this.logger = new Logger({
@@ -99,7 +97,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
             ? prolongedPlaylistDurationInSeconds
             : playlistDurationInSeconds;
       }
-      const encryptionParams = this.config.isDrmEnabled
+      const encryptionParams = channelPublishedEvent.is_drm_protected
         ? {
             startDate: new Date(encryptionStartDate),
             durationInSeconds: encryptionDurationInSeconds,
@@ -107,8 +105,8 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
         : undefined;
       const cpixSettings: CpixSettings = {
         decryptionCpixFile: await createDecryptionCpix(
-          channelPublishedEvent.id,
-          payload.id,
+          channelPublishedEvent.content_id,
+          payload.content_id,
           {
             videos: [placeholderVideo, ...videos],
             // decryption starts immediately
@@ -120,13 +118,13 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
           this.keyServiceApi,
         ),
         encryptionDashCpixFile: await createEncryptionCpix(
-          channelPublishedEvent.id,
+          channelPublishedEvent.content_id,
           'DASH',
           encryptionParams,
           this.storage,
         ),
         encryptionHlsCpixFile: await createEncryptionCpix(
-          channelPublishedEvent.id,
+          channelPublishedEvent.content_id,
           'HLS',
           encryptionParams,
           this.storage,
@@ -144,7 +142,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
         VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream,
         {
           channel_id: payload.channel_id,
-          playlist_id: payload.id,
+          playlist_id: payload.content_id,
           transition_start_date_time: playlistTransitionDate,
           smil: convertObjectToXml(smilDocument),
         },

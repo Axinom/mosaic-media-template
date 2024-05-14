@@ -1,19 +1,23 @@
-import {
-  ChannelServiceMultiTenantMessagingSettings,
-  ChannelUnpublishedEvent,
-} from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
-import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  ChannelServiceMessagingSettings,
+  ChannelUnpublishedEvent,
+} from 'media-messages';
 import { ClientBase } from 'pg';
 import * as db from 'zapatos/db';
 import { Config } from '../../../common';
-import { getChannelId } from '../common';
-import { ChannelGuardedTransactionalMessageHandler } from './channel-guarded-transactional-message-handler';
 
-export class ChannelUnpublishedEventHandler extends ChannelGuardedTransactionalMessageHandler<ChannelUnpublishedEvent> {
+export class ChannelUnpublishedEventHandler extends TransactionalInboxMessageHandler<
+  ChannelUnpublishedEvent,
+  Config
+> {
   constructor(config: Config) {
     super(
-      ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished,
+      ChannelServiceMessagingSettings.ChannelUnpublished,
       new Logger({
         config,
         context: ChannelUnpublishedEventHandler.name,
@@ -26,7 +30,6 @@ export class ChannelUnpublishedEventHandler extends ChannelGuardedTransactionalM
     { payload }: TypedTransactionalMessage<ChannelUnpublishedEvent>,
     txnClient: ClientBase,
   ): Promise<void> {
-    const channelId = getChannelId(payload.id);
-    await db.deletes('channel', { id: channelId }).run(txnClient);
+    await db.deletes('channel', { id: payload.content_id }).run(txnClient);
   }
 }

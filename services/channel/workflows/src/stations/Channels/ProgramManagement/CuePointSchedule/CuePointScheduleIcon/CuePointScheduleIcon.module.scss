@@ -1,0 +1,13 @@
+@import '../../styles.scss';
+
+.container {
+  display: grid;
+  grid: 42px / 42px;
+  place-items: center;
+
+  background-color: $light-gray-2;
+
+  svg {
+    height: 22px;
+  }
+}

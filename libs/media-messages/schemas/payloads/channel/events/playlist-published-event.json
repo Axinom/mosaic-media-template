@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "playlist_published_event",
+  "description": "Publish format for playlist.",
+  "additionalProperties": false,
+  "required": [
+    "content_id",
+    "channel_id",
+    "start_date_time",
+    "end_date_time",
+    "programs"
+  ],
+  "properties": {
+    "content_id": {
+      "$ref": "../common.json#/definitions/playlist_id",
+      "description": "Playlist unique identifier."
+    },
+    "channel_id": {
+      "$ref": "../common.json#/definitions/channel_id",
+      "description": "Reference to the channel associated with the playlist."
+    },
+    "start_date_time": {
+      "description": "Start date and time of the playlist.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date_time": {
+      "description": "End date and time of the playlist.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "programs": {
+      "description": "List of programs associated with the playlist.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "$ref": "../common.json#/definitions/program"
+      }
+    }
+  }
+}

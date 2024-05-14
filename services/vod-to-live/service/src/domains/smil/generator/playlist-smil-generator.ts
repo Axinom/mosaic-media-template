@@ -1,11 +1,11 @@
+import { DetailedVideo } from '@axinom/mosaic-messages';
+import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  DetailedVideo,
   PlaylistPublishedEvent,
   Program,
   ProgramCuePoint,
-} from '@axinom/mosaic-messages';
-import { Logger, MosaicError } from '@axinom/mosaic-service-common';
-import { Config, DAY_IN_SECONDS, ValidationErrors } from '../../../common';
+} from 'media-messages';
+import { Config, DAY_IN_SECONDS, Errors } from '../../../common';
 import { getPlaylistDurationInSeconds } from '../../common';
 import { CpixSettings } from '../../cpix';
 import {
@@ -78,9 +78,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
         channelPlaceholderVideo.video_encoding.length_in_seconds;
       this.placeholderVideo = channelPlaceholderVideo;
     } else {
-      throw new MosaicError(
-        ValidationErrors.PlaylistPlaceholderVideoWasNotFound,
-      );
+      throw new MosaicError(Errors.PlaylistPlaceholderVideoWasNotFound);
     }
   }
   generate(originalEvent: PlaylistPublishedEvent): SMILEnvelope {
@@ -156,7 +154,7 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
       ...getDefaultMetadataHeaders(new Date(originalEvent.start_date_time)),
       createHeaderMetadata(
         HeaderMetadataNames.MosaicPlaylistId,
-        originalEvent.id,
+        originalEvent.content_id,
       ),
     ];
     if (this.drmSettings.decryptionCpixFile) {
@@ -244,9 +242,11 @@ export class PlaylistSmilGenerator extends SmilGenerator<PlaylistPublishedEvent>
             this.logger.warn({
               message: `The MID cue point with ID '${midCuePoint.id}' is missing the insertion time. Therefore this cue point is skipped!`,
               details: {
-                programId: program.id,
-                programTitle: program.title,
-                programType: program.entity_type,
+                programId: program.content_id,
+                programTitle:
+                  program.localizations.find((p) => p.is_default_locale)
+                    ?.title ?? 'unknown',
+                programContentId: program.entity_content_id,
                 cuePoint: midCuePoint,
               },
             });

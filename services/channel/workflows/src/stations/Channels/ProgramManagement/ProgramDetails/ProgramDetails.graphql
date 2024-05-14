@@ -1,0 +1,10 @@
+query ProgramDetailsRootPathParams($programId: UUID!) {
+  program(id: $programId) {
+    playlist {
+      id
+      channel {
+        id
+      }
+    }
+  }
+}

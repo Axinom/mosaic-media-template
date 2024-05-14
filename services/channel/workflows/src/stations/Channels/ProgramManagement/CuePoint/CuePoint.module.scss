@@ -1,0 +1,51 @@
+@import '../styles.scss';
+
+.container {
+  display: grid;
+  grid: #{$row} min-content / 1fr;
+
+  .columns {
+    @include columns;
+  }
+
+  .header {
+    @include header;
+
+    grid: 1fr / #{$column-small - $cp-container-padding} 1fr #{$column-large} #{$column-large} #{$column-medium} #{$column-medium - $cp-container-padding};
+
+    background-color: $light-gray;
+  }
+
+  .cpTimeSlot {
+    @include cpTimeSlot;
+  }
+
+  .cell {
+    @include cell;
+
+    color: $dark-gray;
+  }
+
+  .type {
+    font-weight: bold;
+    text-transform: lowercase;
+    :first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  .actions {
+    @include actions;
+
+    margin-left: 0 - $cp-container-padding;
+  }
+
+  .slotWrapper {
+    display: grid;
+    grid-auto-rows: minmax(#{$row}, max-content);
+    grid-row: 2 / 3;
+    grid-column: 1 / -1;
+
+    @include inset-border-bottom;
+  }
+}

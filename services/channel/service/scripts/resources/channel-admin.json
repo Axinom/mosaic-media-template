@@ -1,0 +1,24 @@
+[
+  {
+    "serviceId": "channel-service",
+    "permissions": ["ADMIN"]
+  },
+  {
+    "serviceId": "ax-image-service",
+    "permissions": ["IMAGES_EDIT"]
+  },
+  {
+    "serviceId": "ax-video-service",
+    "permissions": ["VIDEOS_ENCODE"]
+  },
+  {
+    "serviceId": "ax-localization-service",
+    "permissions": [
+      "SETTINGS_VIEW",
+      "ENTITY_DEFINITIONS_VIEW",
+      "SOURCE_ENTITIES_VIEW",
+      "LOCALIZED_ENTITIES_EDIT",
+      "LOCALIZED_ENTITIES_REVIEW"
+    ]
+  }
+]

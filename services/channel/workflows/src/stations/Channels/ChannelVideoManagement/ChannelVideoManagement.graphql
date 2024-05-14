@@ -1,0 +1,6 @@
+query ChannelVideo($id: UUID!) {
+  channel(id: $id) {
+    placeholderVideoId
+  }
+}
+

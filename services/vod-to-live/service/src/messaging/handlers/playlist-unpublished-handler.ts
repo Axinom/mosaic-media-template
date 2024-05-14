@@ -1,8 +1,8 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import {
-  ChannelServiceMultiTenantMessagingSettings,
+  ChannelServiceMessagingSettings,
   PlaylistUnpublishedEvent,
-} from '@axinom/mosaic-messages';
+} from 'media-messages';
 import { Config } from '../../common';
 import {
   AzureStorage,
@@ -21,8 +21,7 @@ export class PlaylistUnpublishedHandler extends AuthenticatedMessageHandler<Play
     private keyServiceApi: KeyServiceApi,
   ) {
     super(
-      ChannelServiceMultiTenantMessagingSettings.PlaylistUnpublished
-        .messageType,
+      ChannelServiceMessagingSettings.PlaylistUnpublished.messageType,
       config,
     );
   }
@@ -32,7 +31,7 @@ export class PlaylistUnpublishedHandler extends AuthenticatedMessageHandler<Play
   ): Promise<void> {
     await deleteTransitionLiveStream(
       payload.channel_id,
-      payload.id,
+      payload.content_id,
       this.virtualChannelApi,
       this.storage,
       this.keyServiceApi,

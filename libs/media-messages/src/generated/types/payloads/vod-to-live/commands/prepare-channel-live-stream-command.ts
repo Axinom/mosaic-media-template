@@ -7,6 +7,10 @@ export interface PrepareChannelLiveStreamCommand {
    */
   channel_id: string;
   /**
+   * Apply DRM protection on the output stream.
+   */
+  is_drm_protected: boolean;
+  /**
    * SMIL document's XML content serialized as JSON string.
    */
   smil: string;
