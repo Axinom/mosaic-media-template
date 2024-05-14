@@ -48,3 +48,6 @@ ingest-gen
 
 # Mac specific
 .DS_Store
+
+# Temporary Data Dumps
+data-dump/

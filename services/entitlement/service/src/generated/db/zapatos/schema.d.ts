@@ -51,13 +51,13 @@ declare module 'zapatos/schema' {
       /**
       * **claim_sets.created_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       created_date: Date;
       /**
       * **claim_sets.updated_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
       /**
@@ -101,13 +101,13 @@ declare module 'zapatos/schema' {
       /**
       * **claim_sets.created_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       created_date: db.DateString;
       /**
       * **claim_sets.updated_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
       /**
@@ -151,13 +151,13 @@ declare module 'zapatos/schema' {
       /**
       * **claim_sets.created_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **claim_sets.updated_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -201,13 +201,13 @@ declare module 'zapatos/schema' {
       /**
       * **claim_sets.created_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
       /**
       * **claim_sets.updated_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
       /**
@@ -251,13 +251,13 @@ declare module 'zapatos/schema' {
       /**
       * **claim_sets.created_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
       /**
       * **claim_sets.updated_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
       /**
@@ -310,13 +310,13 @@ declare module 'zapatos/schema' {
       /**
       * **subscription_plans.created_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       created_date: Date;
       /**
       * **subscription_plans.updated_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
       /**
@@ -360,13 +360,13 @@ declare module 'zapatos/schema' {
       /**
       * **subscription_plans.created_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       created_date: db.DateString;
       /**
       * **subscription_plans.updated_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
       /**
@@ -410,13 +410,13 @@ declare module 'zapatos/schema' {
       /**
       * **subscription_plans.created_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **subscription_plans.updated_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -460,13 +460,13 @@ declare module 'zapatos/schema' {
       /**
       * **subscription_plans.created_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
       /**
       * **subscription_plans.updated_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
       /**
@@ -510,13 +510,13 @@ declare module 'zapatos/schema' {
       /**
       * **subscription_plans.created_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
       /**
       * **subscription_plans.updated_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
       /**
@@ -565,7 +565,7 @@ declare module 'zapatos/schema' {
       /**
       * **messaging_counter.expiration_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
+      * - `NOT NULL`, default: `((now() + '1 day'::interval) AT TIME ZONE 'utc'::text)`
       */
       expiration_date: Date;
     }
@@ -585,7 +585,7 @@ declare module 'zapatos/schema' {
       /**
       * **messaging_counter.expiration_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
+      * - `NOT NULL`, default: `((now() + '1 day'::interval) AT TIME ZONE 'utc'::text)`
       */
       expiration_date: db.DateString;
     }
@@ -605,7 +605,7 @@ declare module 'zapatos/schema' {
       /**
       * **messaging_counter.expiration_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
+      * - `NOT NULL`, default: `((now() + '1 day'::interval) AT TIME ZONE 'utc'::text)`
       */
       expiration_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
     }
@@ -625,7 +625,7 @@ declare module 'zapatos/schema' {
       /**
       * **messaging_counter.expiration_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
+      * - `NOT NULL`, default: `((now() + '1 day'::interval) AT TIME ZONE 'utc'::text)`
       */
       expiration_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
     }
@@ -645,7 +645,7 @@ declare module 'zapatos/schema' {
       /**
       * **messaging_counter.expiration_date**
       * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
+      * - `NOT NULL`, default: `((now() + '1 day'::interval) AT TIME ZONE 'utc'::text)`
       */
       expiration_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
     }
