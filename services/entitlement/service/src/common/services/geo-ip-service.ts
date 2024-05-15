@@ -1,5 +1,6 @@
 import * as maxmind from 'maxmind';
 import { CountryResponse } from 'maxmind';
+import path from 'path';
 import { getFullConfig } from '../config';
 
 const config = getFullConfig();
@@ -18,7 +19,7 @@ export class GeoIPService {
   async loadDatabase(): Promise<void> {
     try {
       this.lookup = await maxmind.open<CountryResponse>(
-        config.geoIP2DatabasePath || '',
+        path.resolve(__dirname, config.geoIP2DatabasePath || ''),
       );
       // Todo: remove console.log with proper logger.
       console.log('GeoIP database loaded successfully..');
