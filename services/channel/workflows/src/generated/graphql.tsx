@@ -2914,6 +2914,27 @@ export type PlaylistsQueryVariables = Exact<{
 
 export type PlaylistsQuery = { __typename?: 'Query', filtered?: { __typename?: 'PlaylistsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Playlist', id: any, startDateTime: any, calculatedDurationInSeconds: number, createdDate: any, updatedDate: any, publicationState: PublicationState, publishedDate?: any | null, programs: { __typename?: 'ProgramsConnection', totalCount: number } }> } | null, nonFiltered?: { __typename?: 'PlaylistsConnection', totalCount: number } | null };
 
+export type ProgramQueryVariables = Exact<{
+  id: Scalars['UUID'];
+}>;
+
+
+export type ProgramQuery = { __typename?: 'Query', program?: { __typename?: 'Program', id: any, title: string, updatedDate: any, updatedUser: string, createdDate: any, createdUser: string, imageId?: any | null } | null };
+
+export type ProgramTitleQueryVariables = Exact<{
+  id: Scalars['UUID'];
+}>;
+
+
+export type ProgramTitleQuery = { __typename?: 'Query', program?: { __typename?: 'Program', id: any, title: string } | null };
+
+export type UpdateProgramMutationVariables = Exact<{
+  input: UpdateProgramInput;
+}>;
+
+
+export type UpdateProgramMutation = { __typename?: 'Mutation', updateProgram?: { __typename?: 'UpdateProgramPayload', program?: { __typename?: 'Program', id: any } | null } | null };
+
 export type ProgramDetailsRootPathParamsQueryVariables = Exact<{
   programId: Scalars['UUID'];
 }>;
@@ -3738,6 +3759,118 @@ export function usePlaylistsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type PlaylistsQueryHookResult = ReturnType<typeof usePlaylistsQuery>;
 export type PlaylistsLazyQueryHookResult = ReturnType<typeof usePlaylistsLazyQuery>;
 export type PlaylistsQueryResult = Apollo.QueryResult<PlaylistsQuery, PlaylistsQueryVariables>;
+export const ProgramDocument = gql`
+    query Program($id: UUID!) {
+  program(id: $id) {
+    id
+    title
+    updatedDate
+    updatedUser
+    createdDate
+    createdUser
+    imageId
+  }
+}
+    `;
+
+/**
+ * __useProgramQuery__
+ *
+ * To run a query within a React component, call `useProgramQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProgramQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProgramQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useProgramQuery(baseOptions: Apollo.QueryHookOptions<ProgramQuery, ProgramQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProgramQuery, ProgramQueryVariables>(ProgramDocument, options);
+      }
+export function useProgramLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProgramQuery, ProgramQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProgramQuery, ProgramQueryVariables>(ProgramDocument, options);
+        }
+export type ProgramQueryHookResult = ReturnType<typeof useProgramQuery>;
+export type ProgramLazyQueryHookResult = ReturnType<typeof useProgramLazyQuery>;
+export type ProgramQueryResult = Apollo.QueryResult<ProgramQuery, ProgramQueryVariables>;
+export const ProgramTitleDocument = gql`
+    query ProgramTitle($id: UUID!) {
+  program(id: $id) {
+    id
+    title
+  }
+}
+    `;
+
+/**
+ * __useProgramTitleQuery__
+ *
+ * To run a query within a React component, call `useProgramTitleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProgramTitleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProgramTitleQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useProgramTitleQuery(baseOptions: Apollo.QueryHookOptions<ProgramTitleQuery, ProgramTitleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProgramTitleQuery, ProgramTitleQueryVariables>(ProgramTitleDocument, options);
+      }
+export function useProgramTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProgramTitleQuery, ProgramTitleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProgramTitleQuery, ProgramTitleQueryVariables>(ProgramTitleDocument, options);
+        }
+export type ProgramTitleQueryHookResult = ReturnType<typeof useProgramTitleQuery>;
+export type ProgramTitleLazyQueryHookResult = ReturnType<typeof useProgramTitleLazyQuery>;
+export type ProgramTitleQueryResult = Apollo.QueryResult<ProgramTitleQuery, ProgramTitleQueryVariables>;
+export const UpdateProgramDocument = gql`
+    mutation UpdateProgram($input: UpdateProgramInput!) {
+  updateProgram(input: $input) {
+    program {
+      id
+    }
+  }
+}
+    `;
+export type UpdateProgramMutationFn = Apollo.MutationFunction<UpdateProgramMutation, UpdateProgramMutationVariables>;
+
+/**
+ * __useUpdateProgramMutation__
+ *
+ * To run a mutation, you first call `useUpdateProgramMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProgramMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProgramMutation, { data, loading, error }] = useUpdateProgramMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateProgramMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProgramMutation, UpdateProgramMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProgramMutation, UpdateProgramMutationVariables>(UpdateProgramDocument, options);
+      }
+export type UpdateProgramMutationHookResult = ReturnType<typeof useUpdateProgramMutation>;
+export type UpdateProgramMutationResult = Apollo.MutationResult<UpdateProgramMutation>;
+export type UpdateProgramMutationOptions = Apollo.BaseMutationOptions<UpdateProgramMutation, UpdateProgramMutationVariables>;
 export const ProgramDetailsRootPathParamsDocument = gql`
     query ProgramDetailsRootPathParams($programId: UUID!) {
   program(id: $programId) {

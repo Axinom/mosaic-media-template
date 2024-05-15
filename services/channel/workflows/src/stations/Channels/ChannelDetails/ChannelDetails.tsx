@@ -31,7 +31,7 @@ import { ChannelDetailsFormData } from './ChannelDetails.types';
 const channelValidationSchema = Yup.object<
   ObjectSchemaDefinition<ChannelDetailsFormData>
 >({
-  title: Yup.string().required('Title is a required field').max(100),
+  title: Yup.string().required('Title is a required field'),
 });
 
 interface UrlParams {

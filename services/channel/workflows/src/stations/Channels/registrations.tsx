@@ -28,6 +28,7 @@ import {
   ProgramDetails,
   resolveProgramDetailsRoot,
 } from './ProgramManagement/ProgramDetails/ProgramDetails';
+import { ProgramDetailsCrumb } from './ProgramManagement/ProgramDetails/ProgramDetailsCrumb';
 import { ProgramManagement } from './ProgramManagement/ProgramManagement';
 import { routes } from './routes';
 
@@ -148,13 +149,13 @@ export function register(app: PiletApi, extensions: Extensions): void {
       </ExtensionsContext.Provider>
     ),
     {
-      breadcrumb: () => 'Program',
+      breadcrumb: () => 'Playlist program',
       permissions,
     },
   );
 
   app.registerPage(routes.programDetails, () => <ProgramDetails />, {
-    breadcrumb: () => 'Program',
+    breadcrumb: ProgramDetailsCrumb,
     permissions,
   });
 

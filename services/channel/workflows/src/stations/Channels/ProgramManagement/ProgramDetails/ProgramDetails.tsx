@@ -1,72 +1,139 @@
 import {
-  EmptyStation,
-  ErrorTypeToStationError,
-  StationError,
+  Details,
+  DetailsProps,
+  formatDateTime,
+  getFormDiff,
+  InfoPanel,
+  ObjectSchemaDefinition,
+  Paragraph,
+  Section,
+  SingleLineTextField,
 } from '@axinom/mosaic-ui';
-import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router';
+import { Field, useFormikContext } from 'formik';
+import gql from 'graphql-tag';
+import React, { useCallback, useContext } from 'react';
+import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 import { client } from '../../../../apolloClient';
+import { ExtensionsContext } from '../../../../externals/piralExtensions';
 import {
+  Program,
   ProgramDetailsRootPathParamsDocument,
   ProgramDetailsRootPathParamsQuery,
-  useProgramDetailsRootPathParamsQuery,
+  ProgramPatch,
+  UpdateProgramInput,
+  useProgramQuery,
 } from '../../../../generated/graphql';
-import { routes } from '../../routes';
+import { useActions } from './ProgramDetails.actions';
 import classes from './ProgramDetails.module.scss';
+import { ProgramDetailsFormData } from './ProgramDetails.types';
 
-/**
- * A React component that redirects linked items from localization workflows
- * for entity type `program` to the program management station.
- * This component is used to retrieve the necessary `channelId` and `playlistId`
- * information that is required by the `ProgramManagement` component.
- *
- * The `LocalizationService` only has knowledge of `programId`, so this component is responsible
- * for determining the relevant `channelId` and `playlistId` and then redirecting
- * the user to the `ProgramManagement` component, which has no knowledge of `programId`.
- */
+const programValidationSchema = Yup.object<
+  ObjectSchemaDefinition<ProgramDetailsFormData>
+>({
+  title: Yup.string().required('Title is a required field'),
+});
+
+interface UrlParams {
+  programId: string;
+  playlistId: string;
+  channelId: string;
+}
+
 export const ProgramDetails: React.FC = () => {
-  const history = useHistory();
-  const { programId } = useParams<{ programId: string }>();
-  const [stationError, setStationError] = useState<StationError | undefined>();
-
-  const { data, error } = useProgramDetailsRootPathParamsQuery({
+  const { programId, channelId, playlistId } = useParams<UrlParams>();
+  const loadDataMutationParams = { id: programId } as const;
+  const { loading, data, error } = useProgramQuery({
     client,
-    variables: {
-      programId,
-    },
+    variables: loadDataMutationParams,
     fetchPolicy: 'no-cache',
   });
 
-  useEffect(() => {
-    const playlistId = data?.program?.playlist?.id;
+  const onSubmit = useCallback(
+    async (
+      formData: ProgramDetailsFormData,
+      initialData: DetailsProps<ProgramDetailsFormData>['initialData'],
+    ): Promise<void> => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { ...updateDto } = getFormDiff(formData, initialData.data);
+      const patch: ProgramPatch = {
+        ...updateDto,
+      };
+      const GqlMutationDocument = gql`
+        mutation UpdateProgram($input: UpdateProgramInput!) {
+          updateProgram(input: $input) {
+            clientMutationId
+            program {
+              id
+              title
+            }
+          }
+        }
+      `;
 
-    if (playlistId) {
-      history.replace(
-        routes.generate(routes.program, {
-          channelId: data?.program?.playlist?.channel?.id,
-          playlistId,
-        }),
-      );
-    } else if (error) {
-      const stationError = ErrorTypeToStationError(
-        error,
-        'An error occurred when trying to load data.',
-        'Entity not found',
-      );
-      setStationError(stationError);
-    } else if (data?.program === null) {
-      setStationError({
-        title: `Could not find program with ID "${programId}".`,
+      await client.mutate<unknown, { input: UpdateProgramInput }>({
+        mutation: GqlMutationDocument,
+        variables: { input: { id: programId, patch } },
       });
-    }
-  }, [data, error, history, programId]);
+    },
+    [programId],
+  );
+
+  const { actions } = useActions(programId, playlistId, channelId);
 
   return (
-    <EmptyStation title="Program Management" stationError={stationError}>
-      <div className={classes.container}>
-        {!stationError && <h2>Loading...</h2>}
+    <Details<ProgramDetailsFormData>
+      defaultTitle="Program"
+      titleProperty="title"
+      subtitle="Properties"
+      actions={actions}
+      validationSchema={programValidationSchema}
+      initialData={{
+        data: {
+          ...data?.program,
+        },
+        loading,
+        entityNotFound: data?.program === null,
+        error: error?.message,
+      }}
+      saveData={onSubmit}
+      infoPanel={<Panel />}
+      edgeToEdgeContent={true}
+    >
+      <div className={classes.content}>
+        <Form />
       </div>
-    </EmptyStation>
+    </Details>
+  );
+};
+
+const Form: React.FC = () => {
+  return (
+    <>
+      <Field name="title" label="Title" as={SingleLineTextField} />
+    </>
+  );
+};
+
+const Panel: React.FC = () => {
+  const { ImageCover } = useContext(ExtensionsContext);
+  const { values } = useFormikContext<Program>();
+
+  return (
+    <InfoPanel>
+      <Section>
+        <ImageCover id={values?.imageId} />
+      </Section>
+      <Section title="Additional Information">
+        <Paragraph title="ID">{values.id}</Paragraph>
+        <Paragraph title="Created">
+          {formatDateTime(values.createdDate)} by {values.createdUser}
+        </Paragraph>
+        <Paragraph title="Last Modified">
+          {formatDateTime(values.updatedDate)} by {values.updatedUser}
+        </Paragraph>
+      </Section>
+    </InfoPanel>
   );
 };
 

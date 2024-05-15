@@ -1,7 +1,17 @@
-@import '../styles.scss';
-
-.container {
+.content {
+  padding: 30px;
   display: grid;
-  padding: 10px 30px;
-  color: $dark-gray;
+  grid-auto-rows: max-content;
+  grid-template-columns: 1fr;
+  row-gap: 20px;
+}
+
+.datalist {
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  row-gap: 10px;
+
+  .rightAlignment {
+    text-align: right;
+  }
 }

@@ -77,7 +77,7 @@ export const ProgramManagementForm: React.FC<{
   ];
 
   const headerAddActions: ActionData[] = allProviders.map((p) => ({
-    label: `Add ${p.label}`,
+    label: `Select Source ${p.label}`,
     icon: IconName.Plus,
     onActionSelected: () => setProvider(p),
   }));

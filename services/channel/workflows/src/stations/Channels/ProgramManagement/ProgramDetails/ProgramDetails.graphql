@@ -1,3 +1,30 @@
+query Program($id: UUID!) {
+  program(id: $id) {
+    id
+    title
+    updatedDate
+    updatedUser
+    createdDate
+    createdUser
+    imageId
+  }
+}
+
+query ProgramTitle($id: UUID!) {
+  program(id: $id) {
+    id
+    title
+  }
+}
+
+mutation UpdateProgram($input: UpdateProgramInput!) {
+  updateProgram(input: $input) {
+    program {
+      id
+    }
+  }
+}
+
 query ProgramDetailsRootPathParams($programId: UUID!) {
   program(id: $programId) {
     playlist {

@@ -29,10 +29,8 @@ import classes from './Program.module.scss';
 export const Program: React.FC<ProgramProps> = ({
   id,
   trackId,
-  entityId,
   entityType,
   title,
-  videoId,
   videoDurationInSeconds,
   imageId,
   programCuePoints,
@@ -60,12 +58,15 @@ export const Program: React.FC<ProgramProps> = ({
   }, [id, trackId, onToggle]);
 
   const actions: ActionData[] = [
-    ...(resolver
+    ...(resolver && id
       ? [
           {
-            label: 'Open Details',
-            path: resolver({ entityId, entityType }),
-            openInNewTab: true,
+            label: 'Edit Program Item Details',
+            path: routes.generate(routes.programDetails, {
+              channelId,
+              playlistId,
+              programId: id,
+            }),
           },
         ]
       : []),
