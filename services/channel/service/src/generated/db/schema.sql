@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.12
--- Dumped by pg_dump version 11.12
+-- Dumped from database version 16.2
+-- Dumped by pg_dump version 16.2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -506,7 +506,7 @@ $$;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: inbox; Type: TABLE; Schema: app_hidden; Owner: -
@@ -917,8 +917,8 @@ CREATE TABLE app_public.cue_point_schedules (
     sort_index integer NOT NULL,
     video_id uuid,
     duration_in_seconds numeric(13,5) NOT NULL,
-    created_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     type app_public.cue_point_schedule_type_enum DEFAULT 'NOT NULL'::text NOT NULL,
@@ -964,8 +964,8 @@ CREATE TABLE app_public.playlists (
     calculated_duration_in_seconds numeric(13,5) NOT NULL,
     published_date timestamp with time zone,
     published_user text,
-    created_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publication_state app_public.publication_state_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL
@@ -2763,7 +2763,7 @@ $$;
 CREATE TABLE app_private.messaging_counter (
     key text NOT NULL,
     counter integer DEFAULT 1,
-    expiration_date timestamp with time zone DEFAULT timezone('utc'::text, (now() + '1 day'::interval)) NOT NULL
+    expiration_date timestamp with time zone DEFAULT ((now() + '1 day'::interval) AT TIME ZONE 'utc'::text) NOT NULL
 );
 
 
@@ -2801,8 +2801,8 @@ COMMENT ON TABLE app_public.channel_image_type IS '@enum';
 CREATE TABLE app_public.channel_images (
     channel_id uuid NOT NULL,
     image_id uuid NOT NULL,
-    created_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     image_type app_public.channel_image_type_enum DEFAULT 'LOGO'::text NOT NULL
@@ -2831,8 +2831,8 @@ CREATE TABLE app_public.channels (
     key_id text,
     published_date timestamp with time zone,
     published_user text,
-    created_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publication_state app_public.publication_state_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL
@@ -2907,8 +2907,8 @@ CREATE TABLE app_public.program_cue_points (
     time_in_seconds numeric(13,5),
     value text,
     video_cue_point_id uuid,
-    created_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     type app_public.program_break_type_enum NOT NULL,
@@ -2930,8 +2930,8 @@ CREATE TABLE app_public.programs (
     video_duration_in_seconds numeric(13,5) NOT NULL,
     entity_id text NOT NULL,
     entity_type app_public.entity_type_enum NOT NULL,
-    created_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL
 );
@@ -3368,350 +3368,350 @@ CREATE INDEX idx_programs_sort_index_desc_with_id ON app_public.programs USING b
 -- Name: messaging_health _500_messaging_health_trigger; Type: TRIGGER; Schema: app_private; Owner: -
 --
 
-CREATE TRIGGER _500_messaging_health_trigger AFTER UPDATE ON app_private.messaging_health FOR EACH ROW EXECUTE PROCEDURE app_private.messaging_health_notify();
+CREATE TRIGGER _500_messaging_health_trigger AFTER UPDATE ON app_private.messaging_health FOR EACH ROW EXECUTE FUNCTION app_private.messaging_health_notify();
 
 
 --
 -- Name: channel_images _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.channel_images FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.channel_images FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
 
 
 --
 -- Name: channels _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.channels FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.channels FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
 
 
 --
 -- Name: cue_point_schedules _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.cue_point_schedules FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.cue_point_schedules FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
 
 
 --
 -- Name: playlists _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.playlists FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.playlists FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
 
 
 --
 -- Name: program_cue_points _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.program_cue_points FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.program_cue_points FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
 
 
 --
 -- Name: programs _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.programs FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.programs FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
 
 
 --
 -- Name: channel_images _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.channel_images FOR EACH ROW EXECUTE PROCEDURE app_public.tg__sp_images_channels_mt_ts_propagation();
+CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.channel_images FOR EACH ROW EXECUTE FUNCTION app_public.tg__sp_images_channels_mt_ts_propagation();
 
 
 --
 -- Name: cue_point_schedules _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.cue_point_schedules FOR EACH ROW EXECUTE PROCEDURE app_public.tg_cue_point_schedules__program_cue_points_ts_propagation();
+CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.cue_point_schedules FOR EACH ROW EXECUTE FUNCTION app_public.tg_cue_point_schedules__program_cue_points_ts_propagation();
 
 
 --
 -- Name: program_cue_points _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.program_cue_points FOR EACH ROW EXECUTE PROCEDURE app_public.tg_program_cue_points__programs_ts_propagation();
+CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.program_cue_points FOR EACH ROW EXECUTE FUNCTION app_public.tg_program_cue_points__programs_ts_propagation();
 
 
 --
 -- Name: programs _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.programs FOR EACH ROW EXECUTE PROCEDURE app_public.tg_programs__playlists_ts_propagation();
+CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.programs FOR EACH ROW EXECUTE FUNCTION app_public.tg_programs__playlists_ts_propagation();
 
 
 --
 -- Name: channel_images _200_username; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.channel_images FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.channel_images FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: channels _200_username; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.channels FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.channels FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: cue_point_schedules _200_username; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.cue_point_schedules FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.cue_point_schedules FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: playlists _200_username; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.playlists FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.playlists FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: program_cue_points _200_username; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.program_cue_points FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.program_cue_points FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: programs _200_username; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.programs FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.programs FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: channel_images _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.channel_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.channel_images FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: channels _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.channels FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.channels FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: cue_point_schedules _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.cue_point_schedules FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.cue_point_schedules FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: playlists _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.playlists FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.playlists FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: program_cue_points _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.program_cue_points FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.program_cue_points FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: programs _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.programs FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__username();
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.programs FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
 -- Name: program_cue_points _300_time_must_be_within_duration; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _300_time_must_be_within_duration BEFORE INSERT OR UPDATE ON app_public.program_cue_points FOR EACH ROW EXECUTE PROCEDURE app_hidden.tg__program_cue_points_time_must_be_within_duration();
+CREATE TRIGGER _300_time_must_be_within_duration BEFORE INSERT OR UPDATE ON app_public.program_cue_points FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__program_cue_points_time_must_be_within_duration();
 
 
 --
 -- Name: program_cue_points _300_time_must_set_only_for_mid; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _300_time_must_set_only_for_mid BEFORE INSERT OR UPDATE ON app_public.program_cue_points FOR EACH ROW EXECUTE PROCEDURE app_hidden.tg__program_cue_points_time_must_be_set_only_for_mid();
+CREATE TRIGGER _300_time_must_set_only_for_mid BEFORE INSERT OR UPDATE ON app_public.program_cue_points FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__program_cue_points_time_must_be_set_only_for_mid();
 
 
 --
 -- Name: program_cue_points _300_video_cue_point_id_must_set_only_for_mid; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _300_video_cue_point_id_must_set_only_for_mid BEFORE INSERT OR UPDATE ON app_public.program_cue_points FOR EACH ROW EXECUTE PROCEDURE app_hidden.tg__program_cue_points_video_cue_point_id_must_set_only_for_mid();
+CREATE TRIGGER _300_video_cue_point_id_must_set_only_for_mid BEFORE INSERT OR UPDATE ON app_public.program_cue_points FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__program_cue_points_video_cue_point_id_must_set_only_for_mid();
 
 
 --
 -- Name: cue_point_schedules _300_video_id_must_set_only_for_video_schedule; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _300_video_id_must_set_only_for_video_schedule BEFORE INSERT OR UPDATE ON app_public.cue_point_schedules FOR EACH ROW EXECUTE PROCEDURE app_hidden.tg__cue_point_schedules_video_id_must_be_set_only_for_video_sch();
+CREATE TRIGGER _300_video_id_must_set_only_for_video_schedule BEFORE INSERT OR UPDATE ON app_public.cue_point_schedules FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__cue_point_schedules_video_id_must_be_set_only_for_video_sch();
 
 
 --
 -- Name: channel_images _500_gql_channel_images_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_channel_images_deleted BEFORE DELETE ON app_public.channel_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CHANNEL_IMAGE_DELETED', 'graphql:channels', 'channel_id');
+CREATE TRIGGER _500_gql_channel_images_deleted BEFORE DELETE ON app_public.channel_images FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('CHANNEL_IMAGE_DELETED', 'graphql:channels', 'channel_id');
 
 
 --
 -- Name: channel_images _500_gql_channel_images_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_channel_images_inserted AFTER INSERT ON app_public.channel_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CHANNEL_IMAGE_CREATED', 'graphql:channels', 'channel_id');
+CREATE TRIGGER _500_gql_channel_images_inserted AFTER INSERT ON app_public.channel_images FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('CHANNEL_IMAGE_CREATED', 'graphql:channels', 'channel_id');
 
 
 --
 -- Name: channel_images _500_gql_channel_images_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_channel_images_updated AFTER UPDATE ON app_public.channel_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CHANNEL_IMAGE_CHANGED', 'graphql:channels', 'channel_id');
+CREATE TRIGGER _500_gql_channel_images_updated AFTER UPDATE ON app_public.channel_images FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('CHANNEL_IMAGE_CHANGED', 'graphql:channels', 'channel_id');
 
 
 --
 -- Name: channels _500_gql_channels_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_channels_deleted BEFORE DELETE ON app_public.channels FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CHANNEL_DELETED', 'graphql:channels', 'id');
+CREATE TRIGGER _500_gql_channels_deleted BEFORE DELETE ON app_public.channels FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('CHANNEL_DELETED', 'graphql:channels', 'id');
 
 
 --
 -- Name: channels _500_gql_channels_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_channels_inserted AFTER INSERT ON app_public.channels FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CHANNEL_CREATED', 'graphql:channels', 'id');
+CREATE TRIGGER _500_gql_channels_inserted AFTER INSERT ON app_public.channels FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('CHANNEL_CREATED', 'graphql:channels', 'id');
 
 
 --
 -- Name: channels _500_gql_channels_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_channels_updated AFTER UPDATE ON app_public.channels FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CHANNEL_CHANGED', 'graphql:channels', 'id');
+CREATE TRIGGER _500_gql_channels_updated AFTER UPDATE ON app_public.channels FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('CHANNEL_CHANGED', 'graphql:channels', 'id');
 
 
 --
 -- Name: playlists _500_gql_playlists_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_playlists_deleted BEFORE DELETE ON app_public.playlists FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('PLAYLIST_DELETED', 'graphql:playlists', 'id');
+CREATE TRIGGER _500_gql_playlists_deleted BEFORE DELETE ON app_public.playlists FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('PLAYLIST_DELETED', 'graphql:playlists', 'id');
 
 
 --
 -- Name: playlists _500_gql_playlists_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_playlists_inserted AFTER INSERT ON app_public.playlists FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('PLAYLIST_CREATED', 'graphql:playlists', 'id');
+CREATE TRIGGER _500_gql_playlists_inserted AFTER INSERT ON app_public.playlists FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('PLAYLIST_CREATED', 'graphql:playlists', 'id');
 
 
 --
 -- Name: playlists _500_gql_playlists_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_playlists_updated AFTER UPDATE ON app_public.playlists FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('PLAYLIST_CHANGED', 'graphql:playlists', 'id');
+CREATE TRIGGER _500_gql_playlists_updated AFTER UPDATE ON app_public.playlists FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('PLAYLIST_CHANGED', 'graphql:playlists', 'id');
 
 
 --
 -- Name: programs _500_gql_programs_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_programs_deleted BEFORE DELETE ON app_public.programs FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('PLAYLIST_PROGRAM_DELETED', 'graphql:playlists', 'playlist_id');
+CREATE TRIGGER _500_gql_programs_deleted BEFORE DELETE ON app_public.programs FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('PLAYLIST_PROGRAM_DELETED', 'graphql:playlists', 'playlist_id');
 
 
 --
 -- Name: programs _500_gql_programs_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_programs_inserted AFTER INSERT ON app_public.programs FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('PLAYLIST_PROGRAM_CREATED', 'graphql:playlists', 'playlist_id');
+CREATE TRIGGER _500_gql_programs_inserted AFTER INSERT ON app_public.programs FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('PLAYLIST_PROGRAM_CREATED', 'graphql:playlists', 'playlist_id');
 
 
 --
 -- Name: programs _500_gql_programs_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_programs_updated AFTER UPDATE ON app_public.programs FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('PLAYLIST_PROGRAM_CHANGED', 'graphql:playlists', 'playlist_id');
+CREATE TRIGGER _500_gql_programs_updated AFTER UPDATE ON app_public.programs FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('PLAYLIST_PROGRAM_CHANGED', 'graphql:playlists', 'playlist_id');
 
 
 --
 -- Name: channels _900__publish_user; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE OF title, description, placeholder_video_id ON app_public.channels FOR EACH ROW EXECUTE PROCEDURE app_hidden.tg__publish_audit_fields();
+CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE OF title, description, placeholder_video_id ON app_public.channels FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__publish_audit_fields();
 
 
 --
 -- Name: playlists _900__publish_user; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE OF start_date_time, calculated_duration_in_seconds, channel_id ON app_public.playlists FOR EACH ROW EXECUTE PROCEDURE app_hidden.tg__publish_audit_fields();
+CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE OF start_date_time, calculated_duration_in_seconds, channel_id ON app_public.playlists FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__publish_audit_fields();
 
 
 --
 -- Name: channels _900_localizable_channel_delete; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900_localizable_channel_delete AFTER DELETE ON app_public.channels FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_channel_delete();
+CREATE TRIGGER _900_localizable_channel_delete AFTER DELETE ON app_public.channels FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_channel_delete();
 
 
 --
 -- Name: channel_images _900_localizable_channel_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900_localizable_channel_image_delete AFTER DELETE ON app_public.channel_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_channel_image_delete();
+CREATE TRIGGER _900_localizable_channel_image_delete AFTER DELETE ON app_public.channel_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_channel_image_delete();
 
 
 --
 -- Name: channel_images _900_localizable_channel_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900_localizable_channel_image_insert AFTER INSERT ON app_public.channel_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_channel_image_insert();
+CREATE TRIGGER _900_localizable_channel_image_insert AFTER INSERT ON app_public.channel_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_channel_image_insert();
 
 
 --
 -- Name: channel_images _900_localizable_channel_image_update; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900_localizable_channel_image_update AFTER UPDATE ON app_public.channel_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_channel_image_update();
+CREATE TRIGGER _900_localizable_channel_image_update AFTER UPDATE ON app_public.channel_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_channel_image_update();
 
 
 --
 -- Name: channels _900_localizable_channel_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900_localizable_channel_insert AFTER INSERT ON app_public.channels FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_channel_insert();
+CREATE TRIGGER _900_localizable_channel_insert AFTER INSERT ON app_public.channels FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_channel_insert();
 
 
 --
 -- Name: channels _900_localizable_channel_update; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900_localizable_channel_update AFTER UPDATE ON app_public.channels FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_channel_update();
+CREATE TRIGGER _900_localizable_channel_update AFTER UPDATE ON app_public.channels FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_channel_update();
 
 
 --
 -- Name: programs _900_localizable_program_delete; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900_localizable_program_delete AFTER DELETE ON app_public.programs FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_program_delete();
+CREATE TRIGGER _900_localizable_program_delete AFTER DELETE ON app_public.programs FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_program_delete();
 
 
 --
 -- Name: programs _900_localizable_program_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900_localizable_program_insert AFTER INSERT ON app_public.programs FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_program_insert();
+CREATE TRIGGER _900_localizable_program_insert AFTER INSERT ON app_public.programs FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_program_insert();
 
 
 --
 -- Name: programs _900_localizable_program_update; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900_localizable_program_update AFTER UPDATE ON app_public.programs FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_program_update();
+CREATE TRIGGER _900_localizable_program_update AFTER UPDATE ON app_public.programs FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_program_update();
 
 
 --
@@ -3942,6 +3942,13 @@ GRANT USAGE ON SCHEMA app_public TO channel_service_login;
 --
 
 GRANT USAGE ON SCHEMA ax_utils TO channel_service_gql_role;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
+--
+
+GRANT USAGE ON SCHEMA public TO channel_service_gql_role;
 
 
 --
@@ -5122,75 +5129,63 @@ GRANT SELECT ON TABLE app_public.publication_state TO channel_service_login;
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_hidden REVOKE ALL ON SEQUENCES  FROM channel_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_hidden GRANT SELECT,USAGE ON SEQUENCES  TO channel_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_hidden GRANT SELECT,USAGE ON SEQUENCES TO channel_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM channel_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS  TO channel_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS TO channel_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_public REVOKE ALL ON SEQUENCES  FROM channel_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES  TO channel_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES TO channel_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM channel_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_public GRANT ALL ON FUNCTIONS  TO channel_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA app_public GRANT ALL ON FUNCTIONS TO channel_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: ax_utils; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA ax_utils REVOKE ALL ON SEQUENCES  FROM channel_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA ax_utils GRANT SELECT,USAGE ON SEQUENCES  TO channel_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA ax_utils GRANT SELECT,USAGE ON SEQUENCES TO channel_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: ax_utils; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA ax_utils REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA ax_utils REVOKE ALL ON FUNCTIONS  FROM channel_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA ax_utils GRANT ALL ON FUNCTIONS  TO channel_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA ax_utils GRANT ALL ON FUNCTIONS TO channel_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM channel_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO channel_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES TO channel_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM channel_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA public GRANT ALL ON FUNCTIONS  TO channel_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner IN SCHEMA public GRANT ALL ON FUNCTIONS TO channel_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: -; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 
 
 --
@@ -5199,7 +5194,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE channel_service_owner REVOKE ALL ON FUNCTIONS 
 
 CREATE EVENT TRIGGER postgraphile_watch_ddl ON ddl_command_end
          WHEN TAG IN ('ALTER AGGREGATE', 'ALTER DOMAIN', 'ALTER EXTENSION', 'ALTER FOREIGN TABLE', 'ALTER FUNCTION', 'ALTER POLICY', 'ALTER SCHEMA', 'ALTER TABLE', 'ALTER TYPE', 'ALTER VIEW', 'COMMENT', 'CREATE AGGREGATE', 'CREATE DOMAIN', 'CREATE EXTENSION', 'CREATE FOREIGN TABLE', 'CREATE FUNCTION', 'CREATE INDEX', 'CREATE POLICY', 'CREATE RULE', 'CREATE SCHEMA', 'CREATE TABLE', 'CREATE TABLE AS', 'CREATE VIEW', 'DROP AGGREGATE', 'DROP DOMAIN', 'DROP EXTENSION', 'DROP FOREIGN TABLE', 'DROP FUNCTION', 'DROP INDEX', 'DROP OWNED', 'DROP POLICY', 'DROP RULE', 'DROP SCHEMA', 'DROP TABLE', 'DROP TYPE', 'DROP VIEW', 'GRANT', 'REVOKE', 'SELECT INTO')
-   EXECUTE PROCEDURE postgraphile_watch.notify_watchers_ddl();
+   EXECUTE FUNCTION postgraphile_watch.notify_watchers_ddl();
 
 
 --
@@ -5207,7 +5202,7 @@ CREATE EVENT TRIGGER postgraphile_watch_ddl ON ddl_command_end
 --
 
 CREATE EVENT TRIGGER postgraphile_watch_drop ON sql_drop
-   EXECUTE PROCEDURE postgraphile_watch.notify_watchers_drop();
+   EXECUTE FUNCTION postgraphile_watch.notify_watchers_drop();
 
 
 --
