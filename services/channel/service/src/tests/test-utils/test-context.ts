@@ -96,7 +96,7 @@ const runGqlQuery = async function (
           result.errors,
           req.body?.operationName,
           customizeGraphQlErrorFields(customPgErrorMapper),
-          logGraphQlError(defaultWriteLogMapper, this.logger),
+          logGraphQlError(defaultWriteLogMapper, this.config, this.logger),
         );
       }
       return result;
@@ -150,7 +150,7 @@ export const createTestContext = async (
   configOverrides: Dict<string> = {},
   storeOutboxMsg?: StoreOutboxMessage,
 ): Promise<TestContext> => {
-  //TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
+  // TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
   const config = createTestConfig(configOverrides, expect.getState().testPath);
 
   const logger = new Logger({ config, context: 'TestContext' });
