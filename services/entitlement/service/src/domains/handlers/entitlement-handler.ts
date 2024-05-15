@@ -14,6 +14,7 @@ import {
 
 export const EntitlementHandler = async (
   entitlementRequest: EntitlementRequestModel,
+  countryCode: string,
 ): Promise<EntitlementValidationResponse> => {
   // THis handler must take care every thing related to entitlement and country code and all the other stuff
 
@@ -39,7 +40,7 @@ export const EntitlementHandler = async (
   const entitlementValidationResult = EntitlementValidation(
     assertResponse.data,
     userId ? true : false,
-    'NL',
+    countryCode,
   );
 
   if (!entitlementValidationResult.isValid) {

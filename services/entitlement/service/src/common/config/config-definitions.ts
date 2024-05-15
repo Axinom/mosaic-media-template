@@ -87,6 +87,9 @@ export const getConfigDefinitions = (
       env.get('RECURLY_ENTITLEMENT_API_KEY').asString() ||
       'MISSING_RECURLY_ENTITLEMENT_API_KEY',
 
+    clientIPHeaderName: () => env.get('CLIENT_IP_HEADER_NAME').asString(),
+    geoIP2DatabasePath: () => env.get('GEOIP2_DATABASE_PATH').asString(),
+
     /**
      * Optional User Service GraphQL Endpoint, used to get user auth token
      * during development

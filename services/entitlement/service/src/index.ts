@@ -24,7 +24,7 @@ import {
 } from '@axinom/mosaic-service-common';
 import express from 'express';
 import { PoolConfig } from 'pg';
-import { applyMigrations, getFullConfig } from './common';
+import { applyMigrations, GeoIPService, getFullConfig } from './common';
 // import {
 //   setupEntitlementWebhookEndpoint,
 //   setupManifestWebhookEndpoint,
@@ -94,6 +94,9 @@ async function bootstrap(): Promise<void> {
   // await setupPostGraphile(app, config, authConfig);
 
   // Configure REST endpoints additionally to GraphQL (auxiliary needs such as file download)
+
+  await GeoIPService.getInstance().loadDatabase();
+
   setupRestEndpoints(app);
 
   const server = app.listen(config.port, () => {

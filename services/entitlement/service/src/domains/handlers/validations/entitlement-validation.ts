@@ -18,6 +18,7 @@ export const EntitlementValidation = (
   let entitled = false;
   let downloadDuration: number = Number.MAX_SAFE_INTEGER;
 
+  //TODO: add GeoBlockingFeatureSwitch
   if (GeoBlockingFeatureSwitch && assetData.licenses.nodes.length > 0) {
     const license = assetData.licenses.nodes.find((node) =>
       node.countries.some((c) => c.toUpperCase() === country.toUpperCase()),
@@ -34,6 +35,7 @@ export const EntitlementValidation = (
         data: null,
       };
     }
+    // TODO: UTC TIME need to be used instead of local time
     if (!(new Date() >= license.startTime && new Date() <= license.endTime)) {
       return {
         isValid: false,

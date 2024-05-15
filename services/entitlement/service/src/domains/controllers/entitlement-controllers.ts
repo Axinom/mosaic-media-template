@@ -3,6 +3,7 @@ import { validate } from 'class-validator';
 import { Request, Response } from 'express';
 import {
   EntitlementRequestModel,
+  extractCountryCodeFromRemoteIP,
   getFullConfig,
   MosaicDrmOptions,
 } from '../../common';
@@ -29,7 +30,9 @@ export const EntitlementRequestHandling = async (
     });
   }
 
-  const entitlement = await EntitlementHandler(entitlementRequest);
+  const countryCode = await extractCountryCodeFromRemoteIP(req);
+
+  const entitlement = await EntitlementHandler(entitlementRequest, countryCode);
 
   if (!entitlement.isValid) {
     // Todo: log the error and send custom error message
