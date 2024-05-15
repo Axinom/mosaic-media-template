@@ -59,6 +59,10 @@ regularVariables:
   # Custom Service URLs
   CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-nfn-mosaic-catalog-acc.api}'
 
+  # GeoIP2 Variables
+  CLIENT_IP_HEADER_NAME: X-Forwarded-For
+  GEOIP2_DATABASE_PATH: #####/GeoLite2-City.mmdb
+
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
 
@@ -70,8 +74,18 @@ secureVariables:
   GEOLITE2_LICENSE_KEY: 'REPLACE_WITH_VALID_GEOLITE2_LICENSE_KEY'
 
   # DRM License Communication Key and ID
-  DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'
-  DRM_LICENSE_COMMUNICATION_KEY_ID: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY_ID'
+  # DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'
+  # DRM_LICENSE_COMMUNICATION_KEY_ID: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY_ID'
+  DRM_LICENSE_COMMUNICATION_KEY: ''
+  DRM_LICENSE_COMMUNICATION_KEY_ID: ''
+
+  # User JWT token validation public key
+  USER_SESSION_PUBLIC_KEY: ''
+
+  # Recurly entitlement service configuration
+  RECURLY_ENTITLEMENT_API_URL: https://v3.eu.recurly.com
+  RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: '<chanel>-video-playback'
+  RECURLY_ENTITLEMENT_API_KEY: ####
 
 serviceAccounts:
   - name: 'primary'
