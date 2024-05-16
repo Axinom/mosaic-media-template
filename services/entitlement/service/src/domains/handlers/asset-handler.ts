@@ -87,7 +87,7 @@ export const AssetHandler = async (
         isValid: false,
         error: {
           status: 404,
-          message: 'Movie or its DRM keys not found',
+          message: 'Asset DRM keys not found or its mismatch with the request',
         },
         data: new AssetModel(),
       };
