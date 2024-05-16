@@ -1,3 +1,4 @@
+import { Logger } from '@axinom/mosaic-service-common';
 import * as maxmind from 'maxmind';
 import { CountryResponse } from 'maxmind';
 import path from 'path';
@@ -6,6 +7,10 @@ import { getFullConfig } from '../config';
 const config = getFullConfig();
 
 export class GeoIPService {
+  private logger = new Logger({
+    config,
+    context: GeoIPService.name,
+  });
   private static instance: GeoIPService;
   private lookup: maxmind.Reader<CountryResponse> | null = null;
 
@@ -21,10 +26,12 @@ export class GeoIPService {
       this.lookup = await maxmind.open<CountryResponse>(
         path.resolve(__dirname, config.geoIP2DatabasePath || ''),
       );
-      // Todo: remove console.log with proper logger.
-      console.log('GeoIP database loaded successfully..');
+      this.logger.log('GeoIP database loaded successfully..');
     } catch (error) {
-      console.error('Failed to load the GeoIP database:', error);
+      this.logger.error({
+        name: 'GeoIP database loading failed',
+        message: (error as Error).message,
+      });
     }
   }
 
@@ -32,7 +39,10 @@ export class GeoIPService {
     if (this.lookup) {
       return this.lookup.get(ip);
     } else {
-      console.error('GeoIP database is not loaded.');
+      this.logger.error({
+        name: 'GeoIP database not loaded',
+        message: 'GeoIP database is not loaded or lookup is not initialized.',
+      });
       return null;
     }
   }

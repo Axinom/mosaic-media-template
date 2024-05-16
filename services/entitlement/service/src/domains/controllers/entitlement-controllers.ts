@@ -1,3 +1,4 @@
+import { Logger } from '@axinom/mosaic-service-common';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { Request, Response } from 'express';
@@ -15,18 +16,28 @@ export const EntitlementRequestHandling = async (
   req: Request,
   res: Response,
 ): Promise<Response> => {
+  const logger = new Logger({
+    config,
+    context: EntitlementRequestHandling.name,
+  });
   const entitlementRequest = plainToClass(EntitlementRequestModel, req.body);
   const validationErrors = await validate(entitlementRequest, {
     stopAtFirstError: true,
   });
   if (validationErrors.length > 0) {
-    return res.status(400).json({
-      message: 'Validation failed',
-      errors: validationErrors.flatMap((error) =>
-        Object.values(error.constraints ?? {}).map(
-          (message) => `${error.property}: ${message}`,
-        ),
+    const errorMessages: string[] = validationErrors.flatMap((error) =>
+      Object.values(error.constraints ?? {}).map(
+        (message) => `${error.property}: ${message}`,
       ),
+    );
+    logger.error({
+      name: 'Validation failed',
+      message: errorMessages.join('\n'),
+    });
+
+    return res.status(400).json({
+      message: 'Validation fail',
+      errors: errorMessages,
     });
   }
 
