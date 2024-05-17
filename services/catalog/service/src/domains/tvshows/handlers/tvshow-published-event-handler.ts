@@ -64,89 +64,84 @@ export class TvshowPublishedEventHandler extends TransactionalInboxMessageHandle
     if (payload.videos) {
       for (const video of payload.videos) {
         const { video_streams, cue_points, ...videoToInsert } = video;
-        if (payload.videos) {
-          for (const video of payload.videos) {
-            const { video_streams, cue_points, ...videoToInsert } = video;
 
-            const tvshowVideo = await insert('tvshow_videos', {
-              tvshow_id: insertedTvshow.id,
-              ...videoToInsert,
-            }).run(txnClient);
-            if (video_streams !== undefined) {
-              await insert(
-                'tvshow_video_streams',
-                video_streams.map(
-                  (videoStream): tvshow_video_streams.Insertable => ({
-                    tvshow_video_id: tvshowVideo.id,
-                    ...videoStream,
-                  }),
-                ),
-              ).run(txnClient);
-            }
-
-            if (cue_points !== undefined) {
-              await insert(
-                'tvshow_video_cue_points',
-                cue_points.map(
-                  (cuePoint): tvshow_video_cue_points.Insertable => ({
-                    tvshow_video_id: tvshowVideo.id,
-                    ...cuePoint,
-                  }),
-                ),
-              ).run(txnClient);
-            }
-          }
-        }
-
-        if (payload.images) {
+        const tvshowVideo = await insert('tvshow_videos', {
+          tvshow_id: insertedTvshow.id,
+          ...videoToInsert,
+        }).run(txnClient);
+        if (video_streams !== undefined) {
           await insert(
-            'tvshow_images',
-            payload.images.map(
-              (image): tvshow_images.Insertable => ({
-                tvshow_id: insertedTvshow.id,
-                ...image,
+            'tvshow_video_streams',
+            video_streams.map(
+              (videoStream): tvshow_video_streams.Insertable => ({
+                tvshow_video_id: tvshowVideo.id,
+                ...videoStream,
               }),
             ),
           ).run(txnClient);
         }
 
-        await insert(
-          'tvshow_licenses',
-          payload.licenses.map(
-            (license): tvshow_licenses.Insertable => ({
-              tvshow_id: insertedTvshow.id,
-              ...license,
-            }),
-          ),
-        ).run(txnClient);
-
-        if (payload.genre_ids) {
+        if (cue_points !== undefined) {
           await insert(
-            'tvshow_genres_relation',
-            payload.genre_ids.map((genreId, i) => ({
-              tvshow_id: insertedTvshow.id,
-              tvshow_genre_id: genreId,
-              order_no: i,
-            })),
-          ).run(txnClient);
-        }
-
-        if (payload.localizations) {
-          await insert(
-            'tvshow_localizations',
-            payload.localizations.map(
-              (l): tvshow_localizations.Insertable => ({
-                tvshow_id: payload.content_id,
-                is_default_locale: l.is_default_locale,
-                locale: l.language_tag,
-                title: l.title,
-                synopsis: l.synopsis,
-                description: l.description,
+            'tvshow_video_cue_points',
+            cue_points.map(
+              (cuePoint): tvshow_video_cue_points.Insertable => ({
+                tvshow_video_id: tvshowVideo.id,
+                ...cuePoint,
               }),
             ),
           ).run(txnClient);
         }
       }
+    }
+
+    if (payload.images) {
+      await insert(
+        'tvshow_images',
+        payload.images.map(
+          (image): tvshow_images.Insertable => ({
+            tvshow_id: insertedTvshow.id,
+            ...image,
+          }),
+        ),
+      ).run(txnClient);
+    }
+
+    await insert(
+      'tvshow_licenses',
+      payload.licenses.map(
+        (license): tvshow_licenses.Insertable => ({
+          tvshow_id: insertedTvshow.id,
+          ...license,
+        }),
+      ),
+    ).run(txnClient);
+
+    if (payload.genre_ids) {
+      await insert(
+        'tvshow_genres_relation',
+        payload.genre_ids.map((genreId, i) => ({
+          tvshow_id: insertedTvshow.id,
+          tvshow_genre_id: genreId,
+          order_no: i,
+        })),
+      ).run(txnClient);
+    }
+
+    if (payload.localizations) {
+      await insert(
+        'tvshow_localizations',
+        payload.localizations.map(
+          (l): tvshow_localizations.Insertable => ({
+            tvshow_id: payload.content_id,
+            is_default_locale: l.is_default_locale,
+            locale: l.language_tag,
+            title: l.title,
+            synopsis: l.synopsis,
+            description: l.description,
+          }),
+        ),
+      ).run(txnClient);
     }
   }
 }
