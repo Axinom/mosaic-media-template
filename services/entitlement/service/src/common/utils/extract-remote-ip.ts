@@ -12,7 +12,7 @@ export const extractCountryCodeFromRemoteIP = async (
       config.clientIPHeaderName || 'x-forwarded-for'
     ] as string[];
     const clientIP = forwarded ? forwarded[0] : req.connection.remoteAddress;
-    const countryInfo = GeoIPService.getInstance().getCountry(clientIP || '');
+    const countryInfo = GeoIPService.getInstance().getCity(clientIP || '');
     return countryInfo?.country?.iso_code || 'ZZ';
   } catch (error) {
     // Todo: remove console.log with proper logger.
