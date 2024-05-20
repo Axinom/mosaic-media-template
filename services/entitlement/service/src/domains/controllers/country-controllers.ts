@@ -41,7 +41,6 @@ export const CountryRequestHandling = async (
   }
   const countryInfo = GeoIPService.getInstance().getCity(clientIP || '');
   const subdiv = countryInfo?.subdivisions;
-  console.log(` Local : ${subdiv.find(() => true)}`);
   return res.send({
     CountryCode: countryInfo?.country?.iso_code,
     CountryName: countryInfo?.country?.names?.en,

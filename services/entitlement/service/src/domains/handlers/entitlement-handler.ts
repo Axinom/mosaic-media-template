@@ -10,14 +10,21 @@ import {
   EntitlementRequestModel,
   EntitlementRequestType,
   EntitlementValidationResponse,
+  getFullConfig,
 } from '../../common';
+import { Logger } from '@axinom/mosaic-service-common';
+
+const config = getFullConfig();
 
 export const EntitlementHandler = async (
   entitlementRequest: EntitlementRequestModel,
   countryCode: string,
 ): Promise<EntitlementValidationResponse> => {
   // THis handler must take care every thing related to entitlement and country code and all the other stuff
-
+  const logger = new Logger({
+    config,
+    context: EntitlementHandler.name,
+  });
   const userId = new UserTokenValidation(
     entitlementRequest.token,
   ).getUserIdFromToken();
@@ -25,7 +32,10 @@ export const EntitlementHandler = async (
   const assertResponse = await AssetHandler(entitlementRequest);
 
   if (!assertResponse.isValid || assertResponse.data === null) {
-    // TODO: Adding a Logger..................
+    logger.debug({
+      name: 'Entitlement request validation failed',
+      message: assertResponse.error?.message ?? 'Validation failed',
+    });
     return {
       isValid: assertResponse.isValid,
       error: {
