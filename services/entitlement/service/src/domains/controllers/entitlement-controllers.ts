@@ -46,16 +46,23 @@ export const EntitlementRequestHandling = async (
   const entitlement = await EntitlementHandler(entitlementRequest, countryCode);
 
   if (!entitlement.isValid) {
-    // Todo: log the error and send custom error message
     if (entitlement.error) {
+      logger.debug({
+        name: 'Entitlement denied',
+        message: `Entitlement denied for asset ${entitlementRequest.asset_id}. Error : ${entitlement.error.message}`,
+      });
       return res.status(entitlement.error.status).send({
         success: false,
-        message: entitlement.error.message,
+        message: `Entitlement denied. Error : ${entitlement.error.message}`,
       });
     } else {
+      logger.error({
+        name: 'Entitlement failed',
+        message: `Entitlement failed for asset ${entitlementRequest.asset_id}. Error : internal Server Error`,
+      });
       return res.status(500).send({
         success: false,
-        message: 'Internal Server Error',
+        message: `Entitlement failed. Error : internal Server Error`,
       });
     }
   }

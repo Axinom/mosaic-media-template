@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   AssetModel,
   AuthenticatedTypes,
@@ -7,7 +8,6 @@ import {
 } from '../../../common';
 
 const config = getFullConfig();
-const GeoBlockingFeatureSwitch = true;
 
 export const EntitlementValidation = (
   assetData: AssetModel,
@@ -18,8 +18,7 @@ export const EntitlementValidation = (
   let entitled = false;
   let downloadDuration: number = Number.MAX_SAFE_INTEGER;
 
-  //TODO: add GeoBlockingFeatureSwitch
-  if (GeoBlockingFeatureSwitch && assetData.licenses.nodes.length > 0) {
+  if (config.geoBlockingFeatureSwitch && assetData.licenses.nodes.length > 0) {
     const license = assetData.licenses.nodes.find((node) =>
       node.countries.some((c) => c.toUpperCase() === country.toUpperCase()),
     );
@@ -35,8 +34,8 @@ export const EntitlementValidation = (
         data: null,
       };
     }
-    // TODO: UTC TIME need to be used instead of local time
-    if (!(new Date() >= license.startTime && new Date() <= license.endTime)) {
+    const utc =  moment().utc().toDate();
+    if (!(utc >= license.startTime && utc <= license.endTime)) {
       return {
         isValid: false,
         message: 'Validation failed',

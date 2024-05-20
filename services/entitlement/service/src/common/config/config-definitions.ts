@@ -89,6 +89,7 @@ export const getConfigDefinitions = (
 
     clientIPHeaderName: () => env.get('CLIENT_IP_HEADER_NAME').asString(),
     geoIP2DatabasePath: () => env.get('GEOIP2_DATABASE_PATH').asString(),
+    geoBlockingFeatureSwitch: () => env.get('GEO_BLOCKING_FEATURE_SWITCH').asString(),
 
     /**
      * Optional User Service GraphQL Endpoint, used to get user auth token

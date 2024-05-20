@@ -3,8 +3,10 @@ import { plainToClass } from 'class-transformer';
 import {
   getFullConfig,
   RecurlyEntitlement,
+  RecurlyEntitlementErrorResponse,
   RecurlyEntitlementResponse,
 } from '../../common';
+import { Logger } from '@axinom/mosaic-service-common';
 
 const config = getFullConfig();
 export class RecurlyEntitlementHandler {
@@ -12,6 +14,9 @@ export class RecurlyEntitlementHandler {
   private recurlyEncodedApiKey: string;
   private recurlyRequestAccept: string;
   private recurlyEntitlementPlaybackPermission: string;
+
+  private subscriptionNotFoundCodes = ['immutable_subscription', 'not_found'];
+  private rateLimitedErrorCodes = ['simultaneous_request', 'rate_limited'];
 
   constructor() {
     // this.options = config.recurlyEntitlementOptions;
@@ -27,7 +32,10 @@ export class RecurlyEntitlementHandler {
   async VerifySubscription(
     userId: string,
   ): Promise<RecurlyEntitlementResponse> {
-    // Todo: Need to handel rate limited errors and maybe add some retry logic if that makes sense
+    const logger = new Logger({
+      config,
+      context: this.VerifySubscription.name,
+    });
     // TODO: I had to hard code the user ID here, cause NFN user is broken from Recurly end.
     userId = 'b2ef064e-886f-4230-8c76-6e01d27e2080';
     const url = `${this.recurlyEntitlementApiUrl}/accounts/code-${userId}/entitlements`;
@@ -54,12 +62,35 @@ export class RecurlyEntitlementHandler {
           isValid: isValid,
         };
       } else {
-        //Todo: Log the error please.
+        const errorRes: RecurlyEntitlementErrorResponse = plainToClass(
+          RecurlyEntitlementErrorResponse,
+          response.data,
+        );
+        var msg = 'Recurly Entitlement API returned an error';
+        if (this.subscriptionNotFoundCodes.includes(errorRes?.error?.type)) {
+          msg = 'Recurly subscription not found',
+          logger.debug({
+            name: 'Recurly subscription not found',
+            message: `Recurly Entitlement API didn't find subscription for ${userId}. Error: ${errorRes?.error?.type}`,
+          });
+        }
+        if (this.rateLimitedErrorCodes.includes(errorRes?.error?.type)) {
+          msg = 'Recurly API rate limit error',
+          logger.error({
+            name: 'Recurly API rate limit error',
+            message: `Recurly entitlement request rate limited. URL : ${url}. Error: ${errorRes?.error?.type}`,
+          });
+        } else {
+          logger.error({
+            name: 'Recurly API error',
+            message: `Recurly Entitlement API returned an error ${errorRes?.error?.type}`,
+          });
+        }
         return {
           isValid: false,
           error: {
             status: response.status,
-            message: 'Recurly Entitlement API returned an error',
+            message: msg,
           },
         };
       }

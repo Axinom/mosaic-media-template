@@ -1,6 +1,6 @@
 import { Logger } from '@axinom/mosaic-service-common';
 import * as maxmind from 'maxmind';
-import { CountryResponse } from 'maxmind';
+import { CityResponse } from 'maxmind';
 import path from 'path';
 import { getFullConfig } from '../config';
 
@@ -12,7 +12,7 @@ export class GeoIPService {
     context: GeoIPService.name,
   });
   private static instance: GeoIPService;
-  private lookup: maxmind.Reader<CountryResponse> | null = null;
+  private lookup: maxmind.Reader<CityResponse> | null = null;
 
   static getInstance(): GeoIPService {
     if (!GeoIPService.instance) {
@@ -23,7 +23,7 @@ export class GeoIPService {
 
   async loadDatabase(): Promise<void> {
     try {
-      this.lookup = await maxmind.open<CountryResponse>(
+      this.lookup = await maxmind.open<CityResponse>(
         path.resolve(__dirname, config.geoIP2DatabasePath || ''),
       );
       this.logger.log('GeoIP database loaded successfully..');
@@ -35,7 +35,7 @@ export class GeoIPService {
     }
   }
 
-  getCountry(ip: string): any {
+  getCity(ip: string): any {
     if (this.lookup) {
       return this.lookup.get(ip);
     } else {

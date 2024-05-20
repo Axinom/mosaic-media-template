@@ -8,14 +8,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-interface ErrorResponse {
-  status: number;
-  message: string;
-}
-// export interface RecurlyEntitlementResponse {
-//   isValid: boolean;
-//   error?: ErrorResponse;
-// }
 
 class CustomerPermission {
   @IsString()
@@ -84,4 +76,23 @@ export class RecurlyEntitlement {
   @ValidateNested({ each: true })
   @Type(() => EntitlementData)
   data: EntitlementData[];
+}
+
+export class RecurlyEntitlementError
+{
+    @IsString()
+    @Expose({ name: 'type' })
+    type: string;
+    
+    @IsString()
+    @Expose({ name: 'message' })
+    message: string;
+}
+
+export class RecurlyEntitlementErrorResponse
+{
+    @ValidateNested()
+    @Expose({ name: 'error' })
+    @Type(() => RecurlyEntitlementError)
+    error: RecurlyEntitlementError;
 }
