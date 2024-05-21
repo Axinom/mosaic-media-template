@@ -4,7 +4,6 @@ import { movie } from 'zapatos/schema';
 import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   createMoviePublishedMessage,
-  createMoviePublishedMessage,
   createTestContext,
   ITestContext,
 } from '../../../tests/test-utils';
@@ -33,19 +32,13 @@ describe('MoviePublishEventHandler', () => {
       // Arrange
       const message = createMoviePublishedMessage('movie-1');
       const payload = message.payload;
-      const message = createMoviePublishedMessage('movie-1');
-      const payload = message.payload;
 
       // Act
       await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });
-      await ctx.executeOwnerSql(async (txn) => {
-        await handler.handleMessage(message, txn);
-      });
 
       // Assert
-      const movie = await selectOne('movie', { id: payload.content_id }).run(
       const movie = await selectOne('movie', { id: payload.content_id }).run(
         ctx.ownerPool,
       );
@@ -57,17 +50,28 @@ describe('MoviePublishEventHandler', () => {
         released: payload.released ?? null,
         studio: payload.studio ?? null,
         tags: payload.tags ?? null,
+        audio_languages: payload.audio_languages ?? null,
+        subtitle_languages: payload.subtitle_languages ?? null,
+        caption_languages: payload.caption_languages ?? null,
+        age_rating: payload.age_rating ?? null,
+        asset_subtype: payload.asset_subtype ?? null,
+        asset_type: payload.asset_type ?? null,
+        business_type: payload.business_type ?? null,
+        custom_rating: payload.custom_rating ?? null,
+        directors: payload.directors ?? null,
+        dynamic_field: payload.dynamic_field ?? null,
+        extended_field: payload.extended_field ?? null,
+        rating: payload.rating ?? null,
+        credits_start_time: payload.credits_start_time ?? null,
+        length_in_seconds: payload.length_in_seconds ?? null,
       });
 
       const images = await select('movie_images', {
         movie_id: payload.content_id,
-        movie_id: payload.content_id,
       }).run(ctx.ownerPool);
-      expect(images).toMatchObject(payload.images!);
       expect(images).toMatchObject(payload.images!);
 
       // Remove `video_streams` array from `video` object
-      const expectedVideos = payload.videos.map((video) => {
       const expectedVideos = payload.videos.map((video) => {
         return Object.fromEntries(
           Object.entries(video).filter(
@@ -76,7 +80,6 @@ describe('MoviePublishEventHandler', () => {
         );
       });
       const videos = await select('movie_videos', {
-        movie_id: payload.content_id,
         movie_id: payload.content_id,
       }).run(ctx.ownerPool);
       expect(videos).toMatchObject(expectedVideos);
@@ -97,11 +100,9 @@ describe('MoviePublishEventHandler', () => {
       ).map(({ id, movie_video_id, ...cuePoint }) => cuePoint);
       expect(videoCuePoints).toIncludeSameMembers(
         payload.videos[0].cue_points!,
-        payload.videos[0].cue_points!,
       );
 
       const licenses = await select('movie_licenses', {
-        movie_id: payload.content_id,
         movie_id: payload.content_id,
       }).run(ctx.ownerPool);
       expect(licenses).toMatchObject(licenses);
@@ -109,7 +110,6 @@ describe('MoviePublishEventHandler', () => {
       const genreRelations = await select(
         'movie_genres_relation',
         {
-          movie_id: payload.content_id,
           movie_id: payload.content_id,
         },
         {
@@ -159,9 +159,6 @@ describe('MoviePublishEventHandler', () => {
       const payload = message.payload;
 
       // Act
-      await ctx.executeOwnerSql(async (txn) => {
-        await handler.handleMessage(message, txn);
-      });
       await ctx.executeOwnerSql(async (txn) => {
         await handler.handleMessage(message, txn);
       });

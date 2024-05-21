@@ -50,6 +50,18 @@ describe('TvshowPublishEventHandler', () => {
         released: payload.released ?? null,
         studio: payload.studio ?? null,
         tags: payload.tags ?? null,
+        audio_languages: payload.audio_languages ?? null,
+        subtitle_languages: payload.subtitle_languages ?? null,
+        caption_languages: payload.caption_languages ?? null,
+        age_rating: payload.age_rating ?? null,
+        asset_subtype: payload.asset_subtype ?? null,
+        asset_type: payload.asset_type ?? null,
+        business_type: payload.business_type ?? null,
+        custom_rating: payload.custom_rating ?? null,
+        directors: payload.directors ?? null,
+        dynamic_field: payload.dynamic_field ?? null,
+        extended_field: payload.extended_field ?? null,
+        rating: payload.rating ?? null,
       });
 
       const images = await select('tvshow_images', {
