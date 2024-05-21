@@ -62,6 +62,7 @@ regularVariables:
   # GeoIP2 Variables
   CLIENT_IP_HEADER_NAME: X-Forwarded-For
   GEOIP2_DATABASE_PATH: #####/GeoLite2-City.mmdb
+  GEO_BLOCKING_FEATURE_SWITCH: true
 
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
