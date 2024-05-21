@@ -23,7 +23,7 @@ To get started with developing your own customized solution based on the
 Mosaic Media Template, run the following command:
 
 ```shell
-npx --package=@axinom/mosaic-cli mosaic create
+npx @axinom/mosaic-cli mosaic create
 ```
 
 This process will guide you through the creation of a new Mosaic project based
