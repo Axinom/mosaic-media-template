@@ -52,6 +52,19 @@ describe('EpisodePublishEventHandler', () => {
         released: payload.released ?? null,
         studio: payload.studio ?? null,
         tags: payload.tags ?? null,
+        age_rating: payload.age_rating ?? null,
+        asset_subtype: payload.asset_subtype ?? null,
+        asset_type: payload.asset_type ?? null,
+        credits_start_time: payload.credits_start_time ?? null,
+        custom_rating: payload.custom_rating ?? null,
+        directors: payload.directors ?? null,
+        dynamic_field: payload.dynamic_field ?? null,
+        extended_field: payload.extended_field ?? null,
+        intro_end_time: payload.intro_end_time ?? null,
+        intro_start_time: payload.intro_start_time ?? null,
+        length_in_seconds: payload.length_in_seconds ?? null,
+        rating: payload.rating ?? null,
+        tvshow_id: payload.tvshow_id ?? null,
       });
 
       const images = await select('episode_images', {
