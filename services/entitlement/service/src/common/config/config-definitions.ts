@@ -88,7 +88,11 @@ export const getConfigDefinitions = (
       'MISSING_RECURLY_ENTITLEMENT_API_KEY',
 
     clientIPHeaderName: () => env.get('CLIENT_IP_HEADER_NAME').asString(),
-    geoIP2DatabasePath: () => env.get('GEOIP2_DATABASE_PATH').asString(),
+    geoIP2DatabaseFile: () => env.get('GEOIP2_DATABASE_FILE').required().asString(),
+    geoIP2BlobConnectionString: () => env.get('GEOIP2_BLOB_CONNECTION_STRING').required().asString(),
+    geoIP2BlobContainer: () =>
+      env.get('GEOIP2_BLOB_CONTAINER').required().asString(),
+    geoIP2UpdateSchedule: () => env.get('GEOIP2_UPDATE_SCHEDULE').required().asString(),
     geoBlockingFeatureSwitch: () => env.get('GEO_BLOCKING_FEATURE_SWITCH').asString(),
 
     /**

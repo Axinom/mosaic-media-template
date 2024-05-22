@@ -61,7 +61,10 @@ regularVariables:
 
   # GeoIP2 Variables
   CLIENT_IP_HEADER_NAME: X-Forwarded-For
-  GEOIP2_DATABASE_PATH: #####/GeoLite2-City.mmdb
+  GEOIP2_DATABASE_FILE: #####/GeoLite2-City.mmdb
+  GEOIP2_BLOB_CONNECTION_STRING: ####
+  GEOIP2_BLOB_CONTAINER: ####
+  GEOIP2_UPDATE_SCHEDULE: ####
   GEO_BLOCKING_FEATURE_SWITCH: true
 
 secureVariables:
