@@ -61,10 +61,9 @@ regularVariables:
 
   # GeoIP2 Variables
   CLIENT_IP_HEADER_NAME: X-Forwarded-For
-  GEOIP2_DATABASE_FILE: #####/GeoLite2-City.mmdb
-  GEOIP2_BLOB_SAS_URL: ####
-  GEOIP2_BLOB_CONTAINER: ####
-  GEOIP2_UPDATE_SCHEDULE: ####
+  GEOIP2_DATABASE_FILE: GeoLite2-City.mmdb
+  GEOIP2_UPDATE_SCHEDULE: 0 0 * * *
+
   GEO_BLOCKING_FEATURE_SWITCH: true
 
 secureVariables:
@@ -90,6 +89,11 @@ secureVariables:
   RECURLY_ENTITLEMENT_API_URL: https://v3.eu.recurly.com
   RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: '<chanel>-video-playback'
   RECURLY_ENTITLEMENT_API_KEY: ####
+
+  # GeoIP2 Secure Variables
+  GEOIP2_BLOB_SAS_TOKEN: ####
+  GEOIP2_BLOB_STORAGE_ACCOUNT: ####
+  GEOIP2_BLOB_CONTAINER: ####
 
 serviceAccounts:
   - name: 'primary'
