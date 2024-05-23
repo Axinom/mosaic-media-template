@@ -30,15 +30,15 @@ export class GeoIPService {
   }
 
   async downloadFileFromAzure(
-    connectionString: string,
+    sasUrl: string,
     container: string,
     blob: string,
     localFilename: string,
   ): Promise<void> {
-      const client = BlobServiceClient.fromConnectionString(connectionString);
-      const containerClient = client.getContainerClient(container);
+      const client = new BlobServiceClient(sasUrl);
+      const containerClient = client.getContainerClient(container); 
       const blockBlobClient: BlockBlobClient =
-        containerClient.getBlockBlobClient(blob);
+        containerClient.getBlockBlobClient(blob); 
       const localPath = path.resolve(__dirname, localFilename);
       const tmpPath = path.resolve(__dirname, `tmp_${localFilename}`);
       await blockBlobClient.downloadToFile(tmpPath);
@@ -51,7 +51,7 @@ export class GeoIPService {
     this.loaderIsRunning = true;
     try {
       this.logger.log('Loading GeoIP database ..');
-      await this.downloadFileFromAzure(config.geoIP2BlobConnectionString, 
+      await this.downloadFileFromAzure(config.geoIP2BlobSasUrl, 
         config.geoIP2BlobContainer, config.geoIP2DatabaseFile, this.localFilename);
       this.lookup = await maxmind.open<CityResponse>(
         path.resolve(__dirname, this.localFilename),
