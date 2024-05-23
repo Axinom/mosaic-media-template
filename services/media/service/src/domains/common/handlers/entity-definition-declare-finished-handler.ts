@@ -13,7 +13,10 @@ export class EntityDefinitionDeclareFinishedHandler extends TransactionalInboxMe
   EntityDefinitionDeclareFinishedEvent,
   Config
 > {
-  constructor(config: Config) {
+  constructor(
+    config: Config,
+    private readonly callback: (entityType: string) => Promise<void>,
+  ) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.EntityDefinitionDeclareFinished,
       new Logger({
@@ -33,5 +36,10 @@ export class EntityDefinitionDeclareFinishedHandler extends TransactionalInboxMe
         details: { ...payload },
       });
     }
+
+    // Performs a callback to do post-processing, e.g. populate seed data only
+    // after definitions are fully synced.
+    // Done in this way to avoid circular dependencies between imports.
+    await this.callback(payload.entity_type);
   }
 }
