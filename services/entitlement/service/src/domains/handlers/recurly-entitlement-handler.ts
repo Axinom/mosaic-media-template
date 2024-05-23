@@ -1,3 +1,4 @@
+import { Logger } from '@axinom/mosaic-service-common';
 import axios from 'axios';
 import { plainToClass } from 'class-transformer';
 import {
@@ -6,7 +7,6 @@ import {
   RecurlyEntitlementErrorResponse,
   RecurlyEntitlementResponse,
 } from '../../common';
-import { Logger } from '@axinom/mosaic-service-common';
 
 const config = getFullConfig();
 export class RecurlyEntitlementHandler {
@@ -66,20 +66,20 @@ export class RecurlyEntitlementHandler {
           RecurlyEntitlementErrorResponse,
           response.data,
         );
-        var msg = 'Recurly Entitlement API returned an error';
+        let msg = 'Recurly Entitlement API returned an error';
         if (this.subscriptionNotFoundCodes.includes(errorRes?.error?.type)) {
-          msg = 'Recurly subscription not found',
-          logger.debug({
-            name: 'Recurly subscription not found',
-            message: `Recurly Entitlement API didn't find subscription for ${userId}. Error: ${errorRes?.error?.type}`,
-          });
+          (msg = 'Recurly subscription not found'),
+            logger.debug({
+              name: 'Recurly subscription not found',
+              message: `Recurly Entitlement API didn't find subscription for ${userId}. Error: ${errorRes?.error?.type}`,
+            });
         }
         if (this.rateLimitedErrorCodes.includes(errorRes?.error?.type)) {
-          msg = 'Recurly API rate limit error',
-          logger.error({
-            name: 'Recurly API rate limit error',
-            message: `Recurly entitlement request rate limited. URL : ${url}. Error: ${errorRes?.error?.type}`,
-          });
+          (msg = 'Recurly API rate limit error'),
+            logger.error({
+              name: 'Recurly API rate limit error',
+              message: `Recurly entitlement request rate limited. URL : ${url}. Error: ${errorRes?.error?.type}`,
+            });
         } else {
           logger.error({
             name: 'Recurly API error',

@@ -88,12 +88,28 @@ export const getConfigDefinitions = (
       'MISSING_RECURLY_ENTITLEMENT_API_KEY',
 
     clientIPHeaderName: () => env.get('CLIENT_IP_HEADER_NAME').asString(),
-    geoIP2DatabaseFile: () => env.get('GEOIP2_DATABASE_FILE').required().asString(),
-    geoIP2BlobSasUrl: () => env.get('GEOIP2_BLOB_SAS_URL').required().asString(),
+
+    geoIP2SASToken: () =>
+      env.get('GEOIP2_BLOB_SAS_TOKEN').required().asString() ||
+      'MISSING_GEOIP2_BLOB_SAS_TOKEN',
+    geoIP2StorageAccount: () =>
+      env.get('GEOIP2_BLOB_STORAGE_ACCOUNT').required().asString() ||
+      'MISSING_GEOIP2_BLOB_STORAGE_ACCOUNT',
     geoIP2BlobContainer: () =>
-      env.get('GEOIP2_BLOB_CONTAINER').required().asString(),
-    geoIP2UpdateSchedule: () => env.get('GEOIP2_UPDATE_SCHEDULE').required().asString(),
-    geoBlockingFeatureSwitch: () => env.get('GEO_BLOCKING_FEATURE_SWITCH').asString(),
+      env.get('GEOIP2_BLOB_CONTAINER').required().asString() ||
+      'MISSING_GEOIP2_BLOB_CONTAINER',
+    geoIP2DatabaseFile: () =>
+      env.get('GEOIP2_DATABASE_FILE').required().asString() ||
+      'MISSING_GEOIP2_DATABASE_FILE',
+
+    geoIP2BlobStorageURL: function () {
+      return `https://${this.geoIP2StorageAccount()}.blob.core.windows.net/?${this.geoIP2SASToken()}`;
+    },
+
+    geoIP2UpdateSchedule: () =>
+      env.get('GEOIP2_UPDATE_SCHEDULE').required().asString(),
+    geoBlockingFeatureSwitch: () =>
+      env.get('GEO_BLOCKING_FEATURE_SWITCH').asString(),
 
     /**
      * Optional User Service GraphQL Endpoint, used to get user auth token

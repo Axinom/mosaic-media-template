@@ -34,7 +34,7 @@ export const EntitlementValidation = (
         data: null,
       };
     }
-    const utc =  moment().utc().toDate();
+    const utc = moment().utc().toDate();
     if (!(utc >= license.startTime && utc <= license.endTime)) {
       return {
         isValid: false,
