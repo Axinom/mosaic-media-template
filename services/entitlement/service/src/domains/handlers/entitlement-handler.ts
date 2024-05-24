@@ -6,13 +6,13 @@ import {
   UserTokenValidation,
 } from '../../domains';
 
+import { Logger } from '@axinom/mosaic-service-common';
 import {
   EntitlementRequestModel,
   EntitlementRequestType,
   EntitlementValidationResponse,
   getFullConfig,
 } from '../../common';
-import { Logger } from '@axinom/mosaic-service-common';
 
 const config = getFullConfig();
 
