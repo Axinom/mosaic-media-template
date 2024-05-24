@@ -19,6 +19,11 @@ export const extractCountryCodeFromRemoteIP = async (
     const xForwardedFor =
       req.headers[config.clientIPHeaderName || 'X-FORWARDED-FOR'];
 
+    logger.warn({
+      name: 'Country determining failed',
+      message: `Country not found for IP::: ${clientIP} ----> ${xForwardedFor} :::: ${typeof xForwardedFor}`,
+    });
+
     if (typeof xForwardedFor === 'string') {
       ipList = xForwardedFor.split(',').map((ip) => ip.trim());
     } else {
