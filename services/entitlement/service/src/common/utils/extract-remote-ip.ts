@@ -14,13 +14,26 @@ export const extractCountryCodeFromRemoteIP = async (
   });
   try {
     let clientIP = 'ZZ';
-    if (req.ip) {
-      clientIP = req.ip;
+    let ipList: string[] = [];
+
+    const xForwardedFor =
+      req.headers[config.clientIPHeaderName || 'X-FORWARDED-FOR'];
+
+    if (typeof xForwardedFor === 'string') {
+      ipList = xForwardedFor.split(',').map((ip) => ip.trim());
     } else {
-      const forwarded = req.headers[
-        config.clientIPHeaderName || 'x-forwarded-for'
-      ] as string[];
-      clientIP = forwarded ? forwarded[0] : req.connection.remoteAddress ?? '';
+      logger.warn({
+        name: 'Country determining failed',
+        message: `Country not found for IP::: ${clientIP} ${JSON.stringify(
+          req.headers,
+          null,
+          2,
+        )}`,
+      });
+    }
+
+    if (ipList.length > 0) {
+      clientIP = ipList[0];
     }
 
     const countryInfo = GeoIPService.getInstance().getCity(clientIP || '');
@@ -34,10 +47,7 @@ export const extractCountryCodeFromRemoteIP = async (
         )}`,
       });
     }
-    return (
-      countryInfo?.country?.iso_code ||
-      'ZZU-' + clientIP + JSON.stringify(req.headers, null, 2)
-    );
+    return countryInfo?.country?.iso_code || 'ZZU';
   } catch (error) {
     logger.debug({
       name: 'Country determining failed',
