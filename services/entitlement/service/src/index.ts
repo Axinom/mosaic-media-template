@@ -96,6 +96,7 @@ async function bootstrap(): Promise<void> {
   // Configure REST endpoints additionally to GraphQL (auxiliary needs such as file download)
 
   await GeoIPService.getInstance().startDatabaseUpdater();
+  app.set('trust proxy', true); // trust first proxy and enable req.ip / req.ips
 
   setupRestEndpoints(app);
 
