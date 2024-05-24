@@ -21,7 +21,7 @@ export const extractCountryCodeFromRemoteIP = async (
 
     logger.warn({
       name: 'Country determining failed',
-      message: `Country not found for IP::: ${clientIP} ----> ${xForwardedFor} :::: ${typeof xForwardedFor}`,
+      message: `Country not found for IP xForwardedFor::: ${xForwardedFor} :::: ${typeof xForwardedFor}`,
     });
 
     if (typeof xForwardedFor === 'string') {
