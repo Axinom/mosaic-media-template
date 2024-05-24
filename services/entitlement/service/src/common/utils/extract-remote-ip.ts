@@ -24,7 +24,20 @@ export const extractCountryCodeFromRemoteIP = async (
     }
 
     const countryInfo = GeoIPService.getInstance().getCity(clientIP || '');
-    return countryInfo?.country?.iso_code || 'ZZU-' + clientIP;
+    if (!countryInfo?.country?.iso_code) {
+      logger.warn({
+        name: 'Country determining failed',
+        message: `Country not found for IP::: ${clientIP} ${JSON.stringify(
+          req.headers,
+          null,
+          2,
+        )}`,
+      });
+    }
+    return (
+      countryInfo?.country?.iso_code ||
+      'ZZU-' + clientIP + JSON.stringify(req.headers, null, 2)
+    );
   } catch (error) {
     logger.debug({
       name: 'Country determining failed',
