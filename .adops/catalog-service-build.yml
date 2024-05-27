@@ -75,6 +75,7 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
+              SERVICE_ID: $(serviceIdAcc)
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
@@ -87,5 +88,6 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
+              SERVICE_ID: $(serviceIdProd)
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
