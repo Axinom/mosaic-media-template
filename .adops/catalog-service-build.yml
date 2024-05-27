@@ -5,8 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  serviceIdAcc: 'dc-nfn-mosaic-catalog-acc'
-  serviceIdProd: 'dc-nfn-mo-catalog-prod'
+  serviceId: 'dc-nfn-mo-catalog'
   containerRegistry: 'harbor-beyonddutch-automation'
   dockerfilePath: 'Dockerfile'
   packageRoot: 'services/catalog/service'
@@ -71,11 +70,10 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-acceptance-$(tag)" -i "$(serviceIdAcc)" -p "$(packageRoot)"
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
-              SERVICE_ID: $(serviceIdAcc)
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
@@ -84,7 +82,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-production-$(tag)" -i "$(serviceIdProd)" -p "$(packageRoot)"
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
