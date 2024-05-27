@@ -3,7 +3,6 @@
 # Refer to the README.md file for instructions on how to use this.
 
 version: '1.0'
-serviceId: 'dc-nfn-mosaic-catalog-acc'
 
 regularVariables:
   # Service General Variables
