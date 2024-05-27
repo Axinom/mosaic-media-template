@@ -6,7 +6,7 @@ pool:
 
 variables:
   serviceIdAcc: 'dc-nfn-mosaic-catalog-acc'
-  serviceIdProd: 'dc-nfn-mosaic-catalog-prod'
+  serviceIdProd: 'dc-nfn-mo-catalog-prod'
   containerRegistry: 'harbor-beyonddutch-automation'
   dockerfilePath: 'Dockerfile'
   packageRoot: 'services/catalog/service'
