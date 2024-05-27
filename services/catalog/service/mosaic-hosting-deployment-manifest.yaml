@@ -3,6 +3,7 @@
 # Refer to the README.md file for instructions on how to use this.
 
 version: '1.0'
+serviceId: 'bd-nfn-mosaic-catalog'
 
 regularVariables:
   # Service General Variables
