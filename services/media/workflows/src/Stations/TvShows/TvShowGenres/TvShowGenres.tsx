@@ -163,10 +163,12 @@ const Panel: React.FC<{ data?: TvShowGenresQuery }> = ({ data }) => {
     return (
       <InfoPanel>
         <Section title="Additional Information">
-          <Paragraph title="Last Modified">
-            {formatDateTime(data?.tvshowGenres?.nodes[0].updatedDate)} by{' '}
-            {data?.tvshowGenres?.nodes[0].updatedUser}
-          </Paragraph>
+          {data?.tvshowGenres?.nodes[0] && (
+            <Paragraph title="Last Modified">
+              {formatDateTime(data.tvshowGenres.nodes[0].updatedDate)} by{' '}
+              {data.tvshowGenres.nodes[0].updatedUser}
+            </Paragraph>
+          )}
           <Paragraph title="Statistic">
             <div className={classes.datalist}>
               <div>Items Total</div>
