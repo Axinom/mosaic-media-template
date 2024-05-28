@@ -5,10 +5,14 @@ pool:
   vmImage: 'ubuntu-latest'
 
 parameters:
+  - name: build
+    displayName: Build
+    type: boolean
+    default: false
   - name: nfn_acceptance
     displayName: Release to NFN acceptance
     type: boolean
-    default: true
+    default: false
   - name: nfn_production
     displayName: Release to NFN production
     type: boolean
@@ -31,6 +35,7 @@ stages:
     jobs:
       - job: Build
         displayName: Build
+        condition: ${{ eq(parameters.build, true) }}
         steps:
           - task: NodeTool@0
             inputs:
