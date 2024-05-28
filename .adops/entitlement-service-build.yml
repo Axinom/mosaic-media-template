@@ -78,11 +78,11 @@ stages:
           - group: vault-nfn-acceptance
         steps:
           - bash: |
-              # apt install -y jq
-              # echo "Temporarily switch to newer version of Mosaic CLI in package.json"
-              # jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
-              # mv package.updated.json package.json
-              # yarn install
+              apt install -y jq
+              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
+              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
+              mv package.updated.json package.json
+              yarn install
             displayName: 'Install Dev Dependencies'
           - task: qetza.replacetokens.replacetokens-task.replacetokens@6
             displayName: 'Replace tokens'
