@@ -4,8 +4,18 @@ pr: none
 pool:
   vmImage: 'ubuntu-latest'
 
+parameters:
+  - name: nfn_acceptance
+    displayName: Release to NFN acceptance
+    type: boolean
+    default: true
+  - name: nfn_production
+    displayName: Release to NFN production
+    type: boolean
+    default: false
+
 variables:
-  serviceId: 'dc-nfn-entitlement-acc'
+  serviceId: 'dc-entitlement-service'
   containerRegistry: 'harbor-beyonddutch-automation'
   dockerfilePath: 'Dockerfile'
   packageRoot: 'services/entitlement/service'
@@ -64,15 +74,28 @@ stages:
               mv package.updated.json package.json
               yarn install
             displayName: 'Install Dev Dependencies'
-
-          - task: Bash@3
-            displayName: 'Upload deployment configuration to Acceptance environment'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+        
+          - ${{ if eq(parameters.nfn_acceptance, true) }}:
+            - task: Bash@3
+              displayName: 'Upload deployment configuration to Acceptance environment'
+              inputs:
+                targetType: 'inline'
+                script: |
+                  yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+              env:
+                MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
+                MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
+                ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+                HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+          - ${{ if eq(parameters.nfn_production, true) }}:
+            - task: Bash@3
+              displayName: 'Upload deployment configuration to Production environment'
+              inputs:
+                targetType: 'inline'
+                script: |
+                  yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+              env:
+                MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
+                MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
+                ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+                HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net

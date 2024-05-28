@@ -10,7 +10,7 @@
 # DRM_LICENSE_COMMUNICATION_KEY_ID
 
 version: '1.0'
-serviceId: 'bd-nfn-entitlement'
+serviceId: 'dc-entitlement-service'
 
 regularVariables:
   # Service General Variables
@@ -19,7 +19,7 @@ regularVariables:
   LOG_LEVEL: 'DEBUG'
   GRAPHQL_GUI_ENABLED: true
   DEMO_MODE: true
-  PORT: '${__ax_hosted__.port.api}'
+  PORT: '${__ax_hosted__.port.dc}'
 
   # Mosaic Environment Info
   TENANT_ID: '${__ax_hosted__.env.tenant_id}'
@@ -57,7 +57,7 @@ regularVariables:
   USER_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-user-service.auth_base_url}'
 
   # Custom Service URLs
-  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-nfn-mosaic-catalog-acc.api}'
+  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-mosaic-catalog-service.dc}'
 
   # GeoIP2 Variables
   CLIENT_IP_HEADER_NAME: X-Forwarded-For
@@ -107,5 +107,5 @@ pilets:
   []
 
 dnsMappedPorts:
-  - name: 'api'
+  - name: 'dc'
     port: 11600
