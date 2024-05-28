@@ -90,7 +90,6 @@ stages:
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
-            secureVariables:
               GEOLITE2_LICENSE_KEY: $(GEOLITE2-LICENSE-KEY)
               DRM_LICENSE_COMMUNICATION_KEY: $(drm-com-key)
               DRM_LICENSE_COMMUNICATION_KEY_ID: $(drm-com-key-id)
@@ -123,7 +122,6 @@ stages:
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
-            secureVariables:
               GEOLITE2_LICENSE_KEY: $(GEOLITE2-LICENSE-KEY)
               DRM_LICENSE_COMMUNICATION_KEY: $(drm-com-key)
               DRM_LICENSE_COMMUNICATION_KEY_ID: $(drm-com-key-id)
