@@ -11,7 +11,7 @@ regularVariables:
   NODE_ENV: 'production'
   LOG_LEVEL: 'DEBUG'
   GRAPHQL_GUI_ENABLED: true
-  PORT: '${__ax_hosted__.port.api}'
+  PORT: '${__ax_hosted__.port.dc}'
 
   # Mosaic Environment Info
   TENANT_ID: '${__ax_hosted__.env.tenant_id}'
