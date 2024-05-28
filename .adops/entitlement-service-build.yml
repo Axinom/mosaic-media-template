@@ -66,7 +66,7 @@ stages:
               command: 'push'
               tags: '$(tag)'
 
-      - job: Upload
+      - job: Upload_Acceptance
         displayName: 'Upload Manifest to Acceptance'
         condition: ${{ eq(parameters.nfn_acceptance, true) }}
         variables:
@@ -98,7 +98,7 @@ stages:
               RECURLY_ENTITLEMENT_API_KEY: $(RECURLY-API-KEY)
               GEOIP2_BLOB_SAS_TOKEN: $(GEOIP2-BLOB-SAS-TOKEN)
 
-      - job: Upload
+      - job: Upload_Production
         displayName: 'Upload Manifest to Production'
         condition: ${{ eq(parameters.nfn_production, true) }}
         variables:
