@@ -86,7 +86,7 @@ secureVariables:
   USER_SESSION_PUBLIC_KEY: '#{session-public-key}#'
 
   # Recurly entitlement service configuration
-  RECURLY_ENTITLEMENT_API_URL: 'https://v3.eu.recurly.com
+  RECURLY_ENTITLEMENT_API_URL: 'https://v3.eu.recurly.com'
   RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: '#{RECURLY-PLAYBACK-PERMISSION}#'
   RECURLY_ENTITLEMENT_API_KEY: '#{RECURLY-API-KEY}#'
 
