@@ -58,7 +58,6 @@ stages:
               arguments:
                 '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg
                 PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
-
           - task: Docker@2
             displayName: Push Docker Image to Axinom Container Registry
             inputs:
@@ -67,6 +66,12 @@ stages:
               command: 'push'
               tags: '$(tag)'
 
+      - job: Upload
+        displayName: 'Upload Manifest to Acceptance'
+        condition: ${{ eq(parameters.nfn_acceptance, true) }}
+        variables:
+          - group: vault-nfn-acceptance
+        steps:
           - bash: |
               apt install -y jq
               echo "Temporarily switch to newer version of Mosaic CLI in package.json"
@@ -74,28 +79,55 @@ stages:
               mv package.updated.json package.json
               yarn install
             displayName: 'Install Dev Dependencies'
-        
-          - ${{ if eq(parameters.nfn_acceptance, true) }}:
-            - task: Bash@3
-              displayName: 'Upload deployment configuration to Acceptance environment'
-              inputs:
-                targetType: 'inline'
-                script: |
-                  yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
-              env:
-                MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
-                MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
-                ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-                HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
-          - ${{ if eq(parameters.nfn_production, true) }}:
-            - task: Bash@3
-              displayName: 'Upload deployment configuration to Production environment'
-              inputs:
-                targetType: 'inline'
-                script: |
-                  yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
-              env:
-                MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
-                MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
-                ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-                HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+          - task: Bash@3
+            displayName: 'Upload deployment configuration to Acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+            secureVariables:
+              GEOLITE2_LICENSE_KEY: $(GEOLITE2-LICENSE-KEY)
+              DRM_LICENSE_COMMUNICATION_KEY: $(drm-com-key)
+              DRM_LICENSE_COMMUNICATION_KEY_ID: $(drm-com-key-id)
+              USER_SESSION_PUBLIC_KEY: $(session-public-key)
+              RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: $(RECURLY-PLAYBACK-PERMISSION)
+              RECURLY_ENTITLEMENT_API_KEY: $(RECURLY-API-KEY)
+              GEOIP2_BLOB_SAS_TOKEN: $(GEOIP2-BLOB-SAS-TOKEN)
+
+      - job: Upload
+        displayName: 'Upload Manifest to Production'
+        condition: ${{ eq(parameters.nfn_production, true) }}
+        variables:
+          - group: vault-nfn-production
+        steps:
+          - bash: |
+              apt install -y jq
+              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
+              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
+              mv package.updated.json package.json
+              yarn install
+            displayName: 'Install Dev Dependencies' 
+          - task: Bash@3
+            displayName: 'Upload deployment configuration to Production environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+            secureVariables:
+              GEOLITE2_LICENSE_KEY: $(GEOLITE2-LICENSE-KEY)
+              DRM_LICENSE_COMMUNICATION_KEY: $(drm-com-key)
+              DRM_LICENSE_COMMUNICATION_KEY_ID: $(drm-com-key-id)
+              USER_SESSION_PUBLIC_KEY: $(session-public-key)
+              RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: $(RECURLY-PLAYBACK-PERMISSION)
+              RECURLY_ENTITLEMENT_API_KEY: $(RECURLY-API-KEY)
+              GEOIP2_BLOB_SAS_TOKEN: $(GEOIP2-BLOB-SAS-TOKEN)
