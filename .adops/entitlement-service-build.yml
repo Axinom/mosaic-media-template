@@ -84,6 +84,16 @@ stages:
               mv package.updated.json package.json
               yarn install
             displayName: 'Install Dev Dependencies'
+          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
+            displayName: 'Replace tokens'
+            inputs:
+              root: '$(Pipeline.Workspace)'
+              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
+              caseInsensitivePaths: false
+              includeDotPaths: false
+              missingVarAction: keep
+              missingVarLog: error
+              ifNoFilesFound: error
           - task: Bash@3
             displayName: 'Upload deployment configuration to Acceptance environment'
             inputs:
@@ -95,13 +105,6 @@ stages:
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
-              GEOLITE2_LICENSE_KEY: $(GEOLITE2-LICENSE-KEY)
-              DRM_LICENSE_COMMUNICATION_KEY: $(drm-com-key)
-              DRM_LICENSE_COMMUNICATION_KEY_ID: $(drm-com-key-id)
-              USER_SESSION_PUBLIC_KEY: $(session-public-key)
-              RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: $(RECURLY-PLAYBACK-PERMISSION)
-              RECURLY_ENTITLEMENT_API_KEY: $(RECURLY-API-KEY)
-              GEOIP2_BLOB_SAS_TOKEN: $(GEOIP2-BLOB-SAS-TOKEN)
 
       - job: Upload_Production
         displayName: 'Upload Manifest to Production'
@@ -115,7 +118,17 @@ stages:
               jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
               mv package.updated.json package.json
               yarn install
-            displayName: 'Install Dev Dependencies' 
+            displayName: 'Install Dev Dependencies'
+          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
+            displayName: 'Replace tokens'
+            inputs:
+              root: '$(Pipeline.Workspace)'
+              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
+              caseInsensitivePaths: false
+              includeDotPaths: false
+              missingVarAction: keep
+              missingVarLog: error
+              ifNoFilesFound: error
           - task: Bash@3
             displayName: 'Upload deployment configuration to Production environment'
             inputs:
@@ -127,10 +140,3 @@ stages:
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
-              GEOLITE2_LICENSE_KEY: $(GEOLITE2-LICENSE-KEY)
-              DRM_LICENSE_COMMUNICATION_KEY: $(drm-com-key)
-              DRM_LICENSE_COMMUNICATION_KEY_ID: $(drm-com-key-id)
-              USER_SESSION_PUBLIC_KEY: $(session-public-key)
-              RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: $(RECURLY-PLAYBACK-PERMISSION)
-              RECURLY_ENTITLEMENT_API_KEY: $(RECURLY-API-KEY)
-              GEOIP2_BLOB_SAS_TOKEN: $(GEOIP2-BLOB-SAS-TOKEN)
