@@ -3,7 +3,7 @@
 # Refer to the README.md file for instructions on how to use this.
 
 version: '1.0'
-serviceId: 'bd-nfn-mosaic-catalog'
+serviceId: 'dc-nfn-mosaic-catalog'
 
 regularVariables:
   # Service General Variables
@@ -62,5 +62,5 @@ pilets:
 
 dnsMappedPorts:
   # Defines the DNS subdomains that will provisioned and be mapped to the ports exposed by the service
-  - name: 'api'
+  - name: 'dc'
     port: 10300
