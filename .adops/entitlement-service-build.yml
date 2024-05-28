@@ -87,7 +87,6 @@ stages:
           - task: qetza.replacetokens.replacetokens-task.replacetokens@6
             displayName: 'Replace tokens'
             inputs:
-              root: '$(Pipeline.Workspace)'
               sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
               caseInsensitivePaths: false
               includeDotPaths: false
@@ -122,7 +121,6 @@ stages:
           - task: qetza.replacetokens.replacetokens-task.replacetokens@6
             displayName: 'Replace tokens'
             inputs:
-              root: '$(Pipeline.Workspace)'
               sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
               caseInsensitivePaths: false
               includeDotPaths: false
