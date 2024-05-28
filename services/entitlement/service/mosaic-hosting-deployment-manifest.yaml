@@ -10,7 +10,7 @@
 # DRM_LICENSE_COMMUNICATION_KEY_ID
 
 version: '1.0'
-serviceId: 'dc-nfn-entitlement-acc'
+serviceId: 'dc-nfn-entitlement'
 
 regularVariables:
   # Service General Variables
