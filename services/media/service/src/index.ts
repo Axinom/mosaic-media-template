@@ -135,7 +135,7 @@ async function bootstrap(): Promise<void> {
   await registerTypes(storeOutboxMessage, loginPgPool, config);
 
   // Populate the DB with some initial seed data
-  await populateSeedData(ownerPgPool, logger);
+  await populateSeedData(ownerPgPool, config, logger);
 
   // Enable authentication middleware for all requests to /graphql.
   setupManagementAuthentication(app, ['/graphql'], authConfig);
