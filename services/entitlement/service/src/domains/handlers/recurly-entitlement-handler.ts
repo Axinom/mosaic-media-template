@@ -36,8 +36,6 @@ export class RecurlyEntitlementHandler {
       config,
       context: this.VerifySubscription.name,
     });
-    // TODO: I had to hard code the user ID here, cause NFN user is broken from Recurly end.
-    userId = 'b2ef064e-886f-4230-8c76-6e01d27e2080';
     const url = `${this.recurlyEntitlementApiUrl}/accounts/code-${userId}/entitlements`;
     try {
       const response = await axios.get(url, {
