@@ -8,13 +8,13 @@ parameters:
   - name: build
     displayName: Build
     type: boolean
-    default: false
+    default: true
   - name: nfn_acceptance
-    displayName: Release to NFN acceptance
+    displayName: Release manifest to NFN acceptance
     type: boolean
     default: false
   - name: nfn_production
-    displayName: Release to NFN production
+    displayName: Release manifest to NFN production
     type: boolean
     default: false
 
