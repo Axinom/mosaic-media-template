@@ -12,5 +12,5 @@ export function setupRestEndpoints(app: Express): void {
   );
 
   app.post('/v4/entitlement', EntitlementRequestHandling);
-  app.get('/v1/country', CountryRequestHandling);
+  app.get('/v2/country', CountryRequestHandling);
 }

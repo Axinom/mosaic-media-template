@@ -61,7 +61,7 @@ regularVariables:
 
   # GeoIP2 Variables
   CLIENT_IP_HEADER_NAME: 'X-Forwarded-For'
-  GEOIP2_DATABASE_FILE: 'GeoLite2-City.mmdb'
+  GEOIP2_DATABASE_FILE: 'GeoIP2-City.mmdb'
   GEOIP2_UPDATE_SCHEDULE: '0 0 * * *'
 
   GEO_BLOCKING_FEATURE_SWITCH: true
