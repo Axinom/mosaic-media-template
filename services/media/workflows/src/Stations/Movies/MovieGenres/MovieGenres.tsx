@@ -162,13 +162,14 @@ const Form: React.FC = () => {
 
 const Panel: React.FC<{ data?: MovieGenresQuery }> = ({ data }) => {
   return useMemo(() => {
+    const lastModifiedNode = data?.movieGenres?.nodes?.slice(-1)[0];
     return (
       <InfoPanel>
         <Section title="Additional Information">
-          {data?.movieGenres?.nodes[0] && (
+          {lastModifiedNode && (
             <Paragraph title="Last Modified">
-              {formatDateTime(data?.movieGenres?.nodes[0].updatedDate)} by{' '}
-              {data?.movieGenres?.nodes[0].updatedUser}
+              {formatDateTime(lastModifiedNode.updatedDate)} by{' '}
+              {lastModifiedNode.updatedUser}
             </Paragraph>
           )}
           <Paragraph title="Statistic">
