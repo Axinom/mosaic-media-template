@@ -1,3 +1,4 @@
+import { CollectionLocalization } from '../types/collection-localization';
 import { Image } from '../types/image';
 import { RelatedItem } from '../types/related-item';
 /**
@@ -11,7 +12,7 @@ export interface CollectionPublishedEvent {
   /**
    * A string with at least one character and not only whitespace characters.
    */
-  title: string;
+  title?: string;
   /**
    * Original title of the season.
    */
@@ -56,4 +57,8 @@ export interface CollectionPublishedEvent {
    * Array of content related items metadata.
    */
   related_items: RelatedItem[];
+  /**
+   * Localizations for every defined locale.
+   */
+  localizations: CollectionLocalization[];
 }

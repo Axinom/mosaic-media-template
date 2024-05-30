@@ -1,5 +1,6 @@
 import { Image } from '../types/image';
 import { License } from '../types/license';
+import { SeasonLocalization } from '../types/season-localization';
 import { Video } from '../types/video';
 /**
  * Definition of the TV show season publish format.
@@ -101,4 +102,8 @@ export interface SeasonPublishedEvent {
    * Optional asset subtype.
    */
   asset_subtype?: string;
+  /**
+   * Localizations for every defined locale.
+   */
+  localizations: SeasonLocalization[];
 }

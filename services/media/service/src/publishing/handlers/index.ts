@@ -1,2 +1,2 @@
-export * from './publish-entity-command-handler';
-export * from './unpublish-entity-command-handler';
+export * from './publish-entity-handler';
+export * from './unpublish-entity-handler';

@@ -38,13 +38,19 @@ export interface MediaInitializeResult extends CreateIngestMediaResult {
   displayTitleMappings: DisplayTitleMapping[];
 }
 
-export interface OrchestrationData {
+export interface DeferredOrchestrationData {
+  ingestItemStep: ingest_item_steps.Insertable;
+}
+export interface FullOrchestrationData extends DeferredOrchestrationData {
   aggregateId: string;
   messagingSettings: MultiTenantMessagingSettings | MessagingSettings;
   messagePayload: unknown;
   messageContext: unknown;
-  ingestItemStep: ingest_item_steps.Insertable;
 }
+
+export type OrchestrationData =
+  | DeferredOrchestrationData
+  | FullOrchestrationData;
 
 export interface IngestEntityProcessor {
   type: IngestItemTypeEnum;
@@ -56,7 +62,11 @@ export interface IngestEntityProcessor {
 
   getOrchestrationData(content: StartIngestItemCommand): OrchestrationData[];
 
-  updateMetadata(content: UpdateMetadataCommand, ctx: Queryable): Promise<void>;
+  updateMetadata(
+    content: UpdateMetadataCommand,
+    ctx: Queryable,
+    ingestItemId?: number,
+  ): Promise<void>;
 
   processImage(
     entityId: number,

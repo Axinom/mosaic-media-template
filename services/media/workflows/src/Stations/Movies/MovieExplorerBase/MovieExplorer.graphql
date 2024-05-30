@@ -40,7 +40,12 @@ fragment MovieExplorerProperties on Movie {
 }
 
 query Movies($filter: MovieFilter, $orderBy: [MoviesOrderBy!], $after: Cursor) {
-  filtered: movies(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+  filtered: movies(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
     totalCount
     pageInfo {
       hasNextPage
@@ -58,7 +63,7 @@ query Movies($filter: MovieFilter, $orderBy: [MoviesOrderBy!], $after: Cursor) {
 subscription MoviesMutated {
   movieMutated {
     id
-    event
+    eventKey
     movie {
       ...MovieExplorerProperties
     }

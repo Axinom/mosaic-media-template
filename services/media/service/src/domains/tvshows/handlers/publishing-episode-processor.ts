@@ -5,7 +5,7 @@ import {
 } from 'media-messages';
 import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config } from '../../../common';
+import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   atLeastOneString,
   buildPublishingId,
@@ -18,6 +18,7 @@ import {
   videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
+import { getEpisodeLocalizationsMetadata } from '../localization';
 
 const episodeDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -59,20 +60,20 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     },
   ).run(queryable);
 
-  const { result: videos, validation: videosValidation } =
-    await getVideosMetadata(
+  const [
+    { result: videos, validation: videosValidation },
+    { result: images, validation: imagesValidation },
+    { result: localizations, validation: localizationsValidation },
+  ] = await Promise.all([
+    getVideosMetadata(
       config.videoServiceBaseUrl,
       authToken,
       episode.main_video_id,
       episode.trailers,
-    );
-
-  const { result: images, validation: imagesValidation } =
-    await getImagesMetadata(
-      config.imageServiceBaseUrl,
-      authToken,
-      episode.images,
-    );
+    ),
+    getImagesMetadata(config.imageServiceBaseUrl, authToken, episode.images),
+    getEpisodeLocalizationsMetadata(config, authToken, episode.id.toString()),
+  ]);
 
   const snapshotJson: EpisodePublishedEvent = {
     content_id: buildPublishingId('episodes', episode.id),
@@ -80,9 +81,6 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
       ? buildPublishingId('seasons', episode.season_id)
       : undefined,
     index: episode.index,
-    title: episode.title,
-    synopsis: episode.synopsis ?? undefined,
-    description: episode.description ?? undefined,
     original_title: episode.original_title ?? undefined,
     released: episode.released ?? undefined,
     studio: episode.studio ?? undefined,
@@ -99,11 +97,24 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     })),
     images,
     videos,
+    localizations: localizations ?? [
+      {
+        is_default_locale: true,
+        language_tag: DEFAULT_LOCALE_TAG,
+        title: episode.title,
+        synopsis: episode.synopsis ?? undefined,
+        description: episode.description ?? undefined,
+      },
+    ],
   };
 
   return {
     result: snapshotJson,
-    validation: [...imagesValidation, ...videosValidation],
+    validation: [
+      ...imagesValidation,
+      ...videosValidation,
+      ...localizationsValidation,
+    ],
   };
 };
 

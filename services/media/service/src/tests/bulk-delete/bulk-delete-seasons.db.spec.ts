@@ -1,6 +1,4 @@
-import { Broker } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { stub } from 'jest-auto-stub';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import 'jest-extended';
 import {
   DeleteEntityCommand,
@@ -23,7 +21,7 @@ describe('Seasons Bulk Delete endpoint', () => {
   let defaultRequestContext: TestRequestContext;
   let messages: {
     messageType: string;
-    message: DeleteEntityCommand;
+    payload: DeleteEntityCommand;
   }[] = [];
 
   const createSeason = async (
@@ -39,16 +37,12 @@ describe('Seasons Bulk Delete endpoint', () => {
   };
 
   beforeAll(async () => {
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        settings: MessagingSettings,
-        message: DeleteEntityCommand,
-      ) => {
-        messages.push({ messageType: settings.messageType, message });
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload) => {
+        messages.push({ payload: payload as DeleteEntityCommand, messageType });
       },
-    });
-    ctx = await createTestContext({}, broker);
+    );
+    ctx = await createTestContext({}, storeOutboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
     jest
       .spyOn(tokenHelpers, 'getLongLivedToken')
@@ -96,7 +90,7 @@ describe('Seasons Bulk Delete endpoint', () => {
         expect(messages).toIncludeSameMembers([
           {
             messageType: MediaServiceMessagingSettings.DeleteEntity.messageType,
-            message: {
+            payload: {
               entity_id: seasonId1,
               entity_type: 'Season',
               input: undefined,
@@ -135,7 +129,7 @@ describe('Seasons Bulk Delete endpoint', () => {
         expect(messages).toIncludeSameMembers([
           {
             messageType: MediaServiceMessagingSettings.DeleteEntity.messageType,
-            message: {
+            payload: {
               entity_id: seasonId1,
               entity_type: 'Season',
               input: undefined,
@@ -145,7 +139,7 @@ describe('Seasons Bulk Delete endpoint', () => {
           },
           {
             messageType: MediaServiceMessagingSettings.DeleteEntity.messageType,
-            message: {
+            payload: {
               entity_id: seasonId2,
               entity_type: 'Season',
               input: undefined,

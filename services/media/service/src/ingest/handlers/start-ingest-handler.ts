@@ -1,6 +1,8 @@
-import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
-import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
-import { assertNotFalsy } from '@axinom/mosaic-service-common';
+import { assertNotFalsy, Logger } from '@axinom/mosaic-service-common';
+import {
+  StoreOutboxMessage,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CheckFinishIngestDocumentCommand,
   IngestItem,
@@ -8,123 +10,112 @@ import {
   StartIngestCommand,
   StartIngestItemCommand,
 } from 'media-messages';
-import { SubscriptionConfig } from 'rascal';
+import { ClientBase } from 'pg';
 import {
   IngestEntityExistsStatusEnum,
   IngestItemTypeEnum,
 } from 'zapatos/custom';
-import {
-  insert,
-  IsolationLevel,
-  selectExactlyOne,
-  TxnClient,
-  update,
-} from 'zapatos/db';
+import { insert, selectExactlyOne, update } from 'zapatos/db';
 import { ingest_items } from 'zapatos/schema';
 import { Config } from '../../common';
-import { MediaGuardedMessageHandler } from '../../messaging';
+import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
 import {
   DisplayTitleMapping,
   IngestEntityProcessor,
   IngestItemInsertable,
   IngestMediaItem,
 } from '../models';
-import { getIngestErrorMessage } from '../utils';
+import {
+  getFutureIsoDateInMilliseconds,
+  getIngestErrorMessage,
+} from '../utils';
 
-export class StartIngestHandler extends MediaGuardedMessageHandler<StartIngestCommand> {
+export class StartIngestHandler extends MediaGuardedTransactionalInboxMessageHandler<StartIngestCommand> {
   constructor(
     private entityProcessors: IngestEntityProcessor[],
-    private broker: Broker,
-    private loginPool: LoginPgPool,
+    private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
-    overrides?: SubscriptionConfig,
   ) {
     super(
-      MediaServiceMessagingSettings.StartIngest.messageType,
+      MediaServiceMessagingSettings.StartIngest,
       ['INGESTS_EDIT', 'ADMIN'],
+      new Logger({
+        config,
+        context: StartIngestHandler.name,
+      }),
       config,
-      overrides,
     );
   }
 
-  public async onMessage(
-    content: StartIngestCommand,
-    message: MessageInfo,
+  override async handleMessage(
+    { payload, metadata }: TypedTransactionalMessage<StartIngestCommand>,
+    loginClient: ClientBase,
   ): Promise<void> {
-    const pgSettings = await this.getPgSettings(message);
-    const ingestItems = await transactionWithContext(
-      this.loginPool,
-      IsolationLevel.Serializable,
-      pgSettings,
-      async (ctx) => {
-        // Sending only id in a scenario of detached services is an anti-pattern
-        // Ideally the whole doc should have been sent and message should be self-contained, but because doc has a potential to be quite big - we save it to db and pass only it's id
-        const { document, id } = await selectExactlyOne('ingest_documents', {
-          id: content.doc_id,
-        }).run(ctx);
+    // Sending only id in a scenario of detached services is an anti-pattern
+    // Ideally the whole doc should have been sent and message should be self-contained, but because doc has a potential to be quite big - we save it to db and pass only it's id
+    const { document, id } = await selectExactlyOne('ingest_documents', {
+      id: payload.doc_id,
+    }).run(loginClient);
 
-        const ingestItems: ingest_items.JSONSelectable[] = [];
-        for (const processor of this.entityProcessors) {
-          ingestItems.push(
-            ...(await this.initializeItems(processor, document.items, id, ctx)),
-          );
-        }
-
-        return ingestItems;
-      },
-    );
-
+    const ingestItems: ingest_items.JSONSelectable[] = [];
+    for (const processor of this.entityProcessors) {
+      ingestItems.push(
+        ...(await this.initializeItems(
+          processor,
+          document.items,
+          id,
+          loginClient,
+        )),
+      );
+    }
     await this.sendCommands(
-      content.doc_id,
+      payload.doc_id,
       ingestItems,
-      message.envelope.auth_token,
+      loginClient,
+      metadata.authToken,
     );
   }
 
-  public async onMessageFailure(
-    content: StartIngestCommand,
-    message: MessageInfo,
+  override async handleErrorMessage(
     error: Error,
+    { payload }: TypedTransactionalMessage<StartIngestCommand>,
+    loginClient: ClientBase,
+    retry: boolean,
   ): Promise<void> {
-    const pgSettings = await this.getPgSettings(message);
+    if (retry) {
+      return;
+    }
     const errorMessage = getIngestErrorMessage(
       error,
       'An error occurred while trying to initialize ingest items.',
     );
-    await transactionWithContext(
-      this.loginPool,
-      IsolationLevel.Serializable,
-      pgSettings,
-      async (ctx) => {
-        await update(
-          'ingest_documents',
+    await update(
+      'ingest_documents',
+      {
+        status: 'ERROR',
+        errors: [
           {
-            status: 'ERROR',
-            errors: [
-              {
-                message: errorMessage,
-                source: StartIngestHandler.name,
-              },
-            ],
+            message: errorMessage,
+            source: StartIngestHandler.name,
           },
-          { id: content.doc_id },
-        ).run(ctx);
+        ],
       },
-    );
+      { id: payload.doc_id },
+    ).run(loginClient);
   }
 
   private async initializeItems(
     processor: IngestEntityProcessor,
     allItems: IngestItem[],
     documentId: number,
-    ctx: TxnClient<IsolationLevel>,
+    loginClient: ClientBase,
   ): Promise<ingest_items.JSONSelectable[]> {
     const typedItems = allItems.filter(
       (item) => item.type.toLowerCase() === processor.type.toLowerCase(),
     );
 
     const { existedMedia, createdMedia, displayTitleMappings } =
-      await processor.initializeMedia(typedItems, ctx);
+      await processor.initializeMedia(typedItems, loginClient);
 
     const existedItems = this.createIngestItems(
       this.getIngestItemInfo(displayTitleMappings, existedMedia),
@@ -144,7 +135,9 @@ export class StartIngestHandler extends MediaGuardedMessageHandler<StartIngestCo
         'CREATED',
       );
     }
-    return insert('ingest_items', [...existedItems, ...createdItems]).run(ctx);
+    return insert('ingest_items', [...existedItems, ...createdItems]).run(
+      loginClient,
+    );
   }
 
   private getIngestItemInfo(
@@ -196,10 +189,11 @@ export class StartIngestHandler extends MediaGuardedMessageHandler<StartIngestCo
   private async sendCommands(
     documentId: number,
     ingestItems: ingest_items.JSONSelectable[],
+    loginClient: ClientBase,
     jwtToken: string | undefined,
   ): Promise<void> {
     for (const ingestItem of ingestItems) {
-      await this.broker.publish<StartIngestItemCommand>(
+      await this.storeOutboxMessage<StartIngestItemCommand>(
         ingestItem.id.toString(),
         MediaServiceMessagingSettings.StartIngestItem,
         {
@@ -207,11 +201,15 @@ export class StartIngestHandler extends MediaGuardedMessageHandler<StartIngestCo
           entity_id: ingestItem.entity_id,
           item: ingestItem.item,
         },
-        { auth_token: jwtToken },
+        loginClient,
+        {
+          envelopeOverrides: { auth_token: jwtToken },
+          lockedUntil: getFutureIsoDateInMilliseconds(5_000),
+        },
       );
     }
 
-    await this.broker.publish<CheckFinishIngestDocumentCommand>(
+    await this.storeOutboxMessage<CheckFinishIngestDocumentCommand>(
       documentId.toString(),
       MediaServiceMessagingSettings.CheckFinishIngestDocument,
       {
@@ -221,7 +219,8 @@ export class StartIngestHandler extends MediaGuardedMessageHandler<StartIngestCo
         previous_success_count: 0,
         previous_in_progress_count: 0,
       },
-      { auth_token: jwtToken },
+      loginClient,
+      { envelopeOverrides: { auth_token: jwtToken } },
     );
   }
 }

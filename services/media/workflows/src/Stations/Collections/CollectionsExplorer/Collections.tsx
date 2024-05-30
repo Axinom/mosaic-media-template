@@ -20,6 +20,7 @@ import {
   CollectionsQuery,
   CollectionsQueryVariables,
   CollectionsTagsConnection,
+  CollectionSubscriptionEventKey,
   useCreateCollectionSnapshotMutation,
   useDeleteCollectionMutation,
   usePublishCollectionMutation,
@@ -111,8 +112,8 @@ export const Collections: React.FC = () => {
           query: CollectionsMutatedDocument,
         })
         .subscribe((e) => {
-          switch (e.data?.collectionMutated?.event) {
-            case 'CollectionChanged':
+          switch (e.data?.collectionMutated?.eventKey) {
+            case CollectionSubscriptionEventKey.CollectionChanged:
               if (e.data.collectionMutated.collection) {
                 change(
                   e.data.collectionMutated.id,
@@ -120,10 +121,10 @@ export const Collections: React.FC = () => {
                 );
               }
               break;
-            case 'CollectionDeleted':
+            case CollectionSubscriptionEventKey.CollectionDeleted:
               remove(e.data.collectionMutated.id);
               break;
-            case 'CollectionCreated':
+            case CollectionSubscriptionEventKey.CollectionCreated:
               if (e.data.collectionMutated.collection) {
                 add(e.data.collectionMutated.collection);
               }

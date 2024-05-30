@@ -5,7 +5,6 @@ import {
   formatTitleCase,
   FormStation,
   GenericField,
-  IconName,
   InfoPanel,
   List,
   MessageBar,
@@ -236,7 +235,6 @@ function useActions(snapshotId: number): {
     },
     {
       label: 'Delete',
-      icon: IconName.Delete,
       confirmationMode: 'Simple',
       onActionSelected: deleteSnapshot,
     },

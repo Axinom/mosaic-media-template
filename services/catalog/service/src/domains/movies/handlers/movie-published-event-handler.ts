@@ -1,147 +1,137 @@
-import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
-import { MessageHandler, MessageInfo } from '@axinom/mosaic-message-bus';
+import { Logger } from '@axinom/mosaic-service-common';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   MoviePublishedEvent,
   PublishServiceMessagingSettings,
 } from 'media-messages';
-import * as db from 'zapatos/db';
+import { ClientBase } from 'pg';
+import { deletes, insert } from 'zapatos/db';
 import {
   movie_images,
   movie_licenses,
+  movie_localizations,
   movie_video_cue_points,
   movie_video_streams,
 } from 'zapatos/schema';
 import { Config } from '../../../common';
 
-export class MoviePublishedEventHandler extends MessageHandler<MoviePublishedEvent> {
-  constructor(
-    private readonly loginPool: LoginPgPool,
-    private readonly config: Config,
-  ) {
-    super(PublishServiceMessagingSettings.MoviePublished.messageType);
+export class MoviePublishedEventHandler extends TransactionalInboxMessageHandler<
+  MoviePublishedEvent,
+  Config
+> {
+  constructor(config: Config) {
+    super(
+      PublishServiceMessagingSettings.MoviePublished,
+      new Logger({
+        config,
+        context: MoviePublishedEventHandler.name,
+      }),
+      config,
+    );
   }
 
-  async onMessage(
-    payload: MoviePublishedEvent,
-    _message: MessageInfo<MoviePublishedEvent>,
+  override async handleMessage(
+    { payload }: TypedTransactionalMessage<MoviePublishedEvent>,
+    txnClient: ClientBase,
   ): Promise<void> {
-    await transactionWithContext(
-      this.loginPool,
-      db.IsolationLevel.Serializable,
-      { role: this.config.dbGqlRole },
-      async (txnClient) => {
-        await db.deletes('movie', { id: payload.content_id }).run(txnClient);
+    await deletes('movie', { id: payload.content_id }).run(txnClient);
 
-        const insertedMovie = await db
-          .insert('movie', {
-            id: payload.content_id,
-            title: payload.title,
-            original_title: payload.original_title,
-            synopsis: payload.synopsis,
-            description: payload.description,
-            released: payload.released,
-            tags: payload.tags,
-            movie_cast: payload.cast,
-            studio: payload.studio,
-            production_countries: payload.production_countries,
-            audio_languages: payload.audio_languages,
-            caption_languages: payload.caption_languages,
-            subtitle_languages: payload.subtitle_languages,
-            directors: payload.directors,
-            business_type: payload.business_type,
-            credits_start_time: payload.credits_start_time,
-            length_in_seconds: payload.length_in_seconds,
-            dynamic_field: payload.dynamic_field,
-            extended_field: payload.extended_field,
-            rating: payload.rating,
-            custom_rating: payload.custom_rating,
-            age_rating: payload.age_rating,
-            asset_type: payload.asset_type,
-            asset_subtype: payload.asset_subtype,
-          })
-          .run(txnClient);
+    const insertedMovie = await insert('movie', {
+      id: payload.content_id,
+      original_title: payload.original_title,
+      released: payload.released,
+      tags: payload.tags,
+      movie_cast: payload.cast,
+      studio: payload.studio,
+      production_countries: payload.production_countries,
+    }).run(txnClient);
 
-        if (payload.videos) {
-          for (const video of payload.videos) {
-            // Remove `video_streams` array from `video` object
-            const { video_streams, cue_points, ...videoToInsert } = video;
+    if (payload.videos) {
+      for (const video of payload.videos) {
+        // Remove `video_streams` array from `video` object
+        const { video_streams, cue_points, ...videoToInsert } = video;
 
-            const movieVideo = await db
-              .insert('movie_videos', {
-                movie_id: insertedMovie.id,
-                ...videoToInsert,
-              })
-              .run(txnClient);
+        const movieVideo = await insert('movie_videos', {
+          movie_id: insertedMovie.id,
+          ...videoToInsert,
+        }).run(txnClient);
 
-            if (video_streams !== undefined) {
-              await db
-                .insert(
-                  'movie_video_streams',
-                  video_streams.map(
-                    (videoStream): movie_video_streams.Insertable => ({
-                      movie_video_id: movieVideo.id,
-                      ...videoStream,
-                    }),
-                  ),
-                )
-                .run(txnClient);
-            }
-
-            if (cue_points !== undefined) {
-              await db
-                .insert(
-                  'movie_video_cue_points',
-                  cue_points.map(
-                    (cuePoint): movie_video_cue_points.Insertable => ({
-                      movie_video_id: movieVideo.id,
-                      ...cuePoint,
-                    }),
-                  ),
-                )
-                .run(txnClient);
-            }
-          }
-        }
-
-        if (payload.images) {
-          await db
-            .insert(
-              'movie_images',
-              payload.images.map(
-                (image): movie_images.Insertable => ({
-                  movie_id: insertedMovie.id,
-                  ...image,
-                }),
-              ),
-            )
-            .run(txnClient);
-        }
-
-        await db
-          .insert(
-            'movie_licenses',
-            payload.licenses.map(
-              (license): movie_licenses.Insertable => ({
-                movie_id: insertedMovie.id,
-                ...license,
+        if (video_streams !== undefined) {
+          await insert(
+            'movie_video_streams',
+            video_streams.map(
+              (videoStream): movie_video_streams.Insertable => ({
+                movie_video_id: movieVideo.id,
+                ...videoStream,
               }),
             ),
-          )
-          .run(txnClient);
-
-        if (payload.genre_ids) {
-          await db
-            .insert(
-              'movie_genres_relation',
-              payload.genre_ids.map((genreId, i) => ({
-                movie_id: insertedMovie.id,
-                movie_genre_id: genreId,
-                order_no: i,
-              })),
-            )
-            .run(txnClient);
+          ).run(txnClient);
         }
-      },
-    );
+
+        if (cue_points !== undefined) {
+          await insert(
+            'movie_video_cue_points',
+            cue_points.map(
+              (cuePoint): movie_video_cue_points.Insertable => ({
+                movie_video_id: movieVideo.id,
+                ...cuePoint,
+              }),
+            ),
+          ).run(txnClient);
+        }
+      }
+    }
+
+    if (payload.images) {
+      await insert(
+        'movie_images',
+        payload.images.map(
+          (image): movie_images.Insertable => ({
+            movie_id: insertedMovie.id,
+            ...image,
+          }),
+        ),
+      ).run(txnClient);
+    }
+
+    await insert(
+      'movie_licenses',
+      payload.licenses.map(
+        (license): movie_licenses.Insertable => ({
+          movie_id: insertedMovie.id,
+          ...license,
+        }),
+      ),
+    ).run(txnClient);
+
+    if (payload.genre_ids) {
+      await insert(
+        'movie_genres_relation',
+        payload.genre_ids.map((genreId, i) => ({
+          movie_id: insertedMovie.id,
+          movie_genre_id: genreId,
+          order_no: i,
+        })),
+      ).run(txnClient);
+    }
+
+    if (payload.localizations) {
+      await insert(
+        'movie_localizations',
+        payload.localizations.map(
+          (l): movie_localizations.Insertable => ({
+            movie_id: payload.content_id,
+            is_default_locale: l.is_default_locale,
+            locale: l.language_tag,
+            title: l.title,
+            synopsis: l.synopsis,
+            description: l.description,
+          }),
+        ),
+      ).run(txnClient);
+    }
   }
 }

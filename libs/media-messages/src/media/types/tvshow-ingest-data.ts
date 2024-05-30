@@ -1,10 +1,12 @@
-import { IImagesIngestElement } from './images-ingest-element';
+import { ImagesIngestElement } from './images-ingest-element';
 import { LicenseData } from './license-data';
-import { ITrailersIngestElement } from './trailers-ingest-element';
+import { LocalizationsIngestElement } from './localizations-ingest-element';
+import { TrailersIngestElement } from './trailers-ingest-element';
 
 export interface TvShowIngestData
-  extends ITrailersIngestElement,
-    IImagesIngestElement {
+  extends TrailersIngestElement,
+    ImagesIngestElement,
+    LocalizationsIngestElement {
   title?: string;
   description?: string;
   original_title?: string;

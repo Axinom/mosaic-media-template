@@ -21,7 +21,7 @@ describe('IngestMovieProcessor', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    processor = new IngestMovieProcessor();
+    processor = new IngestMovieProcessor(ctx.config);
     user = createTestUser(ctx.config.serviceId);
   });
 

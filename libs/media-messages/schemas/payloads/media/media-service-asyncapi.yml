@@ -13,7 +13,7 @@ channels:
     bindings:
       amqp:
         queue:
-          name: entity:delete
+          name: inbox
     publish:
       message:
         $ref: '#/components/messages/delete-entity-command'
@@ -21,7 +21,7 @@ channels:
     bindings:
       amqp:
         queue:
-          name: entity:publish_entity
+          name: inbox
     publish:
       message:
         $ref: '#/components/messages/publish-entity-command'
@@ -29,7 +29,7 @@ channels:
     bindings:
       amqp:
         queue:
-          name: entity:unpublish_entity
+          name: inbox
     publish:
       message:
         $ref: '#/components/messages/unpublish-entity-command'
@@ -37,7 +37,7 @@ channels:
     bindings:
       amqp:
         queue:
-          name: ingest:start
+          name: inbox
     publish:
       message:
         $ref: '#/components/messages/start-ingest-command'
@@ -45,7 +45,7 @@ channels:
     bindings:
       amqp:
         queue:
-          name: ingest:start_item
+          name: inbox
     publish:
       message:
         $ref: '#/components/messages/start-ingest-item-command'
@@ -53,7 +53,7 @@ channels:
     bindings:
       amqp:
         queue:
-          name: ingest:update_metadata
+          name: inbox
     publish:
       message:
         $ref: '#/components/messages/update-metadata-command'
@@ -61,7 +61,7 @@ channels:
     bindings:
       amqp:
         queue:
-          name: ingest:check_finish_item
+          name: inbox
     publish:
       message:
         $ref: '#/components/messages/check-finish-ingest-item-command'
@@ -69,7 +69,7 @@ channels:
     bindings:
       amqp:
         queue:
-          name: ingest:check_finish_document
+          name: inbox
     publish:
       message:
         $ref: '#/components/messages/check-finish-ingest-document-command'
@@ -79,7 +79,7 @@ channels:
     bindings:
       amqp:
         queue:
-          name: entity:deleted
+          name: inbox
     subscribe:
       message:
         $ref: '#/components/messages/entity-deleted-event'

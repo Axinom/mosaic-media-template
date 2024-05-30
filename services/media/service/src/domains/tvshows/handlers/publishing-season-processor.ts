@@ -5,7 +5,7 @@ import {
 } from 'media-messages';
 import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config } from '../../../common';
+import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   atLeastOneString,
   buildPublishingId,
@@ -18,6 +18,7 @@ import {
   videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
+import { getSeasonLocalizationsMetadata } from '../localization';
 
 const seasonDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -59,20 +60,20 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
     },
   ).run(queryable);
 
-  const { result: videos, validation: videosValidation } =
-    await getVideosMetadata(
+  const [
+    { result: videos, validation: videosValidation },
+    { result: images, validation: imagesValidation },
+    { result: localizations, validation: localizationsValidation },
+  ] = await Promise.all([
+    getVideosMetadata(
       config.videoServiceBaseUrl,
       authToken,
       null,
       season.trailers,
-    );
-
-  const { result: images, validation: imagesValidation } =
-    await getImagesMetadata(
-      config.imageServiceBaseUrl,
-      authToken,
-      season.images,
-    );
+    ),
+    getImagesMetadata(config.imageServiceBaseUrl, authToken, season.images),
+    getSeasonLocalizationsMetadata(config, authToken, season.id.toString()),
+  ]);
 
   const snapshotJson: SeasonPublishedEvent = {
     content_id: buildPublishingId('seasons', season.id),
@@ -80,8 +81,6 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
       ? buildPublishingId('tvshows', season.tvshow_id)
       : undefined,
     index: season.index,
-    synopsis: season.synopsis ?? undefined,
-    description: season.description ?? undefined,
     released: season.released ?? undefined,
     studio: season.studio ?? undefined,
     production_countries: season.productionCountries.map((c) => c.name),
@@ -97,11 +96,23 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
     })),
     images,
     videos,
+    localizations: localizations ?? [
+      {
+        is_default_locale: true,
+        language_tag: DEFAULT_LOCALE_TAG,
+        synopsis: season.synopsis ?? undefined,
+        description: season.description ?? undefined,
+      },
+    ],
   };
 
   return {
     result: snapshotJson,
-    validation: [...imagesValidation, ...videosValidation],
+    validation: [
+      ...imagesValidation,
+      ...videosValidation,
+      ...localizationsValidation,
+    ],
   };
 };
 

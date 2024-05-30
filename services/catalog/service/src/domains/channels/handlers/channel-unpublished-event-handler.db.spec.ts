@@ -1,6 +1,5 @@
-import { MessageInfo } from '@axinom/mosaic-message-bus';
 import { ChannelUnpublishedEvent } from '@axinom/mosaic-messages';
-import { stub } from 'jest-auto-stub';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
@@ -13,7 +12,7 @@ describe('ChannelPublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new ChannelUnpublishedEventHandler(ctx.loginPool, ctx.config);
+    handler = new ChannelUnpublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -43,18 +42,14 @@ describe('ChannelPublishEventHandler', () => {
         type: 'LOGO',
       }).run(ctx.ownerPool);
 
-      const message: ChannelUnpublishedEvent = {
-        id: originalId,
-      };
-      const messageInfo = stub<MessageInfo<ChannelUnpublishedEvent>>({
-        envelope: {
-          auth_token: 'no-token',
-          payload: message,
-        },
-      });
+      const message = {
+        payload: { id: originalId },
+      } as unknown as TypedTransactionalMessage<ChannelUnpublishedEvent>;
 
       // Act
-      await handler.onMessage(message, messageInfo);
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
       // Assert
       const channel = await selectOne('channel', {

@@ -1,4 +1,6 @@
+import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
 import {
+  ActionData,
   createInputRenderer,
   createUpdateGQLFragmentGenerator,
   Details,
@@ -16,6 +18,7 @@ import React, { useCallback, useMemo } from 'react';
 import { client } from '../../../apolloClient';
 import { Constants } from '../../../constants';
 import {
+  MovieGenresDocument,
   MovieGenresQuery,
   Mutation,
   MutationCreateMovieGenreArgs,
@@ -76,7 +79,11 @@ export const MovieGenres: React.FC = () => {
         ${mutations}
       }`;
 
-      await client.mutate({ mutation: GqlMutationDocument });
+      await client.mutate({
+        mutation: GqlMutationDocument,
+        refetchQueries: [MovieGenresDocument],
+        awaitRefetchQueries: true,
+      });
     },
     [],
   );
@@ -103,13 +110,42 @@ export const MovieGenres: React.FC = () => {
 
 const Form: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<MovieGenresFormData>();
+  const localizationPath = getLocalizationEntryPoint('movie_genre');
+
+  const generateInlineMenuActions: ((data) => ActionData[]) | undefined =
+    localizationPath
+      ? ({ id: genreId }) => {
+          return [
+            {
+              label: 'Localizations',
+              path: localizationPath.replace(':genreId', genreId),
+            },
+            {
+              label: 'Delete',
+              onActionSelected: () => {
+                const removeIndex: number = (values.genres || []).findIndex(
+                  (item) => item.id === genreId,
+                );
+                if (values.genres?.length && removeIndex >= 0) {
+                  setFieldValue('genres', [
+                    ...values.genres.slice(0, removeIndex),
+                    ...values.genres.slice(removeIndex + 1),
+                  ]);
+                }
+              },
+            },
+          ];
+        }
+      : undefined;
   return (
     <DynamicDataList<FormDataGenre>
       columns={[
         {
           propertyName: 'title',
           label: 'Title',
-          dataEntryRender: createInputRenderer({ placeholder: 'Enter Title' }),
+          dataEntryRender: createInputRenderer({
+            placeholder: 'Enter Title',
+          }),
         },
       ]}
       allowNewData={true}
@@ -119,6 +155,7 @@ const Form: React.FC = () => {
         setFieldValue('genres', v);
       }}
       stickyHeader={false}
+      inlineMenuActions={generateInlineMenuActions}
     />
   );
 };

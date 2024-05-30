@@ -1,7 +1,5 @@
-import { Broker } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { toBeUuid } from '@axinom/mosaic-service-common';
-import { stub } from 'jest-auto-stub';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
@@ -24,7 +22,7 @@ describe('Movies Bulk Publish endpoint', () => {
   let defaultRequestContext: TestRequestContext;
   let messages: {
     messageType: string;
-    message: PublishEntityCommand;
+    payload: PublishEntityCommand;
   }[] = [];
 
   const createMovie = async (
@@ -40,16 +38,15 @@ describe('Movies Bulk Publish endpoint', () => {
   };
 
   beforeAll(async () => {
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        { messageType }: MessagingSettings,
-        message: PublishEntityCommand,
-      ) => {
-        messages.push({ messageType, message });
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload) => {
+        messages.push({
+          payload: payload as PublishEntityCommand,
+          messageType,
+        });
       },
-    });
-    ctx = await createTestContext({}, broker);
+    );
+    ctx = await createTestContext({}, storeOutboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
     jest
       .spyOn(tokenHelpers, 'getLongLivedToken')
@@ -95,14 +92,14 @@ describe('Movies Bulk Publish endpoint', () => {
         ]);
         expect(messages).toHaveLength(1);
         expect(messages[0]).toMatchObject({
-          message: {
+          payload: {
             entity_id: movieId1,
             table_name: 'movies',
             publish_options: { action: 'PUBLISH_NOW' },
           },
           messageType: MediaServiceMessagingSettings.PublishEntity.messageType,
         });
-        toBeUuid(messages[0].message.job_id as string);
+        toBeUuid(messages[0].payload.job_id as string);
       },
     );
 
@@ -132,7 +129,7 @@ describe('Movies Bulk Publish endpoint', () => {
 
         expect(messages).toHaveLength(2);
         expect(messages[0]).toMatchObject({
-          message: {
+          payload: {
             entity_id: movieId1,
             table_name: 'movies',
             publish_options: { action: 'PUBLISH_NOW' },
@@ -140,15 +137,15 @@ describe('Movies Bulk Publish endpoint', () => {
           messageType: MediaServiceMessagingSettings.PublishEntity.messageType,
         });
         expect(messages[1]).toMatchObject({
-          message: {
+          payload: {
             entity_id: movieId2,
             table_name: 'movies',
             publish_options: { action: 'PUBLISH_NOW' },
           },
           messageType: MediaServiceMessagingSettings.PublishEntity.messageType,
         });
-        toBeUuid(messages[0].message.job_id as string);
-        toBeUuid(messages[1].message.job_id as string);
+        toBeUuid(messages[0].payload.job_id as string);
+        toBeUuid(messages[1].payload.job_id as string);
       },
     );
 
