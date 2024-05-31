@@ -101,6 +101,10 @@ export class RecurlyEntitlementHandler {
         };
       }
     } catch (error) {
+      logger.error({
+        name: 'Recurly API error',
+        message: `Recurly Entitlement API throw an error ${error}`,
+      });
       return {
         //Todo: Log the error please.
         isValid: false,
