@@ -57,7 +57,10 @@ regularVariables:
   USER_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-user-service.auth_base_url}'
 
   # Custom Service URLs
-  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-mosaic-catalog-service.dc}'
+  ## TBD - data migrated to new catalog service
+##  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-mosaic-catalog-service.dc}'
+
+  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-nfn-mosaic-catalog-acc.api}'
 
   # GeoIP2 Variables
   CLIENT_IP_HEADER_NAME: 'X-Forwarded-For'
@@ -79,8 +82,8 @@ secureVariables:
   # DRM License Communication Key and ID
   # DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'
   # DRM_LICENSE_COMMUNICATION_KEY_ID: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY_ID'
-  DRM_LICENSE_COMMUNICATION_KEY: '#{drm-com-key}#'
-  DRM_LICENSE_COMMUNICATION_KEY_ID: '#{drm-com-key-id}#'
+  DRM_LICENSE_COMMUNICATION_KEY: '#{MOSAIC-DRM-LICENSE-COMMUNICATION-KEY}#'
+  DRM_LICENSE_COMMUNICATION_KEY_ID: '#{MOSAIC-DRM-LICENSE-COMMUNICATION-KEY-ID}#'
 
   # User JWT token validation public key
   USER_SESSION_PUBLIC_KEY: '#{session-public-key}#'
