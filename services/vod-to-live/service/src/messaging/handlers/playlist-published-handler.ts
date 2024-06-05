@@ -1,8 +1,8 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
-import { DetailedVideo } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
   ChannelServiceMessagingSettings,
+  DetailedVideo,
   PlaylistPublishedEvent,
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
@@ -152,7 +152,7 @@ export class PlaylistPublishedHandler extends AuthenticatedMessageHandler<Playli
       );
     } else {
       this.logger.error(
-        `The placeholder video for channel ${payload.channel_id} could not be found.The playlist transition cannot be created.`,
+        `The placeholder video for channel ${payload.channel_id} could not be found. The playlist transition cannot be created.`,
       );
     }
   }

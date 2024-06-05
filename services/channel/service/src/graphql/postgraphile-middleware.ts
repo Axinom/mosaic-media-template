@@ -31,7 +31,6 @@ import {
 } from '@axinom/mosaic-service-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
-import { altairExpress } from 'altair-express-middleware';
 import { Express, Request, Response } from 'express';
 import postgraphile, {
   enhanceHttpServerWithSubscriptions,
@@ -180,7 +179,6 @@ export const setupPostGraphile = async (
 
   if (config.graphqlGuiEnabled) {
     app.use(forwardToGraphiQl());
-    app.use('/altair', altairExpress({ endpointURL: '/graphql' }));
   }
 
   const middleware = postgraphile(loginPool, 'app_public', options);

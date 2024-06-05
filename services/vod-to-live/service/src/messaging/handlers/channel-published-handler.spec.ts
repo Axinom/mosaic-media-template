@@ -1,8 +1,7 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { DetailedVideo } from '@axinom/mosaic-messages';
 import { stub } from 'jest-auto-stub';
-import { ChannelPublishedEvent } from 'media-messages';
+import { ChannelPublishedEvent, DetailedVideo } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { Config } from '../../common';
 import { AzureStorage, KeyServiceApi } from '../../domains';

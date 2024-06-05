@@ -1,5 +1,8 @@
-import { DetailedImage, DetailedVideo } from '@axinom/mosaic-messages';
-import { ProgramLocalization } from 'media-messages';
+import {
+  DetailedImage,
+  DetailedVideo,
+  ProgramLocalization,
+} from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { LocalizedPlaylistPublishDto } from './aggregate-playlist-publish-dto';
 import { createPlaylistPublishPayload } from './create-playlist-publish-payload';
@@ -79,6 +82,7 @@ describe('createPlaylistPublishPayload', () => {
     const startDate = new Date();
     return {
       id: uuid(),
+      title: startDate.toISOString().substring(0, 10),
       start_date_time: startDate.toISOString(),
       calculated_duration_in_seconds: 10,
       calculated_end_date_time: new Date(
@@ -97,6 +101,7 @@ describe('createPlaylistPublishPayload', () => {
     const playlistId = uuid();
     return {
       id: playlistId,
+      title: startDate.toISOString().substring(0, 10),
       start_date_time: startDate.toISOString(),
       calculated_duration_in_seconds: 10,
       calculated_end_date_time: new Date(
@@ -160,6 +165,7 @@ describe('createPlaylistPublishPayload', () => {
       const startDate = new Date();
       return {
         id: playlistId,
+        title: startDate.toISOString().substring(0, 10),
         start_date_time: startDate.toISOString(),
         calculated_duration_in_seconds: 10,
         calculated_end_date_time: new Date(
@@ -227,6 +233,7 @@ describe('createPlaylistPublishPayload', () => {
     const startDate = new Date();
     return {
       id: playlistId,
+      title: startDate.toISOString().substring(0, 10),
       start_date_time: startDate.toISOString(),
       calculated_duration_in_seconds: 10,
       calculated_end_date_time: new Date(

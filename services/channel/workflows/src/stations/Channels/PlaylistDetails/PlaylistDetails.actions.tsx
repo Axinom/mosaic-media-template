@@ -39,8 +39,8 @@ export function useActions(
 
   const actions: FormActionData<PlaylistPatch>[] = [
     {
-      label: 'Program',
-      path: routes.generate(routes.program, {
+      label: 'Programs',
+      path: routes.generate(routes.programs, {
         channelId,
         playlistId,
       }),

@@ -7,6 +7,7 @@
   "required": [
     "content_id",
     "channel_id",
+    "title",
     "start_date_time",
     "end_date_time",
     "programs"
@@ -19,6 +20,10 @@
     "channel_id": {
       "$ref": "../common.json#/definitions/channel_id",
       "description": "Reference to the channel associated with the playlist."
+    },
+    "title": {
+      "description": "The title of the playlist - meant for internal usage.",
+      "type": "string"
     },
     "start_date_time": {
       "description": "Start date and time of the playlist.",

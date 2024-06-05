@@ -1,4 +1,3 @@
-import { DetailedImage, DetailedVideo } from '@axinom/mosaic-messages';
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import 'jest-extended';
@@ -6,6 +5,8 @@ import {
   ChannelLocalization,
   ChannelPublishedEvent,
   ChannelServiceMessagingSettings,
+  DetailedImage,
+  DetailedVideo,
 } from 'media-messages';
 import Hasher from 'node-object-hash';
 import { v4 as uuid } from 'uuid';

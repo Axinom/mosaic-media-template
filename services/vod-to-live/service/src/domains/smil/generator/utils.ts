@@ -1,5 +1,4 @@
-import { DetailedVideo } from '@axinom/mosaic-messages';
-import { CuePointSchedule } from 'media-messages';
+import { CuePointSchedule, DetailedVideo } from 'media-messages';
 import {
   createEventStream,
   createParallel,

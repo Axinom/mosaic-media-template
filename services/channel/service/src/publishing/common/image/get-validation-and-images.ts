@@ -1,6 +1,6 @@
-import { DetailedImage } from '@axinom/mosaic-messages';
 import { mosaicErrorMappingFactory } from '@axinom/mosaic-service-common';
 import { GraphQLClient } from 'graphql-request';
+import { DetailedImage } from 'media-messages';
 import urljoin from 'url-join';
 import { CommonErrors } from '../../../common';
 import { GetImagesQuery, getSdk } from '../../../generated/graphql/image';

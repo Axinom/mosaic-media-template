@@ -3,6 +3,7 @@ mutation CreatePlaylist($input: CreatePlaylistInput!) {
     playlist {
       id
       channelId
+      title
       startDateTime
     }
   }

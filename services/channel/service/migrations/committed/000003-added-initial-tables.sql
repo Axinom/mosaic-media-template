@@ -1,5 +1,5 @@
 --! Previous: sha1:8aed04a5a4f67bebe308dff348c10bd7e57ca42f
---! Hash: sha1:531d6075e7c60a7a2deeacb5fcd6d3a4a72e2e62
+--! Hash: sha1:098d8bbe4239517488649a1d765960a3af604d22
 --! Message: added initial tables
 
 -- ##### SECTIONS #####
@@ -310,6 +310,7 @@ DROP TABLE IF EXISTS app_public.playlists CASCADE;
 CREATE TABLE app_public.playlists(
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   channel_id UUID NOT NULL REFERENCES app_public.channels(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
   start_date_time TIMESTAMPTZ NOT NULL,
   calculated_duration_in_seconds NUMERIC(13, 5) NOT NULL,
   published_date TIMESTAMPTZ,
@@ -322,7 +323,7 @@ SELECT ax_define.define_authentication('ADMIN,CHANNELS_EDIT,CHANNELS_VIEW', 'ADM
 
 SELECT ax_define.set_enum_as_column_type('publication_state', 'playlists', 'app_public', 'publication_state', 'app_public', 'NOT_PUBLISHED');
 SELECT ax_define.set_enum_domain('publication_state', 'playlists', 'app_public', 'publication_state_enum', 'app_public');
-SELECT app_hidden.define_publish_trigger('playlists', 'app_public', 'start_date_time,calculated_duration_in_seconds,channel_id');
+SELECT app_hidden.define_publish_trigger('playlists', 'app_public', 'title,start_date_time,calculated_duration_in_seconds,channel_id');
 SELECT ax_define.define_subscription_triggers('id', 'playlists', 'app_public', 'playlists', 'PLAYLIST');
 
 SELECT ax_define.define_indexes_with_id('start_date_time', 'playlists', 'app_public');
@@ -332,8 +333,8 @@ SELECT ax_define.define_indexes_with_id('published_date', 'playlists', 'app_publ
 SELECT ax_define.define_index('channel_id', 'playlists', 'app_public');
 
 GRANT SELECT, DELETE ON app_public.playlists TO ":DATABASE_GQL_ROLE";
-GRANT INSERT (channel_id, start_date_time, calculated_duration_in_seconds) ON app_public.playlists TO ":DATABASE_GQL_ROLE";
-GRANT UPDATE (start_date_time, calculated_duration_in_seconds) ON app_public.playlists TO ":DATABASE_GQL_ROLE";
+GRANT INSERT (channel_id, title, start_date_time, calculated_duration_in_seconds) ON app_public.playlists TO ":DATABASE_GQL_ROLE";
+GRANT UPDATE (title, start_date_time, calculated_duration_in_seconds) ON app_public.playlists TO ":DATABASE_GQL_ROLE";
 
 DROP FUNCTION IF EXISTS app_public.playlists_calculated_end_date_time;
 CREATE FUNCTION app_public.playlists_calculated_end_date_time(playlists playlists) RETURNS TIMESTAMPTZ AS $$

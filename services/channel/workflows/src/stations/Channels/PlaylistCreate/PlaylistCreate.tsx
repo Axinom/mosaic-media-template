@@ -25,6 +25,7 @@ type SubmitResponse = CreatePlaylistMutation['createPlaylist'];
 const playlistCreateSchema = Yup.object().shape<
   ObjectSchemaDefinition<FormData>
 >({
+  title: Yup.string(),
   startDateTime: Yup.date().required(
     'Scheduled Start date and time should be set.',
   ),
@@ -49,6 +50,8 @@ export const PlaylistCreate: React.FC = () => {
             input: {
               playlist: {
                 channelId: channelId,
+                // Set the date component based on the editors display date (not based on UTC)
+                title: formData.startDateTime.substring(0, 10),
                 startDateTime: formData.startDateTime,
                 // NB: by default newly created playlists have duration set to 0
                 calculatedDurationInSeconds: 0,
@@ -58,7 +61,7 @@ export const PlaylistCreate: React.FC = () => {
         })
       ).data?.createPlaylist;
     },
-    [playlistCreate],
+    [playlistCreate, channelId],
   );
 
   const history = useHistory();
@@ -78,7 +81,7 @@ export const PlaylistCreate: React.FC = () => {
         throw new Error('Not expected');
       }
     },
-    [history],
+    [history, channelId],
   );
 
   return (

@@ -923,6 +923,9 @@ input PlaylistFilter {
   """Filter by the object’s `channelId` field."""
   channelId: UUIDFilter
 
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
   """Filter by the object’s `startDateTime` field."""
   startDateTime: DatetimeFilter
 
@@ -1455,6 +1458,7 @@ type PlaylistsConnection {
 type Playlist {
   id: UUID!
   channelId: UUID!
+  title: String!
   startDateTime: Datetime!
   calculatedDurationInSeconds: Float!
   publishedDate: Datetime
@@ -1956,6 +1960,8 @@ enum PlaylistsOrderBy {
   ID_DESC
   CHANNEL_ID_ASC
   CHANNEL_ID_DESC
+  TITLE_ASC
+  TITLE_DESC
   START_DATE_TIME_ASC
   START_DATE_TIME_DESC
   CALCULATED_DURATION_IN_SECONDS_ASC
@@ -1988,6 +1994,9 @@ input PlaylistCondition {
 
   """Checks for equality with the object’s `channelId` field."""
   channelId: UUID
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
 
   """Checks for equality with the object’s `startDateTime` field."""
   startDateTime: Datetime
@@ -2535,6 +2544,7 @@ input CreatePlaylistInput {
 """An input for mutations affecting `Playlist`"""
 input PlaylistInput {
   channelId: UUID!
+  title: String!
   startDateTime: Datetime!
   calculatedDurationInSeconds: Float!
 }
@@ -2812,6 +2822,7 @@ input UpdatePlaylistInput {
 Represents an update to a `Playlist`. Fields that are set will be updated.
 """
 input PlaylistPatch {
+  title: String
   startDateTime: Datetime
   calculatedDurationInSeconds: Float
 }

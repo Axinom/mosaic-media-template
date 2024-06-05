@@ -12,7 +12,6 @@ import {
 import {
   ImageServiceMultiTenantMessagingSettings,
   LocalizationServiceMultiTenantMessagingSettings,
-  MicroFrontendMessagingSettings,
   VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import {
@@ -247,13 +246,6 @@ const registerRabbitMqMessaging = async (
             .EntityDefinitionDeleteFinished.messageType:
           case LocalizationServiceMultiTenantMessagingSettings
             .EntityDefinitionDeleteFailed.messageType:
-          case MicroFrontendMessagingSettings.WorkflowsEnableFinished
-            .messageType:
-          case MicroFrontendMessagingSettings.WorkflowsEnableFailed.messageType:
-          case MicroFrontendMessagingSettings.WorkflowsDisableFinished
-            .messageType:
-          case MicroFrontendMessagingSettings.WorkflowsDisableFailed
-            .messageType:
           case healthMessagingSettings.messageType:
             message.concurrency = 'parallel';
             break;
@@ -318,38 +310,6 @@ const registerRabbitMqMessaging = async (
       .subscribeForCommand(() => inboxWriter),
   ];
   const setupBuilders: RascalConfigBuilder[] = [
-    // Workflows assignment commands
-    new RascalTransactionalConfigBuilder(
-      MicroFrontendMessagingSettings.WorkflowsEnable,
-      config,
-    ).sendCommand(),
-
-    // Workflows assignment events
-    new RascalTransactionalConfigBuilder(
-      MicroFrontendMessagingSettings.WorkflowsEnableFinished,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      MicroFrontendMessagingSettings.WorkflowsEnableFailed,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-
-    // Workflows un-assignment commands
-    new RascalTransactionalConfigBuilder(
-      MicroFrontendMessagingSettings.WorkflowsDisable,
-      config,
-    ).sendCommand(),
-
-    // Workflows un-assignment events
-    new RascalTransactionalConfigBuilder(
-      MicroFrontendMessagingSettings.WorkflowsDisableFinished,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      MicroFrontendMessagingSettings.WorkflowsDisableFailed,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-
     // Cue point types declaration
     new RascalTransactionalConfigBuilder(
       VideoServiceMultiTenantMessagingSettings.DeclareCuePointTypes,

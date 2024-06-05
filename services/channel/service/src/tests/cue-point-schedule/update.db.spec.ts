@@ -46,9 +46,11 @@ describe('update cue point schedules', () => {
         id: channelId,
         title: 'Best Test Channel+',
       }).run(dbContext);
+      const startDate = new Date();
       await insert('playlists', {
         id: playlistId,
-        start_date_time: new Date().toISOString(),
+        title: startDate.toISOString().substring(0, 10),
+        start_date_time: startDate,
         channel_id: channelId,
         calculated_duration_in_seconds: 133,
       }).run(dbContext);

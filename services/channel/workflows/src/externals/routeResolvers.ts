@@ -20,7 +20,7 @@ export const programDetailsStationResolverRegistration = (
       } else if ('playlistId' in dynamicSegments) {
         const { playlistId, channelId } = dynamicSegments;
         return routes.generate(
-          routes.program,
+          routes.programs,
           channelId
             ? {
                 playlistId,

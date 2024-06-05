@@ -11,6 +11,7 @@ const channelId = `channel-${uuid()}`;
 const createPlaylistPublishedPayload = (): PlaylistPublishedEvent => ({
   content_id: `playlist-${uuid()}`,
   channel_id: channelId,
+  title: '2024-04-25',
   start_date_time: '2024-04-25T08:26:34.018247+00:00',
   end_date_time: '2024-04-25T19:34:32.010241+00:00',
   programs: [],

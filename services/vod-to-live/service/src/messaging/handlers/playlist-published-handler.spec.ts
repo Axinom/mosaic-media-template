@@ -1,8 +1,7 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { DetailedVideo } from '@axinom/mosaic-messages';
 import { stub } from 'jest-auto-stub';
-import { PlaylistPublishedEvent } from 'media-messages';
+import { DetailedVideo, PlaylistPublishedEvent } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { Config, DAY_IN_SECONDS, SECOND_IN_MILLISECONDS } from '../../common';
 import { AzureStorage, KeyServiceApi } from '../../domains';
@@ -118,7 +117,8 @@ describe('PlaylistPublishedHandler', () => {
       const startDate = new Date();
       const payload: PlaylistPublishedEvent = {
         content_id: `playlist-${uuid()}`,
-        channel_id: uuid(),
+        channel_id: `channel-${uuid()}`,
+        title: startDate.toISOString().substring(0, 10),
         start_date_time: startDate.toISOString(),
         end_date_time: new Date(
           startDate.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,

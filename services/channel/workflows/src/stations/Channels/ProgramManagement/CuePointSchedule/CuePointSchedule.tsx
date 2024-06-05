@@ -73,7 +73,7 @@ export const CuePointSchedule: React.FC<CuePointScheduleProps> = ({
     formatSecondsToTimestamp(durationInSeconds),
   );
 
-  //TODO: Use Formik/Yup validation on the root form object, instead of this
+  // TODO: Use Formik/Yup validation on the root form object, instead of this
   useEffect(() => {
     if (type === CuePointScheduleType.AdPod && durationInSeconds !== null) {
       setValue(formatSecondsToTimestamp(durationInSeconds));

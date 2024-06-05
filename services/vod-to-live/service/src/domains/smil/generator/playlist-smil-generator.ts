@@ -1,6 +1,6 @@
-import { DetailedVideo } from '@axinom/mosaic-messages';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import {
+  DetailedVideo,
   PlaylistPublishedEvent,
   Program,
   ProgramCuePoint,

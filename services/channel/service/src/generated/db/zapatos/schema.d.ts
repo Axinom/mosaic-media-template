@@ -1418,6 +1418,12 @@ declare module 'zapatos/schema' {
       */
       channel_id: string;
       /**
+      * **playlists.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
       * **playlists.start_date_time**
       * - `timestamptz` in database
       * - `NOT NULL`, no default
@@ -1485,6 +1491,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       channel_id: string;
+      /**
+      * **playlists.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
       /**
       * **playlists.start_date_time**
       * - `timestamptz` in database
@@ -1554,6 +1566,12 @@ declare module 'zapatos/schema' {
       */
       channel_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **playlists.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **playlists.start_date_time**
       * - `timestamptz` in database
       * - `NOT NULL`, no default
@@ -1622,6 +1640,12 @@ declare module 'zapatos/schema' {
       */
       channel_id: string | db.Parameter<string> | db.SQLFragment;
       /**
+      * **playlists.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
+      /**
       * **playlists.start_date_time**
       * - `timestamptz` in database
       * - `NOT NULL`, no default
@@ -1689,6 +1713,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       channel_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **playlists.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **playlists.start_date_time**
       * - `timestamptz` in database

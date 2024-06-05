@@ -7,7 +7,7 @@ const jestConfig: JestConfigWithTsJest = {
   projects: [
     '<rootDir>/scripts/jest.config.ts',
     '<rootDir>/services/**/jest.config.ts',
-    //'<rootDir>/libs/**/jest.config.ts',
+    // '<rootDir>/libs/**/jest.config.ts',
   ],
   collectCoverageFrom: [
     '**/*.{ts,tsx}',

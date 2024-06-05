@@ -1,9 +1,9 @@
 /* eslint-disable jest/no-conditional-expect */
-import { DetailedVideo } from '@axinom/mosaic-messages';
 import { stub } from 'jest-auto-stub';
 import {
   CuePointSchedule,
   CuePointScheduleType,
+  DetailedVideo,
   PlaylistPublishedEvent,
   Program,
   ProgramCuePoint,
@@ -93,6 +93,7 @@ describe('PlaylistSmilGenerator', () => {
     return {
       content_id: `playlist-${uuid()}`,
       channel_id: `channel-${uuid()}`,
+      title: startDateTime.toISOString().substring(0, 10),
       start_date_time: startDateTime.toISOString(),
       end_date_time: new Date(
         startDateTime.getTime() +
@@ -153,6 +154,7 @@ describe('PlaylistSmilGenerator', () => {
     return {
       content_id: `playlist-${uuid()}`,
       channel_id: uuid(),
+      title: startDateTime.toISOString().substring(0, 10),
       start_date_time: startDateTime.toISOString(),
       end_date_time: new Date(
         startDateTime.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
@@ -952,6 +954,7 @@ describe('PlaylistSmilGenerator', () => {
         const testPlaylist: PlaylistPublishedEvent = {
           content_id: `playlist-${uuid()}`,
           channel_id: `channel-${uuid()}`,
+          title: startDateTime.toISOString().substring(0, 10),
           start_date_time: startDateTime.toISOString(),
           end_date_time: startDateTime.toISOString(),
           programs: [],
@@ -1004,6 +1007,7 @@ describe('PlaylistSmilGenerator', () => {
         const testPlaylist: PlaylistPublishedEvent = {
           content_id: `playlist-${uuid()}`,
           channel_id: `channel-${uuid()}`,
+          title: startDateTime.toISOString().substring(0, 10),
           start_date_time: startDateTime.toISOString(),
           end_date_time: new Date(
             startDateTime.getTime() +
@@ -1064,6 +1068,7 @@ describe('PlaylistSmilGenerator', () => {
         const testPlaylist: PlaylistPublishedEvent = {
           content_id: `playlist-${uuid()}`,
           channel_id: `channel-${uuid()}`,
+          title: startDateTime.toISOString().substring(0, 10),
           start_date_time: startDateTime.toISOString(),
           end_date_time: new Date(
             startDateTime.getTime() +

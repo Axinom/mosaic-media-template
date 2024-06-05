@@ -59,6 +59,7 @@ describe('unpublishPlaylist', () => {
     return testContext.executeOwnerSql(testUser, async (txn) => {
       return insert('playlists', {
         id: uuid(),
+        title: startDate.toISOString().substring(0, 10),
         start_date_time: startDate,
         calculated_duration_in_seconds: 2000,
         publication_state: publicationState,

@@ -1450,6 +1450,7 @@ export type Playlist = {
   publishedDate?: Maybe<Scalars['Datetime']>;
   publishedUser?: Maybe<Scalars['String']>;
   startDateTime: Scalars['Datetime'];
+  title: Scalars['String'];
   updatedDate: Scalars['Datetime'];
   updatedUser: Scalars['String'];
 };
@@ -1490,6 +1491,8 @@ export type PlaylistCondition = {
   publishedUser?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `startDateTime` field. */
   startDateTime?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `updatedUser` field. */
@@ -1530,6 +1533,8 @@ export type PlaylistFilter = {
   publishedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `startDateTime` field. */
   startDateTime?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: InputMaybe<StringFilter>;
   /** Filter by the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `updatedUser` field. */
@@ -1541,12 +1546,14 @@ export type PlaylistInput = {
   calculatedDurationInSeconds: Scalars['Float'];
   channelId: Scalars['UUID'];
   startDateTime: Scalars['Datetime'];
+  title: Scalars['String'];
 };
 
 /** Represents an update to a `Playlist`. Fields that are set will be updated. */
 export type PlaylistPatch = {
   calculatedDurationInSeconds?: InputMaybe<Scalars['Float']>;
   startDateTime?: InputMaybe<Scalars['Datetime']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 /**
@@ -1597,6 +1604,8 @@ export enum PlaylistsOrderBy {
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
   StartDateTimeAsc = 'START_DATE_TIME_ASC',
   StartDateTimeDesc = 'START_DATE_TIME_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
   UpdatedDateAsc = 'UPDATED_DATE_ASC',
   UpdatedDateDesc = 'UPDATED_DATE_DESC',
   UpdatedUserAsc = 'UPDATED_USER_ASC',
@@ -2859,7 +2868,7 @@ export type PlaylistQueryVariables = Exact<{
 }>;
 
 
-export type PlaylistQuery = { __typename?: 'Query', playlist?: { __typename?: 'Playlist', id: any, startDateTime: any, calculatedDurationInSeconds: number, calculatedEndDateTime?: any | null, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishedDate?: any | null, publishedUser?: string | null, publicationState: PublicationState, programs: { __typename?: 'ProgramsConnection', nodes: Array<{ __typename?: 'Program', entityType: EntityType }> } } | null };
+export type PlaylistQuery = { __typename?: 'Query', playlist?: { __typename?: 'Playlist', id: any, title: string, startDateTime: any, calculatedDurationInSeconds: number, calculatedEndDateTime?: any | null, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishedDate?: any | null, publishedUser?: string | null, publicationState: PublicationState, programs: { __typename?: 'ProgramsConnection', nodes: Array<{ __typename?: 'Program', entityType: EntityType }> } } | null };
 
 export type UpdatePlaylistMutationVariables = Exact<{
   input: UpdatePlaylistInput;
@@ -2882,12 +2891,12 @@ export type UnpublishPlaylistMutationVariables = Exact<{
 
 export type UnpublishPlaylistMutation = { __typename?: 'Mutation', unpublishPlaylist?: { __typename?: 'UnpublishPlaylistPayload', playlist?: { __typename?: 'Playlist', id: any } | null } | null };
 
-export type PlaylistStartTimeQueryVariables = Exact<{
+export type PlaylistTitleQueryVariables = Exact<{
   id: Scalars['UUID'];
 }>;
 
 
-export type PlaylistStartTimeQuery = { __typename?: 'Query', playlist?: { __typename?: 'Playlist', startDateTime: any } | null };
+export type PlaylistTitleQuery = { __typename?: 'Query', playlist?: { __typename?: 'Playlist', title: string } | null };
 
 export type ValidatePlaylistQueryVariables = Exact<{
   id: Scalars['UUID'];
@@ -3433,6 +3442,7 @@ export const PlaylistDocument = gql`
     query Playlist($id: UUID!) {
   playlist(id: $id) {
     id
+    title
     startDateTime
     calculatedDurationInSeconds
     calculatedEndDateTime
@@ -3584,41 +3594,41 @@ export function useUnpublishPlaylistMutation(baseOptions?: Apollo.MutationHookOp
 export type UnpublishPlaylistMutationHookResult = ReturnType<typeof useUnpublishPlaylistMutation>;
 export type UnpublishPlaylistMutationResult = Apollo.MutationResult<UnpublishPlaylistMutation>;
 export type UnpublishPlaylistMutationOptions = Apollo.BaseMutationOptions<UnpublishPlaylistMutation, UnpublishPlaylistMutationVariables>;
-export const PlaylistStartTimeDocument = gql`
-    query PlaylistStartTime($id: UUID!) {
+export const PlaylistTitleDocument = gql`
+    query PlaylistTitle($id: UUID!) {
   playlist(id: $id) {
-    startDateTime
+    title
   }
 }
     `;
 
 /**
- * __usePlaylistStartTimeQuery__
+ * __usePlaylistTitleQuery__
  *
- * To run a query within a React component, call `usePlaylistStartTimeQuery` and pass it any options that fit your needs.
- * When your component renders, `usePlaylistStartTimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePlaylistTitleQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePlaylistTitleQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usePlaylistStartTimeQuery({
+ * const { data, loading, error } = usePlaylistTitleQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function usePlaylistStartTimeQuery(baseOptions: Apollo.QueryHookOptions<PlaylistStartTimeQuery, PlaylistStartTimeQueryVariables>) {
+export function usePlaylistTitleQuery(baseOptions: Apollo.QueryHookOptions<PlaylistTitleQuery, PlaylistTitleQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PlaylistStartTimeQuery, PlaylistStartTimeQueryVariables>(PlaylistStartTimeDocument, options);
+        return Apollo.useQuery<PlaylistTitleQuery, PlaylistTitleQueryVariables>(PlaylistTitleDocument, options);
       }
-export function usePlaylistStartTimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PlaylistStartTimeQuery, PlaylistStartTimeQueryVariables>) {
+export function usePlaylistTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PlaylistTitleQuery, PlaylistTitleQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PlaylistStartTimeQuery, PlaylistStartTimeQueryVariables>(PlaylistStartTimeDocument, options);
+          return Apollo.useLazyQuery<PlaylistTitleQuery, PlaylistTitleQueryVariables>(PlaylistTitleDocument, options);
         }
-export type PlaylistStartTimeQueryHookResult = ReturnType<typeof usePlaylistStartTimeQuery>;
-export type PlaylistStartTimeLazyQueryHookResult = ReturnType<typeof usePlaylistStartTimeLazyQuery>;
-export type PlaylistStartTimeQueryResult = Apollo.QueryResult<PlaylistStartTimeQuery, PlaylistStartTimeQueryVariables>;
+export type PlaylistTitleQueryHookResult = ReturnType<typeof usePlaylistTitleQuery>;
+export type PlaylistTitleLazyQueryHookResult = ReturnType<typeof usePlaylistTitleLazyQuery>;
+export type PlaylistTitleQueryResult = Apollo.QueryResult<PlaylistTitleQuery, PlaylistTitleQueryVariables>;
 export const ValidatePlaylistDocument = gql`
     query ValidatePlaylist($id: UUID!) {
   validatePlaylist(id: $id) {

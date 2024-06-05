@@ -39,6 +39,7 @@ describe('create playlist publish dto', () => {
     return ctx.executeOwnerSql(user, async (ctx) =>
       insert('playlists', {
         id: uuid(),
+        title: startDateTime.toISOString().substring(0, 10),
         start_date_time: startDateTime,
         calculated_duration_in_seconds: durationInSeconds ?? 10,
         channel_id: testChannelId,
@@ -155,7 +156,7 @@ describe('create playlist publish dto', () => {
     });
   });
 
-  //durationInSeconds:
+  // durationInSeconds:
   // 1 minute
   // 30 minutes
   // 12 hours

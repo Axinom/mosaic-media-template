@@ -27,7 +27,7 @@ export interface Program {
    */
   video_duration_in_seconds: number;
   /**
-   * Content ID of a program item entity reference. Must match the pattern `^(episode|movie)-([a-zA-Z0-9_-]+)$`.
+   * Content ID of a program entity reference. Must match the pattern `^(episode|movie)-([a-zA-Z0-9_-]+)$`.
    */
   entity_content_id: string;
   /**

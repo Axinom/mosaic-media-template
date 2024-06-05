@@ -33,7 +33,7 @@ export const routes = {
   playlistDetails: '/channels/:channelId/playlists/:playlistId',
   playlistPublishing: '/channels/:channelId/playlists/:playlistId/publishing',
   playlistStartTime: '/channels/:channelId/playlists/:playlistId/starttime',
-  program: '/channels/:channelId/playlists/:playlistId/program',
+  programs: '/channels/:channelId/playlists/:playlistId/programs',
   programDetails:
     '/channels/:channelId/playlists/:playlistId/program/:programId',
   programLocalizationRoot:

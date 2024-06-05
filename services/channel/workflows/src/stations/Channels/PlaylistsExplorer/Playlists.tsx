@@ -79,7 +79,7 @@ export const Playlists: React.FC = () => {
     {
       propertyName: 'programs',
       size: '0.8fr',
-      label: 'Program Items',
+      label: 'Programs',
       sortable: false,
       render: (v) =>
         (v as Pick<ProgramsConnection, 'totalCount'>)?.totalCount ?? 0,

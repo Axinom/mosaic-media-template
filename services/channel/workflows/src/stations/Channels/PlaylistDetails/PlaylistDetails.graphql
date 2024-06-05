@@ -1,6 +1,7 @@
 query Playlist($id: UUID!) {
   playlist(id: $id) {
     id
+    title
     startDateTime
     calculatedDurationInSeconds
     calculatedEndDateTime
@@ -43,8 +44,8 @@ mutation UnpublishPlaylist($input: UnpublishPlaylistInput!) {
   }
 }
 
-query PlaylistStartTime($id: UUID!) {
+query PlaylistTitle($id: UUID!) {
   playlist(id: $id) {
-    startDateTime
+    title
   }
 }

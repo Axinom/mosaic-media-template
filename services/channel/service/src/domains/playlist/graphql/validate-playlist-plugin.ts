@@ -42,7 +42,7 @@ export const ValidatePlaylistPlugin: Plugin = makeExtendSchemaPlugin(() => {
           { graphile: { build } },
         ) => {
           try {
-            const { subject, jwtToken, config, pgClient } =
+            const { jwtToken, config, pgClient } =
               getValidatedExtendedContext(context);
             logger.debug(`Validating playlist with ID '${id}'`);
 

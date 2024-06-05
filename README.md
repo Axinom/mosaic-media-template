@@ -104,12 +104,15 @@ Start the following commands in parallel (in separate terminals):
 1. Run `yarn dev:libs` to start the compilation for the `media-messages` package
    in watch mode. Wait until this finishes before proceeding to avoid
    concurrency issues.
-2. Run `yarn dev:services` to start the `media-service` & `catalog-service` in
-   watch mode.
+2. Run `yarn dev:services` to start the `media-service`, `catalog-service`, and
+   `entitlement-service` in watch mode.`
 3. Run `yarn dev:workflows` to start the `media-workflows` in watch mode.
 4. Open http://localhost:10053/ in your browser. You should see a grid with
    different workflow options (Movies, Videos, Images, TV shows, Seasons,
    Episodes).
+
+Alternatively, use the "...:all" scripts to include also the `channel-service`
+and the `vod-to-live-service`.
 
 ## Run tests
 

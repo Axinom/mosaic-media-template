@@ -18,7 +18,7 @@ export async function publishPlaylist(
   ownerClient: ClientBase,
   config: Config,
 ): Promise<void> {
-  //perform validation
+  // perform validation
   const validationResult = await validatePlaylist(
     id,
     jwtToken,

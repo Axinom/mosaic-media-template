@@ -24,8 +24,6 @@ import classes from './CuePoint.module.scss';
 export const CuePoint: React.FC<ProgramCuePointProps> = ({
   id,
   type,
-  timeInSeconds,
-  videoCuePointId,
   startTimeUTC,
   localTime,
   cuePointSchedules,

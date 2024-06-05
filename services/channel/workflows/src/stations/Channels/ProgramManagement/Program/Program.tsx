@@ -61,7 +61,7 @@ export const Program: React.FC<ProgramProps> = ({
     ...(resolver && id
       ? [
           {
-            label: 'Edit Program Item Details',
+            label: 'Edit Program Details',
             path: routes.generate(routes.programDetails, {
               channelId,
               playlistId,

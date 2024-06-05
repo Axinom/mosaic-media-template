@@ -1,5 +1,9 @@
-import { DetailedImage, DetailedVideo } from '@axinom/mosaic-messages';
-import { ChannelLocalization, ChannelPublishedEvent } from 'media-messages';
+import {
+  ChannelLocalization,
+  ChannelPublishedEvent,
+  DetailedImage,
+  DetailedVideo,
+} from 'media-messages';
 import { buildPublishingId } from '../../../publishing';
 import { ChannelPublishDto } from './aggregate-channel-publish-dto';
 

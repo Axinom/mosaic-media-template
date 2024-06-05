@@ -73,6 +73,7 @@ describe('publishPlaylist', () => {
         'playlists',
         {
           id: uuid(),
+          title: startDate.toISOString().substring(0, 10),
           start_date_time: startDate,
           calculated_duration_in_seconds: 2000,
           publication_state: publicationState,
@@ -144,6 +145,7 @@ describe('publishPlaylist', () => {
     const expectedPublishedPayload = {
       content_id: playlist.id,
       channel_id: channel.id,
+      title: playlist.start_date_time.substring(0, 10),
       start_date_time: playlist.start_date_time,
       end_date_time: playlist.calculated_end_date_time,
       programs: [],

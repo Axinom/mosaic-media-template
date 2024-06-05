@@ -18,10 +18,8 @@ import { ChannelPublishing } from './ChannelPublishing/ChannelPublishing';
 import { Channels } from './ChannelsExplorer/Channels';
 import { ChannelVideoManagement } from './ChannelVideoManagement/ChannelVideoManagement';
 import { PlaylistCreate } from './PlaylistCreate/PlaylistCreate';
-import {
-  PlaylistDetails,
-  PlaylistStartTimeCrumb,
-} from './PlaylistDetails/PlaylistDetails';
+import { PlaylistDetails } from './PlaylistDetails/PlaylistDetails';
+import { PlaylistDetailsCrumb } from './PlaylistDetails/PlaylistDetailsCrumb';
 import { PlaylistPublishing } from './PlaylistPublishing/PlaylistPublishing';
 import { Playlists } from './PlaylistsExplorer/Playlists';
 import {
@@ -122,7 +120,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
   });
 
   app.registerPage(routes.playlistDetails, PlaylistDetails, {
-    breadcrumb: PlaylistStartTimeCrumb,
+    breadcrumb: PlaylistDetailsCrumb,
     permissions,
   });
   app.registerPage(routes.playlistPublishing, PlaylistPublishing, {
@@ -136,7 +134,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
   });
 
   app.registerPage(
-    routes.program,
+    routes.programs,
     () => (
       <ExtensionsContext.Provider value={extensions}>
         <PortalContext.Provider
@@ -149,7 +147,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
       </ExtensionsContext.Provider>
     ),
     {
-      breadcrumb: () => 'Playlist program',
+      breadcrumb: () => 'Programs',
       permissions,
     },
   );

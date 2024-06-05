@@ -39,6 +39,7 @@ import {
   getFullConfig,
   HEALTH_CHECK_ROUTING_KEY,
   setIsLocalizationEnabledDbFunction,
+  updateConfigWithActualLocalizationAvailability,
 } from './common';
 import { registerTypes, syncPermissions } from './domains';
 import { setupPostGraphile } from './graphql';
@@ -71,6 +72,8 @@ async function bootstrap(): Promise<void> {
   if (!(await isServiceAvailable(config.idServiceAuthBaseUrl))) {
     throw new MosaicError(IdGuardErrors.IdentityServiceNotAccessible);
   }
+
+  await updateConfigWithActualLocalizationAvailability(config, logger);
 
   // Register service health endpoint
   setupServiceHealthEndpoint(app);
@@ -134,7 +137,6 @@ async function bootstrap(): Promise<void> {
     ],
   });
 
-  await registerTypes(storeOutboxMessage, loginPgPool, config);
   setupManagementAuthentication(app, ['/graphql'], authConfig);
 
   await setupPostGraphile(

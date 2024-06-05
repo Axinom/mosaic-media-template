@@ -7,6 +7,7 @@
   "required": [
     "content_id",
     "channel_id",
+    "title",
     "start_date_time",
     "end_date_time",
     "programs"
@@ -21,6 +22,10 @@
       "description": "Content ID of a channel. Must match the pattern`^(channel)-([a-zA-Z0-9_-]+)$.`",
       "type": "string",
       "pattern": "^(channel)-([a-zA-Z0-9_-]+)$"
+    },
+    "title": {
+      "description": "The title of the playlist - meant for internal usage.",
+      "type": "string"
     },
     "start_date_time": {
       "description": "Start date and time of the playlist.",
@@ -490,7 +495,7 @@
             "type": "integer"
           },
           "entity_content_id": {
-            "description": "Content ID of a program item entity reference. Must match the pattern `^(episode|movie)-([a-zA-Z0-9_-]+)$`.",
+            "description": "Content ID of a program entity reference. Must match the pattern `^(episode|movie)-([a-zA-Z0-9_-]+)$`.",
             "type": "string",
             "pattern": "^(episode|movie)-([a-zA-Z0-9_-]+)$"
           },
@@ -516,7 +521,7 @@
                   "description": "A UUID."
                 },
                 "time_in_seconds": {
-                  "description": "Number of seconds from the biginning of the program, when the cue point is inserted.",
+                  "description": "Number of seconds from the beginning of the program, when the cue point is inserted.",
                   "type": [
                     "number",
                     "null"

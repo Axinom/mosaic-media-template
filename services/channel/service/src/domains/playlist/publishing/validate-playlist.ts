@@ -1,9 +1,6 @@
-import {
-  DetailedVideo,
-  LocalizationServiceMessagingSettings,
-} from '@axinom/mosaic-messages';
+import { LocalizationServiceMessagingSettings } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
-import { PlaylistPublishedEvent } from 'media-messages';
+import { DetailedVideo, PlaylistPublishedEvent } from 'media-messages';
 import Hasher from 'node-object-hash';
 import { ClientBase } from 'pg';
 import { selectExactlyOne } from 'zapatos/db';
@@ -55,7 +52,14 @@ export async function validatePlaylist(
   const channel = await selectExactlyOne(
     'channels',
     { id: publishDto.channel_id },
-    { columns: ['id', 'publication_state', 'placeholder_video_id'] },
+    {
+      columns: [
+        'id',
+        'publication_state',
+        'placeholder_video_id',
+        'is_drm_protected',
+      ],
+    },
   ).run(gqlClient);
 
   if (channel?.publication_state !== 'PUBLISHED') {
@@ -103,7 +107,7 @@ export async function validatePlaylist(
       config.videoServiceBaseUrl,
       jwtToken,
       videoIds,
-      config.isDrmEnabled,
+      channel.is_drm_protected,
       false,
     ),
     isManagedServiceEnabled(
@@ -182,7 +186,7 @@ const validatePlaylistMetadata = (
     validations.push(createValidationWarning(message, context));
   };
 
-  // There is at least one program item otherwise it returns an error.
+  // There is at least one program otherwise it returns an error.
   if (
     publishDto.programs === null ||
     publishDto.programs === undefined ||

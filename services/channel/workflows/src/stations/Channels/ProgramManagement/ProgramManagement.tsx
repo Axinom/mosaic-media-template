@@ -37,8 +37,8 @@ import { generateProgramMutations } from './mutations/program';
 import { generateVideoSchedulesMutations } from './mutations/video-schedules';
 import { Panel } from './Panel/Panel';
 import {
-  ProgramManagementFormData as FormData,
   ProgramCuePointPayLoad,
+  ProgramManagementFormData as FormData,
   ProgramProps,
 } from './ProgramManagement.types';
 import { ProgramManagementForm } from './ProgramManagementForm/ProgramManagementForm';
@@ -66,7 +66,7 @@ export const ProgramManagement: React.FC = () => {
     // this will resolve correct title and navigation for channel breadcrumb
     if (channelId === ':channelId' && data?.channel?.channelId) {
       history.replace(
-        routes.generate(routes.program, {
+        routes.generate(routes.programs, {
           channelId: data?.channel?.channelId,
           playlistId: playlistId,
         }),
@@ -299,7 +299,7 @@ export const ProgramManagement: React.FC = () => {
   return (
     <ProgramManagementProvider>
       <Details<FormData>
-        defaultTitle="Playlist program"
+        defaultTitle="Programs"
         initialData={{
           data: form,
           loading,

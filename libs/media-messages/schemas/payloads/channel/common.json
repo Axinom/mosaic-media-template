@@ -19,7 +19,7 @@
       "pattern": "^(program)-([a-zA-Z0-9_-]+)$"
     },
     "entity_content_id": {
-      "description": "Content ID of a program item entity reference. Must match the pattern `^(episode|movie)-([a-zA-Z0-9_-]+)$`.",
+      "description": "Content ID of a program entity reference. Must match the pattern `^(episode|movie)-([a-zA-Z0-9_-]+)$`.",
       "type": "string",
       "pattern": "^(episode|movie)-([a-zA-Z0-9_-]+)$"
     },
@@ -368,7 +368,7 @@
           "description": "Cue point unique identifier."
         },
         "time_in_seconds": {
-          "description": "Number of seconds from the biginning of the program, when the cue point is inserted.",
+          "description": "Number of seconds from the beginning of the program, when the cue point is inserted.",
           "type": ["number", "null"]
         },
         "type": {

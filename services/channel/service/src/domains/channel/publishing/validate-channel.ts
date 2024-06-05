@@ -65,7 +65,7 @@ export async function validateChannel(
       config.videoServiceBaseUrl,
       jwtToken,
       publishDto.placeholder_video_id ? [publishDto.placeholder_video_id] : [],
-      config.isDrmEnabled,
+      publishDto.is_drm_protected,
       true,
     ),
     isManagedServiceEnabled(

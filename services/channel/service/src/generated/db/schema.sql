@@ -960,6 +960,7 @@ CREATE FUNCTION app_public.create_video_cue_point_schedule(sort_index integer, d
 CREATE TABLE app_public.playlists (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     channel_id uuid NOT NULL,
+    title text NOT NULL,
     start_date_time timestamp with time zone NOT NULL,
     calculated_duration_in_seconds numeric(13,5) NOT NULL,
     published_date timestamp with time zone,
@@ -3648,7 +3649,7 @@ CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE OF title, description,
 -- Name: playlists _900__publish_user; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE OF start_date_time, calculated_duration_in_seconds, channel_id ON app_public.playlists FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__publish_audit_fields();
+CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE OF title, start_date_time, calculated_duration_in_seconds, channel_id ON app_public.playlists FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__publish_audit_fields();
 
 
 --
@@ -4288,6 +4289,13 @@ GRANT SELECT,DELETE ON TABLE app_public.playlists TO channel_service_gql_role;
 --
 
 GRANT INSERT(channel_id) ON TABLE app_public.playlists TO channel_service_gql_role;
+
+
+--
+-- Name: COLUMN playlists.title; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(title),UPDATE(title) ON TABLE app_public.playlists TO channel_service_gql_role;
 
 
 --

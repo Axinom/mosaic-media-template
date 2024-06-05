@@ -1,5 +1,8 @@
-import { DetailedImage, DetailedVideo } from '@axinom/mosaic-messages';
-import { PlaylistPublishedEvent } from 'media-messages';
+import {
+  DetailedImage,
+  DetailedVideo,
+  PlaylistPublishedEvent,
+} from 'media-messages';
 import { buildPublishingId } from '../../../publishing';
 import { LocalizedPlaylistPublishDto } from './aggregate-playlist-publish-dto';
 
@@ -11,6 +14,7 @@ export const createPlaylistPublishPayload = (
   return {
     content_id: buildPublishingId('PLAYLIST', dto.id),
     channel_id: buildPublishingId('CHANNEL', dto.channel_id),
+    title: dto.title,
     start_date_time: dto.start_date_time,
     end_date_time: dto.calculated_end_date_time,
     programs: dto.programs.map((pr) => ({

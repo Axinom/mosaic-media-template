@@ -35,7 +35,7 @@ export async function unpublishPlaylist(
 
   const unpublishedEvent: PlaylistUnpublishedEvent = {
     content_id: buildPublishingId('PLAYLIST', playlist.id),
-    channel_id: playlist.channel_id,
+    channel_id: buildPublishingId('CHANNEL', playlist.channel_id),
   };
 
   await update(

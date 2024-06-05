@@ -1,6 +1,6 @@
-import { DetailedVideo } from '@axinom/mosaic-messages';
 import { mosaicErrorMappingFactory } from '@axinom/mosaic-service-common';
 import { GraphQLClient } from 'graphql-request';
+import { DetailedVideo } from 'media-messages';
 import urljoin from 'url-join';
 import { CommonErrors } from '../../../common';
 import { getSdk, GetVideosQuery } from '../../../generated/graphql/video';

@@ -32,7 +32,7 @@ export const ValidationErrors = {
     code: 'PLAYLIST_CHANGED_SINCE_VALIDATION',
   },
   PlaylistMissingPrograms: {
-    message: 'The playlist must contain at least one program item.',
+    message: 'The playlist must contain at least one program.',
     code: 'PLAYLIST_MISSING_PROGRAMS',
   },
   PlaylistExceeds24Hours: {

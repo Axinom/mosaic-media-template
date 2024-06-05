@@ -1,4 +1,3 @@
-import { BreadcrumbResolver } from '@axinom/mosaic-portal';
 import {
   DateTimeTextField,
   Details,
@@ -11,6 +10,7 @@ import {
   Paragraph,
   ReadOnlyField,
   Section,
+  SingleLineTextField,
 } from '@axinom/mosaic-ui';
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
@@ -21,8 +21,6 @@ import { client } from '../../../apolloClient';
 import {
   Playlist,
   PlaylistPatch,
-  PlaylistStartTimeDocument,
-  PlaylistStartTimeQuery,
   UpdatePlaylistInput,
   usePlaylistQuery,
 } from '../../../generated/graphql';
@@ -31,6 +29,7 @@ import classes from './PlaylistDetails.module.scss';
 import { PlaylistDetailsFormData } from './PlaylistDetails.types';
 
 const playlistValidationSchema = Yup.object().shape<ObjectSchemaDefinition>({
+  title: Yup.string().required('Title is a required field'),
   startDateTime: Yup.date().required(
     'Scheduled Start date and time should be set.',
   ),
@@ -87,7 +86,8 @@ export const PlaylistDetails: React.FC = () => {
 
   return (
     <Details<PlaylistDetailsFormData>
-      defaultTitle={formatDateTime(data?.playlist?.startDateTime)}
+      defaultTitle="Playlist"
+      titleProperty="title"
       subtitle="Properties"
       validationSchema={playlistValidationSchema}
       initialData={{
@@ -110,15 +110,10 @@ export const PlaylistDetails: React.FC = () => {
   );
 };
 
-/**
- * 
- * @returns     startDateTime
-    calculatedDurationInSeconds
-    calculatedEndDateTime
- */
 const Form: React.FC = () => {
   return (
     <>
+      <Field name="title" label="Title" as={SingleLineTextField} />
       <Field name="startDateTime" label="Start Time" as={DateTimeTextField} />
       <Field
         name="calculatedDurationInSeconds"
@@ -171,7 +166,7 @@ const Panel: React.FC = () => {
         )}
       </Section>
       {programCount && (
-        <Section title="Program Items">
+        <Section title="Programs">
           <div className={classes.datalist}>
             {Object.keys(programCount).map((program) => (
               <React.Fragment key={program}>
@@ -188,16 +183,4 @@ const Panel: React.FC = () => {
       )}
     </InfoPanel>
   );
-};
-
-export const PlaylistStartTimeCrumb: BreadcrumbResolver = ({ playlistId }) => {
-  return async (): Promise<string> => {
-    const response = await client.query<PlaylistStartTimeQuery>({
-      query: PlaylistStartTimeDocument,
-      variables: { id: playlistId },
-      errorPolicy: 'ignore',
-    });
-
-    return formatDateTime(response.data.playlist?.startDateTime) as string;
-  };
 };

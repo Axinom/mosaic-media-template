@@ -12,6 +12,10 @@ export interface PlaylistPublishedEvent {
    */
   channel_id: string;
   /**
+   * The title of the playlist - meant for internal usage.
+   */
+  title: string;
+  /**
    * Start date and time of the playlist.
    */
   start_date_time: string;

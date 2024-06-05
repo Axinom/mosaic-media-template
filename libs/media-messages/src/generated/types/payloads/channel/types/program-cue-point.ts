@@ -8,7 +8,7 @@ export interface ProgramCuePoint {
    */
   id: string;
   /**
-   * Number of seconds from the biginning of the program, when the cue point is inserted.
+   * Number of seconds from the beginning of the program, when the cue point is inserted.
    */
   time_in_seconds?: number | null;
   /**

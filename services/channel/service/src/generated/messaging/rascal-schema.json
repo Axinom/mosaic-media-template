@@ -43,11 +43,11 @@
             }
           }
         },
-        "ax-micro-frontend-service:workflows:enable": {
+        "ax-video-service:inbox": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-micro-frontend-service.dead_letter",
+              "x-dead-letter-routing-key": "ax-video-service.dead_letter",
               "x-queue-type": "quorum"
             }
           }
@@ -57,24 +57,6 @@
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
               "x-dead-letter-routing-key": "channel-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-micro-frontend-service:workflows:disable": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-micro-frontend-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-video-service:inbox": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-video-service.dead_letter",
               "x-queue-type": "quorum"
             }
           }
@@ -114,45 +96,15 @@
           "bindingKey": "delay.30sec",
           "destination": "delay:30sec"
         },
-        "retry:ax-micro-frontend-service:workflows:enable": {
+        "retry:ax-video-service:inbox": {
           "source": "retry",
-          "bindingKey": "ax-micro-frontend-service:workflows:enable.#",
-          "destination": "ax-micro-frontend-service:workflows:enable"
+          "bindingKey": "ax-video-service:inbox.#",
+          "destination": "ax-video-service:inbox"
         },
         "retry:channel-service:inbox": {
           "source": "retry",
           "bindingKey": "channel-service:inbox.#",
           "destination": "channel-service:inbox"
-        },
-        "ax-micro-frontend-service.workflows.enable_finished": {
-          "source": "event",
-          "bindingKey": "ax-micro-frontend-service.workflows.enable_finished",
-          "destination": "channel-service:inbox"
-        },
-        "ax-micro-frontend-service.workflows.enable_failed": {
-          "source": "event",
-          "bindingKey": "ax-micro-frontend-service.workflows.enable_failed",
-          "destination": "channel-service:inbox"
-        },
-        "retry:ax-micro-frontend-service:workflows:disable": {
-          "source": "retry",
-          "bindingKey": "ax-micro-frontend-service:workflows:disable.#",
-          "destination": "ax-micro-frontend-service:workflows:disable"
-        },
-        "ax-micro-frontend-service.workflows.disable_finished": {
-          "source": "event",
-          "bindingKey": "ax-micro-frontend-service.workflows.disable_finished",
-          "destination": "channel-service:inbox"
-        },
-        "ax-micro-frontend-service.workflows.disable_failed": {
-          "source": "event",
-          "bindingKey": "ax-micro-frontend-service.workflows.disable_failed",
-          "destination": "channel-service:inbox"
-        },
-        "retry:ax-video-service:inbox": {
-          "source": "retry",
-          "bindingKey": "ax-video-service:inbox.#",
-          "destination": "ax-video-service:inbox"
         },
         "ax-video-service.*.*.cue_point_types.declare_failed": {
           "source": "event",
@@ -241,14 +193,6 @@
               "delay.30sec"
             ]
           }
-        },
-        "WorkflowsEnable": {
-          "exchange": "command",
-          "routingKey": "ax-micro-frontend-service.workflows.enable"
-        },
-        "WorkflowsDisable": {
-          "exchange": "command",
-          "routingKey": "ax-micro-frontend-service.workflows.disable"
         },
         "DeclareCuePointTypes": {
           "exchange": "command",

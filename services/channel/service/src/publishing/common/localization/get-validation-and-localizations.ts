@@ -237,7 +237,7 @@ export const getProgramValidationAndLocalizations = async (
         ({ message }: GqlValidationMessage) =>
           `${
             programTitle
-              ? `The program "${programTitle}" is not fully localized: `
+              ? `The program "${programTitle}" is not fully localized (if the associated entity was localized those values will copied which may take a bit of time): `
               : ''
           }${message}`,
       ),

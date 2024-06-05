@@ -2,7 +2,6 @@ import {
   EncodingState,
   ID,
   OutputFormat,
-  PreviewStatus,
   Video,
 } from '@axinom/mosaic-managed-workflow-integration';
 import {
@@ -109,7 +108,6 @@ const Form: React.FC<{ videoSelectField: unknown }> = ({
   const predefinedFilters: FilterValues<Video> = {
     encodingState: EncodingState.Ready,
     outputFormat: OutputFormat.Cmaf,
-    previewStatus: PreviewStatus.Approved,
   };
   return (
     <>

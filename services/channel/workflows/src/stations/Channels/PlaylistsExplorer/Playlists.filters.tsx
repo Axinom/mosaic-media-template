@@ -14,11 +14,11 @@ import { PlaylistsData } from './Playlists.types';
  * @param value value selected in filter.
  * @returns postgraphile filter
  */
-//todo: improve filtering logic?
+// todo: improve filtering logic?
 const scheduledStartFilter: FilterFunction = (value) => {
   const filterValue = value as string;
   let filter: Record<string, unknown> = {};
-  //today's date without the time
+  // today's date without the time
   const filterDate = new Date(
     new Date().getFullYear(),
     new Date().getMonth(),

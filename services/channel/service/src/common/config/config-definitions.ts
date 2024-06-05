@@ -38,9 +38,6 @@ export const getConfigDefinitions = (
     playlistShouldBe24Hours: () =>
       env.get('PLAYLIST_SHOULD_BE_24_HOURS').default('FALSE').asBoolStrict(),
 
-    isDrmEnabled: () =>
-      env.get('IS_DRM_ENABLED').default('FALSE').asBoolStrict(),
-
     isLocalizationEnabled: () =>
       env.get('IS_LOCALIZATION_ENABLED').default('TRUE').asBoolStrict(),
 
