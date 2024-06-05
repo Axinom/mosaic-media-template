@@ -58,9 +58,8 @@ regularVariables:
 
   # Custom Service URLs
   ## TBD - data migrated to new catalog service
-##  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-mosaic-catalog-service.dc}'
-
-  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-nfn-mosaic-catalog-acc.api}'
+  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-mosaic-catalog-service.dc}'
+  # CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-nfn-mosaic-catalog-acc.api}'
 
   # GeoIP2 Variables
   CLIENT_IP_HEADER_NAME: 'X-Forwarded-For'
