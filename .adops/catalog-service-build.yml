@@ -86,6 +86,19 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
-              SERVICE_ID: $(serviceIdProd)
+              SERVICE_ID: $(serviceId)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+
+          - task: Bash@3
+            displayName: 'Upload deployment configuration to Integration environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "mosaic-catalog-int-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
+              SERVICE_ID: $(serviceId)
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
