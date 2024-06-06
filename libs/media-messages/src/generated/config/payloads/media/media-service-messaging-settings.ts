@@ -1,6 +1,11 @@
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 
 export class MediaServiceMessagingSettings implements MessagingSettings {
+  /**
+   * Defines the messaging settings for the command with message type 
+   * "DeleteEntity" and aggregate type "entity".
+   * The aggregate ID field must contain the value of the "entity ID" field.
+   */
   public static DeleteEntity = new MediaServiceMessagingSettings(
     'DeleteEntity', 
     'inbox', 
@@ -8,6 +13,11 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'command',
     'entity'
     );
+  /**
+   * Defines the messaging settings for the command with message type 
+   * "PublishEntity" and aggregate type "entity".
+   * The aggregate ID field must contain the value of the "snapshot ID" field.
+   */
   public static PublishEntity = new MediaServiceMessagingSettings(
     'PublishEntity', 
     'inbox', 
@@ -15,6 +25,11 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'command',
     'entity'
     );
+  /**
+   * Defines the messaging settings for the command with message type 
+   * "UnpublishEntity" and aggregate type "entity".
+   * The aggregate ID field must contain the value of the "entity ID" field.
+   */
   public static UnpublishEntity = new MediaServiceMessagingSettings(
     'UnpublishEntity', 
     'inbox', 
@@ -22,6 +37,11 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'command',
     'entity'
     );
+  /**
+   * Defines the messaging settings for the command with message type 
+   * "StartIngest" and aggregate type "ingest-document".
+   * The aggregate ID field must contain the value of the "ingest document ID" field.
+   */
   public static StartIngest = new MediaServiceMessagingSettings(
     'StartIngest', 
     'inbox', 
@@ -29,6 +49,11 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'command',
     'ingest-document'
     );
+  /**
+   * Defines the messaging settings for the command with message type 
+   * "StartIngestItem" and aggregate type "ingest-item".
+   * The aggregate ID field must contain the value of the "ingest item ID" field.
+   */
   public static StartIngestItem = new MediaServiceMessagingSettings(
     'StartIngestItem', 
     'inbox', 
@@ -36,6 +61,11 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'command',
     'ingest-item'
     );
+  /**
+   * Defines the messaging settings for the command with message type 
+   * "UpdateMetadata" and aggregate type "ingest-item".
+   * The aggregate ID field must contain the value of the "entity ID" field.
+   */
   public static UpdateMetadata = new MediaServiceMessagingSettings(
     'UpdateMetadata', 
     'inbox', 
@@ -43,6 +73,11 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'command',
     'ingest-item'
     );
+  /**
+   * Defines the messaging settings for the command with message type 
+   * "CheckFinishIngestDocument" and aggregate type "ingest-document".
+   * The aggregate ID field must contain the value of the "ingest document ID" field.
+   */
   public static CheckFinishIngestDocument = new MediaServiceMessagingSettings(
     'CheckFinishIngestDocument', 
     'inbox', 
@@ -50,6 +85,11 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'command',
     'ingest-document'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "EntityDeleted" and aggregate type "entity".
+   * The aggregate ID field contains the value of the "entity ID" field.
+   */
   public static EntityDeleted = new MediaServiceMessagingSettings(
     'EntityDeleted', 
     'inbox', 

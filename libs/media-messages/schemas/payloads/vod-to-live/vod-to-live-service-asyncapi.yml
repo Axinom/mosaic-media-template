@@ -65,18 +65,21 @@ components:
     prepare-transition-live-stream-command:
       tags:
         - name: aggregate-type:channel
+        - name: aggregate-id-field:channel ID
       contentType: application/json
       payload:
         $ref: 'commands/prepare-transition-live-stream-command.json'
     prepare-channel-live-stream-command:
       tags:
         - name: aggregate-type:channel
+        - name: aggregate-id-field:channel ID
       contentType: application/json
       payload:
         $ref: 'commands/prepare-channel-live-stream-command.json'
     check-channel-job-status-command:
       tags:
         - name: aggregate-type:channel
+        - name: aggregate-id-field:channel ID
       contentType: application/json
       payload:
         $ref: 'commands/check-channel-job-status-command.json'
@@ -84,18 +87,21 @@ components:
     channel-protection-key-created-event:
       tags:
         - name: aggregate-type:channel
+        - name: aggregate-id-field:channel ID
       contentType: application/json
       payload:
         $ref: 'events/live-stream-protection-key-created-event.json'
     check-channel-job-status-failed-event:
       tags:
         - name: aggregate-type:channel
+        - name: aggregate-id-field:channel ID
       contentType: application/json
       payload:
         $ref: 'events/check-channel-job-status-failed-event.json'
     check-channel-job-status-succeeded-event:
       tags:
         - name: aggregate-type:channel
+        - name: aggregate-id-field:channel ID
       contentType: application/json
       payload:
         $ref: 'events/check-channel-job-status-succeeded-event.json'

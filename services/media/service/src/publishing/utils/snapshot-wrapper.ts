@@ -1,3 +1,4 @@
+import { UNKNOWN_AGGREGATE_ID } from '@axinom/mosaic-message-bus';
 import { Logger, MosaicError } from '@axinom/mosaic-service-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { PublishServiceMessagingSettings } from 'media-messages';
@@ -142,7 +143,9 @@ export class SnapshotWrapper {
     ).run(this.dbClient);
 
     await this.storeOutboxMessage(
-      snapshot.entity_id.toString(),
+      snapshot.entity_id > 0
+        ? snapshot.entity_id.toString()
+        : UNKNOWN_AGGREGATE_ID,
       messagingSettings,
       snapshot.snapshot_json,
       this.dbClient,
