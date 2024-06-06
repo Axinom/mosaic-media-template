@@ -65,6 +65,7 @@ import {
   LocalizableMovieImageUpdatedDbMessageHandler,
   LocalizableMovieUpdatedDbMessageHandler,
 } from '../domains/movies';
+import { getPopulateSeedDataCallback } from '../domains/populate-seed-data';
 import {
   entityPublishEventSettings,
   publishingProcessors,
@@ -343,7 +344,10 @@ const registerTransactionalInboxHandlers = (
     new ImageTypesDeclaredHandler(config),
     new ImageTypesDeclareFailedHandler(config),
     new EntityDefinitionDeclareFailedHandler(config),
-    new EntityDefinitionDeclareFinishedHandler(config),
+    new EntityDefinitionDeclareFinishedHandler(
+      config,
+      getPopulateSeedDataCallback(ownerPool),
+    ),
     new EntityDefinitionDeleteFailedHandler(config),
     new EntityDefinitionDeleteFinishedHandler(config),
   ];
