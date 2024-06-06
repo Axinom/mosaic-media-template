@@ -1,0 +1,96 @@
+name: $(MajorVersion).$(MinorVersion).$(Year:yy)$(DayOfYear).$(Rev:r)
+
+trigger: none
+pr: none
+
+parameters:
+  - name: bd_int
+    displayName: Release to bd-int
+    type: boolean
+    default: false
+  - name: mo_dev_test
+    displayName: Release to Dev Test
+    type: boolean
+    default: true
+#  - name: mo_grn_acc
+#    displayName: Release to Greenfield Acceptance
+#    type: boolean
+#    default: false
+
+resources:
+  pipelines:
+    - pipeline: 'bd-mosaic-demo-subscription-service-pipeline'
+      project: 'DutchChannels'
+      source: 'bd-mosaic-demo-subscription-service'
+
+  repositories:
+    - repository: 'bd-mosaic-infra'
+      type: git
+      name: "DutchChannels/bd-mosaic-infra"
+      trigger:
+        branches:
+          include:
+            - none
+      ref: main
+
+variables:
+  - group: bd-mosaic-demo-general
+  - group: infrastructure-storage
+  - name: RegistryImage
+    value: bd-mosaic-demo-subscription-service
+  - name: RegistryNamespace
+    value: dc
+  - name: BuildVersion
+    value: $(Build.BuildNumber)
+  - name: ImageTag
+    value: $(resources.pipeline.bd-mosaic-demo-subscription-service-pipeline.runName)
+
+
+stages:
+  - ${{ if eq(parameters.mo_dev_test, true) }}:
+      - template: templates/template-release.yml
+        parameters:
+          artifactPipelineId: bd-mosaic-demo-subscription-service-pipeline
+          environment: 'mo-dev-test'
+          environmentDisplayName: mo_dev_test
+          environmentTenant: mo-dev
+          environmentPrefix: test
+          imageTag: $(ImageTag)
+          terraformFolder: bd-mosaic-subscription-service
+          terraformVersion: 'v1.2.6'
+          azureSubscription: 'Azure - DutchChannels Production'
+          terraformPipelineArgs: '-input=false -no-color -var-file configurable.tfvars -var "build_version=$(ImageTag)"'
+          stateBackendAccessToken: $(STORAGEACCOUNTACCESSTOKEN)
+          stateBackendAccessTokenType: $(STORAGEACCOUNTACCESSTOKENTYPE)
+
+#  - ${{ if eq(parameters.mo_grn_acc, true) }}:
+#      - template: templates/template-release.yml
+#        parameters:
+#          artifactPipelineId: bd-mosaic-demo-subscription-service-pipeline
+#          environment: 'mo-grn-acc'
+#          environmentDisplayName: mo_grn_acc
+#          environmentTenant: mo-grn
+#          environmentPrefix: acc
+#          imageTag: $(ImageTag)
+#          terraformFolder: bd-mosaic-subscription-service
+#          terraformVersion: 'v1.2.6'
+#          azureSubscription: 'Azure - DutchChannels Production'
+#          terraformPipelineArgs: '-input=false -no-color -var-file configurable.tfvars -var "build_version=$(ImageTag)"'
+#          stateBackendAccessToken: $(STORAGEACCOUNTACCESSTOKEN)
+#          stateBackendAccessTokenType: $(STORAGEACCOUNTACCESSTOKENTYPE)
+
+  - ${{ if eq(parameters.bd_int, true) }}:
+      - template: templates/template-release.yml
+        parameters:
+          artifactPipelineId: bd-mosaic-demo-subscription-service-pipeline
+          environment: 'bd-int'
+          environmentDisplayName: bd_int
+          environmentTenant: bd
+          environmentPrefix: int
+          imageTag: $(ImageTag)
+          terraformFolder: bd-mosaic-subscription-service
+          terraformVersion: 'v1.2.6'
+          azureSubscription: 'Azure - DutchChannels Production'
+          terraformPipelineArgs: '-input=false -no-color -var-file configurable.tfvars -var "build_version=$(ImageTag)"'
+          stateBackendAccessToken: $(STORAGEACCOUNTACCESSTOKEN)
+          stateBackendAccessTokenType: $(STORAGEACCOUNTACCESSTOKENTYPE)
