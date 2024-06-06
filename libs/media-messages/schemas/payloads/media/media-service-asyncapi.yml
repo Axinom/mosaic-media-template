@@ -80,7 +80,7 @@ components:
     check-finish-ingest-document-command:
       tags:
         - name: aggregate-type:ingest-document
-        - name: aggregate-id-field:ingest Document ID
+        - name: aggregate-id-field:ingest document ID
       contentType: application/json
       payload:
         $ref: 'commands/check-finish-ingest-document-command.json'

@@ -76,7 +76,7 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
   /**
    * Defines the messaging settings for the command with message type 
    * "CheckFinishIngestDocument" and aggregate type "ingest-document".
-   * The aggregate ID field must contain the value of the "ingest Document ID" field.
+   * The aggregate ID field must contain the value of the "ingest document ID" field.
    */
   public static CheckFinishIngestDocument = new MediaServiceMessagingSettings(
     'CheckFinishIngestDocument', 

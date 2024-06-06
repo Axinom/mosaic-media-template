@@ -22,7 +22,7 @@ export const AllMoviePlugins = makePluginByCombiningPlugins(
     'MoviesLicenseFilter',
   ),
   EntityListPublishingEndpointsPluginFactory({
-    id: 1,
+    id: -1,
     title: 'Movie Genres',
     table: 'movie_genres',
     type: 'MOVIE_GENRE',
