@@ -152,10 +152,18 @@ export function register(app: PiletApi, extensions: Extensions): void {
     },
   );
 
-  app.registerPage(routes.programDetails, () => <ProgramDetails />, {
-    breadcrumb: ProgramDetailsCrumb,
-    permissions,
-  });
+  app.registerPage(
+    routes.programDetails,
+    () => (
+      <ExtensionsContext.Provider value={extensions}>
+        <ProgramDetails />
+      </ExtensionsContext.Provider>
+    ),
+    {
+      breadcrumb: ProgramDetailsCrumb,
+      permissions,
+    },
+  );
 
   app.registerPage(
     routes.channelLogo,
