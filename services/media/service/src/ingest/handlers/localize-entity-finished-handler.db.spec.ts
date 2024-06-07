@@ -99,8 +99,8 @@ describe('LocalizeEntityFinishedHandler', () => {
         processed_language_tags: ['de-DE'],
       };
       const context = {
-        ingestItemStepId: '34d91ea5-db63-4e51-b511-ae545d5c669c',
-        ingestItemId: 1,
+        ingestItemStepId: step1.id,
+        ingestItemId: item1.id,
         imageType: 'MAIN',
       };
 
