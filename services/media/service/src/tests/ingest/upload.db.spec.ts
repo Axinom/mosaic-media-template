@@ -499,11 +499,12 @@ describe('Movies GraphQL endpoints', () => {
         defaultRequestContext,
       );
 
-      let videoId = 1;
-      let imageId = 1;
-      while (messages.length) {
-        const msg = messages.shift();
-        assertNotFalsy(msg, 'msg');
+      await ctx.executeOwnerSql(user, async (txn) => {
+        let videoId = 1;
+        let imageId = 1;
+        while (messages.length) {
+          const msg = messages.shift();
+          assertNotFalsy(msg, 'msg');
 
         switch (msg.messageType) {
           case MediaServiceMessagingSettings.StartIngest.messageType:
@@ -574,7 +575,7 @@ describe('Movies GraphQL endpoints', () => {
           default:
             break;
         }
-      }
+      });
 
       // Assert
       expect(resp.errors).toBeFalsy();

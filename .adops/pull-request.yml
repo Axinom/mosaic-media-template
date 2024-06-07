@@ -53,7 +53,7 @@ stages:
                     echo "Node version $(node --version)"
                     docker --version
                     docker-compose --version
-                    
+
                     [ -d /home/vsts/ ] || sudo mkdir /home/vsts
                     sudo chown AzDevOps:AzDevOps -R /home/vsts
                   displayName: 'Setup Prerequisites'

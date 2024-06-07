@@ -34,7 +34,7 @@ export const requestServiceAccountToken = async (
     config.serviceAccountClientId,
     config.serviceAccountClientSecret,
   );
-
+  
   const { accessToken } = await generateLongLivedToken(
     config.idServiceAuthBaseUrl,
     sat.accessToken,
@@ -44,6 +44,7 @@ export const requestServiceAccountToken = async (
   cache.set(cacheKey, accessToken, refreshAfterInSeconds);
   return accessToken;
 };
+  
 
 /**
  * Get a long lived token to use in long running background processes from a valid JWT user/service account token

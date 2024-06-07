@@ -300,6 +300,9 @@ Note that the following pre-requisites are assumed:
      - i.e.
        `yarn util:load-vars mosaic hosting service deploy -i media-service -t 20230927.1 -p media-workflows@1.0.1 -m media-service-manifest-20230927 -n media-service-deployment-20230927.1`
    - Ensure you provide a unique value for the `<deployment-name>`
+7. (Optional) In case Localizations are enabled - `media-service` service
+   account shall be adjusted to include the `INGESTS_EDIT` permission for
+   the`media-service` itself in the Admin Portal.
 
 #### Deploy Catalog Service
 
