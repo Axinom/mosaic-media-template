@@ -9,10 +9,10 @@ import {
 } from '@axinom/mosaic-db-common';
 import { enhanceGraphqlErrors } from '@axinom/mosaic-graphql-common';
 import {
-  assertError,
   customizeGraphQlErrorFields,
   defaultPgErrorMapper,
   Dict,
+  ensureError,
   GraphQLErrorEnhanced,
   Logger,
   logGraphQlError,
@@ -88,7 +88,7 @@ const runGqlQuery = async function (
           result.errors,
           req.body?.operationName,
           customizeGraphQlErrorFields(defaultPgErrorMapper),
-          logGraphQlError(catalogLogMapper, this.logger),
+          logGraphQlError(catalogLogMapper, undefined, this.logger),
         );
       }
       return result;
@@ -122,10 +122,10 @@ export interface ITestContext {
 export const createTestContext = async (
   configOverrides: Dict<string> = {},
 ): Promise<ITestContext> => {
-  //This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
+  // This is needed if tests are running from monorepo context instead of project context, e.g. using Jest Runner extension
   process.chdir(resolve(__dirname, '../../../'));
 
-  //TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
+  // TODO: Check expect.getState().testPath filename for .db.spec. convention, throw an error if it does not match. https://github.com/facebook/jest/issues/9901
   const config = createTestConfig(configOverrides, expect.getState().testPath);
 
   const settings = await getMigrationSettings(config);
@@ -196,9 +196,9 @@ export const createTestContext = async (
       try {
         await truncate(tableName, 'CASCADE').run(this.ownerPool);
       } catch (e) {
-        assertError(e);
+        const error = ensureError(e);
         this.logger.error(
-          e,
+          error,
           'An error occurred while trying to truncate a table using TestContext.',
         );
       }
@@ -208,9 +208,9 @@ export const createTestContext = async (
         await this.ownerPool.end();
         await this.loginPool.end();
       } catch (e) {
-        assertError(e);
+        const error = ensureError(e);
         this.logger.error(
-          e,
+          error,
           'An error occurred while trying to dispose pg pools using TestContext.',
         );
       }

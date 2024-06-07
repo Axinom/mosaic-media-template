@@ -27,7 +27,7 @@ describe('SeasonPublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('A new season is published', async () => {
       // Arrange
       const message = createSeasonPublishedMessage('season-1');

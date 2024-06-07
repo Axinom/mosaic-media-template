@@ -11503,6 +11503,7 @@ type IngestDocument {
   createdUser: String!
   updatedUser: String!
   status: IngestStatus!
+  startedCount: Int!
 
   """Reads and enables pagination through a set of `IngestItem`."""
   ingestItems(
@@ -12389,6 +12390,9 @@ input IngestDocumentFilter {
   """Filter by the object’s `status` field."""
   status: IngestStatusFilter
 
+  """Filter by the object’s `startedCount` field."""
+  startedCount: IntFilter
+
   """Filter by the object’s `ingestItems` relation."""
   ingestItems: IngestDocumentToManyIngestItemFilter
 
@@ -12663,6 +12667,8 @@ enum IngestDocumentsOrderBy {
   UPDATED_USER_DESC
   STATUS_ASC
   STATUS_DESC
+  STARTED_COUNT_ASC
+  STARTED_COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -12720,6 +12726,9 @@ input IngestDocumentCondition {
 
   """Checks for equality with the object’s `status` field."""
   status: IngestStatus
+
+  """Checks for equality with the object’s `startedCount` field."""
+  startedCount: Int
 }
 
 """

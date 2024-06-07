@@ -84,13 +84,13 @@ export class PlaylistPublishedValidationWebhookHandler
       }
 
       if (this.config.prolongPlaylistTo24Hours) {
-        //Informative warning, that playlist is under 24 hours and will be prolonged with placeholder videos
+        // Informative warning, that playlist is under 24 hours and will be prolonged with placeholder videos
         if (diffInHours < 24) {
           validationResult.warnings.push(ValidationErrors.PlaylistProlongation);
         }
       }
 
-      //determine if playlist start date is older than 24 hours in the past
+      // determine if playlist start date is older than 24 hours in the past
       const playlistStartTimeComparedToNow = getHoursDifference(
         event.start_date_time,
         new Date().toISOString(),

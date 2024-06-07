@@ -34,7 +34,7 @@ export const SnapshotRegistry: React.FC = () => {
   const { filterOptions, transformFilters } = useSnapshotRegistryFilters();
   const { bulkActions } = useSnapshotRegistryActions();
 
-  //TODO: introduce a separate mutation for recreate snapshots for individual items
+  // TODO: introduce a separate mutation for recreate snapshots for individual items
   const [bulkRecreateSnapshots] = useBulkRecreateSnapshotsMutation({
     client: client,
     fetchPolicy: 'no-cache',

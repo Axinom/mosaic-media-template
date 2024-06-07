@@ -1,10 +1,11 @@
 trigger: none
+
 pr:
   - main
   - dev
+
 pool:
-  vmImage: 'ubuntu-latest'
-  demands: project_navy
+  name: 'Mosaic Auto Tests Cloud'
 
 variables:
   YARN_CACHE_FOLDER: /home/vsts/.yarn/berry/cache
@@ -28,6 +29,7 @@ stages:
                 placeholder
               path: $(Agent.TempDirectory)/cache
             displayName: Cache Yarn packages
+
   - stage: pr_check
     dependsOn: cache_init
     jobs:
@@ -45,13 +47,22 @@ stages:
                     versionSpec: '18.x'
                   displayName: 'Install Node.js'
 
-                - script: yarn install --immutable
-                  displayName: Install dependencies
+                - script: |
+                    corepack enable # this is supposed to introduce yarn into the system.
+                    echo "Yarn version $(yarn --version)"
+                    echo "Node version $(node --version)"
+                    docker --version
+                    docker-compose --version
+
+                    [ -d /home/vsts/ ] || sudo mkdir /home/vsts
+                    sudo chown AzDevOps:AzDevOps -R /home/vsts
+                  displayName: 'Setup Prerequisites'
 
                 - task: Bash@3
                   inputs:
                     targetType: 'inline'
                     script: |
+                      yarn install
                       yarn build || echo "Build exited with non-0 exit code"
                       echo "Build Exit Code: $?"
                   displayName: Build
@@ -67,11 +78,6 @@ stages:
                     sed -i 's/^\(RABBITMQ_PASSWORD=\)$/\1fake/' .env
                     sed -i 's/^\(DEV_SERVICE_ACCOUNT_CLIENT_ID=\)$/\1fake/' .env
                     sed -i 's/^\(DEV_SERVICE_ACCOUNT_CLIENT_SECRET=\)$/\1fake/' .env
-                    sed -i '/POSTGRESQL_HOST/d' .env
-                    sed -i '/POSTGRESQL_ROOT/d' .env
-                    echo -e "\nPOSTGRESQL_HOST=$(DATABASE_HOST)" >> .env
-                    echo "POSTGRESQL_ROOT=$(DATABASE_USERNAME)" >> .env
-                    echo "POSTGRESQL_ROOT_PASSWORD=$(DATABASE_PASSWORD)" >> .env
                   displayName:
                     Add fake values to .env to keep config loader happy
 

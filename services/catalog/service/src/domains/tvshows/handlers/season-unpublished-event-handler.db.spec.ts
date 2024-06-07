@@ -24,7 +24,7 @@ describe('SeasonPublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('An existing season is unpublished', async () => {
       // Arrange
       const seasonId = 'season-1';

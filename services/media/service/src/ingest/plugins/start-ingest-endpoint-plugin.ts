@@ -21,6 +21,7 @@ import {
   CommonErrors,
   getLongLivedToken,
   getMediaMappedError,
+  PRIORITY_SEGMENT,
   transformAjvErrors,
 } from '../../common';
 import { ingestPermissionMappings } from '../../domains/permission-definition';
@@ -98,7 +99,7 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
       Mutation: {
         startIngest: async (_query, args, context, { graphile }) => {
           try {
-            const { subject, config, jwtToken, ownerPool, storeOutboxMessage } =
+            const { subject, config, jwtToken, ownerPool, storeInboxMessage } =
               getValidatedExtendedContext(context);
 
             const file = await args.input.file;
@@ -117,16 +118,26 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
             const ajv = new Ajv({ allErrors: true });
             addFormats(ajv);
             const isValid = ajv.validate(ingestSchema, document);
-            const customErrors = customIngestValidation(document);
-            if (!isValid || customErrors.length > 0) {
+            if (!isValid) {
               const schemaErrors = transformAjvErrors(
                 ajv.errors,
                 documentString,
               );
+              // Skip custom errors if schema validation failed, since incorrect
+              // document structure might cause custom validation to fail
               throw new MosaicError({
                 ...CommonErrors.IngestValidationError,
                 details: {
-                  validationErrors: [...schemaErrors, ...customErrors],
+                  validationErrors: [...schemaErrors],
+                },
+              });
+            }
+            const customErrors = customIngestValidation(document);
+            if (customErrors.length > 0) {
+              throw new MosaicError({
+                ...CommonErrors.IngestValidationError,
+                details: {
+                  validationErrors: customErrors,
                 },
               });
             }
@@ -152,12 +163,12 @@ export const StartIngestEndpointPlugin = makeExtendSchemaPlugin((build) => {
                 // Sending only a database ID in a scenario of detached services is an anti-pattern
                 // Ideally the whole doc should have been sent and message should be self-contained,
                 // but because the document can be quite big we save it to DB and pass only it's ID.
-                await storeOutboxMessage<StartIngestCommand>(
+                await storeInboxMessage<StartIngestCommand>(
                   doc.id.toString(),
                   MediaServiceMessagingSettings.StartIngest,
                   { doc_id: doc.id },
                   ctx,
-                  { envelopeOverrides: { auth_token: token } },
+                  { metadata: { authToken: token }, segment: PRIORITY_SEGMENT },
                 );
                 return doc;
               },

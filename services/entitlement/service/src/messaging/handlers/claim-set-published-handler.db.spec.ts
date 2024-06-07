@@ -1,11 +1,7 @@
-import {
-  AuthenticatedManagementSubject,
-  AuthenticatedManagementSubjectMessageInfo,
-} from '@axinom/mosaic-id-guard';
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { ClaimSetPublishedEvent } from '@axinom/mosaic-messages';
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { all, insert, select } from 'zapatos/db';
 import {
@@ -19,19 +15,11 @@ describe('ClaimSetPublishedHandler', () => {
   let ctx: ITestContext;
   let handler: ClaimSetPublishedHandler;
   let user: AuthenticatedManagementSubject;
-  let message: AuthenticatedManagementSubjectMessageInfo;
 
   beforeAll(async () => {
     ctx = await createTestContext();
     handler = new ClaimSetPublishedHandler(ctx.config);
     user = createTestUser({ name: 'Monetization Admin' });
-    message = stub<AuthenticatedManagementSubjectMessageInfo>({
-      envelope: {
-        auth_token:
-          'some token value which is not used because we are substituting getSubject method and using a stub user',
-      },
-      subject: user,
-    });
   });
 
   afterEach(async () => {

@@ -76,10 +76,10 @@ describe('snapshot-utils', () => {
       );
 
       expect(snapshot).toMatchObject({
-        //Auto-generated
-        //updated_date: '2021-05-26T09:36:26.209Z',
-        //created_date: '2021-05-26T09:36:26.209Z',
-        //id: 8,
+        // Auto-generated
+        // updated_date: '2021-05-26T09:36:26.209Z',
+        // created_date: '2021-05-26T09:36:26.209Z',
+        // id: 8,
         updated_user: 'System',
         created_user: 'System',
         entity_id: movie1.id,
@@ -99,7 +99,7 @@ describe('snapshot-utils', () => {
     });
 
     it('call with 1 existing snapshots -> snapshot returned with incremented snapshot_no', async () => {
-      //Arrange
+      // Arrange
       await insert('movies_snapshots', {
         movie_id: movie1.id,
         snapshot_id: snapshot1.id,
@@ -121,10 +121,10 @@ describe('snapshot-utils', () => {
       );
 
       expect(snapshot).toMatchObject({
-        //Auto-generated
-        //updated_date: '2021-05-26T09:36:26.209Z',
-        //created_date: '2021-05-26T09:36:26.209Z',
-        //id: 8,
+        // Auto-generated
+        // updated_date: '2021-05-26T09:36:26.209Z',
+        // created_date: '2021-05-26T09:36:26.209Z',
+        // id: 8,
         updated_user: 'System',
         created_user: 'System',
         entity_id: movie1.id,
@@ -149,7 +149,7 @@ describe('snapshot-utils', () => {
 
   describe('getPublishedSnapshot', () => {
     it('call while published snapshots exist -> non-empty result', async () => {
-      //Arrange
+      // Arrange
       await insert('movies_snapshots', {
         movie_id: movie1.id,
         snapshot_id: snapshot1.id,
@@ -171,7 +171,7 @@ describe('snapshot-utils', () => {
     });
 
     it('call while published orphaned snapshots exist -> undefined result', async () => {
-      //Arrange
+      // Arrange
       await update(
         'snapshots',
         { snapshot_state: 'PUBLISHED' },
@@ -216,10 +216,10 @@ describe('snapshot-utils', () => {
 
       // Assert
       expect(snapshot).toMatchObject({
-        //Auto-generated
-        //updated_date: '2021-05-26T09:36:26.209Z',
-        //created_date: '2021-05-26T09:36:26.209Z',
-        //id: 8,
+        // Auto-generated
+        // updated_date: '2021-05-26T09:36:26.209Z',
+        // created_date: '2021-05-26T09:36:26.209Z',
+        // id: 8,
         updated_user: 'System',
         created_user: 'System',
         entity_id: listSnapshotInfo.id,
@@ -259,10 +259,10 @@ describe('snapshot-utils', () => {
 
       // Assert
       expect(snapshot).toMatchObject({
-        //Auto-generated
-        //updated_date: '2021-05-26T09:36:26.209Z',
-        //created_date: '2021-05-26T09:36:26.209Z',
-        //id: 8,
+        // Auto-generated
+        // updated_date: '2021-05-26T09:36:26.209Z',
+        // created_date: '2021-05-26T09:36:26.209Z',
+        // id: 8,
         updated_user: 'System',
         created_user: 'System',
         entity_id: listSnapshotInfo.id,

@@ -70,9 +70,8 @@ export const MovieImageManagement: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const mutations: string[] = [];
 
@@ -94,25 +93,27 @@ export const MovieImageManagement: React.FC = () => {
         );
 
       const generateDeleteMutation = (imageType: MovieImageType): string =>
-        generateUpdateGQLFragment<
-          MutationDeleteMoviesImageByMovieIdAndImageTypeArgs
-        >('deleteMoviesImageByMovieIdAndImageType', {
-          input: { movieId, imageType: { type: 'enum', value: imageType } },
-        });
+        generateUpdateGQLFragment<MutationDeleteMoviesImageByMovieIdAndImageTypeArgs>(
+          'deleteMoviesImageByMovieIdAndImageType',
+          {
+            input: { movieId, imageType: { type: 'enum', value: imageType } },
+          },
+        );
 
       const generateUpdateMutation = (
         imageId: string,
         imageType: MovieImageType,
       ): string =>
-        generateUpdateGQLFragment<
-          MutationUpdateMoviesImageByMovieIdAndImageTypeArgs
-        >('updateMoviesImageByMovieIdAndImageType', {
-          input: {
-            patch: { imageId },
-            movieId,
-            imageType: { type: 'enum', value: imageType },
+        generateUpdateGQLFragment<MutationUpdateMoviesImageByMovieIdAndImageTypeArgs>(
+          'updateMoviesImageByMovieIdAndImageType',
+          {
+            input: {
+              patch: { imageId },
+              movieId,
+              imageType: { type: 'enum', value: imageType },
+            },
           },
-        });
+        );
 
       Object.entries(formData ?? {}).forEach(([imageType, imageId], idx) => {
         const [imgId] = imageId;

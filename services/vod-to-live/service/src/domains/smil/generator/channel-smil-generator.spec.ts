@@ -62,7 +62,7 @@ describe('ChannelSmilGenerator', () => {
     const headers: { '@name': string; '@content'?: string }[] = [
       createHeaderMetadata(HeaderMetadataNames.Vod2Live, true),
       { '@name': HeaderMetadataNames.Vod2LiveStartTime },
-      //temporary set to false, due to bug in Origin
+      // temporary set to false, due to bug in Origin
       createHeaderMetadata(HeaderMetadataNames.SpliceMedia, false),
       createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
       createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),

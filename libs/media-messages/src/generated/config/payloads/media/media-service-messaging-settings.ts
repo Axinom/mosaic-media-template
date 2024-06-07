@@ -43,13 +43,6 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'command',
     'ingest-item'
     );
-  public static CheckFinishIngestItem = new MediaServiceMessagingSettings(
-    'CheckFinishIngestItem', 
-    'inbox', 
-    'ingest.check_finish_item',
-    'command',
-    'ingest-item'
-    );
   public static CheckFinishIngestDocument = new MediaServiceMessagingSettings(
     'CheckFinishIngestDocument', 
     'inbox', 

@@ -5,7 +5,10 @@ import {
   getHttpServer,
   getWebsocketMiddlewares,
 } from '@axinom/mosaic-service-common';
-import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  StoreInboxMessage,
+  StoreOutboxMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { altairExpress } from 'altair-express-middleware';
 import { Express } from 'express';
 import { enhanceHttpServerWithSubscriptions, postgraphile } from 'postgraphile';
@@ -19,19 +22,27 @@ export const setupPostGraphile = async (
   config: Config,
   authConfig: AuthenticationConfig,
   storeOutboxMessage: StoreOutboxMessage,
+  storeInboxMessage: StoreInboxMessage,
 ): Promise<void> => {
   const websocketMiddlewares = getWebsocketMiddlewares(app);
   const options = buildPostgraphileOptions(
     config,
     ownerPool,
     storeOutboxMessage,
+    storeInboxMessage,
     websocketMiddlewares,
     authConfig,
   );
 
   if (config.graphqlGuiEnabled) {
     app.use(forwardToGraphiQl());
-    app.use('/altair', altairExpress({ endpointURL: '/graphql' }));
+    app.use(
+      '/altair',
+      altairExpress({
+        endpointURL: '/graphql',
+        serveInitialOptionsInSeperateRequest: true,
+      }),
+    );
   }
 
   const middleware = postgraphile(loginPool, 'app_public', options);

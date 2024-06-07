@@ -1,12 +1,9 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { EnsureVideoExistsCreationStartedEvent } from '@axinom/mosaic-messages';
-import {
-  StoreOutboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
+import { MosaicError } from '@axinom/mosaic-service-common';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
-import { CheckFinishIngestItemCommand } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
 import {
@@ -14,6 +11,7 @@ import {
   ingest_items,
   ingest_item_steps,
 } from 'zapatos/schema';
+import { CommonErrors } from '../../common';
 import { MockIngestProcessor } from '../../tests/ingest/mock-ingest-processor';
 import {
   createTestContext,
@@ -30,7 +28,6 @@ describe('VideoSucceededHandler', () => {
   let step1: ingest_item_steps.JSONSelectable;
   let item1: ingest_items.JSONSelectable;
   let doc1: ingest_documents.JSONSelectable;
-  let payloads: CheckFinishIngestItemCommand[] = [];
 
   const createMessage = (
     payload: EnsureVideoExistsCreationStartedEvent,
@@ -45,15 +42,9 @@ describe('VideoSucceededHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
-      async (_aggregateId, _messagingSettings, payload) => {
-        payloads.push(payload as CheckFinishIngestItemCommand);
-      },
-    );
     user = createTestUser(ctx.config.serviceId);
     handler = new VideoCreationStartedHandler(
       [new MockIngestProcessor()],
-      storeOutboxMessage,
       ctx.config,
     );
   });
@@ -95,7 +86,6 @@ describe('VideoSucceededHandler', () => {
 
   afterEach(async () => {
     await ctx.truncate('ingest_documents');
-    payloads = [];
   });
 
   afterAll(async () => {
@@ -103,8 +93,8 @@ describe('VideoSucceededHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
-    it('message succeeded without errors -> message without error sent and step updated', async () => {
+  describe('handleMessage', () => {
+    it('message succeeded without errors -> step updated', async () => {
       // Arrange
       const payload: EnsureVideoExistsCreationStartedEvent = {
         video_id: '6804e7ff-8bed-42b2-85bf-c1ca5b59c417',
@@ -127,33 +117,58 @@ describe('VideoSucceededHandler', () => {
       }).run(ctx.ownerPool);
 
       expect(step?.entity_id).toEqual(payload.video_id);
-
-      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
-        {
-          ingest_item_step_id: step1.id,
-          ingest_item_id: item1.id,
-        },
-      ]);
+      expect(step?.status).toEqual('SUCCESS');
     });
   });
 
-  describe('onMessageFailure', () => {
-    it('message failed on all retries -> message with error sent', async () => {
+  describe('mapError', () => {
+    it('message failed with non-mosaic error -> default error mapped', async () => {
+      // Act
+      const error = handler.mapError(new Error('Unexpected status code: 404'));
+
+      // Assert
+      expect(error).toMatchObject({
+        message:
+          'The video encoding has started, but there was an error adding that video to the entity.',
+        code: CommonErrors.IngestError.code,
+      });
+    });
+
+    it('message failed with mosaic error -> thrown error mapped', async () => {
+      // Arrange
+      const testErrorInfo = {
+        message: 'Handled test message',
+        code: 'HANDLED_TEST_CODE',
+      };
+
+      // Act
+      const error = handler.mapError(new MosaicError(testErrorInfo));
+
+      // Assert
+      expect(error).toMatchObject(testErrorInfo);
+    });
+  });
+
+  describe('handleErrorMessage', () => {
+    it('message failed on all retries -> step updated', async () => {
       // Arrange
       const payload: EnsureVideoExistsCreationStartedEvent = {
         video_id: '6804e7ff-8bed-42b2-85bf-c1ca5b59c417',
         encoding_state: 'IN_PROGRESS',
       };
       const context = {
-        ingestItemStepId: '8331d916-575e-4555-99da-ac820d456a7b',
+        ingestItemStepId: step1.id,
         ingestItemId: item1.id,
         videoType: 'MAIN',
       };
+      // mapError makes sure this error is appropriate
+      const error = new Error('Handled and mapped message');
 
       // Act
       await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleErrorMessage(
-          new Error('test error'),
+          // mapError makes sure this error is appropriate
+          error,
           createMessage(payload, context),
           dbCtx,
           false,
@@ -161,14 +176,11 @@ describe('VideoSucceededHandler', () => {
       );
 
       // Assert
-      expect(payloads).toEqual<CheckFinishIngestItemCommand[]>([
-        {
-          ingest_item_step_id: '8331d916-575e-4555-99da-ac820d456a7b',
-          ingest_item_id: item1.id,
-          error_message:
-            'An unexpected error occurred while trying to update video relations.',
-        },
-      ]);
+      const step = await selectOne('ingest_item_steps', {
+        id: step1.id,
+      }).run(ctx.ownerPool);
+      expect(step?.response_message).toEqual(error.message);
+      expect(step?.status).toEqual('ERROR');
     });
   });
 });

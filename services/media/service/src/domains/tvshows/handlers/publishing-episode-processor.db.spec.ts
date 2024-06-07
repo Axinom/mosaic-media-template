@@ -44,7 +44,7 @@ describe('publishingEpisodeProcessor', () => {
 
   describe('aggregator', () => {
     it('minimal episode -> valid result', async () => {
-      //Arrange
+      // Arrange
       jest
         .spyOn(videoMetadata, 'getVideosMetadata')
         .mockImplementation(async () => ({

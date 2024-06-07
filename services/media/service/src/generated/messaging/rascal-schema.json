@@ -43,20 +43,20 @@
             }
           }
         },
-        "media-service:inbox": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "media-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
         "ax-video-service:inbox": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
               "x-dead-letter-routing-key": "ax-video-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "media-service:inbox": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "media-service.dead_letter",
               "x-queue-type": "quorum"
             }
           }
@@ -70,43 +70,7 @@
             }
           }
         },
-        "ax-localization-service:entity:localize": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-localization-service:entity_definition:declare": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-localization-service:entity_definition:delete": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-localization-service:localization_source_entity:upsert": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-localization-service:localization_source_entity:delete": {
+        "ax-localization-service:inbox": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
@@ -132,40 +96,15 @@
           "bindingKey": "delay.30sec",
           "destination": "delay:30sec"
         },
-        "retry:media-service:inbox": {
-          "source": "retry",
-          "bindingKey": "media-service:inbox.#",
-          "destination": "media-service:inbox"
-        },
-        "media-service.ingest.start": {
-          "source": "command",
-          "bindingKey": "media-service.ingest.start",
-          "destination": "media-service:inbox"
-        },
-        "media-service.ingest.start_item": {
-          "source": "command",
-          "bindingKey": "media-service.ingest.start_item",
-          "destination": "media-service:inbox"
-        },
-        "media-service.ingest.update_metadata": {
-          "source": "command",
-          "bindingKey": "media-service.ingest.update_metadata",
-          "destination": "media-service:inbox"
-        },
-        "media-service.ingest.check_finish_item": {
-          "source": "command",
-          "bindingKey": "media-service.ingest.check_finish_item",
-          "destination": "media-service:inbox"
-        },
-        "media-service.ingest.check_finish_document": {
-          "source": "command",
-          "bindingKey": "media-service.ingest.check_finish_document",
-          "destination": "media-service:inbox"
-        },
         "retry:ax-video-service:inbox": {
           "source": "retry",
           "bindingKey": "ax-video-service:inbox.#",
           "destination": "ax-video-service:inbox"
+        },
+        "retry:media-service:inbox": {
+          "source": "retry",
+          "bindingKey": "media-service:inbox.#",
+          "destination": "media-service:inbox"
         },
         "ax-video-service.*.*.video.ensure_exists_already_existed": {
           "source": "event",
@@ -212,10 +151,10 @@
           "bindingKey": "ax-localization-service.*.*.localization_source_entity.upsert_failed",
           "destination": "media-service:inbox"
         },
-        "retry:ax-localization-service:entity:localize": {
+        "retry:ax-localization-service:inbox": {
           "source": "retry",
-          "bindingKey": "ax-localization-service:entity:localize.#",
-          "destination": "ax-localization-service:entity:localize"
+          "bindingKey": "ax-localization-service:inbox.#",
+          "destination": "ax-localization-service:inbox"
         },
         "ax-localization-service.*.*.entity.localize_finished": {
           "source": "event",
@@ -225,21 +164,6 @@
         "ax-localization-service.*.*.entity.localize_failed": {
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity.localize_failed",
-          "destination": "media-service:inbox"
-        },
-        "media-service.entity.publish_entity": {
-          "source": "command",
-          "bindingKey": "media-service.entity.publish_entity",
-          "destination": "media-service:inbox"
-        },
-        "media-service.entity.unpublish_entity": {
-          "source": "command",
-          "bindingKey": "media-service.entity.unpublish_entity",
-          "destination": "media-service:inbox"
-        },
-        "media-service.entity.delete": {
-          "source": "command",
-          "bindingKey": "media-service.entity.delete",
           "destination": "media-service:inbox"
         },
         "ax-image-service.*.*.image_types.declared": {
@@ -262,11 +186,6 @@
           "bindingKey": "ax-video-service.*.*.cue_point_types.declare_failed",
           "destination": "media-service:inbox"
         },
-        "retry:ax-localization-service:entity_definition:declare": {
-          "source": "retry",
-          "bindingKey": "ax-localization-service:entity_definition:declare.#",
-          "destination": "ax-localization-service:entity_definition:declare"
-        },
         "ax-localization-service.*.*.entity_definition.declare_failed": {
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.declare_failed",
@@ -277,11 +196,6 @@
           "bindingKey": "ax-localization-service.*.*.entity_definition.declare_finished",
           "destination": "media-service:inbox"
         },
-        "retry:ax-localization-service:entity_definition:delete": {
-          "source": "retry",
-          "bindingKey": "ax-localization-service:entity_definition:delete.#",
-          "destination": "ax-localization-service:entity_definition:delete"
-        },
         "ax-localization-service.*.*.entity_definition.delete_failed": {
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.delete_failed",
@@ -291,16 +205,6 @@
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.delete_finished",
           "destination": "media-service:inbox"
-        },
-        "retry:ax-localization-service:localization_source_entity:upsert": {
-          "source": "retry",
-          "bindingKey": "ax-localization-service:localization_source_entity:upsert.#",
-          "destination": "ax-localization-service:localization_source_entity:upsert"
-        },
-        "retry:ax-localization-service:localization_source_entity:delete": {
-          "source": "retry",
-          "bindingKey": "ax-localization-service:localization_source_entity:delete.#",
-          "destination": "ax-localization-service:localization_source_entity:delete"
         }
       },
       "publications": {
@@ -320,26 +224,6 @@
             ]
           }
         },
-        "StartIngest": {
-          "exchange": "command",
-          "routingKey": "media-service.ingest.start"
-        },
-        "StartIngestItem": {
-          "exchange": "command",
-          "routingKey": "media-service.ingest.start_item"
-        },
-        "UpdateMetadata": {
-          "exchange": "command",
-          "routingKey": "media-service.ingest.update_metadata"
-        },
-        "CheckFinishIngestItem": {
-          "exchange": "command",
-          "routingKey": "media-service.ingest.check_finish_item"
-        },
-        "CheckFinishIngestDocument": {
-          "exchange": "command",
-          "routingKey": "media-service.ingest.check_finish_document"
-        },
         "EnsureVideoExists": {
           "exchange": "command",
           "routingKey": "ax-video-service.*.*.video.ensure_exists"
@@ -351,14 +235,6 @@
         "LocalizeEntity": {
           "exchange": "command",
           "routingKey": "ax-localization-service.*.*.entity.localize"
-        },
-        "PublishEntity": {
-          "exchange": "command",
-          "routingKey": "media-service.entity.publish_entity"
-        },
-        "UnpublishEntity": {
-          "exchange": "command",
-          "routingKey": "media-service.entity.unpublish_entity"
         },
         "MoviePublished": {
           "exchange": "event",
@@ -415,10 +291,6 @@
         "CollectionUnpublished": {
           "exchange": "event",
           "routingKey": "media-service.collection.unpublished"
-        },
-        "DeleteEntity": {
-          "exchange": "command",
-          "routingKey": "media-service.entity.delete"
         },
         "DeclareImageTypes": {
           "exchange": "command",

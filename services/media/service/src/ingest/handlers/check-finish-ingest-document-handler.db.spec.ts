@@ -1,7 +1,7 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import { assertNotFalsy } from '@axinom/mosaic-service-common';
+import { assertNotFalsy, MosaicError } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -10,6 +10,7 @@ import { CheckFinishIngestDocumentCommand } from 'media-messages';
 import { IngestItemStatusEnum } from 'zapatos/custom';
 import { insert, selectOne, update } from 'zapatos/db';
 import { ingest_documents, ingest_items } from 'zapatos/schema';
+import { CommonErrors } from '../../common';
 import {
   createTestContext,
   createTestUser,
@@ -40,14 +41,14 @@ describe('Check Finish Ingest Document Handler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as CheckFinishIngestDocumentCommand);
       },
     );
     user = createTestUser(ctx.config.serviceId);
     handler = new CheckFinishIngestDocumentHandler(
-      storeOutboxMessage,
+      storeInboxMessage,
       ctx.config,
     );
   });
@@ -107,7 +108,7 @@ describe('Check Finish Ingest Document Handler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message with all 0 counts for 2 in progress items, initial call -> seconds_without_progress remains the same, waiting 5 sec', async () => {
       // Arrange
       const payload: CheckFinishIngestDocumentCommand = {
@@ -323,5 +324,64 @@ describe('Check Finish Ingest Document Handler', () => {
         expect(messages).toEqual([]);
       },
     );
+  });
+
+  describe('mapError', () => {
+    it('message failed with non-mosaic error -> default error mapped', async () => {
+      // Act
+      const error = handler.mapError(new Error('Unexpected status code: 404'));
+
+      // Assert
+      expect(error).toMatchObject({
+        message:
+          'An unexpected error occurred trying to update the ingest document and its relations.',
+        code: CommonErrors.IngestError.code,
+      });
+    });
+
+    it('message failed with mosaic error -> thrown error mapped', async () => {
+      // Arrange
+      const testErrorInfo = {
+        message: 'Handled test message',
+        code: 'HANDLED_TEST_CODE',
+      };
+
+      // Act
+      const error = handler.mapError(new MosaicError(testErrorInfo));
+
+      // Assert
+      expect(error).toMatchObject(testErrorInfo);
+    });
+  });
+
+  describe('handleErrorMessage', () => {
+    it('message failed on all retries -> document state updated to ERROR', async () => {
+      // Arrange
+      const payload: CheckFinishIngestDocumentCommand = {
+        ingest_document_id: doc1.id,
+        seconds_without_progress: 0,
+        previous_success_count: 0,
+        previous_in_progress_count: 0,
+        previous_error_count: 0,
+      };
+      // mapError makes sure this error is appropriate
+      const error = new Error('Handled and mapped message');
+
+      // Act
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
+        handler.handleErrorMessage(error, createMessage(payload), dbCtx, false),
+      );
+      // Assert
+      const doc = await selectOne('ingest_documents', { id: doc1.id }).run(
+        ctx.ownerPool,
+      );
+      expect(doc?.errors).toEqual([
+        {
+          message: error.message,
+          source: 'CheckFinishIngestDocumentHandler',
+        },
+      ]);
+      expect(doc?.status).toEqual('ERROR');
+    });
   });
 });

@@ -10,12 +10,11 @@ import { PublishingSnapshotExplorer } from '../../Publishing/PublishingSnapshotE
 export const MovieGenresSnapshots: React.FC = () => {
   const history = useHistory();
 
-  const [
-    createMovieGenresSnapshotMutation,
-  ] = useCreateMovieGenresSnapshotMutation({
-    client,
-    fetchPolicy: 'no-cache',
-  });
+  const [createMovieGenresSnapshotMutation] =
+    useCreateMovieGenresSnapshotMutation({
+      client,
+      fetchPolicy: 'no-cache',
+    });
 
   const handleItemCreate = async (): Promise<void> => {
     const { data } = await createMovieGenresSnapshotMutation();

@@ -5,8 +5,12 @@ import {
 import NodeCache from 'node-cache';
 import { Config } from '../config';
 
-// By default, service account token is valid for 1 hour
-const cache = new NodeCache({ stdTTL: 55 * 60 });
+const tokenExpirationInSeconds = 7 * 24 * 60 * 60; // 7 days
+const refreshAfterInSeconds = 60 * 60; // 1 hour
+
+// We convert service account token to long lived token that is valid for 7 days
+// But refresh it after 1 hour to account for possible permission changes
+const cache = new NodeCache({ stdTTL: refreshAfterInSeconds });
 
 /**
  * Get the access token for the service account of the media service
@@ -25,14 +29,22 @@ export const requestServiceAccountToken = async (
   if (token !== undefined) {
     return token;
   }
-  const { accessToken, expiresInSeconds } = await getServiceAccountToken(
+  const sat = await getServiceAccountToken(
     config.idServiceAuthBaseUrl,
     config.serviceAccountClientId,
     config.serviceAccountClientSecret,
   );
-  cache.set(cacheKey, accessToken, expiresInSeconds - 5 * 60);
+  
+  const { accessToken } = await generateLongLivedToken(
+    config.idServiceAuthBaseUrl,
+    sat.accessToken,
+    sat.accessToken,
+    tokenExpirationInSeconds,
+  );
+  cache.set(cacheKey, accessToken, refreshAfterInSeconds);
   return accessToken;
 };
+  
 
 /**
  * Get a long lived token to use in long running background processes from a valid JWT user/service account token
@@ -41,14 +53,19 @@ export const requestServiceAccountToken = async (
  */
 export const getLongLivedToken = async (
   subjectToken: string,
-  config: Config,
+  config: Pick<
+    Config,
+    | 'idServiceAuthBaseUrl'
+    | 'serviceAccountClientId'
+    | 'serviceAccountClientSecret'
+  >,
 ): Promise<string> => {
   const accessToken = await requestServiceAccountToken(config);
   const token = await generateLongLivedToken(
     config.idServiceAuthBaseUrl,
     accessToken,
     subjectToken,
-    604800,
+    tokenExpirationInSeconds,
   );
   return token.accessToken;
 };

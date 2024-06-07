@@ -70,9 +70,8 @@ export const CollectionImageManagement: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const mutations: string[] = [];
 
@@ -94,28 +93,30 @@ export const CollectionImageManagement: React.FC = () => {
         );
 
       const generateDeleteMutation = (imageType: CollectionImageType): string =>
-        generateUpdateGQLFragment<
-          MutationDeleteCollectionsImageByCollectionIdAndImageTypeArgs
-        >('deleteCollectionsImageByCollectionIdAndImageType', {
-          input: {
-            collectionId,
-            imageType: { type: 'enum', value: imageType },
+        generateUpdateGQLFragment<MutationDeleteCollectionsImageByCollectionIdAndImageTypeArgs>(
+          'deleteCollectionsImageByCollectionIdAndImageType',
+          {
+            input: {
+              collectionId,
+              imageType: { type: 'enum', value: imageType },
+            },
           },
-        });
+        );
 
       const generateUpdateMutation = (
         imageId: string,
         imageType: CollectionImageType,
       ): string =>
-        generateUpdateGQLFragment<
-          MutationUpdateCollectionsImageByCollectionIdAndImageTypeArgs
-        >('updateCollectionsImageByCollectionIdAndImageType', {
-          input: {
-            patch: { imageId },
-            collectionId,
-            imageType: { type: 'enum', value: imageType },
+        generateUpdateGQLFragment<MutationUpdateCollectionsImageByCollectionIdAndImageTypeArgs>(
+          'updateCollectionsImageByCollectionIdAndImageType',
+          {
+            input: {
+              patch: { imageId },
+              collectionId,
+              imageType: { type: 'enum', value: imageType },
+            },
           },
-        });
+        );
 
       Object.entries(formData ?? {}).forEach(([imageType, imageId], idx) => {
         const [imgId] = imageId;

@@ -135,7 +135,7 @@ describe('PlaylistSmilGenerator', () => {
 
   const PLACEHOLDER_VIDEO = createTestVideo(false, '0', 20);
 
-  //Playlist contains:
+  // Playlist contains:
   // - Program/video for 60 seconds
   // - MID cue point at 10s (of the video) with duration for 5s
   // - MID cue point at 25s (of the video) with duration for 7s
@@ -199,7 +199,7 @@ describe('PlaylistSmilGenerator', () => {
         HeaderMetadataNames.Vod2LiveStartTime,
         startDateTime,
       ),
-      //temporary set to false, due to bug in Origin
+      // temporary set to false, due to bug in Origin
       createHeaderMetadata(HeaderMetadataNames.SpliceMedia, false),
       createHeaderMetadata(HeaderMetadataNames.TimedMetadata, true),
       createHeaderMetadata(HeaderMetadataNames.MpdSegmentTemplate, 'time'),
@@ -302,7 +302,7 @@ describe('PlaylistSmilGenerator', () => {
                     SpliceInfoSection: {
                       SpliceInsert: [
                         {
-                          '@outOfNetworkIndicator': 1, //out of network indicator
+                          '@outOfNetworkIndicator': 1, // out of network indicator
                           '@spliceImmediateFlag': 1,
                           '@spliceEventId': `${spliceId}`,
                         },
@@ -325,7 +325,7 @@ describe('PlaylistSmilGenerator', () => {
                     SpliceInfoSection: {
                       SpliceInsert: [
                         {
-                          '@outOfNetworkIndicator': 0, //back to the network indicator
+                          '@outOfNetworkIndicator': 0, // back to the network indicator
                           '@spliceImmediateFlag': 1,
                           '@spliceEventId': `${spliceId}`,
                         },
@@ -373,7 +373,7 @@ describe('PlaylistSmilGenerator', () => {
         for (let i = 0; i < parallels.length; i++) {
           const parallel = parallels[i];
           if (i % 2 === 0) {
-            //if it is the last parallel - it is an empty parallel with no media, but event to return `in network`, after last `out of network` ad
+            // if it is the last parallel - it is an empty parallel with no media, but event to return `in network`, after last `out of network` ad
             const countOfMedia = i === parallels.length - 1 ? 0 : 1;
             // index is even - expect parallel for video
             expect(parallel.audio).toHaveLength(countOfMedia);
@@ -390,7 +390,7 @@ describe('PlaylistSmilGenerator', () => {
                           SpliceInfoSection: {
                             SpliceInsert: [
                               {
-                                '@outOfNetworkIndicator': 0, //back to the network indicator
+                                '@outOfNetworkIndicator': 0, // back to the network indicator
                                 '@spliceImmediateFlag': 1,
                                 '@spliceEventId': `${spliceId}`,
                               },
@@ -416,7 +416,7 @@ describe('PlaylistSmilGenerator', () => {
                     SpliceInfoSection: {
                       SpliceInsert: [
                         {
-                          '@outOfNetworkIndicator': 1, //out of network indicator
+                          '@outOfNetworkIndicator': 1, // out of network indicator
                           '@spliceImmediateFlag': 1,
                           '@spliceEventId': `${spliceId}`,
                         },
@@ -560,13 +560,13 @@ describe('PlaylistSmilGenerator', () => {
         const parallels = resultSmil.smil.body.seq.par;
         expect(parallels).toHaveLength(7); // 3 parallels for ads and 4 for program's video
         expect(parallels).toMatchObject([
-          //program is played for 10 seconds
+          // program is played for 10 seconds
           {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(10),
             EventStream: undefined,
           },
-          //ad is played for 5 seconds
+          // ad is played for 5 seconds
           {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(5),
@@ -576,7 +576,7 @@ describe('PlaylistSmilGenerator', () => {
                   SpliceInfoSection: {
                     SpliceInsert: [
                       {
-                        '@outOfNetworkIndicator': 1, //out of the network indicator
+                        '@outOfNetworkIndicator': 1, // out of the network indicator
                         '@spliceImmediateFlag': 1,
                         '@spliceEventId': `1`,
                       },
@@ -586,7 +586,7 @@ describe('PlaylistSmilGenerator', () => {
               },
             },
           },
-          //program is played from 10s mark to 25
+          // program is played from 10s mark to 25
           {
             '@clipBegin': transformSecondsToWallClock(10),
             '@clipEnd': transformSecondsToWallClock(25),
@@ -596,7 +596,7 @@ describe('PlaylistSmilGenerator', () => {
                   SpliceInfoSection: {
                     SpliceInsert: [
                       {
-                        '@outOfNetworkIndicator': 0, //to the network indicator
+                        '@outOfNetworkIndicator': 0, // to the network indicator
                         '@spliceImmediateFlag': 1,
                         '@spliceEventId': `1`,
                       },
@@ -606,7 +606,7 @@ describe('PlaylistSmilGenerator', () => {
               },
             },
           },
-          //ad is played for 7 seconds
+          // ad is played for 7 seconds
           {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(7),
@@ -616,7 +616,7 @@ describe('PlaylistSmilGenerator', () => {
                   SpliceInfoSection: {
                     SpliceInsert: [
                       {
-                        '@outOfNetworkIndicator': 1, //out of the network indicator
+                        '@outOfNetworkIndicator': 1, // out of the network indicator
                         '@spliceImmediateFlag': 1,
                         '@spliceEventId': `2`,
                       },
@@ -626,7 +626,7 @@ describe('PlaylistSmilGenerator', () => {
               },
             },
           },
-          //program is played from 10s mark to 25
+          // program is played from 10s mark to 25
           {
             '@clipBegin': transformSecondsToWallClock(25),
             '@clipEnd': transformSecondsToWallClock(47),
@@ -636,7 +636,7 @@ describe('PlaylistSmilGenerator', () => {
                   SpliceInfoSection: {
                     SpliceInsert: [
                       {
-                        '@outOfNetworkIndicator': 0, //to the network indicator
+                        '@outOfNetworkIndicator': 0, // to the network indicator
                         '@spliceImmediateFlag': 1,
                         '@spliceEventId': `2`,
                       },
@@ -646,7 +646,7 @@ describe('PlaylistSmilGenerator', () => {
               },
             },
           },
-          //ad is played for 13 seconds
+          // ad is played for 13 seconds
           {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(13),
@@ -656,7 +656,7 @@ describe('PlaylistSmilGenerator', () => {
                   SpliceInfoSection: {
                     SpliceInsert: [
                       {
-                        '@outOfNetworkIndicator': 1, //out of the network indicator
+                        '@outOfNetworkIndicator': 1, // out of the network indicator
                         '@spliceImmediateFlag': 1,
                         '@spliceEventId': `3`,
                       },
@@ -666,7 +666,7 @@ describe('PlaylistSmilGenerator', () => {
               },
             },
           },
-          //program is played from 47s mark till end
+          // program is played from 47s mark till end
           {
             '@clipBegin': transformSecondsToWallClock(47),
             '@clipEnd': undefined,
@@ -676,7 +676,7 @@ describe('PlaylistSmilGenerator', () => {
                   SpliceInfoSection: {
                     SpliceInsert: [
                       {
-                        '@outOfNetworkIndicator': 0, //to the network indicator
+                        '@outOfNetworkIndicator': 0, // to the network indicator
                         '@spliceImmediateFlag': 1,
                         '@spliceEventId': `3`,
                       },
@@ -731,21 +731,21 @@ describe('PlaylistSmilGenerator', () => {
         expect(parallels).toHaveLength(3 * 3 + 1); // 3 programs each has pre and post rolls plus one 'back-to-network' parallel
         expect(parallels).toMatchObject([
           /* video 1*/
-          //pre-roll for video 1
+          // pre-roll for video 1
           {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(10),
             EventStream: createEventStream(1, '1'),
             ...expectedParallelReference,
           },
-          //video 1 is played
+          // video 1 is played
           {
             '@clipBegin': undefined,
             '@clipEnd': undefined,
             EventStream: createEventStream(0, '1'),
             ...expectedParallelReference,
           },
-          //pre-roll for video 1
+          // pre-roll for video 1
           {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(10),
@@ -754,21 +754,21 @@ describe('PlaylistSmilGenerator', () => {
           },
 
           /* video 2*/
-          //pre-roll for video 2
+          // pre-roll for video 2
           {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(10),
             EventStream: undefined,
             ...expectedParallelReference,
           },
-          //video 2 is played
+          // video 2 is played
           {
             '@clipBegin': undefined,
             '@clipEnd': undefined,
             EventStream: createEventStream(0, '2'),
             ...expectedParallelReference,
           },
-          //pre-roll for video 2
+          // pre-roll for video 2
           {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(10),
@@ -777,21 +777,21 @@ describe('PlaylistSmilGenerator', () => {
           },
 
           /* video 3*/
-          //pre-roll for video 3
+          // pre-roll for video 3
           {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(10),
             EventStream: undefined,
             ...expectedParallelReference,
           },
-          //video 3 is played
+          // video 3 is played
           {
             '@clipBegin': undefined,
             '@clipEnd': undefined,
             EventStream: createEventStream(0, '3'),
             ...expectedParallelReference,
           },
-          //pre-roll for video 3
+          // pre-roll for video 3
           {
             '@clipBegin': undefined,
             '@clipEnd': transformSecondsToWallClock(10),
@@ -845,7 +845,7 @@ describe('PlaylistSmilGenerator', () => {
         for (let i = 0; i < parallels.length; i++) {
           const parallel = parallels[i];
           if (i % 2 === 0) {
-            //if it is the last parallel - it is an empty parallel with no media, but event to return `in network`, after last `out of network` ad
+            // if it is the last parallel - it is an empty parallel with no media, but event to return `in network`, after last `out of network` ad
             const countOfMedia = i === parallels.length - 1 ? 0 : 1;
             // index is even - expect parallel for video
             expect(parallel.audio).toHaveLength(countOfMedia);
@@ -862,7 +862,7 @@ describe('PlaylistSmilGenerator', () => {
                           SpliceInfoSection: {
                             SpliceInsert: [
                               {
-                                '@outOfNetworkIndicator': 0, //back to the network indicator
+                                '@outOfNetworkIndicator': 0, // back to the network indicator
                                 '@spliceImmediateFlag': 1,
                                 '@spliceEventId': `${spliceId}`,
                               },
@@ -888,7 +888,7 @@ describe('PlaylistSmilGenerator', () => {
                     SpliceInfoSection: {
                       SpliceInsert: [
                         {
-                          '@outOfNetworkIndicator': 1, //out of network indicator
+                          '@outOfNetworkIndicator': 1, // out of network indicator
                           '@spliceImmediateFlag': 1,
                           '@spliceEventId': `${spliceId}`,
                         },
@@ -907,7 +907,7 @@ describe('PlaylistSmilGenerator', () => {
       'error is thrown if placeholder video is not defined',
       (video) => {
         // Arrange;
-        //Act & Assert
+        // Act & Assert
         expect(() => {
           new PlaylistSmilGenerator(
             {
