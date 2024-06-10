@@ -227,16 +227,16 @@
   dependencies:
     "@types/json-schema" "^7.0.11"
 
-"@axinom/mosaic-cli@0.34.0-rc.5":
-  version "0.34.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-cli/-/mosaic-cli-0.34.0-rc.5.tgz#a249ed0ba5374c40bf636f481de0e1e17eb3af20"
-  integrity sha512-+84u9L+exnX9ryhwuKxOgm9GSxMbdH3j/y+ZDgw4xosB5n70++UrCF1Ajp8J8AYf8Nig5aoS04RPQCXtQOFZww==
+"@axinom/mosaic-cli@0.34.0":
+  version "0.34.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-cli/-/mosaic-cli-0.34.0.tgz#503b98e6ccfa28042feb406a6781dfe9bdf7866b"
+  integrity sha512-Qsef8iMkZe4UTAMTYSqpuc9j9jdbh51W4swZAsvxWCOcQQoY3jj/oig1HlubKv/F5iDhbTy51Ag/O+XRIbNtCw==
   dependencies:
     "@asyncapi/diff" "^0.4.1"
     "@asyncapi/modelina" "^1.8.4"
     "@asyncapi/parser" "^2.0.2"
-    "@axinom/mosaic-id-link-be" "^0.22.0-rc.5"
-    "@axinom/mosaic-service-common" "^0.50.0-rc.5"
+    "@axinom/mosaic-id-link-be" "^0.22.0"
+    "@axinom/mosaic-service-common" "^0.50.0"
     "@graphql-inspector/core" "^3.1.2"
     "@inquirer/prompts" "^4.3.0"
     "@stoplight/spectral-core" "^1.18.3"
@@ -266,15 +266,15 @@
     tar "^6.1.13"
     zlib "^1.0.5"
 
-"@axinom/mosaic-core@^0.4.21-rc.5":
-  version "0.4.21-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.21-rc.5.tgz#75b6c83273c11291f9d6a2426e5dcd3e9ea58807"
-  integrity sha512-bC3qr8WUTGejoUWsDwiXoGExBacUezSRK3p/Nq1y1yIrQSRoxh6dZMuUksVvJh74JVMtlT/vQxY2KLmDnXaRqg==
+"@axinom/mosaic-core@^0.4.21":
+  version "0.4.21"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.21.tgz#4c994ef894fe44a5f47f538d3426987bfba7b028"
+  integrity sha512-gE4SCmaw47iXnZOb/l3q681wvdGU1zouyOQPuZMzsH8ZQOs38/qL/u37WLun47Q3f5v3c4gYUwq91efLC/VeQQ==
 
-"@axinom/mosaic-db-common@0.38.0-rc.5":
-  version "0.38.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-db-common/-/mosaic-db-common-0.38.0-rc.5.tgz#63aee6645cfda0d1ff5cc2a746c63a3f1989798f"
-  integrity sha512-blEXinxfwUpoION8bjtDsgS9PcoYgMwPewShfLJa2IZLJYDcZJIlih49yAd+4J4fySDDamfz+uwfiZSm80Yzog==
+"@axinom/mosaic-db-common@0.38.0":
+  version "0.38.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-db-common/-/mosaic-db-common-0.38.0.tgz#bdee2442d02481489d41f622bbe5084f7ed42136"
+  integrity sha512-F+Bw7Q71ylDb2WIWdQo0kHrplKzHpADONZExQ/9HLqiqeAobiMX6wZJRIbwgaMml31X37QTHQPPcQXAWJlWfsg==
   dependencies:
     express "^4.17.1"
     graphile-migrate "^1.4.0"
@@ -285,10 +285,10 @@
     yargs "^16.2.0"
     zapatos "3.6.0"
 
-"@axinom/mosaic-graphql-common@0.14.0-rc.5":
-  version "0.14.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-graphql-common/-/mosaic-graphql-common-0.14.0-rc.5.tgz#2ac1ada32c7c974a3a6480b424c5d68c42435f85"
-  integrity sha512-eIOrMBBVFFJndzqhNJt96I4EVvcZcZEdiqXskyTA+3fmf0I/71RMcNX97Nbs/v8E4Jjox3SMS/Ogb4Xl/uaAbw==
+"@axinom/mosaic-graphql-common@0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-graphql-common/-/mosaic-graphql-common-0.14.0.tgz#834e5221850436917b93e1b83a467682e3b65d72"
+  integrity sha512-aSItULRKQMGM43q/p5cU4GE2o8S9XGJJ7PSYVhOpPLX4FlrWrKdcOvaaJ/l7KuevkrzbCy6vq/NQIW+x4Vb+YA==
   dependencies:
     "@graphile/pg-pubsub" "^4.12.3"
     endent "^2.1.0"
@@ -303,15 +303,15 @@
     pg "^8.11.3"
     postgraphile "^4.13.0"
 
-"@axinom/mosaic-id-guard@0.33.0-rc.5":
-  version "0.33.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-guard/-/mosaic-id-guard-0.33.0-rc.5.tgz#2e430ff9e790e9aec1b8d96a82f3e6362980da29"
-  integrity sha512-KVwZhQqPgmNXYFjLRy3ZMpHmnowDrG2kOLGbJFCMoOozqL2B9Ynjx6TJE/GMxyX7QgkpxLcIJUP5v+pzQVc1Sw==
+"@axinom/mosaic-id-guard@0.33.0":
+  version "0.33.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-guard/-/mosaic-id-guard-0.33.0.tgz#4734e77a0873bb6349d5bbe26f78729334aef30c"
+  integrity sha512-749fWpbEOD0Ez6sFGENQWsk1WCGxMjv2Psgsajk/aWzZojDmmA+x2dFiJ1UYGiyik/aWAYJZuvJuH66WMADeRA==
   dependencies:
-    "@axinom/mosaic-id-utils" "^0.15.18-rc.5"
-    "@axinom/mosaic-message-bus" "^0.28.0-rc.5"
-    "@axinom/mosaic-service-common" "^0.50.0-rc.5"
-    "@axinom/mosaic-transactional-inbox-outbox" "^0.10.0-rc.5"
+    "@axinom/mosaic-id-utils" "^0.15.18"
+    "@axinom/mosaic-message-bus" "^0.28.0"
+    "@axinom/mosaic-service-common" "^0.50.0"
+    "@axinom/mosaic-transactional-inbox-outbox" "^0.10.0"
     amqplib "^0.10.3"
     express "^4.17.1"
     express-bearer-token "^2.4.0"
@@ -329,43 +329,43 @@
     rascal "^14.0.1"
     subscriptions-transport-ws "^0.9.19"
 
-"@axinom/mosaic-id-link-be@0.22.0-rc.5", "@axinom/mosaic-id-link-be@^0.22.0-rc.5":
-  version "0.22.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-link-be/-/mosaic-id-link-be-0.22.0-rc.5.tgz#00043ab8166bc7e76f370254e0a41cfa509d0212"
-  integrity sha512-moO6QyyOq9MZqLLaVnjCkTP5I46UN/WEwRZhcBROQvYKK0GOnk03E5hjNtKbbpxn3vjUt2cEcpNyK/dUOZ6pHA==
+"@axinom/mosaic-id-link-be@0.22.0", "@axinom/mosaic-id-link-be@^0.22.0":
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-link-be/-/mosaic-id-link-be-0.22.0.tgz#1375eb359e33b13dabc2bd95b6a5705ab607dc51"
+  integrity sha512-dmfvwK+U3DAPp0LKzBS5YMMTmevnovqMh5NXYKoCGQG0U/JzZe+LTWoF4XhOsH4l4Y0VvQrq+IczKLOdy7C15w==
   dependencies:
     "@apollo/client" "^3.7.9"
-    "@axinom/mosaic-core" "^0.4.21-rc.5"
-    "@axinom/mosaic-id-utils" "^0.15.18-rc.5"
-    "@axinom/mosaic-service-common" "^0.50.0-rc.5"
+    "@axinom/mosaic-core" "^0.4.21"
+    "@axinom/mosaic-id-utils" "^0.15.18"
+    "@axinom/mosaic-service-common" "^0.50.0"
     axios "1.6.3"
     cross-fetch "^3.0.4"
     graphql "^15.4.0"
     graphql-tag "^2.11.0"
 
-"@axinom/mosaic-id-utils@0.15.18-rc.5", "@axinom/mosaic-id-utils@^0.15.18-rc.5":
-  version "0.15.18-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-utils/-/mosaic-id-utils-0.15.18-rc.5.tgz#716e3042cbf9add4e3369bd6496b07faeb1aa8f9"
-  integrity sha512-leGvjgBFEr+VMwRAypazitj75kvSfRMnbaG1Cv56swJRbEL4dUb8GA6iFoQg1BHLFOd8fLhAwug5vV6Q9QZ/eg==
+"@axinom/mosaic-id-utils@0.15.18", "@axinom/mosaic-id-utils@^0.15.18":
+  version "0.15.18"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-utils/-/mosaic-id-utils-0.15.18.tgz#295b782066df8cd91538a7d786f55df5bf66609f"
+  integrity sha512-ciHH6pJ1B5krtcbk/u6LMkcodGpuqBorG7OIOnbmxyBC4gWMJXPxN2nx9+zd0YEPfHQyN6PZSncKx3tZOPMr/g==
   dependencies:
-    "@axinom/mosaic-core" "^0.4.21-rc.5"
+    "@axinom/mosaic-core" "^0.4.21"
 
-"@axinom/mosaic-managed-workflow-integration@0.16.0-rc.5":
-  version "0.16.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.16.0-rc.5.tgz#01970904149fa6340003aaba9b403298edeaa734"
-  integrity sha512-H1umUD9F5337c1kZR1ggKxkNCqkt2J0OB9aNYmsthrp/JZ0KLK3cfqxO7fgbQlX1EQDla63Hm+k8Md9nUEdKDw==
+"@axinom/mosaic-managed-workflow-integration@0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.16.0.tgz#b3e734f8b6623361535c79968a0d419f1cb73878"
+  integrity sha512-ismvKxLg2qrWZUq+f2Vcp2iGhajDgaRzkQ/TmyLgGNWpiPbfMoaKjv9PWzh/GLvbZ1in08NFLsAVPWBTZ3wBIw==
 
-"@axinom/mosaic-message-bus-abstractions@0.15.0-rc.5", "@axinom/mosaic-message-bus-abstractions@^0.15.0-rc.5":
-  version "0.15.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus-abstractions/-/mosaic-message-bus-abstractions-0.15.0-rc.5.tgz#67f3e2c1b872ac1e0493512c26e581696cbd957c"
-  integrity sha512-aAjeRO1l2+Qj4nhKOf2dd572Wy00re4bZoC0Y6zDHQn3xGGZ1r4aS3CPO/8F4BZj+rbJekhDyNowPMkjK+6+WA==
+"@axinom/mosaic-message-bus-abstractions@0.15.0", "@axinom/mosaic-message-bus-abstractions@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus-abstractions/-/mosaic-message-bus-abstractions-0.15.0.tgz#0f912e98c86d46209783c48bd361221d332e05de"
+  integrity sha512-GopdZZgIc+YwMDKTbmqd2EEJeHVgExpK7Od4tVL7L5y/9GI6jLmh3y550pfAw6B3sik4WxozM/C6aRjwYPe53g==
 
-"@axinom/mosaic-message-bus@0.28.0-rc.5", "@axinom/mosaic-message-bus@^0.28.0-rc.5":
-  version "0.28.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus/-/mosaic-message-bus-0.28.0-rc.5.tgz#602234367be077e4fb978ff3cb7a27a8db109e4f"
-  integrity sha512-UBfT2rHKbGdy3hP3EvxmXzAGkPFmTrT8vIuu+r2FurWrJ6r298cW8ts6m8WS8QgZfBSgMEoNEwIuMus87AgMpQ==
+"@axinom/mosaic-message-bus@0.28.0", "@axinom/mosaic-message-bus@^0.28.0":
+  version "0.28.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus/-/mosaic-message-bus-0.28.0.tgz#23c755336d8e53aff35a59d6a140bf24d26b4230"
+  integrity sha512-Oo6AvjrgOKWlK2oLM/fCeaTE2fYIMcRHK0RPpY6DGzGFgK8AJH4/GOiVpXIKqxaRjDws9YjNeIIeqpQ1c9yxbA==
   dependencies:
-    "@axinom/mosaic-message-bus-abstractions" "^0.15.0-rc.5"
+    "@axinom/mosaic-message-bus-abstractions" "^0.15.0"
     amqplib "^0.10.3"
     dotenv "^8.2.0"
     prom-client "^15.1.0"
@@ -373,20 +373,20 @@
     rascal "^14.0.1"
     uuid "^8.3.2"
 
-"@axinom/mosaic-messages@0.44.0-rc.5":
-  version "0.44.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-messages/-/mosaic-messages-0.44.0-rc.5.tgz#49d35c454a72171fc27fdb9730c8ac57d7641d9d"
-  integrity sha512-UlY3b/ppApmZloMpfWY/tueVwN3gY44MW6q4XD2srRJN/LL79KpSWEDVmA1aMDFTBvHZFiCYZuuUaMzD+o1h0g==
+"@axinom/mosaic-messages@0.44.0":
+  version "0.44.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-messages/-/mosaic-messages-0.44.0.tgz#806e41c38edc9b4de700e904932cce47332a6d98"
+  integrity sha512-sdClBuEBkteMdR/KQ4NIfFSgarqkv54zlYDuuujZXg/EBLvZRIcKCpYjn+60Akfp4zvgCZ5MYPv1C1wl6u6yGA==
 
-"@axinom/mosaic-portal@0.32.0-rc.5":
-  version "0.32.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.32.0-rc.5.tgz#40432d9963d0aa941b8a29815f5a8914346c7448"
-  integrity sha512-VGbVdcRtvIIssmPZZVaIIcw1CmECSdVs2Q6fzJs84u/H6fjKvV7wTshFhTTBAdXINy8yzJAl1OIdkkGbLMxqzQ==
+"@axinom/mosaic-portal@0.32.0":
+  version "0.32.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.32.0.tgz#9fe5f849b4e84c0a43f83370a30f344847273605"
+  integrity sha512-Gqn08SLDkqgwahav/05oVFM7hGABeDncH0kE5LP8RHyzkpQKokasrjf9R3nCAiDemZEwoPtNaCTyLpJnyLCsXA==
 
-"@axinom/mosaic-service-common@0.50.0-rc.5", "@axinom/mosaic-service-common@^0.50.0-rc.5":
-  version "0.50.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.50.0-rc.5.tgz#f360712a9f52bae8c92bae194a7d8cc7becb917f"
-  integrity sha512-2kHic4KOWPgosA4bi78WY2s+4votsJyV4C2eiLASOhOSIrj5SU8MqPGjuojYhZgbkXUrh48Nm6Xh8o1rM+9BXg==
+"@axinom/mosaic-service-common@0.50.0", "@axinom/mosaic-service-common@^0.50.0":
+  version "0.50.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.50.0.tgz#f797bb5c3568dfc8d6c538325565cc76f917e5cf"
+  integrity sha512-9QCpd9vW6TgnfipkU50qLdwjupXAM3hTTgwnyHqEa9obmiG+jvxNuQftalSL/QUot3jnkg/C9pCxGDFck67R8A==
   dependencies:
     ajv "^7.0.3"
     ajv-formats "^2.1.1"
@@ -409,25 +409,25 @@
     uuid-encoder "^1.2.0"
     verror "^1.10.1"
 
-"@axinom/mosaic-transactional-inbox-outbox@0.10.0-rc.5", "@axinom/mosaic-transactional-inbox-outbox@^0.10.0-rc.5":
-  version "0.10.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-transactional-inbox-outbox/-/mosaic-transactional-inbox-outbox-0.10.0-rc.5.tgz#fcac85c61296290538bebebc223edb4fcaf94e07"
-  integrity sha512-oHbLCEmOGD4kPAonNBZxbIttD+pk4pIXrxldRtW0hwdtCliNwPYcOKHjiYyzsSvwXRyuzuRToGHKQUouVectIQ==
+"@axinom/mosaic-transactional-inbox-outbox@0.10.0", "@axinom/mosaic-transactional-inbox-outbox@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-transactional-inbox-outbox/-/mosaic-transactional-inbox-outbox-0.10.0.tgz#4fb4f3fd9690e49a56e9385b77ec32ebc0cd7b6e"
+  integrity sha512-SUzNWDBkl0IejphQLRiM23kC6FzcpBIBwccrEyBq989EXc1giNaQgRoYuGM/JsMCkTrGuZCiwjAw5wP2Sf24+Q==
   dependencies:
-    "@axinom/mosaic-message-bus" "^0.28.0-rc.5"
-    "@axinom/mosaic-message-bus-abstractions" "^0.15.0-rc.5"
+    "@axinom/mosaic-message-bus" "^0.28.0"
+    "@axinom/mosaic-message-bus-abstractions" "^0.15.0"
     async-mutex "^0.4.0"
     env-var "^6.3.0"
     pg "^8.11.3"
     pg-transactional-outbox "^0.5.7"
     prom-client "^15.1.0"
 
-"@axinom/mosaic-ui@0.48.0-rc.5":
-  version "0.48.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.48.0-rc.5.tgz#4a6a665abda1f495c8937d8e25ab69ce7c860321"
-  integrity sha512-61lpehgCqBmGLdZ6CEoe7mtWkKV3NmnMahT8ronkjTkhWxyNIf/4kGF945MHjkD1udBieLDp4gM+9vST3o7CdQ==
+"@axinom/mosaic-ui@0.48.0":
+  version "0.48.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.48.0.tgz#68eb3432f453f7a4df2666fc371e8ac12902ddc6"
+  integrity sha512-te2vju1oUymmO7DmtjEgFry40WlA+KhzN/OL8unfE0MzVU7sJqWSaoK/lQvZ+infv7RT/Kmtrv4XLAHqkNVDlQ==
   dependencies:
-    "@axinom/mosaic-core" "^0.4.21-rc.5"
+    "@axinom/mosaic-core" "^0.4.21"
     "@faker-js/faker" "^7.4.0"
     "@popperjs/core" "^2.11.8"
     clsx "^1.1.0"
