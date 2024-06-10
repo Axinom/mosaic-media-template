@@ -28,7 +28,7 @@ export const AllTvshowPlugins = makePluginByCombiningPlugins(
     'EpisodesLicenseFilter',
   ),
   EntityListPublishingEndpointsPluginFactory({
-    id: -1,
+    id: 0,
     title: 'TV Show Genres',
     table: 'tvshow_genres',
     type: 'TVSHOW_GENRE',
