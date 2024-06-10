@@ -1,6 +1,11 @@
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 
 export class VodToLiveServiceMessagingSettings implements MessagingSettings {
+  /**
+   * Defines the messaging settings for the command with message type 
+   * "PrepareTransitionLiveStream" and aggregate type "channel".
+   * The aggregate ID field must contain the value of the "channel ID" field.
+   */
   public static PrepareTransitionLiveStream = new VodToLiveServiceMessagingSettings(
     'PrepareTransitionLiveStream', 
     'transition:prepare_live_stream', 
@@ -8,6 +13,11 @@ export class VodToLiveServiceMessagingSettings implements MessagingSettings {
     'command',
     'channel'
     );
+  /**
+   * Defines the messaging settings for the command with message type 
+   * "PrepareChannelLiveStream" and aggregate type "channel".
+   * The aggregate ID field must contain the value of the "channel ID" field.
+   */
   public static PrepareChannelLiveStream = new VodToLiveServiceMessagingSettings(
     'PrepareChannelLiveStream', 
     'channel:prepare_live_stream', 
@@ -15,6 +25,11 @@ export class VodToLiveServiceMessagingSettings implements MessagingSettings {
     'command',
     'channel'
     );
+  /**
+   * Defines the messaging settings for the command with message type 
+   * "CheckChannelJobStatus" and aggregate type "channel".
+   * The aggregate ID field must contain the value of the "channel ID" field.
+   */
   public static CheckChannelJobStatus = new VodToLiveServiceMessagingSettings(
     'CheckChannelJobStatus', 
     'channel:check_job_status', 
@@ -22,6 +37,11 @@ export class VodToLiveServiceMessagingSettings implements MessagingSettings {
     'command',
     'channel'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "LiveStreamProtectionKeyCreated" and aggregate type "channel".
+   * The aggregate ID field contains the value of the "channel ID" field.
+   */
   public static LiveStreamProtectionKeyCreated = new VodToLiveServiceMessagingSettings(
     'LiveStreamProtectionKeyCreated', 
     'channel:protection_key_created', 
@@ -29,6 +49,11 @@ export class VodToLiveServiceMessagingSettings implements MessagingSettings {
     'event',
     'channel'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "CheckChannelJobStatusFailed" and aggregate type "channel".
+   * The aggregate ID field contains the value of the "channel ID" field.
+   */
   public static CheckChannelJobStatusFailed = new VodToLiveServiceMessagingSettings(
     'CheckChannelJobStatusFailed', 
     'channel:check_job_status_failed', 
@@ -36,6 +61,11 @@ export class VodToLiveServiceMessagingSettings implements MessagingSettings {
     'event',
     'channel'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "CheckChannelJobStatusSucceeded" and aggregate type "channel".
+   * The aggregate ID field contains the value of the "channel ID" field.
+   */
   public static CheckChannelJobStatusSucceeded = new VodToLiveServiceMessagingSettings(
     'CheckChannelJobStatusSucceeded', 
     'channel:check_job_status_succeeded', 

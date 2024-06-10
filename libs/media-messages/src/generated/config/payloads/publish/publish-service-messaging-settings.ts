@@ -1,6 +1,11 @@
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 
 export class PublishServiceMessagingSettings implements MessagingSettings {
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "MoviePublished" and aggregate type "movie".
+   * The aggregate ID field contains the value of the "movie ID" field.
+   */
   public static MoviePublished = new PublishServiceMessagingSettings(
     'MoviePublished', 
     'inbox', 
@@ -8,6 +13,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'movie'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "MovieUnpublished" and aggregate type "movie".
+   * The aggregate ID field contains the value of the "movie ID" field.
+   */
   public static MovieUnpublished = new PublishServiceMessagingSettings(
     'MovieUnpublished', 
     'inbox', 
@@ -15,6 +25,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'movie'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "SeasonPublished" and aggregate type "season".
+   * The aggregate ID field contains the value of the "season ID" field.
+   */
   public static SeasonPublished = new PublishServiceMessagingSettings(
     'SeasonPublished', 
     'inbox', 
@@ -22,6 +37,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'season'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "SeasonUnpublished" and aggregate type "season".
+   * The aggregate ID field contains the value of the "season ID" field.
+   */
   public static SeasonUnpublished = new PublishServiceMessagingSettings(
     'SeasonUnpublished', 
     'inbox', 
@@ -29,6 +49,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'season'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "TvshowPublished" and aggregate type "tvshow".
+   * The aggregate ID field contains the value of the "tvshow ID" field.
+   */
   public static TvshowPublished = new PublishServiceMessagingSettings(
     'TvshowPublished', 
     'inbox', 
@@ -36,6 +61,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'tvshow'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "TvshowUnpublished" and aggregate type "tvshow".
+   * The aggregate ID field contains the value of the "tvshow ID" field.
+   */
   public static TvshowUnpublished = new PublishServiceMessagingSettings(
     'TvshowUnpublished', 
     'inbox', 
@@ -43,6 +73,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'tvshow'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "EpisodePublished" and aggregate type "episode".
+   * The aggregate ID field contains the value of the "episode ID" field.
+   */
   public static EpisodePublished = new PublishServiceMessagingSettings(
     'EpisodePublished', 
     'inbox', 
@@ -50,6 +85,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'episode'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "EpisodeUnpublished" and aggregate type "episode".
+   * The aggregate ID field contains the value of the "episode ID" field.
+   */
   public static EpisodeUnpublished = new PublishServiceMessagingSettings(
     'EpisodeUnpublished', 
     'inbox', 
@@ -57,6 +97,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'episode'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "CollectionPublished" and aggregate type "collection".
+   * The aggregate ID field contains the value of the "collection ID" field.
+   */
   public static CollectionPublished = new PublishServiceMessagingSettings(
     'CollectionPublished', 
     'inbox', 
@@ -64,6 +109,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'collection'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "CollectionUnpublished" and aggregate type "collection".
+   * The aggregate ID field contains the value of the "collection ID" field.
+   */
   public static CollectionUnpublished = new PublishServiceMessagingSettings(
     'CollectionUnpublished', 
     'inbox', 
@@ -71,6 +121,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'collection'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "MovieGenresPublished" and aggregate type "movie-genres".
+   * The aggregate ID is not known (yet) so the field contains the value "UNDEFINED_ID".
+   */
   public static MovieGenresPublished = new PublishServiceMessagingSettings(
     'MovieGenresPublished', 
     'inbox', 
@@ -78,6 +133,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'movie-genres'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "MovieGenresUnpublished" and aggregate type "movie-genres".
+   * The aggregate ID is not known (yet) so the field contains the value "UNDEFINED_ID".
+   */
   public static MovieGenresUnpublished = new PublishServiceMessagingSettings(
     'MovieGenresUnpublished', 
     'inbox', 
@@ -85,6 +145,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'movie-genres'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "TvshowGenresPublished" and aggregate type "tvshow-genres".
+   * The aggregate ID is not known (yet) so the field contains the value "UNDEFINED_ID".
+   */
   public static TvshowGenresPublished = new PublishServiceMessagingSettings(
     'TvshowGenresPublished', 
     'inbox', 
@@ -92,6 +157,11 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     'event',
     'tvshow-genres'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "TvshowGenresUnpublished" and aggregate type "tvshow-genres".
+   * The aggregate ID is not known (yet) so the field contains the value "UNDEFINED_ID".
+   */
   public static TvshowGenresUnpublished = new PublishServiceMessagingSettings(
     'TvshowGenresUnpublished', 
     'inbox', 
