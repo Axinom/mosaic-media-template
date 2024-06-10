@@ -22,7 +22,7 @@ import {
 import express from 'express';
 import { PoolConfig } from 'pg';
 import { postgraphile } from 'postgraphile';
-import { applyMigrations, getFullConfig } from './common';
+import { applyMigrations, getFullConfig, loadInMemoryLocales } from './common';
 import { registerMessaging } from './domains/register-messaging';
 import { buildPostgraphileOptions } from './graphql/postgraphile-options';
 
@@ -58,6 +58,8 @@ async function bootstrap(): Promise<void> {
     shutdownActions,
     poolConfig,
   );
+
+  await loadInMemoryLocales(ownerPool);
 
   const broker = await registerMessaging(
     app,

@@ -10,7 +10,7 @@ import {
 import { ClientBase } from 'pg';
 import { conditions as c, deletes, insert, upsert } from 'zapatos/db';
 import { movie_genre_localizations } from 'zapatos/schema';
-import { Config } from '../../../common';
+import { Config, syncInMemoryLocales } from '../../../common';
 
 export class MovieGenresPublishedEventHandler extends TransactionalInboxMessageHandler<
   MovieGenresPublishedEvent,
@@ -55,6 +55,7 @@ export class MovieGenresPublishedEventHandler extends TransactionalInboxMessageH
       );
     });
 
+    await syncInMemoryLocales(payload.genres[0].localizations, txnClient);
     await deletes('movie_genre_localizations', {}).run(txnClient);
     await insert('movie_genre_localizations', localizations).run(txnClient);
   }

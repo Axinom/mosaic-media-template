@@ -1,7 +1,11 @@
 import gql from 'graphql-tag';
 import 'jest-extended';
 import { insert } from 'zapatos/db';
-import { DEFAULT_LOCALE_TAG, MOSAIC_LOCALE_HEADER_KEY } from '../../common';
+import {
+  DEFAULT_LOCALE_TAG,
+  MOSAIC_LOCALE_HEADER_KEY,
+  syncInMemoryLocales,
+} from '../../common';
 import { createTestContext, ITestContext } from '../test-utils';
 
 const SEASON_REQUEST = gql`
@@ -22,6 +26,14 @@ describe('Season Localization Graphql Requests', () => {
   beforeAll(async () => {
     ctx = await createTestContext();
     await insert('season', { id: seasonId }).run(ctx.ownerPool);
+    await syncInMemoryLocales(
+      [
+        { language_tag: DEFAULT_LOCALE_TAG, is_default_locale: true },
+        { language_tag: 'de-DE', is_default_locale: false },
+        { language_tag: 'et-EE', is_default_locale: false },
+      ],
+      ctx.ownerPool,
+    );
   });
 
   beforeEach(async () => {

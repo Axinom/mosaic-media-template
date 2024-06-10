@@ -17,8 +17,8 @@ import {
   catalogLogMapper,
   CommonErrors,
   Config,
+  getMosaicLocaleSetting,
   MOSAIC_LOCALE_HEADER_KEY,
-  MOSAIC_LOCALE_PG_KEY,
 } from '../common';
 import { AllChannelPlugins } from '../domains/channels/plugins/all-channel-plugins';
 import { AllCollectionPlugins } from '../domains/collections/plugins/all-collection-plugins';
@@ -45,7 +45,7 @@ export function buildPostgraphileOptions(
     })
     .setPgSettings(async (req) => ({
       role: config.dbGqlRole,
-      [MOSAIC_LOCALE_PG_KEY]: req.headers[MOSAIC_LOCALE_HEADER_KEY],
+      ...getMosaicLocaleSetting(req),
     }))
     .addPlugins(
       PgSimplifyInflectorPlugin,
