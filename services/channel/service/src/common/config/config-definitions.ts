@@ -24,7 +24,7 @@ export const getConfigDefinitions = (
   return {
     ...getBasicConfigDefinitions(variables),
     ...getBasicMetricsEndpointDefinitions(variables),
-    ...getBasicGraphQlConfigDefinitions(11800, variables),
+    ...getBasicGraphQlConfigDefinitions(12000, variables),
     ...getBasicDbConfigDefinitions(variables),
     ...getBasicRabbitMqConfigDefinitions(variables),
     ...getBasicCustomizableConfigDefinitions(variables),

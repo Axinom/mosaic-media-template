@@ -1,0 +1,86 @@
+# This YAML contains the Deployment Manifest for the VOD-to-Live Service.
+# It is required when deploying the service via the Mosaic Hosting Service.
+# Refer to the README.md file for instructions on how to use this.
+
+version: '1.0'
+serviceId: 'vod-to-live-service'
+
+regularVariables:
+  # Service General Variables
+  SERVICE_ID: 'vod-to-live-service'
+  NODE_ENV: 'production'
+  LOG_LEVEL: 'DEBUG'
+  GRAPHQL_GUI_ENABLED: true
+  PORT: '${__ax_hosted__.port.api}'
+
+  # Mosaic Environment Info
+  TENANT_ID: '${__ax_hosted__.env.tenant_id}'
+  ENVIRONMENT_ID: '${__ax_hosted__.env.environment_id}'
+
+  # RabbitMQ Variables
+  RABBITMQ_PROTOCOL: '${__ax_hosted__.rmq.protocol}'
+  RABBITMQ_HOST: '${__ax_hosted__.rmq.host}'
+  RABBITMQ_PORT: '${__ax_hosted__.rmq.port}'
+  RABBITMQ_MGMT_PROTOCOL: '${__ax_hosted__.rmq.mgmt_protocol}'
+  RABBITMQ_MGMT_HOST: '${__ax_hosted__.rmq.mgmt_host}'
+  RABBITMQ_MGMT_PORT: '${__ax_hosted__.rmq.mgmt_port}'
+  RABBITMQ_VHOST: '${__ax_hosted__.rmq.vhost}'
+  RABBITMQ_USER: '${__ax_hosted__.rmq.username}'
+  RABBITMQ_PASSWORD: '${__ax_hosted__.rmq.password}'
+
+  # Managed Service URLs
+  ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
+
+  VIRTUAL_CHANNEL_MANAGEMENT_API_BASE_URL: 'TODO'
+  VIRTUAL_CHANNEL_ORIGIN_BASE_URL: 'TODO'
+  VIRTUAL_CHANNEL_MANAGEMENT_API_KEY: 'TODO'
+
+  AZURE_STORAGE_CONNECTION: 'TODO'
+  KEY_SERVICE_API_BASE_URL: 'TODO'
+  KEY_SERVICE_TENANT_ID: 'TODO'
+  KEY_SERVICE_MANAGEMENT_KEY: 'TODO'
+  DRM_KEY_SEED_ID: 'TODO'
+
+  PROLONG_PLAYLIST_TO_24_HOURS: false
+  CATCH_UP_DURATION_IN_MINUTES: 60
+  CHANNEL_PROCESSING_WAIT_TIME_IN_SECONDS: 600
+
+secureVariables:
+  # Use this section to store any custom environment variables which contain sensitive data.
+
+  # Service Account Variables
+  SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
+  SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
+
+serviceAccounts:
+  # Defines the service accounts that will be provisioned for this service.
+  - name: 'primary'
+    permissionStructure:
+      - serviceId: 'ax-id-service'
+        permissions:
+          - 'PERMISSIONS_SYNCHRONIZE'
+          - 'ACCESS_TOKENS_GENERATE_LONG_LIVED_TOKEN'
+
+      - serviceId: 'ax-image-service'
+        permissions:
+          - 'IMAGE_TYPES_DECLARE'
+
+      - serviceId: 'ax-video-service'
+        permissions:
+          - 'CUE_POINT_TYPES_DECLARE'
+
+      - serviceId: 'ax-localization-service'
+        permissions:
+          - 'SOURCE_ENTITIES_EDIT'
+          - 'ENTITY_DEFINITIONS_EDIT'
+          - 'LOCALIZED_ENTITIES_EDIT'
+          - 'LOCALIZED_ENTITIES_REVIEW'
+
+pilets:
+  # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.
+  []
+
+dnsMappedPorts:
+  # Defines the DNS subdomains that will provisioned and be mapped to the ports exposed by the service
+  - name: 'api'
+    port: '${__ax_hosted__.port.api}'

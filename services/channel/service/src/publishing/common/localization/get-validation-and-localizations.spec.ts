@@ -315,7 +315,7 @@ describe('getValidationAndLocalizations', () => {
         {
           context: 'LOCALIZATION',
           message:
-            'The program "Awesome Program" is not fully localized (if the associated entity was localized those values will copied which may take a bit of time): No localization value and status was found for the field "title" with the locale "de-DE".',
+            'The program "Awesome Program" is not fully localized (if the associated entity was localized those values will be copied which may take a bit of time): No localization value and status was found for the field "title" with the locale "de-DE".',
           severity: 'ERROR',
         },
       ]);
@@ -418,7 +418,7 @@ describe('getValidationAndLocalizations', () => {
         {
           context: 'LOCALIZATION',
           message:
-            'The program "Awesome Program" is not fully localized (if the associated entity was localized those values will copied which may take a bit of time): No localization value and status was found for the field "title" with the locale "de-DE".',
+            'The program "Awesome Program" is not fully localized (if the associated entity was localized those values will be copied which may take a bit of time): No localization value and status was found for the field "title" with the locale "de-DE".',
           severity: 'WARNING',
         },
       ]);
