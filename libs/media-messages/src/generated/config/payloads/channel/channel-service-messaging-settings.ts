@@ -1,6 +1,11 @@
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 
 export class ChannelServiceMessagingSettings implements MessagingSettings {
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "ChannelPublished" and aggregate type "channel".
+   * The aggregate ID field contains the value of the "channel ID" field.
+   */
   public static ChannelPublished = new ChannelServiceMessagingSettings(
     'ChannelPublished', 
     'inbox', 
@@ -8,6 +13,11 @@ export class ChannelServiceMessagingSettings implements MessagingSettings {
     'event',
     'channel'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "ChannelUnpublished" and aggregate type "channel".
+   * The aggregate ID field contains the value of the "channel ID" field.
+   */
   public static ChannelUnpublished = new ChannelServiceMessagingSettings(
     'ChannelUnpublished', 
     'inbox', 
@@ -15,6 +25,11 @@ export class ChannelServiceMessagingSettings implements MessagingSettings {
     'event',
     'channel'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "PlaylistPublished" and aggregate type "playlist".
+   * The aggregate ID field contains the value of the "playlist ID" field.
+   */
   public static PlaylistPublished = new ChannelServiceMessagingSettings(
     'PlaylistPublished', 
     'inbox', 
@@ -22,6 +37,11 @@ export class ChannelServiceMessagingSettings implements MessagingSettings {
     'event',
     'playlist'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "PlaylistUnpublished" and aggregate type "playlist".
+   * The aggregate ID field contains the value of the "playlist ID" field.
+   */
   public static PlaylistUnpublished = new ChannelServiceMessagingSettings(
     'PlaylistUnpublished', 
     'inbox', 

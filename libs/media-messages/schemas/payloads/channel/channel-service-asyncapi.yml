@@ -48,24 +48,28 @@ components:
     channel-published-event:
       tags:
         - name: aggregate-type:channel
+        - name: aggregate-id-field:channel ID
       contentType: application/json
       payload:
         $ref: 'events/channel-published-event.json'
     channel-unpublished-event:
       tags:
         - name: aggregate-type:channel
+        - name: aggregate-id-field:channel ID
       contentType: application/json
       payload:
         $ref: 'events/channel-unpublished-event.json'
     playlist-published-event:
       tags:
         - name: aggregate-type:playlist
+        - name: aggregate-id-field:playlist ID
       contentType: application/json
       payload:
         $ref: 'events/playlist-published-event.json'
     playlist-unpublished-event:
       tags:
         - name: aggregate-type:playlist
+        - name: aggregate-id-field:playlist ID
       contentType: application/json
       payload:
         $ref: 'events/playlist-unpublished-event.json'
