@@ -159,14 +159,25 @@ const Form: React.FC = () => {
 };
 
 const Panel: React.FC<{ data?: TvShowGenresQuery }> = ({ data }) => {
+  const sortedGenres = useMemo(() => {
+    if (!data?.tvshowGenres?.nodes) {
+      return [];
+    }
+    return data.tvshowGenres.nodes.slice().sort((a, b) => {
+      const dateA = new Date(a.updatedDate);
+      const dateB = new Date(b.updatedDate);
+      return dateB.getTime() - dateA.getTime();
+    });
+  }, [data?.tvshowGenres?.nodes]);
+
   return useMemo(() => {
     return (
       <InfoPanel>
         <Section title="Additional Information">
-          {data?.tvshowGenres?.nodes[0] && (
+          {sortedGenres.length > 0 && (
             <Paragraph title="Last Modified">
-              {formatDateTime(data.tvshowGenres.nodes[0].updatedDate)} by{' '}
-              {data.tvshowGenres.nodes[0].updatedUser}
+              {formatDateTime(sortedGenres[0].updatedDate)} by{' '}
+              {sortedGenres[0].updatedUser}
             </Paragraph>
           )}
           <Paragraph title="Statistic">
