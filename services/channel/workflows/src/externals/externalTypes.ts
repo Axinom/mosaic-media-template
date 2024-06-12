@@ -1,3 +1,4 @@
+import '@axinom/mosaic-portal';
 import {
   ChannelDetailsStationDynamicSegments,
   ChannelStationNames,
@@ -15,11 +16,35 @@ interface ProgramDetailsResolverData {
 }
 
 declare module '@axinom/mosaic-portal' {
-  interface RegisterRouteResolver {
-    (data: ChannelDetailsResolverData): void;
+  interface RegistrationFunction {
+    (
+      station: ChannelStationNames.ChannelDetails,
+      resolver: (
+        dynamicRouteSegments: ChannelDetailsStationDynamicSegments,
+      ) => void,
+    ): string | undefined;
   }
-
-  interface RegisterRouteResolver {
-    (data: ProgramDetailsResolverData): void;
+  // channel details station resolver function
+  interface ResolverFunction {
+    (
+      station: ChannelStationNames.ChannelDetails,
+      dynamicRouteSegments: ChannelDetailsStationDynamicSegments,
+    ): string | undefined;
+  }
+  // channel program details station resolver registration
+  interface RegistrationFunction {
+    (
+      station: ChannelStationNames.ProgramDetails,
+      resolver: (
+        dynamicRouteSegments: ProgramDetailsStationDynamicSegments,
+      ) => void,
+    ): string | undefined;
+  }
+  // channel program details station resolver function
+  interface ResolverFunction {
+    (
+      station: ChannelStationNames.ProgramDetails,
+      dynamicRouteSegments: ProgramDetailsStationDynamicSegments,
+    ): string | undefined;
   }
 }

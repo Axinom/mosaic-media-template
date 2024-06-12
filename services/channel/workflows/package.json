@@ -27,8 +27,8 @@
   ],
   "dependencies": {
     "@apollo/client": "^3.7.10",
-    "@axinom/mosaic-managed-workflow-integration": "0.15.0-rc.8",
-    "@axinom/mosaic-ui": "0.47.0-rc.8",
+    "@axinom/mosaic-managed-workflow-integration": "0.17.0-rc.1",
+    "@axinom/mosaic-ui": "0.49.0-rc.1",
     "clsx": "^1.2.1",
     "env-cmd": "^10.1.0",
     "formik": "^2.2.9",
@@ -40,7 +40,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@axinom/mosaic-portal": "0.31.0-rc.8",
+    "@axinom/mosaic-portal": "0.33.0-rc.1",
     "@dbeining/react-atom": "^4.1.21",
     "@graphql-codegen/cli": "^2.13.4",
     "@graphql-codegen/typescript": "^2.7.3",
@@ -58,8 +58,8 @@
     "env-cmd": "^10.1.0",
     "fork-ts-checker-webpack-plugin": "^6.5.2",
     "history": "^4.10.1",
-    "piral-cli": "^0.15.8",
-    "piral-cli-webpack5": "^0.15.8",
+    "piral-cli": "^1.5.2",
+    "piral-cli-webpack5": "^1.5.2",
     "path-to-regexp": "6.2.0",
     "postcss": "^8.4.19",
     "postcss-modules": "^2.0.0",
