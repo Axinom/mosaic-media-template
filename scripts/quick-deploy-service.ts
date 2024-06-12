@@ -170,7 +170,8 @@ function validateDeploymentManifestIsModified(
     | 'media-service'
     | 'catalog-service'
     | 'entitlement-service'
-    | 'channel-service',
+    | 'channel-service'
+    | 'vod-to-live',
 ): void {
   const servicePrefix = serviceId.split('-service')[0];
 
@@ -214,7 +215,8 @@ function buildDockerImageAndPush(
     | 'media-service'
     | 'catalog-service'
     | 'entitlement-service'
-    | 'channel-service',
+    | 'channel-service'
+    | 'vod-to-live',
   uniqueID: string,
 ): void {
   const servicePrefix = serviceId.split('-service')[0];
@@ -273,7 +275,8 @@ function uploadDeploymentManifest(
     | 'media-service'
     | 'catalog-service'
     | 'entitlement-service'
-    | 'channel-service',
+    | 'channel-service'
+    | 'vod-to-live',
   uniqueID: string,
 ): void {
   const servicePrefix = serviceId.split('-service')[0];
@@ -294,7 +297,8 @@ function initiateDeployment(
     | 'media-service'
     | 'catalog-service'
     | 'entitlement-service'
-    | 'channel-service',
+    | 'channel-service'
+    | 'vod-to-live',
   dockerImageTag: string,
   uniqueID: string,
 ): void {
@@ -357,6 +361,7 @@ async function main(): Promise<void> {
           { title: 'Catalog Service', value: 'catalog-service' },
           { title: 'Entitlement Service', value: 'entitlement-service' },
           { title: 'Channel Service', value: 'channel-service' },
+          { title: 'VOD-to-Live Service', value: 'vod-to-liv-service' },
         ],
       },
       {
