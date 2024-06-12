@@ -58,6 +58,14 @@ export class RecurlyEntitlementHandler {
             r.customerPermission.code ===
             this.recurlyEntitlementPlaybackPermission,
         );
+        if (!isValid) {
+          logger.log({
+            name: 'Recurly entitlement permission denied',
+            message: `Recurly Entitlement API permission denied for ${userId} returned object: ${JSON.stringify(
+              entitlements,
+            )}`,
+          });
+        }
         return {
           isValid: isValid,
         };
@@ -95,6 +103,10 @@ export class RecurlyEntitlementHandler {
         };
       }
     } catch (error) {
+      logger.error({
+        name: 'Recurly API error',
+        message: `Recurly Entitlement API throw an error ${error}`,
+      });
       return {
         //Todo: Log the error please.
         isValid: false,

@@ -1,16 +1,15 @@
 import cors from 'cors';
 import { Express, json } from 'express';
 import bearerTokenExtractor from 'express-bearer-token';
-import { EntitlementRequestHandling, CountryRequestHandling } from '../domains/controllers';
+import {
+  CountryRequestHandling,
+  EntitlementRequestHandling,
+} from '../domains/controllers';
 
 export function setupRestEndpoints(app: Express): void {
   app.use(cors());
-  app.use(
-    bearerTokenExtractor(),
-    //jwtValidateManagementPermission(authConfig, config, permissionsMap),
-    json(),
-  );
+  app.use(bearerTokenExtractor(), json());
 
   app.post('/v4/entitlement', EntitlementRequestHandling);
-  app.get('/v1/country', CountryRequestHandling);
+  app.get('/v2/country', CountryRequestHandling);
 }
