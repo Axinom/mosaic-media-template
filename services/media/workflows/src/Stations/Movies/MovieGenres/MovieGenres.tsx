@@ -161,14 +161,25 @@ const Form: React.FC = () => {
 };
 
 const Panel: React.FC<{ data?: MovieGenresQuery }> = ({ data }) => {
+  const sortedGenres = useMemo(() => {
+    if (!data?.movieGenres?.nodes) {
+      return [];
+    }
+    return data.movieGenres.nodes.slice().sort((a, b) => {
+      const dateA = new Date(a.updatedDate);
+      const dateB = new Date(b.updatedDate);
+      return dateB.getTime() - dateA.getTime();
+    });
+  }, [data?.movieGenres?.nodes]);
+
   return useMemo(() => {
     return (
       <InfoPanel>
         <Section title="Additional Information">
-          {data?.movieGenres?.nodes[0] && (
+          {sortedGenres.length > 0 && (
             <Paragraph title="Last Modified">
-              {formatDateTime(data?.movieGenres?.nodes[0].updatedDate)} by{' '}
-              {data?.movieGenres?.nodes[0].updatedUser}
+              {formatDateTime(sortedGenres[0].updatedDate)} by{' '}
+              {sortedGenres[0].updatedUser}
             </Paragraph>
           )}
           <Paragraph title="Statistic">
@@ -194,9 +205,5 @@ const Panel: React.FC<{ data?: MovieGenresQuery }> = ({ data }) => {
         </Section>
       </InfoPanel>
     );
-  }, [
-    data?.movieGenres?.nodes,
-    data?.movieGenres?.totalCount,
-    data?.snapshots?.nodes,
-  ]);
+  }, [sortedGenres, data?.movieGenres?.totalCount, data?.snapshots?.nodes]);
 };
