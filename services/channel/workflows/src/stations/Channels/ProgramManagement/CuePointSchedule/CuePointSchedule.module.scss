@@ -1,0 +1,124 @@
+@import '../styles.scss';
+
+$cell-height: 42px;
+$input-error-msg-height: 16px;
+$input-error-msg-padding: 2px;
+$input-error-offset: $input-error-msg-height + $input-error-msg-padding * 2;
+
+@mixin inset-border-bottom {
+  box-shadow: 0px -1px 0px $light-gray inset;
+}
+
+@mixin inset-border-right {
+  box-shadow: -1px 0px 0px lighten($gray, 15%) inset;
+}
+
+.container {
+  display: grid;
+  grid: minmax(#{$row}, 1fr) / #{$column-small - $cp-container-padding} 1fr;
+  column-gap: $column-gap;
+  background-color: $white;
+
+  .columns {
+    @include columns;
+  }
+
+  .cpTimeSlot {
+    @include cpTimeSlot;
+
+    &.hasError {
+      padding-top: $input-error-offset;
+    }
+  }
+
+  .row {
+    grid: 1fr / 1fr #{$column-large} #{$column-large} #{$column-medium} #{$column-medium - $cp-container-padding};
+
+    .cell {
+      @include cell;
+
+      color: $dark-gray;
+    }
+
+    .ellipses {
+      @include ellipses;
+
+      grid-column: -1 / -2;
+    }
+
+    .title {
+      display: grid;
+      grid: 1fr / 50px #{$cell-height} minmax(50px, 1fr);
+      align-items: center;
+
+      p {
+        padding-left: 10px;
+      }
+
+      svg {
+        rect {
+          fill: $blue;
+        }
+      }
+    }
+
+    .dragIcon {
+      @include dragIcon;
+
+      padding-left: 5px;
+    }
+
+    .typeIcon {
+      height: 42px;
+      background-color: $light-gray-2;
+    }
+
+    .input {
+      @include cell;
+
+      display: grid;
+      grid: 1fr / #{$column-large};
+      align-items: center;
+
+      input {
+        height: #{$cell-height};
+        max-width: 100px;
+        display: inline-block;
+        margin-left: -8px;
+
+        padding: 0 8px;
+        color: $dark-gray;
+        border: 1px solid $gray;
+
+        outline: none;
+
+        transition: box-shadow 0.15s ease-in-out 0s;
+      }
+
+      small {
+        height: $input-error-msg-height;
+        padding-top: $input-error-msg-padding;
+        padding-bottom: $input-error-msg-padding;
+
+        color: $red;
+      }
+
+      &.hasError {
+        padding-bottom: 4px;
+
+        input {
+          border: 1px solid $red;
+        }
+      }
+    }
+
+    @include inset-border-bottom;
+
+    &.hasError {
+      > div:nth-child(-n + 2),
+      div:nth-child(5) {
+        padding-top: $input-error-offset;
+      }
+    }
+  }
+}

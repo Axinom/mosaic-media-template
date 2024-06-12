@@ -37,8 +37,9 @@ describe('deleteTransitionLiveStream', () => {
     isDrmProtected: boolean,
   ) => {
     return JSON.stringify({
+      content_id: channelId,
+      title: 'Discovery++',
       description: null,
-      id: channelId,
       images: [
         {
           height: 646,
@@ -53,7 +54,6 @@ describe('deleteTransitionLiveStream', () => {
         '3a8e5dc9-5c91-4d61-bf95-c4e719b705f2',
         62,
       ),
-      title: 'Discovery++',
     });
   };
 
@@ -116,8 +116,8 @@ describe('deleteTransitionLiveStream', () => {
 
   it('all playlist transitions are deleted', async () => {
     // Arrange
-    const channelId = uuid();
-    const playlistId = uuid();
+    const channelId = `channel-${uuid()}`;
+    const playlistId = `playlist-${uuid()}`;
     // virtual channel has other playlist transitions
     channelHasPlaylistTransitionsResult = () => {
       return true;
@@ -142,8 +142,8 @@ describe('deleteTransitionLiveStream', () => {
     'if virtual channel does not have any playlist transition left -> channel transition is created',
     async (isDrmProtected: boolean) => {
       // Arrange
-      const channelId = uuid();
-      const playlistId = uuid();
+      const channelId = `channel-${uuid()}`;
+      const playlistId = `playlist-${uuid()}`;
       getFileContentResult = () => {
         return createChannelJsonString(channelId, isDrmProtected);
       };

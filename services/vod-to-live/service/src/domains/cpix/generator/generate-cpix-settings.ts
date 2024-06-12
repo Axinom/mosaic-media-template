@@ -1,4 +1,4 @@
-import { DetailedVideo } from '@axinom/mosaic-messages';
+import { DetailedVideo } from 'media-messages';
 import { SECOND_IN_MILLISECONDS } from '../../../common';
 import {
   decryptionCpixFileName,

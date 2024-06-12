@@ -1,9 +1,7 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import {
   ChannelPublishedEvent,
-  ChannelServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
-import {
+  ChannelServiceMessagingSettings,
   PrepareChannelLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
@@ -25,10 +23,7 @@ export class ChannelPublishedHandler extends AuthenticatedMessageHandler<Channel
     private keyServiceApi: KeyServiceApi,
     private azureStorage: AzureStorage,
   ) {
-    super(
-      ChannelServiceMultiTenantMessagingSettings.ChannelPublished.messageType,
-      config,
-    );
+    super(ChannelServiceMessagingSettings.ChannelPublished.messageType, config);
   }
   async onMessage(
     payload: ChannelPublishedEvent,
@@ -36,7 +31,7 @@ export class ChannelPublishedHandler extends AuthenticatedMessageHandler<Channel
   ): Promise<void> {
     const cpixSettings: CpixSettings = {
       decryptionCpixFile: await createDecryptionCpix(
-        payload.id,
+        payload.content_id,
         null,
         {
           videos: payload.placeholder_video ? [payload.placeholder_video] : [],
@@ -53,10 +48,11 @@ export class ChannelPublishedHandler extends AuthenticatedMessageHandler<Channel
     const generator = new ChannelSmilGenerator(cpixSettings);
     const smilEnvelope = generator.generate(payload);
     await this.broker.publish<PrepareChannelLiveStreamCommand>(
-      payload.id,
+      payload.content_id,
       VodToLiveServiceMessagingSettings.PrepareChannelLiveStream,
       {
-        channel_id: payload.id,
+        channel_id: payload.content_id,
+        is_drm_protected: payload.is_drm_protected,
         smil: convertObjectToXml(smilEnvelope),
         json: JSON.stringify(payload),
       },

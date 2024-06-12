@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "playlist_unpublished_event",
+  "description": "Unpublish format for playlist.",
+  "additionalProperties": false,
+  "required": [
+    "content_id",
+    "channel_id"
+  ],
+  "properties": {
+    "content_id": {
+      "description": "Content ID of a playlist. Must match the pattern `^(playlist)-([a-zA-Z0-9_-]+)$`.",
+      "type": "string",
+      "pattern": "^(playlist)-([a-zA-Z0-9_-]+)$"
+    },
+    "channel_id": {
+      "description": "Content ID of a channel. Must match the pattern`^(channel)-([a-zA-Z0-9_-]+)$.`",
+      "type": "string",
+      "pattern": "^(channel)-([a-zA-Z0-9_-]+)$"
+    }
+  }
+}

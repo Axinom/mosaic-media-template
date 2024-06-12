@@ -6,7 +6,7 @@ import { MovieExplorer } from '../Stations/Movies/MovieExplorerBase/MovieExplore
 
 export function register(app: PiletApi): void {
   app.addProvider('fast-provider', {
-    type: 'Movie',
+    type: 'MOVIE',
     label: 'Movie',
     selectionComponent: ({ onSelected, onClose }) => (
       <MovieExplorer
@@ -48,7 +48,7 @@ export function register(app: PiletApi): void {
   });
 
   app.addProvider('fast-provider', {
-    type: 'Episode',
+    type: 'EPISODE',
     label: 'Episode',
     selectionComponent: ({ onSelected, onClose }) => (
       <EpisodeExplorer

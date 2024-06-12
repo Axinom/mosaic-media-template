@@ -1,0 +1,55 @@
+query Channel($id: UUID!) {
+  channel(id: $id) {
+    id
+    title
+    description
+    dashStreamUrl
+    hlsStreamUrl
+    keyId
+    isDrmProtected
+    updatedDate
+    updatedUser
+    createdDate
+    createdUser
+    publicationState
+    publishedDate
+    publishedUser
+    channelImages {
+      nodes {
+        imageId
+        imageType
+      }
+    }
+  }
+}
+
+query ChannelTitle($id: UUID!) {
+  channel(id: $id) {
+    id
+    title
+  }
+}
+
+mutation UpdateChannel($input: UpdateChannelInput!) {
+  updateChannel(input: $input) {
+    channel {
+      id
+    }
+  }
+}
+
+mutation DeleteChannel($input: DeleteChannelInput!) {
+  deleteChannel(input: $input) {
+    channel {
+      id
+    }
+  }
+}
+
+mutation UnpublishChannel($input: UnpublishChannelInput!) {
+  unpublishChannel(input: $input) {
+    channel {
+      id
+    }
+  }
+}

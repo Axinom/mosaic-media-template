@@ -1,7 +1,7 @@
 import { Broker } from '@axinom/mosaic-message-bus';
-import { ChannelPublishedEvent } from '@axinom/mosaic-messages';
 import { getMappedError, Logger } from '@axinom/mosaic-service-common';
 import {
+  ChannelPublishedEvent,
   PrepareTransitionLiveStreamCommand,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
@@ -71,7 +71,7 @@ export const deleteTransitionLiveStream = async (
 
       const cpixSettings: CpixSettings = {
         decryptionCpixFile: await createDecryptionCpix(
-          event.id,
+          event.content_id,
           null,
           {
             videos: event.placeholder_video ? [event.placeholder_video] : [],

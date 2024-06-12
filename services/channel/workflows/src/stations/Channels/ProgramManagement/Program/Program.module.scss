@@ -1,0 +1,148 @@
+@import '../styles.scss';
+
+$expanded-program: mix($dark-blue, #707070, 50%);
+$closed-program: $dark-blue;
+
+.sections {
+  @include sections;
+}
+
+.container {
+  display: grid;
+  grid: #{$row} 1fr / 1fr;
+
+  transition: grid-template-rows 100ms linear;
+
+  outline: 1px solid $expanded-program;
+  outline-offset: -1px;
+
+  .columns {
+    @include columns;
+  }
+
+  .header {
+    @include header;
+
+    background-color: $expanded-program;
+  }
+
+  &.closed {
+    grid-template-rows: #{$row} 0fr;
+    overflow: hidden;
+
+    outline: 1px solid $closed-program;
+
+    .header {
+      background-color: $closed-program;
+    }
+  }
+
+  .cell {
+    @include cell;
+  }
+
+  .icons {
+    grid: 50px / 30px 1fr;
+
+    path {
+      stroke: white;
+    }
+  }
+
+  .title {
+    display: grid;
+    grid: 1fr / 50px 1fr;
+    column-gap: 10px;
+    align-items: center;
+
+    p {
+      padding-left: 0px;
+    }
+
+    // render over outline
+    z-index: 1;
+  }
+
+  .ellipses {
+    @include ellipses;
+  }
+
+  .dragIcon {
+    @include dragIcon;
+  }
+
+  .cpWrapper {
+    display: grid;
+    grid-auto-rows: minmax(#{$row}, min-content);
+    grid-row: 2 / 3;
+    grid-column: 1 / -1;
+    row-gap: 4px;
+    overflow: hidden;
+
+    &.hasCuePoints {
+      padding: $cp-container-padding;
+    }
+    &.hasErrors {
+      padding-top: 20px;
+    }
+
+    &.collapsed {
+      padding-top: 0px;
+      padding-bottom: 0px;
+    }
+  }
+
+  .chevron {
+    @include chevron;
+
+    transform: rotate(90deg);
+
+    &.closed {
+      transform: rotate(0deg);
+    }
+  }
+
+  small {
+    grid-column: 1 / -1;
+    padding-top: 2px;
+    padding-left: $cp-container-padding;
+    color: $red;
+  }
+}
+
+.timeSlot {
+  display: grid;
+  grid: min-content / 1fr 0.6fr;
+  column-gap: 5px;
+  padding-top: 17px;
+
+  font-size: 16px;
+  font-weight: bold;
+  color: $dark-gray;
+
+  background-color: $light-gray-2;
+
+  p {
+    padding: 0;
+    margin: 0;
+    justify-self: end;
+  }
+
+  span {
+    height: 14px;
+    width: 26px;
+    display: grid;
+    grid: 1fr / 1fr;
+
+    align-self: center;
+
+    padding: 4px 6px 3px 6px;
+    line-height: 1;
+    font-size: 6px;
+    color: white;
+
+    border-radius: 8px;
+
+    background-color: #e47647;
+  }
+}

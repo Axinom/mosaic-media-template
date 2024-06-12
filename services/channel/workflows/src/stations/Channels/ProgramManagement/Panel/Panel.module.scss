@@ -1,0 +1,9 @@
+.componentsContainer {
+  display: grid;
+  grid: repeat(3, 1fr) / repeat(2, 1fr);
+  row-gap: 10px;
+
+  div:nth-child(even) {
+    justify-self: end;
+  }
+}

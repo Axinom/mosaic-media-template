@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "channel_unpublished_event",
+  "description": "Unpublish format for channel.",
+  "additionalProperties": false,
+  "required": [
+    "content_id"
+  ],
+  "properties": {
+    "content_id": {
+      "description": "Content ID of a channel. Must match the pattern`^(channel)-([a-zA-Z0-9_-]+)$.`",
+      "type": "string",
+      "pattern": "^(channel)-([a-zA-Z0-9_-]+)$"
+    }
+  }
+}

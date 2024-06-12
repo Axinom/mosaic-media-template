@@ -1,0 +1,11 @@
+query ChannelImages($id: UUID!) {
+  channel(id: $id) {
+    id
+    channelImages {
+      nodes {
+        imageType
+        imageId
+      }
+    }
+  }
+}

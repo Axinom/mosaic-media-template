@@ -1,0 +1,15 @@
+// This config is used exclusively by 'build' script to produce a 'dist' output without unnecessary files (e.g. scripts, tests)
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "scripts",
+    "**/tests",
+    "**/*spec.ts",
+    "jest.*"
+  ]
+}

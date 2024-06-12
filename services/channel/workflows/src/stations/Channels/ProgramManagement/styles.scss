@@ -1,0 +1,101 @@
+@import '../../../styles/variables.scss';
+
+$column-small: 80px;
+$column-medium: 100px;
+$column-large: 150px;
+$row: 50px;
+$column-gap: 10px;
+$cp-container-padding: 10px;
+$cp-time-slot-padding: 6px;
+$drop-position-border-style: dashed;
+
+@mixin sections {
+  display: grid;
+  grid: min-content / #{$column-medium} 1fr;
+  column-gap: 4px;
+}
+
+@mixin columns {
+  display: grid;
+  grid: 1fr / #{$column-small} 1fr #{$column-large} #{$column-large} #{$column-medium} #{$column-medium};
+  column-gap: $column-gap;
+}
+
+@mixin header {
+  display: grid;
+  grid-row: 1 / 2;
+}
+
+@mixin actions {
+  display: grid;
+  grid: #{$row} / 1fr min-content min-content;
+  grid-column: -1 / -2;
+  align-items: center;
+  justify-items: end;
+
+  background-color: $light-gray;
+}
+
+@mixin cell {
+  display: grid;
+  grid: 1fr / 1fr;
+  grid-row: 1 / 2;
+  align-items: center;
+
+  color: white;
+
+  p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+@mixin cpTimeSlot {
+  display: grid;
+  grid: 1fr / 1fr;
+  place-items: center;
+
+  color: $dark-gray;
+
+  p {
+    padding-left: $cp-time-slot-padding;
+  }
+}
+
+@mixin chevron {
+  height: 35px;
+
+  justify-self: end;
+}
+
+@mixin ellipses {
+  align-items: center;
+  justify-items: end;
+}
+
+@mixin dragIcon {
+  height: 35px;
+
+  rect {
+    width: 5.5px;
+    height: 5.5px;
+
+    fill: white;
+  }
+}
+
+@mixin inset-border-bottom {
+  box-shadow: 0px -1px 0px $light-gray inset;
+}
+
+@mixin inset-border-right {
+  box-shadow: -1px 0px 0px lighten($gray, 15%) inset;
+}
+
+@mixin drop-position-indicator {
+  content: '';
+  border-color: $blue;
+  border-width: 3px;
+  margin: -4.5px 0;
+}

@@ -87,7 +87,10 @@ async function bootstrap(): Promise<void> {
 
   const server = app.listen(config.port, () => {
     if (config.isDev) {
-      logger.log(`http://localhost:${config.port}/graphiql`);
+      logger.log({
+        message: `🚀 Server ready at http://localhost:${config.port}`,
+        context: 'catalogAppEndpoint',
+      });
     } else {
       logger.log('App is ready!');
     }

@@ -1,0 +1,27 @@
+query MediaLocalizations(
+  $entityId: String!
+  $entityType: String!
+  $serviceId: String!
+) {
+  localizedEntities(
+    filter: {
+      localizationSourceEntity: {
+        entityId: { equalTo: $entityId }
+        entityDefinition: {
+          entityType: { equalTo: $entityType }
+          serviceId: { equalTo: $serviceId }
+        }
+      }
+    }
+  ) {
+    nodes {
+      id
+      languageTag
+      fields {
+        fieldName
+        fieldValue
+        state
+      }
+    }
+  }
+}

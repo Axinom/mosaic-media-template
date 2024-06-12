@@ -1,4 +1,4 @@
-import { DetailedVideo } from '@axinom/mosaic-messages';
+import { DetailedVideo } from 'media-messages';
 import { DRMKey } from '../models';
 
 export const getDrmKeys = (video: DetailedVideo): DRMKey[] => {

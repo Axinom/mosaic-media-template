@@ -1,7 +1,7 @@
 import { Broker, MessageInfo } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { ChannelPublishedEvent, DetailedVideo } from '@axinom/mosaic-messages';
 import { stub } from 'jest-auto-stub';
+import { ChannelPublishedEvent, DetailedVideo } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { Config } from '../../common';
 import { AzureStorage, KeyServiceApi } from '../../domains';
@@ -72,9 +72,18 @@ describe('ChannelPublishedHandler', () => {
         mockedAzureStorage,
       );
       const payload: ChannelPublishedEvent = {
-        id: uuid(),
-        title: 'Test',
+        content_id: `channel-${uuid()}`,
+        is_drm_protected: isDrmProtected,
+        images: [],
         placeholder_video: createTestVideo(isDrmProtected, '0', 60),
+        localizations: [
+          {
+            is_default_locale: true,
+            language_tag: 'default',
+            title: 'Test',
+            description: null,
+          },
+        ],
       };
       const messageInfo = stub<MessageInfo<ChannelPublishedEvent>>({
         envelope: {

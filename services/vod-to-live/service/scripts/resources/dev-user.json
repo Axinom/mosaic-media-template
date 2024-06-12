@@ -1,6 +1,0 @@
-[
-  {
-    "serviceId": "ax-channel-service",
-    "permissions": ["SETTINGS_EDIT"]
-  }
-]

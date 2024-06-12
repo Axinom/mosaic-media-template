@@ -31,6 +31,7 @@ export class PrepareChannelLiveStreamHandler extends AuthenticatedMessageHandler
   ): Promise<void> {
     await prepareChannelLiveStream(
       payload.channel_id,
+      payload.is_drm_protected,
       payload.smil,
       payload.json,
       this.virtualChannelApi,
@@ -38,7 +39,6 @@ export class PrepareChannelLiveStreamHandler extends AuthenticatedMessageHandler
       this.keyServiceApi,
       this.broker,
       message.envelope.auth_token,
-      this.config,
     );
   }
 }

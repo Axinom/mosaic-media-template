@@ -1,0 +1,19 @@
+query ValidateChannel($id: UUID!) {
+  validateChannel(id: $id) {
+    publishHash
+    validationStatus
+    validationMessages {
+      context
+      message
+      severity
+    }
+  }
+}
+
+mutation PublishChannel($id: UUID!, $publishHash: String!) {
+  publishChannel(input: {id: $id, publishHash: $publishHash}) {
+    channel {
+        id
+    }
+  }
+}

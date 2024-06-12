@@ -24,14 +24,13 @@
     "test:watch": "yarn test --watch",
     "test:debug": "yarn util:load-vars node --inspect -r tsconfig-paths/register -r ts-node/register ../../../node_modules/jest/bin/jest --runInBand --silent",
     "test:cov": "yarn util:load-vars jest --coverage --silent && ts-node ../../../scripts/open-test-coverage.ts -- services/vod-to-live/service",
-    "util:load-vars": "env-cmd -f .env env-cmd -f ../../../.env",
-    "setup:webhook": "yarn util:load-vars ts-node --files scripts/setup-webhook.ts"
+    "util:load-vars": "env-cmd -f .env env-cmd -f ../../../.env"
   },
   "dependencies": {
-    "@axinom/mosaic-id-guard": "0.33.0-rc.5",
-    "@axinom/mosaic-message-bus": "0.28.0-rc.5",
-    "@axinom/mosaic-messages": "0.44.0-rc.5",
-    "@axinom/mosaic-service-common": "0.50.0-rc.5",
+    "@axinom/mosaic-id-guard": "0.34.0-rc.1",
+    "@axinom/mosaic-message-bus": "0.29.0-rc.1",
+    "@axinom/mosaic-messages": "0.45.0-rc.1",
+    "@axinom/mosaic-service-common": "0.51.0-rc.1",
     "@azure/storage-blob": "^12.14.0",
     "amqplib": "^0.6.0",
     "axios": "^0.24.0",
