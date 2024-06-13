@@ -3,8 +3,7 @@
 ## Overview
 
 This is the backend service with a focus on checking wether a client is entitled
-to playback videos. It uses PostgreSQL as a database and PostGraphile as the
-GraphQL API engine
+to playback videos.
 
 ## License note
 
@@ -52,53 +51,3 @@ country will be used to check if a movie or episode has a valid license. During
 development and in a test environment, it might be desirable to simulate the
 behavior of being located in different countries and test license validation
 logic for licenses that have different country codes.
-
-To do this, `MOSAIC_TESTING_IP_ENABLED` can be used. Setting this flag to true
-allows to pass any IP address (v4 or v6) as a custom header, and that value will
-override the actual IP. To summarize, GraphQL request can look like this:
-
-```
-query Entitlement {
-  entitlement(input: { entityId: "movie-1" }) {
-    entitlementMessageJwt
-  }
-}
-```
-
-And passed with headers like this:
-
-```
-{
-  "Authorization": "Bearer jwt_value_placeholder",
-  "mosaic-testing-ip":"2a05:4f46:c14:5700:fcee:3dcb:301c:fed5"
-}
-```
-
-Different IP address ranges for specific countries can be found in google. To
-get the jwt value during development, `yarn util:token` can be executed.
-
-## Setting up webhook secrets for production environment
-
-The `yarn setup:webhooks` script is used for development environments. To get
-the values for `ENTITLEMENT_WEBHOOK_SECRET` and `MANIFEST_WEBHOOK_SECRET` env
-variables for the production environment, the following mutation must be
-launched against the Video Service GraphQL API. You can use GraphiQL UI for that
-(https://video.service.eu.axinom.net/graphiql):
-
-```
-  mutation GenerateSecrets {
-    generateEntitlementWebhookSecret {
-      secret
-    }
-    generateManifestWebhookSecret {
-      secret
-    }
-  }
-```
-
-To authenticate the request, you would need an appropriate JWT. To get the JWT -
-the Portal Admin UI can be used (https://admin.service.eu.axinom.com). You would
-need to create or use an existing service account for your environment, make
-sure it has `Settings: Edit` permission for the Video Service, and generate a
-JWT on a dedicated `Access Token` station. More info here:
-https://portal.axinom.com/mosaic/documentation/authenticate-service-account

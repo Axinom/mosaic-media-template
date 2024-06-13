@@ -1,7 +1,6 @@
 import {
   DEFAULT_DB_USERNAME,
   getBeforeMigrationScripts,
-  getGraphileBuildPgWatchFixturesPath,
 } from '@axinom/mosaic-db-common';
 import { Logger as MigrateLogger, Settings } from 'graphile-migrate';
 import { DbConfig } from '../config';
@@ -24,18 +23,12 @@ export const getMigrationSettings = async (
       ':DB_NAME': config.dbName,
       ':DB_OWNER': config.dbOwner,
       ':DATABASE_LOGIN': config.dbLogin,
-      ':DATABASE_GQL_ROLE': config.dbGqlRole,
       ':DEFAULT_USERNAME': DEFAULT_DB_USERNAME,
     },
     afterReset: [
       {
         _: 'sql',
         file: 'after-reset/install-extensions.sql',
-        root: true,
-      },
-      {
-        _: 'sql',
-        file: getGraphileBuildPgWatchFixturesPath(),
         root: true,
       },
     ],

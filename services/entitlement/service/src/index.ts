@@ -76,8 +76,6 @@ async function bootstrap(): Promise<void> {
     ],
   });
 
-  // Configure REST endpoints additionally to GraphQL (auxiliary needs such as file download)
-
   await GeoIPService.getInstance().startDatabaseUpdater();
   app.set('trust proxy', true); // trust first proxy and enable req.ip / req.ips
 
@@ -85,7 +83,7 @@ async function bootstrap(): Promise<void> {
 
   const server = app.listen(config.port, () => {
     if (config.isDev) {
-      logger.log(`http://localhost:${config.port}/graphiql`);
+      logger.log(`App is ready! Listening on port ${config.port}`);
     } else {
       logger.log('App is ready!');
     }
