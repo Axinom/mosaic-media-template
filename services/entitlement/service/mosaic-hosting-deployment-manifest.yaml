@@ -10,7 +10,7 @@
 # DRM_LICENSE_COMMUNICATION_KEY_ID
 
 version: '1.0'
-serviceId: 'dc-nfn-entitlement-acc'
+serviceId: 'dc-entitlement-service'
 
 regularVariables:
   # Service General Variables
@@ -18,7 +18,7 @@ regularVariables:
   NODE_ENV: 'production'
   LOG_LEVEL: 'DEBUG'
   DEMO_MODE: true
-  PORT: '${__ax_hosted__.port.api}'
+  PORT: '${__ax_hosted__.port.dc}'
 
   # Mosaic Environment Info
   TENANT_ID: '${__ax_hosted__.env.tenant_id}'
@@ -39,12 +39,14 @@ regularVariables:
   PG_POOL_MAX_CONNECTIONS: 25
 
   # Custom Service URLs
-  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-nfn-mosaic-catalog-acc.api}'
+  ## TBD - data migrated to new catalog service
+  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-mosaic-catalog-service.dc}'
+  # CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-nfn-mosaic-catalog-acc.api}'
 
   # GeoIP2 Variables
-  CLIENT_IP_HEADER_NAME: X-Forwarded-For
-  GEOIP2_DATABASE_FILE: GeoLite2-City.mmdb
-  GEOIP2_UPDATE_SCHEDULE: 0 0 * * *
+  CLIENT_IP_HEADER_NAME: 'X-Forwarded-For'
+  GEOIP2_DATABASE_FILE: 'GeoIP2-City.mmdb'
+  GEOIP2_UPDATE_SCHEDULE: '0 0 * * *'
 
   GEO_BLOCKING_FEATURE_SWITCH: true
 
@@ -58,21 +60,21 @@ secureVariables:
   # DRM License Communication Key and ID
   # DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'
   # DRM_LICENSE_COMMUNICATION_KEY_ID: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY_ID'
-  DRM_LICENSE_COMMUNICATION_KEY: ''
-  DRM_LICENSE_COMMUNICATION_KEY_ID: ''
+  DRM_LICENSE_COMMUNICATION_KEY: '#{MOSAIC-DRM-LICENSE-COMMUNICATION-KEY}#'
+  DRM_LICENSE_COMMUNICATION_KEY_ID: '#{MOSAIC-DRM-LICENSE-COMMUNICATION-KEY-ID}#'
 
   # User JWT token validation public key
-  USER_SESSION_PUBLIC_KEY: ''
+  USER_SESSION_PUBLIC_KEY: '#{session-public-key}#'
 
   # Recurly entitlement service configuration
-  RECURLY_ENTITLEMENT_API_URL: https://v3.eu.recurly.com
-  RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: '<chanel>-video-playback'
-  RECURLY_ENTITLEMENT_API_KEY: ####
+  RECURLY_ENTITLEMENT_API_URL: 'https://v3.eu.recurly.com'
+  RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: '#{RECURLY-PLAYBACK-PERMISSION}#'
+  RECURLY_ENTITLEMENT_API_KEY: '#{RECURLY-API-KEY}#'
 
   # GeoIP2 Secure Variables
-  GEOIP2_BLOB_SAS_TOKEN: ####
-  GEOIP2_BLOB_STORAGE_ACCOUNT: ####
-  GEOIP2_BLOB_CONTAINER: ####
+  GEOIP2_BLOB_SAS_TOKEN: '#{GEOIP2-BLOB-SAS-TOKEN}#'
+  GEOIP2_BLOB_STORAGE_ACCOUNT: 'fc92815cac35ea297008806d'
+  GEOIP2_BLOB_CONTAINER: 'maxmindgeodb'
 
 serviceAccounts:
   - name: 'primary'
@@ -86,5 +88,5 @@ pilets:
   []
 
 dnsMappedPorts:
-  - name: 'api'
+  - name: 'dc'
     port: 11600
