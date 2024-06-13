@@ -26,6 +26,7 @@ variables:
   packageBuildCommand: 'build:entitlement-service:prod'
   imageRepository: 'beyonddutch-mosaic/mosaic-entitlement-service'
   tag: '$(Build.BuildNumber)'
+  group: vault-nfn-acceptance
 
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/s/.yarn
 
