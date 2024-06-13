@@ -27,7 +27,7 @@ variables:
   imageRepository: 'beyonddutch-mosaic/mosaic-entitlement-service'
   tag: '$(Build.BuildNumber)'
 
-  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/s/.yarn
 
 stages:
   - stage: Build
