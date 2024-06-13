@@ -10,8 +10,8 @@ import {
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
-import { Config, requestServiceAccountToken } from '../../common';
-import { ChannelTransactionalInboxMessageHandler } from '../../messaging';
+import { Config, requestServiceAccountToken } from '../common';
+import { ChannelTransactionalInboxMessageHandler } from '../messaging';
 
 export interface LocalizationMessageData {
   settings: LocalizationServiceMultiTenantMessagingSettings;

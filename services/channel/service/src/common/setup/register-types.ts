@@ -1,12 +1,10 @@
 import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { IsolationLevel } from 'zapatos/db';
-import {
-  Config,
-  registerImageTypes,
-  registerLocalizationEntityDefinitions,
-  registerVideoCuePointTypes,
-} from '../common';
+import { Config } from '../config';
+import { registerImageTypes } from './register-image-types';
+import { registerLocalizationEntityDefinitions } from './register-localization-entity-definitions';
+import { registerVideoCuePointTypes } from './register-video-cue-point-types';
 
 export const registerTypes = async (
   storeOutboxMessage: StoreOutboxMessage,

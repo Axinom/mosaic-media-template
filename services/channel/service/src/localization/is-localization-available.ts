@@ -1,7 +1,7 @@
 import { getAuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { ensureError, Logger } from '@axinom/mosaic-service-common';
-import { Config } from '../config';
-import { requestServiceAccountToken } from './token-utils';
+import { Config } from '../common/config';
+import { requestServiceAccountToken } from '../common/utils/token-utils';
 
 /**
  * This service has the `config.isLocalizationEnabled`. If it is true, we

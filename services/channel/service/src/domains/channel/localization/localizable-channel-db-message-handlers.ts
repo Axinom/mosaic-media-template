@@ -3,11 +3,12 @@ import {
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { Config, LOCALIZATION_CHANNEL_TYPE } from '../../../common';
-import { getDeleteMessageData, getUpsertMessageData } from '../../common';
 import {
+  getLocalizationDeleteMessageData,
+  getLocalizationUpsertMessageData,
   LocalizableTransactionalInboxMessageHandler,
   LocalizationMessageData,
-} from '../../common/localizable-transactional-inbox-message-handler';
+} from '../../../localization';
 import { LocalizableChannelDbMessagingSettings } from './localizable-channel-db-messaging-settings';
 
 export interface LocalizableChannelDbEvent {
@@ -31,7 +32,7 @@ export class LocalizableChannelCreatedDbMessageHandler extends LocalizableTransa
   }: TypedTransactionalMessage<LocalizableChannelDbEvent>): Promise<
     LocalizationMessageData | undefined
   > {
-    return getUpsertMessageData(
+    return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_CHANNEL_TYPE,
       id,
@@ -56,7 +57,7 @@ export class LocalizableChannelUpdatedDbMessageHandler extends LocalizableTransa
   }: TypedTransactionalMessage<LocalizableChannelDbEvent>): Promise<
     LocalizationMessageData | undefined
   > {
-    return getUpsertMessageData(
+    return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_CHANNEL_TYPE,
       id,
@@ -81,7 +82,7 @@ export class LocalizableChannelDeletedDbMessageHandler extends LocalizableTransa
   }: TypedTransactionalMessage<LocalizableChannelDbEvent>): Promise<
     LocalizationMessageData | undefined
   > {
-    return getDeleteMessageData(
+    return getLocalizationDeleteMessageData(
       this.config.serviceId,
       LOCALIZATION_CHANNEL_TYPE,
       id,

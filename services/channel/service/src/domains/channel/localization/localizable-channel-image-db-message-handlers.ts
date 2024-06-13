@@ -6,10 +6,10 @@ import { ClientBase } from 'pg';
 import { selectOne } from 'zapatos/db';
 import { Config, LOCALIZATION_CHANNEL_TYPE } from '../../../common';
 import {
-  getUpsertMessageData,
+  getLocalizationUpsertMessageData,
   LocalizableTransactionalInboxMessageHandler,
   LocalizationMessageData,
-} from '../../common';
+} from '../../../localization';
 import { LocalizableChannelDbMessagingSettings } from './localizable-channel-db-messaging-settings';
 
 export interface LocalizableChannelImageDbEvent {
@@ -37,7 +37,7 @@ export class LocalizableChannelImageCreatedDbMessageHandler extends LocalizableT
       return undefined;
     }
 
-    return getUpsertMessageData(
+    return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_CHANNEL_TYPE,
       channel_id,
@@ -67,7 +67,7 @@ export class LocalizableChannelImageUpdatedDbMessageHandler extends LocalizableT
       return undefined;
     }
 
-    return getUpsertMessageData(
+    return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_CHANNEL_TYPE,
       channel_id,
@@ -102,7 +102,7 @@ export class LocalizableChannelImageDeletedDbMessageHandler extends LocalizableT
       return undefined;
     }
 
-    return getUpsertMessageData(
+    return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_CHANNEL_TYPE,
       channel_id,
