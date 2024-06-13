@@ -26,7 +26,6 @@ variables:
   packageBuildCommand: 'build:entitlement-service:prod'
   imageRepository: 'beyonddutch-mosaic/mosaic-entitlement-service'
   tag: '$(Build.BuildNumber)'
-  group: vault-nfn-acceptance
 
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/s/.yarn
 
@@ -35,6 +34,8 @@ stages:
     displayName: Build and push stage
     jobs:
       - job: Build
+        variables:
+          - group: vault-nfn-acceptance
         displayName: Build
         condition: ${{ eq(parameters.build, true) }}
         steps:
