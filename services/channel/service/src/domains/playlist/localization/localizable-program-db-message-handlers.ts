@@ -22,11 +22,12 @@ import {
   LOCALIZATION_PROGRAM_TYPE,
 } from '../../../common';
 import { getSdk } from '../../../generated/graphql/localization';
-import { getDeleteMessageData, getUpsertMessageData } from '../../common';
 import {
+  getLocalizationDeleteMessageData,
+  getLocalizationUpsertMessageData,
   LocalizableTransactionalInboxMessageHandler,
   LocalizationMessageData,
-} from '../../common/localizable-transactional-inbox-message-handler';
+} from '../../../localization';
 import { LocalizableProgramDbMessagingSettings } from './localizable-program-db-messaging-settings';
 
 export interface LocalizableProgramDbEvent {
@@ -156,7 +157,7 @@ export class LocalizableProgramCreatedDbMessageHandler extends LocalizableTransa
     ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
     const sourceTitle = await this.getSourceTitle(id, ownerClient, fields);
-    return getUpsertMessageData(
+    return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_PROGRAM_TYPE,
       id,
@@ -223,7 +224,7 @@ export class LocalizableProgramUpdatedDbMessageHandler extends LocalizableTransa
   }: TypedTransactionalMessage<LocalizableProgramDbEvent>): Promise<
     LocalizationMessageData | undefined
   > {
-    return getUpsertMessageData(
+    return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_PROGRAM_TYPE,
       id,
@@ -248,7 +249,7 @@ export class LocalizableProgramDeletedDbMessageHandler extends LocalizableTransa
   }: TypedTransactionalMessage<LocalizableProgramDbEvent>): Promise<
     LocalizationMessageData | undefined
   > {
-    return getDeleteMessageData(
+    return getLocalizationDeleteMessageData(
       this.config.serviceId,
       LOCALIZATION_PROGRAM_TYPE,
       id,

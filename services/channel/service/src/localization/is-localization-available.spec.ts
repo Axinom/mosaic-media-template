@@ -1,10 +1,10 @@
 import { getAuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { Logger } from '@axinom/mosaic-service-common';
-import { Config } from '../config';
+import { Config } from '../common/config';
+import { requestServiceAccountToken } from '../common/utils/token-utils';
 import { updateConfigWithActualLocalizationAvailability } from './is-localization-available';
-import { requestServiceAccountToken } from './token-utils';
 
-jest.mock('./token-utils', () => ({
+jest.mock('../common/utils/token-utils', () => ({
   requestServiceAccountToken: jest.fn(),
 }));
 

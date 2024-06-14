@@ -38,11 +38,14 @@ import {
   applyMigrations,
   getFullConfig,
   HEALTH_CHECK_ROUTING_KEY,
+  registerTypes,
+} from './common';
+import { syncPermissions } from './domains';
+import { setupPostGraphile } from './graphql';
+import {
   setIsLocalizationEnabledDbFunction,
   updateConfigWithActualLocalizationAvailability,
-} from './common';
-import { registerTypes, syncPermissions } from './domains';
-import { setupPostGraphile } from './graphql';
+} from './localization';
 import { registerMessaging } from './messaging';
 
 const logger = new Logger({ context: bootstrap.name });

@@ -5,7 +5,7 @@ import {
 } from '@axinom/mosaic-messages';
 import { LocalizationMessageData } from './localizable-transactional-inbox-message-handler';
 
-export const getUpsertMessageData = (
+export const getLocalizationUpsertMessageData = (
   serviceId: string,
   entityType: string,
   entityId: string,
@@ -28,7 +28,7 @@ export const getUpsertMessageData = (
   };
 };
 
-export const getDeleteMessageData = (
+export const getLocalizationDeleteMessageData = (
   serviceId: string,
   entityType: string,
   entityId: string,
