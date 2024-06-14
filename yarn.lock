@@ -360,6 +360,11 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.17.0-rc.1.tgz#0faebf74a605df9bcec97ae3ccf177adb88cf0c1"
   integrity sha512-uJzO2N0Qx2y7fc0GZSCnXb43pYvf3tNn9z3xJ5vTOwxRpJ1rwWmqhX+WI8ugs4rKJOjNZHFrhKFVCVzPakfyTA==
 
+"@axinom/mosaic-managed-workflow-integration@0.17.0-rc.2":
+  version "0.17.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.17.0-rc.2.tgz#b6760c0e49666f99b1a9af773abd56c8eb211755"
+  integrity sha512-rSibPfLBIfFrCPOZSjiTKRDHDtGPv2lvZ6WHcN2Va/R2X6UTRWikUJpU46WJjIaz/k3ltVF74IC9nSRTszmn/A==
+
 "@axinom/mosaic-message-bus-abstractions@0.16.0-rc.1", "@axinom/mosaic-message-bus-abstractions@^0.16.0-rc.1":
   version "0.16.0-rc.1"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus-abstractions/-/mosaic-message-bus-abstractions-0.16.0-rc.1.tgz#de69fbd8a7ba564f8ace02114875e1cfc2eb3d12"

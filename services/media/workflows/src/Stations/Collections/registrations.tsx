@@ -25,16 +25,13 @@ export function register(app: PiletApi, extensions: Extensions): void {
 
   // Generate entry points to embedded localization stations
   if (piletConfig.isLocalizationEnabled) {
-    registerLocalizationEntryPoints(
-      [
-        {
-          root: '/collections/:collectionId',
-          entityIdParam: 'collectionId',
-          entityType: 'collection',
-        },
-      ],
-      app,
-    );
+    registerLocalizationEntryPoints([
+      {
+        root: '/collections/:collectionId',
+        entityIdParam: 'collectionId',
+        entityType: 'collection',
+      },
+    ]);
   }
 
   app.setRouteResolver(
