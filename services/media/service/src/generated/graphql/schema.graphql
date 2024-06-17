@@ -11503,7 +11503,6 @@ type IngestDocument {
   createdUser: String!
   updatedUser: String!
   status: IngestStatus!
-  startedCount: Int!
 
   """Reads and enables pagination through a set of `IngestItem`."""
   ingestItems(
@@ -12390,9 +12389,6 @@ input IngestDocumentFilter {
   """Filter by the object’s `status` field."""
   status: IngestStatusFilter
 
-  """Filter by the object’s `startedCount` field."""
-  startedCount: IntFilter
-
   """Filter by the object’s `ingestItems` relation."""
   ingestItems: IngestDocumentToManyIngestItemFilter
 
@@ -12667,8 +12663,6 @@ enum IngestDocumentsOrderBy {
   UPDATED_USER_DESC
   STATUS_ASC
   STATUS_DESC
-  STARTED_COUNT_ASC
-  STARTED_COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -12726,9 +12720,6 @@ input IngestDocumentCondition {
 
   """Checks for equality with the object’s `status` field."""
   status: IngestStatus
-
-  """Checks for equality with the object’s `startedCount` field."""
-  startedCount: Int
 }
 
 """
@@ -14863,19 +14854,19 @@ type Mutation {
   publishCollection(
     """ID of the collection to publish."""
     collectionId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Unpublishes the currently published Collection snapshot."""
   unpublishCollection(
     """ID of the collection to unpublish."""
     collectionId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Creates a new Collection snapshot."""
   createCollectionSnapshot(
     """ID of the collection to create a snapshot from."""
     collectionId: Int!
-  ): Snapshot
+  ): Snapshot!
   deleteCollections(filter: CollectionFilter): BulkMutationIntPayload
   deleteCollectionRelations(filter: CollectionRelationFilter): BulkMutationIntPayload
   createMovieSnapshots(
@@ -14895,19 +14886,19 @@ type Mutation {
   publishMovie(
     """ID of the movie to publish."""
     movieId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Unpublishes the currently published Movie snapshot."""
   unpublishMovie(
     """ID of the movie to unpublish."""
     movieId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Creates a new Movie snapshot."""
   createMovieSnapshot(
     """ID of the movie to create a snapshot from."""
     movieId: Int!
-  ): Snapshot
+  ): Snapshot!
   deleteMoviesLicenses(filter: MoviesLicenseFilter): BulkMutationIntPayload
   deleteMovieGenres(filter: MovieGenreFilter): BulkMutationIntPayload
   deleteMovies(filter: MovieFilter): BulkMutationIntPayload
@@ -14915,13 +14906,13 @@ type Mutation {
   """
   Creates a Movie genres snapshot and immediately publishes it if it's valid.
   """
-  publishMovieGenres: Snapshot
+  publishMovieGenres: Snapshot!
 
   """Unpublishes the currently published Movie genres snapshot."""
-  unpublishMovieGenres: Snapshot
+  unpublishMovieGenres: Snapshot!
 
   """Creates a new Movie genres snapshot."""
-  createMovieGenresSnapshot: Snapshot
+  createMovieGenresSnapshot: Snapshot!
   createEpisodeSnapshots(
     """Filter for bulk selecting items."""
     filter: EpisodeFilter
@@ -14963,55 +14954,55 @@ type Mutation {
   publishTvshow(
     """ID of the tvshow to publish."""
     tvshowId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Unpublishes the currently published Tvshow snapshot."""
   unpublishTvshow(
     """ID of the tvshow to unpublish."""
     tvshowId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Creates a new Tvshow snapshot."""
   createTvshowSnapshot(
     """ID of the tvshow to create a snapshot from."""
     tvshowId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Creates a Season snapshot and immediately publishes it if it's valid."""
   publishSeason(
     """ID of the season to publish."""
     seasonId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Unpublishes the currently published Season snapshot."""
   unpublishSeason(
     """ID of the season to unpublish."""
     seasonId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Creates a new Season snapshot."""
   createSeasonSnapshot(
     """ID of the season to create a snapshot from."""
     seasonId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Creates a Episode snapshot and immediately publishes it if it's valid."""
   publishEpisode(
     """ID of the episode to publish."""
     episodeId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Unpublishes the currently published Episode snapshot."""
   unpublishEpisode(
     """ID of the episode to unpublish."""
     episodeId: Int!
-  ): Snapshot
+  ): Snapshot!
 
   """Creates a new Episode snapshot."""
   createEpisodeSnapshot(
     """ID of the episode to create a snapshot from."""
     episodeId: Int!
-  ): Snapshot
+  ): Snapshot!
   deleteTvshowsLicenses(filter: TvshowsLicenseFilter): BulkMutationIntPayload
   deleteSeasonsLicenses(filter: SeasonsLicenseFilter): BulkMutationIntPayload
   deleteEpisodesLicenses(filter: EpisodesLicenseFilter): BulkMutationIntPayload
@@ -15023,13 +15014,13 @@ type Mutation {
   """
   Creates a Tvshow genres snapshot and immediately publishes it if it's valid.
   """
-  publishTvshowGenres: Snapshot
+  publishTvshowGenres: Snapshot!
 
   """Unpublishes the currently published Tvshow genres snapshot."""
-  unpublishTvshowGenres: Snapshot
+  unpublishTvshowGenres: Snapshot!
 
   """Creates a new Tvshow genres snapshot."""
-  createTvshowGenresSnapshot: Snapshot
+  createTvshowGenresSnapshot: Snapshot!
   populateCollections(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.

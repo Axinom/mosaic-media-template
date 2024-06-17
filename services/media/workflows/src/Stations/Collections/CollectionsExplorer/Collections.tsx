@@ -1,4 +1,5 @@
 import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
+import { PiletApi } from '@axinom/mosaic-portal';
 import {
   ActionData,
   Column,
@@ -26,12 +27,21 @@ import {
   usePublishCollectionMutation,
   useUnpublishCollectionMutation,
 } from '../../../generated/graphql';
+import { publishNowNotification } from '../../../Util/Notifications/PublishNowNotification';
+import { snapshotCreateNotification } from '../../../Util/Notifications/SnapshotCreateNotification';
+import { unpublishNotification } from '../../../Util/Notifications/UnpublishNotification';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
 import { useCollectionsActions } from './Collections.actions';
 import { useCollectionsFilters } from './Collections.filters';
 import { CollectionData } from './Collections.types';
 
-export const Collections: React.FC = () => {
+interface CollectionProps {
+  showNotification: PiletApi['showNotification'];
+}
+
+export const Collections: React.FC<CollectionProps> = ({
+  showNotification,
+}) => {
   const history = useHistory();
   const { transformFilters, filterOptions } = useCollectionsFilters();
   const { bulkActions } = useCollectionsActions();
@@ -145,9 +155,18 @@ export const Collections: React.FC = () => {
       {
         label: 'Create Snapshot',
         onActionSelected: async () => {
-          await createCollectionSnapshotMutation({
+          const response = await createCollectionSnapshotMutation({
             variables: { collectionId: id },
           });
+          if (!response.data) {
+            return response.errors;
+          }
+          showNotification(
+            snapshotCreateNotification({
+              link: `/collections/${id}/snapshots/${response.data.createCollectionSnapshot.id}`,
+              snapshotNo: response.data.createCollectionSnapshot?.snapshotNo,
+            }),
+          );
           history.push('/collections');
         },
         icon: IconName.Snapshot,
@@ -155,7 +174,18 @@ export const Collections: React.FC = () => {
       {
         label: 'Publish Now',
         onActionSelected: async () => {
-          await publishCollectionMutation({ variables: { id } });
+          const response = await publishCollectionMutation({
+            variables: { id },
+          });
+          if (!response.data) {
+            return response.errors;
+          }
+          showNotification(
+            publishNowNotification({
+              link: `/collections/${id}/snapshots/${response.data.publishCollection.id}`,
+              snapshotNo: response.data.publishCollection?.snapshotNo,
+            }),
+          );
           history.push('/collections');
         },
         icon: IconName.Publish,
@@ -165,6 +195,7 @@ export const Collections: React.FC = () => {
         label: 'Unpublish',
         onActionSelected: async () => {
           await unpublishCollectionMutation({ variables: { id } });
+          showNotification(unpublishNotification());
           history.push('/collections');
         },
         icon: IconName.Unpublish,
