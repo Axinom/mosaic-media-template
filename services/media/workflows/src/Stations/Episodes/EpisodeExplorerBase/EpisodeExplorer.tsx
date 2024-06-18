@@ -1,4 +1,4 @@
-import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
+import { createThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
   Column,
@@ -58,7 +58,7 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
     {
       propertyName: 'publishStatus',
       label: 'State',
-      render: getThumbnailAndStateRenderer()(
+      render: createThumbnailAndStateRenderer(
         'episodesImages',
         PublishStatusStateMap,
       ),

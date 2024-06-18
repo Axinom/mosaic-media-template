@@ -1,4 +1,4 @@
-import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
+import { createThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
   Column,
@@ -58,7 +58,7 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
     {
       propertyName: 'publishStatus',
       label: 'State',
-      render: getThumbnailAndStateRenderer()(
+      render: createThumbnailAndStateRenderer(
         'seasonsImages',
         PublishStatusStateMap,
       ),

@@ -1,4 +1,4 @@
-import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
+import { createThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
   Column,
@@ -56,7 +56,7 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
     {
       propertyName: 'publishStatus',
       label: 'State',
-      render: getThumbnailAndStateRenderer()(
+      render: createThumbnailAndStateRenderer(
         'moviesImages',
         PublishStatusStateMap,
       ),
