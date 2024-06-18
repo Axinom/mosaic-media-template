@@ -25,9 +25,6 @@ export const EntitlementHandler = async (
     config,
     context: EntitlementHandler.name,
   });
-  const userId = new UserTokenValidation(
-    entitlementRequest.token,
-  ).getUserIdFromToken();
 
   const assertResponse = await AssetHandler(entitlementRequest);
 
@@ -46,7 +43,10 @@ export const EntitlementHandler = async (
     };
   }
 
-  // TODO: Country code should be dynamic and please use request body to get the country code
+  const userId = new UserTokenValidation(
+    entitlementRequest.token ?? '',
+  ).getUserIdFromToken();
+
   const entitlementValidationResult = EntitlementValidation(
     assertResponse.data,
     userId ? true : false,
