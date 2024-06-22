@@ -171,11 +171,14 @@ function validateDeploymentManifestIsModified(
     | 'catalog-service'
     | 'entitlement-service'
     | 'channel-service'
-    | 'vod-to-live',
+    | 'vod-to-live-service',
 ): void {
   const servicePrefix = serviceId.split('-service')[0];
 
   const deploymentManifestFilePath = `./services/${servicePrefix}/service/mosaic-hosting-deployment-manifest.yaml`;
+
+  console.log(deploymentManifestFilePath);
+
   const fileContent = readFileSync(deploymentManifestFilePath).toString();
   if (fileContent.includes(`'REPLACE_WITH_VALID_`)) {
     throw new Error(
@@ -216,7 +219,7 @@ function buildDockerImageAndPush(
     | 'catalog-service'
     | 'entitlement-service'
     | 'channel-service'
-    | 'vod-to-live',
+    | 'vod-to-live-service',
   uniqueID: string,
 ): void {
   const servicePrefix = serviceId.split('-service')[0];
@@ -276,7 +279,7 @@ function uploadDeploymentManifest(
     | 'catalog-service'
     | 'entitlement-service'
     | 'channel-service'
-    | 'vod-to-live',
+    | 'vod-to-live-service',
   uniqueID: string,
 ): void {
   const servicePrefix = serviceId.split('-service')[0];
@@ -298,7 +301,7 @@ function initiateDeployment(
     | 'catalog-service'
     | 'entitlement-service'
     | 'channel-service'
-    | 'vod-to-live',
+    | 'vod-to-live-service',
   dockerImageTag: string,
   uniqueID: string,
 ): void {
@@ -361,7 +364,7 @@ async function main(): Promise<void> {
           { title: 'Catalog Service', value: 'catalog-service' },
           { title: 'Entitlement Service', value: 'entitlement-service' },
           { title: 'Channel Service', value: 'channel-service' },
-          { title: 'VOD-to-Live Service', value: 'vod-to-liv-service' },
+          { title: 'VOD-to-Live Service', value: 'vod-to-live-service' },
         ],
       },
       {

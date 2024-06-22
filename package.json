@@ -51,6 +51,7 @@
     "build:channel-service:prod": "yarn && wsrun -trm -p channel-service -c build && yarn install --prod",
     "build:vod-to-live-service:prod": "yarn && wsrun -trm -p vod-to-live-service -c build && yarn install --prod",
     "build:media-workflows:prod": "yarn && wsrun -trm -p media-workflows -c build && pilet pack services/media/workflows",
+    "build:channel-workflows:prod": "yarn && wsrun -trm -p channel-workflows -c build && pilet pack services/channel/workflows",
     "setup:hosting": "yarn util:load-vars ts-node ./scripts/setup-hosting.ts",
     "yarn:de-dupe": "npx yarn-deduplicate yarn.lock"
   },

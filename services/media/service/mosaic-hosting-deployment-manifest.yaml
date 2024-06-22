@@ -9,7 +9,7 @@ regularVariables:
   # Service General Variables
   SERVICE_ID: 'media-service'
   NODE_ENV: 'production'
-  LOG_LEVEL: 'DEBUG'
+  LOG_LEVEL: 'WARN'
   GRAPHQL_GUI_ENABLED: true
   PORT: '${__ax_hosted__.port.api}'
 

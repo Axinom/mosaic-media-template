@@ -9,7 +9,7 @@ regularVariables:
   # Service General Variables
   SERVICE_ID: 'channel-service'
   NODE_ENV: 'production'
-  LOG_LEVEL: 'DEBUG'
+  LOG_LEVEL: 'WARN'
   GRAPHQL_GUI_ENABLED: true
   PORT: '${__ax_hosted__.port.api}'
 
@@ -116,4 +116,4 @@ pilets:
 dnsMappedPorts:
   # Defines the DNS subdomains that will provisioned and be mapped to the ports exposed by the service
   - name: 'api'
-    port: '${__ax_hosted__.port.api}'
+    port: 12000

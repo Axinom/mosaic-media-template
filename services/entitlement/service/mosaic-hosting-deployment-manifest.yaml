@@ -16,7 +16,7 @@ regularVariables:
   # Service General Variables
   SERVICE_ID: 'entitlement-service'
   NODE_ENV: 'production'
-  LOG_LEVEL: 'DEBUG'
+  LOG_LEVEL: 'WARN'
   GRAPHQL_GUI_ENABLED: true
   DEMO_MODE: true
   PORT: '${__ax_hosted__.port.api}'
