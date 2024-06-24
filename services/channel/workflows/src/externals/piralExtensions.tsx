@@ -3,8 +3,7 @@ import {
   bindVideoExtensions,
   extensionDefaultValue,
   ImageExtensions,
-  setGetThumbnailAndStateRenderer,
-  setGetVideoCuePointsData,
+  initializeIntegrationLib,
   VideoExtensions,
 } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
@@ -29,22 +28,11 @@ export const ExtensionsContext = React.createContext<Extensions>({
  * @returns An object containing all external extensions that can be used as value as `ExtensionsContext.Provider` value.
  */
 export const bindExtensions = (app: PiletApi): Extensions => {
-  setGetThumbnailAndStateRenderer(app);
-  setGetVideoCuePointsData(app);
-
-  /** Video Extensions */
-  const { VideoSelectExplorer, VideoSelectField } = bindVideoExtensions(app);
-
-  /** Image Extensions */
-  const { ImageCover, ImagePreview, ImageSelectExplorer, ImageSelectField } =
-    bindImageExtensions(app);
-
+  initializeIntegrationLib(app);
   return {
-    ImageCover,
-    ImagePreview,
-    ImageSelectExplorer,
-    ImageSelectField,
-    VideoSelectExplorer,
-    VideoSelectField,
+    /** Video Extensions */
+    ...bindVideoExtensions(app),
+    /** Image Extensions */
+    ...bindImageExtensions(app),
   };
 };

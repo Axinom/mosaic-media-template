@@ -47,10 +47,7 @@ export const generateProgram = async (
   });
 
   // fetch the video's cue points and duration from the video service
-  const data = await getVideoCuePointsData()(
-    videoIds,
-    filteredCuePointTypeKeys,
-  );
+  const data = await getVideoCuePointsData(videoIds, filteredCuePointTypeKeys);
 
   // Find the maximum sortIndex in the currentPrograms array
   const maxSortIndex = currentPrograms.reduce((maxIndex, program) => {
