@@ -44,15 +44,15 @@
     "util:define-func-migration": "yarn mosaic generate-define-func-migration"
   },
   "dependencies": {
-    "@axinom/mosaic-db-common": "0.39.0-rc.1",
-    "@axinom/mosaic-graphql-common": "0.15.0-rc.1",
-    "@axinom/mosaic-id-guard": "0.34.0-rc.1",
-    "@axinom/mosaic-id-link-be": "0.23.0-rc.1",
-    "@axinom/mosaic-message-bus": "0.29.0-rc.1",
-    "@axinom/mosaic-message-bus-abstractions": "0.16.0-rc.1",
-    "@axinom/mosaic-messages": "0.45.0-rc.1",
-    "@axinom/mosaic-service-common": "0.51.0-rc.1",
-    "@axinom/mosaic-transactional-inbox-outbox": "0.11.0-rc.1",
+    "@axinom/mosaic-db-common": "0.39.0-rc.2",
+    "@axinom/mosaic-graphql-common": "0.15.0-rc.2",
+    "@axinom/mosaic-id-guard": "0.34.0-rc.2",
+    "@axinom/mosaic-id-link-be": "0.23.0-rc.2",
+    "@axinom/mosaic-message-bus": "0.29.0-rc.2",
+    "@axinom/mosaic-message-bus-abstractions": "0.16.0-rc.2",
+    "@axinom/mosaic-messages": "0.45.0-rc.2",
+    "@axinom/mosaic-service-common": "0.51.0-rc.2",
+    "@axinom/mosaic-transactional-inbox-outbox": "0.11.0-rc.2",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "amqplib": "^0.6.0",
     "dotenv": "^8.6.0",
@@ -82,7 +82,7 @@
     "zapatos": "^3.6.0"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.35.0-rc.1",
+    "@axinom/mosaic-cli": "0.35.0-rc.2",
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-graphql-request": "^4.5.5",

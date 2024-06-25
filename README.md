@@ -19,8 +19,8 @@ solution will be provided, updated and maintained by Axinom.
 
 ## Getting Started
 
-To get started with developing your own customized solution based on the
-Mosaic Media Template, run the following command:
+To get started with developing your own customized solution based on the Mosaic
+Media Template, run the following command:
 
 ```shell
 npx -p @axinom/mosaic-cli mosaic create
@@ -28,7 +28,9 @@ npx -p @axinom/mosaic-cli mosaic create
 
 This process will guide you through the creation of a new Mosaic project based
 on the Mosaic Media Template.  
-See [the CLI documentation](https://portal.axinom.com/mosaic/documentation/axinom-mosaic-cli#_mosaic_create) for more details.
+See
+[the CLI documentation](https://portal.axinom.com/mosaic/documentation/axinom-mosaic-cli#_mosaic_create)
+for more details.
 
 ## Prerequisites
 
@@ -85,7 +87,7 @@ without `sudo`, please see
    - `DEV_SERVICE_ACCOUNT_CLIENT_SECRET`
 
    You will get these values from the 'Environment Connection' station on the
-   Environment Administration Portal. For a description on how to create a new
+   Environment Administration Portal. For a description of how to create a new
    environment and getting the required connection values, please follow the
    steps described
    [here](#Prepare-the-developer-environment-and-get-connection-values).

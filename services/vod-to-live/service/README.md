@@ -10,9 +10,9 @@ a
 please refer to the
 [VOD-to-Live Service documentation](https://portal.axinom.com/mosaic/documentation/media/vod-to-live-service).
 
-The root `package.json` contains Channel Service and VOD-to-Live Service
-specific scripts: `build:fast`, `clean:fast`, and `dev:services:fast` scripts.
-And the Jest tests are not run from the root either.
+The root `package.json` contains beside the media specific script the `*:all`
+scripts that include the Channel Service and VOD-to-Live Service as well:
+`build:fast`, `clean:fast`, and `dev:services:fast` scripts.
 
 ## Overview
 
