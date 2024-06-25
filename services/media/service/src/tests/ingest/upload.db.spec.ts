@@ -499,82 +499,84 @@ describe('Movies GraphQL endpoints', () => {
         defaultRequestContext,
       );
 
-      let videoId = 1;
-      let imageId = 1;
-      while (messages.length) {
-        const msg = messages.shift();
-        assertNotFalsy(msg, 'msg');
+      await ctx.executeOwnerSql(user, async (txn) => {
+        let videoId = 1;
+        let imageId = 1;
+        while (messages.length) {
+          const msg = messages.shift();
+          assertNotFalsy(msg, 'msg');
 
-        switch (msg.messageType) {
-          case MediaServiceMessagingSettings.StartIngest.messageType:
-            await ctx.executeOwnerSql(user, async (txn) => {
-              await startIngest.handleMessage(
-                createMessage(msg.payload, msg.envelopeOverrides),
-                txn,
-                { subject: user },
-              );
-            });
-            break;
-          case MediaServiceMessagingSettings.StartIngestItem.messageType:
-            await ctx.executeOwnerSql(user, async (txn) => {
-              await startItem.handleMessage(
-                createMessage(msg.payload, msg.envelopeOverrides),
-                txn,
-              );
-            });
-            break;
-          case MediaServiceMessagingSettings.UpdateMetadata.messageType:
-            await ctx.executeOwnerSql(user, async (txn) => {
-              await updateMetadata.handleMessage(
-                createMessage(msg.payload, msg.envelopeOverrides),
-                txn,
-              );
-            });
-            break;
-          case VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
-            .messageType: // EnsureVideoExistsStart is handled in another service, here we will just mock messages from it.
-            await ctx.executeOwnerSql(user, async (txn) => {
-              await videoCreationStarted.handleMessage(
-                createMessage(
-                  {
-                    ...msg.payload,
-                    video_id: `0354c2ac-a6d2-45b4-94dc-0000000000${(
-                      '00' + videoId++
-                    ).slice(-2)}`,
-                  },
-                  msg.envelopeOverrides,
-                ),
-                txn,
-              );
-            });
-            break;
-          case ImageServiceMultiTenantMessagingSettings.EnsureImageExists
-            .messageType: // EnsureImageExistsStart is handled in another service, here we will just mock messages from it.
-            await ctx.executeOwnerSql(user, async (txn) => {
-              await imageCreated.handleMessage(
-                createMessage(
-                  {
-                    image_id: `11e1d903-49ed-4d70-8b24-00000000000${imageId++}`,
-                  },
-                  msg.envelopeOverrides,
-                ),
-                txn,
-              );
-            });
-            break;
-          case MediaServiceMessagingSettings.CheckFinishIngestDocument
-            .messageType:
-            await ctx.executeOwnerSql(user, async (txn) => {
-              await checkFinishDocument.handleMessage(
-                createMessage(msg.payload, msg.envelopeOverrides),
-                txn,
-              );
-            });
-            break;
-          default:
-            break;
+          switch (msg.messageType) {
+            case MediaServiceMessagingSettings.StartIngest.messageType:
+              await ctx.executeOwnerSql(user, async (txn) => {
+                await startIngest.handleMessage(
+                  createMessage(msg.payload, msg.envelopeOverrides),
+                  txn,
+                  { subject: user },
+                );
+              });
+              break;
+            case MediaServiceMessagingSettings.StartIngestItem.messageType:
+              await ctx.executeOwnerSql(user, async (txn) => {
+                await startItem.handleMessage(
+                  createMessage(msg.payload, msg.envelopeOverrides),
+                  txn,
+                );
+              });
+              break;
+            case MediaServiceMessagingSettings.UpdateMetadata.messageType:
+              await ctx.executeOwnerSql(user, async (txn) => {
+                await updateMetadata.handleMessage(
+                  createMessage(msg.payload, msg.envelopeOverrides),
+                  txn,
+                );
+              });
+              break;
+            case VideoServiceMultiTenantMessagingSettings.EnsureVideoExists
+              .messageType: // EnsureVideoExistsStart is handled in another service, here we will just mock messages from it.
+              await ctx.executeOwnerSql(user, async (txn) => {
+                await videoCreationStarted.handleMessage(
+                  createMessage(
+                    {
+                      ...msg.payload,
+                      video_id: `0354c2ac-a6d2-45b4-94dc-0000000000${(
+                        '00' + videoId++
+                      ).slice(-2)}`,
+                    },
+                    msg.envelopeOverrides,
+                  ),
+                  txn,
+                );
+              });
+              break;
+            case ImageServiceMultiTenantMessagingSettings.EnsureImageExists
+              .messageType: // EnsureImageExistsStart is handled in another service, here we will just mock messages from it.
+              await ctx.executeOwnerSql(user, async (txn) => {
+                await imageCreated.handleMessage(
+                  createMessage(
+                    {
+                      image_id: `11e1d903-49ed-4d70-8b24-00000000000${imageId++}`,
+                    },
+                    msg.envelopeOverrides,
+                  ),
+                  txn,
+                );
+              });
+              break;
+            case MediaServiceMessagingSettings.CheckFinishIngestDocument
+              .messageType:
+              await ctx.executeOwnerSql(user, async (txn) => {
+                await checkFinishDocument.handleMessage(
+                  createMessage(msg.payload, msg.envelopeOverrides),
+                  txn,
+                );
+              });
+              break;
+            default:
+              break;
+          }
         }
-      }
+      });
 
       // Assert
       expect(resp.errors).toBeFalsy();

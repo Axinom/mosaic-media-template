@@ -191,3 +191,8 @@ export class CheckFinishIngestDocumentHandler extends MediaGuardedTransactionalI
     ).run(ownerClient);
   }
 }
+
+interface StatusAggregation {
+  status: IngestItemStatusEnum;
+  count: number;
+}
