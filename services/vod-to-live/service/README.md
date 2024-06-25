@@ -1,19 +1,8 @@
 # VOD-to-Live Service
 
-## N.B. Experimental
-
-This service is designed to facilitate the transition from Video-on-Demand (VOD)
-content to live channels, providing a seamless experience for our users. It is
+This service is designed to use video assets from Video-on-Demand (VOD) content
+to create live channels, providing a seamless experience for our users. It is
 based on the beta version of the Unified Streaming Virtual Channels solution.
-Although in its experimental phase, the main flows of the service have been
-implemented, offering a solid foundation for further development or integration
-with other streaming providers.
-
-The purpose of this service is to serve as a source for developers interested in
-understanding the inner workings of a VOD-to-Live Service and how it can be
-integrated with our Mosaic Channel Management Service. Please keep in mind that
-as an experimental service, some refinements and improvements are likely still
-needed.
 
 If you want to learn more about the responsibilities of VOD-to-Live Services in
 a
@@ -21,70 +10,35 @@ a
 please refer to the
 [VOD-to-Live Service documentation](https://portal.axinom.com/mosaic/documentation/media/vod-to-live-service).
 
-The root `package.json` excludes the VOD-to-Live Service from the global
-`build`, `clean`, and `dev:services` scripts. And the Jest tests are not run
-from the root either.
+The root `package.json` contains Channel Service and VOD-to-Live Service
+specific scripts: `build:fast`, `clean:fast`, and `dev:services:fast` scripts.
+And the Jest tests are not run from the root either.
 
 ## Overview
 
-The VOD-to-Live Service is a customizable component of the Media solution that
-enables custom logic implementation and creation of live streams utilizing the
-[Unified Virtual Channel](https://beta.docs.unified-streaming.com/documentation/virtual-channel/index.html).
+The VOD-to-Live Service is a customizable component of the Mosaic Media solution
+that enables a customizable integration of the
+[Unified Virtual Channel](https://beta.docs.unified-streaming.com/documentation/virtual-channel/index.html)
+service.
 
-The managed Channel Service provides a way to publish Channels and Playlists to
-the customizable VOD-to-Live Service. The VOD-to-Live Service uses the data from
-the Channel Service to generate a Synchronized Multimedia Integration Language
-(SMIL) file that incorporates the videos from the playlist along with
-placeholder videos acting as fillers for advertisement pods. The Unified Virtual
-Channel API is used to create advanced virtual FAST channels from the VOD
-sources that seamlessly transition from one source to another.
+The Channel Service provides a way to publish channels and playlists to the
+VOD-to-Live Service. The VOD-to-Live Service uses the data from the Channel
+Service to generate a Synchronized Multimedia Integration Language (SMIL) file
+that incorporates the videos from the playlist along with placeholder videos
+acting as fillers for advertisement pods. The Unified Virtual Channel API is
+used to create advanced virtual FAST channels from the VOD sources that
+seamlessly transition from one source to another.
 
 This diagram visualizes the flow that the VOD-to-Live service is performing:
 ![flow](https://github.com/Axinom/mosaic-media-template/assets/10724090/f615b6fc-b740-4dcf-b680-f652174d9270)
 
-## Features
-
-### Validation via Pre-Publishing Webhook
-
-The VOD-to-Live Service exposes an API endpoint `/pre-publishing` which is
-compatible with the pre-publishing webhook of the Channel Service. This enables
-the VOD-to-Live Service to apply a custom set of validation rules to determine
-the eligibility of a Channel or Playlist for publishing from the Channel
-Service.
-
-#### Channel validation rules
-
-- A placeholder video must be set for the channel.
-
-#### Playlist validation rules
-
-- The Playlist must contain at least one program.
-- A warning is reported if the Playlist duration exceeds 24 hours.
-- The Playlist duration should not exceed 25 hours.
-- The Playlist start date should not be older than 24 hours.
-- The Playlist scheduling should not start and end with an ad pod.
-- All videos associated with the Playlist should have at least one common stream
-  format (matching resolution, frame rate, and bitrate).
-
-#### Video validation rules
-
-Every video assigned to a channel or playlist must pass the following validation
-rules:
-
-- Videos must use be encoded as `H264`.
-- Videos must have a separate audio stream.
-- Videos must be packaged in the `CMAF` format.
-- If DRM protection is enabled, DRM-protected videos must have their DRM key
-  identifiers defined.
-- If DRM protection is disabled, videos cannot be DRM-protected.
-
 ### Live stream creation
 
 The main responsibility of the VOD-to-Live Service is to create a live stream
-using the data published by the Managed Channel Service. Once validation is
-successful and the Channel or Playlist is published, the VOD-to-Live Service
+using the data published by the Channel Service. Once the validation is
+successful and the channel or playlist is published, the VOD-to-Live Service
 receives a RabbitMQ message containing an object representing the published
-entity. The service then generates a SMIL file that can be sent to the Virtual
+entity. The service then generates an SMIL file that can be sent to the Virtual
 Channel Management API for live channel creation or update.
 
 Here is an example of the JSON object received by the VOD-to-Live Service for a
@@ -191,12 +145,13 @@ Virtual Channel API.
 
 #### DRM protection
 
-DRM protection can be enabled for the Channel's live stream by configuring the
-service and setting the appropriate DRM variables.
+DRM protection can be enabled for the channel's live stream by configuring the
+channel for DRM and setting the appropriate DRM environment variables.
 
 ```
 The service uses the Axinom DRM Key Service to request the DRM encryption key.
-The DRM settings for the VOD-to-Live Service should be aligned with the DRM settings used for the encryption of the used VOD assets.
+The DRM settings for the VOD-to-Live Service should be aligned with the DRM
+settings used for the encryption of the used VOD assets.
 ```
 
 When DRM is enabled DRM-protected VODs can be included in playlists. To decrypt
@@ -213,27 +168,21 @@ with the Channel's metadata in Azure Storage.
 
 When the Playlist prolongation feature is enabled, the VOD-to-Live Service will
 automatically extend the duration of any playlist that has a duration of less
-than 24 hours, so that it is exactly 24 hours long. This is achieved by using a
-placeholder video to fill the remaining time.
+than 24 hours, so that it is exactly 24 hours long. This is achieved by using
+the channel's placeholder video to fill the remaining time.
 
 ## Setup
 
 - Prerequisites: The
   [Unified Virtual Channel](https://beta.docs.unified-streaming.com/documentation/virtual-channel/gettingstarted/index.html)
-  should be set up.
-- Follow the instructions from the `README.md` file in the Media Solution root
-  folder.
+  is set up.
+- Follow the instructions from the `README.md` file in the solution root folder.
 - Open the configuration file `.env` for the service and set missing values
   accordingly.
 
 ### Service configuration
 
 #### General settings
-
-`PRE_PUBLISHING_WEBHOOK_SECRET` - This is a mandatory setting. The secret key is
-used to sign validation messages between the Managed Channel and VOD-to-Live
-services. It can be retrieved from the Admin portal when setting up the
-Pre-Publishing webhook for the Channel Service.
 
 `CATCH_UP_DURATION_IN_MINUTES` - This setting defaults to 60 minutes and adds
 this duration to the playlist to create smoother transitions between playlists.

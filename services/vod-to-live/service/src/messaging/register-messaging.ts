@@ -1,6 +1,6 @@
 import { Broker, RascalConfigBuilder } from '@axinom/mosaic-message-bus';
-import { ChannelServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import {
+  ChannelServiceMessagingSettings,
   CheckChannelJobStatusCommand,
   PrepareChannelLiveStreamCommand,
   PrepareTransitionLiveStreamCommand,
@@ -27,14 +27,20 @@ export const registerMessaging = (
   return [
     // Receive published and unpublished  events
     new RascalConfigBuilder(
-      ChannelServiceMultiTenantMessagingSettings.ChannelPublished,
+      {
+        ...ChannelServiceMessagingSettings.ChannelPublished,
+        queue: 'channel:published',
+      },
       config,
     ).subscribeForEvent(
       (broker: Broker) =>
         new ChannelPublishedHandler(config, broker, keyServiceApi, storage),
     ),
     new RascalConfigBuilder(
-      ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished,
+      {
+        ...ChannelServiceMessagingSettings.ChannelUnpublished,
+        queue: 'channel:unpublished',
+      },
       config,
     ).subscribeForEvent(
       () =>
@@ -46,14 +52,20 @@ export const registerMessaging = (
         ),
     ),
     new RascalConfigBuilder(
-      ChannelServiceMultiTenantMessagingSettings.PlaylistPublished,
+      {
+        ...ChannelServiceMessagingSettings.PlaylistPublished,
+        queue: 'playlist:published',
+      },
       config,
     ).subscribeForEvent(
       (broker: Broker) =>
         new PlaylistPublishedHandler(config, broker, storage, keyServiceApi),
     ),
     new RascalConfigBuilder(
-      ChannelServiceMultiTenantMessagingSettings.PlaylistUnpublished,
+      {
+        ...ChannelServiceMessagingSettings.PlaylistUnpublished,
+        queue: 'playlist:unpublished',
+      },
       config,
     ).subscribeForEvent(
       (broker: Broker) =>
@@ -75,6 +87,7 @@ export const registerMessaging = (
       .subscribeForCommand<PrepareTransitionLiveStreamCommand>(
         () => new PrepareTransitionLiveStreamHandler(config, virtualChannelApi),
       ),
+
     // Channel-to-Live-stream
     new RascalConfigBuilder(
       VodToLiveServiceMessagingSettings.PrepareChannelLiveStream,

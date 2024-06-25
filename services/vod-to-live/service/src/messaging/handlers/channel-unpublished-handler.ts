@@ -1,8 +1,8 @@
 import { MessageInfo } from '@axinom/mosaic-message-bus';
 import {
-  ChannelServiceMultiTenantMessagingSettings,
+  ChannelServiceMessagingSettings,
   ChannelUnpublishedEvent,
-} from '@axinom/mosaic-messages';
+} from 'media-messages';
 import { Config } from '../../common';
 import {
   AzureStorage,
@@ -20,7 +20,7 @@ export class ChannelUnpublishedHandler extends AuthenticatedMessageHandler<Chann
     private keyServiceApi: KeyServiceApi,
   ) {
     super(
-      ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished.messageType,
+      ChannelServiceMessagingSettings.ChannelUnpublished.messageType,
       config,
     );
   }
@@ -29,11 +29,10 @@ export class ChannelUnpublishedHandler extends AuthenticatedMessageHandler<Chann
     _message: MessageInfo,
   ): Promise<void> {
     await deleteChannelLiveStream(
-      payload.id,
+      payload.content_id,
       this.virtualChannelApi,
       this.storage,
       this.keyServiceApi,
-      this.config,
     );
   }
 }

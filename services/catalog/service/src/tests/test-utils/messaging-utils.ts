@@ -1,6 +1,6 @@
-import { ChannelPublishedEvent } from '@axinom/mosaic-messages';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
+  ChannelPublishedEvent,
   CollectionLocalization,
   CollectionPublishedEvent,
   CuePoint,
@@ -13,9 +13,13 @@ import {
   RelationType,
   SeasonLocalization,
   SeasonPublishedEvent,
+  StreamType,
   TvshowGenresPublishedEvent,
   TvshowLocalization,
   TvshowPublishedEvent,
+  VideoEncodingState,
+  VideoOutputFormat,
+  VideoPreviewStatus,
   VideoStream,
 } from 'media-messages';
 import { v4 as uuid } from 'uuid';
@@ -172,9 +176,8 @@ export function createChannelPublishedMessage(
   channelId: string,
 ): TypedTransactionalMessage<ChannelPublishedEvent> {
   return createMessage({
-    id: channelId,
-    title: 'Another test channel',
-    description: 'Good for testing!',
+    content_id: channelId,
+    is_drm_protected: false,
     placeholder_video: {
       id: '3a8e5dc9-5c91-4d61-bf95-c4e719b705f2',
       is_archived: false,
@@ -193,16 +196,16 @@ export function createChannelPublishedMessage(
           'https://test.blob.core.windows.net/video-output/8EPGt6rB2D4oJbJqb1tw3o/cmaf/manifest.mpd',
         dash_size_in_bytes: null,
         length_in_seconds: 62,
-        encoding_state: 'READY',
+        encoding_state: 'READY' as VideoEncodingState,
         finished_date: '2022-11-25T12:26:41.396001+00:00',
         hls_manifest_path:
           'https://test.blob.core.windows.net/video-output/8EPGt6rB2D4oJbJqb1tw3o/cmaf/manifest.m3u8',
         hls_size_in_bytes: null,
         is_protected: false,
-        output_format: 'CMAF',
+        output_format: 'CMAF' as VideoOutputFormat,
         output_location: '8EPGt6rB2D4oJbJqb1tw3o',
         preview_comment: null,
-        preview_status: 'NOT_PREVIEWED',
+        preview_status: 'NOT_PREVIEWED' as VideoPreviewStatus,
         subtitle_languages: [],
         title: 'Mosaic Placeholder Video (with logo)',
         video_streams: [
@@ -212,7 +215,7 @@ export function createChannelPublishedMessage(
             display_aspect_ratio: '16:9',
             file: 'cmaf/video-H264-216-300k-video-avc1.mp4',
             file_template: null,
-            format: 'CMAF',
+            format: 'CMAF' as VideoOutputFormat,
             frame_rate: 30,
             height: 216,
             iv: null,
@@ -222,7 +225,7 @@ export function createChannelPublishedMessage(
             language_name: null,
             pixel_aspect_ratio: '1:1',
             sampling_rate: null,
-            type: 'VIDEO',
+            type: 'VIDEO' as StreamType,
             width: 384,
           },
           {
@@ -231,7 +234,7 @@ export function createChannelPublishedMessage(
             display_aspect_ratio: null,
             file: 'cmaf/audio-en-audio-en-mp4a.mp4',
             file_template: null,
-            format: 'CMAF',
+            format: 'CMAF' as VideoOutputFormat,
             frame_rate: null,
             height: null,
             iv: null,
@@ -241,7 +244,7 @@ export function createChannelPublishedMessage(
             language_name: 'English',
             pixel_aspect_ratio: null,
             sampling_rate: 48000,
-            type: 'AUDIO',
+            type: 'AUDIO' as StreamType,
             width: null,
           },
         ],
@@ -249,6 +252,20 @@ export function createChannelPublishedMessage(
       videos_tags: ['vod2live'],
     },
     images: [{ id: 'image-1', ...createImage() }],
+    localizations: [
+      {
+        language_tag: 'en-US',
+        is_default_locale: true,
+        title: 'Another test channel',
+        description: 'Good for testing!',
+      },
+      {
+        language_tag: 'de-DE',
+        is_default_locale: false,
+        title: 'Ein weiterer Testkanal',
+        description: 'Gut zum Testen!',
+      },
+    ],
   });
 }
 

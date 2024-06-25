@@ -1,13 +1,18 @@
 import { Logger } from '@axinom/mosaic-service-common';
-import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   CheckChannelJobStatusFailedEvent,
   VodToLiveServiceMessagingSettings,
 } from 'media-messages';
 import { Config } from '../../../common';
-import { ChannelGuardedTransactionalMessageHandler } from './channel-guarded-transactional-message-handler';
 
-export class CheckChannelJobStatusFailedEventHandler extends ChannelGuardedTransactionalMessageHandler<CheckChannelJobStatusFailedEvent> {
+export class CheckChannelJobStatusFailedEventHandler extends TransactionalInboxMessageHandler<
+  CheckChannelJobStatusFailedEvent,
+  Config
+> {
   constructor(config: Config) {
     super(
       VodToLiveServiceMessagingSettings.CheckChannelJobStatusFailed,

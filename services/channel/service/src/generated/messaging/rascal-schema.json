@@ -1,0 +1,300 @@
+{
+  "vhosts": {
+    "vhost-name": {
+      "assert": false,
+      "exchanges": {
+        "command": {
+          "type": "topic"
+        },
+        "event": {
+          "type": "topic"
+        },
+        "delay": {
+          "type": "topic"
+        },
+        "retry": {
+          "type": "topic"
+        },
+        "dead_letter": {
+          "type": "topic"
+        }
+      },
+      "queues": {
+        "delay:10s": {
+          "options": {
+            "arguments": {
+              "x-message-ttl": 10000,
+              "x-dead-letter-exchange": "retry",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "delay:30s": {
+          "options": {
+            "arguments": {
+              "x-message-ttl": 30000,
+              "x-dead-letter-exchange": "retry",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "channel-service:dead_letter": {
+          "options": {
+            "arguments": {
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-video-service:inbox": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-video-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "channel-service:inbox": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "channel-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-image-service:inbox": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-image-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        },
+        "ax-localization-service:inbox": {
+          "options": {
+            "arguments": {
+              "x-dead-letter-exchange": "dead_letter",
+              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
+              "x-queue-type": "quorum"
+            }
+          }
+        }
+      },
+      "bindings": {
+        "channel-service:dead_letter": {
+          "source": "dead_letter",
+          "bindingKey": "channel-service.dead_letter",
+          "destination": "channel-service:dead_letter"
+        },
+        "delay:10s": {
+          "source": "delay",
+          "bindingKey": "delay.10s",
+          "destination": "delay:10s"
+        },
+        "delay:30s": {
+          "source": "delay",
+          "bindingKey": "delay.30s",
+          "destination": "delay:30s"
+        },
+        "retry:ax-video-service:inbox": {
+          "source": "retry",
+          "bindingKey": "ax-video-service:inbox.#",
+          "destination": "ax-video-service:inbox"
+        },
+        "retry:channel-service:inbox": {
+          "source": "retry",
+          "bindingKey": "channel-service:inbox.#",
+          "destination": "channel-service:inbox"
+        },
+        "ax-video-service.*.*.cue_point_types.declare_failed": {
+          "source": "event",
+          "bindingKey": "ax-video-service.*.*.cue_point_types.declare_failed",
+          "destination": "channel-service:inbox"
+        },
+        "ax-video-service.*.*.cue_point_types.declared": {
+          "source": "event",
+          "bindingKey": "ax-video-service.*.*.cue_point_types.declared",
+          "destination": "channel-service:inbox"
+        },
+        "retry:ax-image-service:inbox": {
+          "source": "retry",
+          "bindingKey": "ax-image-service:inbox.#",
+          "destination": "ax-image-service:inbox"
+        },
+        "ax-image-service.*.*.image_types.declare_failed": {
+          "source": "event",
+          "bindingKey": "ax-image-service.*.*.image_types.declare_failed",
+          "destination": "channel-service:inbox"
+        },
+        "ax-image-service.*.*.image_types.declared": {
+          "source": "event",
+          "bindingKey": "ax-image-service.*.*.image_types.declared",
+          "destination": "channel-service:inbox"
+        },
+        "retry:ax-localization-service:inbox": {
+          "source": "retry",
+          "bindingKey": "ax-localization-service:inbox.#",
+          "destination": "ax-localization-service:inbox"
+        },
+        "ax-localization-service.*.*.entity_definition.declare_failed": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity_definition.declare_failed",
+          "destination": "channel-service:inbox"
+        },
+        "ax-localization-service.*.*.entity_definition.declare_finished": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity_definition.declare_finished",
+          "destination": "channel-service:inbox"
+        },
+        "ax-localization-service.*.*.entity_definition.delete_failed": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity_definition.delete_failed",
+          "destination": "channel-service:inbox"
+        },
+        "ax-localization-service.*.*.entity_definition.delete_finished": {
+          "source": "event",
+          "bindingKey": "ax-localization-service.*.*.entity_definition.delete_finished",
+          "destination": "channel-service:inbox"
+        },
+        "vod-to-live-service.channel.check_job_status_succeeded": {
+          "source": "event",
+          "bindingKey": "vod-to-live-service.channel.check_job_status_succeeded",
+          "destination": "channel-service:inbox"
+        },
+        "vod-to-live-service.channel.check_job_status_failed": {
+          "source": "event",
+          "bindingKey": "vod-to-live-service.channel.check_job_status_failed",
+          "destination": "channel-service:inbox"
+        },
+        "vod-to-live-service.channel.protection_key_created": {
+          "source": "event",
+          "bindingKey": "vod-to-live-service.channel.protection_key_created",
+          "destination": "channel-service:inbox"
+        },
+        "channel-service.channel_service.health_check": {
+          "source": "command",
+          "bindingKey": "channel-service.channel_service.health_check",
+          "destination": "channel-service:inbox"
+        }
+      },
+      "publications": {
+        "retry_in_10sec": {
+          "exchange": "delay",
+          "options": {
+            "CC": [
+              "delay.10s"
+            ]
+          }
+        },
+        "retry_in_30sec": {
+          "exchange": "delay",
+          "options": {
+            "CC": [
+              "delay.30s"
+            ]
+          }
+        },
+        "DeclareCuePointTypes": {
+          "exchange": "command",
+          "routingKey": "ax-video-service.*.*.cue_point_types.declare"
+        },
+        "DeclareImageTypes": {
+          "exchange": "command",
+          "routingKey": "ax-image-service.*.*.image_types.declare"
+        },
+        "DeclareEntityDefinition": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.entity_definition.declare"
+        },
+        "DeleteEntityDefinition": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.entity_definition.delete"
+        },
+        "LocalizeEntity": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.entity.localize"
+        },
+        "ChannelPublished": {
+          "exchange": "event",
+          "routingKey": "channel-service.channel.published"
+        },
+        "ChannelUnpublished": {
+          "exchange": "event",
+          "routingKey": "channel-service.channel.unpublished"
+        },
+        "PlaylistPublished": {
+          "exchange": "event",
+          "routingKey": "channel-service.playlist.published"
+        },
+        "PlaylistUnpublished": {
+          "exchange": "event",
+          "routingKey": "channel-service.playlist.unpublished"
+        },
+        "UpsertLocalizationSourceEntity": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.localization_source_entity.upsert"
+        },
+        "DeleteLocalizationSourceEntity": {
+          "exchange": "command",
+          "routingKey": "ax-localization-service.*.*.localization_source_entity.delete"
+        },
+        "OutboxInboxHealthCheckCommand": {
+          "exchange": "command",
+          "routingKey": "channel-service.channel_service.health_check"
+        }
+      },
+      "subscriptions": {
+        "Inbox": {
+          "queue": "channel-service:inbox",
+          "prefetch": 10,
+          "recovery": "deferred_retry",
+          "redeliveries": {
+            "limit": 5,
+            "counter": "mosaic",
+            "timeout": 10000
+          }
+        }
+      }
+    }
+  },
+  "recovery": {
+    "deferred_retry": [
+      {
+        "strategy": "forward",
+        "attempts": 4,
+        "publication": "retry_in_10sec",
+        "xDeathFix": true
+      },
+      {
+        "strategy": "forward",
+        "attempts": 8,
+        "publication": "retry_in_30sec",
+        "xDeathFix": true
+      },
+      {
+        "strategy": "forward",
+        "attempts": 9,
+        "publication": "retry_in_30sec",
+        "options": {
+          "options": {
+            "headers": {
+              "mosaic_final_error": true
+            }
+          }
+        }
+      },
+      {
+        "strategy": "nack"
+      }
+    ]
+  },
+  "redeliveries": {
+    "counters": {
+      "mosaic": {
+        "type": "postgresCounter"
+      }
+    }
+  }
+}

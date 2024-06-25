@@ -6,6 +6,7 @@
   "additionalProperties": false,
   "required": [
     "channel_id",
+    "is_drm_protected",
     "smil",
     "json"
   ],
@@ -15,6 +16,10 @@
       "minLength": 1,
       "pattern": "^$|.*\\S.*",
       "description": "A string with at least one character and not only whitespace characters."
+    },
+    "is_drm_protected": {
+      "type": "boolean",
+      "description": "Apply DRM protection on the output stream."
     },
     "smil": {
       "type": "string",

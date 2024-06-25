@@ -1,0 +1,40 @@
+query PlaylistPrograms($id: UUID!) {
+  playlist(id: $id) {
+    startDateTime
+    calculatedEndDateTime
+    calculatedDurationInSeconds
+    programs(orderBy: SORT_INDEX_ASC) {
+      nodes {
+        id
+        sortIndex
+        title
+        entityId
+        entityType
+        videoDurationInSeconds
+        imageId
+        videoId
+        programCuePoints {
+          nodes {
+            id
+            videoCuePointId
+            type
+            timeInSeconds
+            cuePointSchedules(orderBy: SORT_INDEX_ASC) {
+              nodes {
+                id
+                type
+                durationInSeconds
+                videoId
+                sortIndex
+                programCuePointId
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  channel: playlist(id: $id) {
+    channelId
+  }
+}

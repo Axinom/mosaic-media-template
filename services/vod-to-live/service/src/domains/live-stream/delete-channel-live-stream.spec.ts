@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { stub } from 'jest-auto-stub';
 import { v4 as uuid } from 'uuid';
-import { Config } from '../../common';
 import { createTestVideo } from '../../tests';
 import { AzureStorage } from '../azure';
 import { KeyServiceApi } from '../key-service';
@@ -19,37 +18,39 @@ describe('deleteChannelLiveStream', () => {
   let deletedContentKeys: string[] = [];
   const channelId = uuid();
   const mockContentKeyId = uuid();
-  const getFileContentResult: any = () => {
-    return JSON.stringify({
-      description: null,
-      id: channelId,
-      images: [
-        {
-          height: 646,
-          id: 'db561b84-1e78-4f4d-9a3f-446e34db40de',
-          path: '/transform/0-0/U5uZEHhwrXGde33yxwVHx9.png',
-          type: 'channel_logo',
-          width: 860,
-        },
-      ],
-      placeholder_video: createTestVideo(
-        true,
-        '3a8e5dc9-5c91-4d61-bf95-c4e719b705f2',
-        62,
-      ),
-      title: 'Discovery++',
-      key_id: mockContentKeyId,
+  const getMockedStorage = (isDrmProtected: boolean) => {
+    const getFileContentResult: any = () => {
+      return JSON.stringify({
+        description: null,
+        id: channelId,
+        images: [
+          {
+            height: 646,
+            id: 'db561b84-1e78-4f4d-9a3f-446e34db40de',
+            path: '/transform/0-0/U5uZEHhwrXGde33yxwVHx9.png',
+            type: 'channel_logo',
+            width: 860,
+          },
+        ],
+        placeholder_video: createTestVideo(
+          true,
+          '3a8e5dc9-5c91-4d61-bf95-c4e719b705f2',
+          62,
+        ),
+        title: 'Discovery++',
+        key_id: isDrmProtected ? mockContentKeyId : undefined,
+      });
+    };
+    return stub<AzureStorage>({
+      getFileContent: async () => getFileContentResult(),
+      deleteFolder: async (
+        relativeFilePath: string,
+      ): Promise<{ filePath: string; wasDeleted: boolean }[]> => {
+        deletedFolders.push(relativeFilePath);
+        return [];
+      },
     });
   };
-  const mockedStorage = stub<AzureStorage>({
-    getFileContent: async () => getFileContentResult(),
-    deleteFolder: async (
-      relativeFilePath: string,
-    ): Promise<{ filePath: string; wasDeleted: boolean }[]> => {
-      deletedFolders.push(relativeFilePath);
-      return [];
-    },
-  });
 
   const mockedKeyServiceApi = stub<KeyServiceApi>({
     deleteContentKey: async (contentKeyId: string): Promise<void> => {
@@ -63,6 +64,7 @@ describe('deleteChannelLiveStream', () => {
     deletedContentKeys = [];
     jest.clearAllMocks();
   });
+
   it('channel metadata is removed from Azure Storage, Virtual Channel is deleted and DRM content key is deleted', async () => {
     // Arrange
     const mockedAxios = jest.mocked(axios);
@@ -70,9 +72,8 @@ describe('deleteChannelLiveStream', () => {
     await deleteChannelLiveStream(
       channelId,
       virtualChannelApi,
-      mockedStorage,
+      getMockedStorage(true),
       mockedKeyServiceApi,
-      stub<Config>({ isDrmEnabled: true }),
     );
     // Assert
     expect(deletedFolders).toHaveLength(1);
@@ -82,16 +83,15 @@ describe('deleteChannelLiveStream', () => {
     expect(deletedContentKeys).toMatchObject([mockContentKeyId]);
   });
 
-  it('on channel deletion the DRM key is not removed if DRN is disabled', async () => {
+  it('on channel deletion the DRM key is not removed if DRM is disabled', async () => {
     // Arrange
     const mockedAxios = jest.mocked(axios);
     // Act
     await deleteChannelLiveStream(
       channelId,
       virtualChannelApi,
-      mockedStorage,
+      getMockedStorage(false),
       mockedKeyServiceApi,
-      stub<Config>({ isDrmEnabled: false }),
     );
     // Assert
     expect(deletedFolders).toHaveLength(1);

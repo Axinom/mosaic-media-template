@@ -40,12 +40,10 @@ export class KeyServiceApi {
   private keyServiceManagementKey?: string;
   private drmKeySeedId?: string;
   constructor(config: Config) {
-    if (config.isDrmEnabled) {
-      this.keyServiceApiUrl = config.keyServiceApiBaseUrl;
-      this.keyServiceTenantId = config.keyServiceTenantId;
-      this.keyServiceManagementKey = config.keyServiceManagementKey;
-      this.drmKeySeedId = config.drmKeySeedId;
-    }
+    this.keyServiceApiUrl = config.keyServiceApiBaseUrl;
+    this.keyServiceTenantId = config.keyServiceTenantId;
+    this.keyServiceManagementKey = config.keyServiceManagementKey;
+    this.drmKeySeedId = config.drmKeySeedId;
   }
 
   /**

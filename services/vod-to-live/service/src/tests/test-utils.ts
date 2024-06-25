@@ -1,4 +1,4 @@
-import { DetailedVideo } from '@axinom/mosaic-messages';
+import { DetailedVideo } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { StreamParams } from '../domains';
 

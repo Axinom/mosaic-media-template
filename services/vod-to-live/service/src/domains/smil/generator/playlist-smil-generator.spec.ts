@@ -1,4 +1,5 @@
 /* eslint-disable jest/no-conditional-expect */
+import { stub } from 'jest-auto-stub';
 import {
   CuePointSchedule,
   CuePointScheduleType,
@@ -6,8 +7,7 @@ import {
   PlaylistPublishedEvent,
   Program,
   ProgramCuePoint,
-} from '@axinom/mosaic-messages';
-import { stub } from 'jest-auto-stub';
+} from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import {
   Config,
@@ -73,21 +73,27 @@ describe('PlaylistSmilGenerator', () => {
     const programs: Program[] = [];
     for (let i = 0; i < 3; i++) {
       programs.push({
-        id: uuid(),
+        content_id: `program-${uuid()}`,
         sort_index: i,
-        title: `Program-${i}`,
-        entity_id: uuid(),
-        entity_type: 'MOVIE',
+        entity_content_id: 'movie-6548',
         video_duration_in_seconds: 28800,
         video: createTestVideo(isDrmProtected, `${i}`, 28800),
+        localizations: [
+          {
+            is_default_locale: true,
+            language_tag: 'default',
+            title: `Program-${i}`,
+          },
+        ],
       });
     }
     const totalDurationInSeconds = programs.reduce((accumulator, pr) => {
       return accumulator + pr.video.video_encoding.length_in_seconds!;
     }, 0);
     return {
-      id: uuid(),
-      channel_id: uuid(),
+      content_id: `playlist-${uuid()}`,
+      channel_id: `channel-${uuid()}`,
+      title: startDateTime.toISOString().substring(0, 10),
       start_date_time: startDateTime.toISOString(),
       end_date_time: new Date(
         startDateTime.getTime() +
@@ -146,19 +152,18 @@ describe('PlaylistSmilGenerator', () => {
   ): PlaylistPublishedEvent => {
     const startDateTime = new Date();
     return {
-      id: uuid(),
+      content_id: `playlist-${uuid()}`,
       channel_id: uuid(),
+      title: startDateTime.toISOString().substring(0, 10),
       start_date_time: startDateTime.toISOString(),
       end_date_time: new Date(
         startDateTime.getTime() + DAY_IN_SECONDS * SECOND_IN_MILLISECONDS,
       ).toISOString(),
       programs: [
         {
-          id: uuid(),
+          content_id: `program-${uuid()}`,
           sort_index: 0,
-          title: `Program-12345`,
-          entity_id: uuid(),
-          entity_type: 'MOVIE',
+          entity_content_id: `movie-${uuid()}`,
           video_duration_in_seconds: 60,
           video: createTestVideo(isDrmProtected, '12345', 60),
           program_cue_points: [
@@ -171,6 +176,13 @@ describe('PlaylistSmilGenerator', () => {
             createCuePointWithSchedules('MID', 47, [
               createSchedule(0, scheduleType, 13, isDrmProtected),
             ]),
+          ],
+          localizations: [
+            {
+              is_default_locale: true,
+              language_tag: 'default',
+              title: `Program-12345`,
+            },
           ],
         },
       ],
@@ -239,7 +251,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);
@@ -276,7 +288,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);
@@ -362,7 +374,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);
@@ -453,7 +465,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);
@@ -503,7 +515,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);
@@ -552,7 +564,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);
@@ -722,7 +734,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);
@@ -834,7 +846,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);
@@ -940,10 +952,12 @@ describe('PlaylistSmilGenerator', () => {
         // Arrange
         const startDateTime = new Date();
         const testPlaylist: PlaylistPublishedEvent = {
-          id: uuid(),
-          channel_id: uuid(),
+          content_id: `playlist-${uuid()}`,
+          channel_id: `channel-${uuid()}`,
+          title: startDateTime.toISOString().substring(0, 10),
           start_date_time: startDateTime.toISOString(),
           end_date_time: startDateTime.toISOString(),
+          programs: [],
         };
         const generator = new PlaylistSmilGenerator(
           createTestCpixSettings(isDrmProtected),
@@ -959,7 +973,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);
@@ -991,13 +1005,15 @@ describe('PlaylistSmilGenerator', () => {
         // Arrange
         const startDateTime = new Date();
         const testPlaylist: PlaylistPublishedEvent = {
-          id: uuid(),
-          channel_id: uuid(),
+          content_id: `playlist-${uuid()}`,
+          channel_id: `channel-${uuid()}`,
+          title: startDateTime.toISOString().substring(0, 10),
           start_date_time: startDateTime.toISOString(),
           end_date_time: new Date(
             startDateTime.getTime() +
               SECOND_IN_MILLISECONDS * playlistDurationInSec,
           ).toISOString(),
+          programs: [],
         };
         const generator = new PlaylistSmilGenerator(
           createTestCpixSettings(isDrmProtected),
@@ -1013,7 +1029,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);
@@ -1050,13 +1066,15 @@ describe('PlaylistSmilGenerator', () => {
         // Arrange
         const startDateTime = new Date();
         const testPlaylist: PlaylistPublishedEvent = {
-          id: uuid(),
-          channel_id: uuid(),
+          content_id: `playlist-${uuid()}`,
+          channel_id: `channel-${uuid()}`,
+          title: startDateTime.toISOString().substring(0, 10),
           start_date_time: startDateTime.toISOString(),
           end_date_time: new Date(
             startDateTime.getTime() +
               SECOND_IN_MILLISECONDS * playlistDurationInSec,
           ).toISOString(),
+          programs: [],
         };
         const generator = new PlaylistSmilGenerator(
           createTestCpixSettings(isDrmProtected),
@@ -1072,7 +1090,7 @@ describe('PlaylistSmilGenerator', () => {
         const headerMetadata = resultSmil.smil.head.meta;
         const expectedHeaders = getExpectedMetadataHeaders(
           isDrmProtected,
-          testPlaylist.id,
+          testPlaylist.content_id,
           testPlaylist.start_date_time,
         );
         expect(headerMetadata).toHaveLength(expectedHeaders.length);

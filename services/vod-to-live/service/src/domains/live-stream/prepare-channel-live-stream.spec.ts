@@ -1,9 +1,11 @@
 import { Broker } from '@axinom/mosaic-message-bus';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import { stub } from 'jest-auto-stub';
-import { VodToLiveServiceMessagingSettings } from 'media-messages';
+import {
+  ChannelPublishedEvent,
+  VodToLiveServiceMessagingSettings,
+} from 'media-messages';
 import { v4 as uuid } from 'uuid';
-import { Config } from '../../common';
 import { createTestVideo } from '../../tests';
 import { AzureStorage } from '../azure';
 import { convertObjectToXml } from '../common';
@@ -33,9 +35,9 @@ describe('prepareChannelLiveStream', () => {
   const testChannelData = (
     isDrmProtected: boolean,
   ): { channelId: string; channelJson: string; channelSmil: string } => {
-    const testChannel = {
-      description: null,
-      id: uuid(),
+    const testChannel: ChannelPublishedEvent = {
+      content_id: `channel-${uuid()}`,
+      is_drm_protected: isDrmProtected,
       images: [
         {
           height: 646,
@@ -50,13 +52,20 @@ describe('prepareChannelLiveStream', () => {
         '3a8e5dc9-5c91-4d61-bf95-c4e719b705f2',
         62,
       ),
-      title: 'Discovery++',
+      localizations: [
+        {
+          is_default_locale: true,
+          language_tag: 'default',
+          title: 'Discovery++',
+          description: 'Discovery description',
+        },
+      ],
     };
     const cpix = isDrmProtected
       ? 'https://testing.blob.core.windows.net/vod2live/cpix.smil?sv=...'
       : null;
     return {
-      channelId: testChannel.id,
+      channelId: testChannel.content_id,
       channelJson: JSON.stringify(testChannel),
       channelSmil: convertObjectToXml(
         new ChannelSmilGenerator({
@@ -148,364 +157,240 @@ describe('prepareChannelLiveStream', () => {
     jest.clearAllMocks();
   });
 
-  describe('DRM is enabled', () => {
-    const mockedConfig = stub<Config>({
-      isDrmEnabled: true,
-    });
-    it.each([true, false])(
-      'if virtual channel does not exist -> it will be created',
-      async (isDrmProtected: boolean) => {
-        // Arrange
-        channelHasPlaylistTransitionsResult = () => {
-          return false;
-        };
-        getChannelsResult = () => {
-          return [];
-        };
-        const channelData = testChannelData(isDrmProtected);
-        // Act
-        await prepareChannelLiveStream(
-          channelData.channelId,
-          channelData.channelSmil,
-          channelData.channelJson,
-          mockedVirtualChannelApi,
-          mockedStorage,
-          mockedKeyServiceApi,
-          mockedBroker,
-          '',
-          mockedConfig,
-        );
-        // Assert
-        expect(createdVirtualChannels).toHaveLength(1);
-        expect(createdVirtualChannels).toMatchObject([
-          { channelId: channelData.channelId },
-        ]);
-        expect(messages).toHaveLength(2);
-        expect(messages).toMatchObject([
-          {
-            messageType:
-              VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated
-                .messageType,
-            message: {
-              channel_id: channelData.channelId,
-              key_id: mockedContentKeyId,
-            },
-          },
-          {
-            message: {
-              channel_id: channelData.channelId,
-              seconds_elapsed_while_waiting: 0,
-            },
-            messageType:
-              VodToLiveServiceMessagingSettings.CheckChannelJobStatus
-                .messageType,
-          },
-        ]);
+  it('if virtual channel with DRM does not exist -> it will be created', async () => {
+    // Arrange
+    channelHasPlaylistTransitionsResult = () => {
+      return false;
+    };
+    getChannelsResult = () => {
+      return [];
+    };
+    const { channelId, channelJson, channelSmil } = testChannelData(true);
 
-        expect(createdContentKeys).toHaveLength(1);
-        expect(createdContentKeys).toMatchObject([
-          { channel: channelData.channelId, keyId: mockedContentKeyId },
-        ]);
-
-        const channelMetadata = {
-          ...JSON.parse(channelData.channelJson),
-          key_id: mockedContentKeyId,
-        };
-
-        expect(filesStoredInStorage).toHaveLength(3);
-        expect(filesStoredInStorage).toMatchObject([
-          {
-            relativeFilePath: generateChannelFilePath(
-              channelData.channelId,
-              protectionHlsCpixFileName,
-            ),
-            fileContent: '<mocked SpekeV2 response!>',
-          },
-          {
-            relativeFilePath: generateChannelFilePath(
-              channelData.channelId,
-              protectionDashCpixFileName,
-            ),
-            fileContent: '<mocked SpekeV2 response!>',
-          },
-          {
-            relativeFilePath: generateChannelFilePath(
-              channelData.channelId,
-              metadataFileName,
-            ),
-            fileContent: JSON.stringify(channelMetadata),
-          },
-        ]);
-      },
+    // Act
+    await prepareChannelLiveStream(
+      channelId,
+      true,
+      channelSmil,
+      channelJson,
+      mockedVirtualChannelApi,
+      mockedStorage,
+      mockedKeyServiceApi,
+      mockedBroker,
+      '',
     );
-
-    it.each([true, false])(
-      'if virtual channel exist and has no playlist transitions -> channel transition is created',
-      async (isDrmProtected: boolean) => {
-        // Arrange
-        channelHasPlaylistTransitionsResult = () => {
-          return false;
-        };
-        const { channelId, channelJson, channelSmil } =
-          testChannelData(isDrmProtected);
-        getChannelsResult = () => {
-          return [{ name: channelId, uri: '' }];
-        };
-
-        // Act
-        await prepareChannelLiveStream(
+    // Assert
+    expect(createdVirtualChannels).toHaveLength(1);
+    expect(createdVirtualChannels).toMatchObject([{ channelId: channelId }]);
+    expect(messages).toHaveLength(2);
+    expect(messages).toMatchObject([
+      {
+        messageType:
+          VodToLiveServiceMessagingSettings.LiveStreamProtectionKeyCreated
+            .messageType,
+        message: {
+          channel_id: channelId,
+          key_id: mockedContentKeyId,
+        },
+      },
+      {
+        message: {
+          channel_id: channelId,
+          seconds_elapsed_while_waiting: 0,
+        },
+        messageType:
+          VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
+      },
+    ]);
+    expect(createdContentKeys).toHaveLength(1);
+    expect(createdContentKeys).toMatchObject([
+      { channel: channelId, keyId: mockedContentKeyId },
+    ]);
+    expect(filesStoredInStorage).toHaveLength(3);
+    const channelMetadata = {
+      ...JSON.parse(channelJson),
+      key_id: mockedContentKeyId,
+    };
+    expect(filesStoredInStorage).toMatchObject([
+      {
+        relativeFilePath: generateChannelFilePath(
           channelId,
-          channelSmil,
-          channelJson,
-          mockedVirtualChannelApi,
-          mockedStorage,
-          mockedKeyServiceApi,
-          mockedBroker,
-          '',
-          mockedConfig,
-        );
-        // Assert
-        expect(createdVirtualChannels).toHaveLength(0);
-        expect(messages).toHaveLength(1);
-        expect(messages).toMatchObject([
-          {
-            messageType:
-              VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream
-                .messageType,
-            message: {
-              channel_id: channelId,
-              playlist_id: channelId,
-              smil: channelSmil,
-            },
-          },
-        ]);
-        expect(createdContentKeys).toHaveLength(0); // no new key ids were requested
-        const channelMetadata = {
-          ...JSON.parse(channelJson),
-          key_id: mockedContentKeyId,
-        };
-
-        expect(filesStoredInStorage).toHaveLength(1);
-        expect(filesStoredInStorage).toMatchObject([
-          {
-            relativeFilePath: generateChannelFilePath(
-              channelId,
-              metadataFileName,
-            ),
-            fileContent: JSON.stringify(channelMetadata),
-          },
-        ]);
+          protectionHlsCpixFileName,
+        ),
+        fileContent: '<mocked SpekeV2 response!>',
       },
-    );
-
-    it.each([true, false])(
-      'if virtual channel exist and has playlist transitions -> only azure storage is updated',
-      async (isDrmProtected: boolean) => {
-        // Arrange
-        channelHasPlaylistTransitionsResult = () => {
-          return true;
-        };
-        const { channelId, channelJson, channelSmil } =
-          testChannelData(isDrmProtected);
-        getChannelsResult = () => {
-          return [{ name: channelId, uri: '' }];
-        };
-
-        // Act
-        await prepareChannelLiveStream(
+      {
+        relativeFilePath: generateChannelFilePath(
           channelId,
-          channelSmil,
-          channelJson,
-          mockedVirtualChannelApi,
-          mockedStorage,
-          mockedKeyServiceApi,
-          mockedBroker,
-          '',
-          mockedConfig,
-        );
-        // Assert
-        expect(createdVirtualChannels).toHaveLength(0);
-        expect(messages).toHaveLength(0);
-
-        expect(createdContentKeys).toHaveLength(0); // no new key ids were requested
-        const channelMetadata = {
-          ...JSON.parse(channelJson),
-          key_id: mockedContentKeyId,
-        };
-
-        expect(filesStoredInStorage).toHaveLength(1);
-        expect(filesStoredInStorage).toMatchObject([
-          {
-            relativeFilePath: generateChannelFilePath(
-              channelId,
-              metadataFileName,
-            ),
-            fileContent: JSON.stringify(channelMetadata),
-          },
-        ]);
+          protectionDashCpixFileName,
+        ),
+        fileContent: '<mocked SpekeV2 response!>',
       },
-    );
+      {
+        relativeFilePath: generateChannelFilePath(channelId, metadataFileName),
+        fileContent: JSON.stringify(channelMetadata),
+      },
+    ]);
   });
 
-  describe('DRM is disabled', () => {
-    const mockedConfig = stub<Config>({
-      isDrmEnabled: false,
-    });
-    it.each([true, false])(
-      'if virtual channel does not exist -> it will be created',
-      async (isDrmProtected: boolean) => {
-        // Arrange
-        channelHasPlaylistTransitionsResult = () => {
-          return false;
-        };
-        getChannelsResult = () => {
-          return [];
-        };
-        const channelData = testChannelData(isDrmProtected);
-        // Act
-        await prepareChannelLiveStream(
+  it.each([true, false])(
+    'if virtual channel exist and has no playlist transitions -> channel transition is created (DRM: %p)',
+    async (isDrmProtected: boolean) => {
+      // Arrange
+      channelHasPlaylistTransitionsResult = () => {
+        return false;
+      };
+      const { channelId, channelJson, channelSmil } =
+        testChannelData(isDrmProtected);
+      getChannelsResult = () => {
+        return [{ name: channelId, uri: '' }];
+      };
+
+      // Act
+      await prepareChannelLiveStream(
+        channelId,
+        isDrmProtected,
+        channelSmil,
+        channelJson,
+        mockedVirtualChannelApi,
+        mockedStorage,
+        mockedKeyServiceApi,
+        mockedBroker,
+        '',
+      );
+      // Assert
+      expect(createdVirtualChannels).toHaveLength(0);
+      expect(messages).toHaveLength(1);
+      expect(messages).toMatchObject([
+        {
+          messageType:
+            VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream
+              .messageType,
+          message: {
+            channel_id: channelId,
+            playlist_id: channelId,
+            smil: channelSmil,
+          },
+        },
+      ]);
+      expect(createdContentKeys).toHaveLength(0); // no new key ids were requested
+      const channelMetadata = {
+        ...JSON.parse(channelJson),
+        key_id: isDrmProtected ? mockedContentKeyId : undefined,
+      };
+
+      expect(filesStoredInStorage).toHaveLength(1);
+      expect(filesStoredInStorage).toMatchObject([
+        {
+          relativeFilePath: generateChannelFilePath(
+            channelId,
+            metadataFileName,
+          ),
+          fileContent: JSON.stringify(channelMetadata),
+        },
+      ]);
+    },
+  );
+
+  it.each([true, false])(
+    'if virtual channel exist and has playlist transitions -> only azure storage is updated (DRM: %p)',
+    async (isDrmProtected: boolean) => {
+      // Arrange
+      channelHasPlaylistTransitionsResult = () => {
+        return true;
+      };
+      const { channelId, channelJson, channelSmil } =
+        testChannelData(isDrmProtected);
+      getChannelsResult = () => {
+        return [{ name: channelId, uri: '' }];
+      };
+
+      // Act
+      await prepareChannelLiveStream(
+        channelId,
+        isDrmProtected,
+        channelSmil,
+        channelJson,
+        mockedVirtualChannelApi,
+        mockedStorage,
+        mockedKeyServiceApi,
+        mockedBroker,
+        '',
+      );
+      // Assert
+      expect(createdVirtualChannels).toHaveLength(0);
+      expect(messages).toHaveLength(0);
+
+      expect(createdContentKeys).toHaveLength(0); // no new key ids were requested
+      const channelMetadata = {
+        ...JSON.parse(channelJson),
+        key_id: isDrmProtected ? mockedContentKeyId : undefined,
+      };
+
+      expect(filesStoredInStorage).toHaveLength(1);
+      expect(filesStoredInStorage).toMatchObject([
+        {
+          relativeFilePath: generateChannelFilePath(
+            channelId,
+            metadataFileName,
+          ),
+          fileContent: JSON.stringify(channelMetadata),
+        },
+      ]);
+    },
+  );
+
+  it('if virtual channel without DRM does not exist -> it will be created', async () => {
+    // Arrange
+    channelHasPlaylistTransitionsResult = () => {
+      return false;
+    };
+    getChannelsResult = () => {
+      return [];
+    };
+    const channelData = testChannelData(false);
+    // Act
+    await prepareChannelLiveStream(
+      channelData.channelId,
+      false,
+      channelData.channelSmil,
+      channelData.channelJson,
+      mockedVirtualChannelApi,
+      mockedStorage,
+      mockedKeyServiceApi,
+      mockedBroker,
+      '',
+    );
+    // Assert
+    expect(createdVirtualChannels).toHaveLength(1);
+    expect(createdVirtualChannels).toMatchObject([
+      { channelId: channelData.channelId },
+    ]);
+    expect(messages).toHaveLength(1);
+    expect(messages).toMatchObject([
+      {
+        message: {
+          channel_id: channelData.channelId,
+          seconds_elapsed_while_waiting: 0,
+        },
+        messageType:
+          VodToLiveServiceMessagingSettings.CheckChannelJobStatus.messageType,
+      },
+    ]);
+
+    expect(createdContentKeys).toHaveLength(0);
+
+    const channelMetadata = JSON.parse(channelData.channelJson);
+
+    expect(filesStoredInStorage).toHaveLength(1);
+    expect(filesStoredInStorage).toMatchObject([
+      {
+        relativeFilePath: generateChannelFilePath(
           channelData.channelId,
-          channelData.channelSmil,
-          channelData.channelJson,
-          mockedVirtualChannelApi,
-          mockedStorage,
-          mockedKeyServiceApi,
-          mockedBroker,
-          '',
-          mockedConfig,
-        );
-        // Assert
-        expect(createdVirtualChannels).toHaveLength(1);
-        expect(createdVirtualChannels).toMatchObject([
-          { channelId: channelData.channelId },
-        ]);
-        expect(messages).toHaveLength(1);
-        expect(messages).toMatchObject([
-          {
-            message: {
-              channel_id: channelData.channelId,
-              seconds_elapsed_while_waiting: 0,
-            },
-            messageType:
-              VodToLiveServiceMessagingSettings.CheckChannelJobStatus
-                .messageType,
-          },
-        ]);
-        expect(createdContentKeys).toHaveLength(0);
-        const channelMetadata = JSON.parse(channelData.channelJson);
-
-        expect(filesStoredInStorage).toHaveLength(1);
-        expect(filesStoredInStorage).toMatchObject([
-          {
-            relativeFilePath: generateChannelFilePath(
-              channelData.channelId,
-              metadataFileName,
-            ),
-            fileContent: JSON.stringify(channelMetadata),
-          },
-        ]);
+          metadataFileName,
+        ),
+        fileContent: JSON.stringify(channelMetadata),
       },
-    );
-
-    it.each([true, false])(
-      'if virtual channel exist and has no playlist transitions -> channel transition is created',
-      async (isDrmProtected: boolean) => {
-        // Arrange
-        channelHasPlaylistTransitionsResult = () => {
-          return false;
-        };
-        const { channelId, channelJson, channelSmil } =
-          testChannelData(isDrmProtected);
-        getChannelsResult = () => {
-          return [{ name: channelId, uri: '' }];
-        };
-
-        // Act
-        await prepareChannelLiveStream(
-          channelId,
-          channelSmil,
-          channelJson,
-          mockedVirtualChannelApi,
-          mockedStorage,
-          mockedKeyServiceApi,
-          mockedBroker,
-          '',
-          mockedConfig,
-        );
-        // Assert
-        expect(createdVirtualChannels).toHaveLength(0);
-        expect(messages).toHaveLength(1);
-        expect(messages).toMatchObject([
-          {
-            messageType:
-              VodToLiveServiceMessagingSettings.PrepareTransitionLiveStream
-                .messageType,
-            message: {
-              channel_id: channelId,
-              playlist_id: channelId,
-              smil: channelSmil,
-            },
-          },
-        ]);
-        expect(createdContentKeys).toHaveLength(0); // no new key ids were requested
-        const channelMetadata = JSON.parse(channelJson);
-
-        expect(filesStoredInStorage).toHaveLength(1);
-        expect(filesStoredInStorage).toMatchObject([
-          {
-            relativeFilePath: generateChannelFilePath(
-              channelId,
-              metadataFileName,
-            ),
-            fileContent: JSON.stringify(channelMetadata),
-          },
-        ]);
-      },
-    );
-
-    it.each([true, false])(
-      'if virtual channel exist and has playlist transitions -> only azure storage is updated',
-      async (isDrmProtected: boolean) => {
-        // Arrange
-        channelHasPlaylistTransitionsResult = () => {
-          return true;
-        };
-        const { channelId, channelJson, channelSmil } =
-          testChannelData(isDrmProtected);
-        getChannelsResult = () => {
-          return [{ name: channelId, uri: '' }];
-        };
-
-        // Act
-        await prepareChannelLiveStream(
-          channelId,
-          channelSmil,
-          channelJson,
-          mockedVirtualChannelApi,
-          mockedStorage,
-          mockedKeyServiceApi,
-          mockedBroker,
-          '',
-          mockedConfig,
-        );
-        // Assert
-        expect(createdVirtualChannels).toHaveLength(0);
-        expect(messages).toHaveLength(0);
-
-        expect(createdContentKeys).toHaveLength(0); // no new key ids were requested
-        const channelMetadata = JSON.parse(channelJson);
-
-        expect(filesStoredInStorage).toHaveLength(1);
-        expect(filesStoredInStorage).toMatchObject([
-          {
-            relativeFilePath: generateChannelFilePath(
-              channelId,
-              metadataFileName,
-            ),
-            fileContent: JSON.stringify(channelMetadata),
-          },
-        ]);
-      },
-    );
+    ]);
   });
 });

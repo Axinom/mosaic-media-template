@@ -4,7 +4,6 @@ import { LiveStreamProtectionKeyCreatedEvent } from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { insert, selectOne } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
-import { getChannelId } from '../common';
 import { LiveStreamProtectionKeyCreatedEventHandler } from './live-stream-protection-key-created-event-handler';
 
 describe('LiveStreamProtectionKeyCreatedEventHandler', () => {
@@ -28,13 +27,13 @@ describe('LiveStreamProtectionKeyCreatedEventHandler', () => {
   describe('handleMessage', () => {
     test('live stream protection key is sent, but the channel is not yet registered in catalog -> error is thrown & channel is not created', async () => {
       // Arrange
-      const originalId = uuid();
-      const channelId = getChannelId(originalId);
+      const channelId = `channel-${uuid()}`;
+      const payload: LiveStreamProtectionKeyCreatedEvent = {
+        channel_id: channelId,
+        key_id: uuid(),
+      };
       const message = {
-        payload: {
-          channel_id: originalId,
-          key_id: uuid(),
-        },
+        payload,
       } as unknown as TypedTransactionalMessage<LiveStreamProtectionKeyCreatedEvent>;
 
       // Act
@@ -55,19 +54,18 @@ describe('LiveStreamProtectionKeyCreatedEventHandler', () => {
 
     test('live stream protection key is sent and channel is registered in catalog -> channel is updated', async () => {
       // Arrange
-      const originalId = uuid();
-      const channelId = getChannelId(originalId);
+      const channelId = `channel-${uuid()}`;
       await insert('channel', {
         id: channelId,
-        title: 'Old title',
         dash_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.mpd',
         hls_stream_url: 'https://axinom-test-origin.com/channel-1.isml/.m3u8',
       }).run(ctx.ownerPool);
+      const payload: LiveStreamProtectionKeyCreatedEvent = {
+        channel_id: channelId,
+        key_id: uuid(),
+      };
       const message = {
-        payload: {
-          channel_id: originalId,
-          key_id: uuid(),
-        },
+        payload,
       } as unknown as TypedTransactionalMessage<LiveStreamProtectionKeyCreatedEvent>;
 
       // Act

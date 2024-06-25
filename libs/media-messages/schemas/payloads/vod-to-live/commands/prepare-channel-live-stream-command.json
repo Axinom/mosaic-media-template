@@ -4,21 +4,21 @@
   "title": "prepare_channel_live_stream_command",
   "description": "Prepare live stream for the Channel.",
   "additionalProperties": false,
-  "required": [
-    "channel_id",
-    "smil",
-    "json"
-  ],
+  "required": ["channel_id", "is_drm_protected", "smil", "json"],
   "properties": {
     "channel_id": {
       "description": "Unique identifier of the channel.",
       "$ref": "../../common.json#/definitions/non_empty_string"
     },
+    "is_drm_protected": {
+      "type": "boolean",
+      "description": "Apply DRM protection on the output stream."
+    },
     "smil": {
       "type": "string",
       "description": "SMIL document's XML content serialized as JSON string."
     },
-    "json":{
+    "json": {
       "type": "string",
       "description": "JSON representation of the channel."
     }

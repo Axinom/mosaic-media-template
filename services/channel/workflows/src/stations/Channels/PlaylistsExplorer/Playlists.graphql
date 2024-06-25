@@ -1,0 +1,30 @@
+query Playlists($filter: PlaylistFilter, $orderBy: [PlaylistsOrderBy!], $after: Cursor, $channelId: UUID!) {
+  filtered: playlists(
+    filter: $filter, 
+    orderBy: $orderBy, 
+    first: 30, 
+    after: $after, 
+    condition: { channelId: $channelId }
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      startDateTime
+      calculatedDurationInSeconds
+      programs{
+        totalCount
+      }
+      createdDate
+      updatedDate
+      publicationState
+      publishedDate
+    }
+  }
+  nonFiltered: playlists(condition: { channelId: $channelId }) {
+    totalCount
+  }
+}

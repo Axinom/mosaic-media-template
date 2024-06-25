@@ -20,19 +20,21 @@
         }
       },
       "queues": {
-        "delay:10sec": {
+        "delay:10s": {
           "options": {
             "arguments": {
               "x-message-ttl": 10000,
-              "x-dead-letter-exchange": "retry"
+              "x-dead-letter-exchange": "retry",
+              "x-queue-type": "quorum"
             }
           }
         },
-        "delay:30sec": {
+        "delay:30s": {
           "options": {
             "arguments": {
               "x-message-ttl": 30000,
-              "x-dead-letter-exchange": "retry"
+              "x-dead-letter-exchange": "retry",
+              "x-queue-type": "quorum"
             }
           }
         },
@@ -59,15 +61,15 @@
           "bindingKey": "catalog-service.dead_letter",
           "destination": "catalog-service:dead_letter"
         },
-        "delay:10sec": {
+        "delay:10s": {
           "source": "delay",
-          "bindingKey": "delay.10sec",
-          "destination": "delay:10sec"
+          "bindingKey": "delay.10s",
+          "destination": "delay:10s"
         },
-        "delay:30sec": {
+        "delay:30s": {
           "source": "delay",
-          "bindingKey": "delay.30sec",
-          "destination": "delay:30sec"
+          "bindingKey": "delay.30s",
+          "destination": "delay:30s"
         },
         "retry:catalog-service:inbox": {
           "source": "retry",
@@ -144,14 +146,24 @@
           "bindingKey": "media-service.collection.unpublished",
           "destination": "catalog-service:inbox"
         },
-        "ax-channel-service.*.*.channel.published": {
+        "channel-service.channel.published": {
           "source": "event",
-          "bindingKey": "ax-channel-service.*.*.channel.published",
+          "bindingKey": "channel-service.channel.published",
           "destination": "catalog-service:inbox"
         },
-        "ax-channel-service.*.*.channel.unpublished": {
+        "channel-service.channel.unpublished": {
           "source": "event",
-          "bindingKey": "ax-channel-service.*.*.channel.unpublished",
+          "bindingKey": "channel-service.channel.unpublished",
+          "destination": "catalog-service:inbox"
+        },
+        "channel-service.playlist.published": {
+          "source": "event",
+          "bindingKey": "channel-service.playlist.published",
+          "destination": "catalog-service:inbox"
+        },
+        "channel-service.playlist.unpublished": {
+          "source": "event",
+          "bindingKey": "channel-service.playlist.unpublished",
           "destination": "catalog-service:inbox"
         },
         "vod-to-live-service.channel.check_job_status_succeeded": {
@@ -175,7 +187,7 @@
           "exchange": "delay",
           "options": {
             "CC": [
-              "delay.10sec"
+              "delay.10s"
             ]
           }
         },
@@ -183,7 +195,7 @@
           "exchange": "delay",
           "options": {
             "CC": [
-              "delay.30sec"
+              "delay.30s"
             ]
           }
         }

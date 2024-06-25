@@ -10,7 +10,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
   config: {
     class: {
       movie_view: {
-        description: 'Definition of the movie publish format.',
+        description: 'Definition of the movie entity.',
         attribute: {
           title: {
             description: 'Title of the movie.',
@@ -296,7 +296,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       movie_genre_view: {
-        description: 'Definition of the movie genre publish format.',
+        description: 'Definition of the movie genre entity.',
         attribute: {
           title: {
             description: 'Title of the genre.',
@@ -311,7 +311,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       tvshow_view: {
-        description: 'Definition of the TV show publish format.',
+        description: 'Definition of the TV show entity.',
         attribute: {
           title: {
             description: 'Title of the TV show.',
@@ -598,7 +598,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       tvshow_genre_view: {
-        description: 'Definition of the TV show genre publish format.',
+        description: 'Definition of the TV show genre entity.',
         attribute: {
           title: {
             description: 'Title of the genre.',
@@ -613,7 +613,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       season_view: {
-        description: 'Definition of the TV show season publish format.',
+        description: 'Definition of the TV show season entity.',
         attribute: {
           synopsis: {
             description: 'Short description of the main plot elements.',
@@ -898,7 +898,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       episode_view: {
-        description: 'Definition of the TV show episode publish format.',
+        description: 'Definition of the TV show episode entity.',
         attribute: {
           title: {
             description: 'Title of the episode.',
@@ -1190,7 +1190,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         },
       },
       collection_view: {
-        description: 'Definition of the collection publish format.',
+        description: 'Definition of the collection entity.',
         attribute: {
           title: {
             description: 'Title of the collection.',
@@ -1260,8 +1260,8 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           ],
         },
       },
-      channel: {
-        description: 'Definition of the channel publish format.',
+      channel_view: {
+        description: 'Definition of the channel entity.',
         attribute: {
           title: {
             description: 'Title of the channel.',
@@ -1311,13 +1311,86 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         tags: {
           omitFromQueryRoot: true,
           omit: 'create,update,delete',
+          foreignKey: [
+            '(channel_id) references app_public.channel_view (id)|@foreignFieldName images',
+          ],
         },
-        constraint: {
-          channel_images_channel_id_fkey: {
-            tags: {
-              foreignFieldName: 'images',
-            },
+      },
+      playlist: {
+        description: 'Definition of the playlist entity.',
+        attribute: {
+          channel_id: {
+            description: 'The channel ID.',
+            ...disableFilterAndOrder,
           },
+          start_date_time: {
+            description: 'Start date of the playlist.',
+            tags: { omit: 'filter' },
+          },
+          end_date_time: {
+            description: 'End date of the playlist.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omit: 'create,update,delete',
+          foreignKey: [
+            '(channel_id) references app_public.channel_view (id)|@foreignFieldName playlists',
+          ],
+        },
+      },
+      program_view: {
+        description: 'Definition of the program object.',
+        attribute: {
+          sort_index: {
+            description: 'The sort index of the program.',
+            tags: { omit: 'filter' },
+          },
+          movie_id: {
+            description: 'The movie ID.',
+            ...disableFilterAndOrder,
+          },
+          episode_id: {
+            description: 'The episode ID.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+          foreignKey: [
+            '(playlist_id) references app_public.playlist (id)|@foreignFieldName programs',
+            '(movie_id) references app_public.movie_view (id)|@omit many',
+            '(episode_id) references app_public.episode_view (id)|@omit many',
+          ],
+        },
+      },
+      program_images: {
+        description: 'Asset image metadata.',
+        attribute: {
+          type: {
+            description: 'Type of the image.',
+            ...disableFilterAndOrder,
+          },
+          path: {
+            description: 'URI to the image file.',
+            ...disableFilterAndOrder,
+          },
+          width: {
+            description: 'Width of the image in pixels.',
+            ...disableFilterAndOrder,
+          },
+          height: {
+            description: 'Height of the image in pixels.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omitFromQueryRoot: true,
+          omit: 'create,update,delete',
+          foreignKey: [
+            '(program_id) references app_public.program_view (id)|@foreignFieldName images',
+          ],
         },
       },
     },

@@ -1,0 +1,10 @@
+.explorer {
+  :global(.list-header-container) {
+    span[title=''] + div {
+      padding-left: 1px;
+    }
+    span[title=''] {
+      display: none;
+    }
+  }
+}

@@ -1,20 +1,24 @@
+import { Logger } from '@axinom/mosaic-service-common';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   ChannelPublishedEvent,
-  ChannelServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
-import { Logger } from '@axinom/mosaic-service-common';
-import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+  ChannelServiceMessagingSettings,
+} from 'media-messages';
 import { ClientBase } from 'pg';
 import { deletes, insert, upsert } from 'zapatos/db';
-import { channel_images } from 'zapatos/schema';
+import { channel_images, channel_localizations } from 'zapatos/schema';
 import { Config } from '../../../common';
-import { getChannelId } from '../common';
-import { ChannelGuardedTransactionalMessageHandler } from './channel-guarded-transactional-message-handler';
 
-export class ChannelPublishedEventHandler extends ChannelGuardedTransactionalMessageHandler<ChannelPublishedEvent> {
+export class ChannelPublishedEventHandler extends TransactionalInboxMessageHandler<
+  ChannelPublishedEvent,
+  Config
+> {
   constructor(config: Config) {
     super(
-      ChannelServiceMultiTenantMessagingSettings.ChannelPublished,
+      ChannelServiceMessagingSettings.ChannelPublished,
       new Logger({
         config,
         context: ChannelPublishedEventHandler.name,
@@ -27,28 +31,42 @@ export class ChannelPublishedEventHandler extends ChannelGuardedTransactionalMes
     { payload }: TypedTransactionalMessage<ChannelPublishedEvent>,
     txnClient: ClientBase,
   ): Promise<void> {
-    const channelId = getChannelId(payload.id);
+    const channel_id = payload.content_id;
     await upsert(
       'channel',
       {
-        id: channelId,
-        title: payload.title,
-        description: payload.description,
+        id: channel_id,
       },
       ['id'],
     ).run(txnClient);
 
-    await deletes('channel_images', { channel_id: channelId }).run(txnClient);
+    await deletes('channel_images', { channel_id }).run(txnClient);
     if (payload.images) {
       await insert(
         'channel_images',
         payload.images.map(
           (image): channel_images.Insertable => ({
-            channel_id: channelId,
+            channel_id,
             type: image.type,
             path: image.path,
             width: image.width,
             height: image.height,
+          }),
+        ),
+      ).run(txnClient);
+    }
+
+    await deletes('channel_localizations', { channel_id }).run(txnClient);
+    if (payload.localizations) {
+      await insert(
+        'channel_localizations',
+        payload.localizations.map(
+          (l): channel_localizations.Insertable => ({
+            channel_id,
+            is_default_locale: l.is_default_locale,
+            locale: l.language_tag,
+            title: l.title,
+            description: l.description,
           }),
         ),
       ).run(txnClient);

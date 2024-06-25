@@ -21,14 +21,9 @@ import {
   tenantEnvironmentIdsLogMiddleware,
   trimErrorsSkipMaskMiddleware,
 } from '@axinom/mosaic-service-common';
-import express, { json } from 'express';
+import express from 'express';
 import { getFullConfig } from './common';
-import {
-  AzureStorage,
-  KeyServiceApi,
-  setupPrePublishingValidationWebhook,
-  VirtualChannelApi,
-} from './domains';
+import { AzureStorage, KeyServiceApi, VirtualChannelApi } from './domains';
 import { registerMessaging } from './messaging/register-messaging';
 
 const logger = new Logger({ context: 'bootstrap' });
@@ -40,7 +35,6 @@ async function bootstrap(): Promise<void> {
   setupGlobalConsoleOverride(logger);
   const config = getFullConfig();
   const app = express();
-  app.use(json({ limit: config.webhookBodySizeLimit }));
   setupGlobalLogMiddleware([tenantEnvironmentIdsLogMiddleware(config)]);
 
   const { readiness } = setupLivenessAndReadiness(config);
@@ -85,11 +79,12 @@ async function bootstrap(): Promise<void> {
     metrics: [createRabbitMQConnectivityMetric(broker)],
   });
 
-  setupPrePublishingValidationWebhook(app, config, storage);
-
   const server = app.listen(config.port, () => {
     if (config.isDev) {
-      logger.log(`http://localhost:${config.port}`);
+      logger.log({
+        message: `🚀 Server ready at http://localhost:${config.port}`,
+        context: 'vodToLiveAppEndpoint',
+      });
     } else {
       logger.log('App is ready!');
     }

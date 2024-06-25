@@ -1,10 +1,12 @@
 import { RascalConfigBuilder } from '@axinom/mosaic-message-bus';
-import { ChannelServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import {
   RabbitMqInboxWriter,
   RascalTransactionalConfigBuilder,
 } from '@axinom/mosaic-transactional-inbox-outbox';
-import { VodToLiveServiceMessagingSettings } from 'media-messages';
+import {
+  ChannelServiceMessagingSettings,
+  VodToLiveServiceMessagingSettings,
+} from 'media-messages';
 import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
 import { RegisterContentTypeMessaging } from '../../messaging';
@@ -14,6 +16,8 @@ import {
   CheckChannelJobStatusFailedEventHandler,
   CheckChannelJobStatusSucceededEventHandler,
   LiveStreamProtectionKeyCreatedEventHandler,
+  PlaylistPublishedEventHandler,
+  PlaylistUnpublishedEventHandler,
 } from './handlers';
 
 export const registerChannelsMessaging: RegisterContentTypeMessaging =
@@ -23,11 +27,20 @@ export const registerChannelsMessaging: RegisterContentTypeMessaging =
   ): RascalConfigBuilder[] {
     return [
       new RascalTransactionalConfigBuilder(
-        ChannelServiceMultiTenantMessagingSettings.ChannelPublished,
+        ChannelServiceMessagingSettings.ChannelPublished,
         config,
       ).subscribeForEvent(() => inboxWriter),
       new RascalTransactionalConfigBuilder(
-        ChannelServiceMultiTenantMessagingSettings.ChannelUnpublished,
+        ChannelServiceMessagingSettings.ChannelUnpublished,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
+
+      new RascalTransactionalConfigBuilder(
+        ChannelServiceMessagingSettings.PlaylistPublished,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
+      new RascalTransactionalConfigBuilder(
+        ChannelServiceMessagingSettings.PlaylistUnpublished,
         config,
       ).subscribeForEvent(() => inboxWriter),
 
@@ -53,6 +66,8 @@ export const registerChannelsHandlers = (
   return [
     new ChannelPublishedEventHandler(config),
     new ChannelUnpublishedEventHandler(config),
+    new PlaylistPublishedEventHandler(config),
+    new PlaylistUnpublishedEventHandler(config),
     new CheckChannelJobStatusSucceededEventHandler(config),
     new CheckChannelJobStatusFailedEventHandler(config),
     new LiveStreamProtectionKeyCreatedEventHandler(config),

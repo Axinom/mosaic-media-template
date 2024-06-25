@@ -1,0 +1,33 @@
+// This config is used by vscode to provide proper IDE support for all typescript files in project, including tests and scripts. Inherited by tsconfig.build.json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "esModuleInterop": true, // Needed to be able to import 'postgraphile-plugin-connection-filter'
+    "allowSyntheticDefaultImports": true, // Needed to be able to import 'ajv' together with esModuleInterop
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "target": "es2017",
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "preserveWatchOutput": true
+  },
+  "exclude": ["node_modules", "dist"],
+  // Typescript 4.9 has changed the way file watch works by default. See here
+  // for more info: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#file-watching-now-uses-file-system-events
+  // This has broken the file watch for Windows 10/11 + VSCode. There are no
+  // consistent reproduction steps for the issue, but it causes services to
+  // restart during watch when no actual file changes were made, sometimes
+  // restarts happen multiple times in a row. This reverts the watch mode to
+  // pre-4.9 state.
+  "watchOptions": { "watchFile": "fixedPollingInterval" }
+}

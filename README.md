@@ -104,12 +104,15 @@ Start the following commands in parallel (in separate terminals):
 1. Run `yarn dev:libs` to start the compilation for the `media-messages` package
    in watch mode. Wait until this finishes before proceeding to avoid
    concurrency issues.
-2. Run `yarn dev:services` to start the `media-service` & `catalog-service` in
-   watch mode.
+2. Run `yarn dev:services` to start the `media-service`, `catalog-service`, and
+   `entitlement-service` in watch mode.`
 3. Run `yarn dev:workflows` to start the `media-workflows` in watch mode.
 4. Open http://localhost:10053/ in your browser. You should see a grid with
    different workflow options (Movies, Videos, Images, TV shows, Seasons,
    Episodes).
+
+Alternatively, use the "...:all" scripts to include also the `channel-service`
+and the `vod-to-live-service`.
 
 ## Run tests
 
@@ -362,6 +365,42 @@ Note that the following pre-requisites are assumed:
      - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -m <manifest-name> -n <deployment-name>`
      - i.e.
        `yarn util:load-vars mosaic hosting service deploy -i entitlement-service -t 20230927.1 -m entitlement-service-manifest-20230927 -n entitlement-service-deployment-20230927.1`
+   - Ensure you provide a unique value for the `<deployment-name>`
+
+#### Deploy channel Service
+
+1. Build the service using the provided Dockerfile
+   - CLI Command
+     - `docker build -t <username>/<repository_name>:<tag> --build-arg PACKAGE_ROOT=services/channel/service --build-arg PACKAGE_BUILD_COMMAND=build:channel-service:prod .`
+     - i.e.
+       `docker build -t my-user/channel-service:20230927.1 --build-arg PACKAGE_ROOT=services/channel/service --build-arg PACKAGE_BUILD_COMMAND=build:channel-service:prod .`
+   - Ensure to use the same `<repository_name>` you decide on here, also in the
+     `Customized Service` details station of the Admin Portal.
+2. Push the container image to Docker Hub
+   - CLI Command
+     - `docker push <dockerhub_username>/<repository_name>:<tag>`
+     - i.e. `docker push my-user/channel-service:20230927.1`
+3. Build the workflows of the channel-service
+   - CLI Command
+     - `yarn build:channel-workflows:prod`
+   - This will produce a `.tgz` pilet artifact on the project root
+4. Register the pilet artifact on the Mosaic Hosting Service
+   - CLI Command
+     - `yarn util:load-vars mosaic hosting pilet register -i <custom-service-id> -p <path-to-workflow-build-artifact>`
+     - i.e.
+       `yarn util:load-vars mosaic hosting pilet register -i channel-service -p ./`
+5. Upload the deployment manifest to the Mosaic Hosting Service
+   - CLI Command
+     - `yarn util:load-vars mosaic hosting manifest upload -i <custom-service-id> -p <path-to-deployment-manifest-yaml> -n <manifest-name>`
+     - i.e.
+       `yarn util:load-vars mosaic hosting manifest upload -i channel-service -p ./services/channel/service/mosaic-hosting-deployment-manifest.yaml -n channel-service-manifest-20230927`
+   - Ensure you provide a unique value for the `<manifest-name>`
+6. Deploy the service with the specific artifacts (i.e. container image tag,
+   pilet artifact, deployment manifest)
+   - CLI Command
+     - `yarn util:load-vars mosaic hosting service deploy -i <custom-service-id> -t <tag> -p <workflow-package@version> -m <manifest-name> -n <deployment-name>`
+     - i.e.
+       `yarn util:load-vars mosaic hosting service deploy -i channel-service -t 20230927.1 -p channel-workflows@1.0.1 -m channel-service-manifest-20230927 -n channel-service-deployment-20230927.1`
    - Ensure you provide a unique value for the `<deployment-name>`
 
 ## Development notes
