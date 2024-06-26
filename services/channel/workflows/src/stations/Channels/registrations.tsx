@@ -44,22 +44,19 @@ export function register(app: PiletApi, extensions: Extensions): void {
   };
 
   // Generate entry points to embedded localization stations
-  registerLocalizationEntryPoints(
-    [
-      {
-        root: routes.channelDetails,
-        entityIdParam: 'channelId',
-        entityType: 'channel',
-      },
-      {
-        root: routes.programLocalizationRoot,
-        resolveRoot: resolveProgramDetailsRoot,
-        entityIdParam: 'programId',
-        entityType: 'program',
-      },
-    ],
-    app,
-  );
+  registerLocalizationEntryPoints([
+    {
+      root: routes.channelDetails,
+      entityIdParam: 'channelId',
+      entityType: 'channel',
+    },
+    {
+      root: routes.programLocalizationRoot,
+      resolveRoot: resolveProgramDetailsRoot,
+      entityIdParam: 'programId',
+      entityType: 'program',
+    },
+  ]);
 
   app.setRouteResolver(
     ChannelStationNames.ChannelDetails,

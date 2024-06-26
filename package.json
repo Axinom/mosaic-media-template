@@ -29,6 +29,7 @@
     "dev:workflows:all": "yarn util:portal-version-check && yarn util:load-vars cross-env-shell pilet debug 'services/*/workflows/src/index.tsx' --feed '\\$MICRO_FRONTEND_SERVICE_BASE_URL/v1/pilets/\\$TENANT_ID/\\$ENVIRONMENT_ID' --port 10054",
     "dev:workflows:local": "pilet debug 'services/[!channel]*/workflows/src/index.tsx' --port 10053",
     "dev:workflows:local:all": "pilet debug 'services/*/workflows/src/index.tsx' --port 10054",
+    "dev:workflows:local:managed": "pilet debug 'services/*/workflows/src/index.tsx' --feed 'http://localhost:10051/$pilet-api' --port 10053",
     "test": "yarn util:load-vars jest -c jest.config.ts --silent",
     "test:ci": "jest --silent --reporters=default --reporters=jest-junit --coverage --coverageReporters=cobertura",
     "test:reset:dbs": "wsrun -sm test:reset:dbs",
@@ -54,7 +55,7 @@
     "yarn:de-dupe": "npx yarn-deduplicate yarn.lock"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.35.0-rc.1",
+    "@axinom/mosaic-cli": "0.35.0-rc.2",
     "@dbeining/react-atom": "^4.1.21",
     "@jest/globals": "^29.5.0",
     "@libre/atom": "^1.3.3",

@@ -1,7 +1,7 @@
 export const ValidationErrors = {
   // Channel
   AssociatedChannelNotPublished: {
-    message: 'The channel associated with the playlist was changed.',
+    message: 'The channel associated with the playlist is not published.',
     code: 'ASSOCIATED_CHANNEL_NOT_PUBLISHED',
   },
   CannotUnpublishNotPublishedChannel: {
