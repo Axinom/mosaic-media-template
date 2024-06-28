@@ -4,9 +4,11 @@ import axios from 'axios';
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import { from } from 'env-var';
+import * as fs from 'fs';
 import { readFileSync } from 'fs';
 import gql from 'graphql-tag';
 import { print } from 'graphql/language/printer';
+import * as path from 'path';
 import { prompt } from 'prompts';
 
 /**
@@ -188,6 +190,7 @@ Please follow the service README file to understand how to generate the values, 
   }
 }
 
+// Function to get Docker data from DockerInfo
 function getDockerInfo(): { registry?: string; username?: string } {
   console.log(`\nChecking Docker Info...\n`);
 
@@ -210,6 +213,96 @@ function getDockerInfo(): { registry?: string; username?: string } {
       'Unable to determine the Docker Registry and Username. Please make sure the Docker CLI is installed and you are logged in to a Docker Registry.',
     );
   }
+}
+
+// Function to get Docker username from config.json
+async function getUsernameFromDockerConfig(): Promise<string | undefined> {
+  // Checks both the primary and fallback paths for Docker config files.
+  const primaryPath = path.join(
+    process.env.HOME || process.env.USERPROFILE || '',
+    '.docker',
+    'config.json',
+  );
+  const fallbackPath = path.join(
+    process.env.HOME || process.env.USERPROFILE || '',
+    'snap',
+    'docker',
+    'current',
+    '.docker',
+    'config.json',
+  );
+
+  const configPaths = [primaryPath, fallbackPath];
+
+  for (const configPath of configPaths) {
+    try {
+      if (fs.existsSync(configPath)) {
+        const fileContent = fs.readFileSync(configPath, 'utf8');
+        const config = JSON.parse(fileContent);
+
+        const auths = config.auths;
+        if (!auths) {
+          throw new Error('No [auths] section found in Docker config.json');
+        }
+
+        const usernames: { registry: string; username: string }[] = [];
+
+        for (const registry in auths) {
+          if (Object.prototype.hasOwnProperty.call(auths, registry)) {
+            const auth = auths[registry];
+            if (auth.username) {
+              usernames.push({ registry, username: auth.username });
+            }
+
+            if (auth.auth) {
+              const [username] = Buffer.from(auth.auth, 'base64')
+                .toString()
+                .split(':');
+              usernames.push({ registry, username });
+            }
+          }
+        }
+
+        // If multiple username found, it prompts the user to select one.
+        if (usernames.length === 1) {
+          return usernames[0].username;
+        } else if (usernames.length > 1) {
+          const answers = await prompt([
+            {
+              type: 'select',
+              name: 'selectedUsername',
+              message: 'Multiple Docker usernames found. Please select one:',
+              choices: usernames.map((item) => ({
+                title: `${item.username} (${item.registry})`,
+                value: item.username,
+              })),
+            },
+          ]);
+
+          return answers.selectedUsername;
+        }
+      }
+    } catch (error) {
+      console.error(`Error reading Docker config.json from ${configPath}`);
+    }
+  }
+
+  // If username is not found in config files, it prompts the user to manually enter the registry and username.
+  const answers = await prompt([
+    {
+      type: 'text',
+      name: 'registry',
+      message: 'Enter Docker registry:',
+      initial: 'https://index.docker.io/v1/',
+    },
+    {
+      type: 'text',
+      name: 'username',
+      initial: 'Enter Docker username:',
+    },
+  ]);
+
+  return answers.username;
 }
 
 function buildDockerImageAndPush(
@@ -353,7 +446,9 @@ function printAdminPortalURL(serviceDefinitionId: string): void {
 
 async function main(): Promise<void> {
   try {
-    const { username } = getDockerInfo();
+    const username =
+      getDockerInfo().username ?? (await getUsernameFromDockerConfig());
+
     const answers = await prompt([
       {
         type: 'select',
