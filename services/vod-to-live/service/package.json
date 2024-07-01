@@ -27,10 +27,10 @@
     "util:load-vars": "env-cmd -f .env env-cmd -f ../../../.env"
   },
   "dependencies": {
-    "@axinom/mosaic-id-guard": "0.34.0-rc.2",
-    "@axinom/mosaic-message-bus": "0.29.0-rc.2",
-    "@axinom/mosaic-messages": "0.45.0-rc.2",
-    "@axinom/mosaic-service-common": "0.51.0-rc.2",
+    "@axinom/mosaic-id-guard": "0.34.0",
+    "@axinom/mosaic-message-bus": "0.29.0",
+    "@axinom/mosaic-messages": "0.45.0",
+    "@axinom/mosaic-service-common": "0.51.0",
     "@azure/storage-blob": "^12.14.0",
     "amqplib": "^0.6.0",
     "axios": "^0.24.0",
