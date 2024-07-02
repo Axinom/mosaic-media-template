@@ -1259,7 +1259,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the channel.',
-            ...disableFilterAndOrder,
           },
           description: {
             description: 'Description of the channel.',
@@ -1336,6 +1335,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       program_view: {
         description: 'Definition of the program object.',
         attribute: {
+          title: {
+            description: 'Title of the program.',
+          },
           sort_index: {
             description: 'The sort index of the program.',
             tags: { omit: 'filter' },

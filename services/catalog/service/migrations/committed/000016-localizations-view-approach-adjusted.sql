@@ -1,5 +1,5 @@
 --! Previous: sha1:ed200bb5de90a7d4d7ab04cc493b5e8c3da35189
---! Hash: sha1:2bf6facfe4d784a9d5e284749eb7987fe27c9cf2
+--! Hash: sha1:fc9415fd1858d514f88cce07b2bd0be73c05d3e8
 --! Message: localizations-view-approach-adjusted
 
 -- Update the localization views
@@ -12,12 +12,18 @@
   It is recommended to use smart tags to fine-tune the resulting GraphQL schema,
   such as adding virtual constraints, adding comments, and marking fields as not-null.
 */
-CREATE OR REPLACE FUNCTION app_private.define_localization_view(localizableFields text[], tableName text, localizationsTableName text, fkColumn text) RETURNS void
+DROP FUNCTION IF EXISTS app_private.define_localization_view(text[], text, text, text);
+CREATE OR REPLACE FUNCTION app_private.define_localization_view(tableName text, localizationsTableName text, fkColumn text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE
-  localizableFieldsSelect text = 'l.' || array_to_string(localizableFields, ', l.');
+  localizableFieldsSelect text;
 BEGIN
+  SELECT 'l.' || string_agg(column_name, ', l.')
+  INTO localizableFieldsSelect
+  FROM information_schema.columns
+  WHERE table_schema = 'app_public' AND table_name = localizationsTableName AND column_name != 'locale' AND column_name != 'id' AND column_name != 'is_default_locale' AND column_name != fkColumn;
+        
   EXECUTE 'DROP VIEW IF EXISTS app_public.' || tableName || '_view CASCADE;';
   EXECUTE 'CREATE VIEW app_public.' || tableName || '_view AS ' ||
           'SELECT p.*, ' || localizableFieldsSelect || ' FROM app_public.' || localizationsTableName || ' as l ' ||
@@ -33,46 +39,49 @@ END;
 $$;
 
 SELECT app_private.define_localization_view(
-  ARRAY['title', 'description', 'synopsis'],
   'movie',
   'movie_localizations',
   'movie_id');
 
 SELECT app_private.define_localization_view(
-  ARRAY['title'],
   'movie_genre',
   'movie_genre_localizations',
   'movie_genre_id');
 
 SELECT app_private.define_localization_view(
-  ARRAY['title', 'description', 'synopsis'],
   'tvshow',
   'tvshow_localizations',
   'tvshow_id');
 
 SELECT app_private.define_localization_view(
-  ARRAY['title'],
   'tvshow_genre',
   'tvshow_genre_localizations',
   'tvshow_genre_id');
 
 SELECT app_private.define_localization_view(
-  ARRAY['description', 'synopsis'],
   'season',
   'season_localizations',
   'season_id');
 
 SELECT app_private.define_localization_view(
-  ARRAY['title', 'description', 'synopsis'],
   'episode',
   'episode_localizations',
   'episode_id');
 
 SELECT app_private.define_localization_view(
-  ARRAY['title', 'description', 'synopsis'],
   'collection',
   'collection_localizations',
   'collection_id');
+
+SELECT app_private.define_localization_view(
+  'channel',
+  'channel_localizations',
+  'channel_id');
+
+SELECT app_private.define_localization_view(
+  'program',
+  'program_localizations',
+  'program_id');
 
 -- Add a table to store a list of available locales
 DROP TABLE IF EXISTS app_public.locales CASCADE;
@@ -171,6 +180,20 @@ SELECT ax_define.define_indexes_with_id(
   schemaName => 'app_public', 
   idFieldName => 'collection_id');
 
+SELECT ax_define.define_like_index('title', 'channel_localizations', 'app_public');
+SELECT ax_define.define_indexes_with_id(
+  fieldName => 'title', 
+  tableName => 'channel_localizations', 
+  schemaName => 'app_public', 
+  idFieldName => 'channel_id');
+
+SELECT ax_define.define_like_index('title', 'program_localizations', 'app_public');
+SELECT ax_define.define_indexes_with_id(
+  fieldName => 'title', 
+  tableName => 'program_localizations', 
+  schemaName => 'app_public', 
+  idFieldName => 'program_id');
+
 -- Make sure only one row can be added for each combination of locale and FK
 ALTER TABLE app_public.movie_localizations DROP CONSTRAINT IF EXISTS unique_by_movie_id_and_locale;
 ALTER TABLE app_public.movie_localizations ADD CONSTRAINT unique_by_movie_id_and_locale UNIQUE(movie_id, locale);
@@ -192,6 +215,12 @@ ALTER TABLE app_public.episode_localizations ADD CONSTRAINT unique_by_episode_id
 
 ALTER TABLE app_public.collection_localizations DROP CONSTRAINT IF EXISTS unique_by_collection_id_and_locale;
 ALTER TABLE app_public.collection_localizations ADD CONSTRAINT unique_by_collection_id_and_locale UNIQUE(collection_id, locale);
+
+ALTER TABLE app_public.channel_localizations DROP CONSTRAINT IF EXISTS unique_by_channel_id_and_locale;
+ALTER TABLE app_public.channel_localizations ADD CONSTRAINT unique_by_channel_id_and_locale UNIQUE(channel_id, locale);
+
+ALTER TABLE app_public.program_localizations DROP CONSTRAINT IF EXISTS unique_by_program_id_and_locale;
+ALTER TABLE app_public.program_localizations ADD CONSTRAINT unique_by_program_id_and_locale UNIQUE(program_id, locale);
 
 -- Add migration function to call whenever a new locale is added.
 
@@ -235,3 +264,21 @@ BEGIN
     END LOOP;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Notify localizations changed trigger, see `startLocalesInsertedListener` in 
+-- `services\catalog\service\src\common\db\in-memory-locales.ts` for listener connection
+CREATE OR REPLACE FUNCTION app_hidden.tg__locales_inserted() RETURNS trigger AS $$
+BEGIN
+  NOTIFY :MOSAIC_LOCALE_NOTIFY;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+
+DROP trigger IF EXISTS _500_locales_inserted on app_public.locales;
+CREATE TRIGGER _500_locales_inserted
+AFTER INSERT ON app_public.locales
+FOR EACH STATEMENT
+EXECUTE FUNCTION app_hidden.tg__locales_inserted();
+
+-- Populate `app_public.locales` after migration
+SELECT app_private.set_initial_locales();

@@ -222,6 +222,20 @@ $$;
 
 
 --
+-- Name: tg__locales_inserted(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.tg__locales_inserted() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  NOTIFY notify_locale_inserted;
+  RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: add_default_placeholder_localizations(text); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -261,15 +275,20 @@ $$;
 
 
 --
--- Name: define_localization_view(text[], text, text, text); Type: FUNCTION; Schema: app_private; Owner: -
+-- Name: define_localization_view(text, text, text); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
-CREATE FUNCTION app_private.define_localization_view(localizablefields text[], tablename text, localizationstablename text, fkcolumn text) RETURNS void
+CREATE FUNCTION app_private.define_localization_view(tablename text, localizationstablename text, fkcolumn text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE
-  localizableFieldsSelect text = 'l.' || array_to_string(localizableFields, ', l.');
+  localizableFieldsSelect text;
 BEGIN
+  SELECT 'l.' || string_agg(column_name, ', l.')
+  INTO localizableFieldsSelect
+  FROM information_schema.columns
+  WHERE table_schema = 'app_public' AND table_name = localizationsTableName AND column_name != 'locale' AND column_name != 'id' AND column_name != 'is_default_locale' AND column_name != fkColumn;
+        
   EXECUTE 'DROP VIEW IF EXISTS app_public.' || tableName || '_view CASCADE;';
   EXECUTE 'CREATE VIEW app_public.' || tableName || '_view AS ' ||
           'SELECT p.*, ' || localizableFieldsSelect || ' FROM app_public.' || localizationsTableName || ' as l ' ||
@@ -2173,15 +2192,11 @@ CREATE VIEW app_public.channel_view AS
     p.dash_stream_url,
     p.hls_stream_url,
     p.key_id,
-    c.title,
-    c.description
-   FROM (app_public.channel p
-     LEFT JOIN LATERAL ( SELECT l.title,
-            l.description
-           FROM app_public.channel_localizations l
-          WHERE ((l.channel_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title,
+    l.description
+   FROM (app_public.channel_localizations l
+     JOIN app_public.channel p ON ((l.channel_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -3073,13 +3088,10 @@ CREATE VIEW app_public.program_view AS
     p.sort_index,
     p.movie_id,
     p.episode_id,
-    c.title
-   FROM (app_public.program p
-     LEFT JOIN LATERAL ( SELECT l.title
-           FROM app_public.program_localizations l
-          WHERE ((l.program_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title
+   FROM (app_public.program_localizations l
+     JOIN app_public.program p ON ((l.program_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -4121,6 +4133,14 @@ ALTER TABLE ONLY app_public.tvshow_videos
 
 
 --
+-- Name: channel_localizations unique_by_channel_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.channel_localizations
+    ADD CONSTRAINT unique_by_channel_id_and_locale UNIQUE (channel_id, locale);
+
+
+--
 -- Name: collection_localizations unique_by_collection_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -4150,6 +4170,14 @@ ALTER TABLE ONLY app_public.movie_genre_localizations
 
 ALTER TABLE ONLY app_public.movie_localizations
     ADD CONSTRAINT unique_by_movie_id_and_locale UNIQUE (movie_id, locale);
+
+
+--
+-- Name: program_localizations unique_by_program_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.program_localizations
+    ADD CONSTRAINT unique_by_program_id_and_locale UNIQUE (program_id, locale);
 
 
 --
@@ -4238,6 +4266,20 @@ CREATE INDEX idx_channel_localizations_channel_id ON app_public.channel_localiza
 --
 
 CREATE INDEX idx_channel_localizations_locale ON app_public.channel_localizations USING btree (locale);
+
+
+--
+-- Name: idx_channel_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_channel_localizations_title_asc_with_id ON app_public.channel_localizations USING btree (title, channel_id);
+
+
+--
+-- Name: idx_channel_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_channel_localizations_title_desc_with_id ON app_public.channel_localizations USING btree (title DESC, channel_id);
 
 
 --
@@ -4584,6 +4626,20 @@ CREATE INDEX idx_program_localizations_program_id ON app_public.program_localiza
 
 
 --
+-- Name: idx_program_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_program_localizations_title_asc_with_id ON app_public.program_localizations USING btree (title, program_id);
+
+
+--
+-- Name: idx_program_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_program_localizations_title_desc_with_id ON app_public.program_localizations USING btree (title DESC, program_id);
+
+
+--
 -- Name: idx_program_playlist_id_sort_index; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -4675,6 +4731,13 @@ CREATE INDEX idx_season_videos_season_id ON app_public.season_videos USING btree
 
 
 --
+-- Name: idx_trgm_channel_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_channel_localizations_title ON app_public.channel_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
 -- Name: idx_trgm_collection_localizations_title; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -4700,6 +4763,13 @@ CREATE INDEX idx_trgm_movie_genre_localizations_title ON app_public.movie_genre_
 --
 
 CREATE INDEX idx_trgm_movie_localizations_title ON app_public.movie_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_program_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_program_localizations_title ON app_public.program_localizations USING gin (title public.gin_trgm_ops);
 
 
 --
@@ -4882,6 +4952,13 @@ CREATE INDEX tvshow_genres_relation_tvshow_genre_id_idx ON app_public.tvshow_gen
 --
 
 CREATE INDEX tvshow_genres_relation_tvshow_id_idx ON app_public.tvshow_genres_relation USING btree (tvshow_id);
+
+
+--
+-- Name: locales _500_locales_inserted; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _500_locales_inserted AFTER INSERT ON app_public.locales FOR EACH STATEMENT EXECUTE FUNCTION app_hidden.tg__locales_inserted();
 
 
 --
@@ -5317,6 +5394,14 @@ GRANT ALL ON FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms i
 
 
 --
+-- Name: FUNCTION tg__locales_inserted(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.tg__locales_inserted() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.tg__locales_inserted() TO catalog_service_gql_role;
+
+
+--
 -- Name: FUNCTION add_default_placeholder_localizations(newlocale text); Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -5324,10 +5409,10 @@ REVOKE ALL ON FUNCTION app_private.add_default_placeholder_localizations(newloca
 
 
 --
--- Name: FUNCTION define_localization_view(localizablefields text[], tablename text, localizationstablename text, fkcolumn text); Type: ACL; Schema: app_private; Owner: -
+-- Name: FUNCTION define_localization_view(tablename text, localizationstablename text, fkcolumn text); Type: ACL; Schema: app_private; Owner: -
 --
 
-REVOKE ALL ON FUNCTION app_private.define_localization_view(localizablefields text[], tablename text, localizationstablename text, fkcolumn text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION app_private.define_localization_view(tablename text, localizationstablename text, fkcolumn text) FROM PUBLIC;
 
 
 --

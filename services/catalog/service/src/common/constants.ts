@@ -8,3 +8,7 @@ export const MOSAIC_LOCALE_HEADER_KEY = 'mosaic-locale';
  * database migrations that are using this key must be re-applied.
  */
 export const MOSAIC_LOCALE_PG_KEY = 'mosaic.locale';
+/**
+ * A PG notification to keep in-memory array up-to-date in multi-instance scenarios.
+ */
+export const MOSAIC_LOCALE_NOTIFY = 'notify_locale_inserted';

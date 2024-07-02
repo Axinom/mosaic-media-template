@@ -26,11 +26,11 @@ describe('getMosaicLocaleSetting', () => {
 
   it.each([null, undefined, '', ' ', 'my-locale', 'de-DE', ['asd']])(
     'No supported locales and any header %p specified --> setting with default locale returned',
-    async (emptyValue) => {
+    async (value) => {
       // Arrange
       const req = mockRequest({
         headers: {
-          [MOSAIC_LOCALE_HEADER_KEY]: emptyValue,
+          [MOSAIC_LOCALE_HEADER_KEY]: value,
         },
       });
 

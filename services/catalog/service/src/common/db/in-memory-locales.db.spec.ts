@@ -1,11 +1,18 @@
+import {
+  getFirstMockResult,
+  Logger,
+  sleep,
+} from '@axinom/mosaic-service-common';
 import 'jest-extended';
-import { all, insert, select } from 'zapatos/db';
+import { Client } from 'pg';
+import { all, insert, select, SQL, sql } from 'zapatos/db';
 import { createTestContext, ITestContext } from '../../tests/test-utils';
 import { DEFAULT_LOCALE_TAG } from '../constants';
 import {
   exportedForTesting,
   getInMemoryLocales,
   loadInMemoryLocales,
+  startLocalesInsertedListener,
   syncInMemoryLocales,
 } from './in-memory-locales';
 
@@ -13,6 +20,7 @@ describe('inMemoryLocales', () => {
   let ctx: ITestContext;
   const movieId = 'movie-1';
   const episodeId = 'episode-1';
+  let logger: Logger;
 
   const populateLocales = async () => {
     return (
@@ -26,6 +34,7 @@ describe('inMemoryLocales', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
+    logger = new Logger({ config: ctx.config });
     await insert('movie', { id: movieId }).run(ctx.ownerPool);
     await insert('episode', { id: episodeId }).run(ctx.ownerPool);
   });
@@ -46,7 +55,7 @@ describe('inMemoryLocales', () => {
   describe('loadInMemoryLocales', () => {
     it('Load without any db entries -> empty in-memory locales array', async () => {
       // Act
-      await loadInMemoryLocales(ctx.ownerPool);
+      await loadInMemoryLocales(ctx.ownerPool, logger);
 
       // Assert
       const locales = getInMemoryLocales();
@@ -58,7 +67,7 @@ describe('inMemoryLocales', () => {
       await populateLocales();
 
       // Act
-      await loadInMemoryLocales(ctx.ownerPool);
+      await loadInMemoryLocales(ctx.ownerPool, logger);
 
       // Assert
       const locales = getInMemoryLocales();
@@ -68,8 +77,120 @@ describe('inMemoryLocales', () => {
         'et-EE',
       ]);
     });
+  });
 
-    it('Load without existing locales, but with existing localizations -> matching in-memory locales array', async () => {
+  describe('syncInMemoryLocales', () => {
+    it('Sync with empty array and empty in-memory locales array -> empty in-memory locales array', async () => {
+      // Act
+      const localesChanged = await syncInMemoryLocales([], ctx.ownerPool);
+
+      // Assert
+      const locales = getInMemoryLocales();
+      expect(locales).toEqual([]);
+      expect(localesChanged).toEqual(false);
+    });
+
+    it('Sync with empty array and filled in-memory locales array -> unchanged in-memory locales array', async () => {
+      // Array
+      const expectedLocales = await populateLocales();
+      await loadInMemoryLocales(ctx.ownerPool, logger);
+
+      // Act
+      const localesChanged = await syncInMemoryLocales([], ctx.ownerPool);
+
+      // Assert
+      const locales = getInMemoryLocales();
+      expect(locales).toIncludeSameMembers(expectedLocales);
+      expect(localesChanged).toEqual(false);
+    });
+
+    it('Sync with single default element and filled in-memory locales array -> updated in-memory locales array and locales row', async () => {
+      // Array
+      await populateLocales();
+      await loadInMemoryLocales(ctx.ownerPool, logger);
+
+      // Act
+      const localesChanged = await syncInMemoryLocales(
+        [{ language_tag: 'en-US', is_default_locale: true }],
+        ctx.ownerPool,
+      );
+
+      // Assert
+      const locales = getInMemoryLocales();
+      expect(locales).toEqual(['en-US']);
+      const dbEntries = await select('locales', all).run(ctx.ownerPool);
+      expect(dbEntries).toEqual([{ locale: 'en-US', is_default: true }]);
+      expect(localesChanged).toEqual(true);
+    });
+
+    it('Sync with two locales and filled in-memory locales array -> updated in-memory locales array and locales row', async () => {
+      // Array
+      await insert('locales', [
+        { locale: DEFAULT_LOCALE_TAG, is_default: true },
+      ]).run(ctx.ownerPool);
+      await loadInMemoryLocales(ctx.ownerPool, logger);
+
+      // Act
+      const localesChanged = await syncInMemoryLocales(
+        [
+          { language_tag: DEFAULT_LOCALE_TAG, is_default_locale: true },
+          { language_tag: 'de-DE', is_default_locale: false },
+        ],
+        ctx.ownerPool,
+      );
+
+      // Assert
+      const locales = getInMemoryLocales();
+      expect(locales).toIncludeSameMembers([DEFAULT_LOCALE_TAG, 'de-DE']);
+      const dbEntries = await select('locales', all).run(ctx.ownerPool);
+      expect(dbEntries).toIncludeSameMembers([
+        { locale: DEFAULT_LOCALE_TAG, is_default: true },
+        { locale: 'de-DE', is_default: false },
+      ]);
+      expect(localesChanged).toEqual(true);
+    });
+
+    it('Sync multiple times in parallel -> update only single time', async () => {
+      // Array
+      await insert('locales', [
+        { locale: DEFAULT_LOCALE_TAG, is_default: true },
+      ]).run(ctx.ownerPool);
+      await loadInMemoryLocales(ctx.ownerPool, logger);
+
+      // Act
+      const results = await Promise.all(
+        Array.from({ length: 10 }).map(() =>
+          syncInMemoryLocales(
+            [
+              { language_tag: DEFAULT_LOCALE_TAG, is_default_locale: true },
+              { language_tag: 'de-DE', is_default_locale: false },
+              { language_tag: 'et-EE', is_default_locale: false },
+            ],
+            ctx.ownerPool,
+          ),
+        ),
+      );
+
+      // Assert
+      const locales = getInMemoryLocales();
+      expect(locales).toIncludeSameMembers([
+        DEFAULT_LOCALE_TAG,
+        'de-DE',
+        'et-EE',
+      ]);
+      const dbEntries = await select('locales', all).run(ctx.ownerPool);
+      expect(dbEntries).toIncludeSameMembers([
+        { locale: DEFAULT_LOCALE_TAG, is_default: true },
+        { locale: 'de-DE', is_default: false },
+        { locale: 'et-EE', is_default: false },
+      ]);
+      expect(results.filter((x) => x)).toHaveLength(1);
+      expect(results.filter((x) => !x)).toHaveLength(9);
+    });
+  });
+
+  describe('app_private.set_initial_locales', () => {
+    it('No existing locales, but with existing localizations -> locales table updated', async () => {
       // Arrange
       await insert('movie_localizations', [
         {
@@ -93,10 +214,13 @@ describe('inMemoryLocales', () => {
       ]).run(ctx.ownerPool);
 
       // Act
-      await loadInMemoryLocales(ctx.ownerPool);
+      const [result] = await sql<
+        SQL,
+        { set_initial_locales: string[] }[]
+      >`select app_private.set_initial_locales();`.run(ctx.ownerPool);
 
       // Assert
-      const locales = getInMemoryLocales();
+      const locales = result.set_initial_locales;
       expect(locales).toIncludeSameMembers([
         DEFAULT_LOCALE_TAG,
         'de-DE',
@@ -111,7 +235,7 @@ describe('inMemoryLocales', () => {
       ]);
     });
 
-    it('Load without existing locales, but with multiple existing localizations -> matching in-memory locales array', async () => {
+    it('No existing locales, but with multiple existing localizations -> locales table updated', async () => {
       // Arrange
       await insert('movie_localizations', [
         {
@@ -155,10 +279,13 @@ describe('inMemoryLocales', () => {
       ]).run(ctx.ownerPool);
 
       // Act
-      await loadInMemoryLocales(ctx.ownerPool);
+      const [result] = await sql<
+        SQL,
+        { set_initial_locales: string[] }[]
+      >`select app_private.set_initial_locales();`.run(ctx.ownerPool);
 
       // Assert
-      const locales = getInMemoryLocales();
+      const locales = result.set_initial_locales;
       expect(locales).toIncludeSameMembers([
         DEFAULT_LOCALE_TAG,
         'de-DE',
@@ -174,113 +301,97 @@ describe('inMemoryLocales', () => {
     });
   });
 
-  describe('syncInMemoryLocales', () => {
-    it('Sync with empty array and empty in-memory locales array -> empty in-memory locales array', async () => {
+  describe('startLocalesInsertedListener', () => {
+    let errorSpy: jest.SpyInstance;
+    let logSpy: jest.SpyInstance;
+
+    beforeEach(async () => {
+      errorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((obj) => JSON.parse(obj));
+      logSpy = jest
+        .spyOn(console, 'log')
+        .mockImplementation((obj) => JSON.parse(obj));
+    });
+
+    afterEach(async () => {
+      await exportedForTesting.closeActiveClient();
+      jest.clearAllMocks();
+    });
+
+    it('Insert of locales after the listener stared -> in-memory locales array updated', async () => {
       // Act
-      const localesChanged = await syncInMemoryLocales([], ctx.ownerPool);
+      await startLocalesInsertedListener(ctx.config, logger);
+      await populateLocales();
+      await sleep(1000); // notification processing can take a little bit of time
+
+      // Assert
+      const locales = getInMemoryLocales();
+      expect(locales).toIncludeSameMembers(['default', 'de-DE', 'et-EE']);
+
+      expect(logSpy).toHaveBeenCalledTimes(1);
+      expect(getFirstMockResult(logSpy)).toMatchObject({
+        details: {
+          locales: ['default', 'de-DE', 'et-EE'],
+        },
+        loglevel: 'INFO',
+        message: 'In-memory locales successfully (re)loaded.',
+      });
+
+      expect(errorSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('Insert of locales before the listener stared -> in-memory locales array is empty as listener was not up when notify was issued', async () => {
+      // Arrange
+      await populateLocales();
+
+      // Act
+      await startLocalesInsertedListener(ctx.config, logger);
+      await sleep(1000); // notification processing can take a little bit of time
 
       // Assert
       const locales = getInMemoryLocales();
       expect(locales).toEqual([]);
-      expect(localesChanged).toEqual(false);
+
+      expect(logSpy).toHaveBeenCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
     });
 
-    it('Sync with empty array and filled in-memory locales array -> unchanged in-memory locales array', async () => {
-      // Array
-      const expectedLocales = await populateLocales();
-      await loadInMemoryLocales(ctx.ownerPool);
-
+    it('Error is emitted for listener client -> listener recovers, in-memory locales array updated', async () => {
       // Act
-      const localesChanged = await syncInMemoryLocales([], ctx.ownerPool);
+      await startLocalesInsertedListener(ctx.config, logger);
+      // Casting as Client to make sure error is thrown if it's null
+      (exportedForTesting.getActiveClient() as Client).emit(
+        'error',
+        new Error('Test error'),
+      );
 
-      // Assert
-      const locales = getInMemoryLocales();
-      expect(locales).toIncludeSameMembers(expectedLocales);
-      expect(localesChanged).toEqual(false);
-    });
-
-    it('Sync with single default element and filled in-memory locales array -> updated in-memory locales array and locales row', async () => {
-      // Array
       await populateLocales();
-      await loadInMemoryLocales(ctx.ownerPool);
-
-      // Act
-      const localesChanged = await syncInMemoryLocales(
-        [{ language_tag: 'en-US', is_default_locale: true }],
-        ctx.ownerPool,
-      );
+      await sleep(1000); // notification processing can take a little bit of time
 
       // Assert
       const locales = getInMemoryLocales();
-      expect(locales).toEqual(['en-US']);
-      const dbEntries = await select('locales', all).run(ctx.ownerPool);
-      expect(dbEntries).toEqual([{ locale: 'en-US', is_default: true }]);
-      expect(localesChanged).toEqual(true);
-    });
+      expect(locales).toIncludeSameMembers(['default', 'de-DE', 'et-EE']);
 
-    it('Sync with two locales and filled in-memory locales array -> updated in-memory locales array and locales row', async () => {
-      // Array
-      await insert('locales', [
-        { locale: DEFAULT_LOCALE_TAG, is_default: true },
-      ]).run(ctx.ownerPool);
-      await loadInMemoryLocales(ctx.ownerPool);
+      expect(logSpy).toHaveBeenCalledTimes(1);
+      expect(getFirstMockResult(logSpy)).toMatchObject({
+        details: {
+          locales: ['default', 'de-DE', 'et-EE'],
+        },
+        loglevel: 'INFO',
+        message: 'In-memory locales successfully (re)loaded.',
+      });
 
-      // Act
-      const localesChanged = await syncInMemoryLocales(
-        [
-          { language_tag: DEFAULT_LOCALE_TAG, is_default_locale: true },
-          { language_tag: 'de-DE', is_default_locale: false },
-        ],
-        ctx.ownerPool,
-      );
-
-      // Assert
-      const locales = getInMemoryLocales();
-      expect(locales).toIncludeSameMembers([DEFAULT_LOCALE_TAG, 'de-DE']);
-      const dbEntries = await select('locales', all).run(ctx.ownerPool);
-      expect(dbEntries).toIncludeSameMembers([
-        { locale: DEFAULT_LOCALE_TAG, is_default: true },
-        { locale: 'de-DE', is_default: false },
-      ]);
-      expect(localesChanged).toEqual(true);
-    });
-
-    it('Sync multiple times in parallel -> update only single time', async () => {
-      // Array
-      await insert('locales', [
-        { locale: DEFAULT_LOCALE_TAG, is_default: true },
-      ]).run(ctx.ownerPool);
-      await loadInMemoryLocales(ctx.ownerPool);
-
-      // Act
-      const results = await Promise.all(
-        Array.from({ length: 10 }).map(() =>
-          syncInMemoryLocales(
-            [
-              { language_tag: DEFAULT_LOCALE_TAG, is_default_locale: true },
-              { language_tag: 'de-DE', is_default_locale: false },
-              { language_tag: 'et-EE', is_default_locale: false },
-            ],
-            ctx.ownerPool,
-          ),
-        ),
-      );
-
-      // Assert
-      const locales = getInMemoryLocales();
-      expect(locales).toIncludeSameMembers([
-        DEFAULT_LOCALE_TAG,
-        'de-DE',
-        'et-EE',
-      ]);
-      const dbEntries = await select('locales', all).run(ctx.ownerPool);
-      expect(dbEntries).toIncludeSameMembers([
-        { locale: DEFAULT_LOCALE_TAG, is_default: true },
-        { locale: 'de-DE', is_default: false },
-        { locale: 'et-EE', is_default: false },
-      ]);
-      expect(results.filter((x) => x)).toHaveLength(1);
-      expect(results.filter((x) => !x)).toHaveLength(9);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(getFirstMockResult(errorSpy)).toMatchObject({
+        error: {
+          message: 'Test error',
+          name: 'Error',
+        },
+        loglevel: 'ERROR',
+        message:
+          'Listener database connection error occurred. Attempting to reconnect. (1/50)',
+      });
     });
   });
 });

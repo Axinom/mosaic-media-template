@@ -848,6 +848,8 @@ type Program {
 
   """The episode ID."""
   episodeId: String
+
+  """Title of the program."""
   title: String
 
   """Reads a single `Playlist` that is related to this `Program`."""
@@ -4853,6 +4855,8 @@ enum ChannelsOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
+  TITLE_ASC
+  TITLE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -4863,6 +4867,9 @@ A condition to be used against `Channel` object types. All fields are tested for
 input ChannelCondition {
   """Checks for equality with the object’s `id` field."""
   id: String
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
 }
 
 """
@@ -4871,6 +4878,9 @@ A filter to be used against `Channel` object types. All fields are combined with
 input ChannelFilter {
   """Filter by the object’s `id` field."""
   id: StringFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
 
   """Checks for all expressions in this list."""
   and: [ChannelFilter!]
