@@ -16,7 +16,7 @@ import {
   tvshow_video_cue_points,
   tvshow_video_streams,
 } from 'zapatos/schema';
-import { Config } from '../../../common';
+import { Config, syncInMemoryLocales } from '../../../common';
 
 export class TvshowPublishedEventHandler extends TransactionalInboxMessageHandler<
   TvshowPublishedEvent,
@@ -117,6 +117,7 @@ export class TvshowPublishedEventHandler extends TransactionalInboxMessageHandle
     }
 
     if (payload.localizations) {
+      await syncInMemoryLocales(payload.localizations, txnClient);
       await insert(
         'tvshow_localizations',
         payload.localizations.map(

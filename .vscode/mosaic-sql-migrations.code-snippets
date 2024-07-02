@@ -165,7 +165,8 @@
     "description": [
       "Defines ASC/DESC indexes based on id and one other column.",
       "Use these indexes if there is a plan to perform sorting by this column.\n",
-      "Fourth & fifth (optional) parameters: unique names for the indexes. If either value is NULL then a name will be generated from the table & field name."
+      "Fourth & fifth (optional) parameters: unique names for the indexes. If either value is NULL then a name will be generated from the table & field name.\n",
+      "Sixth (optional) parameter: name for the ID column to be used, default is 'id'"
     ],
     "scope": "sql"
   },
@@ -362,9 +363,21 @@
   },
   "Create Messaging Counter Table (Ax Define)": {
     "prefix": "ax-create-messaging-counter-table",
-    "body": ["SELECT ax_define.create_messaging_counter_table();"],
+    "body": [
+      "SELECT ax_define.create_messaging_counter_table();"
+    ],
     "description": [
       "Creates a table that will count how often a message was already processed via Mosaic-based messaging e.g. multiple retries due to server crashes."
+    ],
+    "scope": "sql"
+  },
+  "Create Messaging Health Monitoring (Ax Define)": {
+    "prefix": "ax-create-messaging-health-monitoring",
+    "body": [
+      "SELECT ax_define.create_messaging_health_monitorying();"
+    ],
+    "description": [
+      "Creates a table that will store a key when a health check is conducted and triggers to notify the application about updates in that table."
     ],
     "scope": "sql"
   },
@@ -437,12 +450,41 @@
   },
   "Pgmemento Delete Old Logs (Ax Define)": {
     "prefix": "ax-pgmemento-delete-old-logs",
-    "body": ["SELECT ax_define.pgmemento_delete_old_logs(${age:'30 days'})"],
+    "body": [
+      "SELECT ax_define.pgmemento_delete_old_logs(${age:'30 days'})"
+    ],
     "description": [
       "Deletes all audit logs (for all registered tables) older than specified age.\n",
       "Returns number of table events deleted.\n",
       "NOTE: This requires pgmemento extension to be installed in the database.\n",
       "For additional info, see https://github.com/pgMemento/pgMemento/wiki/Delete-logs .\n"
+    ],
+    "scope": "sql"
+  },
+  "Create Trx Table  (Ax Define)": {
+    "prefix": "ax-create-trx-table ",
+    "body": [
+      "SELECT ax_define.create_trx_table(",
+      "  '${1:app_hidden}',",
+      "  '${2|inbox,outbox|}',",
+      "  '{${3::DATABASE_ENV_OWNER},${4::DATABASE_GQL_ROLE}}',",
+      "  '${5|sequential,parallel|}');"
+    ],
+    "description": [
+      "Create a new table for transaction inbox/outbox handling. \n"
+    ],
+    "scope": "sql"
+  },
+  "Create Trx Next Messages Function (Ax Define)": {
+    "prefix": "ax-create-trx-next-messages-function",
+    "body": [
+      "SELECT ax_define.create_trx_next_messages_function(",
+      "  '${1:app_hidden}',",
+      "  '${2:app_hidden}',",
+      "  '${3|inbox,outbox|}');"
+    ],
+    "description": [
+      "Create next_messages function that is used to poll the inbox/outbox tables. \n"
     ],
     "scope": "sql"
   },
@@ -467,7 +509,9 @@
   },
   "Validate Identifier Length (Ax Utils)": {
     "prefix": "ax-validate-identifier-length",
-    "body": ["PERFORM ax_utils.validate_identifier_length('${1:identifier}');"],
+    "body": [
+      "PERFORM ax_utils.validate_identifier_length('${1:identifier}');"
+    ],
     "description": [
       "Raises an exception if the provided identifer exceeds the PostgreSQL max length (63 bytes).",
       "This can be useful to prevent name truncation, identifier collisions and silently dropped constraints.",
@@ -677,7 +721,9 @@
   },
   "Validation Not Empty (Ax Utils)": {
     "prefix": "ax-validation-not-empty",
-    "body": ["ax_utils.validation_not_empty(${1:column_or_variable})"],
+    "body": [
+      "ax_utils.validation_not_empty(${1:column_or_variable})"
+    ],
     "description": [
       "Returns true if the value is not null, not an empty string, and not a whitespace string. Returns false otherwise."
     ],
@@ -685,7 +731,9 @@
   },
   "Validation Is Trimmed (Ax Utils)": {
     "prefix": "ax-validation-is-trimmed",
-    "body": ["ax_utils.validation_is_trimmed(${1:column_or_variable})"],
+    "body": [
+      "ax_utils.validation_is_trimmed(${1:column_or_variable})"
+    ],
     "description": [
       "Returns false if the value starts or ends with a whitespace character. Returns true otherwise."
     ],
@@ -693,7 +741,9 @@
   },
   "Validation Is Base64 (Ax Utils)": {
     "prefix": "ax-validation-is-base64",
-    "body": ["ax_utils.validation_is_base64(${1:column_or_variable})"],
+    "body": [
+      "ax_utils.validation_is_base64(${1:column_or_variable})"
+    ],
     "description": [
       "Returns true if the value is a base64 encoded string. Returns false otherwise."
     ],
@@ -701,7 +751,9 @@
   },
   "Validation Is Identifier Key (Ax Utils)": {
     "prefix": "ax-validation-is-identifier-key",
-    "body": ["ax_utils.validation_is_identifier_key(${1:column_or_variable})"],
+    "body": [
+      "ax_utils.validation_is_identifier_key(${1:column_or_variable})"
+    ],
     "description": [
       "Returns true if the value only contains letters, numbers, underscores, and dashes.",
       "Returns false otherwise."
@@ -710,7 +762,9 @@
   },
   "Validation Is Url (Ax Utils)": {
     "prefix": "ax-validation-is-url",
-    "body": ["ax_utils.validation_is_url(${1:column_or_variable})"],
+    "body": [
+      "ax_utils.validation_is_url(${1:column_or_variable})"
+    ],
     "description": [
       "Returns true if the value is a valid URL. Returns false otherwise, including in cases when value is an empty string."
     ],
@@ -718,7 +772,9 @@
   },
   "Validation Is Optional Url (Ax Utils)": {
     "prefix": "ax-validation-is-optional-url",
-    "body": ["ax_utils.validation_is_optional_url(${1:column_or_variable})"],
+    "body": [
+      "ax_utils.validation_is_optional_url(${1:column_or_variable})"
+    ],
     "description": [
       "Returns true if the value is a valid URL or an empty string. Returns false otherwise."
     ],
@@ -736,7 +792,9 @@
   },
   "Validation Not Empty Array (Ax Utils)": {
     "prefix": "ax-validation-not-empty-array",
-    "body": ["ax_utils.validation_not_empty_array(${1:column_or_variable})"],
+    "body": [
+      "ax_utils.validation_not_empty_array(${1:column_or_variable})"
+    ],
     "description": [
       "Returns false if the value is an empty array or an array containing empty elements. Returns true otherwise."
     ],
@@ -744,7 +802,9 @@
   },
   "Validation Valid Url Array (Ax Utils)": {
     "prefix": "ax-validation-valid-url-array",
-    "body": ["ax_utils.validation_valid_url_array(${1:column_or_variable})"],
+    "body": [
+      "ax_utils.validation_valid_url_array(${1:column_or_variable})"
+    ],
     "description": [
       "Returns false if at least one element of an array is not a valid URL or an empty string. Returns true otherwise."
     ],
@@ -776,7 +836,9 @@
   },
   "User Has Tag (Ax Utils)": {
     "prefix": "ax-user-has-tag",
-    "body": ["SELECT ax_utils.user_has_tag(${1:'tag1,tag2'});"],
+    "body": [
+      "SELECT ax_utils.user_has_tag(${1:'tag1,tag2'});"
+    ],
     "description": [
       "Checks if a user has one of the specified tags.\n",
       "Returns true if the user has at least one of the tags from provided comma-separated string. Returns false otherwise."
@@ -798,7 +860,9 @@
   },
   "Current Tenant Id (Ax Utils)": {
     "prefix": "ax-current-tenant-id",
-    "body": ["SELECT ax_utils.current_tenant_id();"],
+    "body": [
+      "SELECT ax_utils.current_tenant_id();"
+    ],
     "description": [
       "Gets the tenant ID from the context of the current user.",
       "This is needed for multitenancy systems."
@@ -807,7 +871,9 @@
   },
   "Current Environment Id (Ax Utils)": {
     "prefix": "ax-current-environment-id",
-    "body": ["SELECT ax_utils.current_environment_id();"],
+    "body": [
+      "SELECT ax_utils.current_environment_id();"
+    ],
     "description": [
       "Gets the environment ID from the context of the current user.",
       "This is needed for multitenancy systems."
@@ -816,7 +882,9 @@
   },
   "Current User Id (Ax Utils)": {
     "prefix": "ax-current-user-id",
-    "body": ["SELECT ax_utils.current_user_id();"],
+    "body": [
+      "SELECT ax_utils.current_user_id();"
+    ],
     "description": [
       "Gets the User ID from the context of the current user.",
       "This is needed when end-user RLS is needed."
@@ -1030,7 +1098,9 @@
   "Drop Table (Ax Custom)": {
     "scope": "sql",
     "prefix": "ax-drop-table",
-    "body": ["DROP TABLE IF EXISTS ${8:app_public}.${1:table_name} CASCADE;"],
+    "body": [
+      "DROP TABLE IF EXISTS ${8:app_public}.${1:table_name} CASCADE;"
+    ],
     "description": "Drops a table."
   },
   "Add Enum and Column (Ax Custom)": {
@@ -1069,6 +1139,42 @@
     "body": [
       "UPDATE ${5:app_public}.${4:entity_table_name} SET ${6:colum_name} = '${7:DEFAULT_VALUE}' WHERE ${6:colum_name} = '${3:ENUM_VALUE_TO_DROP}';",
       "DELETE FROM ${2:app_public}.${1:enum_table_name} WHERE value = '${3:ENUM_VALUE_TO_DROP}';"
+    ],
+    "description": [
+      "Drops a value from the enum table.\n",
+      "Make sure the dropped value is not used in other tables.\n",
+      "This snippet has a simplified migration sample that might require adjustments."
+    ]
+  },
+  "Create Transaction Inbox Outbox Tables and Functions (Ax Custom)": {
+    "scope": "sql",
+    "prefix": "ax-add-trx-inbox-outbox-tables-and-functions",
+    "body": [
+      "-- Create Transaction Inbox Table",
+      "SELECT ax_define.create_trx_table(",
+      "'${1:app_hidden}',",
+      "'${2:inbox}',",
+      "'{${3::DATABASE_ENV_OWNER},${4::DATABASE_GQL_ROLE}}',",
+      "'${5|sequential,parallel|}');",
+      "",
+      "-- Create Transaction Outbox Table",
+      "SELECT ax_define.create_trx_table(",
+      "'${1:app_hidden}',",
+      "'${6:outbox}',",
+      "'{${3::DATABASE_ENV_OWNER},${4::DATABASE_GQL_ROLE}}',",
+      "'${7|sequential,parallel|}');",
+      "",
+      "-- Create Transaction Inbox Next Message function",
+      "SELECT ax_define.create_trx_next_messages_function(",
+      "'${8:app_hidden}',",
+      "'${1:app_hidden}',",
+      "'${2:inbox}');",
+      "",
+      "-- Create Transaction Outbox Next Message function",
+      "SELECT ax_define.create_trx_next_messages_function(",
+      "'${8:app_hidden}',",
+      "'${1:app_hidden}',",
+      "'${6:outbox}');"
     ],
     "description": [
       "Drops a value from the enum table.\n",

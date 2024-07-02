@@ -14,7 +14,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the movie.',
-            ...disableFilterAndOrder,
           },
           original_title: {
             description: 'Original title of the movie.',
@@ -300,7 +299,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the genre.',
-            ...disableFilterAndOrder,
           },
           order_no: {
             description: 'Global ordering number for the genre.',
@@ -315,7 +313,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the TV show.',
-            ...disableFilterAndOrder,
           },
           synopsis: {
             description: 'Short description of the main plot elements.',
@@ -602,7 +599,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the genre.',
-            ...disableFilterAndOrder,
           },
           order_no: {
             description: 'Global ordering number for the genre.',
@@ -902,7 +898,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the episode.',
-            ...disableFilterAndOrder,
           },
           synopsis: {
             description: 'Short description of the main plot elements.',
@@ -1194,7 +1189,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the collection.',
-            ...disableFilterAndOrder,
           },
           synopsis: {
             description: 'Short description.',
@@ -1265,7 +1259,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           title: {
             description: 'Title of the channel.',
-            ...disableFilterAndOrder,
           },
           description: {
             description: 'Description of the channel.',
@@ -1342,6 +1335,9 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
       program_view: {
         description: 'Definition of the program object.',
         attribute: {
+          title: {
+            description: 'Title of the program.',
+          },
           sort_index: {
             description: 'The sort index of the program.',
             tags: { omit: 'filter' },

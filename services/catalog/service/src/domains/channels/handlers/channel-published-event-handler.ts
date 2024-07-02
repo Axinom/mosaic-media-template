@@ -10,7 +10,7 @@ import {
 import { ClientBase } from 'pg';
 import { deletes, insert, upsert } from 'zapatos/db';
 import { channel_images, channel_localizations } from 'zapatos/schema';
-import { Config } from '../../../common';
+import { Config, syncInMemoryLocales } from '../../../common';
 
 export class ChannelPublishedEventHandler extends TransactionalInboxMessageHandler<
   ChannelPublishedEvent,
@@ -58,6 +58,7 @@ export class ChannelPublishedEventHandler extends TransactionalInboxMessageHandl
 
     await deletes('channel_localizations', { channel_id }).run(txnClient);
     if (payload.localizations) {
+      await syncInMemoryLocales(payload.localizations, txnClient);
       await insert(
         'channel_localizations',
         payload.localizations.map(

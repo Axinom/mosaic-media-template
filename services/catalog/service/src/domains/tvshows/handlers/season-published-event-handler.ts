@@ -16,7 +16,7 @@ import {
   season_video_cue_points,
   season_video_streams,
 } from 'zapatos/schema';
-import { Config } from '../../../common';
+import { Config, syncInMemoryLocales } from '../../../common';
 
 export class SeasonPublishedEventHandler extends TransactionalInboxMessageHandler<
   SeasonPublishedEvent,
@@ -118,6 +118,7 @@ export class SeasonPublishedEventHandler extends TransactionalInboxMessageHandle
     }
 
     if (payload.localizations) {
+      await syncInMemoryLocales(payload.localizations, txnClient);
       await insert(
         'season_localizations',
         payload.localizations.map(
