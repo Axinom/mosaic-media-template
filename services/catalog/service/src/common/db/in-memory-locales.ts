@@ -118,7 +118,6 @@ export const startLocalesInsertedListener = async (
 
   try {
     closeActiveClient();
-    // TODO: add testing notes for scaling + pgBouncer
     const client = new Client(config.dbOwnerConnectionString);
 
     client.on('error', async (e) => {
