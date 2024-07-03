@@ -1515,7 +1515,7 @@ declare module 'zapatos/schema' {
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'collection_localizations_pkey';
+    export type UniqueIndex = 'collection_localizations_pkey' | 'unique_by_collection_id_and_locale';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -3429,7 +3429,7 @@ declare module 'zapatos/schema' {
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'episode_localizations_pkey';
+    export type UniqueIndex = 'episode_localizations_pkey' | 'unique_by_episode_id_and_locale';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -5432,6 +5432,85 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
+  export namespace locales {
+    export type Table = 'locales';
+    export interface Selectable {
+      /**
+      * **locales.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **locales.is_default**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_default: boolean;
+    }
+    export interface JSONSelectable {
+      /**
+      * **locales.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string;
+      /**
+      * **locales.is_default**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_default: boolean;
+    }
+    export interface Whereable {
+      /**
+      * **locales.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **locales.is_default**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_default?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **locales.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **locales.is_default**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_default?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **locales.locale**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      locale?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **locales.is_default**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_default?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'locales_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
   export namespace movie {
     export type Table = 'movie';
     export interface Selectable {
@@ -6322,7 +6401,7 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = 'movie_genre_localizations_pkey';
+    export type UniqueIndex = 'movie_genre_localizations_pkey' | 'unique_by_movie_genre_id_and_locale';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -7317,7 +7396,7 @@ declare module 'zapatos/schema' {
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'movie_localizations_pkey';
+    export type UniqueIndex = 'movie_localizations_pkey' | 'unique_by_movie_id_and_locale';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -10698,7 +10777,7 @@ declare module 'zapatos/schema' {
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'season_localizations_pkey';
+    export type UniqueIndex = 'season_localizations_pkey' | 'unique_by_season_id_and_locale';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -13381,7 +13460,7 @@ declare module 'zapatos/schema' {
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = 'tvshow_genre_localizations_pkey';
+    export type UniqueIndex = 'tvshow_genre_localizations_pkey' | 'unique_by_tvshow_genre_id_and_locale';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -14376,7 +14455,7 @@ declare module 'zapatos/schema' {
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'tvshow_localizations_pkey';
+    export type UniqueIndex = 'tvshow_localizations_pkey' | 'unique_by_tvshow_id_and_locale';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -16417,6 +16496,7 @@ declare module 'zapatos/schema' {
     episode_video_streams: episode_video_streams.Selectable;
     episode_videos: episode_videos.Selectable;
     episode_view: episode_view.Selectable;
+    locales: locales.Selectable;
     messaging_counter: messaging_counter.Selectable;
     movie: movie.Selectable;
     movie_genre: movie_genre.Selectable;
@@ -16471,6 +16551,7 @@ declare module 'zapatos/schema' {
     episode_video_streams: episode_video_streams.JSONSelectable;
     episode_videos: episode_videos.JSONSelectable;
     episode_view: episode_view.JSONSelectable;
+    locales: locales.JSONSelectable;
     messaging_counter: messaging_counter.JSONSelectable;
     movie: movie.JSONSelectable;
     movie_genre: movie_genre.JSONSelectable;
@@ -16525,6 +16606,7 @@ declare module 'zapatos/schema' {
     episode_video_streams: episode_video_streams.Whereable;
     episode_videos: episode_videos.Whereable;
     episode_view: episode_view.Whereable;
+    locales: locales.Whereable;
     messaging_counter: messaging_counter.Whereable;
     movie: movie.Whereable;
     movie_genre: movie_genre.Whereable;
@@ -16579,6 +16661,7 @@ declare module 'zapatos/schema' {
     episode_video_streams: episode_video_streams.Insertable;
     episode_videos: episode_videos.Insertable;
     episode_view: episode_view.Insertable;
+    locales: locales.Insertable;
     messaging_counter: messaging_counter.Insertable;
     movie: movie.Insertable;
     movie_genre: movie_genre.Insertable;
@@ -16633,6 +16716,7 @@ declare module 'zapatos/schema' {
     episode_video_streams: episode_video_streams.Updatable;
     episode_videos: episode_videos.Updatable;
     episode_view: episode_view.Updatable;
+    locales: locales.Updatable;
     messaging_counter: messaging_counter.Updatable;
     movie: movie.Updatable;
     movie_genre: movie_genre.Updatable;
@@ -16687,6 +16771,7 @@ declare module 'zapatos/schema' {
     episode_video_streams: episode_video_streams.UniqueIndex;
     episode_videos: episode_videos.UniqueIndex;
     episode_view: episode_view.UniqueIndex;
+    locales: locales.UniqueIndex;
     messaging_counter: messaging_counter.UniqueIndex;
     movie: movie.UniqueIndex;
     movie_genre: movie_genre.UniqueIndex;
@@ -16741,6 +16826,7 @@ declare module 'zapatos/schema' {
     episode_video_streams: episode_video_streams.Column;
     episode_videos: episode_videos.Column;
     episode_view: episode_view.Column;
+    locales: locales.Column;
     messaging_counter: messaging_counter.Column;
     movie: movie.Column;
     movie_genre: movie_genre.Column;
@@ -16795,6 +16881,7 @@ declare module 'zapatos/schema' {
     episode_video_streams: episode_video_streams.SQL;
     episode_videos: episode_videos.SQL;
     episode_view: episode_view.SQL;
+    locales: locales.SQL;
     messaging_counter: messaging_counter.SQL;
     movie: movie.SQL;
     movie_genre: movie_genre.SQL;

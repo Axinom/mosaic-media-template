@@ -108,6 +108,40 @@ type Query {
     filter: EpisodeFilter
   ): EpisodesConnection
 
+  """Reads and enables pagination through a set of `Locale`."""
+  locales(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Locale`."""
+    orderBy: [LocalesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LocaleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: LocaleFilter
+  ): LocalesConnection
+
   """Reads and enables pagination through a set of `MovieGenre`."""
   movieGenres(
     """Only read the first `n` values of the set."""
@@ -280,6 +314,7 @@ type Query {
   channel(id: String!): Channel
   collection(id: String!, countryCode: String): Collection
   episode(id: String!, countryCode: String): Episode
+  locale(locale: String!): Locale
   movieGenre(id: String!): MovieGenre
   movie(id: String!, countryCode: String): Movie
   season(id: String!): Season
@@ -7174,6 +7209,121 @@ input CollectionCondition {
 
   """Checks for equality with the object’s `originalTitle` field."""
   originalTitle: String
+}
+
+"""A connection to a list of `Locale` values."""
+type LocalesConnection {
+  """A list of `Locale` objects."""
+  nodes: [Locale!]!
+
+  """
+  A list of edges which contains the `Locale` and cursor to aid in pagination.
+  """
+  edges: [LocalesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Locale` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Locale {
+  locale: String!
+  isDefault: Boolean!
+}
+
+"""A `Locale` edge in the connection."""
+type LocalesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Locale` at the end of the edge."""
+  node: Locale!
+}
+
+"""Methods to use when ordering `Locale`."""
+enum LocalesOrderBy {
+  NATURAL
+  LOCALE_ASC
+  LOCALE_DESC
+  IS_DEFAULT_ASC
+  IS_DEFAULT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Locale` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input LocaleCondition {
+  """Checks for equality with the object’s `locale` field."""
+  locale: String
+
+  """Checks for equality with the object’s `isDefault` field."""
+  isDefault: Boolean
+}
+
+"""
+A filter to be used against `Locale` object types. All fields are combined with a logical ‘and.’
+"""
+input LocaleFilter {
+  """Filter by the object’s `locale` field."""
+  locale: StringFilter
+
+  """Filter by the object’s `isDefault` field."""
+  isDefault: BooleanFilter
+
+  """Checks for all expressions in this list."""
+  and: [LocaleFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [LocaleFilter!]
+
+  """Negates the expression."""
+  not: LocaleFilter
+}
+
+"""
+A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
+"""
+input BooleanFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Boolean
+
+  """Not equal to the specified value."""
+  notEqualTo: Boolean
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Boolean
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Boolean
+
+  """Included in the specified list."""
+  in: [Boolean!]
+
+  """Not included in the specified list."""
+  notIn: [Boolean!]
+
+  """Less than the specified value."""
+  lessThan: Boolean
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Boolean
+
+  """Greater than the specified value."""
+  greaterThan: Boolean
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Boolean
 }
 
 """A connection to a list of `MovieGenre` values."""

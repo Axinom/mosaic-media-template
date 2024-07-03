@@ -14,7 +14,7 @@ import {
   collection_items_relation,
   collection_localizations,
 } from 'zapatos/schema';
-import { Config } from '../../../common';
+import { Config, syncInMemoryLocales } from '../../../common';
 
 export class CollectionPublishedEventHandler extends TransactionalInboxMessageHandler<
   CollectionPublishedEvent,
@@ -73,6 +73,7 @@ export class CollectionPublishedEventHandler extends TransactionalInboxMessageHa
     }
 
     if (payload.localizations) {
+      await syncInMemoryLocales(payload.localizations, txnClient);
       await insert(
         'collection_localizations',
         payload.localizations.map(
