@@ -5,7 +5,7 @@ import {
 import gql from 'graphql-tag';
 import 'jest-extended';
 import { insert } from 'zapatos/db';
-import { CommonErrors } from '../../../common';
+import { CommonErrors, DEFAULT_LOCALE_TAG } from '../../../common';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
 
 const MOVIE_REQUEST = gql`
@@ -25,6 +25,12 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
   beforeAll(async () => {
     ctx = await createTestContext();
     await insert('movie', { id: movieId }).run(ctx.ownerPool);
+    await insert('movie_localizations', {
+      movie_id: movieId,
+      locale: DEFAULT_LOCALE_TAG,
+      is_default_locale: true,
+      title: 'test',
+    }).run(ctx.ownerPool);
   });
 
   beforeEach(async () => {

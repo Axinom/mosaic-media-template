@@ -5,7 +5,11 @@ import {
 } from '@axinom/mosaic-db-common';
 import { Logger as MigrateLogger, Settings } from 'graphile-migrate';
 import { DbConfig } from '../config';
-import { DEFAULT_LOCALE_TAG, MOSAIC_LOCALE_PG_KEY } from '../constants';
+import {
+  DEFAULT_LOCALE_TAG,
+  MOSAIC_LOCALE_NOTIFY,
+  MOSAIC_LOCALE_PG_KEY,
+} from '../constants';
 
 export const getMigrationSettings = async (
   config: DbConfig,
@@ -29,6 +33,7 @@ export const getMigrationSettings = async (
       ':DEFAULT_USERNAME': DEFAULT_DB_USERNAME,
       ':DEFAULT_LOCALE_TAG': DEFAULT_LOCALE_TAG,
       ':MOSAIC_LOCALE': MOSAIC_LOCALE_PG_KEY,
+      ':MOSAIC_LOCALE_NOTIFY': MOSAIC_LOCALE_NOTIFY,
     },
     afterReset: [
       {

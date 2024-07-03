@@ -22,12 +22,16 @@ import {
 import express from 'express';
 import { PoolConfig } from 'pg';
 import { postgraphile } from 'postgraphile';
-import { applyMigrations, getFullConfig } from './common';
+import {
+  applyMigrations,
+  getFullConfig,
+  loadInMemoryLocales,
+  startLocalesInsertedListener,
+} from './common';
 import { registerMessaging } from './domains/register-messaging';
 import { buildPostgraphileOptions } from './graphql/postgraphile-options';
 
 const logger = new Logger({ context: 'bootstrap' });
-
 // Entry point for the service. For annotated version please see /services/media/service/src/index.ts.
 async function bootstrap(): Promise<void> {
   handleGlobalErrors(logger);
@@ -58,6 +62,9 @@ async function bootstrap(): Promise<void> {
     shutdownActions,
     poolConfig,
   );
+
+  await startLocalesInsertedListener(config, logger);
+  await loadInMemoryLocales(ownerPool, logger);
 
   const broker = await registerMessaging(
     app,
