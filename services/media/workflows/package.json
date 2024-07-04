@@ -39,7 +39,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@axinom/mosaic-portal": "0.28.0",
+    "@axinom/mosaic-portal": "0.33.0",
     "@dbeining/react-atom": "^4.1.21",
     "@graphql-codegen/cli": "^2.13.4",
     "@graphql-codegen/typescript": "^2.7.3",
@@ -81,5 +81,11 @@
     "react-router-dom": "*",
     "tslib": "*"
   },
-  "peerModules": []
+  "peerModules": [],
+  "importmap": {
+    "imports": {},
+    "inherit": [
+      "@axinom/mosaic-portal"
+    ]
+  }
 }

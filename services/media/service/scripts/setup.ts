@@ -46,7 +46,6 @@ async function main(): Promise<void> {
     config.devServiceAccountClientSecret,
     config.serviceId,
     [idServicePermissions],
-    false,
   );
   config.serviceAccountClientId = result.clientId;
   config.serviceAccountClientSecret = result.clientSecret;
