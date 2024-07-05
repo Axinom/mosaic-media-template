@@ -36,7 +36,13 @@ regularVariables:
   DATABASE_OWNER_PASSWORD: '${__ax_hosted__.pg.db_owner_password}'
   DATABASE_LOGIN: '${__ax_hosted__.pg.db_login_role}'
   DATABASE_LOGIN_PASSWORD: '${__ax_hosted__.pg.db_login_password}'
+  DATABASE_GQL_ROLE: '${__ax_hosted__.pg.db_gql_role}'
   PG_POOL_MAX_CONNECTIONS: 25
+
+  # Managed Service URLs
+  ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
+  BILLING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-billing-service.end_user_base_url}'
+  USER_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-user-service.auth_base_url}'
 
   # Custom Service URLs
   ## TBD - data migrated to new catalog service
