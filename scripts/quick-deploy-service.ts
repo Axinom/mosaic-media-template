@@ -291,14 +291,8 @@ async function getUsernameFromDockerConfig(): Promise<string | undefined> {
   const answers = await prompt([
     {
       type: 'text',
-      name: 'registry',
-      message: 'Enter Docker registry:',
-      initial: 'https://index.docker.io/v1/',
-    },
-    {
-      type: 'text',
       name: 'username',
-      initial: 'Enter Docker username:',
+      message: 'Enter Docker username:',
     },
   ]);
 
