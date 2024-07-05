@@ -46,10 +46,7 @@ pipelines/terraform/modules
 # Files generated using util:ingest-gen script
 ingest-gen
 
-<<<<<<< HEAD
 **/.mmdb
 .mmdb
-=======
 # Mac specific
 .DS_Store
->>>>>>> master
