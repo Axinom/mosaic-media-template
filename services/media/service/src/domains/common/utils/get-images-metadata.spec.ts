@@ -285,7 +285,9 @@ describe('getImagesMetadata', () => {
     // Arrange
     const errorMessage = 'connect ECONNREFUSED 127.0.0.1:10400';
     result = () => {
-      throw new Error(errorMessage);
+      const error = new Error(errorMessage) as Error & { code?: string };
+      error.code = 'ECONNREFUSED';
+      throw error;
     };
 
     // Act
@@ -296,9 +298,13 @@ describe('getImagesMetadata', () => {
     );
 
     // Assert
-    expect(error).toMatchObject(CommonErrors.PublishImagesMetadataRequestError);
+    expect(error).toMatchObject({
+      message:
+        'The Image service is not accessible. Please contact the service support.',
+      code: CommonErrors.ServiceNotAccessible.code,
+    });
     expect(error.stack).toContain(errorMessage);
-    expect(error.details).toEqual({ errors: undefined });
+    expect(error.details).toBeUndefined();
   });
 
   it('Error thrown by image service because api changed -> error with details is re-thrown to support message retries', async () => {

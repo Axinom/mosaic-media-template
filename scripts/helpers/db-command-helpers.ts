@@ -118,8 +118,8 @@ export const runResetQueries = async (
       // When owner is superuser - this is not needed, but in deployed environments and for test databases owner is a regular user and also needs such grant.
       `GRANT ${dbGqlRole} TO ${dbOwner};`,
 
-      // Trying to create a database with a different owner than the user/role that is running the create db query will,
-      // fail in Flexible Servers for Postgres servers in Azure. Therefore we grant the `dbOwner` role to the user that runs,
+      // Trying to create a database with a different owner than the user/role that is running the create db query will
+      // fail in Flexible Servers for Postgres servers in Azure. Therefore we grant the `dbOwner` role to the user that runs
       // the query first.
       pgRoot ? `GRANT ${dbOwner} TO ${pgRoot}` : '',
     ];

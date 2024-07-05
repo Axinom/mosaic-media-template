@@ -1,3 +1,4 @@
+import { getOwnerPgPool } from '@axinom/mosaic-db-common';
 import { Logger } from '@axinom/mosaic-service-common';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
@@ -20,6 +21,7 @@ export const EntitlementRequestHandling = async (
     config,
     context: EntitlementRequestHandling.name,
   });
+  const ownerPool = getOwnerPgPool(req.app);
   const entitlementRequest = plainToClass(EntitlementRequestModel, req.body);
   const validationErrors = await validate(entitlementRequest, {
     stopAtFirstError: true,

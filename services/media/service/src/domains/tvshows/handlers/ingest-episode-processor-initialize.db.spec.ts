@@ -16,7 +16,7 @@ describe('IngestEpisodeProcessor', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    processor = new IngestEpisodeProcessor();
+    processor = new IngestEpisodeProcessor(ctx.config);
     user = createTestUser(ctx.config.serviceId);
   });
 

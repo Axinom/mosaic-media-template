@@ -27,6 +27,7 @@ import { InfoPanelParent } from '../../../components';
 import { ExtensionsContext } from '../../../externals';
 import {
   Episode,
+  EpisodeDocument,
   EpisodeImageType,
   Mutation,
   MutationCreateEpisodesCastArgs,
@@ -220,6 +221,8 @@ export const EpisodeDetails: React.FC = () => {
       >({
         mutation: GqlMutationDocument,
         variables: { input: { id: episodeId, patch } },
+        refetchQueries: [EpisodeDocument],
+        awaitRefetchQueries: true,
       });
     },
     [allGenres, episodeId],

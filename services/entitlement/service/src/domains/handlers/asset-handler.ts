@@ -1,6 +1,6 @@
+import { Logger } from '@axinom/mosaic-service-common';
 import { plainToClass } from 'class-transformer';
 import { validate, ValidationError } from 'class-validator';
-
 import {
   AssetHandlerInput,
   AssetHandlerResponse,
@@ -58,6 +58,10 @@ const getAssetFromCatalogService = async (
 export const AssetHandler = async (
   assetRequest: AssetHandlerInput,
 ): Promise<AssetHandlerResponse> => {
+  const logger = new Logger({
+    config,
+    context: AssetHandler.name,
+  });
   try {
     const catalogResponse: AssetModel = await getAssetFromCatalogService(
       assetRequest,
@@ -79,15 +83,36 @@ export const AssetHandler = async (
     }
 
     const mainVideo = catalogResponse.videos.nodes.find(
-      (v: { type: string; drmKeyId?: string }) =>
-        v.type === 'MAIN' && v.drmKeyId === assetRequest.key_id,
+      (v: { type: string; drmKeyId?: string }) => v.type === 'MAIN',
     );
     if (!mainVideo) {
       return {
         isValid: false,
         error: {
           status: 404,
-          message: 'Asset DRM keys not found or its mismatch with the request',
+          message: 'Asset do not have valid main video',
+        },
+        data: new AssetModel(),
+      };
+    }
+
+    if (!mainVideo.isProtected) {
+      return {
+        isValid: false,
+        error: {
+          status: 404,
+          message: 'This endpoint can only be used for drm enabled content',
+        },
+        data: new AssetModel(),
+      };
+    }
+
+    if (!mainVideo.drmKeyId || mainVideo.drmKeyId !== assetRequest.key_id) {
+      return {
+        isValid: false,
+        error: {
+          status: 404,
+          message: 'Asset key_id does not match with the video key_id',
         },
         data: new AssetModel(),
       };
@@ -98,7 +123,10 @@ export const AssetHandler = async (
       data: catalogResponse,
     };
   } catch (error) {
-    console.error(error); //Todo: remove console.log with proper logger.
+    logger.error({
+      name: 'AssetHandler throw an 500 server error',
+      message: (error as Error).message,
+    });
     return {
       isValid: false,
       error: {

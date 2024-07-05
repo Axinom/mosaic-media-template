@@ -21,518 +21,199 @@ declare module 'zapatos/schema' {
 
   /* --- tables --- */
 
-  export namespace claim_sets {
-    export type Table = 'claim_sets';
+  export namespace subscription_devices {
+    export type Table = 'subscription_devices';
     export interface Selectable {
       /**
-      * **claim_sets.key**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      key: string;
-      /**
-      * **claim_sets.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title: string;
-      /**
-      * **claim_sets.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description: string | null;
-      /**
-      * **claim_sets.claims**
-      * - `_text` in database
-      * - `NOT NULL`, default: `'{}'::text[]`
-      */
-      claims: string[];
-      /**
-      * **claim_sets.created_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      created_date: Date;
-      /**
-      * **claim_sets.updated_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      updated_date: Date;
-      /**
-      * **claim_sets.created_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      created_user: string;
-      /**
-      * **claim_sets.updated_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      updated_user: string;
-    }
-    export interface JSONSelectable {
-      /**
-      * **claim_sets.key**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      key: string;
-      /**
-      * **claim_sets.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title: string;
-      /**
-      * **claim_sets.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description: string | null;
-      /**
-      * **claim_sets.claims**
-      * - `_text` in database
-      * - `NOT NULL`, default: `'{}'::text[]`
-      */
-      claims: string[];
-      /**
-      * **claim_sets.created_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      created_date: db.DateString;
-      /**
-      * **claim_sets.updated_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      updated_date: db.DateString;
-      /**
-      * **claim_sets.created_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      created_user: string;
-      /**
-      * **claim_sets.updated_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      updated_user: string;
-    }
-    export interface Whereable {
-      /**
-      * **claim_sets.key**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      key?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **claim_sets.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **claim_sets.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **claim_sets.claims**
-      * - `_text` in database
-      * - `NOT NULL`, default: `'{}'::text[]`
-      */
-      claims?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **claim_sets.created_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **claim_sets.updated_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **claim_sets.created_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      created_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **claim_sets.updated_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      updated_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
-      /**
-      * **claim_sets.key**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      key: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **claim_sets.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **claim_sets.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **claim_sets.claims**
-      * - `_text` in database
-      * - `NOT NULL`, default: `'{}'::text[]`
-      */
-      claims?: string[] | db.Parameter<string[]> | db.DefaultType | db.SQLFragment;
-      /**
-      * **claim_sets.created_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
-      /**
-      * **claim_sets.updated_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
-      /**
-      * **claim_sets.created_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
-      /**
-      * **claim_sets.updated_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
-    }
-    export interface Updatable {
-      /**
-      * **claim_sets.key**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      key?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **claim_sets.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **claim_sets.description**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **claim_sets.claims**
-      * - `_text` in database
-      * - `NOT NULL`, default: `'{}'::text[]`
-      */
-      claims?: string[] | db.Parameter<string[]> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **claim_sets.created_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **claim_sets.updated_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **claim_sets.created_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **claim_sets.updated_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
-    }
-    export type UniqueIndex = 'claim_sets_pkey';
-    export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
-    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
-    export type SQL = SQLExpression | SQLExpression[];
-  }
-
-  export namespace subscription_plans {
-    export type Table = 'subscription_plans';
-    export interface Selectable {
-      /**
-      * **subscription_plans.id**
+      * **subscription_devices.id**
       * - `uuid` in database
       * - `NOT NULL`, no default
       */
       id: string;
       /**
-      * **subscription_plans.title**
+      * **subscription_devices.subscription_code**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      title: string;
+      subscription_code: string;
       /**
-      * **subscription_plans.description**
+      * **subscription_devices.device_id**
       * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      device_id: string;
+      /**
+      * **subscription_devices.device_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      device_name: string;
+      /**
+      * **subscription_devices.last_active**
+      * - `timestamptz` in database
       * - Nullable, no default
       */
-      description: string | null;
+      last_active: Date | null;
       /**
-      * **subscription_plans.claim_set_keys**
-      * - `_text` in database
-      * - `NOT NULL`, default: `'{}'::text[]`
+      * **subscription_devices.manual_closed**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
       */
-      claim_set_keys: string[];
-      /**
-      * **subscription_plans.created_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      created_date: Date;
-      /**
-      * **subscription_plans.updated_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      updated_date: Date;
-      /**
-      * **subscription_plans.created_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      created_user: string;
-      /**
-      * **subscription_plans.updated_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      updated_user: string;
+      manual_closed: boolean;
     }
     export interface JSONSelectable {
       /**
-      * **subscription_plans.id**
+      * **subscription_devices.id**
       * - `uuid` in database
       * - `NOT NULL`, no default
       */
       id: string;
       /**
-      * **subscription_plans.title**
+      * **subscription_devices.subscription_code**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      title: string;
+      subscription_code: string;
       /**
-      * **subscription_plans.description**
+      * **subscription_devices.device_id**
       * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      device_id: string;
+      /**
+      * **subscription_devices.device_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      device_name: string;
+      /**
+      * **subscription_devices.last_active**
+      * - `timestamptz` in database
       * - Nullable, no default
       */
-      description: string | null;
+      last_active: db.DateString | null;
       /**
-      * **subscription_plans.claim_set_keys**
-      * - `_text` in database
-      * - `NOT NULL`, default: `'{}'::text[]`
+      * **subscription_devices.manual_closed**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
       */
-      claim_set_keys: string[];
-      /**
-      * **subscription_plans.created_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      created_date: db.DateString;
-      /**
-      * **subscription_plans.updated_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      updated_date: db.DateString;
-      /**
-      * **subscription_plans.created_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      created_user: string;
-      /**
-      * **subscription_plans.updated_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      updated_user: string;
+      manual_closed: boolean;
     }
     export interface Whereable {
       /**
-      * **subscription_plans.id**
+      * **subscription_devices.id**
       * - `uuid` in database
       * - `NOT NULL`, no default
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **subscription_plans.title**
+      * **subscription_devices.subscription_code**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      subscription_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **subscription_plans.description**
+      * **subscription_devices.device_id**
       * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      device_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **subscription_devices.device_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      device_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **subscription_devices.last_active**
+      * - `timestamptz` in database
       * - Nullable, no default
       */
-      description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      last_active?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **subscription_plans.claim_set_keys**
-      * - `_text` in database
-      * - `NOT NULL`, default: `'{}'::text[]`
+      * **subscription_devices.manual_closed**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
       */
-      claim_set_keys?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **subscription_plans.created_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **subscription_plans.updated_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **subscription_plans.created_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      created_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **subscription_plans.updated_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      updated_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      manual_closed?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-      * **subscription_plans.id**
+      * **subscription_devices.id**
       * - `uuid` in database
       * - `NOT NULL`, no default
       */
       id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **subscription_plans.title**
+      * **subscription_devices.subscription_code**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      title: string | db.Parameter<string> | db.SQLFragment;
+      subscription_code: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **subscription_plans.description**
+      * **subscription_devices.device_id**
       * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      device_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **subscription_devices.device_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      device_name: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **subscription_devices.last_active**
+      * - `timestamptz` in database
       * - Nullable, no default
       */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      last_active?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **subscription_plans.claim_set_keys**
-      * - `_text` in database
-      * - `NOT NULL`, default: `'{}'::text[]`
+      * **subscription_devices.manual_closed**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
       */
-      claim_set_keys?: string[] | db.Parameter<string[]> | db.DefaultType | db.SQLFragment;
-      /**
-      * **subscription_plans.created_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
-      /**
-      * **subscription_plans.updated_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
-      /**
-      * **subscription_plans.created_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
-      /**
-      * **subscription_plans.updated_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      manual_closed?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-      * **subscription_plans.id**
+      * **subscription_devices.id**
       * - `uuid` in database
       * - `NOT NULL`, no default
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **subscription_plans.title**
+      * **subscription_devices.subscription_code**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      subscription_code?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **subscription_plans.description**
+      * **subscription_devices.device_id**
       * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      device_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **subscription_devices.device_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      device_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **subscription_devices.last_active**
+      * - `timestamptz` in database
       * - Nullable, no default
       */
-      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      last_active?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **subscription_plans.claim_set_keys**
-      * - `_text` in database
-      * - `NOT NULL`, default: `'{}'::text[]`
+      * **subscription_devices.manual_closed**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
       */
-      claim_set_keys?: string[] | db.Parameter<string[]> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **subscription_plans.created_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **subscription_plans.updated_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, now())`
-      */
-      updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **subscription_plans.created_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **subscription_plans.updated_user**
-      * - `text` in database
-      * - `NOT NULL`, default: `'Unknown'::text`
-      */
-      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      manual_closed?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'subscription_plans_pkey';
+    export type UniqueIndex = 'subscription_devices_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -547,114 +228,6 @@ declare module 'zapatos/schema' {
 
   /* --- tables --- */
 
-  export namespace messaging_counter {
-    export type Table = 'messaging_counter';
-    export interface Selectable {
-      /**
-      * **messaging_counter.key**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      key: string;
-      /**
-      * **messaging_counter.counter**
-      * - `int4` in database
-      * - Nullable, default: `1`
-      */
-      counter: number | null;
-      /**
-      * **messaging_counter.expiration_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
-      */
-      expiration_date: Date;
-    }
-    export interface JSONSelectable {
-      /**
-      * **messaging_counter.key**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      key: string;
-      /**
-      * **messaging_counter.counter**
-      * - `int4` in database
-      * - Nullable, default: `1`
-      */
-      counter: number | null;
-      /**
-      * **messaging_counter.expiration_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
-      */
-      expiration_date: db.DateString;
-    }
-    export interface Whereable {
-      /**
-      * **messaging_counter.key**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      key?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **messaging_counter.counter**
-      * - `int4` in database
-      * - Nullable, default: `1`
-      */
-      counter?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **messaging_counter.expiration_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
-      */
-      expiration_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
-      /**
-      * **messaging_counter.key**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      key: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **messaging_counter.counter**
-      * - `int4` in database
-      * - Nullable, default: `1`
-      */
-      counter?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **messaging_counter.expiration_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
-      */
-      expiration_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
-    }
-    export interface Updatable {
-      /**
-      * **messaging_counter.key**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      key?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **messaging_counter.counter**
-      * - `int4` in database
-      * - Nullable, default: `1`
-      */
-      counter?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **messaging_counter.expiration_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `timezone('utc'::text, (now() + '1 day'::interval))`
-      */
-      expiration_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
-    }
-    export type UniqueIndex = 'messaging_counter_pkey';
-    export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
-    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
-    export type SQL = SQLExpression | SQLExpression[];
-  }
 
 
   /* === schema: app_public === */
@@ -685,64 +258,48 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = claim_sets.Table | messaging_counter.Table | subscription_plans.Table;
-  export type Selectable = claim_sets.Selectable | messaging_counter.Selectable | subscription_plans.Selectable;
-  export type JSONSelectable = claim_sets.JSONSelectable | messaging_counter.JSONSelectable | subscription_plans.JSONSelectable;
-  export type Whereable = claim_sets.Whereable | messaging_counter.Whereable | subscription_plans.Whereable;
-  export type Insertable = claim_sets.Insertable | messaging_counter.Insertable | subscription_plans.Insertable;
-  export type Updatable = claim_sets.Updatable | messaging_counter.Updatable | subscription_plans.Updatable;
-  export type UniqueIndex = claim_sets.UniqueIndex | messaging_counter.UniqueIndex | subscription_plans.UniqueIndex;
-  export type Column = claim_sets.Column | messaging_counter.Column | subscription_plans.Column;
-  export type AllTables = [claim_sets.Table, messaging_counter.Table, subscription_plans.Table];
+  export type Table = subscription_devices.Table;
+  export type Selectable = subscription_devices.Selectable;
+  export type JSONSelectable = subscription_devices.JSONSelectable;
+  export type Whereable = subscription_devices.Whereable;
+  export type Insertable = subscription_devices.Insertable;
+  export type Updatable = subscription_devices.Updatable;
+  export type UniqueIndex = subscription_devices.UniqueIndex;
+  export type Column = subscription_devices.Column;
+  export type AllTables = [subscription_devices.Table];
   export type AllMaterializedViews = [];
 
 
   export type SelectableForTable<T extends Table> = {
-    claim_sets: claim_sets.Selectable;
-    messaging_counter: messaging_counter.Selectable;
-    subscription_plans: subscription_plans.Selectable;
+    subscription_devices: subscription_devices.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
-    claim_sets: claim_sets.JSONSelectable;
-    messaging_counter: messaging_counter.JSONSelectable;
-    subscription_plans: subscription_plans.JSONSelectable;
+    subscription_devices: subscription_devices.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
-    claim_sets: claim_sets.Whereable;
-    messaging_counter: messaging_counter.Whereable;
-    subscription_plans: subscription_plans.Whereable;
+    subscription_devices: subscription_devices.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
-    claim_sets: claim_sets.Insertable;
-    messaging_counter: messaging_counter.Insertable;
-    subscription_plans: subscription_plans.Insertable;
+    subscription_devices: subscription_devices.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
-    claim_sets: claim_sets.Updatable;
-    messaging_counter: messaging_counter.Updatable;
-    subscription_plans: subscription_plans.Updatable;
+    subscription_devices: subscription_devices.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
-    claim_sets: claim_sets.UniqueIndex;
-    messaging_counter: messaging_counter.UniqueIndex;
-    subscription_plans: subscription_plans.UniqueIndex;
+    subscription_devices: subscription_devices.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
-    claim_sets: claim_sets.Column;
-    messaging_counter: messaging_counter.Column;
-    subscription_plans: subscription_plans.Column;
+    subscription_devices: subscription_devices.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
-    claim_sets: claim_sets.SQL;
-    messaging_counter: messaging_counter.SQL;
-    subscription_plans: subscription_plans.SQL;
+    subscription_devices: subscription_devices.SQL;
   }[T];
 
 }

@@ -17,7 +17,6 @@ regularVariables:
   SERVICE_ID: 'entitlement-service'
   NODE_ENV: 'production'
   LOG_LEVEL: 'DEBUG'
-  GRAPHQL_GUI_ENABLED: true
   DEMO_MODE: true
   PORT: '${__ax_hosted__.port.dc}'
 
@@ -37,24 +36,7 @@ regularVariables:
   DATABASE_OWNER_PASSWORD: '${__ax_hosted__.pg.db_owner_password}'
   DATABASE_LOGIN: '${__ax_hosted__.pg.db_login_role}'
   DATABASE_LOGIN_PASSWORD: '${__ax_hosted__.pg.db_login_password}'
-  DATABASE_GQL_ROLE: '${__ax_hosted__.pg.db_gql_role}'
   PG_POOL_MAX_CONNECTIONS: 25
-
-  # RabbitMQ Variables
-  RABBITMQ_PROTOCOL: '${__ax_hosted__.rmq.protocol}'
-  RABBITMQ_HOST: '${__ax_hosted__.rmq.host}'
-  RABBITMQ_PORT: '${__ax_hosted__.rmq.port}'
-  RABBITMQ_MGMT_PROTOCOL: '${__ax_hosted__.rmq.mgmt_protocol}'
-  RABBITMQ_MGMT_HOST: '${__ax_hosted__.rmq.mgmt_host}'
-  RABBITMQ_MGMT_PORT: '${__ax_hosted__.rmq.mgmt_port}'
-  RABBITMQ_VHOST: '${__ax_hosted__.rmq.vhost}'
-  RABBITMQ_USER: '${__ax_hosted__.rmq.username}'
-  RABBITMQ_PASSWORD: '${__ax_hosted__.rmq.password}'
-
-  # Managed Service URLs
-  ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
-  BILLING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-billing-service.end_user_base_url}'
-  USER_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-user-service.auth_base_url}'
 
   # Custom Service URLs
   ## TBD - data migrated to new catalog service
@@ -74,9 +56,6 @@ secureVariables:
   # Service Account Variables
   SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
   SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
-
-  # GeoLite License Key
-  GEOLITE2_LICENSE_KEY: '#{GEOLITE2-LICENSE-KEY}#'
 
   # DRM License Communication Key and ID
   # DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'

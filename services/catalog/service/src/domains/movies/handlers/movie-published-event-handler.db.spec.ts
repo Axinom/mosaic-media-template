@@ -1,11 +1,9 @@
-import { MessageInfo } from '@axinom/mosaic-message-bus';
-import { stub } from 'jest-auto-stub';
 import 'jest-extended';
-import { MoviePublishedEvent } from 'media-messages';
 import { insert, select, selectOne } from 'zapatos/db';
 import { movie } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
-  createMoviePublishedEvent,
+  createMoviePublishedMessage,
   createTestContext,
   ITestContext,
 } from '../../../tests/test-utils';
@@ -17,7 +15,7 @@ describe('MoviePublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new MoviePublishedEventHandler(ctx.loginPool, ctx.config);
+    handler = new MoviePublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -32,42 +30,49 @@ describe('MoviePublishEventHandler', () => {
   describe('onMessage', () => {
     test('A new movie is published', async () => {
       // Arrange
-      const message = createMoviePublishedEvent('movie-1');
-      const messageInfo = stub<MessageInfo<MoviePublishedEvent>>({
-        envelope: {
-          auth_token: 'no-token',
-          payload: message,
-        },
-      });
+      const message = createMoviePublishedMessage('movie-1');
+      const payload = message.payload;
 
       // Act
-      await handler.onMessage(message, messageInfo);
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
-      // TODO: Consider verifying via the GQL API.
       // Assert
-      const movie = await selectOne('movie', { id: message.content_id }).run(
+      const movie = await selectOne('movie', { id: payload.content_id }).run(
         ctx.ownerPool,
       );
       expect(movie).toEqual<movie.JSONSelectable>({
-        id: message.content_id,
-        title: message.title ?? null,
-        description: message.description ?? null,
-        movie_cast: message.cast ?? null,
-        original_title: message.original_title ?? null,
-        production_countries: message.production_countries ?? null,
-        released: message.released ?? null,
-        studio: message.studio ?? null,
-        synopsis: message.synopsis ?? null,
-        tags: message.tags ?? null,
+        id: payload.content_id,
+        movie_cast: payload.cast ?? null,
+        original_title: payload.original_title ?? null,
+        production_countries: payload.production_countries ?? null,
+        released: payload.released ?? null,
+        studio: payload.studio ?? null,
+        tags: payload.tags ?? null,
+        audio_languages: payload.audio_languages ?? null,
+        subtitle_languages: payload.subtitle_languages ?? null,
+        caption_languages: payload.caption_languages ?? null,
+        age_rating: payload.age_rating ?? null,
+        asset_subtype: payload.asset_subtype ?? null,
+        asset_type: payload.asset_type ?? null,
+        business_type: payload.business_type ?? null,
+        custom_rating: payload.custom_rating ?? null,
+        directors: payload.directors ?? null,
+        dynamic_field: payload.dynamic_field ?? null,
+        extended_field: payload.extended_field ?? null,
+        rating: payload.rating ?? null,
+        credits_start_time: payload.credits_start_time ?? null,
+        length_in_seconds: payload.length_in_seconds ?? null,
       });
 
       const images = await select('movie_images', {
-        movie_id: message.content_id,
+        movie_id: payload.content_id,
       }).run(ctx.ownerPool);
-      expect(images).toMatchObject(message.images!);
+      expect(images).toMatchObject(payload.images!);
 
       // Remove `video_streams` array from `video` object
-      const expectedVideos = message.videos.map((video) => {
+      const expectedVideos = payload.videos.map((video) => {
         return Object.fromEntries(
           Object.entries(video).filter(
             ([key, _value]) => key !== 'video_streams' && key !== 'cue_points',
@@ -75,7 +80,7 @@ describe('MoviePublishEventHandler', () => {
         );
       });
       const videos = await select('movie_videos', {
-        movie_id: message.content_id,
+        movie_id: payload.content_id,
       }).run(ctx.ownerPool);
       expect(videos).toMatchObject(expectedVideos);
 
@@ -85,7 +90,7 @@ describe('MoviePublishEventHandler', () => {
         }).run(ctx.ownerPool)
       ).map(({ id, movie_video_id, ...stream }) => stream);
       expect(movieVideoStreams).toIncludeSameMembers(
-        message.videos[0].video_streams!,
+        payload.videos[0].video_streams!,
       );
 
       const videoCuePoints = (
@@ -94,18 +99,18 @@ describe('MoviePublishEventHandler', () => {
         }).run(ctx.ownerPool)
       ).map(({ id, movie_video_id, ...cuePoint }) => cuePoint);
       expect(videoCuePoints).toIncludeSameMembers(
-        message.videos[0].cue_points!,
+        payload.videos[0].cue_points!,
       );
 
       const licenses = await select('movie_licenses', {
-        movie_id: message.content_id,
+        movie_id: payload.content_id,
       }).run(ctx.ownerPool);
       expect(licenses).toMatchObject(licenses);
 
       const genreRelations = await select(
         'movie_genres_relation',
         {
-          movie_id: message.content_id,
+          movie_id: payload.content_id,
         },
         {
           order: {
@@ -115,33 +120,74 @@ describe('MoviePublishEventHandler', () => {
         },
       ).run(ctx.ownerPool);
       expect(genreRelations.map((g) => g.movie_genre_id)).toEqual(
-        message.genre_ids,
+        payload.genre_ids,
+      );
+      const localizations = await select(
+        'movie_localizations',
+        { movie_id: payload.content_id },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        payload.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
       );
     });
 
     test('An existing movie is republished', async () => {
       // Arrange
-      await insert('movie', { id: 'movie-1', title: 'Old title' }).run(
-        ctx.ownerPool,
-      );
-      const message = createMoviePublishedEvent('movie-1');
-      message.title = 'New title';
-      const messageInfo = stub<MessageInfo<MoviePublishedEvent>>({
-        envelope: {
-          auth_token: 'no-token',
-          payload: message,
-        },
-      });
+      await insert('movie', {
+        id: 'movie-1',
+        original_title: 'Incorrect original title',
+      }).run(ctx.ownerPool);
+      await insert('movie_localizations', {
+        movie_id: 'movie-1',
+        title: 'Old title',
+        locale: DEFAULT_LOCALE_TAG,
+        is_default_locale: true,
+      }).run(ctx.ownerPool);
+      const message = createMoviePublishedMessage('movie-1');
+      const payload = message.payload;
 
       // Act
-      await handler.onMessage(message, messageInfo);
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
       // Assert
-      const movie = await selectOne('movie', { id: message.content_id }).run(
-        ctx.ownerPool,
-      );
+      const movie = await selectOne('movie', {
+        id: payload.content_id,
+      }).run(ctx.ownerPool);
 
-      expect(movie?.title).toEqual('New title');
+      expect(movie?.original_title).toEqual('Movie title');
+      const localizations = await select(
+        'movie_localizations',
+        { movie_id: 'movie-1' },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        payload.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
   });
 });

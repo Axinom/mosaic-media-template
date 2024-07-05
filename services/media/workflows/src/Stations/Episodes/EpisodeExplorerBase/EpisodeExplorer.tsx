@@ -21,6 +21,7 @@ import {
   EpisodesQuery,
   EpisodesQueryVariables,
   EpisodesTvshowGenresConnection,
+  EpisodeSubscriptionEventKey,
   useCreateEpisodeSnapshotMutation,
   useDeleteEpisodeMutation,
   usePublishEpisodeMutation,
@@ -124,16 +125,16 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
         })
         .subscribe((e) => {
           console.log(e);
-          switch (e.data?.episodeMutated?.event) {
-            case 'EpisodeChanged':
+          switch (e.data?.episodeMutated?.eventKey) {
+            case EpisodeSubscriptionEventKey.EpisodeChanged:
               if (e.data.episodeMutated.episode) {
                 change(e.data.episodeMutated.id, e.data.episodeMutated.episode);
               }
               break;
-            case 'EpisodeDeleted':
+            case EpisodeSubscriptionEventKey.EpisodeDeleted:
               remove(e.data.episodeMutated.id);
               break;
-            case 'EpisodeCreated':
+            case EpisodeSubscriptionEventKey.EpisodeCreated:
               if (e.data.episodeMutated.episode) {
                 add(e.data.episodeMutated.episode);
               }

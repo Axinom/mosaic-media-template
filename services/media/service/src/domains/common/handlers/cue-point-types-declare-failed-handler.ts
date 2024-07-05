@@ -1,28 +1,37 @@
-import { MessageHandler } from '@axinom/mosaic-message-bus';
 import {
   CuePointTypesDeclareFailedEvent,
   VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { Config } from '../../../common';
 
-export class CuePointTypesDeclareFailedHandler extends MessageHandler<CuePointTypesDeclareFailedEvent> {
-  private logger: Logger;
+export class CuePointTypesDeclareFailedHandler extends TransactionalInboxMessageHandler<
+  CuePointTypesDeclareFailedEvent,
+  Config
+> {
   constructor(config: Config) {
     super(
-      VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclareFailed
-        .messageType,
-    );
-    this.logger = new Logger({
+      VideoServiceMultiTenantMessagingSettings.CuePointTypesDeclareFailed,
+      new Logger({
+        config,
+        context: CuePointTypesDeclareFailedHandler.name,
+      }),
       config,
-      context: CuePointTypesDeclareFailedHandler.name,
-    });
+    );
   }
 
-  async onMessage(content: CuePointTypesDeclareFailedEvent): Promise<void> {
-    this.logger.error({
-      message: 'Cue point types declare command has failed!',
-      details: { ...content },
-    });
+  async handleMessage({
+    payload,
+  }: TypedTransactionalMessage<CuePointTypesDeclareFailedEvent>): Promise<void> {
+    if (payload.service_id === this.config.serviceId) {
+      this.logger.error({
+        message: 'Cue point types declare command has failed!',
+        details: { ...payload },
+      });
+    }
   }
 }

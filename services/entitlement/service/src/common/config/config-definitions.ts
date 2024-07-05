@@ -4,15 +4,11 @@ import {
   getBasicConfigDefinitions,
   getBasicCustomizableConfigDefinitions,
   getBasicDbConfigDefinitions,
-  getBasicGraphQlConfigDefinitions,
   getBasicMetricsEndpointDefinitions,
-  getBasicRabbitMqConfigDefinitions,
   getConfigType,
   getValidatedConfig,
 } from '@axinom/mosaic-service-common';
 import { from } from 'env-var';
-
-export const GEOLITE2_LICENSE_KEY = 'GEOLITE2_LICENSE_KEY';
 
 /**
  * Get an object that contains all the configuration declaration functions to
@@ -27,19 +23,13 @@ export const getConfigDefinitions = (
   return {
     ...getBasicConfigDefinitions(variables),
     ...getBasicMetricsEndpointDefinitions(variables),
-    ...getBasicGraphQlConfigDefinitions(10200, variables),
     ...getBasicDbConfigDefinitions(variables),
-    ...getBasicRabbitMqConfigDefinitions(variables),
     ...getBasicCustomizableConfigDefinitions(variables),
 
-    userServiceAuthBaseUrl: () =>
-      env.get('USER_SERVICE_AUTH_BASE_URL').required().asUrlString(),
+    port: () => env.get('PORT').default(10200).asPortNumber(),
 
     catalogServiceBaseUrl: () =>
       env.get('CATALOG_SERVICE_BASE_URL').required().asUrlString(),
-
-    billingServiceBaseUrl: () =>
-      env.get('BILLING_SERVICE_BASE_URL').required().asUrlString(),
 
     drmLicenseCommunicationKeyId: () =>
       env.get('DRM_LICENSE_COMMUNICATION_KEY_ID').required().asString(),
@@ -47,30 +37,9 @@ export const getConfigDefinitions = (
     drmLicenseCommunicationKey: () =>
       env.get('DRM_LICENSE_COMMUNICATION_KEY').required().asString(),
 
-    mosaicTestingIpEnabled: () =>
-      env.get('MOSAIC_TESTING_IP_ENABLED').default('false').asBoolStrict(),
-
-    geolite2LicenseKey: function () {
-      return env.get(GEOLITE2_LICENSE_KEY).required(!this.isDev()).asString();
-    },
-
     drmLicenseCommunicationKeyBuffer: function () {
       return Buffer.from(this.drmLicenseCommunicationKey(), 'base64');
     },
-
-    entitlementWebhookSecret: () =>
-      env.get('ENTITLEMENT_WEBHOOK_SECRET').asString(),
-
-    manifestWebhookSecret: () => env.get('MANIFEST_WEBHOOK_SECRET').asString(),
-
-    widevineLicenseServiceUrl: () =>
-      env.get('WIDEVINE_LICENSE_SERVICE_URL').asUrlString(),
-    playreadyLicenseServiceUrl: () =>
-      env.get('PLAYREADY_LICENSE_SERVICE_URL').asUrlString(),
-    fairplayLicenseServiceUrl: () =>
-      env.get('FAIRPLAY_LICENSE_SERVICE_URL').asUrlString(),
-    fairplayStreamingCertificateUrl: () =>
-      env.get('FAIRPLAY_STREAMING_CERTIFICATE_URL').asUrlString(),
 
     userSessionPublicKey: () =>
       env.get('USER_SESSION_PUBLIC_KEY').required().asString(),

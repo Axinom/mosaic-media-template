@@ -25,10 +25,7 @@ import {
 import express from 'express';
 import { PoolConfig } from 'pg';
 import { applyMigrations, GeoIPService, getFullConfig } from './common';
-// import {
-//   setupEntitlementWebhookEndpoint,
-//   setupManifestWebhookEndpoint,
-// } from './domains';
+
 import { setupRestEndpoints } from './routes';
 
 import 'reflect-metadata';
@@ -43,9 +40,6 @@ async function bootstrap(): Promise<void> {
   const app = express();
   const config = getFullConfig();
   setupGlobalLogMiddleware([tenantEnvironmentIdsLogMiddleware(config)]);
-
-  // // intentionally not doing await because this can run for ~1 min
-  // updateGeoDatabase(config);
 
   const { readiness } = setupLivenessAndReadiness(config);
 
@@ -82,19 +76,6 @@ async function bootstrap(): Promise<void> {
     ],
   });
 
-  // const authConfig: AuthenticationConfig = {
-  //   tenantId: config.tenantId,
-  //   environmentId: config.environmentId,
-  //   authEndpoint: config.userServiceAuthBaseUrl,
-  // };
-  // // setupEndUserAuthentication(app, ['/graphql'], authConfig);
-  // // setupEntitlementWebhookEndpoint(app, config);
-  // // setupManifestWebhookEndpoint(app, config);
-
-  // await setupPostGraphile(app, config, authConfig);
-
-  // Configure REST endpoints additionally to GraphQL (auxiliary needs such as file download)
-
   await GeoIPService.getInstance().startDatabaseUpdater();
   app.set('trust proxy', true); // trust first proxy and enable req.ip / req.ips
 
@@ -102,7 +83,7 @@ async function bootstrap(): Promise<void> {
 
   const server = app.listen(config.port, () => {
     if (config.isDev) {
-      logger.log(`http://localhost:${config.port}/graphiql`);
+      logger.log(`App is ready! Listening on port ${config.port}`);
     } else {
       logger.log('App is ready!');
     }

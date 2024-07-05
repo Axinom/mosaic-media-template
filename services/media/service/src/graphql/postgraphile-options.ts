@@ -15,7 +15,6 @@ import {
   getManagementAuthenticationContext,
   IdGuardErrors,
 } from '@axinom/mosaic-id-guard';
-import { Broker } from '@axinom/mosaic-message-bus';
 import {
   customizeGraphQlErrorFields,
   defaultWriteLogMapper,
@@ -23,6 +22,7 @@ import {
   logGraphQlError,
   MosaicErrors,
 } from '@axinom/mosaic-service-common';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import { Request, Response } from 'express';
 import { Middleware, PostGraphileOptions } from 'postgraphile';
@@ -46,7 +46,7 @@ import { ExtendedGraphQLContext, ScalarTypesPlugin } from './plugins';
 export const buildPostgraphileOptions = (
   config: Config,
   ownerPool: OwnerPgPool,
-  messagingBroker: Broker,
+  storeOutboxMessage: StoreOutboxMessage,
   websocketMiddlewares: Middleware<Request, Response>[] = [],
   authConfig?: AuthenticationConfig,
 ): PostGraphileOptions<Request, Response> => {
@@ -123,7 +123,7 @@ export const buildPostgraphileOptions = (
         config,
         subject,
         ownerPool,
-        messagingBroker,
+        storeOutboxMessage,
         jwtToken: extendedRequest?.token,
         authErrorInfo,
         mutationAtomicityContext: getMutationAtomicityContext(req, true),

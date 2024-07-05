@@ -8,7 +8,7 @@ export const Episodes: React.FC = () => {
   return (
     <EpisodeExplorer
       kind="NavigationExplorer"
-      title="Episode Explorer"
+      title="Episodes"
       stationKey="EpisodeExplorer"
       bulkActions={bulkActions}
       calculateNavigateUrl={(item) => `/episodes/${item.id}`}

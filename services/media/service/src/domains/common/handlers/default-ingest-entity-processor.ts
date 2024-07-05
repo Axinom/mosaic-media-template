@@ -12,14 +12,15 @@ import {
   normalizeRelativePath,
 } from '@axinom/mosaic-service-common';
 import {
-  IImagesIngestElement,
   ImageMessageContext,
-  IMainVideoIngestElement,
+  ImagesIngestElement,
   IngestItem,
   IngestMessageContext,
-  ITrailersIngestElement,
+  LocalizationsIngestElement,
+  MainVideoIngestElement,
   MediaServiceMessagingSettings,
   StartIngestItemCommand,
+  TrailersIngestElement,
   UpdateMetadataCommand,
   VideoIngestData,
   VideoMessageContext,
@@ -48,7 +49,7 @@ import {
   movie_genres,
   tvshow_genres,
 } from 'zapatos/schema';
-import { CommonErrors } from '../../../common';
+import { CommonErrors, Config } from '../../../common';
 import {
   CreateIngestMediaResult,
   IngestEntityProcessor,
@@ -75,6 +76,7 @@ export abstract class DefaultIngestEntityProcessor
   implements IngestEntityProcessor
 {
   public abstract type: IngestItemTypeEnum;
+  constructor(private config: Config) {}
 
   public abstract initializeMedia(
     typedItems: IngestItem[],
@@ -88,6 +90,7 @@ export abstract class DefaultIngestEntityProcessor
   public abstract updateMetadata(
     content: UpdateMetadataCommand,
     ctx: Queryable,
+    ingestItemId?: number,
   ): Promise<void>;
 
   public abstract processImage(
@@ -168,7 +171,7 @@ export abstract class DefaultIngestEntityProcessor
   }
 
   protected orchestrateMainVideo(
-    element: IMainVideoIngestElement,
+    element: MainVideoIngestElement,
     ingestItemId: number,
   ): OrchestrationData[] {
     if (element?.main_video && !isEmptyObject(element.main_video)) {
@@ -206,7 +209,7 @@ export abstract class DefaultIngestEntityProcessor
   }
 
   protected orchestrateTrailers(
-    element: ITrailersIngestElement,
+    element: TrailersIngestElement,
     ingestItemId: number,
   ): OrchestrationData[] {
     const type = 'TRAILER';
@@ -245,7 +248,7 @@ export abstract class DefaultIngestEntityProcessor
   }
 
   protected orchestrateImages(
-    element: IImagesIngestElement,
+    element: ImagesIngestElement,
     content: StartIngestItemCommand,
   ): OrchestrationData[] {
     const orchestrationData: OrchestrationData[] = [];
@@ -283,10 +286,35 @@ export abstract class DefaultIngestEntityProcessor
     return orchestrationData;
   }
 
+  protected orchestrateLocalizations(
+    element: LocalizationsIngestElement,
+    content: StartIngestItemCommand,
+  ): OrchestrationData[] {
+    if (
+      !this.config.isLocalizationEnabled ||
+      !element?.localizations ||
+      element.localizations.length === 0
+    ) {
+      return [];
+    }
+
+    const stepId = uuid();
+    const ingestItemStep: ingest_item_steps.Insertable = {
+      id: stepId,
+      type: 'LOCALIZATIONS',
+      ingest_item_id: content.ingest_item_id,
+      sub_type: '',
+    };
+    const orchestrationData: OrchestrationData = {
+      ingestItemStep,
+    };
+    return [orchestrationData];
+  }
+
   protected async clearOutdatedTrailers(
     tableName: TrailerRelationTable,
     fkSelector: RelationFKSelector,
-    element: ITrailersIngestElement,
+    element: TrailersIngestElement,
     ctx: Queryable,
   ): Promise<void> {
     if (element.trailers === null || element.trailers?.length === 0) {
@@ -296,7 +324,7 @@ export abstract class DefaultIngestEntityProcessor
 
   protected async clearOutdatedMainVideo(
     tableName: IngestibleTable,
-    element: IMainVideoIngestElement,
+    element: MainVideoIngestElement,
     content: UpdateMetadataCommand,
     ctx: Queryable,
   ): Promise<void> {
@@ -312,7 +340,7 @@ export abstract class DefaultIngestEntityProcessor
   protected async clearOutdatedImages(
     tableName: ImagesRelationTable,
     fkSelector: RelationFKSelector,
-    element: IImagesIngestElement,
+    element: ImagesIngestElement,
     ctx: Queryable,
   ): Promise<void> {
     if (element.images && element.images?.length > 0) {
@@ -493,7 +521,7 @@ export abstract class DefaultIngestEntityProcessor
         { id: messageContext.ingestItemId },
       ).run(ctx);
 
-      const element = item.item.data as ITrailersIngestElement;
+      const element = item.item.data as TrailersIngestElement;
       if (item.processed_trailer_ids.length === element?.trailers?.length) {
         await this.updateTrailerRelations(
           trailersTable,
@@ -532,6 +560,32 @@ export abstract class DefaultIngestEntityProcessor
         video_id: videoId,
       }));
       await insert(tableName, newRelations).run(ctx);
+    }
+  }
+
+  /*
+   * Ingest correlation id is initially set to make sure that db message
+   * handlers would recognize that update is done within the context of
+   * ingest operation and would attach the ingestItemId to the
+   * UpsertLocalizationSourceEntity message context, making sure that the
+   * response event would be sent, so that the ingest processing can use said
+   * event to continue processing localizations.
+   *
+   * This function separately clears the correlation id to make sure other
+   * non-ingest operations would not use it.
+   */
+  protected async clearIngestCorrelationId(
+    entityTable: IngestibleTable,
+    ingestItemId: number | undefined,
+    entityId: number,
+    ctx: Queryable,
+  ): Promise<void> {
+    if (ingestItemId) {
+      await update(
+        entityTable,
+        { ingest_correlation_id: null },
+        { id: entityId },
+      ).run(ctx);
     }
   }
 }

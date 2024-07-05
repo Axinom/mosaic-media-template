@@ -1,4 +1,5 @@
-import { FormActionData, IconName } from '@axinom/mosaic-ui';
+import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
+import { FormActionData } from '@axinom/mosaic-ui';
 import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
 import {
@@ -12,6 +13,7 @@ export function useTvShowDetailsActions(id: number): {
   readonly actions: FormActionData<TvShowDetailsFormData>[];
 } {
   const history = useHistory();
+  const localizationPath = getLocalizationEntryPoint('tv_show');
 
   const [deleteTvShowMutation] = useDeleteTvShowMutation({
     client,
@@ -50,6 +52,14 @@ export function useTvShowDetailsActions(id: number): {
       label: 'Licensing',
       path: `/tvshows/${id}/licenses`,
     },
+    ...(localizationPath
+      ? [
+          {
+            label: 'Localizations',
+            path: localizationPath.replace(':tvshowId', id.toString()),
+          },
+        ]
+      : []),
     {
       label: 'Publish Now',
       confirmationMode: 'Simple',
@@ -70,7 +80,6 @@ export function useTvShowDetailsActions(id: number): {
     },
     {
       label: 'Delete',
-      icon: IconName.Delete,
       confirmationMode: 'Simple',
       onActionSelected: deleteTvShow,
     },

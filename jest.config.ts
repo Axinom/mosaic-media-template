@@ -2,7 +2,6 @@ import type { JestConfigWithTsJest } from 'ts-jest';
 
 const jestConfig: JestConfigWithTsJest = {
   preset: 'ts-jest',
-  testTimeout: 60000,
   modulePathIgnorePatterns: ['./dist/'],
   setupFilesAfterEnv: ['jest-expect-message', 'jest-extended/all'],
   projects: [
@@ -18,6 +17,7 @@ const jestConfig: JestConfigWithTsJest = {
     '!**/dist/**',
     '!**/vendor/**',
   ],
+  workerIdleMemoryLimit: '1GB',
 };
 
 export default jestConfig;

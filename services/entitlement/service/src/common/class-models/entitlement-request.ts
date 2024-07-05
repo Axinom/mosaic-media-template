@@ -32,9 +32,8 @@ export class EntitlementRequestModel {
   @Type(() => () => typeof RequestType)
   request_type: RequestType;
 
-  @IsNotEmpty({ message: 'Token is required' })
-  @IsString({ message: 'Token is required' })
-  token: string;
+  @IsString({ message: 'Token must be valid string' })
+  token?: string;
 
   @IsNotEmpty({ message: 'Please specify a valid key_id for the asset' })
   @IsString({ message: 'Please specify a valid key_id for the asset' })

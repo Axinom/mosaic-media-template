@@ -1,31 +1,35 @@
-import { LoginPgPool, transactionWithContext } from '@axinom/mosaic-db-common';
-import { MessageHandler, MessageInfo } from '@axinom/mosaic-message-bus';
+import { Logger } from '@axinom/mosaic-service-common';
+import {
+  TransactionalInboxMessageHandler,
+  TypedTransactionalMessage,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   PublishServiceMessagingSettings,
   TvshowUnpublishedEvent,
 } from 'media-messages';
+import { ClientBase } from 'pg';
 import * as db from 'zapatos/db';
 import { Config } from '../../../common';
 
-export class TvshowUnpublishedEventHandler extends MessageHandler<TvshowUnpublishedEvent> {
-  constructor(
-    private readonly loginPool: LoginPgPool,
-    private readonly config: Config,
-  ) {
-    super(PublishServiceMessagingSettings.TvshowUnpublished.messageType);
+export class TvshowUnpublishedEventHandler extends TransactionalInboxMessageHandler<
+  TvshowUnpublishedEvent,
+  Config
+> {
+  constructor(config: Config) {
+    super(
+      PublishServiceMessagingSettings.TvshowUnpublished,
+      new Logger({
+        config,
+        context: TvshowUnpublishedEventHandler.name,
+      }),
+      config,
+    );
   }
 
-  async onMessage(
-    payload: TvshowUnpublishedEvent,
-    _message: MessageInfo<TvshowUnpublishedEvent>,
+  override async handleMessage(
+    { payload }: TypedTransactionalMessage<TvshowUnpublishedEvent>,
+    txnClient: ClientBase,
   ): Promise<void> {
-    await transactionWithContext(
-      this.loginPool,
-      db.IsolationLevel.Serializable,
-      { role: this.config.dbGqlRole },
-      async (txnClient) => {
-        await db.deletes('tvshow', { id: payload.content_id }).run(txnClient);
-      },
-    );
+    await db.deletes('tvshow', { id: payload.content_id }).run(txnClient);
   }
 }

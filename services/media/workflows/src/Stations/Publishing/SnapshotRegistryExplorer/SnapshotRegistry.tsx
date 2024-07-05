@@ -18,6 +18,7 @@ import {
   SnapshotsOrderBy,
   SnapshotsQuery,
   SnapshotsQueryVariables,
+  SnapshotSubscriptionEventKey,
   useBulkRecreateSnapshotsMutation,
   useDeleteSnapshotMutation,
   usePublishSnapshotMutation,
@@ -117,8 +118,8 @@ export const SnapshotRegistry: React.FC = () => {
           query: SnapshotsMutatedDocument,
         })
         .subscribe((e) => {
-          switch (e.data?.snapshotMutated?.event) {
-            case 'SnapshotChanged':
+          switch (e.data?.snapshotMutated?.eventKey) {
+            case SnapshotSubscriptionEventKey.SnapshotChanged:
               if (e.data.snapshotMutated.snapshot) {
                 change(
                   e.data.snapshotMutated.id,
@@ -126,10 +127,10 @@ export const SnapshotRegistry: React.FC = () => {
                 );
               }
               break;
-            case 'SnapshotDeleted':
+            case SnapshotSubscriptionEventKey.SnapshotDeleted:
               remove(e.data.snapshotMutated.id);
               break;
-            case 'SnapshotCreated':
+            case SnapshotSubscriptionEventKey.SnapshotCreated:
               if (e.data.snapshotMutated.snapshot) {
                 add(e.data.snapshotMutated.snapshot);
               }

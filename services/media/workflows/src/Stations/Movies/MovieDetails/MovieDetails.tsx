@@ -25,6 +25,7 @@ import { client } from '../../../apolloClient';
 import { ExtensionsContext } from '../../../externals';
 import {
   Movie,
+  MovieDocument,
   MovieGenre,
   MovieImageType,
   Mutation,
@@ -210,6 +211,8 @@ export const MovieDetails: React.FC = () => {
       await client.mutate<unknown, { input: UpdateMovieInput }>({
         mutation: GqlMutationDocument,
         variables: { input: { id: movieId, patch } },
+        refetchQueries: [MovieDocument],
+        awaitRefetchQueries: true,
       });
     },
     [allGenres, movieId],

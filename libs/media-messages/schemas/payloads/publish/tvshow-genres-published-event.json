@@ -11,22 +11,43 @@
       "items": {
         "description": "An individual TV show genre object.",
         "type": "object",
-        "title": "genre",
+        "title": "tvshow_genre",
+        "required": ["content_id", "order_no", "localizations"],
+        "additionalProperties": false,
         "properties": {
           "content_id": {
             "$ref": "./common.json#/definitions/tvshow_genre_id"
           },
-          "title": {
-            "description": "Title of the genre.",
-            "$ref": "../common.json#/definitions/non_empty_string"
-          },
           "order_no": {
             "description": "Global ordering number for the genre.",
             "type": "integer"
+          },
+          "localizations": {
+            "description": "Localizations for every defined locale.",
+            "type": "array",
+            "additionalItems": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "title": "tvshow_genre_localization",
+              "required": ["is_default_locale", "language_tag", "title"],
+              "properties": {
+                "is_default_locale": {
+                  "type": "boolean",
+                  "description": "Boolean flag to indicate if locale is default or not."
+                },
+                "language_tag": {
+                  "type": "string",
+                  "description": "The locale for which the values are localized."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "The localized title of this TV show genre."
+                }
+              }
+            }
           }
-        },
-        "required": ["content_id", "title", "order_no"],
-        "additionalProperties": false
+        }
       }
     }
   },
