@@ -80,14 +80,6 @@ stages:
               command: 'push'
               tags: '$(tag)'
 
-          - bash: |
-              apt install -y jq
-              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
-              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
-              mv package.updated.json package.json
-              yarn install
-            displayName: 'Install Dev Dependencies'
-
       - job: Upload_NFN_Acceptance
         dependsOn: Build
         displayName: 'Upload Manifest to NFN Acceptance'
@@ -151,7 +143,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-production-$(tag)" -i dc-mosaic-catalog-service -p "$(packageRoot)"
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
@@ -221,7 +213,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                yarn mosaic hosting manifest upload -n "lov-mosaic-catalog-production-$(tag)" -i dc-mosaic-catalog-service -p "$(packageRoot)"
+                yarn mosaic hosting manifest upload -n "lov-mosaic-catalog-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
