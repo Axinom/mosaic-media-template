@@ -22,8 +22,17 @@ fragment SnapshotExplorerProperties on Snapshot {
   unpublishedDate
 }
 
-query Snapshots($filter: SnapshotFilter, $orderBy: [SnapshotsOrderBy!], $after: Cursor) {
-  filtered: snapshots(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+query Snapshots(
+  $filter: SnapshotFilter
+  $orderBy: [SnapshotsOrderBy!]
+  $after: Cursor
+) {
+  filtered: snapshots(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
     totalCount
     pageInfo {
       hasNextPage
@@ -41,7 +50,7 @@ query Snapshots($filter: SnapshotFilter, $orderBy: [SnapshotsOrderBy!], $after: 
 subscription SnapshotsMutated {
   snapshotMutated {
     id
-    event
+    eventKey
     snapshot {
       ...SnapshotExplorerProperties
     }

@@ -14,9 +14,15 @@ fragment PublishingSnapshotExplorerProperties on Snapshot {
   validationStatus
 }
 
-query PublishingSnapshots($entityType: EntityType!, $entityId: Int, $filter: SnapshotFilter, $orderBy: [SnapshotsOrderBy!], $after: Cursor) {
+query PublishingSnapshots(
+  $entityType: EntityType!
+  $entityId: Int
+  $filter: SnapshotFilter
+  $orderBy: [SnapshotsOrderBy!]
+  $after: Cursor
+) {
   filtered: snapshots(
-    condition: {entityType: $entityType, entityId: $entityId}
+    condition: { entityType: $entityType, entityId: $entityId }
     filter: $filter
     orderBy: $orderBy
     after: $after
@@ -30,7 +36,9 @@ query PublishingSnapshots($entityType: EntityType!, $entityId: Int, $filter: Sna
       ...PublishingSnapshotExplorerProperties
     }
   }
-  nonFiltered: snapshots(condition: {entityType: $entityType, entityId: $entityId}) {
+  nonFiltered: snapshots(
+    condition: { entityType: $entityType, entityId: $entityId }
+  ) {
     totalCount
   }
 }
@@ -38,7 +46,7 @@ query PublishingSnapshots($entityType: EntityType!, $entityId: Int, $filter: Sna
 subscription PublishingSnapshotMutated {
   snapshotMutated {
     id
-    event
+    eventKey
     snapshot {
       entityType
       entityId

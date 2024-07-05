@@ -5,7 +5,7 @@ import {
 } from 'media-messages';
 import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config } from '../../../common';
+import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   buildPublishingId,
   EntityPublishingProcessor,
@@ -16,6 +16,7 @@ import {
   validateYupPublishSchema,
 } from '../../../publishing';
 import { getImagesMetadata } from '../../common';
+import { getCollectionLocalizationsMetadata } from '../localization';
 
 const collectionDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -39,18 +40,20 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
     },
   ).run(queryable);
 
-  const { result: images, validation: imagesValidation } =
-    await getImagesMetadata(
-      config.imageServiceBaseUrl,
+  const [
+    { result: images, validation: imagesValidation },
+    { result: localizations, validation: localizationsValidation },
+  ] = await Promise.all([
+    getImagesMetadata(config.imageServiceBaseUrl, authToken, collection.images),
+    getCollectionLocalizationsMetadata(
+      config,
       authToken,
-      collection.images,
-    );
+      collection.id.toString(),
+    ),
+  ]);
 
   const snapshotJson: CollectionPublishedEvent = {
     content_id: buildPublishingId('collections', collection.id),
-    title: collection.title,
-    synopsis: collection.synopsis ?? undefined,
-    description: collection.description ?? undefined,
     tags: collection.tags.map((c) => c.name),
     images: images,
     related_items: collection.relations.map((r) => ({
@@ -75,11 +78,20 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
         ? 'SEASON'
         : 'EPISODE',
     })),
+    localizations: localizations ?? [
+      {
+        is_default_locale: true,
+        language_tag: DEFAULT_LOCALE_TAG,
+        title: collection.title,
+        synopsis: collection.synopsis ?? undefined,
+        description: collection.description ?? undefined,
+      },
+    ],
   };
 
   return {
     result: snapshotJson,
-    validation: imagesValidation,
+    validation: [...imagesValidation, ...localizationsValidation],
   };
 };
 

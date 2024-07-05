@@ -1,0 +1,68 @@
+parameters:
+  - name: artifactPipelineId
+  - name: environment
+  - name: environmentDisplayName
+  - name: imageTag
+  - name: terraformFolder
+  - name: environmentTenant
+  - name: environmentPrefix
+  - name: terraformVersion
+  - name: azureSubscription
+  - name: terraformPipelineArgs
+  - name: stateBackendAccessToken
+  - name: stateBackendAccessTokenType
+
+stages:
+  - stage: 'release_${{ parameters.environmentDisplayName }}'
+    displayName: "Release ${{ upper(parameters.environmentDisplayName) }}"
+    pool:
+      vmImage: 'ubuntu-latest'
+    jobs:
+      - deployment: release
+        variables:
+          - name: directoryPathToRunTerraform
+            value: '$(Pipeline.Workspace)/infra/infrastructure/L3/${{ parameters.terraformFolder }}/${{ parameters.environmentTenant}}/${{ parameters.environmentPrefix }}'
+          - name: directoryPathDisplayName
+            value: ${{ replace(parameters.terraformFolder, '/', ' - ') }}
+          - name: directoryPathStageName
+            value: ${{ replace(replace(replace(parameters.terraformFolder, '/', '_'), ' ', '_'), '-', '_') }}
+        environment: ${{ parameters.environment }}
+        displayName: "Releasing to ${{ upper(parameters.environmentDisplayName) }}"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: 'bd-mosaic-infra'
+                  path: 'infra'
+                  submodules: true
+                - download: '${{ parameters.artifactPipelineId }}'
+
+                - bash: |
+                    echo "##vso[build.updatebuildnumber]${IMAGE_TAG}"
+                  displayName: 'Set build version'
+                  env:
+                    IMAGE_TAG: ${{ parameters.imageTag }}
+
+                - task: TerraformInstaller@0
+                  displayName: 'Install Terraform ${{ parameters.terraformVersion }}'
+                  inputs:
+                    terraformVersion: '${{ parameters.terraformVersion }}'
+
+                - task: AzureCLI@2
+                  displayName: 'Initialize Backend'
+                  inputs:
+                    azureSubscription: '${{ parameters.azureSubscription }}'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      terraform init ${{ parameters.terraformPipelineArgs }} \
+                      -backend-config="${{ parameters.stateBackendAccessTokenType }}=${{ parameters.stateBackendAccessToken }}"
+                    workingDirectory: $(directoryPathToRunTerraform)
+
+                - task: TerraformTaskV2@2
+                  displayName: 'Apply Changes'
+                  inputs:
+                    environmentServiceNameAzureRM: '${{ parameters.azureSubscription }}'
+                    command: 'apply'
+                    commandOptions: '${{ parameters.terraformPipelineArgs }} --auto-approve'
+                    workingDirectory: $(directoryPathToRunTerraform)

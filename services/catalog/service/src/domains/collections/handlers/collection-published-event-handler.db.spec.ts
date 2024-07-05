@@ -1,7 +1,9 @@
+import 'jest-extended';
 import { insert, select, selectOne } from 'zapatos/db';
 import { collection } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
-  createCollectionPublishedEvent,
+  createCollectionPublishedMessage,
   createTestContext,
   ITestContext,
 } from '../../../tests/test-utils';
@@ -13,7 +15,7 @@ describe('CollectionPublishEventHandler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    handler = new CollectionPublishedEventHandler(ctx.loginPool, ctx.config);
+    handler = new CollectionPublishedEventHandler(ctx.config);
   });
 
   afterEach(async () => {
@@ -28,80 +30,126 @@ describe('CollectionPublishEventHandler', () => {
   describe('onMessage', () => {
     test('A new collection is published', async () => {
       // Arrange
-      const message = createCollectionPublishedEvent('collection-1');
+      const message = createCollectionPublishedMessage('collection-1');
+      const payload = message.payload;
 
       // Act
-      await handler.onMessage(message);
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
-      // TODO: Consider verifying via the GQL API.
       // Assert
       const collection = await selectOne('collection', {
-        id: message.content_id,
+        id: payload.content_id,
       }).run(ctx.ownerPool);
       expect(collection).toEqual<collection.JSONSelectable>({
-        id: message.content_id,
-        title: message.title ?? null,
-        description: message.description ?? null,
-        synopsis: message.synopsis ?? null,
-        tags: message.tags ?? null,
+        id: payload.content_id,
+        tags: payload.tags ?? null,
       });
 
       const images = await select('collection_images', {
-        collection_id: message.content_id,
+        collection_id: payload.content_id,
       }).run(ctx.ownerPool);
-      expect(images).toMatchObject(message.images!);
+      expect(images).toMatchObject(payload.images!);
 
       const itemRelations = await select(
         'collection_items_relation',
-        { collection_id: message.content_id },
+        { collection_id: payload.content_id },
         { order: { by: 'order_no', direction: 'ASC' } },
       ).run(ctx.ownerPool);
       expect(itemRelations).toMatchObject([
         {
-          collection_id: message.content_id,
+          collection_id: payload.content_id,
           movie_id: 'movie-1',
           order_no: 1,
           relation_type: 'MOVIE',
         },
         {
-          collection_id: message.content_id,
+          collection_id: payload.content_id,
           order_no: 2,
           relation_type: 'TVSHOW',
           tvshow_id: 'tvshow-1',
         },
         {
-          collection_id: message.content_id,
+          collection_id: payload.content_id,
           order_no: 3,
           relation_type: 'SEASON',
           season_id: 'season-1',
         },
         {
-          collection_id: message.content_id,
+          collection_id: payload.content_id,
           episode_id: 'episode-1',
           order_no: 4,
           relation_type: 'EPISODE',
         },
       ]);
+
+      const localizations = await select(
+        'collection_localizations',
+        { collection_id: payload.content_id },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        payload.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
 
     test('An existing collection is republished', async () => {
       // Arrange
       await insert('collection', {
         id: 'collection-1',
-        title: 'Old title',
+        tags: ['Old Tag 1', 'Old Tag 2'],
       }).run(ctx.ownerPool);
-      const message = createCollectionPublishedEvent('collection-1');
-      message.title = 'New title';
+      await insert('collection_localizations', {
+        collection_id: 'collection-1',
+        title: 'Old title',
+        locale: DEFAULT_LOCALE_TAG,
+        is_default_locale: true,
+      }).run(ctx.ownerPool);
+      const message = createCollectionPublishedMessage('collection-1');
+      const payload = message.payload;
 
       // Act
-      await handler.onMessage(message);
+      await ctx.executeOwnerSql(async (txn) => {
+        await handler.handleMessage(message, txn);
+      });
 
       // Assert
       const collection = await selectOne('collection', {
-        id: message.content_id,
+        id: payload.content_id,
       }).run(ctx.ownerPool);
 
-      expect(collection?.title).toEqual('New title');
+      expect(collection?.tags).toEqual(payload.tags);
+      const localizations = await select(
+        'collection_localizations',
+        { collection_id: 'collection-1' },
+        {
+          columns: [
+            'title',
+            'description',
+            'synopsis',
+            'locale',
+            'is_default_locale',
+          ],
+        },
+      ).run(ctx.ownerPool);
+      expect(localizations).toIncludeSameMembers(
+        payload.localizations.map(({ language_tag, ...other }) => ({
+          ...other,
+          locale: language_tag,
+        })),
+      );
     });
   });
 });

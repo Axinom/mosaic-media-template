@@ -1,29 +1,35 @@
-import { LoginPgPool } from '@axinom/mosaic-db-common';
-import { RascalConfigBuilder } from '@axinom/mosaic-message-bus';
+import {
+  RabbitMqInboxWriter,
+  RascalTransactionalConfigBuilder,
+} from '@axinom/mosaic-transactional-inbox-outbox';
 import { PublishServiceMessagingSettings } from 'media-messages';
+import { TransactionalMessageHandler } from 'pg-transactional-outbox';
 import { Config } from '../../common';
-import { ContentTypeRegistrant } from '../../messaging';
+import { RegisterContentTypeMessaging } from '../../messaging';
 import {
   CollectionPublishedEventHandler,
   CollectionUnpublishedEventHandler,
 } from './handlers';
 
-export const registerCollectionsMessaging: ContentTypeRegistrant = function (
+export const registerCollectionsMessaging: RegisterContentTypeMessaging =
+  function (inboxWriter: RabbitMqInboxWriter, config: Config) {
+    return [
+      new RascalTransactionalConfigBuilder(
+        PublishServiceMessagingSettings.CollectionPublished,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
+      new RascalTransactionalConfigBuilder(
+        PublishServiceMessagingSettings.CollectionUnpublished,
+        config,
+      ).subscribeForEvent(() => inboxWriter),
+    ];
+  };
+
+export const registerCollectionsHandlers = (
   config: Config,
-  loginPool: LoginPgPool,
-) {
+): TransactionalMessageHandler[] => {
   return [
-    new RascalConfigBuilder(
-      PublishServiceMessagingSettings.CollectionPublished,
-      config,
-    ).subscribeForEvent(
-      () => new CollectionPublishedEventHandler(loginPool, config),
-    ),
-    new RascalConfigBuilder(
-      PublishServiceMessagingSettings.CollectionUnpublished,
-      config,
-    ).subscribeForEvent(
-      () => new CollectionUnpublishedEventHandler(loginPool, config),
-    ),
+    new CollectionPublishedEventHandler(config),
+    new CollectionUnpublishedEventHandler(config),
   ];
 };

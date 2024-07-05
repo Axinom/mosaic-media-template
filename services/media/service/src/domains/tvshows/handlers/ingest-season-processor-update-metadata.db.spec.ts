@@ -18,7 +18,7 @@ describe('IngestSeasonProcessor', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    processor = new IngestSeasonProcessor();
+    processor = new IngestSeasonProcessor(ctx.config);
     user = createTestUser(ctx.config.serviceId);
   });
 

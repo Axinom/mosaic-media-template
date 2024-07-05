@@ -1,3 +1,4 @@
+import { registerLocalizationEntryPoints } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions, ExtensionsContext } from '../../externals';
@@ -30,6 +31,41 @@ export function register(app: PiletApi, extensions: Extensions): void {
     label: 'Movies',
     icon: <MediaIcons icon={MediaIconName.Movie} />,
   };
+
+  // Generate entry points to embedded localization stations
+  registerLocalizationEntryPoints(
+    [
+      {
+        root: '/movies/:movieId',
+        entityIdParam: 'movieId',
+        entityType: 'movie',
+      },
+      {
+        root: '/settings/media/moviegenres/:genreId',
+        entityIdParam: 'genreId',
+        entityType: 'movie_genre',
+      },
+    ],
+    app,
+  );
+
+  app.setRouteResolver(
+    'movie-details',
+    (dynamicRouteSegments?: Record<string, string> | string) => {
+      const movieId =
+        typeof dynamicRouteSegments === 'string'
+          ? dynamicRouteSegments
+          : dynamicRouteSegments?.movieId;
+
+      return movieId ? `/movies/${movieId}` : undefined;
+    },
+  );
+
+  app.setRouteResolver(
+    'movie_genre-details',
+    (_dynamicRouteSegments?: Record<string, string> | string) =>
+      '/settings/media/moviegenres',
+  );
 
   app.registerTile(
     {

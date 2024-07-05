@@ -17,6 +17,7 @@ import {
   PublishingSnapshotsQuery,
   PublishingSnapshotsQueryVariables,
   SnapshotsOrderBy,
+  SnapshotSubscriptionEventKey,
   useDeleteSnapshotMutation,
 } from '../../../generated/graphql';
 import { ValidationResultsRenderer } from '../../../Util/PublishingSnapshots/ValidationResultsRenderer/ValidationResultsRenderer';
@@ -103,8 +104,8 @@ export const PublishingSnapshotExplorer: React.FC<
         })
         .subscribe((e) => {
           {
-            switch (e.data?.snapshotMutated?.event) {
-              case 'SnapshotChanged':
+            switch (e.data?.snapshotMutated?.eventKey) {
+              case SnapshotSubscriptionEventKey.SnapshotChanged:
                 if (
                   e.data?.snapshotMutated.snapshot &&
                   e.data?.snapshotMutated?.snapshot?.entityId === entityId &&
@@ -116,10 +117,10 @@ export const PublishingSnapshotExplorer: React.FC<
                   );
                 }
                 break;
-              case 'SnapshotDeleted':
+              case SnapshotSubscriptionEventKey.SnapshotDeleted:
                 remove(e.data?.snapshotMutated.id);
                 break;
-              case 'SnapshotCreated':
+              case SnapshotSubscriptionEventKey.SnapshotCreated:
                 if (
                   e.data?.snapshotMutated.snapshot &&
                   e.data?.snapshotMutated?.snapshot?.entityId === entityId &&

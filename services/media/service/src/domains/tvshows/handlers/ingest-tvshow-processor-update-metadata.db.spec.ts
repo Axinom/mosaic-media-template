@@ -18,7 +18,7 @@ describe('IngestTvshowProcessor', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    processor = new IngestTvshowProcessor();
+    processor = new IngestTvshowProcessor(ctx.config);
     user = createTestUser(ctx.config.serviceId);
   });
 

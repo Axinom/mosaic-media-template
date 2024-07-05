@@ -26,7 +26,7 @@ describe('IngestMovieProcessor', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    processor = new IngestMovieProcessor();
+    processor = new IngestMovieProcessor(ctx.config);
     user = createTestUser(ctx.config.serviceId);
   });
 
@@ -41,6 +41,7 @@ describe('IngestMovieProcessor', () => {
   afterEach(async () => {
     await ctx.truncate('movies');
     await ctx.truncate('movie_genres');
+    jest.restoreAllMocks();
   });
 
   afterAll(async () => {
@@ -63,43 +64,55 @@ describe('IngestMovieProcessor', () => {
   };
 
   describe('updateMetadata', () => {
-    it('message with missing regular properties -> original values are retained', async () => {
-      // Arrange
-      const body = createMessageBody(movie1, {
-        title: 'Entity1',
-      });
-      const selectColumns: ColumnForTable<'movies'>[] = [
-        'title',
-        'original_title',
-        'synopsis',
-        'description',
-        'studio',
-        'released',
-      ];
-      const updatedMovies = await update(
-        'movies',
-        {
-          original_title: 'Test Title',
-          synopsis: 'Test Synopsis',
-          description: 'Test Description',
-          studio: 'Test Studio',
-          released: '2009-12-11',
-        },
-        { id: movie1.id },
-        { returning: selectColumns },
-      ).run(ctx.ownerPool);
+    it.each([undefined, 1])(
+      'message with missing regular properties -> original values are retained',
+      async (ingestItemId) => {
+        // Arrange
+        const spy = jest.spyOn<any, any>(processor, 'clearIngestCorrelationId');
+        const body = createMessageBody(movie1, {
+          title: 'Entity1',
+        });
+        const selectColumns: ColumnForTable<'movies'>[] = [
+          'title',
+          'original_title',
+          'synopsis',
+          'description',
+          'studio',
+          'released',
+          'ingest_correlation_id',
+        ];
+        const updatedMovies = await update(
+          'movies',
+          {
+            original_title: 'Test Title',
+            synopsis: 'Test Synopsis',
+            description: 'Test Description',
+            studio: 'Test Studio',
+            released: '2009-12-11',
+            ingest_correlation_id: null,
+          },
+          { id: movie1.id },
+          { returning: selectColumns },
+        ).run(ctx.ownerPool);
 
-      // Act
-      await ctx.executeGqlSql(user, async (dbCtx) => {
-        await processor.updateMetadata(body, dbCtx);
-      });
+        // Act
+        await ctx.executeGqlSql(user, async (dbCtx) => {
+          await processor.updateMetadata(body, dbCtx, ingestItemId);
+        });
 
-      // Assert
-      const movies = await select('movies', all, {
-        columns: selectColumns,
-      }).run(ctx.ownerPool);
-      expect(movies).toEqual(updatedMovies);
-    });
+        // Assert
+        const movies = await select('movies', all, {
+          columns: selectColumns,
+        }).run(ctx.ownerPool);
+        expect(movies).toEqual(updatedMovies);
+        expect(spy).toHaveBeenCalledWith(
+          'movies',
+          ingestItemId,
+          body.entity_id,
+          expect.any(Object),
+        );
+      },
+    );
 
     it.each([
       {

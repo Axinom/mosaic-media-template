@@ -3,98 +3,98 @@ import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 export class PublishServiceMessagingSettings implements MessagingSettings {
   public static MoviePublished = new PublishServiceMessagingSettings(
     'MoviePublished', 
-    'movie:published', 
+    'inbox', 
     'movie.published',
     'event',
     'movie'
     );
   public static MovieUnpublished = new PublishServiceMessagingSettings(
     'MovieUnpublished', 
-    'movie:unpublished', 
+    'inbox', 
     'movie.unpublished',
     'event',
     'movie'
     );
   public static SeasonPublished = new PublishServiceMessagingSettings(
     'SeasonPublished', 
-    'season:published', 
+    'inbox', 
     'season.published',
     'event',
     'season'
     );
   public static SeasonUnpublished = new PublishServiceMessagingSettings(
     'SeasonUnpublished', 
-    'season:unpublished', 
+    'inbox', 
     'season.unpublished',
     'event',
     'season'
     );
   public static TvshowPublished = new PublishServiceMessagingSettings(
     'TvshowPublished', 
-    'tvshow:published', 
+    'inbox', 
     'tvshow.published',
     'event',
     'tvshow'
     );
   public static TvshowUnpublished = new PublishServiceMessagingSettings(
     'TvshowUnpublished', 
-    'tvshow:unpublished', 
+    'inbox', 
     'tvshow.unpublished',
     'event',
     'tvshow'
     );
   public static EpisodePublished = new PublishServiceMessagingSettings(
     'EpisodePublished', 
-    'episode:published', 
+    'inbox', 
     'episode.published',
     'event',
     'episode'
     );
   public static EpisodeUnpublished = new PublishServiceMessagingSettings(
     'EpisodeUnpublished', 
-    'episode:unpublished', 
+    'inbox', 
     'episode.unpublished',
     'event',
     'episode'
     );
   public static CollectionPublished = new PublishServiceMessagingSettings(
     'CollectionPublished', 
-    'collection:published', 
+    'inbox', 
     'collection.published',
     'event',
     'collection'
     );
   public static CollectionUnpublished = new PublishServiceMessagingSettings(
     'CollectionUnpublished', 
-    'collection:unpublished', 
+    'inbox', 
     'collection.unpublished',
     'event',
     'collection'
     );
   public static MovieGenresPublished = new PublishServiceMessagingSettings(
     'MovieGenresPublished', 
-    'movie-genres:published', 
+    'inbox', 
     'movie-genres.published',
     'event',
     'movie-genres'
     );
   public static MovieGenresUnpublished = new PublishServiceMessagingSettings(
     'MovieGenresUnpublished', 
-    'movie-genres:unpublished', 
+    'inbox', 
     'movie-genres.unpublished',
     'event',
     'movie-genres'
     );
   public static TvshowGenresPublished = new PublishServiceMessagingSettings(
     'TvshowGenresPublished', 
-    'tvshow-genres:published', 
+    'inbox', 
     'tvshow-genres.published',
     'event',
     'tvshow-genres'
     );
   public static TvshowGenresUnpublished = new PublishServiceMessagingSettings(
     'TvshowGenresUnpublished', 
-    'tvshow-genres:unpublished', 
+    'inbox', 
     'tvshow-genres.unpublished',
     'event',
     'tvshow-genres'

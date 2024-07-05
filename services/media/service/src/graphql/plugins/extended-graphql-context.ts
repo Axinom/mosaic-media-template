@@ -1,7 +1,7 @@
 import { OwnerPgPool } from '@axinom/mosaic-db-common';
 import { ManagementAuthenticationContext } from '@axinom/mosaic-id-guard';
-import { Broker } from '@axinom/mosaic-message-bus';
 import { assertObjectHasProperties } from '@axinom/mosaic-service-common';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { WebSocket } from 'graphql-ws';
 import { Client } from 'pg';
 import {
@@ -15,7 +15,7 @@ export interface ExtendedGraphQLContext
     Partial<AtomicMutationRequest> {
   config: Config;
   mutationAtomicityContext?: MutationAtomicityContext;
-  messagingBroker: Broker;
+  storeOutboxMessage: StoreOutboxMessage;
   ownerPool: OwnerPgPool;
   jwtToken?: string;
   pgRole?: string; // set from PostGraphile
@@ -30,7 +30,7 @@ export function getValidatedExtendedContext(
     value,
     [
       'config',
-      'messagingBroker',
+      'storeOutboxMessage',
       'ownerPool',
       'jwtToken',
       'pgRole',

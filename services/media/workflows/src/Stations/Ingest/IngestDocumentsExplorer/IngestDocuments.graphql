@@ -29,7 +29,7 @@ query IngestDocuments($orderBy: [IngestDocumentsOrderBy!], $after: Cursor) {
 subscription IngestDocumentsMutated {
   ingestDocumentMutated {
     id
-    event
+    eventKey
     ingestDocument {
       ...IngestDocumentExplorerProperties
     }

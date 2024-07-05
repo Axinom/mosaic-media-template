@@ -1,4 +1,5 @@
-import { FormActionData, IconName } from '@axinom/mosaic-ui';
+import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
+import { FormActionData } from '@axinom/mosaic-ui';
 import { useHistory } from 'react-router';
 import { client } from '../../../apolloClient';
 import {
@@ -12,6 +13,7 @@ export function useEpisodeDetailsActions(id: number): {
   readonly actions: FormActionData<EpisodeDetailsFormData>[];
 } {
   const history = useHistory();
+  const localizationPath = getLocalizationEntryPoint('episode');
 
   const [deleteEpisodeMutation] = useDeleteEpisodeMutation({
     client,
@@ -46,6 +48,14 @@ export function useEpisodeDetailsActions(id: number): {
       label: 'Licensing',
       path: `/episodes/${id}/licenses`,
     },
+    ...(localizationPath
+      ? [
+          {
+            label: 'Localizations',
+            path: localizationPath.replace(':episodeId', id.toString()),
+          },
+        ]
+      : []),
     {
       label: 'Publish Now',
       confirmationMode: 'Simple',
@@ -66,7 +76,6 @@ export function useEpisodeDetailsActions(id: number): {
     },
     {
       label: 'Delete',
-      icon: IconName.Delete,
       confirmationMode: 'Simple',
       onActionSelected: deleteEpisode,
     },

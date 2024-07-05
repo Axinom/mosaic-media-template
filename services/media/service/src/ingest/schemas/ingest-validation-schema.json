@@ -175,6 +175,21 @@
           }
         }
       }
+    },
+    "localizations": {
+      "type": ["array", "null"],
+      "description": "Localizations for any defined locale.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["language_tag"],
+        "properties": {
+          "language_tag": {
+            "type": "string",
+            "description": "The locale for which the values are localized."
+          }
+        }
+      }
     }
   },
   "properties": {
@@ -317,6 +332,25 @@
                           }
                         ]
                       ]
+                    },
+                    "localizations": {
+                      "$ref": "#/definitions/localizations",
+                      "examples": [
+                        [
+                          {
+                            "language_tag": "de-DE",
+                            "title": "Avatar – Aufbruch nach Pandora",
+                            "description": "Avatar ist ein US-amerikanischer Science-Fiction-Epos aus dem Jahr 2009...",
+                            "synopsis": "Im Jahr 2154 haben die Menschen die natürlichen Ressourcen der Erde erschöpft..."
+                          },
+                          {
+                            "language_tag": "et-EE",
+                            "title": "Avatar",
+                            "description": "Avatar on 2009. aasta Ameerika eepiline ulmefilm...",
+                            "synopsis": "Aastal 2154 on inimesed ammendanud Maa loodusvarad..."
+                          }
+                        ]
+                      ]
                     }
                   }
                 }
@@ -420,6 +454,25 @@
                           }
                         ]
                       ]
+                    },
+                    "localizations": {
+                      "$ref": "#/definitions/localizations",
+                      "examples": [
+                        [
+                          {
+                            "language_tag": "de-DE",
+                            "title": "The Mandalorian",
+                            "description": "Nach den Geschichten von Jango und Boba Fett taucht ein weiterer Krieger im Star Wars-Universum auf...",
+                            "synopsis": "Die Reisen eines einsamen Kopfgeldjägers in den äußeren Bereichen der Galaxis, weit entfernt von der Autorität der Neuen Republik."
+                          },
+                          {
+                            "language_tag": "et-EE",
+                            "title": "The Mandalorian",
+                            "description": "Pärast Jango ja Boba Fetti lugusid kerkib Tähesõdade universumis esile veel üks sõdalane...",
+                            "synopsis": "Üksildase pearahaküti reisid galaktika äärealadel, kaugel Uue Vabariigi autoriteedist."
+                          }
+                        ]
+                      ]
                     }
                   }
                 }
@@ -520,6 +573,23 @@
                           {
                             "path": "test-images/teasers/mandalorian_s1.png",
                             "type": "TEASER"
+                          }
+                        ]
+                      ]
+                    },
+                    "localizations": {
+                      "$ref": "#/definitions/localizations",
+                      "examples": [
+                        [
+                          {
+                            "language_tag": "de-DE",
+                            "description": "Nach den Geschichten von Jango und Boba Fett taucht ein weiterer Krieger im Star Wars-Universum auf...",
+                            "synopsis": "Ein mandalorianischer Kopfgeldjäger verfolgt ein Ziel für einen gut zahlenden, mysteriösen Kunden."
+                          },
+                          {
+                            "language_tag": "et-EE",
+                            "description": "Pärast Jango ja Boba Fetti lugusid kerkib Tähesõdade universumis esile veel üks sõdalane...",
+                            "synopsis": "Mandaloriast pärit pearahakütt jälitab hästi maksva ja salapärase kliendi sihtmärki."
                           }
                         ]
                       ]
@@ -642,6 +712,25 @@
                           {
                             "path": "test-images/teasers/mandalorian_s2_e1_t1.png",
                             "type": "TEASER"
+                          }
+                        ]
+                      ]
+                    },
+                    "localizations": {
+                      "$ref": "#/definitions/localizations",
+                      "examples": [
+                        [
+                          {
+                            "language_tag": "de-DE",
+                            "title": "The Mandalorian",
+                            "description": "Nach den Geschichten von Jango und Boba Fett taucht ein weiterer Krieger im Star Wars-Universum auf...",
+                            "synopsis": "Der Mandalorianer zieht es auf der Suche nach Artgenossen in den Outer Rim."
+                          },
+                          {
+                            "language_tag": "et-EE",
+                            "title": "The Mandalorian",
+                            "description": "Pärast Jango ja Boba Fetti lugusid kerkib Tähesõdade universumis esile veel üks sõdalane...",
+                            "synopsis": "Mandaloriat tõmbab Välisääre poole, et otsida teisi omasuguseid."
                           }
                         ]
                       ]

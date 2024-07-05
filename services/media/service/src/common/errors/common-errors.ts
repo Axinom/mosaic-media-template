@@ -16,6 +16,10 @@ export const CommonErrors = {
     message: 'Unable to retrieve images metadata.',
     code: 'PUBLISH_IMAGES_METADATA_REQUEST_ERROR',
   },
+  PublishLocalizationsMetadataRequestError: {
+    message: 'Unable to retrieve localizations metadata.',
+    code: 'PUBLISH_LOCALIZATIONS_METADATA_REQUEST_ERROR',
+  },
   PublishError: {
     message: 'Attempt to publish media has failed.',
     code: 'PUBLISH_ERROR',
@@ -45,5 +49,15 @@ export const CommonErrors = {
     message:
       'The subject was provided, but it does not have enough permissions to perform the operation.',
     code: 'NOT_ENOUGH_PERMISSIONS',
+  },
+  ServiceNotAccessible: {
+    message:
+      'The %s service is not accessible. Please contact the service support.',
+    code: 'SERVICE_NOT_ACCESSIBLE',
+  },
+  MissingKeyLocalizationProperties: {
+    message:
+      'The retrieved localizations are missing key properties. Please contact the service support.',
+    code: 'MISSING_KEY_LOCALIZATION_PROPERTIES',
   },
 } as const;

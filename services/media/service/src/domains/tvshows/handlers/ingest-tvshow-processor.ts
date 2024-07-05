@@ -1,4 +1,4 @@
-import { nullable } from '@axinom/mosaic-db-common';
+import { nullable, optional } from '@axinom/mosaic-db-common';
 import {
   ImageMessageContext,
   IngestItem,
@@ -52,6 +52,7 @@ export class IngestTvshowProcessor extends DefaultIngestEntityProcessor {
       ...this.orchestrateMetadataUpdate(content, content.ingest_item_id),
       ...this.orchestrateTrailers(tvshow, content.ingest_item_id),
       ...this.orchestrateImages(tvshow, content),
+      ...this.orchestrateLocalizations(tvshow, content),
     ];
 
     return orchestrationData;
@@ -60,12 +61,14 @@ export class IngestTvshowProcessor extends DefaultIngestEntityProcessor {
   public async updateMetadata(
     content: UpdateMetadataCommand,
     ctx: Queryable,
+    ingestItemId?: number,
   ): Promise<void> {
     const tvshow = content.item.data as TvShowIngestData;
 
     await update(
       'tvshows',
       {
+        ...optional(ingestItemId, (val) => ({ ingest_correlation_id: val })),
         external_id: content.item.external_id,
         title: tvshow.title?.trim(),
         ...nullable(tvshow.original_title, (val) => ({
@@ -80,6 +83,13 @@ export class IngestTvshowProcessor extends DefaultIngestEntityProcessor {
       },
       { id: content.entity_id },
     ).run(ctx);
+
+    await this.clearIngestCorrelationId(
+      'tvshows',
+      ingestItemId,
+      content.entity_id,
+      ctx,
+    );
 
     await this.updateRelations(
       'tvshows_tags',

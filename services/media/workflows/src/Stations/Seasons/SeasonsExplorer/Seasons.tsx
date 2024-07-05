@@ -8,7 +8,7 @@ export const Seasons: React.FC = () => {
   return (
     <SeasonExplorer
       kind="NavigationExplorer"
-      title="Season Explorer"
+      title="Seasons"
       stationKey="SeasonExplorer"
       bulkActions={bulkActions}
       calculateNavigateUrl={(item) => `/seasons/${item.id}`}

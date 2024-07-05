@@ -47,8 +47,17 @@ fragment EpisodeExplorerProperties on Episode {
   id
 }
 
-query Episodes($filter: EpisodeFilter, $orderBy: [EpisodesOrderBy!], $after: Cursor) {
-  filtered: episodes(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
+query Episodes(
+  $filter: EpisodeFilter
+  $orderBy: [EpisodesOrderBy!]
+  $after: Cursor
+) {
+  filtered: episodes(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
     totalCount
     pageInfo {
       hasNextPage
@@ -66,7 +75,7 @@ query Episodes($filter: EpisodeFilter, $orderBy: [EpisodesOrderBy!], $after: Cur
 subscription EpisodesMutated {
   episodeMutated {
     id
-    event
+    eventKey
     episode {
       ...EpisodeExplorerProperties
     }

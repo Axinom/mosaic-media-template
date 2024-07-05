@@ -1,6 +1,8 @@
 import 'jest-extended';
+import { MovieLocalization } from 'media-messages';
 import { insert, update } from 'zapatos/db';
 import { movies } from 'zapatos/schema';
+import { DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   commonPublishValidator,
   SnapshotValidationResult,
@@ -9,6 +11,7 @@ import { createTestContext, ITestContext } from '../../../tests/test-utils';
 import { PublishImage, PublishVideo } from '../../common';
 import * as imageMetadata from '../../common/utils/get-images-metadata';
 import * as videoMetadata from '../../common/utils/get-videos-metadata';
+import * as localizationMetadata from '../localization/get-movie-localizations-metadata';
 import { publishingMovieProcessor } from './publishing-movie-processor';
 
 describe('publishingMovieProcessor', () => {
@@ -52,6 +55,12 @@ describe('publishingMovieProcessor', () => {
           result: [],
           validation: [],
         }));
+      jest
+        .spyOn(localizationMetadata, 'getMovieLocalizationsMetadata')
+        .mockImplementation(async () => ({
+          result: undefined,
+          validation: [],
+        }));
 
       // Act
       const result = await publishingMovieProcessor.aggregator(
@@ -67,7 +76,6 @@ describe('publishingMovieProcessor', () => {
           cast: [],
           tags: [],
           content_id: `movie-${movie1.id}`,
-          description: undefined,
           genre_ids: [],
           images: [],
           licenses: [],
@@ -75,9 +83,16 @@ describe('publishingMovieProcessor', () => {
           production_countries: [],
           released: undefined,
           studio: undefined,
-          synopsis: undefined,
-          title: 'Entity1',
           videos: [],
+          localizations: [
+            {
+              is_default_locale: true,
+              language_tag: DEFAULT_LOCALE_TAG,
+              title: 'Entity1',
+              description: undefined,
+              synopsis: undefined,
+            },
+          ],
         },
         validation: [],
       });
@@ -217,6 +232,40 @@ describe('publishingMovieProcessor', () => {
           result: [image],
           validation: [imageError, imageWarning],
         }));
+      const localizationWarning: SnapshotValidationResult = {
+        context: 'LOCALIZATION',
+        message: `test localization warning`,
+        severity: 'WARNING',
+      };
+      const localizations: MovieLocalization[] = [
+        {
+          title: 'source title',
+          synopsis: 'source synopsis',
+          description: 'source description',
+          language_tag: 'en-US',
+          is_default_locale: true,
+        },
+        {
+          title: 'localized title 1',
+          synopsis: 'localized synopsis',
+          description: 'localized description',
+          language_tag: 'de-DE',
+          is_default_locale: false,
+        },
+        {
+          title: 'localized title 2',
+          synopsis: null,
+          description: null,
+          language_tag: 'et-EE',
+          is_default_locale: false,
+        },
+      ];
+      jest
+        .spyOn(localizationMetadata, 'getMovieLocalizationsMetadata')
+        .mockImplementation(async () => ({
+          result: localizations,
+          validation: [localizationWarning],
+        }));
 
       // Act
       const result = await publishingMovieProcessor.aggregator(
@@ -232,7 +281,6 @@ describe('publishingMovieProcessor', () => {
           cast: ['Actress 1', 'Actor 2'],
           tags: ['Tag 1', 'Tag 3'],
           content_id: `movie-${movie1.id}`,
-          description: updateValues.description,
           genre_ids: [`movie_genre-${genre1.id}`, `movie_genre-${genre2.id}`],
           images: [image],
           licenses: [
@@ -251,11 +299,16 @@ describe('publishingMovieProcessor', () => {
           production_countries: ['Imaginary Country A', 'Imaginary Country B'],
           released: updateValues.released,
           studio: updateValues.studio,
-          synopsis: updateValues.synopsis,
-          title: 'Entity1',
           videos: [video],
+          localizations,
         },
-        validation: [imageError, imageWarning, videoError, videoWarning],
+        validation: [
+          imageError,
+          imageWarning,
+          videoError,
+          videoWarning,
+          localizationWarning,
+        ],
       });
     });
   });
@@ -292,11 +345,6 @@ describe('publishingMovieProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'title' is required.`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
           message: `Property 'licenses' is required.`,
           severity: 'ERROR',
         },
@@ -315,20 +363,25 @@ describe('publishingMovieProcessor', () => {
           message: `Property 'videos' is required.`,
           severity: 'ERROR',
         },
+        {
+          context: 'METADATA',
+          message: `Property 'localizations' is required.`,
+          severity: 'ERROR',
+        },
       ]);
     });
 
-    it('object with empty required properties and and invalid video and image -> errors', async () => {
+    it('object with empty required properties and and invalid video, image, and localization-> errors', async () => {
       // Act
       const result = await commonPublishValidator(
         {
           result: {
             content_id: '',
-            title: '',
             licenses: [],
             genre_ids: [],
             images: [{ type: 'COVER' }],
             videos: [{ type: 'MAIN' }],
+            localizations: [{ title: '' }],
           },
           validation: [],
         } as any,
@@ -390,11 +443,6 @@ describe('publishingMovieProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `Property 'title' should not be empty.`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
           message: `Property 'path' of the first image is required.`,
           severity: 'ERROR',
         },
@@ -413,6 +461,18 @@ describe('publishingMovieProcessor', () => {
           message: `Property 'is_protected' of the first video is required.`,
           severity: 'ERROR',
         },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'is_default_locale' of the first localization is required.",
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'language_tag' of the first localization is required.",
+          severity: 'ERROR',
+        },
       ]);
     });
 
@@ -422,7 +482,6 @@ describe('publishingMovieProcessor', () => {
         {
           result: {
             content_id: 'movie-1',
-            title: 'test',
             licenses: [
               {},
               {
@@ -456,6 +515,9 @@ describe('publishingMovieProcessor', () => {
                 dash_manifest:
                   'https://videoimagedev.blob.core.windows.net/encoded-videos/QtmGgafYUYmrmxw5apkD66/dash/manifest.mpd',
               },
+            ],
+            localizations: [
+              { title: 123, is_default_locale: 'no', language_tag: null },
             ],
           },
           validation: [],
@@ -529,6 +591,24 @@ describe('publishingMovieProcessor', () => {
           message: `Property 'type' of the second video should be one of the following values: MAIN, TRAILER.`,
           severity: 'ERROR',
         },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'is_default_locale' of the first localization should be of type 'boolean'.",
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'language_tag' of the first localization should be of type 'string'.",
+          severity: 'ERROR',
+        },
+        {
+          context: 'METADATA',
+          message:
+            "Property 'title' of the first localization should be of type 'string'.",
+          severity: 'ERROR',
+        },
       ]);
     });
 
@@ -538,7 +618,6 @@ describe('publishingMovieProcessor', () => {
         {
           result: {
             content_id: 'movie-1',
-            title: 'empty',
             production_countries: [],
             genre_ids: [],
             cast: [],
@@ -546,6 +625,13 @@ describe('publishingMovieProcessor', () => {
             licenses: [],
             images: [],
             videos: [],
+            localizations: [
+              {
+                title: 'empty',
+                is_default_locale: true,
+                language_tag: DEFAULT_LOCALE_TAG,
+              },
+            ],
           },
           validation: [],
         } as any,
@@ -584,7 +670,6 @@ describe('publishingMovieProcessor', () => {
         {
           result: {
             content_id: 'movie-1',
-            title: 'test',
             licenses: [{ countries: ['ZW'] }],
             genre_ids: ['movie_genre-1'],
             images: [
@@ -607,6 +692,13 @@ describe('publishingMovieProcessor', () => {
                 caption_languages: [],
                 dash_manifest:
                   'https://videoimagedev.blob.core.windows.net/encoded-videos/83Y9JqrKjiCMLpj1bCnsed/dash/manifest.mpd',
+              },
+            ],
+            localizations: [
+              {
+                title: 'test',
+                is_default_locale: true,
+                language_tag: DEFAULT_LOCALE_TAG,
               },
             ],
           },
@@ -648,11 +740,6 @@ describe('publishingMovieProcessor', () => {
         {
           result: {
             content_id: 'movie-6',
-            title: 'Avatar',
-            synopsis:
-              "In 2154, humans have depleted Earth's natural resources...",
-            description:
-              'Avatar is a 2009 American epic science fiction film...',
             original_title: "James Cameron's Avatar",
             released: '2009-12-10',
             studio: '20th Century Fox',
@@ -737,6 +824,31 @@ describe('publishingMovieProcessor', () => {
                   'https://videoimagedev.blob.core.windows.net/encoded-videos/83Y9JqrKjiCMLpj1bCnsed/dash/manifest.mpd',
                 dash_manifest:
                   'https://videoimagedev.blob.core.windows.net/encoded-videos/83Y9JqrKjiCMLpj1bCnsed/dash/manifest.mpd',
+              },
+            ],
+            localizations: [
+              {
+                title: 'Avatar',
+                synopsis:
+                  "In 2154, humans have depleted Earth's natural resources...",
+                description:
+                  'Avatar is a 2009 American epic science fiction film...',
+                is_default_locale: true,
+                language_tag: 'en-US',
+              },
+              {
+                title: 'localized title 1',
+                synopsis: 'localized synopsis 1',
+                description: 'localized description 1',
+                is_default_locale: false,
+                language_tag: 'et-EE',
+              },
+              {
+                title: 'localized title 2',
+                synopsis: 'localized synopsis 2',
+                description: 'localized description 2',
+                is_default_locale: false,
+                language_tag: 'de-DE',
               },
             ],
           },

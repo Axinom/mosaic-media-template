@@ -1,6 +1,4 @@
-import { Broker } from '@axinom/mosaic-message-bus';
-import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { stub } from 'jest-auto-stub';
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
@@ -24,7 +22,7 @@ describe('Snapshots Bulk Unpublish endpoint', () => {
   let defaultRequestContext: TestRequestContext;
   let messages: {
     messageType: string;
-    message: UnpublishEntityCommand;
+    payload: UnpublishEntityCommand;
   }[] = [];
 
   const createSnapshot = async (
@@ -43,16 +41,15 @@ describe('Snapshots Bulk Unpublish endpoint', () => {
   };
 
   beforeAll(async () => {
-    const broker = stub<Broker>({
-      publish: (
-        _id: string,
-        { messageType }: MessagingSettings,
-        message: UnpublishEntityCommand,
-      ) => {
-        messages.push({ messageType, message });
+    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+      async (_aggregateId, { messageType }, payload) => {
+        messages.push({
+          payload: payload as UnpublishEntityCommand,
+          messageType,
+        });
       },
-    });
-    ctx = await createTestContext({}, broker);
+    );
+    ctx = await createTestContext({}, storeOutboxMessage);
     defaultRequestContext = createTestRequestContext(ctx.config.serviceId);
     jest
       .spyOn(tokenHelpers, 'getLongLivedToken')
@@ -97,7 +94,7 @@ describe('Snapshots Bulk Unpublish endpoint', () => {
         );
         expect(messages).toEqual([
           {
-            message: {
+            payload: {
               entity_id: snapshotId1,
               entity_type: 'Snapshot',
               input: undefined,
@@ -135,7 +132,7 @@ describe('Snapshots Bulk Unpublish endpoint', () => {
 
         expect(messages).toEqual([
           {
-            message: {
+            payload: {
               entity_id: snapshotId1,
               entity_type: 'Snapshot',
               input: undefined,
@@ -146,7 +143,7 @@ describe('Snapshots Bulk Unpublish endpoint', () => {
               MediaServiceMessagingSettings.UnpublishEntity.messageType,
           },
           {
-            message: {
+            payload: {
               entity_id: snapshotId2,
               entity_type: 'Snapshot',
               input: undefined,

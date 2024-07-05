@@ -270,6 +270,96 @@ $_$;
 
 
 --
+-- Name: create_localizable_entity_triggers(text, text, text, text, text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.create_localizable_entity_triggers(aggregateid text, tablename text, entitytype text, localizable_fields text, required_fields text) RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+BEGIN
+    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_insert() RETURNS TRIGGER AS $body$' || E'\n' ||
+            'DECLARE' || E'\n' ||
+              E'\t' || '_jsonb_new jsonb := row_to_json(NEW.*);' || E'\n' ||
+              E'\t' || '_fields text[] := string_to_array(''' || localizable_fields || ''', '','') || string_to_array(''' || required_fields || ''', '','');' || E'\n' ||
+              E'\t' || '_payload jsonb := ''{}''::jsonb;' || E'\n' ||
+              E'\t' || '_field text;' || E'\n' ||
+            'BEGIN' || E'\n' ||
+              E'\t' || 'FOREACH _field IN ARRAY _fields' || E'\n' ||
+              E'\t' || 'LOOP' || E'\n' ||
+                E'\t\t' || 'IF coalesce(_jsonb_new ->> _field, '''') != '''' THEN' || E'\n' ||
+                  E'\t\t\t' || '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);' || E'\n' ||
+                E'\t\t' || 'END IF;' || E'\n' ||
+              E'\t' || 'END LOOP;' || E'\n' ||
+              E'\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)' || E'\n' ||
+              E'\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Created'', ''parallel'', _payload, NOW());' || E'\n' ||
+              E'\t' || 'RETURN NEW;' || E'\n' ||
+            'END;' || E'\n' ||
+            '$body$ LANGUAGE plpgsql volatile;';
+
+    EXECUTE 'DROP trigger IF EXISTS _900_localizable_' || entityType || '_insert on app_public.' || tableName || ';';
+    EXECUTE 'CREATE trigger _900_localizable_' || entityType || '_insert ' ||
+            'AFTER INSERT ON app_public.' || tableName || ' FOR EACH ROW WHEN (app_hidden.is_localization_enabled() IS TRUE) ' ||
+            'EXECUTE PROCEDURE app_hidden.localizable_' || entityType || '_insert();';
+
+    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_update() RETURNS TRIGGER AS $body$' || E'\n' ||
+            'DECLARE' || E'\n' ||
+              E'\t' || '_jsonb_old jsonb := row_to_json(OLD.*);' || E'\n' ||
+              E'\t' || '_jsonb_new jsonb := row_to_json(NEW.*);' || E'\n' ||
+              E'\t' || '_required_fields text[] := string_to_array(''' || required_fields || ''', '','');' || E'\n' ||
+              E'\t' || '_localizable_fields text[] := string_to_array(''' || localizable_fields || ''', '','');' || E'\n' ||
+              E'\t' || '_payload jsonb := ''{}''::jsonb;' || E'\n' ||
+              E'\t' || '_metadata jsonb;' || E'\n' ||
+              E'\t' || '_field text;' || E'\n' ||
+            'BEGIN' || E'\n' ||
+              E'\t' || 'FOREACH _field IN ARRAY _localizable_fields' || E'\n' ||
+              E'\t' || 'LOOP' || E'\n' ||
+                E'\t\t' || 'IF coalesce(_jsonb_old ->> _field, '''') != coalesce(_jsonb_new ->> _field, '''') THEN' || E'\n' ||
+                  E'\t\t\t' || '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);' || E'\n' ||
+                E'\t\t' || 'END IF;' || E'\n' ||
+              E'\t' || 'END LOOP;' || E'\n' ||
+              E'\t' || 'IF _jsonb_new ->> ''ingest_correlation_id'' IS NOT NULL THEN' || E'\n' ||
+                  E'\t\t\t' || '_metadata := jsonb_build_object(''messageContext'', jsonb_build_object(''ingestItemId'', _jsonb_new -> ''ingest_correlation_id''));' || E'\n' ||
+              E'\t' || 'END IF;' || E'\n' ||
+              E'\t' || 'IF _payload != ''{}''::jsonb OR _metadata IS NOT NULL THEN' ||  E'\n' ||        
+                E'\t\t' || 'FOREACH _field IN ARRAY _required_fields' || E'\n' ||
+                E'\t\t' || 'LOOP' || E'\n' ||
+                  E'\t\t\t' || '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);' || E'\n' ||
+                E'\t\t' || 'END LOOP;' || E'\n' ||
+                E'\t\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)' || E'\n' ||
+                E'\t\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Updated'', ''parallel'', _payload, _metadata, NOW());' || E'\n' ||
+              E'\t' || 'END IF;' || E'\n' ||
+              E'\t' || 'RETURN NEW;' || E'\n' ||
+            'END;' || E'\n' ||
+            '$body$ LANGUAGE plpgsql volatile;';
+
+    EXECUTE 'DROP trigger IF EXISTS _900_localizable_' || entityType || '_update on app_public.' || tableName || ';';
+    EXECUTE 'CREATE trigger _900_localizable_' || entityType || '_update ' ||
+            'AFTER UPDATE ON app_public.' || tableName || ' FOR EACH ROW WHEN (app_hidden.is_localization_enabled() IS TRUE) ' ||
+            'EXECUTE PROCEDURE app_hidden.localizable_' || entityType || '_update();';
+
+    EXECUTE 'CREATE OR REPLACE FUNCTION app_hidden.localizable_' || entityType || '_delete() RETURNS TRIGGER AS $body$' || E'\n' ||
+            'DECLARE' || E'\n' ||
+              E'\t' || '_jsonb_old jsonb := row_to_json(OLD.*);' || E'\n' ||
+              E'\t' || '_fields text[] := string_to_array(''' || required_fields || ''', '','');' || E'\n' ||
+              E'\t' || '_payload jsonb := ''{}''::jsonb;' || E'\n' ||
+            'BEGIN' || E'\n' ||
+              E'\t' || 'SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)' || E'\n' ||
+              E'\t' || 'FROM (SELECT unnest(_fields) AS field) as f INTO _payload;' || E'\n' ||
+              E'\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)' || E'\n' ||
+              E'\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), OLD.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Deleted'', ''parallel'', _payload, NOW());' || E'\n' ||
+              E'\t' || 'RETURN OLD;' || E'\n' ||
+            'END;' || E'\n' ||
+            '$body$ LANGUAGE plpgsql volatile;';
+
+    EXECUTE 'DROP trigger IF EXISTS _900_localizable_' || entityType || '_delete on app_public.' || tableName || ';';
+    EXECUTE 'CREATE trigger _900_localizable_' || entityType || '_delete ' ||
+            'AFTER DELETE ON app_public.' || tableName || ' FOR EACH ROW WHEN (app_hidden.is_localization_enabled() IS TRUE) ' ||
+            'EXECUTE PROCEDURE app_hidden.localizable_' || entityType || '_delete();';
+END;
+$_$;
+
+
+--
 -- Name: create_propagate_publish_state_trigger(text, text); Type: FUNCTION; Schema: app_hidden; Owner: -
 --
 
@@ -370,6 +460,1259 @@ BEGIN
   EXECUTE 'DROP POLICY IF EXISTS snapshots_validation_' || entityType || '_authorization_insert ON app_public.snapshot_validation_results;';
   EXECUTE 'DROP POLICY IF EXISTS snapshots_validation_' || entityType || '_authorization_update ON app_public.snapshot_validation_results;';
   EXECUTE 'DROP POLICY IF EXISTS snapshots_validation_' || entityType || '_authorization_delete ON app_public.snapshot_validation_results;';
+END;
+$$;
+
+
+--
+-- Name: is_localization_enabled(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.is_localization_enabled() RETURNS boolean
+    LANGUAGE sql IMMUTABLE
+    AS $$SELECT FALSE $$;
+
+
+--
+-- Name: localizable_collection_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_collection_image_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_image_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('collection_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_collection_image_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_image_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('image_id', ',') || string_to_array('collection_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_collection_image_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_image_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('collection_id,image_id,image_type', ',');
+	_localizable_fields text[] := string_to_array('image_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_collection_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_collection_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_collection_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_episode_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id,index,season_id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_episode_image_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_image_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('episode_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_episode_image_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_image_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('image_id', ',') || string_to_array('episode_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_episode_image_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_image_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('episode_id,image_id,image_type', ',');
+	_localizable_fields text[] := string_to_array('image_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_episode_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title,synopsis,description,season_id', ',') || string_to_array('id,index,season_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_episode_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_episode_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id,index,season_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,season_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_movie_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_movie_genre_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_genre_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_movie_genre_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_genre_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_movie_genre_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_genre_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_movie_image_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_image_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('movie_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_movie_image_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_image_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('image_id', ',') || string_to_array('movie_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_movie_image_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_image_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('movie_id,image_id,image_type', ',');
+	_localizable_fields text[] := string_to_array('image_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_movie_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_movie_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_movie_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_season_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id,index,tvshow_id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_season_image_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_image_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('season_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_season_image_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_image_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('image_id', ',') || string_to_array('season_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_season_image_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_image_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('season_id,image_id,image_type', ',');
+	_localizable_fields text[] := string_to_array('image_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_season_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('synopsis,description,tvshow_id', ',') || string_to_array('id,index,tvshow_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_season_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_season_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id,index,tvshow_id', ',');
+	_localizable_fields text[] := string_to_array('synopsis,description,tvshow_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_tvshow_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_tvshow_genre_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_genre_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_tvshow_genre_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_genre_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_tvshow_genre_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_genre_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_tvshow_image_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_image_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('tvshow_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_tvshow_image_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_image_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('image_id', ',') || string_to_array('tvshow_id,image_id,image_type', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_tvshow_image_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_image_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('tvshow_id,image_id,image_type', ',');
+	_localizable_fields text[] := string_to_array('image_id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_tvshow_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_tvshow_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_tvshow_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: inbox; Type: TABLE; Schema: app_hidden; Owner: -
+--
+
+CREATE TABLE app_hidden.inbox (
+    id uuid NOT NULL,
+    aggregate_type text NOT NULL,
+    aggregate_id text NOT NULL,
+    message_type text NOT NULL,
+    segment text,
+    concurrency text DEFAULT 'sequential'::text NOT NULL,
+    payload jsonb NOT NULL,
+    metadata jsonb,
+    locked_until timestamp with time zone DEFAULT to_timestamp((0)::double precision) NOT NULL,
+    created_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
+    processed_at timestamp with time zone,
+    abandoned_at timestamp with time zone,
+    started_attempts smallint DEFAULT 0 NOT NULL,
+    finished_attempts smallint DEFAULT 0 NOT NULL,
+    CONSTRAINT inbox_concurrency_check CHECK ((concurrency = ANY (ARRAY['sequential'::text, 'parallel'::text])))
+);
+
+
+--
+-- Name: next_inbox_messages(integer, integer); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms integer) RETURNS SETOF app_hidden.inbox
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+  loop_row app_hidden.inbox%ROWTYPE;
+  message_row app_hidden.inbox%ROWTYPE;
+  ids uuid[] := '{}';
+BEGIN
+
+  IF max_size < 1 THEN
+    RAISE EXCEPTION 'The max_size for the next messages batch must be at least one.' using errcode = 'MAXNR';
+  END IF;
+
+  -- get (only) the oldest message of every segment but only return it if it is not locked
+  FOR loop_row IN
+    SELECT * FROM app_hidden.inbox m WHERE m.id in (SELECT DISTINCT ON (segment) id
+      FROM app_hidden.inbox
+      WHERE processed_at IS NULL AND abandoned_at IS NULL
+      ORDER BY segment, created_at) order by created_at
+  LOOP
+    BEGIN
+      EXIT WHEN cardinality(ids) >= max_size;
+    
+      SELECT *
+        INTO message_row
+        FROM app_hidden.inbox
+        WHERE id = loop_row.id
+        FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+      
+      IF message_row.locked_until > NOW() THEN
+        CONTINUE;
+      END IF;
+      
+      ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+    END;
+  END LOOP;
+  
+  -- if max_size not reached: get the oldest parallelizable message independent of segment
+  IF cardinality(ids) < max_size THEN
+    FOR loop_row IN
+      SELECT * FROM app_hidden.inbox
+        WHERE concurrency = 'parallel' AND processed_at IS NULL AND abandoned_at IS NULL AND locked_until < NOW() 
+          AND id NOT IN (SELECT UNNEST(ids))
+        order by created_at
+    LOOP
+      BEGIN
+        EXIT WHEN cardinality(ids) >= max_size;
+
+        SELECT *
+          INTO message_row
+          FROM app_hidden.inbox
+          WHERE id = loop_row.id
+          FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+
+        ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+      END;
+    END LOOP;
+  END IF;
+  
+  -- set a short lock value so the the workers can each process a message
+  IF cardinality(ids) > 0 THEN
+
+    RETURN QUERY 
+      UPDATE app_hidden.inbox
+        SET locked_until = clock_timestamp() + (lock_ms || ' milliseconds')::INTERVAL, started_attempts = started_attempts + 1
+        WHERE ID = ANY(ids)
+        RETURNING *;
+
+  END IF;
+END;
+$$;
+
+
+--
+-- Name: outbox; Type: TABLE; Schema: app_hidden; Owner: -
+--
+
+CREATE TABLE app_hidden.outbox (
+    id uuid NOT NULL,
+    aggregate_type text NOT NULL,
+    aggregate_id text NOT NULL,
+    message_type text NOT NULL,
+    segment text,
+    concurrency text DEFAULT 'sequential'::text NOT NULL,
+    payload jsonb NOT NULL,
+    metadata jsonb,
+    locked_until timestamp with time zone DEFAULT to_timestamp((0)::double precision) NOT NULL,
+    created_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
+    processed_at timestamp with time zone,
+    abandoned_at timestamp with time zone,
+    started_attempts smallint DEFAULT 0 NOT NULL,
+    finished_attempts smallint DEFAULT 0 NOT NULL,
+    CONSTRAINT outbox_concurrency_check CHECK ((concurrency = ANY (ARRAY['sequential'::text, 'parallel'::text])))
+);
+
+
+--
+-- Name: next_outbox_messages(integer, integer); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.next_outbox_messages(max_size integer, lock_ms integer) RETURNS SETOF app_hidden.outbox
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+  loop_row app_hidden.outbox%ROWTYPE;
+  message_row app_hidden.outbox%ROWTYPE;
+  ids uuid[] := '{}';
+BEGIN
+
+  IF max_size < 1 THEN
+    RAISE EXCEPTION 'The max_size for the next messages batch must be at least one.' using errcode = 'MAXNR';
+  END IF;
+
+  -- get (only) the oldest message of every segment but only return it if it is not locked
+  FOR loop_row IN
+    SELECT * FROM app_hidden.outbox m WHERE m.id in (SELECT DISTINCT ON (segment) id
+      FROM app_hidden.outbox
+      WHERE processed_at IS NULL AND abandoned_at IS NULL
+      ORDER BY segment, created_at) order by created_at
+  LOOP
+    BEGIN
+      EXIT WHEN cardinality(ids) >= max_size;
+    
+      SELECT *
+        INTO message_row
+        FROM app_hidden.outbox
+        WHERE id = loop_row.id
+        FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+      
+      IF message_row.locked_until > NOW() THEN
+        CONTINUE;
+      END IF;
+      
+      ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+    END;
+  END LOOP;
+  
+  -- if max_size not reached: get the oldest parallelizable message independent of segment
+  IF cardinality(ids) < max_size THEN
+    FOR loop_row IN
+      SELECT * FROM app_hidden.outbox
+        WHERE concurrency = 'parallel' AND processed_at IS NULL AND abandoned_at IS NULL AND locked_until < NOW() 
+          AND id NOT IN (SELECT UNNEST(ids))
+        order by created_at
+    LOOP
+      BEGIN
+        EXIT WHEN cardinality(ids) >= max_size;
+
+        SELECT *
+          INTO message_row
+          FROM app_hidden.outbox
+          WHERE id = loop_row.id
+          FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+
+        ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+      END;
+    END LOOP;
+  END IF;
+  
+  -- set a short lock value so the the workers can each process a message
+  IF cardinality(ids) > 0 THEN
+
+    RETURN QUERY 
+      UPDATE app_hidden.outbox
+        SET locked_until = clock_timestamp() + (lock_ms || ' milliseconds')::INTERVAL, started_attempts = started_attempts + 1
+        WHERE ID = ANY(ids)
+        RETURNING *;
+
+  END IF;
 END;
 $$;
 
@@ -500,6 +1843,32 @@ CREATE FUNCTION app_hidden.tg_snapshots__propagate_publish_state_to_tvshows() RE
 CREATE FUNCTION app_hidden.tg_tvshows__check_active_snapshots() RETURNS trigger
     LANGUAGE plpgsql STABLE
     AS $$ BEGIN IF EXISTS (SELECT '' FROM app_public.snapshots s INNER JOIN app_public.tvshows_snapshots es ON es.snapshot_id = s.id WHERE es.tvshow_id = OLD.id AND s.snapshot_state IN ('INITIALIZATION', 'VALIDATION', 'PUBLISHED')) THEN perform ax_utils.raise_error('%s with ID %s cannot be deleted as it has active snapshots.', 'ACSNS', 'TV Show', OLD.id::text); END IF; RETURN OLD; END; $$;
+
+
+--
+-- Name: to_kebab_case(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.to_kebab_case(input_value text) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  RETURN lower(replace(input_value, '_', '-'));
+END;
+$$;
+
+
+--
+-- Name: to_pascal_case(text); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.to_pascal_case(input_value text) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  RETURN replace(initcap(replace(input_value, '_', ' ')), ' ', '');
+END;
+$$;
 
 
 --
@@ -1991,8 +3360,8 @@ DECLARE
   found_column text;
 begin
   EXECUTE '
-    SELECT column_name 
-    FROM information_schema.columns 
+    SELECT column_name
+    FROM information_schema.columns
     WHERE table_schema='''||schemaName||''' and table_name='''||tableName||''' and column_name='''||columnName||''';
   ' INTO found_column;
 
@@ -2076,7 +3445,7 @@ CREATE FUNCTION ax_define.define_audit_date_fields_on_table(tablename text, sche
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
+    DO $do$ BEGIN
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN created_date timestamptz NOT NULL DEFAULT (now() at time zone ''utc'');
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN updated_date timestamptz NOT NULL DEFAULT (now() at time zone ''utc'');
@@ -2099,7 +3468,7 @@ CREATE FUNCTION ax_define.define_audit_user_fields_on_table(tablename text, sche
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
+    DO $do$ BEGIN
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN created_user text NOT NULL DEFAULT ''' || defaultUserName || ''';
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN updated_user text NOT NULL DEFAULT ''' || defaultUserName || ''';
@@ -2173,8 +3542,8 @@ DECLARE
 BEGIN
   EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ENABLE ROW LEVEL SECURITY;';
   EXECUTE 'DROP POLICY IF EXISTS ' || tableName || '_end_user_authorization ON ' || schemaName || '.' || tableName || ';';
-  
- 
+
+
   EXECUTE 'CREATE POLICY ' || tableName || '_end_user_authorization ON ' || schemaName || '.' || tableName || ' AS RESTRICTIVE FOR ALL
     USING (' || end_user_rls_string || ');';
 
@@ -2273,18 +3642,24 @@ $$;
 CREATE FUNCTION ax_define.define_subscription_triggers(idcolumn text, tablename text, schemaname text, maintablename text, eventtype text) RETURNS void
     LANGUAGE plpgsql
     AS $$
+DECLARE
+  createEvent text = eventType || '_CREATED';
+  changeEvent text = eventType || '_CHANGED';
+  deleteEvent text = eventType || '_DELETED';
 BEGIN
+  EXECUTE 'COMMENT ON TABLE ' || schemaName || '.' || tableName || '  IS E''@subscription_events_' || mainTableName || ' ' || createEvent || ',' || changeEvent || ',' || deleteEvent || ''';';
+  
   EXECUTE 'DROP TRIGGER IF EXISTS _500_gql_' || tableName || '_inserted ON ' || schemaName || '.' || tableName;
   EXECUTE 'CREATE TRIGGER _500_gql_' || tableName || '_inserted after insert on ' || schemaName || '.' || tableName || ' ' ||
-          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || eventType || 'Created'',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
+          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || createEvent || ''',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
 
   EXECUTE 'DROP TRIGGER IF EXISTS _500_gql_' || tableName || '_updated ON ' || schemaName || '.' || tableName;
   EXECUTE 'CREATE TRIGGER _500_gql_' || tableName || '_updated after update on ' || schemaName || '.' || tableName || ' ' ||
-          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || eventType || 'Changed'',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
+          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || changeEvent || ''',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
 
   EXECUTE 'DROP TRIGGER IF EXISTS _500_gql_' || tableName || '_deleted ON ' || schemaName || '.' || tableName;
   EXECUTE 'CREATE TRIGGER _500_gql_' || tableName || '_deleted before delete on ' || schemaName || '.' || tableName || ' ' ||
-          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || eventType || 'Deleted'',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
+          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || deleteEvent || ''',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
 END;
 $$;
 
@@ -2319,15 +3694,15 @@ BEGIN
   -- Set updated_date=now() on the foreign table. This will propogate UPDATE triggers.
   --
   -- A new function is created for each table to do this.
-  --     It *may* be possible to use a stock function with trigger arguments but its not easy as NEW and OLD cannot be accessed with dynamic column names. A possible 
-  --     solution to that is described here: https://itectec.com/database/postgresql-assignment-of-a-column-with-dynamic-column-name/. But even there the advise is 
+  --     It *may* be possible to use a stock function with trigger arguments but its not easy as NEW and OLD cannot be accessed with dynamic column names. A possible
+  --     solution to that is described here: https://itectec.com/database/postgresql-assignment-of-a-column-with-dynamic-column-name/. But even there the advise is
   --     to: "Just write a new trigger function for each table. Less hassle, better performance. Byte the bullet on code duplication:"
   --
-  -- WARNING: This function uses "SECURITY DEFINER". This is required to ensure that update to the target table is allowed. This means that the function is 
+  -- WARNING: This function uses "SECURITY DEFINER". This is required to ensure that update to the target table is allowed. This means that the function is
   --          executed with role "DB_OWNER". Any propogated trigger functions will also execute with role "DB_OWNER".
   EXECUTE  '
             CREATE OR REPLACE FUNCTION ' || schemaName || '.' || functionName || '() RETURNS TRIGGER
-            LANGUAGE plpgsql 
+            LANGUAGE plpgsql
             SECURITY DEFINER
             SET search_path = pg_temp
             AS $b$
@@ -2340,31 +3715,31 @@ BEGIN
                         RETURN NULL;
                     END IF;
                 END IF;
-                
+
                 -- UPDATE (where relationship is unchanged, or changed to another entity in which case a change is triggered on both the old and new relation)
                 IF (OLD.' || idColumnName || ' IS NOT NULL AND NEW.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE (' || foreignIdColumnName || ' = OLD.' || idColumnName || ') OR (' || foreignIdColumnName || ' = NEW.' || idColumnName || ');
-                
+
                 -- INSERT (or UPDATE which sets nullable relationship)
                 ELSIF (NEW.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE ' || foreignIdColumnName || ' = NEW.' || idColumnName || ';
-                
+
                 -- DELETE (or UPDATE which removes nullable relationship)
                 ELSIF (OLD.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE ' || foreignIdColumnName || ' = OLD.' || idColumnName || ';
-                    
+
                 END IF;
                 RETURN NULL;
             END $b$;
             REVOKE EXECUTE ON FUNCTION ' || schemaName || '.' || functionName || '() FROM public;
             ';
-  
+
   -- Function runs *AFTER* INSERT, UPDATE, DELETE. Propogated queries can still raise an error and rollback the transaction
   EXECUTE  'DROP TRIGGER IF EXISTS _200_propogate_timestamps on ' || schemaName || '.' || tableName;
-  EXECUTE  'CREATE trigger _200_propogate_timestamps 
+  EXECUTE  'CREATE trigger _200_propogate_timestamps
             AFTER INSERT OR UPDATE OR DELETE ON ' || schemaName || '.' || tableName || '
             FOR EACH ROW EXECUTE PROCEDURE ' || schemaName || '.' || functionName || '();';
 END;
@@ -2428,17 +3803,17 @@ CREATE FUNCTION ax_define.define_user_id_on_table(tablename text, schemaname tex
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
+    DO $do$ BEGIN
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN user_id UUID NOT NULL DEFAULT ''00000000-0000-0000-0000-000000000000'';
       EXCEPTION
           WHEN duplicate_column THEN RAISE NOTICE ''The column user_id already exists in the ' || schemaName || '.' || tableName || ' table.'';
       END;
     END $do$;
-    
+
     ALTER TABLE ' || schemaName || '.' || tableName || ' DROP CONSTRAINT IF EXISTS user_id_not_default;
     ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT user_id_not_default CHECK (ax_utils.constraint_not_default_uuid(user_id, uuid_nil()));
-    
+
     SELECT ax_define.define_user_id_trigger(''' || tableName || ''', ''' || schemaName || ''');
   ';
 END;
@@ -2647,6 +4022,59 @@ $_$;
 
 
 --
+-- Name: pgmemento_create_table_audit(text, text, text, boolean, boolean, boolean); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.pgmemento_create_table_audit(table_name text, schema_name text DEFAULT 'app_public'::text, audit_id_column_name text DEFAULT 'pgmemento_audit_id'::text, log_old_data boolean DEFAULT true, log_new_data boolean DEFAULT false, log_state boolean DEFAULT false) RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+BEGIN
+    PERFORM pgmemento.create_table_audit($1, $2, $3, $4, $5, $6, TRUE);
+EXCEPTION
+    -- If this has been run before the table will already have the pgmemento_audit_id column and an error will be thrown.
+    WHEN duplicate_column THEN
+        RAISE INFO 'Column % already exists on %.%', $3, $2, $1 ;
+END;
+$_$;
+
+
+--
+-- Name: pgmemento_delete_old_logs(interval); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.pgmemento_delete_old_logs(age interval) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    counter INTEGER;
+    transaction_id INTEGER;
+    tablename TEXT;
+    schemaname TEXT;
+BEGIN
+    counter := 0;
+    FOR transaction_id, tablename, schemaname IN (
+        -- 1. Get all transaction metadata and associated table event metadata older than specified age.
+        SELECT DISTINCT
+            tl.id, el.table_name, el.schema_name
+        FROM
+            pgmemento.transaction_log tl
+            JOIN pgmemento.table_event_log el ON tl.id = el.transaction_id
+        WHERE
+            tl.txid_time  < NOW() - age)
+    LOOP
+        -- 2. Delete all table event metadata and row log entries associated with the transaction.
+        PERFORM  pgmemento.delete_table_event_log(transaction_id, tablename, schemaname);
+        -- 3. Delete the transaction metadata itself.
+        PERFORM pgmemento.delete_txid_log(transaction_id);
+        counter := counter + 1;
+    END LOOP;
+
+    RETURN counter;
+END;
+$$;
+
+
+--
 -- Name: set_enum_as_column_type(text, text, text, text, text, text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
 --
 
@@ -2663,10 +4091,10 @@ BEGIN
   END IF;
   IF NOT ax_define.column_exists(columnName, tableName, schemaName) THEN
     EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN ' || columnName ||' text ' || default_setting || ' ' || notNullOptions || ';';
-  END IF; 
+  END IF;
 
   -- Set the column that uses enum value as a foreign key
-  EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT ' || constraintName || ' FOREIGN KEY ('|| columnName ||') REFERENCES ' || enumSchemaName || '.' || enumName || '(value);'; 
+  EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT ' || constraintName || ' FOREIGN KEY ('|| columnName ||') REFERENCES ' || enumSchemaName || '.' || enumName || '(value);';
 END;
 $$;
 
@@ -2680,8 +4108,8 @@ CREATE FUNCTION ax_define.set_enum_domain(columnname text, tablename text, schem
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
-      BEGIN 
+    DO $do$ BEGIN
+      BEGIN
         CREATE DOMAIN ' || enumSchemaName || '.' || enumName || ' AS text;
       EXCEPTION
         WHEN duplicate_object THEN RAISE NOTICE ''Domain already existed.'';
@@ -3483,10 +4911,6 @@ end;
 $$;
 
 
-SET default_tablespace = '';
-
-SET default_with_oids = false;
-
 --
 -- Name: messaging_counter; Type: TABLE; Schema: app_private; Owner: -
 --
@@ -3532,6 +4956,13 @@ CREATE TABLE app_public.collection_relations (
 
 
 --
+-- Name: TABLE collection_relations; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.collection_relations IS '@subscription_events_collections COLLECTION_RELATION_CREATED,COLLECTION_RELATION_CHANGED,COLLECTION_RELATION_DELETED';
+
+
+--
 -- Name: collection_relations_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -3568,6 +4999,13 @@ CREATE TABLE app_public.collections (
 
 
 --
+-- Name: TABLE collections; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.collections IS '@subscription_events_collections COLLECTION_CREATED,COLLECTION_CHANGED,COLLECTION_DELETED';
+
+
+--
 -- Name: collections_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -3593,6 +5031,13 @@ CREATE TABLE app_public.collections_images (
 
 
 --
+-- Name: TABLE collections_images; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.collections_images IS '@subscription_events_collections COLLECTION_IMAGE_CREATED,COLLECTION_IMAGE_CHANGED,COLLECTION_IMAGE_DELETED';
+
+
+--
 -- Name: collections_snapshots; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -3611,6 +5056,13 @@ CREATE TABLE app_public.collections_tags (
     name text NOT NULL,
     CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE collections_tags; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.collections_tags IS '@subscription_events_collections COLLECTION_TAG_CREATED,COLLECTION_TAG_CHANGED,COLLECTION_TAG_DELETED';
 
 
 --
@@ -3670,9 +5122,24 @@ CREATE TABLE app_public.episodes (
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
+    ingest_correlation_id integer,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE episodes; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.episodes IS '@subscription_events_episodes EPISODE_CREATED,EPISODE_CHANGED,EPISODE_DELETED';
+
+
+--
+-- Name: COLUMN episodes.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.episodes.ingest_correlation_id IS '@omit';
 
 
 --
@@ -3684,6 +5151,13 @@ CREATE TABLE app_public.episodes_casts (
     name text NOT NULL,
     CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE episodes_casts; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.episodes_casts IS '@subscription_events_episodes EPISODE_CAST_CREATED,EPISODE_CAST_CHANGED,EPISODE_CAST_DELETED';
 
 
 --
@@ -3712,6 +5186,13 @@ CREATE TABLE app_public.episodes_images (
 
 
 --
+-- Name: TABLE episodes_images; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.episodes_images IS '@subscription_events_episodes EPISODE_IMAGE_CREATED,EPISODE_IMAGE_CHANGED,EPISODE_IMAGE_DELETED';
+
+
+--
 -- Name: episodes_licenses; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -3726,6 +5207,13 @@ CREATE TABLE app_public.episodes_licenses (
 
 
 --
+-- Name: TABLE episodes_licenses; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.episodes_licenses IS '@subscription_events_episodes EPISODE_LICENSE_CREATED,EPISODE_LICENSE_CHANGED,EPISODE_LICENSE_DELETED';
+
+
+--
 -- Name: episodes_licenses_countries; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -3733,6 +5221,13 @@ CREATE TABLE app_public.episodes_licenses_countries (
     episodes_license_id integer NOT NULL,
     code app_public.iso_alpha_two_country_codes_enum NOT NULL
 );
+
+
+--
+-- Name: TABLE episodes_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.episodes_licenses_countries IS '@subscription_events_episodes_licenses EPISODE_LICENSE_COUNTRY_CREATED,EPISODE_LICENSE_COUNTRY_CHANGED,EPISODE_LICENSE_COUNTRY_DELETED';
 
 
 --
@@ -3761,6 +5256,13 @@ CREATE TABLE app_public.episodes_production_countries (
 
 
 --
+-- Name: TABLE episodes_production_countries; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.episodes_production_countries IS '@subscription_events_episodes EPISODE_PRODUCTION_COUNTRY_CREATED,EPISODE_PRODUCTION_COUNTRY_CHANGED,EPISODE_PRODUCTION_COUNTRY_DELETED';
+
+
+--
 -- Name: episodes_snapshots; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -3782,6 +5284,13 @@ CREATE TABLE app_public.episodes_tags (
 
 
 --
+-- Name: TABLE episodes_tags; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.episodes_tags IS '@subscription_events_episodes EPISODE_TAG_CREATED,EPISODE_TAG_CHANGED,EPISODE_TAG_DELETED';
+
+
+--
 -- Name: episodes_trailers; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -3792,6 +5301,13 @@ CREATE TABLE app_public.episodes_trailers (
 
 
 --
+-- Name: TABLE episodes_trailers; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.episodes_trailers IS '@subscription_events_episodes EPISODE_TRAILER_CREATED,EPISODE_TRAILER_CHANGED,EPISODE_TRAILER_DELETED';
+
+
+--
 -- Name: episodes_tvshow_genres; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -3799,6 +5315,13 @@ CREATE TABLE app_public.episodes_tvshow_genres (
     episode_id integer NOT NULL,
     tvshow_genres_id integer NOT NULL
 );
+
+
+--
+-- Name: TABLE episodes_tvshow_genres; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.episodes_tvshow_genres IS '@subscription_events_episodes EPISODE_TVSHOW_GENRE_CREATED,EPISODE_TVSHOW_GENRE_CHANGED,EPISODE_TVSHOW_GENRE_DELETED';
 
 
 --
@@ -3824,6 +5347,13 @@ CREATE TABLE app_public.ingest_documents (
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 50, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE ingest_documents; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.ingest_documents IS '@subscription_events_ingest_documents INGEST_DOCUMENT_CREATED,INGEST_DOCUMENT_CHANGED,INGEST_DOCUMENT_DELETED';
 
 
 --
@@ -3968,6 +5498,13 @@ CREATE TABLE app_public.ingest_items (
 
 
 --
+-- Name: TABLE ingest_items; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.ingest_items IS '@subscription_events_ingest_documents INGEST_ITEM_CREATED,INGEST_ITEM_CHANGED,INGEST_ITEM_DELETED';
+
+
+--
 -- Name: ingest_items_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -4034,6 +5571,13 @@ CREATE TABLE app_public.movie_genres (
 
 
 --
+-- Name: TABLE movie_genres; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.movie_genres IS '@subscription_events_movie_genres MOVIE_GENRE_CREATED,MOVIE_GENRE_CHANGED,MOVIE_GENRE_DELETED';
+
+
+--
 -- Name: movie_genres_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -4085,9 +5629,24 @@ CREATE TABLE app_public.movies (
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
+    ingest_correlation_id integer,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE movies; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.movies IS '@subscription_events_movies MOVIE_CREATED,MOVIE_CHANGED,MOVIE_DELETED';
+
+
+--
+-- Name: COLUMN movies.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.movies.ingest_correlation_id IS '@omit';
 
 
 --
@@ -4099,6 +5658,13 @@ CREATE TABLE app_public.movies_casts (
     name text NOT NULL,
     CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE movies_casts; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.movies_casts IS '@subscription_events_movies MOVIE_CAST_CREATED,MOVIE_CAST_CHANGED,MOVIE_CAST_DELETED';
 
 
 --
@@ -4127,6 +5693,13 @@ CREATE TABLE app_public.movies_images (
 
 
 --
+-- Name: TABLE movies_images; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.movies_images IS '@subscription_events_movies MOVIE_IMAGE_CREATED,MOVIE_IMAGE_CHANGED,MOVIE_IMAGE_DELETED';
+
+
+--
 -- Name: movies_licenses; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4141,6 +5714,13 @@ CREATE TABLE app_public.movies_licenses (
 
 
 --
+-- Name: TABLE movies_licenses; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.movies_licenses IS '@subscription_events_movies MOVIE_LICENSE_CREATED,MOVIE_LICENSE_CHANGED,MOVIE_LICENSE_DELETED';
+
+
+--
 -- Name: movies_licenses_countries; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4148,6 +5728,13 @@ CREATE TABLE app_public.movies_licenses_countries (
     movies_license_id integer NOT NULL,
     code app_public.iso_alpha_two_country_codes_enum NOT NULL
 );
+
+
+--
+-- Name: TABLE movies_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.movies_licenses_countries IS '@subscription_events_movies_licenses MOVIE_LICENSE_COUNTRY_CREATED,MOVIE_LICENSE_COUNTRY_CHANGED,MOVIE_LICENSE_COUNTRY_DELETED';
 
 
 --
@@ -4175,6 +5762,13 @@ CREATE TABLE app_public.movies_movie_genres (
 
 
 --
+-- Name: TABLE movies_movie_genres; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.movies_movie_genres IS '@subscription_events_movies MOVIE_MOVIE_GENRE_CREATED,MOVIE_MOVIE_GENRE_CHANGED,MOVIE_MOVIE_GENRE_DELETED';
+
+
+--
 -- Name: movies_production_countries; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4183,6 +5777,13 @@ CREATE TABLE app_public.movies_production_countries (
     name text NOT NULL,
     CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE movies_production_countries; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.movies_production_countries IS '@subscription_events_movies MOVIE_PRODUCTION_COUNTRY_CREATED,MOVIE_PRODUCTION_COUNTRY_CHANGED,MOVIE_PRODUCTION_COUNTRY_DELETED';
 
 
 --
@@ -4207,6 +5808,13 @@ CREATE TABLE app_public.movies_tags (
 
 
 --
+-- Name: TABLE movies_tags; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.movies_tags IS '@subscription_events_movies MOVIE_TAG_CREATED,MOVIE_TAG_CHANGED,MOVIE_TAG_DELETED';
+
+
+--
 -- Name: movies_trailers; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4214,6 +5822,13 @@ CREATE TABLE app_public.movies_trailers (
     movie_id integer NOT NULL,
     video_id uuid NOT NULL
 );
+
+
+--
+-- Name: TABLE movies_trailers; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.movies_trailers IS '@subscription_events_movies MOVIE_TRAILER_CREATED,MOVIE_TRAILER_CHANGED,MOVIE_TRAILER_DELETED';
 
 
 --
@@ -4269,8 +5884,23 @@ CREATE TABLE app_public.seasons (
     updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
-    publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL
+    publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
+    ingest_correlation_id integer
 );
+
+
+--
+-- Name: TABLE seasons; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.seasons IS '@subscription_events_seasons SEASON_CREATED,SEASON_CHANGED,SEASON_DELETED';
+
+
+--
+-- Name: COLUMN seasons.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.seasons.ingest_correlation_id IS '@omit';
 
 
 --
@@ -4282,6 +5912,13 @@ CREATE TABLE app_public.seasons_casts (
     name text NOT NULL,
     CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE seasons_casts; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.seasons_casts IS '@subscription_events_seasons SEASON_CAST_CREATED,SEASON_CAST_CHANGED,SEASON_CAST_DELETED';
 
 
 --
@@ -4310,6 +5947,13 @@ CREATE TABLE app_public.seasons_images (
 
 
 --
+-- Name: TABLE seasons_images; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.seasons_images IS '@subscription_events_seasons SEASON_IMAGE_CREATED,SEASON_IMAGE_CHANGED,SEASON_IMAGE_DELETED';
+
+
+--
 -- Name: seasons_licenses; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4324,6 +5968,13 @@ CREATE TABLE app_public.seasons_licenses (
 
 
 --
+-- Name: TABLE seasons_licenses; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.seasons_licenses IS '@subscription_events_seasons SEASON_LICENSE_CREATED,SEASON_LICENSE_CHANGED,SEASON_LICENSE_DELETED';
+
+
+--
 -- Name: seasons_licenses_countries; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4331,6 +5982,13 @@ CREATE TABLE app_public.seasons_licenses_countries (
     seasons_license_id integer NOT NULL,
     code app_public.iso_alpha_two_country_codes_enum NOT NULL
 );
+
+
+--
+-- Name: TABLE seasons_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.seasons_licenses_countries IS '@subscription_events_seasons_licenses SEASON_LICENSE_COUNTRY_CREATED,SEASON_LICENSE_COUNTRY_CHANGED,SEASON_LICENSE_COUNTRY_DELETED';
 
 
 --
@@ -4359,6 +6017,13 @@ CREATE TABLE app_public.seasons_production_countries (
 
 
 --
+-- Name: TABLE seasons_production_countries; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.seasons_production_countries IS '@subscription_events_seasons SEASON_PRODUCTION_COUNTRY_CREATED,SEASON_PRODUCTION_COUNTRY_CHANGED,SEASON_PRODUCTION_COUNTRY_DELETED';
+
+
+--
 -- Name: seasons_snapshots; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4380,6 +6045,13 @@ CREATE TABLE app_public.seasons_tags (
 
 
 --
+-- Name: TABLE seasons_tags; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.seasons_tags IS '@subscription_events_seasons SEASON_TAG_CREATED,SEASON_TAG_CHANGED,SEASON_TAG_DELETED';
+
+
+--
 -- Name: seasons_trailers; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4390,6 +6062,13 @@ CREATE TABLE app_public.seasons_trailers (
 
 
 --
+-- Name: TABLE seasons_trailers; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.seasons_trailers IS '@subscription_events_seasons SEASON_TRAILER_CREATED,SEASON_TRAILER_CHANGED,SEASON_TRAILER_DELETED';
+
+
+--
 -- Name: seasons_tvshow_genres; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4397,6 +6076,13 @@ CREATE TABLE app_public.seasons_tvshow_genres (
     season_id integer NOT NULL,
     tvshow_genres_id integer NOT NULL
 );
+
+
+--
+-- Name: TABLE seasons_tvshow_genres; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.seasons_tvshow_genres IS '@subscription_events_seasons SEASON_TVSHOW_GENRE_CREATED,SEASON_TVSHOW_GENRE_CHANGED,SEASON_TVSHOW_GENRE_DELETED';
 
 
 --
@@ -4465,6 +6151,13 @@ CREATE TABLE app_public.snapshot_validation_results (
 
 
 --
+-- Name: TABLE snapshot_validation_results; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.snapshot_validation_results IS '@subscription_events_snapshots SNAPSHOT_VALIDATION_RESULT_CREATED,SNAPSHOT_VALIDATION_RESULT_CHANGED,SNAPSHOT_VALIDATION_RESULT_DELETED';
+
+
+--
 -- Name: snapshot_validation_results_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -4522,6 +6215,13 @@ CREATE TABLE app_public.snapshots (
 
 
 --
+-- Name: TABLE snapshots; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.snapshots IS '@subscription_events_snapshots SNAPSHOT_CREATED,SNAPSHOT_CHANGED,SNAPSHOT_DELETED';
+
+
+--
 -- Name: snapshots_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -4551,6 +6251,13 @@ CREATE TABLE app_public.tvshow_genres (
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 50, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE tvshow_genres; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.tvshow_genres IS '@subscription_events_tvshow_genres TVSHOW_GENRE_CREATED,TVSHOW_GENRE_CHANGED,TVSHOW_GENRE_DELETED';
 
 
 --
@@ -4604,9 +6311,24 @@ CREATE TABLE app_public.tvshows (
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
+    ingest_correlation_id integer,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE tvshows; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.tvshows IS '@subscription_events_tvshows TVSHOW_CREATED,TVSHOW_CHANGED,TVSHOW_DELETED';
+
+
+--
+-- Name: COLUMN tvshows.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.tvshows.ingest_correlation_id IS '@omit';
 
 
 --
@@ -4618,6 +6340,13 @@ CREATE TABLE app_public.tvshows_casts (
     name text NOT NULL,
     CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
 );
+
+
+--
+-- Name: TABLE tvshows_casts; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.tvshows_casts IS '@subscription_events_tvshows TVSHOW_CAST_CREATED,TVSHOW_CAST_CHANGED,TVSHOW_CAST_DELETED';
 
 
 --
@@ -4646,6 +6375,13 @@ CREATE TABLE app_public.tvshows_images (
 
 
 --
+-- Name: TABLE tvshows_images; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.tvshows_images IS '@subscription_events_tvshows TVSHOW_IMAGE_CREATED,TVSHOW_IMAGE_CHANGED,TVSHOW_IMAGE_DELETED';
+
+
+--
 -- Name: tvshows_licenses; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4660,6 +6396,13 @@ CREATE TABLE app_public.tvshows_licenses (
 
 
 --
+-- Name: TABLE tvshows_licenses; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.tvshows_licenses IS '@subscription_events_tvshows TVSHOW_LICENSE_CREATED,TVSHOW_LICENSE_CHANGED,TVSHOW_LICENSE_DELETED';
+
+
+--
 -- Name: tvshows_licenses_countries; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4667,6 +6410,13 @@ CREATE TABLE app_public.tvshows_licenses_countries (
     tvshows_license_id integer NOT NULL,
     code app_public.iso_alpha_two_country_codes_enum NOT NULL
 );
+
+
+--
+-- Name: TABLE tvshows_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.tvshows_licenses_countries IS '@subscription_events_tvshows_licenses TVSHOW_LICENSE_COUNTRY_CREATED,TVSHOW_LICENSE_COUNTRY_CHANGED,TVSHOW_LICENSE_COUNTRY_DELETED';
 
 
 --
@@ -4695,6 +6445,13 @@ CREATE TABLE app_public.tvshows_production_countries (
 
 
 --
+-- Name: TABLE tvshows_production_countries; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.tvshows_production_countries IS '@subscription_events_tvshows TVSHOW_PRODUCTION_COUNTRY_CREATED,TVSHOW_PRODUCTION_COUNTRY_CHANGED,TVSHOW_PRODUCTION_COUNTRY_DELETED';
+
+
+--
 -- Name: tvshows_snapshots; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4716,6 +6473,13 @@ CREATE TABLE app_public.tvshows_tags (
 
 
 --
+-- Name: TABLE tvshows_tags; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.tvshows_tags IS '@subscription_events_tvshows TVSHOW_TAG_CREATED,TVSHOW_TAG_CHANGED,TVSHOW_TAG_DELETED';
+
+
+--
 -- Name: tvshows_trailers; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4726,6 +6490,13 @@ CREATE TABLE app_public.tvshows_trailers (
 
 
 --
+-- Name: TABLE tvshows_trailers; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.tvshows_trailers IS '@subscription_events_tvshows TVSHOW_TRAILER_CREATED,TVSHOW_TRAILER_CHANGED,TVSHOW_TRAILER_DELETED';
+
+
+--
 -- Name: tvshows_tvshow_genres; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -4733,6 +6504,29 @@ CREATE TABLE app_public.tvshows_tvshow_genres (
     tvshow_id integer NOT NULL,
     tvshow_genres_id integer NOT NULL
 );
+
+
+--
+-- Name: TABLE tvshows_tvshow_genres; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.tvshows_tvshow_genres IS '@subscription_events_tvshows TVSHOW_TVSHOW_GENRE_CREATED,TVSHOW_TVSHOW_GENRE_CHANGED,TVSHOW_TVSHOW_GENRE_DELETED';
+
+
+--
+-- Name: inbox inbox_pkey; Type: CONSTRAINT; Schema: app_hidden; Owner: -
+--
+
+ALTER TABLE ONLY app_hidden.inbox
+    ADD CONSTRAINT inbox_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: outbox outbox_pkey; Type: CONSTRAINT; Schema: app_hidden; Owner: -
+--
+
+ALTER TABLE ONLY app_hidden.outbox
+    ADD CONSTRAINT outbox_pkey PRIMARY KEY (id);
 
 
 --
@@ -5437,6 +7231,76 @@ ALTER TABLE ONLY app_public.collection_relations
 
 ALTER TABLE ONLY app_public.collection_relations
     ADD CONSTRAINT unique_tvshow_per_collection UNIQUE (collection_id, tvshow_id);
+
+
+--
+-- Name: idx_inbox_abandoned_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_abandoned_at ON app_hidden.inbox USING btree (abandoned_at);
+
+
+--
+-- Name: idx_inbox_created_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_created_at ON app_hidden.inbox USING btree (created_at);
+
+
+--
+-- Name: idx_inbox_locked_until; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_locked_until ON app_hidden.inbox USING btree (locked_until);
+
+
+--
+-- Name: idx_inbox_processed_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_processed_at ON app_hidden.inbox USING btree (processed_at);
+
+
+--
+-- Name: idx_inbox_segment; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_inbox_segment ON app_hidden.inbox USING btree (segment);
+
+
+--
+-- Name: idx_outbox_abandoned_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_abandoned_at ON app_hidden.outbox USING btree (abandoned_at);
+
+
+--
+-- Name: idx_outbox_created_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_created_at ON app_hidden.outbox USING btree (created_at);
+
+
+--
+-- Name: idx_outbox_locked_until; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_locked_until ON app_hidden.outbox USING btree (locked_until);
+
+
+--
+-- Name: idx_outbox_processed_at; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_processed_at ON app_hidden.outbox USING btree (processed_at);
+
+
+--
+-- Name: idx_outbox_segment; Type: INDEX; Schema: app_hidden; Owner: -
+--
+
+CREATE INDEX idx_outbox_segment ON app_hidden.outbox USING btree (segment);
 
 
 --
@@ -7515,966 +9379,1218 @@ CREATE TRIGGER _300_publish_state_changed BEFORE UPDATE ON app_public.tvshows FO
 -- Name: collection_relations _500_gql_collection_relations_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collection_relations_deleted BEFORE DELETE ON app_public.collection_relations FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionRelationDeleted', 'graphql:collections', 'collection_id');
+CREATE TRIGGER _500_gql_collection_relations_deleted BEFORE DELETE ON app_public.collection_relations FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_RELATION_DELETED', 'graphql:collections', 'collection_id');
 
 
 --
 -- Name: collection_relations _500_gql_collection_relations_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collection_relations_inserted AFTER INSERT ON app_public.collection_relations FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionRelationCreated', 'graphql:collections', 'collection_id');
+CREATE TRIGGER _500_gql_collection_relations_inserted AFTER INSERT ON app_public.collection_relations FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_RELATION_CREATED', 'graphql:collections', 'collection_id');
 
 
 --
 -- Name: collection_relations _500_gql_collection_relations_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collection_relations_updated AFTER UPDATE ON app_public.collection_relations FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionRelationChanged', 'graphql:collections', 'collection_id');
+CREATE TRIGGER _500_gql_collection_relations_updated AFTER UPDATE ON app_public.collection_relations FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_RELATION_CHANGED', 'graphql:collections', 'collection_id');
 
 
 --
 -- Name: collections _500_gql_collections_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collections_deleted BEFORE DELETE ON app_public.collections FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionDeleted', 'graphql:collections', 'id');
+CREATE TRIGGER _500_gql_collections_deleted BEFORE DELETE ON app_public.collections FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_DELETED', 'graphql:collections', 'id');
 
 
 --
 -- Name: collections_images _500_gql_collections_images_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collections_images_deleted BEFORE DELETE ON app_public.collections_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionImageDeleted', 'graphql:collections', 'collection_id');
+CREATE TRIGGER _500_gql_collections_images_deleted BEFORE DELETE ON app_public.collections_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_IMAGE_DELETED', 'graphql:collections', 'collection_id');
 
 
 --
 -- Name: collections_images _500_gql_collections_images_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collections_images_inserted AFTER INSERT ON app_public.collections_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionImageCreated', 'graphql:collections', 'collection_id');
+CREATE TRIGGER _500_gql_collections_images_inserted AFTER INSERT ON app_public.collections_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_IMAGE_CREATED', 'graphql:collections', 'collection_id');
 
 
 --
 -- Name: collections_images _500_gql_collections_images_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collections_images_updated AFTER UPDATE ON app_public.collections_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionImageChanged', 'graphql:collections', 'collection_id');
+CREATE TRIGGER _500_gql_collections_images_updated AFTER UPDATE ON app_public.collections_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_IMAGE_CHANGED', 'graphql:collections', 'collection_id');
 
 
 --
 -- Name: collections _500_gql_collections_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collections_inserted AFTER INSERT ON app_public.collections FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionCreated', 'graphql:collections', 'id');
+CREATE TRIGGER _500_gql_collections_inserted AFTER INSERT ON app_public.collections FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_CREATED', 'graphql:collections', 'id');
 
 
 --
 -- Name: collections_tags _500_gql_collections_tags_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collections_tags_deleted BEFORE DELETE ON app_public.collections_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionTagDeleted', 'graphql:collections', 'collection_id');
+CREATE TRIGGER _500_gql_collections_tags_deleted BEFORE DELETE ON app_public.collections_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_TAG_DELETED', 'graphql:collections', 'collection_id');
 
 
 --
 -- Name: collections_tags _500_gql_collections_tags_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collections_tags_inserted AFTER INSERT ON app_public.collections_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionTagCreated', 'graphql:collections', 'collection_id');
+CREATE TRIGGER _500_gql_collections_tags_inserted AFTER INSERT ON app_public.collections_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_TAG_CREATED', 'graphql:collections', 'collection_id');
 
 
 --
 -- Name: collections_tags _500_gql_collections_tags_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collections_tags_updated AFTER UPDATE ON app_public.collections_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionTagChanged', 'graphql:collections', 'collection_id');
+CREATE TRIGGER _500_gql_collections_tags_updated AFTER UPDATE ON app_public.collections_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_TAG_CHANGED', 'graphql:collections', 'collection_id');
 
 
 --
 -- Name: collections _500_gql_collections_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_collections_updated AFTER UPDATE ON app_public.collections FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('CollectionChanged', 'graphql:collections', 'id');
+CREATE TRIGGER _500_gql_collections_updated AFTER UPDATE ON app_public.collections FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('COLLECTION_CHANGED', 'graphql:collections', 'id');
 
 
 --
 -- Name: episodes_casts _500_gql_episodes_casts_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_casts_deleted BEFORE DELETE ON app_public.episodes_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeCastDeleted', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_casts_deleted BEFORE DELETE ON app_public.episodes_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_CAST_DELETED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_casts _500_gql_episodes_casts_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_casts_inserted AFTER INSERT ON app_public.episodes_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeCastCreated', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_casts_inserted AFTER INSERT ON app_public.episodes_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_CAST_CREATED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_casts _500_gql_episodes_casts_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_casts_updated AFTER UPDATE ON app_public.episodes_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeCastChanged', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_casts_updated AFTER UPDATE ON app_public.episodes_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_CAST_CHANGED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes _500_gql_episodes_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_deleted BEFORE DELETE ON app_public.episodes FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeDeleted', 'graphql:episodes', 'id');
+CREATE TRIGGER _500_gql_episodes_deleted BEFORE DELETE ON app_public.episodes FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_DELETED', 'graphql:episodes', 'id');
 
 
 --
 -- Name: episodes_images _500_gql_episodes_images_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_images_deleted BEFORE DELETE ON app_public.episodes_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeImageDeleted', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_images_deleted BEFORE DELETE ON app_public.episodes_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_IMAGE_DELETED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_images _500_gql_episodes_images_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_images_inserted AFTER INSERT ON app_public.episodes_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeImageCreated', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_images_inserted AFTER INSERT ON app_public.episodes_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_IMAGE_CREATED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_images _500_gql_episodes_images_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_images_updated AFTER UPDATE ON app_public.episodes_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeImageChanged', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_images_updated AFTER UPDATE ON app_public.episodes_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_IMAGE_CHANGED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes _500_gql_episodes_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_inserted AFTER INSERT ON app_public.episodes FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeCreated', 'graphql:episodes', 'id');
+CREATE TRIGGER _500_gql_episodes_inserted AFTER INSERT ON app_public.episodes FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_CREATED', 'graphql:episodes', 'id');
 
 
 --
 -- Name: episodes_licenses_countries _500_gql_episodes_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_countries_deleted BEFORE DELETE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeLicensesCountryDeleted', 'graphql:episodes_licenses', 'episodes_license_id');
+CREATE TRIGGER _500_gql_episodes_licenses_countries_deleted BEFORE DELETE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_LICENSE_COUNTRY_DELETED', 'graphql:episodes_licenses', 'episodes_license_id');
 
 
 --
 -- Name: episodes_licenses_countries _500_gql_episodes_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_countries_inserted AFTER INSERT ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeLicensesCountryCreated', 'graphql:episodes_licenses', 'episodes_license_id');
+CREATE TRIGGER _500_gql_episodes_licenses_countries_inserted AFTER INSERT ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_LICENSE_COUNTRY_CREATED', 'graphql:episodes_licenses', 'episodes_license_id');
 
 
 --
 -- Name: episodes_licenses_countries _500_gql_episodes_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_countries_updated AFTER UPDATE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeLicensesCountryChanged', 'graphql:episodes_licenses', 'episodes_license_id');
+CREATE TRIGGER _500_gql_episodes_licenses_countries_updated AFTER UPDATE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_LICENSE_COUNTRY_CHANGED', 'graphql:episodes_licenses', 'episodes_license_id');
 
 
 --
 -- Name: episodes_licenses _500_gql_episodes_licenses_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_deleted BEFORE DELETE ON app_public.episodes_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeLicenseDeleted', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_licenses_deleted BEFORE DELETE ON app_public.episodes_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_LICENSE_DELETED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_licenses _500_gql_episodes_licenses_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_inserted AFTER INSERT ON app_public.episodes_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeLicenseCreated', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_licenses_inserted AFTER INSERT ON app_public.episodes_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_LICENSE_CREATED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_licenses _500_gql_episodes_licenses_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_updated AFTER UPDATE ON app_public.episodes_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeLicenseChanged', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_licenses_updated AFTER UPDATE ON app_public.episodes_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_LICENSE_CHANGED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_production_countries _500_gql_episodes_production_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_production_countries_deleted BEFORE DELETE ON app_public.episodes_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeProductionCountryDeleted', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_production_countries_deleted BEFORE DELETE ON app_public.episodes_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_PRODUCTION_COUNTRY_DELETED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_production_countries _500_gql_episodes_production_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_production_countries_inserted AFTER INSERT ON app_public.episodes_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeProductionCountryCreated', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_production_countries_inserted AFTER INSERT ON app_public.episodes_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_PRODUCTION_COUNTRY_CREATED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_production_countries _500_gql_episodes_production_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_production_countries_updated AFTER UPDATE ON app_public.episodes_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeProductionCountryChanged', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_production_countries_updated AFTER UPDATE ON app_public.episodes_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_PRODUCTION_COUNTRY_CHANGED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_tags _500_gql_episodes_tags_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_tags_deleted BEFORE DELETE ON app_public.episodes_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeTagDeleted', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_tags_deleted BEFORE DELETE ON app_public.episodes_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_TAG_DELETED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_tags _500_gql_episodes_tags_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_tags_inserted AFTER INSERT ON app_public.episodes_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeTagCreated', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_tags_inserted AFTER INSERT ON app_public.episodes_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_TAG_CREATED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_tags _500_gql_episodes_tags_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_tags_updated AFTER UPDATE ON app_public.episodes_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeTagChanged', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_tags_updated AFTER UPDATE ON app_public.episodes_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_TAG_CHANGED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_trailers _500_gql_episodes_trailers_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_trailers_deleted BEFORE DELETE ON app_public.episodes_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeTrailerDeleted', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_trailers_deleted BEFORE DELETE ON app_public.episodes_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_TRAILER_DELETED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_trailers _500_gql_episodes_trailers_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_trailers_inserted AFTER INSERT ON app_public.episodes_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeTrailerCreated', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_trailers_inserted AFTER INSERT ON app_public.episodes_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_TRAILER_CREATED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_trailers _500_gql_episodes_trailers_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_trailers_updated AFTER UPDATE ON app_public.episodes_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeTrailerChanged', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_trailers_updated AFTER UPDATE ON app_public.episodes_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_TRAILER_CHANGED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_tvshow_genres _500_gql_episodes_tvshow_genres_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_tvshow_genres_deleted BEFORE DELETE ON app_public.episodes_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeGenreDeleted', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_tvshow_genres_deleted BEFORE DELETE ON app_public.episodes_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_TVSHOW_GENRE_DELETED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_tvshow_genres _500_gql_episodes_tvshow_genres_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_tvshow_genres_inserted AFTER INSERT ON app_public.episodes_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeGenreCreated', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_tvshow_genres_inserted AFTER INSERT ON app_public.episodes_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_TVSHOW_GENRE_CREATED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes_tvshow_genres _500_gql_episodes_tvshow_genres_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_tvshow_genres_updated AFTER UPDATE ON app_public.episodes_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeGenreChanged', 'graphql:episodes', 'episode_id');
+CREATE TRIGGER _500_gql_episodes_tvshow_genres_updated AFTER UPDATE ON app_public.episodes_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_TVSHOW_GENRE_CHANGED', 'graphql:episodes', 'episode_id');
 
 
 --
 -- Name: episodes _500_gql_episodes_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_updated AFTER UPDATE ON app_public.episodes FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EpisodeChanged', 'graphql:episodes', 'id');
+CREATE TRIGGER _500_gql_episodes_updated AFTER UPDATE ON app_public.episodes FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('EPISODE_CHANGED', 'graphql:episodes', 'id');
 
 
 --
 -- Name: ingest_documents _500_gql_ingest_documents_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_ingest_documents_deleted BEFORE DELETE ON app_public.ingest_documents FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('IngestDocumentDeleted', 'graphql:ingest_documents', 'id');
+CREATE TRIGGER _500_gql_ingest_documents_deleted BEFORE DELETE ON app_public.ingest_documents FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('INGEST_DOCUMENT_DELETED', 'graphql:ingest_documents', 'id');
 
 
 --
 -- Name: ingest_documents _500_gql_ingest_documents_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_ingest_documents_inserted AFTER INSERT ON app_public.ingest_documents FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('IngestDocumentCreated', 'graphql:ingest_documents', 'id');
+CREATE TRIGGER _500_gql_ingest_documents_inserted AFTER INSERT ON app_public.ingest_documents FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('INGEST_DOCUMENT_CREATED', 'graphql:ingest_documents', 'id');
 
 
 --
 -- Name: ingest_documents _500_gql_ingest_documents_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_ingest_documents_updated AFTER UPDATE ON app_public.ingest_documents FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('IngestDocumentChanged', 'graphql:ingest_documents', 'id');
+CREATE TRIGGER _500_gql_ingest_documents_updated AFTER UPDATE ON app_public.ingest_documents FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('INGEST_DOCUMENT_CHANGED', 'graphql:ingest_documents', 'id');
 
 
 --
 -- Name: ingest_items _500_gql_ingest_items_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_ingest_items_deleted BEFORE DELETE ON app_public.ingest_items FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('IngestItemDeleted', 'graphql:ingest_documents', 'ingest_document_id');
+CREATE TRIGGER _500_gql_ingest_items_deleted BEFORE DELETE ON app_public.ingest_items FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('INGEST_ITEM_DELETED', 'graphql:ingest_documents', 'ingest_document_id');
 
 
 --
 -- Name: ingest_items _500_gql_ingest_items_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_ingest_items_inserted AFTER INSERT ON app_public.ingest_items FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('IngestItemCreated', 'graphql:ingest_documents', 'ingest_document_id');
+CREATE TRIGGER _500_gql_ingest_items_inserted AFTER INSERT ON app_public.ingest_items FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('INGEST_ITEM_CREATED', 'graphql:ingest_documents', 'ingest_document_id');
 
 
 --
 -- Name: ingest_items _500_gql_ingest_items_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_ingest_items_updated AFTER UPDATE ON app_public.ingest_items FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('IngestItemChanged', 'graphql:ingest_documents', 'ingest_document_id');
+CREATE TRIGGER _500_gql_ingest_items_updated AFTER UPDATE ON app_public.ingest_items FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('INGEST_ITEM_CHANGED', 'graphql:ingest_documents', 'ingest_document_id');
 
 
 --
 -- Name: movie_genres _500_gql_movie_genres_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movie_genres_deleted BEFORE DELETE ON app_public.movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieGenreDeleted', 'graphql:movie_genres', 'id');
+CREATE TRIGGER _500_gql_movie_genres_deleted BEFORE DELETE ON app_public.movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_GENRE_DELETED', 'graphql:movie_genres', 'id');
 
 
 --
 -- Name: movie_genres _500_gql_movie_genres_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movie_genres_inserted AFTER INSERT ON app_public.movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieGenreCreated', 'graphql:movie_genres', 'id');
+CREATE TRIGGER _500_gql_movie_genres_inserted AFTER INSERT ON app_public.movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_GENRE_CREATED', 'graphql:movie_genres', 'id');
 
 
 --
 -- Name: movie_genres _500_gql_movie_genres_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movie_genres_updated AFTER UPDATE ON app_public.movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieGenreChanged', 'graphql:movie_genres', 'id');
+CREATE TRIGGER _500_gql_movie_genres_updated AFTER UPDATE ON app_public.movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_GENRE_CHANGED', 'graphql:movie_genres', 'id');
 
 
 --
 -- Name: movies_casts _500_gql_movies_casts_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_casts_deleted BEFORE DELETE ON app_public.movies_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieCastDeleted', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_casts_deleted BEFORE DELETE ON app_public.movies_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_CAST_DELETED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_casts _500_gql_movies_casts_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_casts_inserted AFTER INSERT ON app_public.movies_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieCastCreated', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_casts_inserted AFTER INSERT ON app_public.movies_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_CAST_CREATED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_casts _500_gql_movies_casts_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_casts_updated AFTER UPDATE ON app_public.movies_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieCastChanged', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_casts_updated AFTER UPDATE ON app_public.movies_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_CAST_CHANGED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies _500_gql_movies_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_deleted BEFORE DELETE ON app_public.movies FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieDeleted', 'graphql:movies', 'id');
+CREATE TRIGGER _500_gql_movies_deleted BEFORE DELETE ON app_public.movies FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_DELETED', 'graphql:movies', 'id');
 
 
 --
 -- Name: movies_images _500_gql_movies_images_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_images_deleted BEFORE DELETE ON app_public.movies_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieImageDeleted', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_images_deleted BEFORE DELETE ON app_public.movies_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_IMAGE_DELETED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_images _500_gql_movies_images_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_images_inserted AFTER INSERT ON app_public.movies_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieImageCreated', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_images_inserted AFTER INSERT ON app_public.movies_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_IMAGE_CREATED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_images _500_gql_movies_images_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_images_updated AFTER UPDATE ON app_public.movies_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieImageChanged', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_images_updated AFTER UPDATE ON app_public.movies_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_IMAGE_CHANGED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies _500_gql_movies_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_inserted AFTER INSERT ON app_public.movies FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieCreated', 'graphql:movies', 'id');
+CREATE TRIGGER _500_gql_movies_inserted AFTER INSERT ON app_public.movies FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_CREATED', 'graphql:movies', 'id');
 
 
 --
 -- Name: movies_licenses_countries _500_gql_movies_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_countries_deleted BEFORE DELETE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieLicensesCountryDeleted', 'graphql:movies_licenses', 'movies_license_id');
+CREATE TRIGGER _500_gql_movies_licenses_countries_deleted BEFORE DELETE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_LICENSE_COUNTRY_DELETED', 'graphql:movies_licenses', 'movies_license_id');
 
 
 --
 -- Name: movies_licenses_countries _500_gql_movies_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_countries_inserted AFTER INSERT ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieLicensesCountryCreated', 'graphql:movies_licenses', 'movies_license_id');
+CREATE TRIGGER _500_gql_movies_licenses_countries_inserted AFTER INSERT ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_LICENSE_COUNTRY_CREATED', 'graphql:movies_licenses', 'movies_license_id');
 
 
 --
 -- Name: movies_licenses_countries _500_gql_movies_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_countries_updated AFTER UPDATE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieLicensesCountryChanged', 'graphql:movies_licenses', 'movies_license_id');
+CREATE TRIGGER _500_gql_movies_licenses_countries_updated AFTER UPDATE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_LICENSE_COUNTRY_CHANGED', 'graphql:movies_licenses', 'movies_license_id');
 
 
 --
 -- Name: movies_licenses _500_gql_movies_licenses_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_deleted BEFORE DELETE ON app_public.movies_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieLicenseDeleted', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_licenses_deleted BEFORE DELETE ON app_public.movies_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_LICENSE_DELETED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_licenses _500_gql_movies_licenses_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_inserted AFTER INSERT ON app_public.movies_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieLicenseCreated', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_licenses_inserted AFTER INSERT ON app_public.movies_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_LICENSE_CREATED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_licenses _500_gql_movies_licenses_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_updated AFTER UPDATE ON app_public.movies_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieLicenseChanged', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_licenses_updated AFTER UPDATE ON app_public.movies_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_LICENSE_CHANGED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_movie_genres _500_gql_movies_movie_genres_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_movie_genres_deleted BEFORE DELETE ON app_public.movies_movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieGenreDeleted', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_movie_genres_deleted BEFORE DELETE ON app_public.movies_movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_MOVIE_GENRE_DELETED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_movie_genres _500_gql_movies_movie_genres_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_movie_genres_inserted AFTER INSERT ON app_public.movies_movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieGenreCreated', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_movie_genres_inserted AFTER INSERT ON app_public.movies_movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_MOVIE_GENRE_CREATED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_movie_genres _500_gql_movies_movie_genres_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_movie_genres_updated AFTER UPDATE ON app_public.movies_movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieGenreChanged', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_movie_genres_updated AFTER UPDATE ON app_public.movies_movie_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_MOVIE_GENRE_CHANGED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_production_countries _500_gql_movies_production_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_production_countries_deleted BEFORE DELETE ON app_public.movies_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieProductionCountryDeleted', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_production_countries_deleted BEFORE DELETE ON app_public.movies_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_PRODUCTION_COUNTRY_DELETED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_production_countries _500_gql_movies_production_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_production_countries_inserted AFTER INSERT ON app_public.movies_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieProductionCountryCreated', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_production_countries_inserted AFTER INSERT ON app_public.movies_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_PRODUCTION_COUNTRY_CREATED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_production_countries _500_gql_movies_production_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_production_countries_updated AFTER UPDATE ON app_public.movies_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieProductionCountryChanged', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_production_countries_updated AFTER UPDATE ON app_public.movies_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_PRODUCTION_COUNTRY_CHANGED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_tags _500_gql_movies_tags_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_tags_deleted BEFORE DELETE ON app_public.movies_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieTagDeleted', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_tags_deleted BEFORE DELETE ON app_public.movies_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_TAG_DELETED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_tags _500_gql_movies_tags_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_tags_inserted AFTER INSERT ON app_public.movies_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieTagCreated', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_tags_inserted AFTER INSERT ON app_public.movies_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_TAG_CREATED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_tags _500_gql_movies_tags_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_tags_updated AFTER UPDATE ON app_public.movies_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieTagChanged', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_tags_updated AFTER UPDATE ON app_public.movies_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_TAG_CHANGED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_trailers _500_gql_movies_trailers_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_trailers_deleted BEFORE DELETE ON app_public.movies_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieTrailerDeleted', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_trailers_deleted BEFORE DELETE ON app_public.movies_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_TRAILER_DELETED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_trailers _500_gql_movies_trailers_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_trailers_inserted AFTER INSERT ON app_public.movies_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieTrailerCreated', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_trailers_inserted AFTER INSERT ON app_public.movies_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_TRAILER_CREATED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies_trailers _500_gql_movies_trailers_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_trailers_updated AFTER UPDATE ON app_public.movies_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieTrailerChanged', 'graphql:movies', 'movie_id');
+CREATE TRIGGER _500_gql_movies_trailers_updated AFTER UPDATE ON app_public.movies_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_TRAILER_CHANGED', 'graphql:movies', 'movie_id');
 
 
 --
 -- Name: movies _500_gql_movies_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_updated AFTER UPDATE ON app_public.movies FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MovieChanged', 'graphql:movies', 'id');
+CREATE TRIGGER _500_gql_movies_updated AFTER UPDATE ON app_public.movies FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('MOVIE_CHANGED', 'graphql:movies', 'id');
 
 
 --
 -- Name: seasons_casts _500_gql_seasons_casts_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_casts_deleted BEFORE DELETE ON app_public.seasons_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonCastDeleted', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_casts_deleted BEFORE DELETE ON app_public.seasons_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_CAST_DELETED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_casts _500_gql_seasons_casts_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_casts_inserted AFTER INSERT ON app_public.seasons_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonCastCreated', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_casts_inserted AFTER INSERT ON app_public.seasons_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_CAST_CREATED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_casts _500_gql_seasons_casts_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_casts_updated AFTER UPDATE ON app_public.seasons_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonCastChanged', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_casts_updated AFTER UPDATE ON app_public.seasons_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_CAST_CHANGED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons _500_gql_seasons_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_deleted BEFORE DELETE ON app_public.seasons FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonDeleted', 'graphql:seasons', 'id');
+CREATE TRIGGER _500_gql_seasons_deleted BEFORE DELETE ON app_public.seasons FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_DELETED', 'graphql:seasons', 'id');
 
 
 --
 -- Name: seasons_images _500_gql_seasons_images_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_images_deleted BEFORE DELETE ON app_public.seasons_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonImageDeleted', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_images_deleted BEFORE DELETE ON app_public.seasons_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_IMAGE_DELETED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_images _500_gql_seasons_images_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_images_inserted AFTER INSERT ON app_public.seasons_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonImageCreated', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_images_inserted AFTER INSERT ON app_public.seasons_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_IMAGE_CREATED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_images _500_gql_seasons_images_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_images_updated AFTER UPDATE ON app_public.seasons_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonImageChanged', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_images_updated AFTER UPDATE ON app_public.seasons_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_IMAGE_CHANGED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons _500_gql_seasons_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_inserted AFTER INSERT ON app_public.seasons FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonCreated', 'graphql:seasons', 'id');
+CREATE TRIGGER _500_gql_seasons_inserted AFTER INSERT ON app_public.seasons FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_CREATED', 'graphql:seasons', 'id');
 
 
 --
 -- Name: seasons_licenses_countries _500_gql_seasons_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_countries_deleted BEFORE DELETE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonLicensesCountryDeleted', 'graphql:seasons_licenses', 'seasons_license_id');
+CREATE TRIGGER _500_gql_seasons_licenses_countries_deleted BEFORE DELETE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_LICENSE_COUNTRY_DELETED', 'graphql:seasons_licenses', 'seasons_license_id');
 
 
 --
 -- Name: seasons_licenses_countries _500_gql_seasons_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_countries_inserted AFTER INSERT ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonLicensesCountryCreated', 'graphql:seasons_licenses', 'seasons_license_id');
+CREATE TRIGGER _500_gql_seasons_licenses_countries_inserted AFTER INSERT ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_LICENSE_COUNTRY_CREATED', 'graphql:seasons_licenses', 'seasons_license_id');
 
 
 --
 -- Name: seasons_licenses_countries _500_gql_seasons_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_countries_updated AFTER UPDATE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonLicensesCountryChanged', 'graphql:seasons_licenses', 'seasons_license_id');
+CREATE TRIGGER _500_gql_seasons_licenses_countries_updated AFTER UPDATE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_LICENSE_COUNTRY_CHANGED', 'graphql:seasons_licenses', 'seasons_license_id');
 
 
 --
 -- Name: seasons_licenses _500_gql_seasons_licenses_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_deleted BEFORE DELETE ON app_public.seasons_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonLicenseDeleted', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_licenses_deleted BEFORE DELETE ON app_public.seasons_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_LICENSE_DELETED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_licenses _500_gql_seasons_licenses_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_inserted AFTER INSERT ON app_public.seasons_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonLicenseCreated', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_licenses_inserted AFTER INSERT ON app_public.seasons_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_LICENSE_CREATED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_licenses _500_gql_seasons_licenses_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_updated AFTER UPDATE ON app_public.seasons_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonLicenseChanged', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_licenses_updated AFTER UPDATE ON app_public.seasons_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_LICENSE_CHANGED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_production_countries _500_gql_seasons_production_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_production_countries_deleted BEFORE DELETE ON app_public.seasons_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonProductionCountryDeleted', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_production_countries_deleted BEFORE DELETE ON app_public.seasons_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_PRODUCTION_COUNTRY_DELETED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_production_countries _500_gql_seasons_production_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_production_countries_inserted AFTER INSERT ON app_public.seasons_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonProductionCountryCreated', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_production_countries_inserted AFTER INSERT ON app_public.seasons_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_PRODUCTION_COUNTRY_CREATED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_production_countries _500_gql_seasons_production_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_production_countries_updated AFTER UPDATE ON app_public.seasons_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonProductionCountryChanged', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_production_countries_updated AFTER UPDATE ON app_public.seasons_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_PRODUCTION_COUNTRY_CHANGED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_tags _500_gql_seasons_tags_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_tags_deleted BEFORE DELETE ON app_public.seasons_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonTagDeleted', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_tags_deleted BEFORE DELETE ON app_public.seasons_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_TAG_DELETED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_tags _500_gql_seasons_tags_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_tags_inserted AFTER INSERT ON app_public.seasons_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonTagCreated', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_tags_inserted AFTER INSERT ON app_public.seasons_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_TAG_CREATED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_tags _500_gql_seasons_tags_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_tags_updated AFTER UPDATE ON app_public.seasons_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonTagChanged', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_tags_updated AFTER UPDATE ON app_public.seasons_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_TAG_CHANGED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_trailers _500_gql_seasons_trailers_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_trailers_deleted BEFORE DELETE ON app_public.seasons_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonTrailerDeleted', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_trailers_deleted BEFORE DELETE ON app_public.seasons_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_TRAILER_DELETED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_trailers _500_gql_seasons_trailers_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_trailers_inserted AFTER INSERT ON app_public.seasons_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonTrailerCreated', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_trailers_inserted AFTER INSERT ON app_public.seasons_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_TRAILER_CREATED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_trailers _500_gql_seasons_trailers_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_trailers_updated AFTER UPDATE ON app_public.seasons_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonTrailerChanged', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_trailers_updated AFTER UPDATE ON app_public.seasons_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_TRAILER_CHANGED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_tvshow_genres _500_gql_seasons_tvshow_genres_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_tvshow_genres_deleted BEFORE DELETE ON app_public.seasons_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonGenreDeleted', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_tvshow_genres_deleted BEFORE DELETE ON app_public.seasons_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_TVSHOW_GENRE_DELETED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_tvshow_genres _500_gql_seasons_tvshow_genres_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_tvshow_genres_inserted AFTER INSERT ON app_public.seasons_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonGenreCreated', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_tvshow_genres_inserted AFTER INSERT ON app_public.seasons_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_TVSHOW_GENRE_CREATED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons_tvshow_genres _500_gql_seasons_tvshow_genres_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_tvshow_genres_updated AFTER UPDATE ON app_public.seasons_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonGenreChanged', 'graphql:seasons', 'season_id');
+CREATE TRIGGER _500_gql_seasons_tvshow_genres_updated AFTER UPDATE ON app_public.seasons_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_TVSHOW_GENRE_CHANGED', 'graphql:seasons', 'season_id');
 
 
 --
 -- Name: seasons _500_gql_seasons_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_updated AFTER UPDATE ON app_public.seasons FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SeasonChanged', 'graphql:seasons', 'id');
+CREATE TRIGGER _500_gql_seasons_updated AFTER UPDATE ON app_public.seasons FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SEASON_CHANGED', 'graphql:seasons', 'id');
 
 
 --
 -- Name: snapshot_validation_results _500_gql_snapshot_validation_results_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_snapshot_validation_results_deleted BEFORE DELETE ON app_public.snapshot_validation_results FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SnapshotValidationResultDeleted', 'graphql:snapshots', 'snapshot_id');
+CREATE TRIGGER _500_gql_snapshot_validation_results_deleted BEFORE DELETE ON app_public.snapshot_validation_results FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SNAPSHOT_VALIDATION_RESULT_DELETED', 'graphql:snapshots', 'snapshot_id');
 
 
 --
 -- Name: snapshot_validation_results _500_gql_snapshot_validation_results_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_snapshot_validation_results_inserted AFTER INSERT ON app_public.snapshot_validation_results FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SnapshotValidationResultCreated', 'graphql:snapshots', 'snapshot_id');
+CREATE TRIGGER _500_gql_snapshot_validation_results_inserted AFTER INSERT ON app_public.snapshot_validation_results FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SNAPSHOT_VALIDATION_RESULT_CREATED', 'graphql:snapshots', 'snapshot_id');
 
 
 --
 -- Name: snapshot_validation_results _500_gql_snapshot_validation_results_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_snapshot_validation_results_updated AFTER UPDATE ON app_public.snapshot_validation_results FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SnapshotValidationResultChanged', 'graphql:snapshots', 'snapshot_id');
+CREATE TRIGGER _500_gql_snapshot_validation_results_updated AFTER UPDATE ON app_public.snapshot_validation_results FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SNAPSHOT_VALIDATION_RESULT_CHANGED', 'graphql:snapshots', 'snapshot_id');
 
 
 --
 -- Name: snapshots _500_gql_snapshots_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_snapshots_deleted BEFORE DELETE ON app_public.snapshots FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SnapshotDeleted', 'graphql:snapshots', 'id');
+CREATE TRIGGER _500_gql_snapshots_deleted BEFORE DELETE ON app_public.snapshots FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SNAPSHOT_DELETED', 'graphql:snapshots', 'id');
 
 
 --
 -- Name: snapshots _500_gql_snapshots_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_snapshots_inserted AFTER INSERT ON app_public.snapshots FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SnapshotCreated', 'graphql:snapshots', 'id');
+CREATE TRIGGER _500_gql_snapshots_inserted AFTER INSERT ON app_public.snapshots FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SNAPSHOT_CREATED', 'graphql:snapshots', 'id');
 
 
 --
 -- Name: snapshots _500_gql_snapshots_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_snapshots_updated AFTER UPDATE ON app_public.snapshots FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SnapshotChanged', 'graphql:snapshots', 'id');
+CREATE TRIGGER _500_gql_snapshots_updated AFTER UPDATE ON app_public.snapshots FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('SNAPSHOT_CHANGED', 'graphql:snapshots', 'id');
 
 
 --
 -- Name: tvshow_genres _500_gql_tvshow_genres_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshow_genres_deleted BEFORE DELETE ON app_public.tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowGenreDeleted', 'graphql:tvshow_genres', 'id');
+CREATE TRIGGER _500_gql_tvshow_genres_deleted BEFORE DELETE ON app_public.tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_GENRE_DELETED', 'graphql:tvshow_genres', 'id');
 
 
 --
 -- Name: tvshow_genres _500_gql_tvshow_genres_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshow_genres_inserted AFTER INSERT ON app_public.tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowGenreCreated', 'graphql:tvshow_genres', 'id');
+CREATE TRIGGER _500_gql_tvshow_genres_inserted AFTER INSERT ON app_public.tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_GENRE_CREATED', 'graphql:tvshow_genres', 'id');
 
 
 --
 -- Name: tvshow_genres _500_gql_tvshow_genres_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshow_genres_updated AFTER UPDATE ON app_public.tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowGenreChanged', 'graphql:tvshow_genres', 'id');
+CREATE TRIGGER _500_gql_tvshow_genres_updated AFTER UPDATE ON app_public.tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_GENRE_CHANGED', 'graphql:tvshow_genres', 'id');
 
 
 --
 -- Name: tvshows_casts _500_gql_tvshows_casts_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_casts_deleted BEFORE DELETE ON app_public.tvshows_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowCastDeleted', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_casts_deleted BEFORE DELETE ON app_public.tvshows_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_CAST_DELETED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_casts _500_gql_tvshows_casts_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_casts_inserted AFTER INSERT ON app_public.tvshows_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowCastCreated', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_casts_inserted AFTER INSERT ON app_public.tvshows_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_CAST_CREATED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_casts _500_gql_tvshows_casts_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_casts_updated AFTER UPDATE ON app_public.tvshows_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowCastChanged', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_casts_updated AFTER UPDATE ON app_public.tvshows_casts FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_CAST_CHANGED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows _500_gql_tvshows_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_deleted BEFORE DELETE ON app_public.tvshows FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowDeleted', 'graphql:tvshows', 'id');
+CREATE TRIGGER _500_gql_tvshows_deleted BEFORE DELETE ON app_public.tvshows FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_DELETED', 'graphql:tvshows', 'id');
 
 
 --
 -- Name: tvshows_images _500_gql_tvshows_images_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_images_deleted BEFORE DELETE ON app_public.tvshows_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowImageDeleted', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_images_deleted BEFORE DELETE ON app_public.tvshows_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_IMAGE_DELETED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_images _500_gql_tvshows_images_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_images_inserted AFTER INSERT ON app_public.tvshows_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowImageCreated', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_images_inserted AFTER INSERT ON app_public.tvshows_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_IMAGE_CREATED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_images _500_gql_tvshows_images_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_images_updated AFTER UPDATE ON app_public.tvshows_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowImageChanged', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_images_updated AFTER UPDATE ON app_public.tvshows_images FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_IMAGE_CHANGED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows _500_gql_tvshows_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_inserted AFTER INSERT ON app_public.tvshows FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowCreated', 'graphql:tvshows', 'id');
+CREATE TRIGGER _500_gql_tvshows_inserted AFTER INSERT ON app_public.tvshows FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_CREATED', 'graphql:tvshows', 'id');
 
 
 --
 -- Name: tvshows_licenses_countries _500_gql_tvshows_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_countries_deleted BEFORE DELETE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowLicensesCountryDeleted', 'graphql:tvshows_licenses', 'tvshows_license_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_countries_deleted BEFORE DELETE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_COUNTRY_DELETED', 'graphql:tvshows_licenses', 'tvshows_license_id');
 
 
 --
 -- Name: tvshows_licenses_countries _500_gql_tvshows_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_countries_inserted AFTER INSERT ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowLicensesCountryCreated', 'graphql:tvshows_licenses', 'tvshows_license_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_countries_inserted AFTER INSERT ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_COUNTRY_CREATED', 'graphql:tvshows_licenses', 'tvshows_license_id');
 
 
 --
 -- Name: tvshows_licenses_countries _500_gql_tvshows_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_countries_updated AFTER UPDATE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowLicensesCountryChanged', 'graphql:tvshows_licenses', 'tvshows_license_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_countries_updated AFTER UPDATE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_COUNTRY_CHANGED', 'graphql:tvshows_licenses', 'tvshows_license_id');
 
 
 --
 -- Name: tvshows_licenses _500_gql_tvshows_licenses_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_deleted BEFORE DELETE ON app_public.tvshows_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowLicenseDeleted', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_deleted BEFORE DELETE ON app_public.tvshows_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_DELETED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_licenses _500_gql_tvshows_licenses_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_inserted AFTER INSERT ON app_public.tvshows_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowLicenseCreated', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_inserted AFTER INSERT ON app_public.tvshows_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_CREATED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_licenses _500_gql_tvshows_licenses_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_updated AFTER UPDATE ON app_public.tvshows_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowLicenseChanged', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_updated AFTER UPDATE ON app_public.tvshows_licenses FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_CHANGED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_production_countries _500_gql_tvshows_production_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_production_countries_deleted BEFORE DELETE ON app_public.tvshows_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowProductionCountryDeleted', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_production_countries_deleted BEFORE DELETE ON app_public.tvshows_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_PRODUCTION_COUNTRY_DELETED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_production_countries _500_gql_tvshows_production_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_production_countries_inserted AFTER INSERT ON app_public.tvshows_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowProductionCountryCreated', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_production_countries_inserted AFTER INSERT ON app_public.tvshows_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_PRODUCTION_COUNTRY_CREATED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_production_countries _500_gql_tvshows_production_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_production_countries_updated AFTER UPDATE ON app_public.tvshows_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowProductionCountryChanged', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_production_countries_updated AFTER UPDATE ON app_public.tvshows_production_countries FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_PRODUCTION_COUNTRY_CHANGED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_tags _500_gql_tvshows_tags_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_tags_deleted BEFORE DELETE ON app_public.tvshows_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowTagDeleted', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_tags_deleted BEFORE DELETE ON app_public.tvshows_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_TAG_DELETED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_tags _500_gql_tvshows_tags_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_tags_inserted AFTER INSERT ON app_public.tvshows_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowTagCreated', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_tags_inserted AFTER INSERT ON app_public.tvshows_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_TAG_CREATED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_tags _500_gql_tvshows_tags_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_tags_updated AFTER UPDATE ON app_public.tvshows_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowTagChanged', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_tags_updated AFTER UPDATE ON app_public.tvshows_tags FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_TAG_CHANGED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_trailers _500_gql_tvshows_trailers_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_trailers_deleted BEFORE DELETE ON app_public.tvshows_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowTrailerDeleted', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_trailers_deleted BEFORE DELETE ON app_public.tvshows_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_TRAILER_DELETED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_trailers _500_gql_tvshows_trailers_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_trailers_inserted AFTER INSERT ON app_public.tvshows_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowTrailerCreated', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_trailers_inserted AFTER INSERT ON app_public.tvshows_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_TRAILER_CREATED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_trailers _500_gql_tvshows_trailers_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_trailers_updated AFTER UPDATE ON app_public.tvshows_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowTrailerChanged', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_trailers_updated AFTER UPDATE ON app_public.tvshows_trailers FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_TRAILER_CHANGED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_tvshow_genres _500_gql_tvshows_tvshow_genres_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_tvshow_genres_deleted BEFORE DELETE ON app_public.tvshows_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowGenreDeleted', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_tvshow_genres_deleted BEFORE DELETE ON app_public.tvshows_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_TVSHOW_GENRE_DELETED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_tvshow_genres _500_gql_tvshows_tvshow_genres_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_tvshow_genres_inserted AFTER INSERT ON app_public.tvshows_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowGenreCreated', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_tvshow_genres_inserted AFTER INSERT ON app_public.tvshows_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_TVSHOW_GENRE_CREATED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows_tvshow_genres _500_gql_tvshows_tvshow_genres_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_tvshow_genres_updated AFTER UPDATE ON app_public.tvshows_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowGenreChanged', 'graphql:tvshows', 'tvshow_id');
+CREATE TRIGGER _500_gql_tvshows_tvshow_genres_updated AFTER UPDATE ON app_public.tvshows_tvshow_genres FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_TVSHOW_GENRE_CHANGED', 'graphql:tvshows', 'tvshow_id');
 
 
 --
 -- Name: tvshows _500_gql_tvshows_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_updated AFTER UPDATE ON app_public.tvshows FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TvshowChanged', 'graphql:tvshows', 'id');
+CREATE TRIGGER _500_gql_tvshows_updated AFTER UPDATE ON app_public.tvshows FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__graphql_subscription('TVSHOW_CHANGED', 'graphql:tvshows', 'id');
+
+
+--
+-- Name: collections _900_localizable_collection_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_delete AFTER DELETE ON app_public.collections FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_delete();
+
+
+--
+-- Name: collections_images _900_localizable_collection_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_image_delete AFTER DELETE ON app_public.collections_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_image_delete();
+
+
+--
+-- Name: collections_images _900_localizable_collection_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_image_insert AFTER INSERT ON app_public.collections_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_image_insert();
+
+
+--
+-- Name: collections_images _900_localizable_collection_image_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_image_update AFTER UPDATE ON app_public.collections_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_image_update();
+
+
+--
+-- Name: collections _900_localizable_collection_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_insert AFTER INSERT ON app_public.collections FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_insert();
+
+
+--
+-- Name: collections _900_localizable_collection_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_collection_update AFTER UPDATE ON app_public.collections FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_collection_update();
+
+
+--
+-- Name: episodes _900_localizable_episode_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_delete AFTER DELETE ON app_public.episodes FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_delete();
+
+
+--
+-- Name: episodes_images _900_localizable_episode_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_image_delete AFTER DELETE ON app_public.episodes_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_image_delete();
+
+
+--
+-- Name: episodes_images _900_localizable_episode_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_image_insert AFTER INSERT ON app_public.episodes_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_image_insert();
+
+
+--
+-- Name: episodes_images _900_localizable_episode_image_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_image_update AFTER UPDATE ON app_public.episodes_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_image_update();
+
+
+--
+-- Name: episodes _900_localizable_episode_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_insert AFTER INSERT ON app_public.episodes FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_insert();
+
+
+--
+-- Name: episodes _900_localizable_episode_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_episode_update AFTER UPDATE ON app_public.episodes FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_episode_update();
+
+
+--
+-- Name: movies _900_localizable_movie_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_delete AFTER DELETE ON app_public.movies FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_delete();
+
+
+--
+-- Name: movie_genres _900_localizable_movie_genre_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_genre_delete AFTER DELETE ON app_public.movie_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_genre_delete();
+
+
+--
+-- Name: movie_genres _900_localizable_movie_genre_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_genre_insert AFTER INSERT ON app_public.movie_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_genre_insert();
+
+
+--
+-- Name: movie_genres _900_localizable_movie_genre_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_genre_update AFTER UPDATE ON app_public.movie_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_genre_update();
+
+
+--
+-- Name: movies_images _900_localizable_movie_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_image_delete AFTER DELETE ON app_public.movies_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_image_delete();
+
+
+--
+-- Name: movies_images _900_localizable_movie_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_image_insert AFTER INSERT ON app_public.movies_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_image_insert();
+
+
+--
+-- Name: movies_images _900_localizable_movie_image_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_image_update AFTER UPDATE ON app_public.movies_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_image_update();
+
+
+--
+-- Name: movies _900_localizable_movie_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_insert AFTER INSERT ON app_public.movies FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_insert();
+
+
+--
+-- Name: movies _900_localizable_movie_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_movie_update AFTER UPDATE ON app_public.movies FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_movie_update();
+
+
+--
+-- Name: seasons _900_localizable_season_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_delete AFTER DELETE ON app_public.seasons FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_delete();
+
+
+--
+-- Name: seasons_images _900_localizable_season_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_image_delete AFTER DELETE ON app_public.seasons_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_image_delete();
+
+
+--
+-- Name: seasons_images _900_localizable_season_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_image_insert AFTER INSERT ON app_public.seasons_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_image_insert();
+
+
+--
+-- Name: seasons_images _900_localizable_season_image_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_image_update AFTER UPDATE ON app_public.seasons_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_image_update();
+
+
+--
+-- Name: seasons _900_localizable_season_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_insert AFTER INSERT ON app_public.seasons FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_insert();
+
+
+--
+-- Name: seasons _900_localizable_season_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_season_update AFTER UPDATE ON app_public.seasons FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_season_update();
+
+
+--
+-- Name: tvshows _900_localizable_tvshow_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_delete AFTER DELETE ON app_public.tvshows FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_delete();
+
+
+--
+-- Name: tvshow_genres _900_localizable_tvshow_genre_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_genre_delete AFTER DELETE ON app_public.tvshow_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_genre_delete();
+
+
+--
+-- Name: tvshow_genres _900_localizable_tvshow_genre_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_genre_insert AFTER INSERT ON app_public.tvshow_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_genre_insert();
+
+
+--
+-- Name: tvshow_genres _900_localizable_tvshow_genre_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_genre_update AFTER UPDATE ON app_public.tvshow_genres FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_genre_update();
+
+
+--
+-- Name: tvshows_images _900_localizable_tvshow_image_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_image_delete AFTER DELETE ON app_public.tvshows_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_image_delete();
+
+
+--
+-- Name: tvshows_images _900_localizable_tvshow_image_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_image_insert AFTER INSERT ON app_public.tvshows_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_image_insert();
+
+
+--
+-- Name: tvshows_images _900_localizable_tvshow_image_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_image_update AFTER UPDATE ON app_public.tvshows_images FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_image_update();
+
+
+--
+-- Name: tvshows _900_localizable_tvshow_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_insert AFTER INSERT ON app_public.tvshows FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_insert();
+
+
+--
+-- Name: tvshows _900_localizable_tvshow_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_tvshow_update AFTER UPDATE ON app_public.tvshows FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE PROCEDURE app_hidden.localizable_tvshow_update();
 
 
 --
@@ -10619,6 +12735,14 @@ GRANT ALL ON FUNCTION app_hidden.create_active_snapshots_before_delete_trigger(t
 
 
 --
+-- Name: FUNCTION create_localizable_entity_triggers(aggregateid text, tablename text, entitytype text, localizable_fields text, required_fields text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.create_localizable_entity_triggers(aggregateid text, tablename text, entitytype text, localizable_fields text, required_fields text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.create_localizable_entity_triggers(aggregateid text, tablename text, entitytype text, localizable_fields text, required_fields text) TO media_service_gql_role;
+
+
+--
 -- Name: FUNCTION create_propagate_publish_state_trigger(tablename text, entitytype text); Type: ACL; Schema: app_hidden; Owner: -
 --
 
@@ -10640,6 +12764,402 @@ GRANT ALL ON FUNCTION app_hidden.define_snapshot_authentication(entitytype text,
 
 REVOKE ALL ON FUNCTION app_hidden.drop_snapshot_authentication(entitytype text) FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.drop_snapshot_authentication(entitytype text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION is_localization_enabled(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.is_localization_enabled() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.is_localization_enabled() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_image_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_image_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_image_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_image_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_image_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_image_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_image_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_image_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_image_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_collection_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_collection_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_collection_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_image_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_image_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_image_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_image_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_image_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_image_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_image_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_image_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_image_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_episode_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_episode_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_episode_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_genre_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_genre_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_genre_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_genre_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_genre_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_genre_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_genre_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_genre_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_genre_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_image_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_image_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_image_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_image_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_image_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_image_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_image_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_image_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_image_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_movie_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_movie_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_movie_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_image_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_image_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_image_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_image_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_image_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_image_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_image_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_image_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_image_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_season_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_season_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_season_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_genre_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_genre_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_genre_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_genre_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_genre_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_genre_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_genre_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_genre_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_genre_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_image_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_image_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_image_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_image_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_image_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_image_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_image_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_image_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_image_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_tvshow_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_tvshow_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_tvshow_update() TO media_service_gql_role;
+
+
+--
+-- Name: TABLE inbox; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.locked_until; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(locked_until) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.processed_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(processed_at) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.abandoned_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(abandoned_at) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.started_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(started_attempts) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN inbox.finished_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(finished_attempts) ON TABLE app_hidden.inbox TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION next_inbox_messages(max_size integer, lock_ms integer); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms integer) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms integer) TO media_service_gql_role;
+
+
+--
+-- Name: TABLE outbox; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN outbox.locked_until; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(locked_until) ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN outbox.processed_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(processed_at) ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN outbox.abandoned_at; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(abandoned_at) ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN outbox.started_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(started_attempts) ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN outbox.finished_attempts; Type: ACL; Schema: app_hidden; Owner: -
+--
+
+GRANT UPDATE(finished_attempts) ON TABLE app_hidden.outbox TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION next_outbox_messages(max_size integer, lock_ms integer); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.next_outbox_messages(max_size integer, lock_ms integer) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.next_outbox_messages(max_size integer, lock_ms integer) TO media_service_gql_role;
 
 
 --
@@ -10736,6 +13256,22 @@ GRANT ALL ON FUNCTION app_hidden.tg_snapshots__propagate_publish_state_to_tvshow
 
 REVOKE ALL ON FUNCTION app_hidden.tg_tvshows__check_active_snapshots() FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.tg_tvshows__check_active_snapshots() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION to_kebab_case(input_value text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.to_kebab_case(input_value text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.to_kebab_case(input_value text) TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION to_pascal_case(input_value text); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.to_pascal_case(input_value text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.to_pascal_case(input_value text) TO media_service_gql_role;
 
 
 --
@@ -11370,6 +13906,20 @@ REVOKE ALL ON FUNCTION ax_define.live_suggestions_endpoint(propertyname text, ty
 
 
 --
+-- Name: FUNCTION pgmemento_create_table_audit(table_name text, schema_name text, audit_id_column_name text, log_old_data boolean, log_new_data boolean, log_state boolean); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.pgmemento_create_table_audit(table_name text, schema_name text, audit_id_column_name text, log_old_data boolean, log_new_data boolean, log_state boolean) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION pgmemento_delete_old_logs(age interval); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.pgmemento_delete_old_logs(age interval) FROM PUBLIC;
+
+
+--
 -- Name: FUNCTION set_enum_as_column_type(columnname text, tablename text, schemaname text, enumname text, enumschemaname text, defaultenumvalue text, notnulloptions text, constraintname text); Type: ACL; Schema: ax_define; Owner: -
 --
 
@@ -11912,6 +14462,13 @@ GRANT INSERT(main_video_id),UPDATE(main_video_id) ON TABLE app_public.episodes T
 
 
 --
+-- Name: COLUMN episodes.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.episodes TO media_service_gql_role;
+
+
+--
 -- Name: TABLE episodes_casts; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -12409,6 +14966,13 @@ GRANT INSERT(main_video_id),UPDATE(main_video_id) ON TABLE app_public.movies TO 
 
 
 --
+-- Name: COLUMN movies.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.movies TO media_service_gql_role;
+
+
+--
 -- Name: TABLE movies_casts; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -12602,6 +15166,13 @@ GRANT INSERT(studio),UPDATE(studio) ON TABLE app_public.seasons TO media_service
 --
 
 GRANT INSERT(released),UPDATE(released) ON TABLE app_public.seasons TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN seasons.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.seasons TO media_service_gql_role;
 
 
 --
@@ -13001,6 +15572,13 @@ GRANT INSERT(studio),UPDATE(studio) ON TABLE app_public.tvshows TO media_service
 --
 
 GRANT INSERT(released),UPDATE(released) ON TABLE app_public.tvshows TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshows.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.tvshows TO media_service_gql_role;
 
 
 --

@@ -46,7 +46,7 @@ query Collections(
 subscription CollectionsMutated {
   collectionMutated {
     id
-    event
+    eventKey
     collection {
       ...CollectionExplorerProperties
     }

@@ -11,30 +11,53 @@
       "items": {
         "description": "An individual movie genre object.",
         "type": "object",
-        "title": "genre",
+        "title": "movie_genre",
+        "required": [
+          "content_id",
+          "order_no",
+          "localizations"
+        ],
+        "additionalProperties": false,
         "properties": {
           "content_id": {
             "description": "Content ID of a movie genre. Must match the pattern `^(movie_genre)-([a-zA-Z0-9_-]+)$`.",
             "type": "string",
             "pattern": "^(movie_genre)-([a-zA-Z0-9_-]+)$"
           },
-          "title": {
-            "type": "string",
-            "minLength": 1,
-            "pattern": "^$|.*\\S.*",
-            "description": "A string with at least one character and not only whitespace characters."
-          },
           "order_no": {
             "description": "Global ordering number for the genre.",
             "type": "integer"
+          },
+          "localizations": {
+            "description": "Localizations for every defined locale.",
+            "type": "array",
+            "additionalItems": false,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "title": "movie_genre_localization",
+              "required": [
+                "is_default_locale",
+                "language_tag",
+                "title"
+              ],
+              "properties": {
+                "is_default_locale": {
+                  "type": "boolean",
+                  "description": "Boolean flag to indicate if locale is default or not."
+                },
+                "language_tag": {
+                  "type": "string",
+                  "description": "The locale for which the values are localized."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "The localized title of this movie genre."
+                }
+              }
+            }
           }
-        },
-        "required": [
-          "content_id",
-          "title",
-          "order_no"
-        ],
-        "additionalProperties": false
+        }
       }
     }
   },
