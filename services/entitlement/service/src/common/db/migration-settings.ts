@@ -23,6 +23,7 @@ export const getMigrationSettings = async (
       ':DB_NAME': config.dbName,
       ':DB_OWNER': config.dbOwner,
       ':DATABASE_LOGIN': config.dbLogin,
+      ':DATABASE_GQL_ROLE': config.dbGqlRole,
       ':DEFAULT_USERNAME': DEFAULT_DB_USERNAME,
     },
     afterReset: [
