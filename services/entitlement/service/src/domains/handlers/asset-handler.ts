@@ -12,7 +12,6 @@ import {
 import { catalogQueries } from './asset-queries';
 
 const config = getFullConfig();
-const GeoBlockingFeatureSwitch = true;
 
 export const logValidationErrors = (
   errors: ValidationError[],
@@ -66,6 +65,17 @@ export const AssetHandler = async (
     const catalogResponse: AssetModel = await getAssetFromCatalogService(
       assetRequest,
     );
+
+    if (!catalogResponse) {
+      return {
+        isValid: false,
+        error: {
+          status: 404,
+          message: `Asset '${assetRequest.asset_id}' not found.`,
+        },
+        data: new AssetModel(),
+      };
+    }
 
     const validationErrors = await validate(catalogResponse, {
       stopAtFirstError: true,
