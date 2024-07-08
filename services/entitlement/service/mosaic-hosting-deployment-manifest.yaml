@@ -1,0 +1,98 @@
+# This YAML contains the Deployment Manifest for the Entitlement Service.
+# It is required when deploying the service via the Mosaic Hosting Service.
+# Refer to the README.md file for instructions on how to use this.
+
+# NOTE:
+# The following environment variables need to be replaced with your own values.
+#
+# GEOLITE2_LICENSE_KEY
+# DRM_LICENSE_COMMUNICATION_KEY
+# DRM_LICENSE_COMMUNICATION_KEY_ID
+
+version: '1.0'
+serviceId: 'dc-entitlement-service'
+
+regularVariables:
+  # Service General Variables
+  SERVICE_ID: 'entitlement-service'
+  NODE_ENV: 'production'
+  LOG_LEVEL: 'DEBUG'
+  DEMO_MODE: true
+  PORT: '${__ax_hosted__.port.dc}'
+
+  # Mosaic Environment Info
+  TENANT_ID: '${__ax_hosted__.env.tenant_id}'
+  ENVIRONMENT_ID: '${__ax_hosted__.env.environment_id}'
+
+  # Database Server Variables
+  PGSSLMODE: '${__ax_hosted__.pg.sslmode}'
+  POSTGRESQL_HOST: '${__ax_hosted__.pg.host}'
+  POSTGRESQL_PORT: '${__ax_hosted__.pg.port}'
+  POSTGRESQL_USER_SUFFIX: '${__ax_hosted__.pg.user_suffix}'
+
+  # Database Variables
+  DATABASE_NAME: '${__ax_hosted__.pg.database_name}'
+  DATABASE_OWNER: '${__ax_hosted__.pg.db_owner_role}'
+  DATABASE_OWNER_PASSWORD: '${__ax_hosted__.pg.db_owner_password}'
+  DATABASE_LOGIN: '${__ax_hosted__.pg.db_login_role}'
+  DATABASE_LOGIN_PASSWORD: '${__ax_hosted__.pg.db_login_password}'
+  DATABASE_GQL_ROLE: '${__ax_hosted__.pg.db_gql_role}'
+  PG_POOL_MAX_CONNECTIONS: 25
+
+  # Managed Service URLs
+  ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
+  BILLING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-billing-service.end_user_base_url}'
+  USER_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-user-service.auth_base_url}'
+
+  # Custom Service URLs
+  ## TBD - data migrated to new catalog service
+  CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-mosaic-catalog-service.dc}'
+  # CATALOG_SERVICE_BASE_URL: 'https://${__ax_hosted__.dns.dc-nfn-mosaic-catalog-acc.api}'
+
+  # GeoIP2 Variables
+  CLIENT_IP_HEADER_NAME: 'X-Forwarded-For'
+  GEOIP2_DATABASE_FILE: 'GeoIP2-City.mmdb'
+  GEOIP2_UPDATE_SCHEDULE: '0 0 * * *'
+
+  GEO_BLOCKING_FEATURE_SWITCH: true
+
+secureVariables:
+  # Use this section to store any custom environment variables which contain sensitive data.
+
+  # Service Account Variables
+  SERVICE_ACCOUNT_CLIENT_ID: '${__ax_hosted__.sa.client_id.primary}'
+  SERVICE_ACCOUNT_CLIENT_SECRET: '${__ax_hosted__.sa.client_secret.primary}'
+
+  # DRM License Communication Key and ID
+  # DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'
+  # DRM_LICENSE_COMMUNICATION_KEY_ID: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY_ID'
+  DRM_LICENSE_COMMUNICATION_KEY: '#{MOSAIC-DRM-LICENSE-COMMUNICATION-KEY}#'
+  DRM_LICENSE_COMMUNICATION_KEY_ID: '#{MOSAIC-DRM-LICENSE-COMMUNICATION-KEY-ID}#'
+
+  # User JWT token validation public key
+  USER_SESSION_PUBLIC_KEY: '#{session-public-key}#'
+
+  # Recurly entitlement service configuration
+  RECURLY_ENTITLEMENT_API_URL: 'https://v3.eu.recurly.com'
+  RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: '#{RECURLY-PLAYBACK-PERMISSION}#'
+  RECURLY_ENTITLEMENT_API_KEY: '#{RECURLY-API-KEY}#'
+
+  # GeoIP2 Secure Variables
+  GEOIP2_BLOB_SAS_TOKEN: '#{GEOIP2-BLOB-SAS-TOKEN}#'
+  GEOIP2_BLOB_STORAGE_ACCOUNT: 'fc92815cac35ea297008806d'
+  GEOIP2_BLOB_CONTAINER: 'maxmindgeodb'
+
+serviceAccounts:
+  - name: 'primary'
+    permissionStructure:
+      - serviceId: 'ax-monetization-grants-service'
+        permissions:
+          - 'CLAIM_DEFINITIONS_SYNCHRONIZE'
+
+pilets:
+  # Defines the pilets (i.e. micro-frontends) associated with the service, and the required key-value pairs to run the pilet.
+  []
+
+dnsMappedPorts:
+  - name: 'dc'
+    port: 11600
