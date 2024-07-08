@@ -62,6 +62,7 @@ export const ScheduleVideoExplorer: React.FC<
         stationKey="program-management-schedule"
         predefinedFilterValues={predefinedFilters}
         onSelection={(val) => onSelectionHandler(val)}
+        onCancel={() => setVideoSelect(undefined)}
       />
     </Modal>
   );
