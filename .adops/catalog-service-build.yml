@@ -72,6 +72,18 @@ stages:
                 '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg
                 PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
 
+          - task: Bash@3
+            displayName:
+              'Install Dev Dependencies'
+            inputs:
+              targetType: 'inline'
+              script: |
+                apt install -y jq
+                echo "Temporarily switch to newer version of Mosaic CLI in package.json"
+                jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
+                mv package.updated.json package.json
+                yarn install
+
           - task: Docker@2
             displayName: Push Docker Image to Axinom Container Registry
             inputs:
