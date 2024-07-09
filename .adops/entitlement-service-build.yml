@@ -42,8 +42,6 @@ stages:
     displayName: Build and push stage
     jobs:
       - job: Build
-        variables:
-          - group: vault-nfn-acceptance
         displayName: Build
         condition: ${{ eq(parameters.build, true) }}
         steps:
