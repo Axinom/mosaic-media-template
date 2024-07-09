@@ -35,8 +35,8 @@ export const routes = {
   playlistStartTime: '/channels/:channelId/playlists/:playlistId/starttime',
   programs: '/channels/:channelId/playlists/:playlistId/programs',
   programDetails:
-    '/channels/:channelId/playlists/:playlistId/program/:programId',
+    '/channels/:channelId/playlists/:playlistId/programs/:programId',
   programLocalizationRoot:
-    '/channels/:channelId/playlists/:playlistId/program/:programId/localizations',
+    '/channels/:channelId/playlists/:playlistId/programs/:programId/localizations',
   generate: generateRoute,
 } as const;
