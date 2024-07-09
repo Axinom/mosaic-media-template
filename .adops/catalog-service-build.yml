@@ -22,7 +22,7 @@ parameters:
     type: boolean
     default: false
   - name: lov_production
-    displayName: Release manifest to NFN production
+    displayName: Release manifest to LOV production
     type: boolean
     default: false
 
