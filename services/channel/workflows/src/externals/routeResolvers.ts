@@ -9,7 +9,7 @@ export const programDetailsStationResolverRegistration = (
 ): string | undefined => {
   switch (typeof dynamicSegments) {
     case 'string':
-      return routes.generate(routes.programDetails, {
+      return routes.generate(routes.orphanedProgramDetails, {
         programId: dynamicSegments,
       });
 

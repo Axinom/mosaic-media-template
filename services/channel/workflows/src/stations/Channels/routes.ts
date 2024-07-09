@@ -38,5 +38,6 @@ export const routes = {
     '/channels/:channelId/playlists/:playlistId/programs/:programId',
   programLocalizationRoot:
     '/channels/:channelId/playlists/:playlistId/programs/:programId/localizations',
+  orphanedProgramDetails: '/channels/programs/:programId',
   generate: generateRoute,
 } as const;
