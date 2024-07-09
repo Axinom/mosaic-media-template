@@ -17,6 +17,14 @@ parameters:
     displayName: Release manifest to NFN production
     type: boolean
     default: false
+  - name: lov_acceptance
+    displayName: Release manifest to LOV acceptance
+    type: boolean
+    default: false
+  - name: lov_production
+    displayName: Release manifest to LOV production
+    type: boolean
+    default: false
 
 variables:
   serviceId: 'dc-entitlement-service'
@@ -34,8 +42,6 @@ stages:
     displayName: Build and push stage
     jobs:
       - job: Build
-        variables:
-          - group: vault-nfn-acceptance
         displayName: Build
         condition: ${{ eq(parameters.build, true) }}
         steps:
@@ -72,7 +78,14 @@ stages:
               repository: $(imageRepository)
               command: 'push'
               tags: '$(tag)'
-          
+
+      - job: Upload_NFN_Acceptance
+        dependsOn: Build
+        displayName: 'Upload Manifest to NFN Acceptance'
+        condition: ${{ eq(parameters.nfn_acceptance, true) }}
+        variables:
+          - group: vault-nfn-acceptance
+        steps:
           - bash: |
               apt install -y jq
               echo "Temporarily switch to newer version of Mosaic CLI in package.json"
@@ -90,7 +103,7 @@ stages:
               missingVarLog: error
               ifNoFilesFound: error
           - task: Bash@3
-            displayName: 'Upload deployment configuration to Acceptance environment'
+            displayName: 'Upload deployment configuration to NFN Acceptance environment'
             inputs:
               targetType: 'inline'
               script: |
@@ -101,70 +114,107 @@ stages:
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
-      # - job: Upload_Acceptance
-      #   displayName: 'Upload Manifest to Acceptance'
-      #   condition: ${{ eq(parameters.nfn_acceptance, true) }}
-      #   variables:
-      #     - group: vault-nfn-acceptance
-      #   steps:
-      #     - bash: |
-      #         apt install -y jq
-      #         echo "Temporarily switch to newer version of Mosaic CLI in package.json"
-      #         jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
-      #         mv package.updated.json package.json
-      #         yarn install
-      #       displayName: 'Install Dev Dependencies'
-      #     - task: qetza.replacetokens.replacetokens-task.replacetokens@6
-      #       displayName: 'Replace tokens'
-      #       inputs:
-      #         sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
-      #         caseInsensitivePaths: false
-      #         includeDotPaths: false
-      #         missingVarAction: keep
-      #         missingVarLog: error
-      #         ifNoFilesFound: error
-      #     - task: Bash@3
-      #       displayName: 'Upload deployment configuration to Acceptance environment'
-      #       inputs:
-      #         targetType: 'inline'
-      #         script: |
-      #           yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
-      #       env:
-      #         MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
-      #         MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
-      #         ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-      #         HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+      - job: Upload_NFN_Production
+        dependsOn: Build
+        displayName: 'Upload Manifest to NFN Production'
+        condition: ${{ eq(parameters.nfn_production, true) }}
+        variables:
+          - group: vault-nfn-production
+        steps:
+          - bash: |
+              apt install -y jq
+              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
+              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
+              mv package.updated.json package.json
+              yarn install
+            displayName: 'Install Dev Dependencies'
+          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
+            displayName: 'Replace tokens'
+            inputs:
+              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
+              caseInsensitivePaths: false
+              includeDotPaths: false
+              missingVarAction: keep
+              missingVarLog: error
+              ifNoFilesFound: error
+          - task: Bash@3
+            displayName: 'Upload deployment configuration to NFN Production environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
-      # - job: Upload_Production
-      #   displayName: 'Upload Manifest to Production'
-      #   condition: ${{ eq(parameters.nfn_production, true) }}
-      #   variables:
-      #     - group: vault-nfn-production
-      #   steps:
-      #     - bash: |
-      #         apt install -y jq
-      #         echo "Temporarily switch to newer version of Mosaic CLI in package.json"
-      #         jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
-      #         mv package.updated.json package.json
-      #         yarn install
-      #       displayName: 'Install Dev Dependencies'
-      #     - task: qetza.replacetokens.replacetokens-task.replacetokens@6
-      #       displayName: 'Replace tokens'
-      #       inputs:
-      #         sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
-      #         caseInsensitivePaths: false
-      #         includeDotPaths: false
-      #         missingVarAction: keep
-      #         missingVarLog: error
-      #         ifNoFilesFound: error
-      #     - task: Bash@3
-      #       displayName: 'Upload deployment configuration to Production environment'
-      #       inputs:
-      #         targetType: 'inline'
-      #         script: |
-      #           yarn mosaic hosting manifest upload -n "nfn-mosaic-entitlement-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
-      #       env:
-      #         MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
-      #         MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
-      #         ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-      #         HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+      - job: Upload_LOV_Acceptance
+        dependsOn: Build
+        displayName: 'Upload Manifest to LOV Acceptance'
+        condition: ${{ eq(parameters.lov_acceptance, true) }}
+        variables:
+          - group: vault-lov-acceptance
+        steps:
+          - bash: |
+              apt install -y jq
+              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
+              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
+              mv package.updated.json package.json
+              yarn install
+            displayName: 'Install Dev Dependencies'
+          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
+            displayName: 'Replace tokens'
+            inputs:
+              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
+              caseInsensitivePaths: false
+              includeDotPaths: false
+              missingVarAction: keep
+              missingVarLog: error
+              ifNoFilesFound: error
+          - task: Bash@3
+            displayName: 'Upload deployment configuration to LOV Acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "lov-mosaic-entitlement-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+
+      - job: Upload_LOV_Production
+        dependsOn: Build
+        displayName: 'Upload Manifest to LOV Production'
+        condition: ${{ eq(parameters.lov_production, true) }}
+        variables:
+          - group: vault-lov-production
+        steps:
+          - bash: |
+              apt install -y jq
+              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
+              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
+              mv package.updated.json package.json
+              yarn install
+            displayName: 'Install Dev Dependencies'
+          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
+            displayName: 'Replace tokens'
+            inputs:
+              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
+              caseInsensitivePaths: false
+              includeDotPaths: false
+              missingVarAction: keep
+              missingVarLog: error
+              ifNoFilesFound: error
+          - task: Bash@3
+            displayName: 'Upload deployment configuration to LOV Production environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "lov-mosaic-entitlement-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
