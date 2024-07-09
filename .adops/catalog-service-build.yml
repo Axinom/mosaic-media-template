@@ -104,7 +104,8 @@ stages:
               missingVarLog: error
               ifNoFilesFound: error
           - task: Bash@3
-            displayName: 'Upload deployment configuration to NFN Acceptance environment'
+            displayName:
+              'Upload deployment configuration to NFN Acceptance environment'
             inputs:
               targetType: 'inline'
               script: |
@@ -139,7 +140,8 @@ stages:
               missingVarLog: error
               ifNoFilesFound: error
           - task: Bash@3
-            displayName: 'Upload deployment configuration to NFN Production environment'
+            displayName:
+              'Upload deployment configuration to NFN Production environment'
             inputs:
               targetType: 'inline'
               script: |
@@ -174,7 +176,8 @@ stages:
               missingVarLog: error
               ifNoFilesFound: error
           - task: Bash@3
-            displayName: 'Upload deployment configuration to LOV Acceptance environment'
+            displayName:
+              'Upload deployment configuration to LOV Acceptance environment'
             inputs:
               targetType: 'inline'
               script: |
@@ -209,7 +212,8 @@ stages:
               missingVarLog: error
               ifNoFilesFound: error
           - task: Bash@3
-            displayName: 'Upload deployment configuration to LOV Production environment'
+            displayName:
+              'Upload deployment configuration to LOV Production environment'
             inputs:
               targetType: 'inline'
               script: |
