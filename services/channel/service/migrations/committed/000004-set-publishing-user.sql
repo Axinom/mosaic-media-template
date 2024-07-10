@@ -1,8 +1,8 @@
 --! Previous: sha1:098d8bbe4239517488649a1d765960a3af604d22
---! Hash: sha1:52abbb9213fd3185b16dbeeac849074c5fe06a07
+--! Hash: sha1:9bdbe7ce3091a2a4eee11d8c0601f7114d59ad50
 --! Message: set-publishing-user
 
--- creation method to create publish audit field triggers
+DROP FUNCTION if exists app_hidden.define_publish_trigger(text, text, text);
 CREATE OR REPLACE FUNCTION app_hidden.define_publish_trigger(tableName text, schemaName text) RETURNS void
     LANGUAGE plpgsql
     AS $$
