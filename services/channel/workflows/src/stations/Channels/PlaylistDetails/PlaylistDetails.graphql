@@ -46,6 +46,7 @@ mutation UnpublishPlaylist($input: UnpublishPlaylistInput!) {
 
 query PlaylistTitle($id: UUID!) {
   playlist(id: $id) {
+    id
     title
   }
 }

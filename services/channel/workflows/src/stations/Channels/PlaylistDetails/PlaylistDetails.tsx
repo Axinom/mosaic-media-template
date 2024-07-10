@@ -65,6 +65,7 @@ export const PlaylistDetails: React.FC = () => {
             clientMutationId
             playlist {
               id
+              title
             }
           }
         }

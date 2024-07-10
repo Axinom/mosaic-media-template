@@ -2861,7 +2861,7 @@ export type CreatePlaylistMutationVariables = Exact<{
 }>;
 
 
-export type CreatePlaylistMutation = { __typename?: 'Mutation', createPlaylist?: { __typename?: 'CreatePlaylistPayload', playlist?: { __typename?: 'Playlist', id: any, channelId: any, startDateTime: any } | null } | null };
+export type CreatePlaylistMutation = { __typename?: 'Mutation', createPlaylist?: { __typename?: 'CreatePlaylistPayload', playlist?: { __typename?: 'Playlist', id: any, channelId: any, title: string, startDateTime: any } | null } | null };
 
 export type PlaylistQueryVariables = Exact<{
   id: Scalars['UUID'];
@@ -2896,7 +2896,7 @@ export type PlaylistTitleQueryVariables = Exact<{
 }>;
 
 
-export type PlaylistTitleQuery = { __typename?: 'Query', playlist?: { __typename?: 'Playlist', title: string } | null };
+export type PlaylistTitleQuery = { __typename?: 'Query', playlist?: { __typename?: 'Playlist', id: any, title: string } | null };
 
 export type ValidatePlaylistQueryVariables = Exact<{
   id: Scalars['UUID'];
@@ -3407,6 +3407,7 @@ export const CreatePlaylistDocument = gql`
     playlist {
       id
       channelId
+      title
       startDateTime
     }
   }
@@ -3597,6 +3598,7 @@ export type UnpublishPlaylistMutationOptions = Apollo.BaseMutationOptions<Unpubl
 export const PlaylistTitleDocument = gql`
     query PlaylistTitle($id: UUID!) {
   playlist(id: $id) {
+    id
     title
   }
 }
