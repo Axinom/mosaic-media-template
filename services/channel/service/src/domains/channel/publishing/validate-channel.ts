@@ -64,7 +64,9 @@ export async function validateChannel(
     getValidationAndVideos(
       config.videoServiceBaseUrl,
       jwtToken,
-      publishDto.placeholder_video_id ? [publishDto.placeholder_video_id] : [],
+      publishDto.placeholder_video_id
+        ? [{ videoId: publishDto.placeholder_video_id }]
+        : [],
       publishDto.is_drm_protected,
       true,
     ),

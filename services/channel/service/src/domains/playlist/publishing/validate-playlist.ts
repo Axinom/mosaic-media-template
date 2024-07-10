@@ -14,7 +14,8 @@ import {
 import {
   getValidationAndImages,
   getValidationAndVideos,
-} from '../../../publishing/common';
+  SelectedVideo,
+} from '../../../publishing';
 import { getProgramValidationAndLocalizations } from '../../../publishing/common/localization';
 import {
   calculateValidationStatus,
@@ -72,24 +73,35 @@ export async function validatePlaylist(
   }
 
   const imagesIds: string[] = [];
-  const videoIds: string[] = [];
+  const selectedVideos: SelectedVideo[] = [];
 
   publishDto.programs.map((pr) => {
     if (pr.image_id) {
       imagesIds.push(pr.image_id);
     }
-    videoIds.push(pr.video_id);
+    selectedVideos.push({
+      videoId: pr.video_id,
+      source: `The video is used in the program "${pr.title}".`,
+    });
     pr.program_cue_points
       .flatMap((cp) => cp.cue_point_schedules)
-      .map((s) => {
+      .map((s, index) => {
         if (s.video_id) {
-          videoIds.push(s.video_id);
+          selectedVideos.push({
+            videoId: s.video_id,
+            source: `The video is assigned as cue point number ${
+              index + 1
+            } of the program "${pr.title}".`,
+          });
         }
       });
   });
 
   if (config.playlistShouldBe24Hours && channel.placeholder_video_id) {
-    videoIds.push(channel.placeholder_video_id);
+    selectedVideos.push({
+      videoId: channel.placeholder_video_id,
+      source: 'The video is the channel placeholder video.',
+    });
   }
 
   const [
@@ -106,7 +118,7 @@ export async function validatePlaylist(
     getValidationAndVideos(
       config.videoServiceBaseUrl,
       jwtToken,
-      videoIds,
+      selectedVideos,
       channel.is_drm_protected,
       false,
     ),

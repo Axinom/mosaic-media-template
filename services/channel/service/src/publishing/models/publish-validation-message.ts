@@ -8,6 +8,7 @@ export const PublishValidationContext = [
   'VIDEOS',
   'LOCALIZATION',
 ] as const;
+
 export type PublishValidationContextEnum =
   typeof PublishValidationContext[number];
 
@@ -20,21 +21,23 @@ export interface PublishValidationMessage {
 export const createValidationWarning = (
   message: string,
   context: PublishValidationContextEnum,
+  postfix?: string,
 ): PublishValidationMessage => {
   return {
     severity: 'WARNING',
     context,
-    message,
+    message: postfix ? `${message} ${postfix}` : message,
   };
 };
 
 export const createValidationError = (
   message: string,
   context: PublishValidationContextEnum,
+  postfix?: string,
 ): PublishValidationMessage => {
   return {
     severity: 'ERROR',
     context,
-    message,
+    message: postfix ? `${message} ${postfix}` : message,
   };
 };
