@@ -199,15 +199,18 @@ describe('validatePlaylist', () => {
         async (
           _videoServiceBaseUrl,
           _authToken,
-          videoIds,
+          assignedVideos,
         ): Promise<{ videos: DetailedVideo[]; validations: [] }> => {
-          if (videoIds.length === 0) {
+          if (assignedVideos.length === 0) {
             return {
               validations: [],
               videos: [],
             };
           } else {
-            return { videos: createVideos(videoIds), validations: [] };
+            return {
+              videos: createVideos(assignedVideos.map((v) => v.videoId)),
+              validations: [],
+            };
           }
         },
       );
