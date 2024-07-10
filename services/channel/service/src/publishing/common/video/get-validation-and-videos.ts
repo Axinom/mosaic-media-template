@@ -3,7 +3,11 @@ import { GraphQLClient } from 'graphql-request';
 import { DetailedVideo } from 'media-messages';
 import urljoin from 'url-join';
 import { CommonErrors } from '../../../common';
-import { getSdk, GetVideosQuery } from '../../../generated/graphql/video';
+import {
+  getSdk,
+  GetVideosQuery,
+  PreviewStatus,
+} from '../../../generated/graphql/video';
 import {
   createValidationError,
   createValidationWarning,
@@ -95,6 +99,16 @@ export const getValidationAndVideos = async (
         validations.push(
           createValidationError(
             `The output format of the video "${gqlVideo.title}" with ID ${gqlVideo.id} is '${gqlVideo.outputFormat}'. Expected output format 'CMAF'.`,
+            'VIDEOS',
+            source,
+          ),
+        );
+      }
+
+      if (gqlVideo.previewStatus !== PreviewStatus.Approved) {
+        validations.push(
+          createValidationError(
+            `The video "${gqlVideo.title}" with ID ${gqlVideo.id} must have the approved status.`,
             'VIDEOS',
             source,
           ),

@@ -81,7 +81,7 @@ export async function validatePlaylist(
     }
     selectedVideos.push({
       videoId: pr.video_id,
-      source: `The video is used in the program "${pr.title}".`,
+      source: `The video is used for the program "${pr.title}".`,
     });
     pr.program_cue_points
       .flatMap((cp) => cp.cue_point_schedules)
@@ -89,7 +89,7 @@ export async function validatePlaylist(
         if (s.video_id) {
           selectedVideos.push({
             videoId: s.video_id,
-            source: `The video is assigned as cue point number ${
+            source: `The video is assigned as the item number ${
               index + 1
             } of the program "${pr.title}".`,
           });
