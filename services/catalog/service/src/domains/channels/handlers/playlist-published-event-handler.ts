@@ -95,9 +95,7 @@ export class PlaylistPublishedEventHandler extends TransactionalInboxMessageHand
       ).run(txnClient);
 
       const programMappings = programs.reduce((acc: Dict<number>, cur) => {
-        if (cur.sort_index) {
-          acc[cur.sort_index] = cur.id;
-        }
+        acc[cur.sort_index] = cur.id;
         return acc;
       }, {});
 
