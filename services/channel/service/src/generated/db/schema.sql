@@ -241,21 +241,6 @@ $$;
 
 
 --
--- Name: define_publish_trigger(text, text, text); Type: FUNCTION; Schema: app_hidden; Owner: -
---
-
-CREATE FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text, columnnames text) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-  EXECUTE 'DROP TRIGGER IF EXISTS _900__publish_user ON ' || schemaName || '.' || tableName || ';';
-  EXECUTE 'CREATE trigger _900__publish_user BEFORE INSERT OR UPDATE OF ' || columnNames || ' ON ' || schemaName || '.' || tableName ||
-          ' FOR EACH ROW EXECUTE PROCEDURE app_hidden.tg__publish_audit_fields();';
-END;
-$$;
-
-
---
 -- Name: is_localization_enabled(); Type: FUNCTION; Schema: app_hidden; Owner: -
 --
 
@@ -3981,14 +3966,6 @@ GRANT ALL ON FUNCTION app_hidden.create_localizable_entity_triggers(aggregateid 
 
 REVOKE ALL ON FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text) FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text) TO channel_service_gql_role;
-
-
---
--- Name: FUNCTION define_publish_trigger(tablename text, schemaname text, columnnames text); Type: ACL; Schema: app_hidden; Owner: -
---
-
-REVOKE ALL ON FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text, columnnames text) FROM PUBLIC;
-GRANT ALL ON FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text, columnnames text) TO channel_service_gql_role;
 
 
 --
