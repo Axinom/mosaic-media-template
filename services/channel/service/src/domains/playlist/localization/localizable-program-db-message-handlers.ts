@@ -1,3 +1,4 @@
+import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
 import {
   LocalizationServiceMultiTenantMessagingSettings,
   LocalizeEntityCommand,
@@ -60,49 +61,61 @@ const getLocalizationMappedError = mosaicErrorMappingFactory(
   },
 );
 
-const getSourceTitle = async (
-  id: string,
-  ownerClient: ClientBase,
-  fields: { title?: string | undefined },
-): Promise<string> => {
-  const program = await selectOne(
-    'programs',
-    { id },
-    {
-      lateral: {
-        playlist: selectExactlyOne(
-          'playlists',
-          {
-            id: parent('playlist_id'),
-          },
-          {
-            columns: ['start_date_time'],
-            lateral: {
-              channel: selectExactlyOne(
-                'channels',
-                {
-                  id: parent('channel_id'),
-                },
-                { columns: ['title'] },
-              ),
-            },
-          },
-        ),
-      },
-    },
-  ).run(ownerClient);
-  if (!program) {
-    throw new MosaicError(
-      `Could not find the program "${fields.title}" with ID "${id}".`,
-    );
+export abstract class ProgramLocalizableTransactionalInboxMessageHandler<
+  T,
+> extends LocalizableTransactionalInboxMessageHandler<T> {
+  constructor(
+    messagingSettings: MessagingSettings,
+    storeOutboxMessage: StoreOutboxMessage,
+    config: Config,
+  ) {
+    super(messagingSettings, storeOutboxMessage, config);
   }
-  return `${fields.title} (${program.playlist.start_date_time.substring(
-    0,
-    10,
-  )} - ${program.playlist.channel.title})`;
-};
 
-export class LocalizableProgramCreatedDbMessageHandler extends LocalizableTransactionalInboxMessageHandler<LocalizableProgramDbEvent> {
+  protected async getSourceTitle(
+    id: string,
+    ownerClient: ClientBase,
+    fields: { title?: string | undefined },
+  ): Promise<string> {
+    const program = await selectOne(
+      'programs',
+      { id },
+      {
+        lateral: {
+          playlist: selectExactlyOne(
+            'playlists',
+            {
+              id: parent('playlist_id'),
+            },
+            {
+              columns: ['start_date_time'],
+              lateral: {
+                channel: selectExactlyOne(
+                  'channels',
+                  {
+                    id: parent('channel_id'),
+                  },
+                  { columns: ['title'] },
+                ),
+              },
+            },
+          ),
+        },
+      },
+    ).run(ownerClient);
+    if (!program) {
+      throw new MosaicError(
+        `Could not find the program "${fields.title}" with ID "${id}".`,
+      );
+    }
+    return `${fields.title} (${program.playlist.start_date_time.substring(
+      0,
+      10,
+    )} - ${program.playlist.channel.title})`;
+  }
+}
+
+export class LocalizableProgramCreatedDbMessageHandler extends ProgramLocalizableTransactionalInboxMessageHandler<LocalizableProgramDbEvent> {
   constructor(storeOutboxMessage: StoreOutboxMessage, config: Config) {
     super(
       LocalizableProgramDbMessagingSettings.LocalizableProgramCreated,
@@ -198,7 +211,7 @@ export class LocalizableProgramCreatedDbMessageHandler extends LocalizableTransa
     }: TypedTransactionalMessage<LocalizableProgramDbEvent>,
     ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
-    const sourceTitle = await getSourceTitle(id, ownerClient, fields);
+    const sourceTitle = await this.getSourceTitle(id, ownerClient, fields);
     return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_PROGRAM_TYPE,
@@ -210,7 +223,7 @@ export class LocalizableProgramCreatedDbMessageHandler extends LocalizableTransa
   }
 }
 
-export class LocalizableProgramUpdatedDbMessageHandler extends LocalizableTransactionalInboxMessageHandler<LocalizableProgramDbEvent> {
+export class LocalizableProgramUpdatedDbMessageHandler extends ProgramLocalizableTransactionalInboxMessageHandler<LocalizableProgramDbEvent> {
   constructor(storeOutboxMessage: StoreOutboxMessage, config: Config) {
     super(
       LocalizableProgramDbMessagingSettings.LocalizableProgramUpdated,
@@ -225,7 +238,7 @@ export class LocalizableProgramUpdatedDbMessageHandler extends LocalizableTransa
     }: TypedTransactionalMessage<LocalizableProgramDbEvent>,
     ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
-    const sourceTitle = await getSourceTitle(id, ownerClient, fields);
+    const sourceTitle = await this.getSourceTitle(id, ownerClient, fields);
     return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_PROGRAM_TYPE,
