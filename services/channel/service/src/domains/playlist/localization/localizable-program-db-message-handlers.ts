@@ -60,6 +60,48 @@ const getLocalizationMappedError = mosaicErrorMappingFactory(
   },
 );
 
+const getSourceTitle = async (
+  id: string,
+  ownerClient: ClientBase,
+  fields: { title?: string | undefined },
+): Promise<string> => {
+  const program = await selectOne(
+    'programs',
+    { id },
+    {
+      lateral: {
+        playlist: selectExactlyOne(
+          'playlists',
+          {
+            id: parent('playlist_id'),
+          },
+          {
+            columns: ['start_date_time'],
+            lateral: {
+              channel: selectExactlyOne(
+                'channels',
+                {
+                  id: parent('channel_id'),
+                },
+                { columns: ['title'] },
+              ),
+            },
+          },
+        ),
+      },
+    },
+  ).run(ownerClient);
+  if (!program) {
+    throw new MosaicError(
+      `Could not find the program "${fields.title}" with ID "${id}".`,
+    );
+  }
+  return `${fields.title} (${program.playlist.start_date_time.substring(
+    0,
+    10,
+  )} - ${program.playlist.channel.title})`;
+};
+
 export class LocalizableProgramCreatedDbMessageHandler extends LocalizableTransactionalInboxMessageHandler<LocalizableProgramDbEvent> {
   constructor(storeOutboxMessage: StoreOutboxMessage, config: Config) {
     super(
@@ -156,7 +198,7 @@ export class LocalizableProgramCreatedDbMessageHandler extends LocalizableTransa
     }: TypedTransactionalMessage<LocalizableProgramDbEvent>,
     ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
-    const sourceTitle = await this.getSourceTitle(id, ownerClient, fields);
+    const sourceTitle = await getSourceTitle(id, ownerClient, fields);
     return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_PROGRAM_TYPE,
@@ -165,48 +207,6 @@ export class LocalizableProgramCreatedDbMessageHandler extends LocalizableTransa
       sourceTitle,
       image_id,
     );
-  }
-
-  protected async getSourceTitle(
-    id: string,
-    ownerClient: ClientBase,
-    fields: { title?: string | undefined },
-  ): Promise<string> {
-    const program = await selectOne(
-      'programs',
-      { id },
-      {
-        lateral: {
-          playlist: selectExactlyOne(
-            'playlists',
-            {
-              id: parent('playlist_id'),
-            },
-            {
-              columns: ['start_date_time'],
-              lateral: {
-                channel: selectExactlyOne(
-                  'channels',
-                  {
-                    id: parent('channel_id'),
-                  },
-                  { columns: ['title'] },
-                ),
-              },
-            },
-          ),
-        },
-      },
-    ).run(ownerClient);
-    if (!program) {
-      throw new MosaicError(
-        `Could not find the program "${fields.title}" with ID "${id}".`,
-      );
-    }
-    return `${fields.title} (${program.playlist.start_date_time.substring(
-      0,
-      10,
-    )} - ${program.playlist.channel.title})`;
   }
 }
 
@@ -219,17 +219,19 @@ export class LocalizableProgramUpdatedDbMessageHandler extends LocalizableTransa
     );
   }
 
-  override async getLocalizationCommandData({
-    payload: { id, image_id, ...fields },
-  }: TypedTransactionalMessage<LocalizableProgramDbEvent>): Promise<
-    LocalizationMessageData | undefined
-  > {
+  override async getLocalizationCommandData(
+    {
+      payload: { id, image_id, ...fields },
+    }: TypedTransactionalMessage<LocalizableProgramDbEvent>,
+    ownerClient: ClientBase,
+  ): Promise<LocalizationMessageData | undefined> {
+    const sourceTitle = await getSourceTitle(id, ownerClient, fields);
     return getLocalizationUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_PROGRAM_TYPE,
       id,
       fields,
-      fields.title,
+      sourceTitle,
       image_id,
     );
   }
