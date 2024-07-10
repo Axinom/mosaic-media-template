@@ -33,6 +33,15 @@ class TestLocalizableProgramCreatedDbMessageHandler extends LocalizableProgramCr
   }
 }
 
+class TestLocalizableProgramUpdatedDbMessageHandler extends LocalizableProgramUpdatedDbMessageHandler {
+  override additionalWork(): Promise<void> {
+    return Promise.resolve();
+  }
+  override getSourceTitle(): Promise<string> {
+    return Promise.resolve('unit test title');
+  }
+}
+
 const serviceAccountToken = 'SERVICE_ACCOUNT_TOKEN';
 jest.mock('@axinom/mosaic-id-link-be', () => {
   const originalModule = jest.requireActual('@axinom/mosaic-id-link-be');
@@ -137,10 +146,10 @@ describe('Localizable Program DB trigger events', () => {
   });
 
   describe('LocalizableProgramUpdatedDbMessageHandler', () => {
-    let handler: LocalizableProgramUpdatedDbMessageHandler;
+    let handler: TestLocalizableProgramUpdatedDbMessageHandler;
 
     beforeAll(() => {
-      handler = new LocalizableProgramUpdatedDbMessageHandler(
+      handler = new TestLocalizableProgramUpdatedDbMessageHandler(
         storeOutboxMessage,
         config,
       );
@@ -161,7 +170,7 @@ describe('Localizable Program DB trigger events', () => {
         {
           payload: {
             entity_id: payload.id.toString(),
-            entity_title: payload.title,
+            entity_title: 'unit test title',
             entity_type: LOCALIZATION_PROGRAM_TYPE,
             fields: {
               title: payload.title,
@@ -196,7 +205,7 @@ describe('Localizable Program DB trigger events', () => {
         {
           payload: {
             entity_id: payload.id.toString(),
-            entity_title: payload.title,
+            entity_title: 'unit test title',
             entity_type: LOCALIZATION_PROGRAM_TYPE,
             fields: {
               title: payload.title,

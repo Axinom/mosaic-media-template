@@ -3,7 +3,11 @@ import { GraphQLClient } from 'graphql-request';
 import { DetailedVideo } from 'media-messages';
 import urljoin from 'url-join';
 import { CommonErrors } from '../../../common';
-import { getSdk, GetVideosQuery } from '../../../generated/graphql/video';
+import {
+  getSdk,
+  GetVideosQuery,
+  PreviewStatus,
+} from '../../../generated/graphql/video';
 import {
   createValidationError,
   createValidationWarning,
@@ -12,17 +16,24 @@ import {
 
 export type GqlVideo = NonNullable<GetVideosQuery['videos']>['nodes'][0];
 
+export interface SelectedVideo {
+  /** The ID of the video in the Video Service */
+  videoId: string;
+  /** The owning entity e.g. the channel name or program item name */
+  source?: string;
+}
+
 export const getValidationAndVideos = async (
   videoServiceBaseUrl: string,
   authToken: string,
-  videoIds: string[],
+  selectedVideos: SelectedVideo[],
   isDrmEnabled: boolean,
   exactlyOneVideo: boolean,
 ): Promise<{
   videos: DetailedVideo[];
   validations: PublishValidationMessage[];
 }> => {
-  if (videoIds.length === 0) {
+  if (selectedVideos.length === 0) {
     return {
       videos: [],
       validations: [
@@ -38,20 +49,19 @@ export const getValidationAndVideos = async (
     const { GetVideos } = getSdk(client);
     const { data } = await GetVideos(
       {
-        filter: { id: { in: videoIds } },
+        filter: { id: { in: selectedVideos.map((v) => v.videoId) } },
       },
       { Authorization: `Bearer ${authToken}` },
     );
     const videosDetails = [];
-    for (const videoAssignment of videoIds) {
-      const gqlVideo = data?.videos?.nodes.find(
-        (i) => i.id === videoAssignment,
-      );
+    for (const { videoId, source } of selectedVideos) {
+      const gqlVideo = data?.videos?.nodes.find((i) => i.id === videoId);
       if (!gqlVideo) {
         validations.push(
           createValidationError(
-            `Details for the video with ID '${videoAssignment}' were not found.`,
+            `Details for the video with ID '${videoId}' were not found.`,
             'VIDEOS',
+            source,
           ),
         );
         continue;
@@ -70,6 +80,7 @@ export const getValidationAndVideos = async (
               createValidationError(
                 `Video "${gqlVideo.title}" with ID ${gqlVideo.id} is protected but no key ids were found.`,
                 'VIDEOS',
+                source,
               ),
             );
           }
@@ -78,6 +89,7 @@ export const getValidationAndVideos = async (
             createValidationError(
               `Video "${gqlVideo.title}" with ID ${gqlVideo.id} is DRM protected.`,
               'VIDEOS',
+              source,
             ),
           );
         }
@@ -86,8 +98,19 @@ export const getValidationAndVideos = async (
       if (gqlVideo.outputFormat !== 'CMAF') {
         validations.push(
           createValidationError(
-            `The output format of the video "${gqlVideo.title}" with ID ${gqlVideo.id} is '${gqlVideo.outputFormat}'. Expected output format 'CMAF'`,
+            `The output format of the video "${gqlVideo.title}" with ID ${gqlVideo.id} is '${gqlVideo.outputFormat}'. Expected output format 'CMAF'.`,
             'VIDEOS',
+            source,
+          ),
+        );
+      }
+
+      if (gqlVideo.previewStatus !== PreviewStatus.Approved) {
+        validations.push(
+          createValidationError(
+            `The video "${gqlVideo.title}" with ID ${gqlVideo.id} must have the approved status.`,
+            'VIDEOS',
+            source,
           ),
         );
       }
@@ -96,6 +119,7 @@ export const getValidationAndVideos = async (
         createValidationError(
           `Video "${gqlVideo.title}" with ID ${gqlVideo.id} is missing an AUDIO stream.`,
           'VIDEOS',
+          source,
         );
       }
 
@@ -107,6 +131,7 @@ export const getValidationAndVideos = async (
         createValidationError(
           `Video "${gqlVideo.title}" with ID ${gqlVideo.id} is not encoded as 'H264'.`,
           'VIDEOS',
+          source,
         );
       }
 
