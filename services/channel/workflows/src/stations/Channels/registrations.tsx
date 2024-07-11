@@ -27,6 +27,7 @@ import {
   resolveProgramDetailsRoot,
 } from './ProgramManagement/ProgramDetails/ProgramDetails';
 import { ProgramDetailsCrumb } from './ProgramManagement/ProgramDetails/ProgramDetailsCrumb';
+import { ProgramDetailsReRouter } from './ProgramManagement/ProgramDetails/ProgramDetailsReRouter';
 import { ProgramManagement } from './ProgramManagement/ProgramManagement';
 import { routes } from './routes';
 
@@ -158,6 +159,15 @@ export function register(app: PiletApi, extensions: Extensions): void {
     ),
     {
       breadcrumb: ProgramDetailsCrumb,
+      permissions,
+    },
+  );
+
+  app.registerPage(
+    routes.orphanedProgramDetails,
+    () => <ProgramDetailsReRouter />,
+    {
+      breadcrumb: () => 'Program',
       permissions,
     },
   );
