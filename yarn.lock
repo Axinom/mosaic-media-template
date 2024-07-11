@@ -426,10 +426,10 @@
     pg-transactional-outbox "^0.5.7"
     prom-client "^15.1.0"
 
-"@axinom/mosaic-ui@0.49.1":
-  version "0.49.1"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.49.1.tgz#a2797adcd3b45f27ed0b9930c3cb9d2a7cc08aa1"
-  integrity sha512-2KqznRjmDYqA+XVh5aBH4kEEzUMDT0YTquTL7x/NPFlR4/wC7MjJh2XRNs3c9XrSPxmepdyQaBmbyurHXVuVgw==
+"@axinom/mosaic-ui@0.49.2":
+  version "0.49.2"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.49.2.tgz#257d6afa64150915726c588d95471af62a4de032"
+  integrity sha512-pnJ8um06GXBbRhve93Pr4ij/l3dWfni4mirXJZ/G2R4TDwuHTjjEaDYu33jVPtoQooJeSdAUeEhMTGQpZtQBdg==
   dependencies:
     "@axinom/mosaic-core" "^0.4.22"
     "@faker-js/faker" "^7.4.0"
