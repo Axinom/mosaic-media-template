@@ -12,10 +12,11 @@ import {
 import clsx from 'clsx';
 import { FormikErrors } from 'formik';
 import moment, { utc } from 'moment';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { DragDropContext, Draggable } from 'react-beautiful-dnd';
 import { useParams } from 'react-router';
 import { ProgramBreakType } from '../../../../generated/graphql';
+import { PortalContext } from '../../../../store/portal-contex';
 import { routes } from '../../routes';
 import { CuePoint } from '../CuePoint/CuePoint';
 import {
@@ -40,6 +41,7 @@ export const Program: React.FC<ProgramProps> = ({
   ImagePreview,
   isOpen,
   sortIndex,
+  entityId,
   resolver,
   onChange,
   onToggle,
@@ -51,6 +53,12 @@ export const Program: React.FC<ProgramProps> = ({
   const { programCuePoints: cpErrors, ...rest } = errors;
   const errMsg = (Object.values(rest) as string[]).join(', ');
   const programLocalizationPath = getLocalizationEntryPoint('program');
+  const { resolveRoute } = useContext(PortalContext);
+
+  const sourceEntityPath = useMemo(
+    () => resolveRoute(`${entityType.toLowerCase()}-details`, entityId),
+    [resolveRoute, entityType, entityId],
+  );
 
   useEffect(() => {
     onToggle(id ?? trackId, false);
@@ -58,6 +66,9 @@ export const Program: React.FC<ProgramProps> = ({
   }, [id, trackId, onToggle]);
 
   const actions: ActionData[] = [
+    ...(sourceEntityPath
+      ? [{ label: 'Open Source Details', path: sourceEntityPath }]
+      : []),
     ...(resolver && id
       ? [
           {

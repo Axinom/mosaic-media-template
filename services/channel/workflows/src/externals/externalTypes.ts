@@ -5,6 +5,7 @@ import {
   ProgramDetailsStationDynamicSegments,
 } from '../types';
 
+// TODO: create a library for shared types.
 interface ChannelDetailsResolverData {
   station: ChannelStationNames.ChannelDetails;
   resolver: (dynamicSegments: ChannelDetailsStationDynamicSegments) => void;
@@ -46,5 +47,9 @@ declare module '@axinom/mosaic-portal' {
       station: ChannelStationNames.ProgramDetails,
       dynamicRouteSegments: ProgramDetailsStationDynamicSegments,
     ): string | undefined;
+  }
+  // entity details station resolver function
+  interface ResolverFunction {
+    (station: string, dynamicRouteSegments: string): string | undefined;
   }
 }
