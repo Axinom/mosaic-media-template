@@ -131,6 +131,18 @@ stages:
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+          - task: Bash@3
+            displayName:
+              'Deploy service'
+            inputs:
+              targetType: 'inline'
+              script: |                
+                yarn util:load-vars mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m mosaic-media-int-$(tag) -n media-service
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
       - job: Upload_NFN_Acceptance
         dependsOn: Build
