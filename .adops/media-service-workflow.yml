@@ -1,0 +1,141 @@
+trigger: none
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+parameters:
+  - name: int
+    displayName: Release workflow to INT
+    type: boolean
+    default: true
+  - name: nfn_acceptance
+    displayName: Release workflow to NFN acceptance
+    type: boolean
+    default: false
+  - name: nfn_production
+    displayName: Release workflow to NFN production
+    type: boolean
+    default: false
+  - name: lov_acceptance
+    displayName: Release workflow to LOV acceptance
+    type: boolean
+    default: false
+  - name: lov_production
+    displayName: Release workflow to LOV production
+    type: boolean
+    default: false
+
+variables:
+  tag: '$(Build.BuildNumber)'
+  serviceId: dc-media-service
+
+stages:
+  - stage: Build
+    displayName: Build and push stage
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '18.x'
+            displayName: 'Install Node.js'
+
+          - script: |
+              ORIGINAL_PKG_VER=`npx -q json -f "$(packageRoot)/package.json" version`
+              NEW_PKG_VER="${ORIGINAL_PKG_VER}-$(tag)"
+              echo "##vso[task.setvariable variable=pkgVer]${NEW_PKG_VER}"
+
+              echo "Current package.json version is: [${ORIGINAL_PKG_VER}]"
+              echo "Updating package.json version to: [${NEW_PKG_VER}]"
+              
+              npx -q json -I -f "$(packageRoot)/package.json" -e "this.version = '${NEW_PKG_VER}'"
+              
+              echo "Updated package.json version is: [`npx -q json -f \"$(packageRoot)/package.json\" version`]"
+            displayName:
+              'Updating package.json version to reflect the build number'
+
+          - script: |
+              npm run $(packageBuildCommand)
+            displayName: 'Build pilet'
+
+          - task: CopyFiles@2
+            inputs:
+              Contents: '*.tgz'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+            displayName: Copy pilet package artifact to staging directory
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'drop'
+              publishLocation: 'Container'
+            displayName: Publishing build artifact
+          
+          - task: Bash@3
+            condition: ${{ eq(parameters.int, true) }}
+            displayName:
+              'Upload pilet to INT environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+
+          - task: Bash@3
+            condition: ${{ eq(parameters.nfn_acceptance, true) }}
+            displayName:
+              'Upload pilet to NFN acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnAcc)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+
+          - task: Bash@3
+            condition: ${{ eq(parameters.nfn_production, true) }}
+            displayName:
+              'Upload pilet to NFN production environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnProd)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+
+          - task: Bash@3
+            condition: ${{ eq(parameters.lov_acceptance, true) }}
+            displayName:
+              'Upload pilet to LOV acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+
+          - task: Bash@3
+            condition: ${{ eq(parameters.lov_production, true) }}
+            displayName:
+              'Upload pilet to LOV acceptance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
