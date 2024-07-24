@@ -1,3 +1,4 @@
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -17,6 +18,7 @@ export async function publishChannel(
   storeOutboxMessage: StoreOutboxMessage,
   ownerClient: ClientBase,
   config: Config,
+  subject: AuthenticatedManagementSubject,
 ): Promise<void> {
   const { publishHash, publishPayload, validationStatus, validations } =
     await validateChannel(id, jwtToken, ownerClient, config);
@@ -36,7 +38,11 @@ export async function publishChannel(
   const publishedDate = new Date().toUTCString();
   await update(
     'channels',
-    { publication_state: 'PUBLISHED', published_date: publishedDate },
+    {
+      publication_state: 'PUBLISHED',
+      published_date: publishedDate,
+      published_user: subject.name,
+    },
     {
       id,
     },

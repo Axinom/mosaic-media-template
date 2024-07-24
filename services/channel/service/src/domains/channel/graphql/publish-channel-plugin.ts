@@ -97,6 +97,7 @@ export const PublishChannelPlugin = makeExtendSchemaPlugin((build) => {
                   storeOutboxMessage,
                   ctx,
                   config,
+                  subject,
                 );
               },
             );
