@@ -97,6 +97,7 @@ export const PublishPlaylistPlugin = makeExtendSchemaPlugin((build) => {
                   storeOutboxMessage,
                   ctx,
                   config,
+                  subject,
                 );
               },
             );

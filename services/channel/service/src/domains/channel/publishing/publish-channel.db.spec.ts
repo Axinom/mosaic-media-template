@@ -191,6 +191,7 @@ describe('publishChannel', () => {
           storeOutboxMessage,
           txn,
           testContext.config,
+          testUser,
         ),
       ),
     );
@@ -256,6 +257,7 @@ describe('publishChannel', () => {
             storeOutboxMessage,
             txn,
             testContext.config,
+            testUser,
           ),
         ),
       );
@@ -300,6 +302,7 @@ describe('publishChannel', () => {
           storeOutboxMessage,
           txn,
           testContext.config,
+          testUser,
         ),
       ),
     );
@@ -369,6 +372,7 @@ describe('publishChannel', () => {
           storeOutboxMessage,
           txn,
           testContext.config,
+          testUser,
         ),
       );
 
@@ -442,6 +446,7 @@ describe('publishChannel', () => {
         storeOutboxMessage,
         txn,
         testContext.config,
+        testUser,
       ),
     );
 
@@ -517,6 +522,7 @@ describe('publishChannel', () => {
         storeOutboxMessage,
         txn,
         testContext.config,
+        testUser,
       ),
     );
 

@@ -131,6 +131,7 @@ describe('publishPlaylist', () => {
           storeOutboxMessage,
           txn,
           testContext.config,
+          testUser,
         ),
       ),
     );
@@ -179,6 +180,7 @@ describe('publishPlaylist', () => {
         storeOutboxMessage,
         txn,
         testContext.config,
+        testUser,
       );
     });
 

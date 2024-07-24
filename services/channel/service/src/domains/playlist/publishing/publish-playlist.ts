@@ -1,3 +1,4 @@
+import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
@@ -17,6 +18,7 @@ export async function publishPlaylist(
   storeOutboxMessage: StoreOutboxMessage,
   ownerClient: ClientBase,
   config: Config,
+  subject: AuthenticatedManagementSubject,
 ): Promise<void> {
   // perform validation
   const validationResult = await validatePlaylist(
@@ -48,7 +50,11 @@ export async function publishPlaylist(
   const publishedDate = new Date().toUTCString();
   await update(
     'playlists',
-    { publication_state: 'PUBLISHED', published_date: publishedDate },
+    {
+      publication_state: 'PUBLISHED',
+      published_date: publishedDate,
+      published_user: subject.name,
+    },
     {
       id: id,
     },
