@@ -70,6 +70,7 @@ describe('getValidationAndVideos', () => {
       authToken,
       [],
       true,
+      true,
     );
 
     // Assert
@@ -87,6 +88,7 @@ describe('getValidationAndVideos', () => {
       endpoint,
       authToken,
       [],
+      true,
       false,
     );
 
@@ -110,6 +112,7 @@ describe('getValidationAndVideos', () => {
       endpoint,
       authToken,
       [{ videoId: videoId1 }],
+      true,
       true,
     );
 
@@ -138,6 +141,7 @@ describe('getValidationAndVideos', () => {
       authToken,
       [{ videoId: videoId1 }],
       true,
+      true,
     );
 
     // Assert
@@ -159,6 +163,7 @@ describe('getValidationAndVideos', () => {
       authToken,
       [{ videoId: videoId1 }, { videoId: videoId2 }],
       false,
+      false,
     );
 
     // Assert
@@ -178,7 +183,13 @@ describe('getValidationAndVideos', () => {
 
     // Act
     const error = await rejectionOf(
-      getValidationAndVideos(endpoint, authToken, [{ videoId: '1' }], true),
+      getValidationAndVideos(
+        endpoint,
+        authToken,
+        [{ videoId: '1' }],
+        false,
+        true,
+      ),
     );
 
     // Assert
@@ -207,7 +218,13 @@ describe('getValidationAndVideos', () => {
 
     // Act
     const error = await rejectionOf(
-      getValidationAndVideos(endpoint, authToken, [{ videoId: '1' }], true),
+      getValidationAndVideos(
+        endpoint,
+        authToken,
+        [{ videoId: '1' }],
+        false,
+        true,
+      ),
     );
 
     // Assert
@@ -235,7 +252,13 @@ describe('getValidationAndVideos', () => {
 
     // Act
     const error = await rejectionOf(
-      getValidationAndVideos(endpoint, authToken, [{ videoId: '1' }], true),
+      getValidationAndVideos(
+        endpoint,
+        authToken,
+        [{ videoId: '1' }],
+        false,
+        true,
+      ),
     );
 
     // Assert

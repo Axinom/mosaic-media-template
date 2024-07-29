@@ -27,6 +27,7 @@ export const getValidationAndVideos = async (
   videoServiceBaseUrl: string,
   authToken: string,
   selectedVideos: SelectedVideo[],
+  isDrmEnabled: boolean,
   exactlyOneVideo: boolean,
 ): Promise<{
   videos: DetailedVideo[];
@@ -67,14 +68,26 @@ export const getValidationAndVideos = async (
       }
 
       if (gqlVideo.isProtected) {
-        if (
-          gqlVideo.videoStreams.nodes
-            .filter((s) => s.type !== 'SUBTITLE' && s.type !== 'CLOSED_CAPTION')
-            .find((s) => !s.keyId)
-        ) {
+        if (isDrmEnabled) {
+          if (
+            gqlVideo.videoStreams.nodes
+              .filter(
+                (s) => s.type !== 'SUBTITLE' && s.type !== 'CLOSED_CAPTION',
+              )
+              .find((s) => !s.keyId)
+          ) {
+            validations.push(
+              createValidationError(
+                `Video "${gqlVideo.title}" with ID ${gqlVideo.id} is protected but no key ids were found.`,
+                'VIDEOS',
+                source,
+              ),
+            );
+          }
+        } else {
           validations.push(
             createValidationError(
-              `Video "${gqlVideo.title}" with ID ${gqlVideo.id} is protected but no key ids were found.`,
+              `Video "${gqlVideo.title}" with ID ${gqlVideo.id} is DRM protected.`,
               'VIDEOS',
               source,
             ),

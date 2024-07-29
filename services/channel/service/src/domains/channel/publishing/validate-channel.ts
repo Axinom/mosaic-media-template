@@ -67,6 +67,7 @@ export async function validateChannel(
       publishDto.placeholder_video_id
         ? [{ videoId: publishDto.placeholder_video_id }]
         : [],
+      publishDto.is_drm_protected,
       true,
     ),
     isManagedServiceEnabled(
