@@ -40,7 +40,11 @@ export async function unpublishPlaylist(
 
   await update(
     'playlists',
-    { publication_state: 'NOT_PUBLISHED', published_date: null },
+    {
+      publication_state: 'NOT_PUBLISHED',
+      published_date: null,
+      published_user: null,
+    },
     { id: id },
   ).run(ownerClient);
 

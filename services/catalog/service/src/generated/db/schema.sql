@@ -222,29 +222,129 @@ $$;
 
 
 --
--- Name: define_localization_view(text[], text, text, text); Type: FUNCTION; Schema: app_private; Owner: -
+-- Name: tg__locales_inserted(); Type: FUNCTION; Schema: app_hidden; Owner: -
 --
 
-CREATE FUNCTION app_private.define_localization_view(localizablefields text[], tablename text, localizationstablename text, fkcolumn text) RETURNS void
+CREATE FUNCTION app_hidden.tg__locales_inserted() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  NOTIFY notify_locale_inserted;
+  RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: add_default_placeholder_localizations(text); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.add_default_placeholder_localizations(newlocale text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE
-  localizableFieldsSelect text = 'l.' || array_to_string(localizableFields, ', l.');
+    tableName text;
+    columnNames text[];
+    columnNamesStr text;
+    foreignKey text;
 BEGIN
+    FOR tableName IN
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'app_public' AND table_name LIKE '%_localizations'
+    LOOP
+        SELECT array_agg(column_name)
+        INTO columnNames
+        FROM information_schema.columns
+        WHERE table_schema = 'app_public' AND table_name = tableName AND column_name != 'locale' AND column_name != 'id' AND column_name != 'is_default_locale';
+        
+        SELECT columnName
+        INTO foreignKey
+        FROM UNNEST(columnNames) AS columnName
+        WHERE columnName ILIKE '%_id';
+
+        columnNamesStr := array_to_string(columnNames, ', ');
+        EXECUTE 'INSERT INTO app_public.' || tableName || ' (' || columnNamesStr || ', locale, is_default_locale) ' ||
+            'SELECT ' || columnNamesStr || ', ''' || newLocale || ''', FALSE ' ||
+            'FROM app_public.' || tableName || ' ' ||
+            'WHERE is_default_locale = TRUE ' ||
+            'ON CONFLICT (' || foreignKey || ', locale) DO NOTHING;';
+    END LOOP;
+END;
+$$;
+
+
+--
+-- Name: define_localization_view(text, text, text); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.define_localization_view(tablename text, localizationstablename text, fkcolumn text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  localizableFieldsSelect text;
+BEGIN
+  SELECT 'l.' || string_agg(column_name, ', l.')
+  INTO localizableFieldsSelect
+  FROM information_schema.columns
+  WHERE table_schema = 'app_public' AND table_name = localizationsTableName AND column_name != 'locale' AND column_name != 'id' AND column_name != 'is_default_locale' AND column_name != fkColumn;
+        
   EXECUTE 'DROP VIEW IF EXISTS app_public.' || tableName || '_view CASCADE;';
   EXECUTE 'CREATE VIEW app_public.' || tableName || '_view AS ' ||
-          'SELECT p.*, c.* FROM app_public.' || tableName || ' p ' ||
-          'LEFT OUTER JOIN LATERAL ( ' ||
-          'SELECT ' || localizableFieldsSelect || ' ' ||
-          'FROM app_public.' || localizationsTableName || ' l ' ||
-          'WHERE l.' || fkColumn || ' = p.id AND (l.locale = (SELECT pg_catalog.current_setting(''mosaic.locale'', true)) OR l.is_default_locale IS TRUE) ' ||
-          'ORDER BY l.is_default_locale ASC LIMIT 1) c ON TRUE;';
+          'SELECT p.*, ' || localizableFieldsSelect || ' FROM app_public.' || localizationsTableName || ' as l ' ||
+          'JOIN app_public.' || tableName || ' AS p ON l.' || fkColumn || ' = p.id ' ||
+          'WHERE l.locale = (SELECT pg_catalog.current_setting(''mosaic.locale'', true));';
 
   EXECUTE 'GRANT SELECT ON app_public.' || tableName || '_view TO "catalog_service_gql_role";';
 
   EXECUTE 'COMMENT ON TABLE app_public.' || tableName || ' IS E''@omit\n@name ' || tableName || '_data'';';
   EXECUTE 'COMMENT ON TABLE app_public.' || localizationsTableName || ' IS E''@omit'';';
   EXECUTE 'COMMENT ON VIEW app_public.' || tableName || '_view IS E''@name ' || tableName || '\n@primaryKey id'';';
+END;
+$$;
+
+
+--
+-- Name: set_initial_locales(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.set_initial_locales() RETURNS text[]
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    tableName text;
+    localeRecord RECORD;
+    localesFound text[] := '{}';
+    query text;
+BEGIN
+    FOR tableName IN
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'app_public' AND table_name LIKE '%_localizations'
+    LOOP
+        IF localesFound != '{}' THEN
+            -- If locales have been found in a previous iteration, exit the loop
+            EXIT;
+        END IF;
+
+        query := 'SELECT DISTINCT locale, is_default_locale FROM app_public.' || tableName || ';';
+        FOR localeRecord IN EXECUTE query
+        LOOP
+          IF localesFound = '{}' THEN
+            -- If something is found and this is the first locale to be
+            -- processed - drop existing locales
+            DELETE FROM app_public.locales;
+          END IF;
+
+          INSERT INTO app_public.locales (locale, is_default)
+          VALUES (localeRecord.locale, localeRecord.is_default_locale)
+          ON CONFLICT (locale) DO NOTHING;
+
+          localesFound := array_append(localesFound, localeRecord.locale);
+        END LOOP;
+    END LOOP;
+
+    RETURN localesFound;
 END;
 $$;
 
@@ -260,8 +360,8 @@ DECLARE
   found_column text;
 begin
   EXECUTE '
-    SELECT column_name 
-    FROM information_schema.columns 
+    SELECT column_name
+    FROM information_schema.columns
     WHERE table_schema='''||schemaName||''' and table_name='''||tableName||''' and column_name='''||columnName||''';
   ' INTO found_column;
 
@@ -337,6 +437,184 @@ $$;
 
 
 --
+-- Name: create_messaging_health_monitoring(); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.create_messaging_health_monitoring() RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+BEGIN
+
+  EXECUTE 'DROP TABLE IF EXISTS app_private.messaging_health CASCADE;';
+  EXECUTE '
+  CREATE TABLE app_private.messaging_health (
+    key TEXT PRIMARY KEY,
+    success BOOLEAN
+  );';
+  
+  EXECUTE 'CREATE OR REPLACE FUNCTION app_private.messaging_health_notify()
+    RETURNS trigger
+    LANGUAGE plpgsql
+  AS $function$
+  BEGIN
+    PERFORM pg_notify(''messaging_health_handled'', row_to_json(NEW)::text);
+    RETURN NULL;
+  END;
+  $function$ ';
+
+  EXECUTE  'DROP TRIGGER IF EXISTS _500_messaging_health_trigger ON app_private.messaging_health;';
+  EXECUTE  'CREATE trigger _500_messaging_health_trigger
+              AFTER UPDATE ON app_private.messaging_health
+              FOR EACH ROW EXECUTE PROCEDURE app_private.messaging_health_notify();';
+
+END;
+$_$;
+
+
+--
+-- Name: create_trx_next_messages_function(text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.create_trx_next_messages_function(trx_next_message_function_schema text, trx_table_schema text, trx_table_name text) RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+BEGIN
+  EXECUTE 'DROP FUNCTION IF EXISTS ' || trx_next_message_function_schema || '.next_'|| trx_table_name ||'_messages(integer, integer);';
+  EXECUTE 'CREATE OR REPLACE FUNCTION ' || trx_next_message_function_schema || '.next_'|| trx_table_name ||'_messages(
+  max_size integer, lock_ms integer)
+    RETURNS SETOF ' || trx_table_schema || '.'|| trx_table_name ||' 
+    LANGUAGE ''plpgsql''
+
+AS $BODY$
+DECLARE 
+  loop_row ' || trx_table_schema || '.'|| trx_table_name ||'%ROWTYPE;
+  message_row ' || trx_table_schema || '.'|| trx_table_name ||'%ROWTYPE;
+  ids uuid[] := ''{}'';
+BEGIN
+
+  IF max_size < 1 THEN
+    RAISE EXCEPTION ''The max_size for the next messages batch must be at least one.'' using errcode = ''MAXNR'';
+  END IF;
+
+  -- get (only) the oldest message of every segment but only return it if it is not locked
+  FOR loop_row IN
+    SELECT * FROM ' || trx_table_schema || '.'|| trx_table_name ||' m WHERE m.id in (SELECT DISTINCT ON (segment) id
+      FROM ' || trx_table_schema || '.'|| trx_table_name ||'
+      WHERE processed_at IS NULL AND abandoned_at IS NULL
+      ORDER BY segment, created_at) order by created_at
+  LOOP
+    BEGIN
+      EXIT WHEN cardinality(ids) >= max_size;
+    
+      SELECT *
+        INTO message_row
+        FROM ' || trx_table_schema || '.'|| trx_table_name ||'
+        WHERE id = loop_row.id
+        FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+      
+      IF message_row.locked_until > NOW() THEN
+        CONTINUE;
+      END IF;
+      
+      ids := array_append(ids, message_row.id);
+    EXCEPTION 
+      WHEN lock_not_available THEN
+        CONTINUE;
+      WHEN serialization_failure THEN
+        CONTINUE;
+    END;
+  END LOOP;
+  
+  -- if max_size not reached: get the oldest parallelizable message independent of segment
+  IF cardinality(ids) < max_size THEN
+    FOR loop_row IN
+      SELECT * FROM ' || trx_table_schema || '.'|| trx_table_name ||'
+        WHERE concurrency = ''parallel'' AND processed_at IS NULL AND abandoned_at IS NULL AND locked_until < NOW() 
+          AND id NOT IN (SELECT UNNEST(ids))
+        order by created_at
+    LOOP
+      BEGIN
+        EXIT WHEN cardinality(ids) >= max_size;
+
+        SELECT *
+          INTO message_row
+          FROM ' || trx_table_schema || '.'|| trx_table_name ||'
+          WHERE id = loop_row.id
+          FOR NO KEY UPDATE NOWAIT; -- throw/catch error when locked
+
+        ids := array_append(ids, message_row.id);
+      EXCEPTION 
+        WHEN lock_not_available THEN
+          CONTINUE;
+        WHEN serialization_failure THEN
+          CONTINUE;
+      END;
+    END LOOP;
+  END IF;
+  
+  -- set a short lock value so the the workers can each process a message
+  IF cardinality(ids) > 0 THEN
+
+    RETURN QUERY 
+      UPDATE ' || trx_table_schema || '.'|| trx_table_name ||'
+        SET locked_until = clock_timestamp() + (lock_ms || '' milliseconds'')::INTERVAL, started_attempts = started_attempts + 1
+        WHERE ID = ANY(ids)
+        RETURNING *;
+
+  END IF;
+END;
+$BODY$;';
+END;
+$_$;
+
+
+--
+-- Name: create_trx_table(text, text, text[], text); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.create_trx_table(trx_schema text, trx_table_name text, additional_roles_to_grant text[], concurrency text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+  role_ TEXT;
+BEGIN
+  EXECUTE 'DROP TABLE IF EXISTS ' || trx_schema || '.'|| trx_table_name ||' CASCADE;';
+  EXECUTE 'CREATE TABLE ' || trx_schema || '.'|| trx_table_name ||' (
+            id uuid PRIMARY KEY,
+            aggregate_type TEXT NOT NULL,
+            aggregate_id TEXT NOT NULL, 
+            message_type TEXT NOT NULL,
+            payload JSONB NOT NULL,
+            metadata JSONB,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT clock_timestamp(),
+            processed_at TIMESTAMPTZ,
+            started_attempts smallint NOT NULL DEFAULT 0,
+            finished_attempts smallint NOT NULL DEFAULT 0,
+            segment TEXT,
+            locked_until TIMESTAMPTZ NOT NULL DEFAULT to_timestamp(0),
+            concurrency TEXT NOT NULL DEFAULT ''' || concurrency || ''',
+            abandoned_at TIMESTAMPTZ
+          );';
+  EXECUTE 'ALTER TABLE ' || trx_schema || '.'|| trx_table_name ||' ADD CONSTRAINT '|| trx_table_name ||'_concurrency_check
+            CHECK (concurrency IN (''sequential'', ''parallel''));';
+  
+  -- The owner role has full access - no grants needed
+  -- Grants for additional roles are given here
+  FOREACH role_ IN ARRAY additional_roles_to_grant LOOP
+    EXECUTE 'GRANT SELECT, INSERT, DELETE ON ' || trx_schema || '.'|| trx_table_name ||' TO ' || role_ || ';';
+    EXECUTE 'GRANT UPDATE (locked_until, processed_at, abandoned_at, started_attempts, finished_attempts) ON ' || trx_schema || '.'|| trx_table_name ||' TO ' || role_ || ';';
+  END LOOP;  
+
+  EXECUTE 'SELECT ax_define.define_index(''segment'', '''|| trx_table_name ||''', '''||trx_schema||''');';
+  EXECUTE 'SELECT ax_define.define_index(''created_at'', '''|| trx_table_name ||''', ''' || trx_schema || ''');';
+  EXECUTE 'SELECT ax_define.define_index(''processed_at'', '''|| trx_table_name ||''', ''' || trx_schema || ''');';
+  EXECUTE 'SELECT ax_define.define_index(''abandoned_at'', '''|| trx_table_name ||''', ''' || trx_schema || ''');';
+  EXECUTE 'SELECT ax_define.define_index(''locked_until'', '''|| trx_table_name ||''', ''' || trx_schema || ''');';
+END;
+$$;
+
+
+--
 -- Name: define_audit_date_fields_on_table(text, text); Type: FUNCTION; Schema: ax_define; Owner: -
 --
 
@@ -345,7 +623,7 @@ CREATE FUNCTION ax_define.define_audit_date_fields_on_table(tablename text, sche
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
+    DO $do$ BEGIN
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN created_date timestamptz NOT NULL DEFAULT (now() at time zone ''utc'');
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN updated_date timestamptz NOT NULL DEFAULT (now() at time zone ''utc'');
@@ -368,7 +646,7 @@ CREATE FUNCTION ax_define.define_audit_user_fields_on_table(tablename text, sche
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
+    DO $do$ BEGIN
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN created_user text NOT NULL DEFAULT ''' || defaultUserName || ''';
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN updated_user text NOT NULL DEFAULT ''' || defaultUserName || ''';
@@ -442,8 +720,8 @@ DECLARE
 BEGIN
   EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ENABLE ROW LEVEL SECURITY;';
   EXECUTE 'DROP POLICY IF EXISTS ' || tableName || '_end_user_authorization ON ' || schemaName || '.' || tableName || ';';
-  
- 
+
+
   EXECUTE 'CREATE POLICY ' || tableName || '_end_user_authorization ON ' || schemaName || '.' || tableName || ' AS RESTRICTIVE FOR ALL
     USING (' || end_user_rls_string || ');';
 
@@ -469,10 +747,10 @@ $$;
 
 
 --
--- Name: define_indexes_with_id(text, text, text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
+-- Name: define_indexes_with_id(text, text, text, text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
 --
 
-CREATE FUNCTION ax_define.define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text DEFAULT NULL::text, indexnamedesc text DEFAULT NULL::text) RETURNS void
+CREATE FUNCTION ax_define.define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text DEFAULT NULL::text, indexnamedesc text DEFAULT NULL::text, idfieldname text DEFAULT 'id'::text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -481,8 +759,8 @@ BEGIN
   PERFORM ax_utils.validate_identifier_length(indexNameAsc, 'If the auto-generated name is too long then an "indexNameAsc" argument must be provided.');
   PERFORM ax_utils.validate_identifier_length(indexNameDesc, 'If the auto-generated name is too long then an "indexNameDesc" argument must be provided.');
   PERFORM ax_define.drop_indexes_with_id(fieldName, tableName, indexNameAsc, indexNameDesc);
-  EXECUTE 'CREATE INDEX idx_' || tableName || '_' || fieldName || '_asc_with_id ON ' || schemaName || '.' || tableName || ' (' || fieldName || ' ASC, id ASC);';
-  EXECUTE 'CREATE INDEX idx_' || tableName || '_' || fieldName || '_desc_with_id ON ' || schemaName || '.' || tableName || ' (' || fieldName || ' DESC, id ASC);';
+  EXECUTE 'CREATE INDEX idx_' || tableName || '_' || fieldName || '_asc_with_id ON ' || schemaName || '.' || tableName || ' (' || fieldName || ' ASC, ' || idFieldName || ' ASC);';
+  EXECUTE 'CREATE INDEX idx_' || tableName || '_' || fieldName || '_desc_with_id ON ' || schemaName || '.' || tableName || ' (' || fieldName || ' DESC, ' || idFieldName || ' ASC);';
 END;
 $$;
 
@@ -542,18 +820,24 @@ $$;
 CREATE FUNCTION ax_define.define_subscription_triggers(idcolumn text, tablename text, schemaname text, maintablename text, eventtype text) RETURNS void
     LANGUAGE plpgsql
     AS $$
+DECLARE
+  createEvent text = eventType || '_CREATED';
+  changeEvent text = eventType || '_CHANGED';
+  deleteEvent text = eventType || '_DELETED';
 BEGIN
+  EXECUTE 'COMMENT ON TABLE ' || schemaName || '.' || tableName || '  IS E''@subscription_events_' || mainTableName || ' ' || createEvent || ',' || changeEvent || ',' || deleteEvent || ''';';
+  
   EXECUTE 'DROP TRIGGER IF EXISTS _500_gql_' || tableName || '_inserted ON ' || schemaName || '.' || tableName;
   EXECUTE 'CREATE TRIGGER _500_gql_' || tableName || '_inserted after insert on ' || schemaName || '.' || tableName || ' ' ||
-          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || eventType || 'Created'',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
+          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || createEvent || ''',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
 
   EXECUTE 'DROP TRIGGER IF EXISTS _500_gql_' || tableName || '_updated ON ' || schemaName || '.' || tableName;
   EXECUTE 'CREATE TRIGGER _500_gql_' || tableName || '_updated after update on ' || schemaName || '.' || tableName || ' ' ||
-          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || eventType || 'Changed'',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
+          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || changeEvent || ''',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
 
   EXECUTE 'DROP TRIGGER IF EXISTS _500_gql_' || tableName || '_deleted ON ' || schemaName || '.' || tableName;
   EXECUTE 'CREATE TRIGGER _500_gql_' || tableName || '_deleted before delete on ' || schemaName || '.' || tableName || ' ' ||
-          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || eventType || 'Deleted'',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
+          'for each row execute procedure ax_utils.tg__graphql_subscription(''' || deleteEvent || ''',''graphql:' || mainTableName || ''',''' || idColumn || ''');';
 END;
 $$;
 
@@ -588,15 +872,15 @@ BEGIN
   -- Set updated_date=now() on the foreign table. This will propogate UPDATE triggers.
   --
   -- A new function is created for each table to do this.
-  --     It *may* be possible to use a stock function with trigger arguments but its not easy as NEW and OLD cannot be accessed with dynamic column names. A possible 
-  --     solution to that is described here: https://itectec.com/database/postgresql-assignment-of-a-column-with-dynamic-column-name/. But even there the advise is 
+  --     It *may* be possible to use a stock function with trigger arguments but its not easy as NEW and OLD cannot be accessed with dynamic column names. A possible
+  --     solution to that is described here: https://itectec.com/database/postgresql-assignment-of-a-column-with-dynamic-column-name/. But even there the advise is
   --     to: "Just write a new trigger function for each table. Less hassle, better performance. Byte the bullet on code duplication:"
   --
-  -- WARNING: This function uses "SECURITY DEFINER". This is required to ensure that update to the target table is allowed. This means that the function is 
+  -- WARNING: This function uses "SECURITY DEFINER". This is required to ensure that update to the target table is allowed. This means that the function is
   --          executed with role "DB_OWNER". Any propogated trigger functions will also execute with role "DB_OWNER".
   EXECUTE  '
             CREATE OR REPLACE FUNCTION ' || schemaName || '.' || functionName || '() RETURNS TRIGGER
-            LANGUAGE plpgsql 
+            LANGUAGE plpgsql
             SECURITY DEFINER
             SET search_path = pg_temp
             AS $b$
@@ -609,31 +893,31 @@ BEGIN
                         RETURN NULL;
                     END IF;
                 END IF;
-                
+
                 -- UPDATE (where relationship is unchanged, or changed to another entity in which case a change is triggered on both the old and new relation)
                 IF (OLD.' || idColumnName || ' IS NOT NULL AND NEW.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE (' || foreignIdColumnName || ' = OLD.' || idColumnName || ') OR (' || foreignIdColumnName || ' = NEW.' || idColumnName || ');
-                
+
                 -- INSERT (or UPDATE which sets nullable relationship)
                 ELSIF (NEW.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE ' || foreignIdColumnName || ' = NEW.' || idColumnName || ';
-                
+
                 -- DELETE (or UPDATE which removes nullable relationship)
                 ELSIF (OLD.' || idColumnName || ' IS NOT NULL) THEN
                     UPDATE ' || foreignSchemaName || '.' || foreignTableName || ' SET updated_date=now()
                     WHERE ' || foreignIdColumnName || ' = OLD.' || idColumnName || ';
-                    
+
                 END IF;
                 RETURN NULL;
             END $b$;
             REVOKE EXECUTE ON FUNCTION ' || schemaName || '.' || functionName || '() FROM public;
             ';
-  
+
   -- Function runs *AFTER* INSERT, UPDATE, DELETE. Propogated queries can still raise an error and rollback the transaction
   EXECUTE  'DROP TRIGGER IF EXISTS _200_propogate_timestamps on ' || schemaName || '.' || tableName;
-  EXECUTE  'CREATE trigger _200_propogate_timestamps 
+  EXECUTE  'CREATE trigger _200_propogate_timestamps
             AFTER INSERT OR UPDATE OR DELETE ON ' || schemaName || '.' || tableName || '
             FOR EACH ROW EXECUTE PROCEDURE ' || schemaName || '.' || functionName || '();';
 END;
@@ -697,17 +981,17 @@ CREATE FUNCTION ax_define.define_user_id_on_table(tablename text, schemaname tex
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
+    DO $do$ BEGIN
       BEGIN
           ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN user_id UUID NOT NULL DEFAULT ''00000000-0000-0000-0000-000000000000'';
       EXCEPTION
           WHEN duplicate_column THEN RAISE NOTICE ''The column user_id already exists in the ' || schemaName || '.' || tableName || ' table.'';
       END;
     END $do$;
-    
+
     ALTER TABLE ' || schemaName || '.' || tableName || ' DROP CONSTRAINT IF EXISTS user_id_not_default;
     ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT user_id_not_default CHECK (ax_utils.constraint_not_default_uuid(user_id, uuid_nil()));
-    
+
     SELECT ax_define.define_user_id_trigger(''' || tableName || ''', ''' || schemaName || ''');
   ';
 END;
@@ -916,6 +1200,59 @@ $_$;
 
 
 --
+-- Name: pgmemento_create_table_audit(text, text, text, boolean, boolean, boolean); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.pgmemento_create_table_audit(table_name text, schema_name text DEFAULT 'app_public'::text, audit_id_column_name text DEFAULT 'pgmemento_audit_id'::text, log_old_data boolean DEFAULT true, log_new_data boolean DEFAULT false, log_state boolean DEFAULT false) RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+BEGIN
+    PERFORM pgmemento.create_table_audit($1, $2, $3, $4, $5, $6, TRUE);
+EXCEPTION
+    -- If this has been run before the table will already have the pgmemento_audit_id column and an error will be thrown.
+    WHEN duplicate_column THEN
+        RAISE INFO 'Column % already exists on %.%', $3, $2, $1 ;
+END;
+$_$;
+
+
+--
+-- Name: pgmemento_delete_old_logs(interval); Type: FUNCTION; Schema: ax_define; Owner: -
+--
+
+CREATE FUNCTION ax_define.pgmemento_delete_old_logs(age interval) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    counter INTEGER;
+    transaction_id INTEGER;
+    tablename TEXT;
+    schemaname TEXT;
+BEGIN
+    counter := 0;
+    FOR transaction_id, tablename, schemaname IN (
+        -- 1. Get all transaction metadata and associated table event metadata older than specified age.
+        SELECT DISTINCT
+            tl.id, el.table_name, el.schema_name
+        FROM
+            pgmemento.transaction_log tl
+            JOIN pgmemento.table_event_log el ON tl.id = el.transaction_id
+        WHERE
+            tl.txid_time  < NOW() - age)
+    LOOP
+        -- 2. Delete all table event metadata and row log entries associated with the transaction.
+        PERFORM  pgmemento.delete_table_event_log(transaction_id, tablename, schemaname);
+        -- 3. Delete the transaction metadata itself.
+        PERFORM pgmemento.delete_txid_log(transaction_id);
+        counter := counter + 1;
+    END LOOP;
+
+    RETURN counter;
+END;
+$$;
+
+
+--
 -- Name: set_enum_as_column_type(text, text, text, text, text, text, text, text); Type: FUNCTION; Schema: ax_define; Owner: -
 --
 
@@ -932,10 +1269,10 @@ BEGIN
   END IF;
   IF NOT ax_define.column_exists(columnName, tableName, schemaName) THEN
     EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD COLUMN ' || columnName ||' text ' || default_setting || ' ' || notNullOptions || ';';
-  END IF; 
+  END IF;
 
   -- Set the column that uses enum value as a foreign key
-  EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT ' || constraintName || ' FOREIGN KEY ('|| columnName ||') REFERENCES ' || enumSchemaName || '.' || enumName || '(value);'; 
+  EXECUTE 'ALTER TABLE ' || schemaName || '.' || tableName || ' ADD CONSTRAINT ' || constraintName || ' FOREIGN KEY ('|| columnName ||') REFERENCES ' || enumSchemaName || '.' || enumName || '(value);';
 END;
 $$;
 
@@ -949,8 +1286,8 @@ CREATE FUNCTION ax_define.set_enum_domain(columnname text, tablename text, schem
     AS $_$
 BEGIN
   EXECUTE '
-    DO $do$ BEGIN 
-      BEGIN 
+    DO $do$ BEGIN
+      BEGIN
         CREATE DOMAIN ' || enumSchemaName || '.' || enumName || ' AS text;
       EXCEPTION
         WHEN duplicate_object THEN RAISE NOTICE ''Domain already existed.'';
@@ -1855,15 +2192,11 @@ CREATE VIEW app_public.channel_view AS
     p.dash_stream_url,
     p.hls_stream_url,
     p.key_id,
-    c.title,
-    c.description
-   FROM (app_public.channel p
-     LEFT JOIN LATERAL ( SELECT l.title,
-            l.description
-           FROM app_public.channel_localizations l
-          WHERE ((l.channel_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title,
+    l.description
+   FROM (app_public.channel_localizations l
+     JOIN app_public.channel p ON ((l.channel_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -1993,17 +2326,12 @@ ALTER TABLE app_public.collection_localizations ALTER COLUMN id ADD GENERATED BY
 CREATE VIEW app_public.collection_view AS
  SELECT p.id,
     p.tags,
-    c.title,
-    c.description,
-    c.synopsis
-   FROM (app_public.collection p
-     LEFT JOIN LATERAL ( SELECT l.title,
-            l.description,
-            l.synopsis
-           FROM app_public.collection_localizations l
-          WHERE ((l.collection_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title,
+    l.description,
+    l.synopsis
+   FROM (app_public.collection_localizations l
+     JOIN app_public.collection p ON ((l.collection_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -2272,17 +2600,12 @@ CREATE VIEW app_public.episode_view AS
     p.episode_cast,
     p.tags,
     p.production_countries,
-    c.title,
-    c.description,
-    c.synopsis
-   FROM (app_public.episode p
-     LEFT JOIN LATERAL ( SELECT l.title,
-            l.description,
-            l.synopsis
-           FROM app_public.episode_localizations l
-          WHERE ((l.episode_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title,
+    l.description,
+    l.synopsis
+   FROM (app_public.episode_localizations l
+     JOIN app_public.episode p ON ((l.episode_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -2291,6 +2614,16 @@ CREATE VIEW app_public.episode_view AS
 
 COMMENT ON VIEW app_public.episode_view IS '@name episode
 @primaryKey id';
+
+
+--
+-- Name: locales; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.locales (
+    locale text NOT NULL,
+    is_default boolean DEFAULT false NOT NULL
+);
 
 
 --
@@ -2375,13 +2708,10 @@ ALTER TABLE app_public.movie_genre_localizations ALTER COLUMN id ADD GENERATED B
 CREATE VIEW app_public.movie_genre_view AS
  SELECT p.id,
     p.order_no,
-    c.title
-   FROM (app_public.movie_genre p
-     LEFT JOIN LATERAL ( SELECT l.title
-           FROM app_public.movie_genre_localizations l
-          WHERE ((l.movie_genre_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title
+   FROM (app_public.movie_genre_localizations l
+     JOIN app_public.movie_genre p ON ((l.movie_genre_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -2623,17 +2953,12 @@ CREATE VIEW app_public.movie_view AS
     p.movie_cast,
     p.production_countries,
     p.tags,
-    c.title,
-    c.description,
-    c.synopsis
-   FROM (app_public.movie p
-     LEFT JOIN LATERAL ( SELECT l.title,
-            l.description,
-            l.synopsis
-           FROM app_public.movie_localizations l
-          WHERE ((l.movie_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title,
+    l.description,
+    l.synopsis
+   FROM (app_public.movie_localizations l
+     JOIN app_public.movie p ON ((l.movie_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -2763,13 +3088,10 @@ CREATE VIEW app_public.program_view AS
     p.sort_index,
     p.movie_id,
     p.episode_id,
-    c.title
-   FROM (app_public.program p
-     LEFT JOIN LATERAL ( SELECT l.title
-           FROM app_public.program_localizations l
-          WHERE ((l.program_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title
+   FROM (app_public.program_localizations l
+     JOIN app_public.program p ON ((l.program_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -3035,15 +3357,11 @@ CREATE VIEW app_public.season_view AS
     p.season_cast,
     p.production_countries,
     p.tags,
-    c.description,
-    c.synopsis
-   FROM (app_public.season p
-     LEFT JOIN LATERAL ( SELECT l.description,
-            l.synopsis
-           FROM app_public.season_localizations l
-          WHERE ((l.season_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.description,
+    l.synopsis
+   FROM (app_public.season_localizations l
+     JOIN app_public.season p ON ((l.season_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -3136,13 +3454,10 @@ ALTER TABLE app_public.tvshow_genre_localizations ALTER COLUMN id ADD GENERATED 
 CREATE VIEW app_public.tvshow_genre_view AS
  SELECT p.id,
     p.order_no,
-    c.title
-   FROM (app_public.tvshow_genre p
-     LEFT JOIN LATERAL ( SELECT l.title
-           FROM app_public.tvshow_genre_localizations l
-          WHERE ((l.tvshow_genre_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title
+   FROM (app_public.tvshow_genre_localizations l
+     JOIN app_public.tvshow_genre p ON ((l.tvshow_genre_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -3384,17 +3699,12 @@ CREATE VIEW app_public.tvshow_view AS
     p.tvshow_cast,
     p.production_countries,
     p.tags,
-    c.title,
-    c.description,
-    c.synopsis
-   FROM (app_public.tvshow p
-     LEFT JOIN LATERAL ( SELECT l.title,
-            l.description,
-            l.synopsis
-           FROM app_public.tvshow_localizations l
-          WHERE ((l.tvshow_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title,
+    l.description,
+    l.synopsis
+   FROM (app_public.tvshow_localizations l
+     JOIN app_public.tvshow p ON ((l.tvshow_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -3556,6 +3866,14 @@ ALTER TABLE ONLY app_public.episode_video_streams
 
 ALTER TABLE ONLY app_public.episode_videos
     ADD CONSTRAINT episode_videos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: locales locales_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.locales
+    ADD CONSTRAINT locales_pkey PRIMARY KEY (locale);
 
 
 --
@@ -3815,6 +4133,78 @@ ALTER TABLE ONLY app_public.tvshow_videos
 
 
 --
+-- Name: channel_localizations unique_by_channel_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.channel_localizations
+    ADD CONSTRAINT unique_by_channel_id_and_locale UNIQUE (channel_id, locale);
+
+
+--
+-- Name: collection_localizations unique_by_collection_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_localizations
+    ADD CONSTRAINT unique_by_collection_id_and_locale UNIQUE (collection_id, locale);
+
+
+--
+-- Name: episode_localizations unique_by_episode_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.episode_localizations
+    ADD CONSTRAINT unique_by_episode_id_and_locale UNIQUE (episode_id, locale);
+
+
+--
+-- Name: movie_genre_localizations unique_by_movie_genre_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.movie_genre_localizations
+    ADD CONSTRAINT unique_by_movie_genre_id_and_locale UNIQUE (movie_genre_id, locale);
+
+
+--
+-- Name: movie_localizations unique_by_movie_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.movie_localizations
+    ADD CONSTRAINT unique_by_movie_id_and_locale UNIQUE (movie_id, locale);
+
+
+--
+-- Name: program_localizations unique_by_program_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.program_localizations
+    ADD CONSTRAINT unique_by_program_id_and_locale UNIQUE (program_id, locale);
+
+
+--
+-- Name: season_localizations unique_by_season_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.season_localizations
+    ADD CONSTRAINT unique_by_season_id_and_locale UNIQUE (season_id, locale);
+
+
+--
+-- Name: tvshow_genre_localizations unique_by_tvshow_genre_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.tvshow_genre_localizations
+    ADD CONSTRAINT unique_by_tvshow_genre_id_and_locale UNIQUE (tvshow_genre_id, locale);
+
+
+--
+-- Name: tvshow_localizations unique_by_tvshow_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.tvshow_localizations
+    ADD CONSTRAINT unique_by_tvshow_id_and_locale UNIQUE (tvshow_id, locale);
+
+
+--
 -- Name: video_stream_type video_stream_type_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -3876,6 +4266,20 @@ CREATE INDEX idx_channel_localizations_channel_id ON app_public.channel_localiza
 --
 
 CREATE INDEX idx_channel_localizations_locale ON app_public.channel_localizations USING btree (locale);
+
+
+--
+-- Name: idx_channel_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_channel_localizations_title_asc_with_id ON app_public.channel_localizations USING btree (title, channel_id);
+
+
+--
+-- Name: idx_channel_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_channel_localizations_title_desc_with_id ON app_public.channel_localizations USING btree (title DESC, channel_id);
 
 
 --
@@ -3942,6 +4346,20 @@ CREATE INDEX idx_collection_localizations_locale ON app_public.collection_locali
 
 
 --
+-- Name: idx_collection_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_collection_localizations_title_asc_with_id ON app_public.collection_localizations USING btree (title, collection_id);
+
+
+--
+-- Name: idx_collection_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_collection_localizations_title_desc_with_id ON app_public.collection_localizations USING btree (title DESC, collection_id);
+
+
+--
 -- Name: idx_episode_genres_relation_episode_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -3988,6 +4406,20 @@ CREATE INDEX idx_episode_localizations_episode_id ON app_public.episode_localiza
 --
 
 CREATE INDEX idx_episode_localizations_locale ON app_public.episode_localizations USING btree (locale);
+
+
+--
+-- Name: idx_episode_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_episode_localizations_title_asc_with_id ON app_public.episode_localizations USING btree (title, episode_id);
+
+
+--
+-- Name: idx_episode_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_episode_localizations_title_desc_with_id ON app_public.episode_localizations USING btree (title DESC, episode_id);
 
 
 --
@@ -4047,6 +4479,20 @@ CREATE INDEX idx_movie_genre_localizations_movie_genre_id ON app_public.movie_ge
 
 
 --
+-- Name: idx_movie_genre_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_genre_localizations_title_asc_with_id ON app_public.movie_genre_localizations USING btree (title, movie_genre_id);
+
+
+--
+-- Name: idx_movie_genre_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_genre_localizations_title_desc_with_id ON app_public.movie_genre_localizations USING btree (title DESC, movie_genre_id);
+
+
+--
 -- Name: idx_movie_genre_order_no; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -4093,6 +4539,20 @@ CREATE INDEX idx_movie_localizations_locale ON app_public.movie_localizations US
 --
 
 CREATE INDEX idx_movie_localizations_movie_id ON app_public.movie_localizations USING btree (movie_id);
+
+
+--
+-- Name: idx_movie_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_localizations_title_asc_with_id ON app_public.movie_localizations USING btree (title, movie_id);
+
+
+--
+-- Name: idx_movie_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_localizations_title_desc_with_id ON app_public.movie_localizations USING btree (title DESC, movie_id);
 
 
 --
@@ -4163,6 +4623,20 @@ CREATE INDEX idx_program_localizations_locale ON app_public.program_localization
 --
 
 CREATE INDEX idx_program_localizations_program_id ON app_public.program_localizations USING btree (program_id);
+
+
+--
+-- Name: idx_program_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_program_localizations_title_asc_with_id ON app_public.program_localizations USING btree (title, program_id);
+
+
+--
+-- Name: idx_program_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_program_localizations_title_desc_with_id ON app_public.program_localizations USING btree (title DESC, program_id);
 
 
 --
@@ -4257,10 +4731,80 @@ CREATE INDEX idx_season_videos_season_id ON app_public.season_videos USING btree
 
 
 --
+-- Name: idx_trgm_channel_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_channel_localizations_title ON app_public.channel_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_collection_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_collection_localizations_title ON app_public.collection_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_episode_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_episode_localizations_title ON app_public.episode_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_movie_genre_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_movie_genre_localizations_title ON app_public.movie_genre_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_movie_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_movie_localizations_title ON app_public.movie_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_program_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_program_localizations_title ON app_public.program_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_tvshow_genre_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_tvshow_genre_localizations_title ON app_public.tvshow_genre_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_tvshow_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_tvshow_localizations_title ON app_public.tvshow_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
 -- Name: idx_tvshow_genre_localizations_locale; Type: INDEX; Schema: app_public; Owner: -
 --
 
 CREATE INDEX idx_tvshow_genre_localizations_locale ON app_public.tvshow_genre_localizations USING btree (locale);
+
+
+--
+-- Name: idx_tvshow_genre_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_genre_localizations_title_asc_with_id ON app_public.tvshow_genre_localizations USING btree (title, tvshow_genre_id);
+
+
+--
+-- Name: idx_tvshow_genre_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_genre_localizations_title_desc_with_id ON app_public.tvshow_genre_localizations USING btree (title DESC, tvshow_genre_id);
 
 
 --
@@ -4317,6 +4861,20 @@ CREATE INDEX idx_tvshow_licenses_tvshow_id ON app_public.tvshow_licenses USING b
 --
 
 CREATE INDEX idx_tvshow_localizations_locale ON app_public.tvshow_localizations USING btree (locale);
+
+
+--
+-- Name: idx_tvshow_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_localizations_title_asc_with_id ON app_public.tvshow_localizations USING btree (title, tvshow_id);
+
+
+--
+-- Name: idx_tvshow_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_localizations_title_desc_with_id ON app_public.tvshow_localizations USING btree (title DESC, tvshow_id);
 
 
 --
@@ -4394,6 +4952,13 @@ CREATE INDEX tvshow_genres_relation_tvshow_genre_id_idx ON app_public.tvshow_gen
 --
 
 CREATE INDEX tvshow_genres_relation_tvshow_id_idx ON app_public.tvshow_genres_relation USING btree (tvshow_id);
+
+
+--
+-- Name: locales _500_locales_inserted; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _500_locales_inserted AFTER INSERT ON app_public.locales FOR EACH STATEMENT EXECUTE FUNCTION app_hidden.tg__locales_inserted();
 
 
 --
@@ -4829,10 +5394,32 @@ GRANT ALL ON FUNCTION app_hidden.next_inbox_messages(max_size integer, lock_ms i
 
 
 --
--- Name: FUNCTION define_localization_view(localizablefields text[], tablename text, localizationstablename text, fkcolumn text); Type: ACL; Schema: app_private; Owner: -
+-- Name: FUNCTION tg__locales_inserted(); Type: ACL; Schema: app_hidden; Owner: -
 --
 
-REVOKE ALL ON FUNCTION app_private.define_localization_view(localizablefields text[], tablename text, localizationstablename text, fkcolumn text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION app_hidden.tg__locales_inserted() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.tg__locales_inserted() TO catalog_service_gql_role;
+
+
+--
+-- Name: FUNCTION add_default_placeholder_localizations(newlocale text); Type: ACL; Schema: app_private; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_private.add_default_placeholder_localizations(newlocale text) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION define_localization_view(tablename text, localizationstablename text, fkcolumn text); Type: ACL; Schema: app_private; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_private.define_localization_view(tablename text, localizationstablename text, fkcolumn text) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION set_initial_locales(); Type: ACL; Schema: app_private; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_private.set_initial_locales() FROM PUBLIC;
 
 
 --
@@ -4857,6 +5444,30 @@ GRANT ALL ON FUNCTION ax_define.create_enum_table(enumname text, schemaname text
 
 REVOKE ALL ON FUNCTION ax_define.create_messaging_counter_table() FROM PUBLIC;
 GRANT ALL ON FUNCTION ax_define.create_messaging_counter_table() TO catalog_service_gql_role;
+
+
+--
+-- Name: FUNCTION create_messaging_health_monitoring(); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.create_messaging_health_monitoring() FROM PUBLIC;
+GRANT ALL ON FUNCTION ax_define.create_messaging_health_monitoring() TO catalog_service_gql_role;
+
+
+--
+-- Name: FUNCTION create_trx_next_messages_function(trx_next_message_function_schema text, trx_table_schema text, trx_table_name text); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.create_trx_next_messages_function(trx_next_message_function_schema text, trx_table_schema text, trx_table_name text) FROM PUBLIC;
+GRANT ALL ON FUNCTION ax_define.create_trx_next_messages_function(trx_next_message_function_schema text, trx_table_schema text, trx_table_name text) TO catalog_service_gql_role;
+
+
+--
+-- Name: FUNCTION create_trx_table(trx_schema text, trx_table_name text, additional_roles_to_grant text[], concurrency text); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.create_trx_table(trx_schema text, trx_table_name text, additional_roles_to_grant text[], concurrency text) FROM PUBLIC;
+GRANT ALL ON FUNCTION ax_define.create_trx_table(trx_schema text, trx_table_name text, additional_roles_to_grant text[], concurrency text) TO catalog_service_gql_role;
 
 
 --
@@ -4908,11 +5519,11 @@ GRANT ALL ON FUNCTION ax_define.define_index(fieldname text, tablename text, sch
 
 
 --
--- Name: FUNCTION define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text, indexnamedesc text); Type: ACL; Schema: ax_define; Owner: -
+-- Name: FUNCTION define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text, indexnamedesc text, idfieldname text); Type: ACL; Schema: ax_define; Owner: -
 --
 
-REVOKE ALL ON FUNCTION ax_define.define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text, indexnamedesc text) FROM PUBLIC;
-GRANT ALL ON FUNCTION ax_define.define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text, indexnamedesc text) TO catalog_service_gql_role;
+REVOKE ALL ON FUNCTION ax_define.define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text, indexnamedesc text, idfieldname text) FROM PUBLIC;
+GRANT ALL ON FUNCTION ax_define.define_indexes_with_id(fieldname text, tablename text, schemaname text, indexnameasc text, indexnamedesc text, idfieldname text) TO catalog_service_gql_role;
 
 
 --
@@ -5097,6 +5708,22 @@ GRANT ALL ON FUNCTION ax_define.drop_users_trigger(tablename text, schemaname te
 
 REVOKE ALL ON FUNCTION ax_define.live_suggestions_endpoint(propertyname text, typename text, schemaname text) FROM PUBLIC;
 GRANT ALL ON FUNCTION ax_define.live_suggestions_endpoint(propertyname text, typename text, schemaname text) TO catalog_service_gql_role;
+
+
+--
+-- Name: FUNCTION pgmemento_create_table_audit(table_name text, schema_name text, audit_id_column_name text, log_old_data boolean, log_new_data boolean, log_state boolean); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.pgmemento_create_table_audit(table_name text, schema_name text, audit_id_column_name text, log_old_data boolean, log_new_data boolean, log_state boolean) FROM PUBLIC;
+GRANT ALL ON FUNCTION ax_define.pgmemento_create_table_audit(table_name text, schema_name text, audit_id_column_name text, log_old_data boolean, log_new_data boolean, log_state boolean) TO catalog_service_gql_role;
+
+
+--
+-- Name: FUNCTION pgmemento_delete_old_logs(age interval); Type: ACL; Schema: ax_define; Owner: -
+--
+
+REVOKE ALL ON FUNCTION ax_define.pgmemento_delete_old_logs(age interval) FROM PUBLIC;
+GRANT ALL ON FUNCTION ax_define.pgmemento_delete_old_logs(age interval) TO catalog_service_gql_role;
 
 
 --
@@ -5627,6 +6254,13 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.episode_videos_id_seq TO catalog_servi
 --
 
 GRANT SELECT ON TABLE app_public.episode_view TO catalog_service_gql_role;
+
+
+--
+-- Name: TABLE locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT ON TABLE app_public.locales TO catalog_service_gql_role;
 
 
 --

@@ -42,6 +42,7 @@ export async function unpublishChannel(
     {
       publication_state: 'NOT_PUBLISHED',
       published_date: null,
+      published_user: null,
       hls_stream_url: null,
       dash_stream_url: null,
       key_id: null,

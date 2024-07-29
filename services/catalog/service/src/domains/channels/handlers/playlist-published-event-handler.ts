@@ -10,7 +10,7 @@ import {
 import { ClientBase } from 'pg';
 import { deletes, insert, upsert } from 'zapatos/db';
 import { program, program_images, program_localizations } from 'zapatos/schema';
-import { Config } from '../../../common';
+import { Config, syncInMemoryLocales } from '../../../common';
 import { EPISODE_ID_PREFIX, MOVIE_ID_PREFIX } from '../common';
 
 export class PlaylistPublishedEventHandler extends TransactionalInboxMessageHandler<
@@ -100,6 +100,10 @@ export class PlaylistPublishedEventHandler extends TransactionalInboxMessageHand
       }, {});
 
       if (localizations) {
+        await syncInMemoryLocales(
+          payload.programs[0]?.localizations ?? [],
+          txnClient,
+        );
         await insert(
           'program_localizations',
           localizations.map((l): program_localizations.Insertable => {
