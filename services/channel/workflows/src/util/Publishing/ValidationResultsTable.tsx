@@ -50,7 +50,8 @@ export const ValidationResultsTable: React.FC = () => {
       label="Validation Details"
       value={mapValidationValidations(values?.validationMessages)}
       allowReordering={false}
-      allowAddAndRemove={false}
+      allowNewData={false}
+      textWrap={true}
       columns={[
         {
           propertyName: 'context',
