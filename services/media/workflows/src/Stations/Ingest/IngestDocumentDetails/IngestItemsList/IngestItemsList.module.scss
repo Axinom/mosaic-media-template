@@ -24,9 +24,13 @@
 .row {
   display: grid;
   grid-template-columns: 50px 125px 100px 100px 1fr;
-  grid-auto-rows: 50px;
+  grid-auto-rows: minmax(50px, auto);
   align-items: center;
   border-bottom: 1px solid #ddd;
+
+  div {
+    padding: 5px 0;
+  }
 }
 
 .icon {

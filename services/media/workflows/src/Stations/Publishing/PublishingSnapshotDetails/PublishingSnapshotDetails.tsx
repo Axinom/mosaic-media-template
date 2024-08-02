@@ -134,6 +134,7 @@ const Form: React.FC = () => {
           values.snapshot?.snapshotState ?? SnapshotState.Error,
         )}
         showActionButton={false}
+        textWrap={true}
       />
     </GenericField>
   );
