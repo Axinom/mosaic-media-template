@@ -7,7 +7,7 @@ type PolicyMode = 'DEFAULT' | 'DEV' | 'STRICT';
 
 export const getPolicy = (mode: PolicyMode): Dict<unknown> => {
   // Some policy properties below are set explicitly to their default values and
-  // can be omitted. See more details in documentation: https://portal.axinom.com/mosaic/documentation/drm/entitlement-message
+  // can be omitted. See more details in documentation: https://docs.axinom.com/services/drm/license-service/entitlement-message
   switch (mode) {
     case 'DEV':
       return {

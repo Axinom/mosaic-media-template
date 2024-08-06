@@ -104,4 +104,4 @@ the Portal Admin UI can be used (https://admin.service.eu.axinom.com). You would
 need to create or use an existing service account for your environment, make
 sure it has `Settings: Edit` permission for the Video Service, and generate a
 JWT on a dedicated `Access Token` station. More info here:
-https://portal.axinom.com/mosaic/documentation/authenticate-service-account
+https://docs.axinom.com/platform/core/identity/authenticate-serviceaccount
