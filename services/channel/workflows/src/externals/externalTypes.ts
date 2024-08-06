@@ -1,3 +1,4 @@
+import { ID, Maybe } from '@axinom/mosaic-managed-workflow-integration';
 import '@axinom/mosaic-portal';
 import {
   ChannelDetailsStationDynamicSegments,
@@ -14,6 +15,28 @@ interface ChannelDetailsResolverData {
 interface ProgramDetailsResolverData {
   station: ChannelStationNames.ProgramDetails;
   resolver: (dynamicSegments: ProgramDetailsStationDynamicSegments) => void;
+}
+
+export interface FastProviderData {
+  type: string;
+  label: string;
+  selectionComponent: React.FC<{
+    onClose: () => void;
+    onSelected: (items: ProgramEntity[]) => void;
+  }>;
+  detailsResolver?: (params: {
+    entityId: string;
+    entityType: string;
+  }) => string;
+}
+
+export type FastProviderType = 'fast-provider';
+
+export interface ProgramEntity {
+  title: string;
+  videoId: ID;
+  entityId: string;
+  imageId?: Maybe<ID>;
 }
 
 declare module '@axinom/mosaic-portal' {
@@ -51,5 +74,13 @@ declare module '@axinom/mosaic-portal' {
   // entity details station resolver function
   interface ResolverFunction {
     (station: string, dynamicRouteSegments: string): string | undefined;
+  }
+
+  // Channel pilet Fast provider registration
+  interface ProviderRegistration {
+    (type: FastProviderType, data: FastProviderData): void;
+  }
+  interface GetProviders {
+    (type: FastProviderType): FastProviderData[];
   }
 }
