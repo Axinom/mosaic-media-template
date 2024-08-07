@@ -1,11 +1,23 @@
 /* eslint-disable no-console */
 import { transformCustomType } from '@axinom/mosaic-db-common';
+import { getValidatedConfig, pick } from '@axinom/mosaic-service-common';
 import { Config as ZapatosConfig, generate } from 'zapatos/generate';
-import { getFullConfig } from '../src/common';
+import { getConfigDefinitions } from '../src/common/config';
 
 async function main(): Promise<void> {
   const isCurrent = process.argv?.[2] === 'current';
-  const config = getFullConfig();
+  const configDefinitions = pick(
+    getConfigDefinitions(),
+    'dbOwnerConnectionString',
+    'dbShadowConnectionString',
+    'dbOwner',
+    'pgUserSuffix',
+    'dbOwnerPassword',
+    'pgHost',
+    'pgPort',
+    'dbName',
+  );
+  const config = getValidatedConfig(configDefinitions);
   const cfg: ZapatosConfig = {
     db: {
       connectionString: isCurrent
