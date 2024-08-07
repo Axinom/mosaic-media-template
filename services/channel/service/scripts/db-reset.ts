@@ -5,7 +5,7 @@ import {
 } from '@axinom/mosaic-service-common';
 import { reset } from 'graphile-migrate';
 import { initializePgPool, runResetQueries } from '../../../../scripts/helpers';
-import { getMigrationSettings } from '../src/common';
+import { getMigrationSettings } from '../src/common/db';
 
 async function main(): Promise<void> {
   console.log('1. Validating Config...');
