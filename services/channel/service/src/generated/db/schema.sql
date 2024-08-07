@@ -226,15 +226,15 @@ $_$;
 
 
 --
--- Name: define_publish_trigger(text, text); Type: FUNCTION; Schema: app_hidden; Owner: -
+-- Name: define_publish_trigger(text, text, text); Type: FUNCTION; Schema: app_hidden; Owner: -
 --
 
-CREATE FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text) RETURNS void
+CREATE FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text, columnnames text) RETURNS void
     LANGUAGE plpgsql
     AS $$
 BEGIN
   EXECUTE 'DROP TRIGGER IF EXISTS _900__publish_user ON ' || schemaName || '.' || tableName || ';';
-  EXECUTE 'CREATE trigger _900__publish_user BEFORE INSERT OR UPDATE ON ' || schemaName || '.' || tableName ||
+  EXECUTE 'CREATE trigger _900__publish_user BEFORE INSERT OR UPDATE OF ' || columnNames || ' ON ' || schemaName || '.' || tableName ||
           ' FOR EACH ROW EXECUTE PROCEDURE app_hidden.tg__publish_audit_fields();';
 END;
 $$;
@@ -834,17 +834,6 @@ BEGIN
   -- set changed state
   IF NEW.published_date = OLD.published_date AND NEW.updated_date <> OLD.updated_date THEN
     NEW.publication_state = 'CHANGED';
-  END IF;
-
-  -- set published_user when published_date changes 
-  IF NEW.published_date IS NULL THEN
-    NEW.published_user = NULL;
-  ELSIF OLD.published_date IS NULL OR NEW.published_date <> OLD.published_date THEN
-    IF username IS NULL OR username !~* '.*\S.*' THEN -- if username is null or empty string
-      NEW.published_user = 'Unknown';
-    ELSE
-      NEW.published_user = username;
-    END IF;
   END IF;
   RETURN NEW;
 END;
@@ -3642,14 +3631,14 @@ CREATE TRIGGER _500_gql_programs_updated AFTER UPDATE ON app_public.programs FOR
 -- Name: channels _900__publish_user; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE ON app_public.channels FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__publish_audit_fields();
+CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE OF title, description, placeholder_video_id, is_drm_protected ON app_public.channels FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__publish_audit_fields();
 
 
 --
 -- Name: playlists _900__publish_user; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE ON app_public.playlists FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__publish_audit_fields();
+CREATE TRIGGER _900__publish_user BEFORE INSERT OR UPDATE OF title, start_date_time, calculated_duration_in_seconds, channel_id ON app_public.playlists FOR EACH ROW EXECUTE FUNCTION app_hidden.tg__publish_audit_fields();
 
 
 --
@@ -3961,11 +3950,11 @@ GRANT ALL ON FUNCTION app_hidden.create_localizable_entity_triggers(aggregateid 
 
 
 --
--- Name: FUNCTION define_publish_trigger(tablename text, schemaname text); Type: ACL; Schema: app_hidden; Owner: -
+-- Name: FUNCTION define_publish_trigger(tablename text, schemaname text, columnnames text); Type: ACL; Schema: app_hidden; Owner: -
 --
 
-REVOKE ALL ON FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text) FROM PUBLIC;
-GRANT ALL ON FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text) TO channel_service_gql_role;
+REVOKE ALL ON FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text, columnnames text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.define_publish_trigger(tablename text, schemaname text, columnnames text) TO channel_service_gql_role;
 
 
 --

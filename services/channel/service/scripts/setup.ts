@@ -5,7 +5,7 @@ import {
   pick,
 } from '@axinom/mosaic-service-common';
 import { serviceAccountSetup } from '../../../../scripts/helpers';
-import { getConfigDefinitions } from '../src/common';
+import { getConfigDefinitions } from '../src/common/config';
 
 async function main(): Promise<void> {
   const config = getValidatedConfig(
