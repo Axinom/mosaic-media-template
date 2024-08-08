@@ -1014,12 +1014,6 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **collection_items_relation.collection_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      collection_id: string | null;
-      /**
       * **collection_items_relation.movie_id**
       * - `text` in database
       * - Nullable, no default
@@ -1055,6 +1049,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       relation_type: string | null;
+      /**
+      * **collection_items_relation.collection_fk_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_fk_id: string | null;
+      /**
+      * **collection_items_relation.collection_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_id: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -1064,12 +1070,6 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **collection_items_relation.collection_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      collection_id: string | null;
-      /**
       * **collection_items_relation.movie_id**
       * - `text` in database
       * - Nullable, no default
@@ -1105,6 +1105,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       relation_type: string | null;
+      /**
+      * **collection_items_relation.collection_fk_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_fk_id: string | null;
+      /**
+      * **collection_items_relation.collection_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_id: string | null;
     }
     export interface Whereable {
       /**
@@ -1113,12 +1125,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, identity column
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **collection_items_relation.collection_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      collection_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **collection_items_relation.movie_id**
       * - `text` in database
@@ -1155,6 +1161,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       relation_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collection_items_relation.collection_fk_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_fk_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collection_items_relation.collection_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1163,12 +1181,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, identity column
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **collection_items_relation.collection_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      collection_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **collection_items_relation.movie_id**
       * - `text` in database
@@ -1205,6 +1217,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       relation_type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **collection_items_relation.collection_fk_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_fk_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **collection_items_relation.collection_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1213,12 +1237,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, identity column
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **collection_items_relation.collection_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      collection_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **collection_items_relation.movie_id**
       * - `text` in database
@@ -1255,6 +1273,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       relation_type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **collection_items_relation.collection_fk_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_fk_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **collection_items_relation.collection_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      collection_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'collection_items_relation_pkey';
     export type Column = keyof Selectable;

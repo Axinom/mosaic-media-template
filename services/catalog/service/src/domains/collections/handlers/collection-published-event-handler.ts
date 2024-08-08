@@ -59,24 +59,13 @@ export class CollectionPublishedEventHandler extends TransactionalInboxMessageHa
         ),
       ).run(txnClient);
     }
-    if (payload.images) {
-      await insert(
-        'collection_images',
-        payload.images.map(
-          (image): collection_images.Insertable => ({
-            collection_id: insertedCollection.id,
-            ...image,
-          }),
-        ),
-      ).run(txnClient);
-    }
 
     if (payload.related_items) {
       await insert(
         'collection_items_relation',
         payload.related_items.map(
           (relation): collection_items_relation.Insertable => ({
-            collection_id: insertedCollection.id,
+            collection_fk_id: insertedCollection.id,
             ...relation,
           }),
         ),

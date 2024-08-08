@@ -138,6 +138,11 @@
             "type": "string",
             "pattern": "^(episode)-([a-zA-Z0-9_-]+)$"
           },
+          "collection_id": {
+            "description": "Content ID of a collection. Must match the pattern `^(collection)-([a-zA-Z0-9_-]+)$`.",
+            "type": "string",
+            "pattern": "^(collection)-([a-zA-Z0-9_-]+)$"
+          },
           "order_no": {
             "description": "Ordering number for the genre.",
             "type": "integer"
@@ -150,7 +155,8 @@
               "MOVIE",
               "TVSHOW",
               "SEASON",
-              "EPISODE"
+              "EPISODE",
+              "COLLECTION"
             ]
           }
         },
