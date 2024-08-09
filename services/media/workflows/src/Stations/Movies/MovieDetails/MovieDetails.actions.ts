@@ -35,6 +35,11 @@ export function useMovieDetailsActions(id: number): {
     history.push('/movies');
   };
 
+  const removeFromContentSet = async (): Promise<void> => {
+    // await deleteMovieMutation({ variables: { input: { id } } });
+    history.push('/movies');
+  };
+
   const actions: FormActionData<MovieDetailsFormData>[] = [
     {
       label: 'Manage Videos',
@@ -56,6 +61,16 @@ export function useMovieDetailsActions(id: number): {
           },
         ]
       : []),
+
+    {
+      label: 'Remove from Content Set',
+      confirmationMode: 'Simple',
+      onActionSelected: removeFromContentSet,
+    },
+    {
+      label: 'Collection Assignment',
+      path: `/movies/${id}/CollectionsToMovie`,
+    },
     {
       label: 'Publish Now',
       confirmationMode: 'Simple',

@@ -913,6 +913,41 @@ export type DeleteManifestWebhookConfigurationPayload = {
 };
 
 /**
+ * All input for the `deleteVideo` mutation.
+ * @permissions: VIDEOS_ENCODE,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,ADMIN
+ */
+export type DeleteVideoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `Video` mutation. */
+export type DeleteVideoPayload = {
+  __typename?: 'DeleteVideoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Video` that was deleted by this mutation. */
+  video?: Maybe<Video>;
+  /** An edge for our `Video`. May be used by Relay 1. */
+  videoEdge?: Maybe<VideosEdge>;
+};
+
+
+/** The output of our delete `Video` mutation. */
+export type DeleteVideoPayloadVideoEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideosOrderBy>>;
+};
+
+/**
  * All input for the `deleteVideosTag` mutation.
  * @permissions: VIDEOS_ENCODE,VIDEOS_EDIT,ADMIN
  */
@@ -1645,8 +1680,13 @@ export type EncodingProcessingProfile = {
   explicitIv?: Maybe<Scalars['String']>;
   extractAndApplyHdr: Scalars['Boolean'];
   extractAndApplyHdr10Plus: Scalars['Boolean'];
+  failOnNoAudioTracks: Scalars['Boolean'];
+  failOnNoCaptionTracks: Scalars['Boolean'];
+  failOnNoSubtitleTracks: Scalars['Boolean'];
+  failOnNoVideoTracks: Scalars['Boolean'];
   forceAspectRatioToStandard: Scalars['Boolean'];
   forcePixelAspectRatioTo1: Scalars['Boolean'];
+  forensicWatermarking?: Maybe<ForensicWatermarking>;
   hlsManifestName?: Maybe<Scalars['String']>;
   id: Scalars['UUID'];
   manifestName?: Maybe<Scalars['String']>;
@@ -1742,10 +1782,20 @@ export type EncodingProcessingProfileCondition = {
   extractAndApplyHdr?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `extractAndApplyHdr10Plus` field. */
   extractAndApplyHdr10Plus?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `failOnNoAudioTracks` field. */
+  failOnNoAudioTracks?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `failOnNoCaptionTracks` field. */
+  failOnNoCaptionTracks?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `failOnNoSubtitleTracks` field. */
+  failOnNoSubtitleTracks?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `failOnNoVideoTracks` field. */
+  failOnNoVideoTracks?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `forceAspectRatioToStandard` field. */
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `forcePixelAspectRatioTo1` field. */
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `forensicWatermarking` field. */
+  forensicWatermarking?: InputMaybe<ForensicWatermarking>;
   /**
    * Checks for equality with the object’s `hlsManifestName` field.
    * @matchesPattern()
@@ -1848,10 +1898,20 @@ export type EncodingProcessingProfileFilter = {
   extractAndApplyHdr?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `extractAndApplyHdr10Plus` field. */
   extractAndApplyHdr10Plus?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `failOnNoAudioTracks` field. */
+  failOnNoAudioTracks?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `failOnNoCaptionTracks` field. */
+  failOnNoCaptionTracks?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `failOnNoSubtitleTracks` field. */
+  failOnNoSubtitleTracks?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `failOnNoVideoTracks` field. */
+  failOnNoVideoTracks?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `forceAspectRatioToStandard` field. */
   forceAspectRatioToStandard?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `forcePixelAspectRatioTo1` field. */
   forcePixelAspectRatioTo1?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `forensicWatermarking` field. */
+  forensicWatermarking?: InputMaybe<ForensicWatermarkingFilter>;
   /** Filter by the object’s `hlsManifestName` field. */
   hlsManifestName?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
@@ -1923,8 +1983,13 @@ export type EncodingProcessingProfileInput = {
   explicitIv?: InputMaybe<Scalars['String']>;
   extractAndApplyHdr?: InputMaybe<Scalars['Boolean']>;
   extractAndApplyHdr10Plus?: InputMaybe<Scalars['Boolean']>;
+  failOnNoAudioTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoCaptionTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoSubtitleTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoVideoTracks?: InputMaybe<Scalars['Boolean']>;
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
+  forensicWatermarking?: InputMaybe<ForensicWatermarking>;
   /** @matchesPattern() */
   hlsManifestName?: InputMaybe<Scalars['String']>;
   /** @matchesPattern() */
@@ -1984,8 +2049,13 @@ export type EncodingProcessingProfilePatch = {
   explicitIv?: InputMaybe<Scalars['String']>;
   extractAndApplyHdr?: InputMaybe<Scalars['Boolean']>;
   extractAndApplyHdr10Plus?: InputMaybe<Scalars['Boolean']>;
+  failOnNoAudioTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoCaptionTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoSubtitleTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoVideoTracks?: InputMaybe<Scalars['Boolean']>;
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
+  forensicWatermarking?: InputMaybe<ForensicWatermarking>;
   /** @matchesPattern() */
   hlsManifestName?: InputMaybe<Scalars['String']>;
   /** @matchesPattern() */
@@ -2075,10 +2145,20 @@ export enum EncodingProcessingProfilesOrderBy {
   ExtractAndApplyHdrDesc = 'EXTRACT_AND_APPLY_HDR_DESC',
   ExtractAndApplyHdr10PlusAsc = 'EXTRACT_AND_APPLY_HDR10PLUS_ASC',
   ExtractAndApplyHdr10PlusDesc = 'EXTRACT_AND_APPLY_HDR10PLUS_DESC',
+  FailOnNoAudioTracksAsc = 'FAIL_ON_NO_AUDIO_TRACKS_ASC',
+  FailOnNoAudioTracksDesc = 'FAIL_ON_NO_AUDIO_TRACKS_DESC',
+  FailOnNoCaptionTracksAsc = 'FAIL_ON_NO_CAPTION_TRACKS_ASC',
+  FailOnNoCaptionTracksDesc = 'FAIL_ON_NO_CAPTION_TRACKS_DESC',
+  FailOnNoSubtitleTracksAsc = 'FAIL_ON_NO_SUBTITLE_TRACKS_ASC',
+  FailOnNoSubtitleTracksDesc = 'FAIL_ON_NO_SUBTITLE_TRACKS_DESC',
+  FailOnNoVideoTracksAsc = 'FAIL_ON_NO_VIDEO_TRACKS_ASC',
+  FailOnNoVideoTracksDesc = 'FAIL_ON_NO_VIDEO_TRACKS_DESC',
   ForceAspectRatioToStandardAsc = 'FORCE_ASPECT_RATIO_TO_STANDARD_ASC',
   ForceAspectRatioToStandardDesc = 'FORCE_ASPECT_RATIO_TO_STANDARD_DESC',
   ForcePixelAspectRatioTo_1Asc = 'FORCE_PIXEL_ASPECT_RATIO_TO_1_ASC',
   ForcePixelAspectRatioTo_1Desc = 'FORCE_PIXEL_ASPECT_RATIO_TO_1_DESC',
+  ForensicWatermarkingAsc = 'FORENSIC_WATERMARKING_ASC',
+  ForensicWatermarkingDesc = 'FORENSIC_WATERMARKING_DESC',
   HlsManifestNameAsc = 'HLS_MANIFEST_NAME_ASC',
   HlsManifestNameDesc = 'HLS_MANIFEST_NAME_DESC',
   IdAsc = 'ID_ASC',
@@ -2739,13 +2819,15 @@ export enum ErrorCodesEnum {
   ValueIsNotObject = 'VALUE_IS_NOT_OBJECT',
   /** The selected source video was already processed. */
   VideoAlreadyProcessed = 'VIDEO_ALREADY_PROCESSED',
+  /** Unable to find the video to delete as both video ID and source location are not specified. */
+  VideoIdentifiersNotProvided = 'VIDEO_IDENTIFIERS_NOT_PROVIDED',
   /** The video was not found. */
   VideoNotFound = 'VIDEO_NOT_FOUND',
   /** Unable to create a video because provided relative path is empty. */
   VideoRelativePathEmpty = 'VIDEO_RELATIVE_PATH_EMPTY',
   /** The Video Representation must have width and/or height defined. */
   VideoRepresentationDimensionsNotSet = 'VIDEO_REPRESENTATION_DIMENSIONS_NOT_SET',
-  /** Unable to make a request to the webhook URL '%s'. Please make sure that the endpoint is reachable. */
+  /** Unable to make a request to the webhook URL '%s'. Please make sure that the endpoint is correct and reachable. */
   WebhookEndpointNotReachable = 'WEBHOOK_ENDPOINT_NOT_REACHABLE',
   /** Validation of webhook payload has failed. */
   WebhookPayloadValidationFailed = 'WEBHOOK_PAYLOAD_VALIDATION_FAILED',
@@ -2753,7 +2835,7 @@ export enum ErrorCodesEnum {
   WebhookRequestFailure = 'WEBHOOK_REQUEST_FAILURE',
   /** Generation of a webhook request has failed. */
   WebhookRequestGenerationFailed = 'WEBHOOK_REQUEST_GENERATION_FAILED',
-  /** The webhook for the URL '%s' responded with error(s). Please check the details for more information. */
+  /** The webhook for the URL '%s' responded with error(s): %s */
   WebhookRespondedWithErrors = 'WEBHOOK_RESPONDED_WITH_ERRORS',
   /** The request to get the %s secret succeeded, but the secret was not found. Please contact Axinom Support. */
   WebhookSecretNotFound = 'WEBHOOK_SECRET_NOT_FOUND',
@@ -2789,6 +2871,37 @@ export type FloatFilter = {
   notEqualTo?: InputMaybe<Scalars['Float']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['Float']>>;
+};
+
+export enum ForensicWatermarking {
+  /** Content Armor */
+  ContentArmor = 'CONTENT_ARMOR'
+}
+
+/** A filter to be used against ForensicWatermarking fields. All fields are combined with a logical ‘and.’ */
+export type ForensicWatermarkingFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<ForensicWatermarking>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<ForensicWatermarking>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<ForensicWatermarking>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<ForensicWatermarking>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<ForensicWatermarking>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<ForensicWatermarking>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<ForensicWatermarking>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<ForensicWatermarking>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<ForensicWatermarking>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<ForensicWatermarking>>;
 };
 
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
@@ -2967,12 +3080,13 @@ export type Mutation = {
   deleteEncodingVideoRepresentation?: Maybe<DeleteEncodingVideoRepresentationPayload>;
   deleteEntitlementWebhookConfiguration: DeleteEntitlementWebhookConfigurationPayload;
   deleteManifestWebhookConfiguration: DeleteManifestWebhookConfigurationPayload;
+  /** Deletes a single `Video` using a unique key. */
+  deleteVideo?: Maybe<DeleteVideoPayload>;
   /** Deletes a single `VideosTag` using a unique key. */
   deleteVideosTag?: Maybe<DeleteVideosTagPayload>;
   encodeVideo?: Maybe<EncodeVideoPayload>;
   generateEntitlementWebhookSecret: GenerateEntitlementWebhookSecretPayload;
   generateManifestWebhookSecret: GenerateManifestWebhookSecretPayload;
-  populateVideos?: Maybe<PopulatePayload>;
   retryEncodeVideo?: Maybe<RetryEncodeVideoPayload>;
   setAmazonS3AcquisitionProfile: EncodingAcquisitionProfile;
   setAmazonS3PublishingProfile: EncodingPublishingProfile;
@@ -2981,7 +3095,7 @@ export type Mutation = {
   setGeneralSettings: GeneralSetting;
   setHostingAzureAcquisitionProfile: EncodingAcquisitionProfile;
   setHostingAzurePublishingProfile: EncodingPublishingProfile;
-  truncateVideos?: Maybe<TruncateVideosPayload>;
+  startVideosDeletion?: Maybe<BulkMutationUuidPayload>;
   unarchiveVideos?: Maybe<BulkMutationUuidPayload>;
   updateAmazonS3AcquisitionProfile: EncodingAcquisitionProfile;
   updateAmazonS3PublishingProfile: EncodingPublishingProfile;
@@ -3081,6 +3195,12 @@ export type MutationDeleteEncodingVideoRepresentationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVideoArgs = {
+  input: DeleteVideoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteVideosTagArgs = {
   input: DeleteVideosTagInput;
 };
@@ -3089,12 +3209,6 @@ export type MutationDeleteVideosTagArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationEncodeVideoArgs = {
   input: EncodeVideoInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationPopulateVideosArgs = {
-  input: PopulateInput;
 };
 
 
@@ -3143,6 +3257,12 @@ export type MutationSetHostingAzureAcquisitionProfileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSetHostingAzurePublishingProfileArgs = {
   input: SetHostingAzurePublishingProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationStartVideosDeletionArgs = {
+  filter?: InputMaybe<VideoFilter>;
 };
 
 
@@ -3335,20 +3455,6 @@ export type PlaybackVideoPayload = {
   hlsManifestUrl?: Maybe<Scalars['String']>;
   playreadyLicenseServiceUrl?: Maybe<Scalars['String']>;
   widevineLicenseServiceUrl?: Maybe<Scalars['String']>;
-};
-
-export type PopulateInput = {
-  count: Scalars['Int'];
-  includeCuePoints?: InputMaybe<Scalars['Boolean']>;
-  includeHistories?: InputMaybe<Scalars['Boolean']>;
-  includeStreams?: InputMaybe<Scalars['Boolean']>;
-  includeTags?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type PopulatePayload = {
-  __typename?: 'PopulatePayload';
-  count: Scalars['Int'];
-  query?: Maybe<Query>;
 };
 
 export enum PreviewStatus {
@@ -3960,11 +4066,6 @@ export type TarModeFilter = {
   notEqualTo?: InputMaybe<TarMode>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<TarMode>>;
-};
-
-export type TruncateVideosPayload = {
-  __typename?: 'TruncateVideosPayload';
-  completed: Scalars['Boolean'];
 };
 
 export type UpdateAmazonS3AcquisitionProfileInput = {

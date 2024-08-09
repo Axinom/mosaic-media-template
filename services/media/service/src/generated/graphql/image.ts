@@ -261,6 +261,43 @@ export type DatetimeFilter = {
 };
 
 /**
+ * All input for the `deleteImage` mutation.
+ * @permissions: IMAGES_EDIT,ADMIN
+ */
+export type DeleteImageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `Image` mutation. */
+export type DeleteImagePayload = {
+  __typename?: 'DeleteImagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Image` that was deleted by this mutation. */
+  image?: Maybe<Image>;
+  /** An edge for our `Image`. May be used by Relay 1. */
+  imageEdge?: Maybe<ImagesEdge>;
+  /** Reads a single `ImageType` that is related to this `Image`. */
+  imageType?: Maybe<ImageType>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `Image` mutation. */
+export type DeleteImagePayloadImageEdgeArgs = {
+  orderBy?: InputMaybe<Array<ImagesOrderBy>>;
+};
+
+/**
  * All input for the `deleteImagesTag` mutation.
  * @permissions: IMAGES_EDIT,ADMIN
  */
@@ -382,6 +419,8 @@ export enum ErrorCodesEnum {
   IdentityServiceNotAccessible = 'IDENTITY_SERVICE_NOT_ACCESSIBLE',
   /** Unable to download image from Amazon S3 storage. Please contact Axinom support. */
   ImageDownloadFromAcquisitionStorageFailed = 'IMAGE_DOWNLOAD_FROM_ACQUISITION_STORAGE_FAILED',
+  /** Unable to find the image to delete as both image ID and original source location are not specified. */
+  ImageIdentifiersNotProvided = 'IMAGE_IDENTIFIERS_NOT_PROVIDED',
   /** The image path is invalid. */
   ImageInvalidPath = 'IMAGE_INVALID_PATH',
   /** Could not read the image file to get the image metadata. */
@@ -1390,20 +1429,20 @@ export type Mutation = {
   clearImageUploadWebhookSecret: ClearImageUploadWebhookSecretPayload;
   /** Creates a single `ImagesTag`. */
   createImagesTag?: Maybe<CreateImagesTagPayload>;
+  /** Deletes a single `Image` using a unique key. */
+  deleteImage?: Maybe<DeleteImagePayload>;
   /** Deletes a single `ImagesTag` using a unique key. */
   deleteImagesTag?: Maybe<DeleteImagesTagPayload>;
   /** Mutation do delete an existing image upload webhook configuration. */
   deleteImageUploadWebhookConfiguration: DeleteImageUploadWebhookConfigurationPayload;
   /** Generate a new image upload webhook secret for signing. */
   generateImageUploadWebhookSecret: GenerateImageUploadWebhookSecretPayload;
-  populateImages?: Maybe<PopulatePayload>;
-  populateImageTypes?: Maybe<PopulatePayload>;
   setAmazonS3AcquisitionProfile: ImageAcquisitionProfile;
   setAzureBlobAcquisitionProfile: ImageAcquisitionProfile;
   /** Mutation to set General Settings in Image Service. */
   setGeneralSettings: GeneralSetting;
   setHostingAzureAcquisitionProfile: ImageAcquisitionProfile;
-  truncateImages?: Maybe<TruncateImagesPayload>;
+  startImagesDeletion?: Maybe<BulkMutationUuidPayload>;
   unarchiveImages?: Maybe<BulkMutationUuidPayload>;
   updateAmazonS3AcquisitionProfile: ImageAcquisitionProfile;
   updateAzureBlobAcquisitionProfile: ImageAcquisitionProfile;
@@ -1429,14 +1468,14 @@ export type MutationCreateImagesTagArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteImagesTagArgs = {
-  input: DeleteImagesTagInput;
+export type MutationDeleteImageArgs = {
+  input: DeleteImageInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationPopulateImagesArgs = {
-  input: PopulateInput;
+export type MutationDeleteImagesTagArgs = {
+  input: DeleteImagesTagInput;
 };
 
 
@@ -1461,6 +1500,12 @@ export type MutationSetGeneralSettingsArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSetHostingAzureAcquisitionProfileArgs = {
   input: SetHostingAzureAcquisitionProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationStartImagesDeletionArgs = {
+  filter?: InputMaybe<ImageFilter>;
 };
 
 
@@ -1516,18 +1561,6 @@ export type PageInfo = {
   hasPreviousPage: Scalars['Boolean'];
   /** When paginating backwards, the cursor to continue. */
   startCursor?: Maybe<Scalars['Cursor']>;
-};
-
-export type PopulateInput = {
-  count: Scalars['Int'];
-  includeImageFiles?: InputMaybe<Scalars['Boolean']>;
-  includeTags?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type PopulatePayload = {
-  __typename?: 'PopulatePayload';
-  count: Scalars['Int'];
-  query?: Maybe<Query>;
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -1789,11 +1822,6 @@ export type Subscription = {
   __typename?: 'Subscription';
   /** Triggered when a Image is mutated (insert, update or delete).  */
   imageMutated?: Maybe<ImageSubscriptionPayload>;
-};
-
-export type TruncateImagesPayload = {
-  __typename?: 'TruncateImagesPayload';
-  completed: Scalars['Boolean'];
 };
 
 export type UpdateAmazonS3AcquisitionProfileInput = {

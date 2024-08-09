@@ -7,6 +7,7 @@ import {
   settingsGroupName,
 } from '../../index';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
+import { MovieCollectionAssignment } from './MovieCollectionAssignment/MovieCollectionAssignment';
 import { MovieCreate } from './MovieCreate/MovieCreate';
 import { MovieDetails } from './MovieDetails/MovieDetails';
 import { MovieDetailsCrumb } from './MovieDetails/MovieDetailsCrumb';
@@ -145,6 +146,21 @@ export function register(app: PiletApi, extensions: Extensions): void {
     {
       breadcrumb: () => 'Image Management',
       permissions: { 'media-service': ['ADMIN', 'MOVIES_EDIT', 'MOVIES_VIEW'] },
+    },
+  );
+
+  app.registerPage(
+    '/movies/:movieId/CollectionsToMovie',
+    () => (
+      <ExtensionsContext.Provider value={extensions}>
+        <MovieCollectionAssignment />
+      </ExtensionsContext.Provider>
+    ),
+    {
+      breadcrumb: () => 'Collection Assignment',
+      permissions: {
+        'media-service': ['ADMIN', 'COLLECTIONS_EDIT', 'COLLECTIONS_VIEW'],
+      },
     },
   );
 

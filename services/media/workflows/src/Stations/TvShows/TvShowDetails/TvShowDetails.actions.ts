@@ -35,6 +35,11 @@ export function useTvShowDetailsActions(id: number): {
     history.push('/tvshows');
   };
 
+  const removeFromContentSet = async (): Promise<void> => {
+    // await deleteTvShowMutation({ variables: { input: { id } } });
+    history.push('/tvshows');
+  };
+
   const actions: FormActionData<TvShowDetailsFormData>[] = [
     {
       label: 'Manage Seasons',
@@ -60,6 +65,15 @@ export function useTvShowDetailsActions(id: number): {
           },
         ]
       : []),
+    {
+      label: 'Remove from Content Set',
+      confirmationMode: 'Simple',
+      onActionSelected: removeFromContentSet,
+    },
+    {
+      label: 'Collection Assignment',
+      path: `/tvshows/${id}/CollectionsToTvshow`,
+    },
     {
       label: 'Publish Now',
       confirmationMode: 'Simple',

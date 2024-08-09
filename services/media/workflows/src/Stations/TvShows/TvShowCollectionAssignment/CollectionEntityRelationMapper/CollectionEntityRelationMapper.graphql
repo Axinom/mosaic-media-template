@@ -1,0 +1,20 @@
+query CollectionRelatedEntities($id: Int!) {
+  collection(id: $id) {
+    collectionRelations(orderBy: SORT_ORDER_ASC) {
+      nodes {
+        tvshow {
+          entityId: id
+          title
+          publishStatus
+          entityImages: tvshowsImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+        id
+        sortOrder
+      }
+    }
+  }
+}

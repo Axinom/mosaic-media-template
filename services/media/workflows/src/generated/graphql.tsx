@@ -16741,7 +16741,9 @@ export type CollectionsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
+export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{
+  moviesImages: { __typename?: "MoviesImagesConnection" | undefined; nodes: { __typename?: "MoviesImage" | undefined; imageId: any; }[]; }; __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } 
+}> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
 
 export type CollectionsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -17060,7 +17062,7 @@ export type SearchMovieProductionCountriesQueryVariables = Exact<{
 
 export type SearchMovieProductionCountriesQuery = { __typename?: 'Query', getMoviesProductionCountriesValues?: { __typename?: 'GetMoviesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
 
-export type MovieExplorerPropertiesFragment = { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> } };
+export type MovieExplorerPropertiesFragment = { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
 
 export type MoviesQueryVariables = Exact<{
   filter?: InputMaybe<MovieFilter>;
@@ -17069,12 +17071,12 @@ export type MoviesQueryVariables = Exact<{
 }>;
 
 
-export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
+export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
 
 export type MoviesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> } } | null } | null };
+export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
 
 export type MovieGenresQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -17768,11 +17770,29 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
       name
     }
   }
+  moviesLicenses {
+    nodes {
+      moviesLicensesCountries {
+        nodes {
+          code
+        }
+      }
+    }
+  }
+  collectionRelations {
+    nodes {
+      collection {
+        title
+      }
+    }
+  }
   studio
   publishedDate
   createdDate
   updatedDate
+  updatedUser
   publishStatus
+  __typename
 }
     `;
 export const PublishingSnapshotExplorerPropertiesFragmentDoc = gql`

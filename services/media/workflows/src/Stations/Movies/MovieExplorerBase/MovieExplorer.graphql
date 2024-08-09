@@ -32,11 +32,29 @@ fragment MovieExplorerProperties on Movie {
       name
     }
   }
+  moviesLicenses {
+    nodes {
+      moviesLicensesCountries {
+        nodes {
+          code
+        }
+      }
+    }
+  }
+  collectionRelations {
+    nodes {
+      collection {
+        title
+      }
+    }
+  }
   studio
   publishedDate
   createdDate
   updatedDate
+  updatedUser
   publishStatus
+  __typename
 }
 
 query Movies($filter: MovieFilter, $orderBy: [MoviesOrderBy!], $after: Cursor) {

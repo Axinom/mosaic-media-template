@@ -16,12 +16,11 @@ export const CollectionSnapshots: React.FC = () => {
     }>().collectionId,
   );
 
-  const [
-    createCollectionSnapshotMutation,
-  ] = useCreateCollectionSnapshotMutation({
-    client,
-    fetchPolicy: 'no-cache',
-  });
+  const [createCollectionSnapshotMutation] =
+    useCreateCollectionSnapshotMutation({
+      client,
+      fetchPolicy: 'no-cache',
+    });
 
   const handleItemCreate = async (): Promise<void> => {
     const { data } = await createCollectionSnapshotMutation({

@@ -11,6 +11,7 @@ import {
   InfoPanel,
   Paragraph,
   Section,
+  SelectField,
   SingleLineTextField,
   TagsField,
   TextAreaField,
@@ -374,28 +375,58 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
     });
     return data.getTvshowsProductionCountriesValues?.nodes ?? [];
   };
+  const bTypeOptions = [
+    { value: 'free', label: 'free' },
+    { value: 'free_authenticated', label: 'free_authenticated' },
+    { value: 'advertisement', label: 'advertisement' },
+    { value: 'premium', label: 'premium' },
+  ];
 
+  const sTypeOptions = [{ value: 'Movie', label: 'Movie' }];
+
+  const ageRatingOptions = [
+    { value: '12PLUS', label: '12PLUS' },
+    { value: '18PLUS', label: '18PLUS' },
+    { value: '6PLUS', label: '6PLUS' },
+    { value: '9PLUS', label: '9PLUS' },
+    { value: 'AL', label: 'AL' },
+    { value: 'DOVE_12PLUS', label: 'DOVE_12PLUS' },
+    { value: 'DOVE_18PLUS', label: 'DOVE_18PLUS' },
+    { value: 'DOVE_AL', label: 'DOVE_AL' },
+  ];
+
+  const languageOptions = [
+    'Abkhaz (ab)',
+    'Arabic (ar)',
+    'English (en)',
+    'Hindi (hi)',
+  ];
+
+  const contentOwnerOptions = [
+    { value: 'ACI', label: 'ACI' },
+    { value: 'BBI', label: 'BBI' },
+    { value: 'California Pictures', label: 'California Pictures' },
+    { value: 'FOX', label: 'FOX' },
+  ];
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
-      <Field
-        name="originalTitle"
-        label="Original Title"
-        as={SingleLineTextField}
-      />
-      <Field name="synopsis" label="Synopsis" as={TextAreaField} />
+      <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
+      <Field name="type" label="Type" as={TextAreaField} />
       <Field
-        name="externalId"
-        label="External ID"
-        className={classes.externalId}
-        as={SingleLineTextField}
+        name="businessType"
+        label="Business Type"
+        addEmptyOption={true}
+        options={bTypeOptions}
+        as={SelectField}
       />
       <Field
-        name="tags"
-        label="Tags"
-        liveSuggestionsResolver={tagsResolver}
-        as={CustomTagsField}
+        name="subtype"
+        label="Subtype"
+        addEmptyOption={true}
+        options={sTypeOptions}
+        as={SelectField}
       />
       <Field
         name="genres"
@@ -409,18 +440,73 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         liveSuggestionsResolver={castSuggestionResolver}
         as={CustomTagsField}
       />
-      <Field name="studio" label="Studio" as={SingleLineTextField} />
       <Field
-        name="productionCountries"
-        label="Production Countries"
-        liveSuggestionsResolver={productionCountriesResolver}
+        name="tags"
+        label="Tags"
+        liveSuggestionsResolver={tagsResolver}
         as={CustomTagsField}
       />
       <Field
         name="released"
-        label="Released Date"
+        label="Released"
         as={DateTimeTextField}
         modifyTime={false}
+      />
+      <Field
+        name="productionCountries"
+        label="Country"
+        liveSuggestionsResolver={productionCountriesResolver}
+        as={CustomTagsField}
+      />
+      <Field
+        name="ageRating"
+        label="Age Rating"
+        addEmptyOption={true}
+        options={ageRatingOptions}
+        as={SelectField}
+      />
+      <Field
+        name="adLanguages"
+        label="Audio Languages"
+        tagsOptions={languageOptions}
+        as={TagsField}
+      />
+      <Field
+        name="sbLanguages"
+        label="Subtitle Languages"
+        tagsOptions={languageOptions}
+        as={TagsField}
+      />
+      <Field
+        name="ccLanguages"
+        label="Caption Languages"
+        tagsOptions={languageOptions}
+        as={TagsField}
+      />
+      <Field
+        name="rating"
+        label="Rating"
+        className={classes.externalId}
+        as={SingleLineTextField}
+      />
+      <Field
+        name="contentOwners"
+        label="Content Owner"
+        addEmptyOption={true}
+        options={contentOwnerOptions}
+        as={SelectField}
+      />
+      <Field
+        name="customRating"
+        label="Custom Rating"
+        className={classes.externalId}
+        as={SingleLineTextField}
+      />
+      <Field
+        name="custom"
+        label="Custom"
+        className={classes.externalId}
+        as={TextAreaField}
       />
     </>
   );
