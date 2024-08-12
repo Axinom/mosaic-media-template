@@ -20,6 +20,10 @@ export interface RelatedItem {
    */
   episode_id?: string;
   /**
+   * Content ID of a collection. Must match the pattern `^(collection)-([a-zA-Z0-9_-]+)$`.
+   */
+  collection_id?: string;
+  /**
    * Ordering number for the genre.
    */
   order_no: number;

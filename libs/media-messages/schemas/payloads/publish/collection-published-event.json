@@ -75,6 +75,9 @@
           "episode_id": {
             "$ref": "./common.json#/definitions/episode_id"
           },
+          "collection_id": {
+            "$ref": "./common.json#/definitions/collection_id"
+          },
           "order_no": {
             "description": "Ordering number for the genre.",
             "type": "integer"
@@ -83,7 +86,7 @@
             "description": "Textual representation of relation type.",
             "type": "string",
             "title": "relation_type",
-            "enum": ["MOVIE", "TVSHOW", "SEASON", "EPISODE"]
+            "enum": ["MOVIE", "TVSHOW", "SEASON", "EPISODE", "COLLECTION"]
           }
         },
         "required": ["order_no", "relation_type"],
