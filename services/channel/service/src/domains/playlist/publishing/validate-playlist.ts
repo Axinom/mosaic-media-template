@@ -119,7 +119,6 @@ export async function validatePlaylist(
       config.videoServiceBaseUrl,
       jwtToken,
       selectedVideos,
-      channel.is_drm_protected,
       false,
     ),
     isManagedServiceEnabled(
