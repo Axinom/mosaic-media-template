@@ -10,6 +10,7 @@ import {
   InfoPanel,
   ObjectSchemaDefinition,
   Paragraph,
+  ReadOnlyField,
   Section,
   SingleLineTextField,
   TextAreaField,
@@ -168,7 +169,7 @@ const Panel: React.FC = () => {
           <ImageCover id={coverImageId} />
         </Section>
         <Section title="Additional Information">
-          <Paragraph title="ID">{values.id}</Paragraph>
+          <Paragraph title="External ID">{values.externalId}</Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -179,7 +180,7 @@ const Panel: React.FC = () => {
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
           {values.publishedDate ? (
-            <Paragraph title="Last Published">
+            <Paragraph title="  Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
           ) : null}
@@ -218,7 +219,7 @@ const Panel: React.FC = () => {
     );
   }, [
     values.collectionsImages?.nodes,
-    values.id,
+    values.externalId,
     values.createdDate,
     values.createdUser,
     values.updatedDate,
@@ -249,15 +250,28 @@ const Form: React.FC = () => {
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
-      <Field name="synopsis" label="Synopsis" as={TextAreaField} />
+      <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
-      <Field name="externalId" label="External ID" as={SingleLineTextField} />
+      <Field name="description" label="Type" as={ReadOnlyField} />
       <Field
         name="tags"
         label="Tags"
         liveSuggestionsResolver={tagsResolver}
         as={CustomTagsField}
       />
+      <Field
+        name="tags"
+        label="Countries"
+        liveSuggestionsResolver={tagsResolver}
+        as={CustomTagsField}
+      />
+      <Field
+        name="tags"
+        label="Languages"
+        liveSuggestionsResolver={tagsResolver}
+        as={CustomTagsField}
+      />
+      <Field name="title" label="Custom" as={SingleLineTextField} />
     </>
   );
 };

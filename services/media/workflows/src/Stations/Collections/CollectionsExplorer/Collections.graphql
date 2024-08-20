@@ -2,6 +2,8 @@ fragment CollectionExplorerProperties on Collection {
   id
   title
   externalId
+  description
+  synopsis
   collectionsTags {
     nodes {
       name
@@ -10,6 +12,7 @@ fragment CollectionExplorerProperties on Collection {
   publishedDate
   createdDate
   updatedDate
+  updatedUser
   publishStatus
   collectionsImages {
     nodes {

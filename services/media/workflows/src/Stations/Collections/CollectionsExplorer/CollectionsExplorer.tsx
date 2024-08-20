@@ -2,7 +2,6 @@ import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-in
 import {
   ActionData,
   Column,
-  createConnectionRenderer,
   DateRenderer,
   ExplorerDataProvider,
   IconName,
@@ -20,7 +19,6 @@ import {
   CollectionsOrderBy,
   CollectionsQuery,
   CollectionsQueryVariables,
-  CollectionsTagsConnection,
   CollectionSubscriptionEventKey,
   useCreateCollectionSnapshotMutation,
   useDeleteCollectionMutation,
@@ -68,21 +66,15 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
       size: '80px',
     },
     { label: 'Title', propertyName: 'title', size: '2fr' },
-    { label: 'External ID', propertyName: 'externalId' },
+    { label: 'Description', propertyName: 'title', size: '2fr' },
+    { label: 'Type', propertyName: 'title', size: '2fr' },
     {
-      label: 'Tags',
-      propertyName: 'collectionsTags',
-      sortable: false,
-      render: createConnectionRenderer<CollectionsTagsConnection>((node) => {
-        return node.name;
-      }),
-    },
-    { label: 'Created At', propertyName: 'createdDate', render: DateRenderer },
-    {
-      label: 'Last Modified At',
+      label: 'Last Modified',
       propertyName: 'updatedDate',
       render: DateRenderer,
     },
+    { label: 'Modified By', propertyName: 'title', size: '2fr' },
+    { label: 'External ID', propertyName: 'externalId' },
   ];
 
   // Data provider
