@@ -7,6 +7,7 @@ import {
   settingsGroupName,
 } from '../../index';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
+import { AgeRatings } from './AgeRatings/AgeRatings';
 import { MovieCollectionAssignment } from './MovieCollectionAssignment/MovieCollectionAssignment';
 import { MovieCreate } from './MovieCreate/MovieCreate';
 import { MovieDetails } from './MovieDetails/MovieDetails';
@@ -228,4 +229,33 @@ export function register(app: PiletApi, extensions: Extensions): void {
       },
     },
   );
+
+  const ageRatingSettingsNav = {
+    name: 'age-ratings',
+    path: '/settings/media/ageratings',
+    label: 'Age Ratings',
+    icon: <MediaIcons icon={MediaIconName.MovieGenres} />,
+  };
+
+  app.registerTile(
+    {
+      ...ageRatingSettingsNav,
+      kind: 'settings',
+      groupName: settingsGroupName,
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...ageRatingSettingsNav,
+    parentName: parentName,
+    categoryName: 'Settings',
+  });
+
+  app.registerPage('/settings/media/ageratings', AgeRatings, {
+    breadcrumb: () => 'Age Ratings',
+    permissions: {
+      'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
+    },
+  });
 }
