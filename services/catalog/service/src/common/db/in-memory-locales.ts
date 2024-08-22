@@ -27,9 +27,9 @@ export const getInMemoryLocale = (locale: string): string => {
     return found.locale;
   }
 
-  const def = inMemoryLocales.find((l) => l.is_default);
-  if (def) {
-    return def.locale;
+  const foundDefault = inMemoryLocales.find((l) => l.is_default);
+  if (foundDefault) {
+    return foundDefault.locale;
   }
 
   return DEFAULT_LOCALE_TAG;
