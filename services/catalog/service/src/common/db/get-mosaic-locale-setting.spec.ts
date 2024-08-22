@@ -49,7 +49,9 @@ describe('getMosaicLocaleSetting', () => {
     async (header) => {
       // Arrange
       const locale = 'de-DE';
-      jest.spyOn(m, 'getInMemoryLocales').mockImplementation(() => [locale]);
+      m.exportedForTesting.populateInMemoryLocales([
+        { locale, is_default: false },
+      ]);
       const req = mockRequest({
         headers: {
           [MOSAIC_LOCALE_HEADER_KEY]: header,
@@ -66,12 +68,14 @@ describe('getMosaicLocaleSetting', () => {
     },
   );
 
-  it('Multiple supported locales and matching header %p specified -> setting with selected locale returned', async () => {
+  it('Multiple supported locales and matching header specified -> setting with selected locale returned', async () => {
     // Arrange
     const selectedLocale = 'zh-CN';
-    jest
-      .spyOn(m, 'getInMemoryLocales')
-      .mockImplementation(() => ['de-DE', 'bg-BG', selectedLocale]);
+    m.exportedForTesting.populateInMemoryLocales([
+      { locale: 'de-DE', is_default: false },
+      { locale: 'bg-BG', is_default: false },
+      { locale: selectedLocale, is_default: false },
+    ]);
     const req = mockRequest({
       headers: {
         [MOSAIC_LOCALE_HEADER_KEY]: selectedLocale,
@@ -87,11 +91,13 @@ describe('getMosaicLocaleSetting', () => {
     });
   });
 
-  it('Multiple supported locales and non-matching header specified -> setting with default locale returned', async () => {
+  it('Multiple supported locales and non-matching header specified with no default locale -> setting with hardcoded default locale returned', async () => {
     // Arrange
-    jest
-      .spyOn(m, 'getInMemoryLocales')
-      .mockImplementation(() => ['de-DE', 'bg-BG', 'zh-CN']);
+    m.exportedForTesting.populateInMemoryLocales([
+      { locale: 'de-DE', is_default: false },
+      { locale: 'bg-BG', is_default: false },
+      { locale: 'zh-CN', is_default: false },
+    ]);
     const req = mockRequest({
       headers: {
         [MOSAIC_LOCALE_HEADER_KEY]: 'zh-TW',
@@ -104,6 +110,29 @@ describe('getMosaicLocaleSetting', () => {
     // Assert
     expect(setting).toEqual({
       [MOSAIC_LOCALE_PG_KEY]: DEFAULT_LOCALE_TAG,
+    });
+  });
+
+  it('Multiple supported locales and non-matching header specified -> setting with is_default locale returned', async () => {
+    // Arrange
+    m.exportedForTesting.populateInMemoryLocales([
+      { locale: 'de-DE', is_default: false },
+      { locale: 'bg-BG', is_default: false },
+      { locale: 'zh-CN', is_default: false },
+      { locale: 'en-US', is_default: true },
+    ]);
+    const req = mockRequest({
+      headers: {
+        [MOSAIC_LOCALE_HEADER_KEY]: 'zh-TW',
+      },
+    });
+
+    // Act
+    const setting = getMosaicLocaleSetting(req);
+
+    // Assert
+    expect(setting).toEqual({
+      [MOSAIC_LOCALE_PG_KEY]: 'en-US',
     });
   });
 });

@@ -6,17 +6,34 @@ import {
 } from '@axinom/mosaic-service-common';
 import { Client } from 'pg';
 import { all, deletes, insert, Queryable, select } from 'zapatos/db';
+import { locales } from 'zapatos/schema';
 import { Config } from '../config';
-import { MOSAIC_LOCALE_NOTIFY } from '../constants';
+import { DEFAULT_LOCALE_TAG, MOSAIC_LOCALE_NOTIFY } from '../constants';
 
-let inMemoryLocales: string[] = [];
+let inMemoryLocales: locales.JSONSelectable[] = [];
 
 /**
- * Returns a list of locales that currently exist in the system.
- * If an API request is made for a specific locale and it is not in this array -
- * default locale would be used instead.
+ * Returns a language tag for a requested locale tag from the in-memory array of
+ * locales currently registered within the service.
+ * If not found - locale that is marked as default will be returned.
+ * If such locale is not found - fallback to hardcoded `DEFAULT_LOCALE_TAG` is
+ * used.
  */
-export const getInMemoryLocales = (): string[] => inMemoryLocales;
+export const getInMemoryLocale = (locale: string): string => {
+  const found = inMemoryLocales.find(
+    (l) => l.locale.toLowerCase() === locale.toLowerCase(),
+  );
+  if (found) {
+    return found.locale;
+  }
+
+  const def = inMemoryLocales.find((l) => l.is_default);
+  if (def) {
+    return def.locale;
+  }
+
+  return DEFAULT_LOCALE_TAG;
+};
 
 /**
  * Expects a list of all available locales as a parameter. Updates the in-memory
@@ -34,37 +51,38 @@ export const syncInMemoryLocales = async (
   if (locales.length === 0) {
     return false;
   }
+  const currentLocales = inMemoryLocales.map((l) => l.locale);
+  const currentDefault = inMemoryLocales.find((x) => x.is_default);
+  const inputDefault = input.find((x) => x.is_default_locale);
 
-  const localesToAdd = difference(locales, inMemoryLocales);
-  const localesToDrop = difference(inMemoryLocales, locales);
-  if (localesToDrop.length === 0 && localesToAdd.length === 0) {
+  const localesToAdd = difference(locales, currentLocales);
+  const localesToDrop = difference(currentLocales, locales);
+  if (
+    localesToDrop.length === 0 &&
+    localesToAdd.length === 0 &&
+    inputDefault?.language_tag === currentDefault?.locale
+  ) {
     return false;
   }
-  inMemoryLocales = locales;
+  inMemoryLocales = input.map((i) => ({
+    locale: i.language_tag,
+    is_default: i.is_default_locale,
+  }));
 
   await deletes('locales', {}).run(queryable);
-  await insert(
-    'locales',
-    input.map((i) => ({
-      locale: i.language_tag,
-      is_default: i.is_default_locale,
-    })),
-  ).run(queryable);
+  await insert('locales', inMemoryLocales).run(queryable);
   return true;
 };
 
 /**
  * Loads locales from `app_public.locales` table into the in-memory array to be
- * used during service runtime. If no locales are found - attempt to populate
- * the `app_public.locales` using contents of `*_localizations` tables.
+ * used during service runtime.
  */
 export const loadInMemoryLocales = async (
   queryable: Queryable,
   logger: Logger,
 ): Promise<void> => {
-  inMemoryLocales = (await select('locales', all).run(queryable)).map(
-    (l) => l.locale,
-  );
+  inMemoryLocales = await select('locales', all).run(queryable);
   logger.log({
     message: 'In-memory locales successfully (re)loaded.',
     details: { locales: inMemoryLocales },
@@ -143,8 +161,12 @@ export const startLocalesInsertedListener = async (
 };
 
 export const exportedForTesting = {
+  getInMemoryLocales: (): locales.JSONSelectable[] => inMemoryLocales,
   clearInMemoryLocales: (): void => {
     inMemoryLocales = [];
+  },
+  populateInMemoryLocales: (locales: locales.JSONSelectable[]): void => {
+    inMemoryLocales = locales;
   },
   getActiveClient: (): Client | null => activeClient,
   closeActiveClient,
