@@ -1,8 +1,12 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import { DetailedImage, DetailedVideo } from '@axinom/mosaic-messages';
 import { rejectionOf } from '@axinom/mosaic-service-common';
 import 'jest-extended';
-import { ChannelLocalization, ProgramLocalization } from 'media-messages';
+import {
+  ChannelLocalization,
+  DetailedImage,
+  DetailedVideo,
+  ProgramLocalization,
+} from 'media-messages';
 import { v4 as uuid } from 'uuid';
 import { PublicationStateEnum } from 'zapatos/custom';
 import { insert } from 'zapatos/db';
