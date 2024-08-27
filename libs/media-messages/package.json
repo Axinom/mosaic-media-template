@@ -21,8 +21,8 @@
     "build:compile": "tsc"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.36.0",
-    "@axinom/mosaic-message-bus-abstractions": "0.17.0",
+    "@axinom/mosaic-cli": "0.37.0",
+    "@axinom/mosaic-message-bus-abstractions": "0.18.0",
     "@types/glob": "^7.2.0",
     "concurrently": "^5.3.0",
     "rimraf": "^3.0.2",
