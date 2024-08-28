@@ -17,7 +17,7 @@ export const useCollectionRelatedEntities = (
 ): useCollectionRelatedEntitiesResult => {
   const { data, loading, error } = useCollectionRelatedEntitiesQuery({
     client,
-    variables: { id: 2 },
+    variables: { id: 1 },
     fetchPolicy: 'no-cache',
   });
 

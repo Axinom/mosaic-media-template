@@ -61,6 +61,11 @@ const movieDetailSchema = Yup.object<
   title: Yup.string().required('Title is a required field').max(100),
 });
 
+interface selectOption {
+  value: string;
+  label: string;
+}
+
 export const MovieDetails: React.FC = () => {
   const movieId = Number(
     useParams<{
@@ -74,26 +79,35 @@ export const MovieDetails: React.FC = () => {
     fetchPolicy: 'network-only',
   });
 
-  const { allGenres, cast, genres, productionCountries, tags } = useMemo(
-    () => ({
-      allGenres:
-        data?.movieGenres?.nodes.reduce<{
-          [tagname: string]: Partial<MovieGenre>;
-        }>((result, current) => {
-          result[current.title] = current;
-          return result;
-        }, {}) ?? {},
-      tags: data?.movie?.moviesTags.nodes.map((node) => node.name),
-      genres: data?.movie?.moviesMovieGenres.nodes.map(
-        (node) => node.movieGenres?.title ?? '',
-      ),
-      cast: data?.movie?.moviesCasts.nodes.map((node) => node.name),
-      productionCountries: data?.movie?.moviesProductionCountries.nodes.map(
-        (node) => node.name,
-      ),
-    }),
-    [data],
-  );
+  const { allGenres, cast, genres, productionCountries, tags, allAgeRatings } =
+    useMemo(
+      () => ({
+        allGenres:
+          data?.movieGenres?.nodes.reduce<{
+            [tagname: string]: Partial<MovieGenre>;
+          }>((result, current) => {
+            result[current.title] = current;
+            return result;
+          }, {}) ?? {},
+        tags: data?.movie?.moviesTags.nodes.map((node) => node.name),
+        genres: data?.movie?.moviesMovieGenres.nodes.map(
+          (node) => node.movieGenres?.title ?? '',
+        ),
+        cast: data?.movie?.moviesCasts.nodes.map((node) => node.name),
+        productionCountries: data?.movie?.moviesProductionCountries.nodes.map(
+          (node) => node.name,
+        ),
+        allAgeRatings:
+          data?.ageRatings?.nodes.map(
+            (node) =>
+              ({
+                value: node.name,
+                label: node.name,
+              } as selectOption),
+          ) ?? [],
+      }),
+      [data],
+    );
 
   const { actions } = useMovieDetailsActions(movieId);
 
@@ -246,7 +260,10 @@ export const MovieDetails: React.FC = () => {
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form genreOptions={Object.keys(allGenres)} />
+      <Form
+        genreOptions={Object.keys(allGenres)}
+        ageRatingOptions={allAgeRatings}
+      />
     </Details>
   );
 };
@@ -340,7 +357,10 @@ const Panel: React.FC = () => {
   ]);
 };
 
-const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
+const Form: React.FC<{
+  genreOptions?: string[];
+  ageRatingOptions?: selectOption[];
+}> = ({ genreOptions, ageRatingOptions }) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchMovieTagsQuery,
@@ -378,25 +398,14 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
     return data.getMoviesProductionCountriesValues?.nodes ?? [];
   };
 
-  const bTypeOptions = [
+  const bTypeOptions: selectOption[] = [
     { value: 'free', label: 'free' },
     { value: 'free_authenticated', label: 'free_authenticated' },
     { value: 'advertisement', label: 'advertisement' },
     { value: 'premium', label: 'premium' },
   ];
 
-  const sTypeOptions = [{ value: 'Movie', label: 'Movie' }];
-
-  const ageRatingOptions = [
-    { value: '12PLUS', label: '12PLUS' },
-    { value: '18PLUS', label: '18PLUS' },
-    { value: '6PLUS', label: '6PLUS' },
-    { value: '9PLUS', label: '9PLUS' },
-    { value: 'AL', label: 'AL' },
-    { value: 'DOVE_12PLUS', label: 'DOVE_12PLUS' },
-    { value: 'DOVE_18PLUS', label: 'DOVE_18PLUS' },
-    { value: 'DOVE_AL', label: 'DOVE_AL' },
-  ];
+  const sTypeOptions: selectOption[] = [{ value: 'Movie', label: 'Movie' }];
 
   const languageOptions = [
     'Abkhaz (ab)',
@@ -405,7 +414,7 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
     'Hindi (hi)',
   ];
 
-  const contentOwnerOptions = [
+  const contentOwnerOptions: selectOption[] = [
     { value: 'ACI', label: 'ACI' },
     { value: 'BBI', label: 'BBI' },
     { value: 'California Pictures', label: 'California Pictures' },

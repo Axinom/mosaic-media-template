@@ -5,6 +5,7 @@ query TvShow($id: Int!) {
     synopsis
     description
     externalId
+    ageRating
     tvshowsTags {
       nodes {
         name
@@ -57,6 +58,13 @@ query TvShow($id: Int!) {
       id
     }
   }
+
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
 }
 
 mutation DeleteTvShow($input: DeleteTvshowInput!) {
@@ -85,19 +93,28 @@ query TvShowTitle($id: Int!) {
 }
 
 query SearchTvShowTags($searchKey: String!, $limit: Int!) {
-  getTvshowsTagsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getTvshowsTagsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }
 
 query SearchTvShowCast($searchKey: String!, $limit: Int!) {
-  getTvshowsCastsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getTvshowsCastsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }
 
 query SearchTvShowProductionCountries($searchKey: String!, $limit: Int!) {
-  getTvshowsProductionCountriesValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getTvshowsProductionCountriesValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }

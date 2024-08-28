@@ -10,6 +10,10 @@ import {
   SnapshotsReadOperations,
 } from '../publishing';
 import {
+  AgeRatingsReadOperations,
+  AgeRatingsWriteOperations,
+} from './ageratings';
+import {
   CollectionDevOperations,
   CollectionsIgnoreOperations,
   CollectionsMutateOperations,
@@ -155,6 +159,16 @@ const permissions = [
     key: 'INGESTS_EDIT',
     title: 'Ingests: Edit',
     gqlOperations: [...IngestReadOperations, ...IngestMutateOperations],
+  },
+  {
+    key: 'AGE_RATINGS_VIEW',
+    title: 'AgeRatings: View',
+    gqlOperations: [...AgeRatingsReadOperations],
+  },
+  {
+    key: 'AGE_RATINGS_EDIT',
+    title: 'AgeRatings: Edit',
+    gqlOperations: [...AgeRatingsWriteOperations],
   },
 ] as const;
 

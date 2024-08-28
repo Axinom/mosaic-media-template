@@ -4,6 +4,7 @@ fragment MovieExplorerProperties on Movie {
   originalTitle
   externalId
   mainVideoId
+  ageRating
   moviesImages(condition: { imageType: COVER }) {
     nodes {
       imageId

@@ -863,6 +863,23 @@
         "startIngest",
         "updateIngestDocument"
       ]
+    },
+    {
+      "key": "AGE_RATINGS_VIEW",
+      "title": "AgeRatings: View",
+      "gqlOperations": [
+        "ageRatings",
+        "ageRating"
+      ]
+    },
+    {
+      "key": "AGE_RATINGS_EDIT",
+      "title": "AgeRatings: Edit",
+      "gqlOperations": [
+        "createAgeRating",
+        "updateAgeRating",
+        "deleteAgeRating"
+      ]
     }
   ]
 }

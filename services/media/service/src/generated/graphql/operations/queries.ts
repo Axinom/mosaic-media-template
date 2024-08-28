@@ -1,4 +1,6 @@
 export enum Queries {
+  ageRating = 'ageRating',
+  ageRatings = 'ageRatings',
   collection = 'collection',
   collectionByExternalId = 'collectionByExternalId',
   collectionRelation = 'collectionRelation',

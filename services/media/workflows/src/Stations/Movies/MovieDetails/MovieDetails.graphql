@@ -5,6 +5,7 @@ query Movie($id: Int!) {
     synopsis
     description
     externalId
+    ageRating
     moviesTags {
       nodes {
         name
@@ -55,6 +56,13 @@ query Movie($id: Int!) {
       id
     }
   }
+
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
 }
 
 mutation DeleteMovie($input: DeleteMovieInput!) {
@@ -83,19 +91,28 @@ query MovieTitle($id: Int!) {
 }
 
 query SearchMovieTags($searchKey: String!, $limit: Int!) {
-  getMoviesTagsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getMoviesTagsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }
 
 query SearchMovieCast($searchKey: String!, $limit: Int!) {
-  getMoviesCastsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getMoviesCastsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }
 
 query SearchMovieProductionCountries($searchKey: String!, $limit: Int!) {
-  getMoviesProductionCountriesValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getMoviesProductionCountriesValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }

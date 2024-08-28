@@ -1,4 +1,4 @@
-query CollectionRelatedEntities($id: Int!) {
+query CollectionRelatedEntitiesForTvShows($id: Int!) {
   collection(id: $id) {
     collectionRelations(orderBy: SORT_ORDER_ASC) {
       nodes {

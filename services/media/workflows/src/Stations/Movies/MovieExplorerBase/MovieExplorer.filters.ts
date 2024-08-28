@@ -50,7 +50,7 @@ export function useMoviesFilters(): {
     {
       // select from list
       label: 'Age Ratings',
-      property: 'originalTitle',
+      property: 'ageRating',
       type: FilterTypes.FreeText,
     },
     {
@@ -135,7 +135,7 @@ export function useMoviesFilters(): {
         'title',
         'includesInsensitive',
       ],
-      // ageRatings: 'includesInsensitive',
+      ageRating: 'includesInsensitive',
       // contentOwners: 'includesInsensitive',
       // contentSets: 'includesInsensitive',
       publishStatus: 'in',

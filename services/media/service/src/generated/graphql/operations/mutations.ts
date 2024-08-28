@@ -1,4 +1,5 @@
 export enum Mutations {
+  createAgeRating = 'createAgeRating',
   createCollection = 'createCollection',
   createCollectionRelation = 'createCollectionRelation',
   createCollectionSnapshot = 'createCollectionSnapshot',
@@ -53,6 +54,7 @@ export enum Mutations {
   createTvshowsTag = 'createTvshowsTag',
   createTvshowsTrailer = 'createTvshowsTrailer',
   createTvshowsTvshowGenre = 'createTvshowsTvshowGenre',
+  deleteAgeRating = 'deleteAgeRating',
   deleteCollection = 'deleteCollection',
   deleteCollectionByExternalId = 'deleteCollectionByExternalId',
   deleteCollectionRelation = 'deleteCollectionRelation',
@@ -150,6 +152,7 @@ export enum Mutations {
   unpublishTvshow = 'unpublishTvshow',
   unpublishTvshowGenres = 'unpublishTvshowGenres',
   unpublishTvshows = 'unpublishTvshows',
+  updateAgeRating = 'updateAgeRating',
   updateCollection = 'updateCollection',
   updateCollectionByExternalId = 'updateCollectionByExternalId',
   updateCollectionRelation = 'updateCollectionRelation',

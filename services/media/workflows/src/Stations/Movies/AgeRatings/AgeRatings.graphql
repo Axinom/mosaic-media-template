@@ -1,37 +1,41 @@
-query MovieGenres {
-  movieGenres(orderBy: SORT_ORDER_ASC) {
+query AgeRatings {
+  ageRatings(orderBy: SORT_ORDER_ASC) {
     nodes {
-      sortOrder
-      title
       id
+      name
+      createdDate
+      createdUser
+      sortOrder
       updatedDate
       updatedUser
     }
     totalCount
   }
-  
-  snapshots(
-    filter: {
-      entityType: { equalTo: MOVIE_GENRE }
-      snapshotState: { equalTo: PUBLISHED }
-    }
-  ) {
-    nodes {
-      updatedUser
-      publishedDate
-      snapshotState
+}
+
+mutation CreateAgeRating($input: CreateAgeRatingInput!) {
+  createAgeRating(input: $input) {
+    ageRating {
+      id
+      name
     }
   }
 }
 
-mutation PublishMovieGenres {
-  publishMovieGenres {
-    id
+mutation UpdateAgeRating($input: UpdateAgeRatingInput!) {
+  updateAgeRating(input: $input) {
+    ageRating {
+      id
+      name
+    }
   }
 }
 
-mutation UnpublishMovieGenres {
-  unpublishMovieGenres {
-    id
+mutation DeleteAgeRating($input: DeleteAgeRatingInput!) {
+  deleteAgeRating(input: $input) {
+    ageRating {
+      id
+      name
+    }
   }
 }

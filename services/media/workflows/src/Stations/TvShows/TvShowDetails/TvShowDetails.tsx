@@ -10,6 +10,7 @@ import {
   getFormDiff,
   InfoPanel,
   Paragraph,
+  ReadOnlyField,
   Section,
   SelectField,
   SingleLineTextField,
@@ -235,6 +236,10 @@ export const TvShowDetails: React.FC = () => {
           genres,
           cast,
           productionCountries,
+          businessType: [],
+          adLanguages: [],
+          sbLanguages: [],
+          ccLanguages: [],
         },
         loading,
         entityNotFound: data?.tvshow === null,
@@ -384,17 +389,6 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
 
   const sTypeOptions = [{ value: 'Movie', label: 'Movie' }];
 
-  const ageRatingOptions = [
-    { value: '12PLUS', label: '12PLUS' },
-    { value: '18PLUS', label: '18PLUS' },
-    { value: '6PLUS', label: '6PLUS' },
-    { value: '9PLUS', label: '9PLUS' },
-    { value: 'AL', label: 'AL' },
-    { value: 'DOVE_12PLUS', label: 'DOVE_12PLUS' },
-    { value: 'DOVE_18PLUS', label: 'DOVE_18PLUS' },
-    { value: 'DOVE_AL', label: 'DOVE_AL' },
-  ];
-
   const languageOptions = [
     'Abkhaz (ab)',
     'Arabic (ar)',
@@ -413,7 +407,7 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
       <Field name="title" label="Title" as={SingleLineTextField} />
       <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
-      <Field name="type" label="Type" as={TextAreaField} />
+      <Field name="type" label="Type" as={ReadOnlyField} value="TVShow" />
       <Field
         name="businessType"
         label="Business Type"
@@ -458,13 +452,13 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         liveSuggestionsResolver={productionCountriesResolver}
         as={CustomTagsField}
       />
-      <Field
+      {/* <Field
         name="ageRating"
         label="Age Rating"
         addEmptyOption={true}
         options={ageRatingOptions}
         as={SelectField}
-      />
+      /> */}
       <Field
         name="adLanguages"
         label="Audio Languages"

@@ -6,6 +6,40 @@ type Query {
   """
   query: Query!
 
+  """Reads and enables pagination through a set of `AgeRating`."""
+  ageRatings(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `AgeRating`."""
+    orderBy: [AgeRatingsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgeRatingCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AgeRatingFilter
+  ): AgeRatingsConnection
+
   """Reads and enables pagination through a set of `CollectionRelation`."""
   collectionRelations(
     """Only read the first `n` values of the set."""
@@ -1583,6 +1617,7 @@ type Query {
     """
     filter: TvshowsTvshowGenreFilter
   ): TvshowsTvshowGenresConnection
+  ageRating(id: UUID!): AgeRating
   collectionRelation(id: Int!): CollectionRelation
   collection(id: Int!): Collection
   collectionByExternalId(externalId: String!): Collection
@@ -1943,6 +1978,418 @@ type Query {
   ): GetTvshowsTagsValuesConnection
 }
 
+"""A connection to a list of `AgeRating` values."""
+type AgeRatingsConnection {
+  """A list of `AgeRating` objects."""
+  nodes: [AgeRating!]!
+
+  """
+  A list of edges which contains the `AgeRating` and cursor to aid in pagination.
+  """
+  edges: [AgeRatingsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AgeRating` you could get from the connection."""
+  totalCount: Int!
+}
+
+""""""
+type AgeRating {
+  id: UUID!
+  name: String!
+  sortOrder: Int!
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+}
+
+"""
+A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
+"""
+scalar UUID
+
+"""
+A point in time as described by the [ISO
+8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+"""
+scalar Datetime
+
+"""A `AgeRating` edge in the connection."""
+type AgeRatingsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AgeRating` at the end of the edge."""
+  node: AgeRating!
+}
+
+"""A location in a connection that can be used for resuming pagination."""
+scalar Cursor
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+}
+
+"""Methods to use when ordering `AgeRating`."""
+enum AgeRatingsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  SORT_ORDER_ASC
+  SORT_ORDER_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `AgeRating` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input AgeRatingCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """
+  Checks for equality with the object’s `name` field.
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String
+
+  """Checks for equality with the object’s `sortOrder` field."""
+  sortOrder: Int
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+}
+
+"""
+A filter to be used against `AgeRating` object types. All fields are combined with a logical ‘and.’
+"""
+input AgeRatingFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `sortOrder` field."""
+  sortOrder: IntFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [AgeRatingFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AgeRatingFilter!]
+
+  """Negates the expression."""
+  not: AgeRatingFilter
+}
+
+"""
+A filter to be used against UUID fields. All fields are combined with a logical ‘and.’
+"""
+input UUIDFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: UUID
+
+  """Not equal to the specified value."""
+  notEqualTo: UUID
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: UUID
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: UUID
+
+  """Included in the specified list."""
+  in: [UUID!]
+
+  """Not included in the specified list."""
+  notIn: [UUID!]
+
+  """Less than the specified value."""
+  lessThan: UUID
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: UUID
+
+  """Greater than the specified value."""
+  greaterThan: UUID
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: UUID
+}
+
+"""
+A filter to be used against String fields. All fields are combined with a logical ‘and.’
+"""
+input StringFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: String
+
+  """Not equal to the specified value."""
+  notEqualTo: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: String
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: String
+
+  """Included in the specified list."""
+  in: [String!]
+
+  """Not included in the specified list."""
+  notIn: [String!]
+
+  """Less than the specified value."""
+  lessThan: String
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: String
+
+  """Greater than the specified value."""
+  greaterThan: String
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: String
+
+  """Contains the specified string (case-sensitive)."""
+  includes: String
+
+  """Does not contain the specified string (case-sensitive)."""
+  notIncludes: String
+
+  """Contains the specified string (case-insensitive)."""
+  includesInsensitive: String
+
+  """Does not contain the specified string (case-insensitive)."""
+  notIncludesInsensitive: String
+
+  """Starts with the specified string (case-sensitive)."""
+  startsWith: String
+
+  """Does not start with the specified string (case-sensitive)."""
+  notStartsWith: String
+
+  """Starts with the specified string (case-insensitive)."""
+  startsWithInsensitive: String
+
+  """Does not start with the specified string (case-insensitive)."""
+  notStartsWithInsensitive: String
+
+  """Ends with the specified string (case-sensitive)."""
+  endsWith: String
+
+  """Does not end with the specified string (case-sensitive)."""
+  notEndsWith: String
+
+  """Ends with the specified string (case-insensitive)."""
+  endsWithInsensitive: String
+
+  """Does not end with the specified string (case-insensitive)."""
+  notEndsWithInsensitive: String
+
+  """
+  Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  like: String
+
+  """
+  Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLike: String
+
+  """
+  Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  likeInsensitive: String
+
+  """
+  Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLikeInsensitive: String
+
+  """Equal to the specified value (case-insensitive)."""
+  equalToInsensitive: String
+
+  """Not equal to the specified value (case-insensitive)."""
+  notEqualToInsensitive: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  distinctFromInsensitive: String
+
+  """
+  Equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  notDistinctFromInsensitive: String
+
+  """Included in the specified list (case-insensitive)."""
+  inInsensitive: [String!]
+
+  """Not included in the specified list (case-insensitive)."""
+  notInInsensitive: [String!]
+
+  """Less than the specified value (case-insensitive)."""
+  lessThanInsensitive: String
+
+  """Less than or equal to the specified value (case-insensitive)."""
+  lessThanOrEqualToInsensitive: String
+
+  """Greater than the specified value (case-insensitive)."""
+  greaterThanInsensitive: String
+
+  """Greater than or equal to the specified value (case-insensitive)."""
+  greaterThanOrEqualToInsensitive: String
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’
+"""
+input DatetimeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Datetime
+
+  """Not equal to the specified value."""
+  notEqualTo: Datetime
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Datetime
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Datetime
+
+  """Included in the specified list."""
+  in: [Datetime!]
+
+  """Not included in the specified list."""
+  notIn: [Datetime!]
+
+  """Less than the specified value."""
+  lessThan: Datetime
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Datetime
+
+  """Greater than the specified value."""
+  greaterThan: Datetime
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Datetime
+}
+
 """
 A connection to a list of `CollectionRelation` values.
 @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
@@ -2145,12 +2592,6 @@ type Collection {
   ): CollectionsSnapshotsConnection!
 }
 
-"""
-A point in time as described by the [ISO
-8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
-"""
-scalar Datetime
-
 enum PublishStatus {
   """Not published"""
   NOT_PUBLISHED
@@ -2161,9 +2602,6 @@ enum PublishStatus {
   """Changed"""
   CHANGED
 }
-
-"""A location in a connection that can be used for resuming pagination."""
-scalar Cursor
 
 """Methods to use when ordering `CollectionRelation`."""
 enum CollectionRelationsOrderBy {
@@ -2276,48 +2714,6 @@ input CollectionRelationFilter {
 }
 
 """
-A filter to be used against Int fields. All fields are combined with a logical ‘and.’
-"""
-input IntFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Int
-
-  """Not equal to the specified value."""
-  notEqualTo: Int
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Int
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Int
-
-  """Included in the specified list."""
-  in: [Int!]
-
-  """Not included in the specified list."""
-  notIn: [Int!]
-
-  """Less than the specified value."""
-  lessThan: Int
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Int
-
-  """Greater than the specified value."""
-  greaterThan: Int
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Int
-}
-
-"""
 A filter to be used against `Collection` object types. All fields are combined with a logical ‘and.’
 """
 input CollectionFilter {
@@ -2389,180 +2785,6 @@ input CollectionFilter {
 
   """Negates the expression."""
   not: CollectionFilter
-}
-
-"""
-A filter to be used against String fields. All fields are combined with a logical ‘and.’
-"""
-input StringFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: String
-
-  """Not equal to the specified value."""
-  notEqualTo: String
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: String
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: String
-
-  """Included in the specified list."""
-  in: [String!]
-
-  """Not included in the specified list."""
-  notIn: [String!]
-
-  """Less than the specified value."""
-  lessThan: String
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: String
-
-  """Greater than the specified value."""
-  greaterThan: String
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: String
-
-  """Contains the specified string (case-sensitive)."""
-  includes: String
-
-  """Does not contain the specified string (case-sensitive)."""
-  notIncludes: String
-
-  """Contains the specified string (case-insensitive)."""
-  includesInsensitive: String
-
-  """Does not contain the specified string (case-insensitive)."""
-  notIncludesInsensitive: String
-
-  """Starts with the specified string (case-sensitive)."""
-  startsWith: String
-
-  """Does not start with the specified string (case-sensitive)."""
-  notStartsWith: String
-
-  """Starts with the specified string (case-insensitive)."""
-  startsWithInsensitive: String
-
-  """Does not start with the specified string (case-insensitive)."""
-  notStartsWithInsensitive: String
-
-  """Ends with the specified string (case-sensitive)."""
-  endsWith: String
-
-  """Does not end with the specified string (case-sensitive)."""
-  notEndsWith: String
-
-  """Ends with the specified string (case-insensitive)."""
-  endsWithInsensitive: String
-
-  """Does not end with the specified string (case-insensitive)."""
-  notEndsWithInsensitive: String
-
-  """
-  Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  like: String
-
-  """
-  Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  notLike: String
-
-  """
-  Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  likeInsensitive: String
-
-  """
-  Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  notLikeInsensitive: String
-
-  """Equal to the specified value (case-insensitive)."""
-  equalToInsensitive: String
-
-  """Not equal to the specified value (case-insensitive)."""
-  notEqualToInsensitive: String
-
-  """
-  Not equal to the specified value, treating null like an ordinary value (case-insensitive).
-  """
-  distinctFromInsensitive: String
-
-  """
-  Equal to the specified value, treating null like an ordinary value (case-insensitive).
-  """
-  notDistinctFromInsensitive: String
-
-  """Included in the specified list (case-insensitive)."""
-  inInsensitive: [String!]
-
-  """Not included in the specified list (case-insensitive)."""
-  notInInsensitive: [String!]
-
-  """Less than the specified value (case-insensitive)."""
-  lessThanInsensitive: String
-
-  """Less than or equal to the specified value (case-insensitive)."""
-  lessThanOrEqualToInsensitive: String
-
-  """Greater than the specified value (case-insensitive)."""
-  greaterThanInsensitive: String
-
-  """Greater than or equal to the specified value (case-insensitive)."""
-  greaterThanOrEqualToInsensitive: String
-}
-
-"""
-A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’
-"""
-input DatetimeFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Datetime
-
-  """Not equal to the specified value."""
-  notEqualTo: Datetime
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Datetime
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Datetime
-
-  """Included in the specified list."""
-  in: [Datetime!]
-
-  """Not included in the specified list."""
-  notIn: [Datetime!]
-
-  """Less than the specified value."""
-  lessThan: Datetime
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Datetime
-
-  """Greater than the specified value."""
-  greaterThan: Datetime
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Datetime
 }
 
 """
@@ -2715,53 +2937,6 @@ input CollectionsImageFilter {
   """Negates the expression."""
   not: CollectionsImageFilter
 }
-
-"""
-A filter to be used against UUID fields. All fields are combined with a logical ‘and.’
-"""
-input UUIDFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: UUID
-
-  """Not equal to the specified value."""
-  notEqualTo: UUID
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: UUID
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: UUID
-
-  """Included in the specified list."""
-  in: [UUID!]
-
-  """Not included in the specified list."""
-  notIn: [UUID!]
-
-  """Less than the specified value."""
-  lessThan: UUID
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: UUID
-
-  """Greater than the specified value."""
-  greaterThan: UUID
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: UUID
-}
-
-"""
-A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
-"""
-scalar UUID
 
 """
 A filter to be used against CollectionImageType fields. All fields are combined with a logical ‘and.’
@@ -3449,6 +3624,9 @@ input MovieFilter {
 
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
+
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
 
   """Filter by the object’s `moviesTags` relation."""
   moviesTags: MovieToManyMoviesTagFilter
@@ -4467,6 +4645,9 @@ input TvshowFilter {
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
 
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
+
   """Filter by the object’s `tvshowsTags` relation."""
   tvshowsTags: TvshowToManyTvshowsTagFilter
 
@@ -4985,6 +5166,9 @@ input SeasonFilter {
 
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
+
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
 
   """Filter by the object’s `seasonsTags` relation."""
   seasonsTags: SeasonToManySeasonsTagFilter
@@ -5531,6 +5715,9 @@ input EpisodeFilter {
 
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
+
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
 
   """Filter by the object’s `episodesTags` relation."""
   episodesTags: EpisodeToManyEpisodesTagFilter
@@ -6469,21 +6656,6 @@ type CollectionsTagsEdge {
   node: CollectionsTag!
 }
 
-"""Information about pagination in a connection."""
-type PageInfo {
-  """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
-  startCursor: Cursor
-
-  """When paginating forwards, the cursor to continue."""
-  endCursor: Cursor
-}
-
 """Methods to use when ordering `CollectionsTag`."""
 enum CollectionsTagsOrderBy {
   NATURAL
@@ -6996,6 +7168,7 @@ type Movie {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
+  ageRating: String
 
   """Reads and enables pagination through a set of `MoviesTag`."""
   moviesTags(
@@ -8010,6 +8183,7 @@ type Tvshow {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
+  ageRating: String
 
   """Reads and enables pagination through a set of `TvshowsTag`."""
   tvshowsTags(
@@ -8961,6 +9135,7 @@ type Season {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
+  ageRating: String
 
   """Reads a single `Tvshow` that is related to this `Season`."""
   tvshow: Tvshow
@@ -9881,6 +10056,7 @@ type Episode {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
+  ageRating: String
 
   """Reads a single `Season` that is related to this `Episode`."""
   season: Season
@@ -10892,6 +11068,8 @@ enum EpisodesOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -10957,6 +11135,9 @@ input EpisodeCondition {
 
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
+
+  """Checks for equality with the object’s `ageRating` field."""
+  ageRating: String
 }
 
 """
@@ -11233,6 +11414,8 @@ enum SeasonsOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -11285,6 +11468,9 @@ input SeasonCondition {
 
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
+
+  """Checks for equality with the object’s `ageRating` field."""
+  ageRating: String
 }
 
 """Methods to use when ordering `TvshowsSnapshot`."""
@@ -12868,6 +13054,8 @@ enum MoviesOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -12927,6 +13115,9 @@ input MovieCondition {
 
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
+
+  """Checks for equality with the object’s `ageRating` field."""
+  ageRating: String
 }
 
 """
@@ -13205,6 +13396,8 @@ enum TvshowsOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -13261,6 +13454,9 @@ input TvshowCondition {
 
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
+
+  """Checks for equality with the object’s `ageRating` field."""
+  ageRating: String
 }
 
 """A connection to a list of `String` values."""
@@ -13759,6 +13955,14 @@ enum ErrorCodesEnum {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  """Creates a single `AgeRating`."""
+  createAgeRating(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAgeRatingInput!
+  ): CreateAgeRatingPayload
+
   """Creates a single `CollectionRelation`."""
   createCollectionRelation(
     """
@@ -14095,6 +14299,14 @@ type Mutation {
     input: CreateTvshowsTvshowGenreInput!
   ): CreateTvshowsTvshowGenrePayload
 
+  """Updates a single `AgeRating` using a unique key and a patch."""
+  updateAgeRating(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAgeRatingInput!
+  ): UpdateAgeRatingPayload
+
   """Updates a single `CollectionRelation` using a unique key and a patch."""
   updateCollectionRelation(
     """
@@ -14430,6 +14642,14 @@ type Mutation {
     """
     input: UpdateTvshowsTagInput!
   ): UpdateTvshowsTagPayload
+
+  """Deletes a single `AgeRating` using a unique key."""
+  deleteAgeRating(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAgeRatingInput!
+  ): DeleteAgeRatingPayload
 
   """Deletes a single `CollectionRelation` using a unique key."""
   deleteCollectionRelation(
@@ -15041,6 +15261,52 @@ type Mutation {
   ): PopulatePayload
 }
 
+"""The output of our create `AgeRating` mutation."""
+type CreateAgeRatingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgeRating` that was created by this mutation."""
+  ageRating: AgeRating
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgeRating`. May be used by Relay 1."""
+  ageRatingEdge(
+    """The method to use when ordering `AgeRating`."""
+    orderBy: [AgeRatingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgeRatingsEdge
+}
+
+"""All input for the create `AgeRating` mutation."""
+input CreateAgeRatingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `AgeRating` to be created by this mutation."""
+  ageRating: AgeRatingInput!
+}
+
+"""An input for mutations affecting `AgeRating`"""
+input AgeRatingInput {
+  """
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String!
+  sortOrder: Int!
+}
+
 """The output of our create `CollectionRelation` mutation."""
 type CreateCollectionRelationPayload {
   """
@@ -15314,6 +15580,7 @@ input EpisodeInput {
   studio: String
   released: Date
   mainVideoId: UUID
+  ageRating: String
 }
 
 """The output of our create `EpisodesCast` mutation."""
@@ -15812,6 +16079,7 @@ input MovieInput {
   studio: String
   released: Date
   mainVideoId: UUID
+  ageRating: String
 }
 
 """The output of our create `MoviesCast` mutation."""
@@ -16257,6 +16525,7 @@ input SeasonInput {
   description: String
   studio: String
   released: Date
+  ageRating: String
 }
 
 """The output of our create `SeasonsCast` mutation."""
@@ -16752,6 +17021,7 @@ input TvshowInput {
   description: String
   studio: String
   released: Date
+  ageRating: String
 }
 
 """The output of our create `TvshowsCast` mutation."""
@@ -17147,6 +17417,57 @@ input TvshowsTvshowGenreInput {
   tvshowGenresId: Int!
 }
 
+"""The output of our update `AgeRating` mutation."""
+type UpdateAgeRatingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgeRating` that was updated by this mutation."""
+  ageRating: AgeRating
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgeRating`. May be used by Relay 1."""
+  ageRatingEdge(
+    """The method to use when ordering `AgeRating`."""
+    orderBy: [AgeRatingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgeRatingsEdge
+}
+
+"""All input for the `updateAgeRating` mutation."""
+input UpdateAgeRatingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `AgeRating` being updated.
+  """
+  patch: AgeRatingPatch!
+  id: UUID!
+}
+
+"""
+Represents an update to a `AgeRating`. Fields that are set will be updated.
+"""
+input AgeRatingPatch {
+  """
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String
+  sortOrder: Int
+}
+
 """The output of our update `CollectionRelation` mutation."""
 type UpdateCollectionRelationPayload {
   """
@@ -17464,6 +17785,7 @@ input EpisodePatch {
   studio: String
   released: Date
   mainVideoId: UUID
+  ageRating: String
 }
 
 """
@@ -17975,6 +18297,7 @@ input MoviePatch {
   studio: String
   released: Date
   mainVideoId: UUID
+  ageRating: String
 }
 
 """
@@ -18378,6 +18701,7 @@ input SeasonPatch {
   description: String
   studio: String
   released: Date
+  ageRating: String
 }
 
 """
@@ -18836,6 +19160,7 @@ input TvshowPatch {
   description: String
   studio: String
   released: Date
+  ageRating: String
 }
 
 """
@@ -19182,6 +19507,40 @@ Represents an update to a `TvshowsTag`. Fields that are set will be updated.
 input TvshowsTagPatch {
   """@notEmpty()"""
   name: String
+}
+
+"""The output of our delete `AgeRating` mutation."""
+type DeleteAgeRatingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgeRating` that was deleted by this mutation."""
+  ageRating: AgeRating
+  deletedAgeRatingNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgeRating`. May be used by Relay 1."""
+  ageRatingEdge(
+    """The method to use when ordering `AgeRating`."""
+    orderBy: [AgeRatingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgeRatingsEdge
+}
+
+"""All input for the `deleteAgeRating` mutation."""
+input DeleteAgeRatingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
 }
 
 """The output of our delete `CollectionRelation` mutation."""
