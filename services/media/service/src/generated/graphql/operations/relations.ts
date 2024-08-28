@@ -24,6 +24,7 @@ export enum Relations {
   movie = 'movie',
   movieGenres = 'movieGenres',
   moviesCasts = 'moviesCasts',
+  moviesDirectors = 'moviesDirectors',
   moviesImages = 'moviesImages',
   moviesLicense = 'moviesLicense',
   moviesLicenses = 'moviesLicenses',

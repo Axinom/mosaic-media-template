@@ -1596,6 +1596,44 @@ export type CreateMoviesCastPayloadMoviesCastEdgeArgs = {
 };
 
 /**
+ * All input for the create `MoviesDirector` mutation.
+ * @permissions: MOVIE_EDITOR,ADMIN
+ */
+export type CreateMoviesDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `MoviesDirector` to be created by this mutation. */
+  moviesDirector: MoviesDirectorInput;
+};
+
+/** The output of our create `MoviesDirector` mutation. */
+export type CreateMoviesDirectorPayload = {
+  __typename?: 'CreateMoviesDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Movie` that is related to this `MoviesDirector`. */
+  movie?: Maybe<Movie>;
+  /** The `MoviesDirector` that was created by this mutation. */
+  moviesDirector?: Maybe<MoviesDirector>;
+  /** An edge for our `MoviesDirector`. May be used by Relay 1. */
+  moviesDirectorEdge?: Maybe<MoviesDirectorsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `MoviesDirector` mutation. */
+export type CreateMoviesDirectorPayloadMoviesDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<MoviesDirectorsOrderBy>>;
+};
+
+/**
  * All input for the create `MoviesImage` mutation.
  * @permissions: MOVIES_EDIT,ADMIN
  */
@@ -3334,6 +3372,46 @@ export type DeleteMoviesCastPayload = {
 /** The output of our delete `MoviesCast` mutation. */
 export type DeleteMoviesCastPayloadMoviesCastEdgeArgs = {
   orderBy?: InputMaybe<Array<MoviesCastsOrderBy>>;
+};
+
+/**
+ * All input for the `deleteMoviesDirector` mutation.
+ * @permissions: MOVIE_EDITOR,ADMIN
+ */
+export type DeleteMoviesDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+};
+
+/** The output of our delete `MoviesDirector` mutation. */
+export type DeleteMoviesDirectorPayload = {
+  __typename?: 'DeleteMoviesDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMoviesDirectorNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Reads a single `Movie` that is related to this `MoviesDirector`. */
+  movie?: Maybe<Movie>;
+  /** The `MoviesDirector` that was deleted by this mutation. */
+  moviesDirector?: Maybe<MoviesDirector>;
+  /** An edge for our `MoviesDirector`. May be used by Relay 1. */
+  moviesDirectorEdge?: Maybe<MoviesDirectorsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `MoviesDirector` mutation. */
+export type DeleteMoviesDirectorPayloadMoviesDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<MoviesDirectorsOrderBy>>;
 };
 
 /**
@@ -6052,6 +6130,26 @@ export type GetMoviesCastsValuesConnection = {
 };
 
 /** A `String` edge in the connection. */
+export type GetMoviesDirectorsValueEdge = {
+  __typename?: 'GetMoviesDirectorsValueEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']['output']>;
+};
+
+/** A connection to a list of `String` values. */
+export type GetMoviesDirectorsValuesConnection = {
+  __typename?: 'GetMoviesDirectorsValuesConnection';
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<GetMoviesDirectorsValueEdge>;
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']['output']>>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `String` edge in the connection. */
 export type GetMoviesProductionCountriesValueEdge = {
   __typename?: 'GetMoviesProductionCountriesValueEdge';
   /** A cursor for use in pagination. */
@@ -7403,6 +7501,8 @@ export type Movie = {
   mainVideoId?: Maybe<Scalars['UUID']['output']>;
   /** Reads and enables pagination through a set of `MoviesCast`. */
   moviesCasts: MoviesCastsConnection;
+  /** Reads and enables pagination through a set of `MoviesDirector`. */
+  moviesDirectors: MoviesDirectorsConnection;
   /** Reads and enables pagination through a set of `MoviesImage`. */
   moviesImages: MoviesImagesConnection;
   /** Reads and enables pagination through a set of `MoviesLicense`. */
@@ -7453,6 +7553,19 @@ export type MovieMoviesCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesCastsOrderBy>>;
+};
+
+
+/** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
+export type MovieMoviesDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<MoviesDirectorCondition>;
+  filter?: InputMaybe<MoviesDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MoviesDirectorsOrderBy>>;
 };
 
 
@@ -7614,6 +7727,10 @@ export type MovieFilter = {
   moviesCasts?: InputMaybe<MovieToManyMoviesCastFilter>;
   /** Some related `moviesCasts` exist. */
   moviesCastsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `moviesDirectors` relation. */
+  moviesDirectors?: InputMaybe<MovieToManyMoviesDirectorFilter>;
+  /** Some related `moviesDirectors` exist. */
+  moviesDirectorsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `moviesImages` relation. */
   moviesImages?: InputMaybe<MovieToManyMoviesImageFilter>;
   /** Some related `moviesImages` exist. */
@@ -8012,6 +8129,95 @@ export type MoviesConnection = {
   /** The count of *all* `Movie` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
+
+/** @permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN */
+export type MoviesDirector = {
+  __typename?: 'MoviesDirector';
+  /** Reads a single `Movie` that is related to this `MoviesDirector`. */
+  movie?: Maybe<Movie>;
+  movieId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `MoviesDirector` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type MoviesDirectorCondition = {
+  /** Checks for equality with the object’s `movieId` field. */
+  movieId?: InputMaybe<Scalars['Int']['input']>;
+  /**
+   * Checks for equality with the object’s `name` field.
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `MoviesDirector` object types. All fields are combined with a logical ‘and.’ */
+export type MoviesDirectorFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<MoviesDirectorFilter>>;
+  /** Filter by the object’s `movie` relation. */
+  movie?: InputMaybe<MovieFilter>;
+  /** Filter by the object’s `movieId` field. */
+  movieId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<MoviesDirectorFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<MoviesDirectorFilter>>;
+};
+
+/** An input for mutations affecting `MoviesDirector` */
+export type MoviesDirectorInput = {
+  movieId: Scalars['Int']['input'];
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+};
+
+/** Represents an update to a `MoviesDirector`. Fields that are set will be updated. */
+export type MoviesDirectorPatch = {
+  movieId?: InputMaybe<Scalars['Int']['input']>;
+  /** @notEmpty() */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/**
+ * A connection to a list of `MoviesDirector` values.
+ * @permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
+ */
+export type MoviesDirectorsConnection = {
+  __typename?: 'MoviesDirectorsConnection';
+  /** A list of edges which contains the `MoviesDirector` and cursor to aid in pagination. */
+  edges: Array<MoviesDirectorsEdge>;
+  /** A list of `MoviesDirector` objects. */
+  nodes: Array<MoviesDirector>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `MoviesDirector` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `MoviesDirector` edge in the connection. */
+export type MoviesDirectorsEdge = {
+  __typename?: 'MoviesDirectorsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `MoviesDirector` at the end of the edge. */
+  node: MoviesDirector;
+};
+
+/** Methods to use when ordering `MoviesDirector`. */
+export enum MoviesDirectorsOrderBy {
+  MovieIdAsc = 'MOVIE_ID_ASC',
+  MovieIdDesc = 'MOVIE_ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
 
 /** A `Movie` edge in the connection. */
 export type MoviesEdge = {
@@ -8850,6 +9056,16 @@ export type MovieToManyMoviesCastFilter = {
   some?: InputMaybe<MoviesCastFilter>;
 };
 
+/** A filter to be used against many `MoviesDirector` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyMoviesDirectorFilter = {
+  /** Every related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesDirectorFilter>;
+  /** No related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesDirectorFilter>;
+  /** Some related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesDirectorFilter>;
+};
+
 /** A filter to be used against many `MoviesImage` object types. All fields are combined with a logical ‘and.’ */
 export type MovieToManyMoviesImageFilter = {
   /** Every related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -8965,6 +9181,8 @@ export type Mutation = {
   createMovieGenresSnapshot?: Maybe<Snapshot>;
   /** Creates a single `MoviesCast`. */
   createMoviesCast?: Maybe<CreateMoviesCastPayload>;
+  /** Creates a single `MoviesDirector`. */
+  createMoviesDirector?: Maybe<CreateMoviesDirectorPayload>;
   /** Creates a single `MoviesImage`. */
   createMoviesImage?: Maybe<CreateMoviesImagePayload>;
   /** Creates a single `MoviesLicense`. */
@@ -9074,6 +9292,8 @@ export type Mutation = {
   deleteMovies?: Maybe<BulkMutationIntPayload>;
   /** Deletes a single `MoviesCast` using a unique key. */
   deleteMoviesCast?: Maybe<DeleteMoviesCastPayload>;
+  /** Deletes a single `MoviesDirector` using a unique key. */
+  deleteMoviesDirector?: Maybe<DeleteMoviesDirectorPayload>;
   /** Deletes a single `MoviesImage` using a unique key. */
   deleteMoviesImageByMovieIdAndImageType?: Maybe<DeleteMoviesImagePayload>;
   /** Deletes a single `MoviesLicense` using a unique key. */
@@ -9224,6 +9444,8 @@ export type Mutation = {
   updateMovieGenre?: Maybe<UpdateMovieGenrePayload>;
   /** Updates a single `MoviesCast` using a unique key and a patch. */
   updateMoviesCast?: Maybe<UpdateMoviesCastPayload>;
+  /** Updates a single `MoviesDirector` using a unique key and a patch. */
+  updateMoviesDirector?: Maybe<UpdateMoviesDirectorPayload>;
   /** Updates a single `MoviesImage` using a unique key and a patch. */
   updateMoviesImageByMovieIdAndImageType?: Maybe<UpdateMoviesImagePayload>;
   /** Updates a single `MoviesLicense` using a unique key and a patch. */
@@ -9394,6 +9616,12 @@ export type MutationCreateMovieGenreArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateMoviesCastArgs = {
   input: CreateMoviesCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateMoviesDirectorArgs = {
+  input: CreateMoviesDirectorInput;
 };
 
 
@@ -9742,6 +9970,12 @@ export type MutationDeleteMoviesArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteMoviesCastArgs = {
   input: DeleteMoviesCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteMoviesDirectorArgs = {
+  input: DeleteMoviesDirectorInput;
 };
 
 
@@ -10250,6 +10484,12 @@ export type MutationUpdateMoviesCastArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateMoviesDirectorArgs = {
+  input: UpdateMoviesDirectorInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateMoviesImageByMovieIdAndImageTypeArgs = {
   input: UpdateMoviesImageByMovieIdAndImageTypeInput;
 };
@@ -10489,6 +10729,7 @@ export type Query = {
   getEpisodesProductionCountriesValues?: Maybe<GetEpisodesProductionCountriesValuesConnection>;
   getEpisodesTagsValues?: Maybe<GetEpisodesTagsValuesConnection>;
   getMoviesCastsValues?: Maybe<GetMoviesCastsValuesConnection>;
+  getMoviesDirectorsValues?: Maybe<GetMoviesDirectorsValuesConnection>;
   getMoviesProductionCountriesValues?: Maybe<GetMoviesProductionCountriesValuesConnection>;
   getMoviesTagsValues?: Maybe<GetMoviesTagsValuesConnection>;
   getSeasonsCastsValues?: Maybe<GetSeasonsCastsValuesConnection>;
@@ -10516,6 +10757,9 @@ export type Query = {
   moviesCast?: Maybe<MoviesCast>;
   /** Reads and enables pagination through a set of `MoviesCast`. */
   moviesCasts?: Maybe<MoviesCastsConnection>;
+  moviesDirector?: Maybe<MoviesDirector>;
+  /** Reads and enables pagination through a set of `MoviesDirector`. */
+  moviesDirectors?: Maybe<MoviesDirectorsConnection>;
   /** Reads and enables pagination through a set of `MoviesImage`. */
   moviesImages?: Maybe<MoviesImagesConnection>;
   moviesLicense?: Maybe<MoviesLicense>;
@@ -10933,6 +11177,17 @@ export type QueryGetMoviesCastsValuesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryGetMoviesDirectorsValuesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<StringFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryGetMoviesProductionCountriesValuesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -11138,6 +11393,26 @@ export type QueryMoviesCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesCastsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMoviesDirectorArgs = {
+  movieId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMoviesDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<MoviesDirectorCondition>;
+  filter?: InputMaybe<MoviesDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MoviesDirectorsOrderBy>>;
 };
 
 
@@ -16078,6 +16353,47 @@ export type UpdateMoviesCastPayloadMoviesCastEdgeArgs = {
 };
 
 /**
+ * All input for the `updateMoviesDirector` mutation.
+ * @permissions: MOVIE_EDITOR,ADMIN
+ */
+export type UpdateMoviesDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `MoviesDirector` being updated. */
+  patch: MoviesDirectorPatch;
+};
+
+/** The output of our update `MoviesDirector` mutation. */
+export type UpdateMoviesDirectorPayload = {
+  __typename?: 'UpdateMoviesDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Movie` that is related to this `MoviesDirector`. */
+  movie?: Maybe<Movie>;
+  /** The `MoviesDirector` that was updated by this mutation. */
+  moviesDirector?: Maybe<MoviesDirector>;
+  /** An edge for our `MoviesDirector`. May be used by Relay 1. */
+  moviesDirectorEdge?: Maybe<MoviesDirectorsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `MoviesDirector` mutation. */
+export type UpdateMoviesDirectorPayloadMoviesDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<MoviesDirectorsOrderBy>>;
+};
+
+/**
  * All input for the `updateMoviesImageByMovieIdAndImageType` mutation.
  * @permissions: MOVIES_EDIT,ADMIN
  */
@@ -17342,7 +17658,7 @@ export type MovieQueryVariables = Exact<{
 }>;
 
 
-export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null };
+export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null };
 
 export type DeleteMovieMutationVariables = Exact<{
   input: DeleteMovieInput;
@@ -17388,6 +17704,14 @@ export type SearchMovieCastQueryVariables = Exact<{
 
 export type SearchMovieCastQuery = { __typename?: 'Query', getMoviesCastsValues?: { __typename?: 'GetMoviesCastsValuesConnection', nodes: Array<string | null> } | null };
 
+export type SearchMovieDirectorQueryVariables = Exact<{
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+}>;
+
+
+export type SearchMovieDirectorQuery = { __typename?: 'Query', getMoviesDirectorsValues?: { __typename?: 'GetMoviesDirectorsValuesConnection', nodes: Array<string | null> } | null };
+
 export type SearchMovieProductionCountriesQueryVariables = Exact<{
   searchKey: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
@@ -17396,7 +17720,7 @@ export type SearchMovieProductionCountriesQueryVariables = Exact<{
 
 export type SearchMovieProductionCountriesQuery = { __typename?: 'Query', getMoviesProductionCountriesValues?: { __typename?: 'GetMoviesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
 
-export type MovieExplorerPropertiesFragment = { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
+export type MovieExplorerPropertiesFragment = { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
 
 export type MoviesQueryVariables = Exact<{
   filter?: InputMaybe<MovieFilter>;
@@ -17405,12 +17729,12 @@ export type MoviesQueryVariables = Exact<{
 }>;
 
 
-export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
+export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
 
 export type MoviesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
+export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
 
 export type MovieGenresQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -18105,6 +18429,11 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
     }
   }
   moviesCasts {
+    nodes {
+      name
+    }
+  }
+  moviesDirectors {
     nodes {
       name
     }
@@ -20320,6 +20649,11 @@ export const MovieDocument = gql`
         name
       }
     }
+    moviesDirectors {
+      nodes {
+        name
+      }
+    }
     released
     moviesProductionCountries {
       nodes {
@@ -20595,6 +20929,45 @@ export function useSearchMovieCastLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type SearchMovieCastQueryHookResult = ReturnType<typeof useSearchMovieCastQuery>;
 export type SearchMovieCastLazyQueryHookResult = ReturnType<typeof useSearchMovieCastLazyQuery>;
 export type SearchMovieCastQueryResult = Apollo.QueryResult<SearchMovieCastQuery, SearchMovieCastQueryVariables>;
+export const SearchMovieDirectorDocument = gql`
+    query SearchMovieDirector($searchKey: String!, $limit: Int!) {
+  getMoviesDirectorsValues(
+    filter: {startsWithInsensitive: $searchKey}
+    first: $limit
+  ) {
+    nodes
+  }
+}
+    `;
+
+/**
+ * __useSearchMovieDirectorQuery__
+ *
+ * To run a query within a React component, call `useSearchMovieDirectorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchMovieDirectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchMovieDirectorQuery({
+ *   variables: {
+ *      searchKey: // value for 'searchKey'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useSearchMovieDirectorQuery(baseOptions: Apollo.QueryHookOptions<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>(SearchMovieDirectorDocument, options);
+      }
+export function useSearchMovieDirectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>(SearchMovieDirectorDocument, options);
+        }
+export type SearchMovieDirectorQueryHookResult = ReturnType<typeof useSearchMovieDirectorQuery>;
+export type SearchMovieDirectorLazyQueryHookResult = ReturnType<typeof useSearchMovieDirectorLazyQuery>;
+export type SearchMovieDirectorQueryResult = Apollo.QueryResult<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>;
 export const SearchMovieProductionCountriesDocument = gql`
     query SearchMovieProductionCountries($searchKey: String!, $limit: Int!) {
   getMoviesProductionCountriesValues(

@@ -23,6 +23,11 @@ query Movie($id: Int!) {
         name
       }
     }
+    moviesDirectors {
+      nodes {
+        name
+      }
+    }
     released
     moviesProductionCountries {
       nodes {
@@ -101,6 +106,15 @@ query SearchMovieTags($searchKey: String!, $limit: Int!) {
 
 query SearchMovieCast($searchKey: String!, $limit: Int!) {
   getMoviesCastsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
+    nodes
+  }
+}
+
+query SearchMovieDirector($searchKey: String!, $limit: Int!) {
+  getMoviesDirectorsValues(
     filter: { startsWithInsensitive: $searchKey }
     first: $limit
   ) {

@@ -31,16 +31,21 @@ import {
   MovieImageType,
   Mutation,
   MutationCreateMoviesCastArgs,
+  MutationCreateMoviesDirectorArgs,
   MutationCreateMoviesMovieGenreArgs,
   MutationCreateMoviesProductionCountryArgs,
   MutationCreateMoviesTagArgs,
   MutationDeleteMoviesCastArgs,
+  MutationDeleteMoviesDirectorArgs,
   MutationDeleteMoviesMovieGenreArgs,
   MutationDeleteMoviesProductionCountryArgs,
   MutationDeleteMoviesTagArgs,
   SearchMovieCastDocument,
   SearchMovieCastQuery,
   SearchMovieCastQueryVariables,
+  SearchMovieDirectorDocument,
+  SearchMovieDirectorQuery,
+  SearchMovieDirectorQueryVariables,
   SearchMovieProductionCountriesDocument,
   SearchMovieProductionCountriesQuery,
   SearchMovieProductionCountriesQueryVariables,
@@ -79,35 +84,43 @@ export const MovieDetails: React.FC = () => {
     fetchPolicy: 'network-only',
   });
 
-  const { allGenres, cast, genres, productionCountries, tags, allAgeRatings } =
-    useMemo(
-      () => ({
-        allGenres:
-          data?.movieGenres?.nodes.reduce<{
-            [tagname: string]: Partial<MovieGenre>;
-          }>((result, current) => {
-            result[current.title] = current;
-            return result;
-          }, {}) ?? {},
-        tags: data?.movie?.moviesTags.nodes.map((node) => node.name),
-        genres: data?.movie?.moviesMovieGenres.nodes.map(
-          (node) => node.movieGenres?.title ?? '',
-        ),
-        cast: data?.movie?.moviesCasts.nodes.map((node) => node.name),
-        productionCountries: data?.movie?.moviesProductionCountries.nodes.map(
-          (node) => node.name,
-        ),
-        allAgeRatings:
-          data?.ageRatings?.nodes.map(
-            (node) =>
-              ({
-                value: node.name,
-                label: node.name,
-              } as selectOption),
-          ) ?? [],
-      }),
-      [data],
-    );
+  const {
+    allGenres,
+    cast,
+    genres,
+    productionCountries,
+    tags,
+    allAgeRatings,
+    director,
+  } = useMemo(
+    () => ({
+      allGenres:
+        data?.movieGenres?.nodes.reduce<{
+          [tagname: string]: Partial<MovieGenre>;
+        }>((result, current) => {
+          result[current.title] = current;
+          return result;
+        }, {}) ?? {},
+      tags: data?.movie?.moviesTags.nodes.map((node) => node.name),
+      genres: data?.movie?.moviesMovieGenres.nodes.map(
+        (node) => node.movieGenres?.title ?? '',
+      ),
+      cast: data?.movie?.moviesCasts.nodes.map((node) => node.name),
+      director: data?.movie?.moviesDirectors.nodes.map((node) => node.name),
+      productionCountries: data?.movie?.moviesProductionCountries.nodes.map(
+        (node) => node.name,
+      ),
+      allAgeRatings:
+        data?.ageRatings?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
+    }),
+    [data],
+  );
 
   const { actions } = useMovieDetailsActions(movieId);
 
@@ -189,6 +202,22 @@ export const MovieDetails: React.FC = () => {
         prefix: 'cast',
       });
 
+      const directorAssignmentMutations = generateArrayMutations({
+        current: formData.director,
+        original: initialData.data?.director,
+        generateCreateMutation: (name) =>
+          generateUpdateGQLFragment<MutationCreateMoviesDirectorArgs>(
+            'createMoviesDirector',
+            { input: { moviesDirector: { name, movieId } } },
+          ),
+        generateDeleteMutation: (name) =>
+          generateUpdateGQLFragment<MutationDeleteMoviesDirectorArgs>(
+            'deleteMoviesDirector',
+            { input: { movieId, name } },
+          ),
+        prefix: 'director',
+      });
+
       const productionCountriesAssignmentMutations = generateArrayMutations({
         current: formData.productionCountries,
         original: initialData.data?.productionCountries,
@@ -220,6 +249,7 @@ export const MovieDetails: React.FC = () => {
         ${tagAssignmentMutations}
         ${genreAssignmentMutations}
         ${castAssignmentMutations}
+        ${directorAssignmentMutations}
         ${productionCountriesAssignmentMutations}
       }`;
 
@@ -247,6 +277,7 @@ export const MovieDetails: React.FC = () => {
           tags,
           genres,
           cast,
+          director,
           productionCountries,
           businessType: [],
           adLanguages: [],
@@ -385,6 +416,19 @@ const Form: React.FC<{
     return data.getMoviesCastsValues?.nodes ?? [];
   };
 
+  const directorSuggestionResolver = async (
+    value: string,
+  ): Promise<(string | null)[]> => {
+    const { data } = await client.query<
+      SearchMovieDirectorQuery,
+      SearchMovieDirectorQueryVariables
+    >({
+      query: SearchMovieDirectorDocument,
+      variables: { searchKey: value, limit: 10 },
+    });
+    return data.getMoviesDirectorsValues?.nodes ?? [];
+  };
+
   const productionCountriesResolver = async (
     value: string,
   ): Promise<(string | null)[]> => {
@@ -453,9 +497,9 @@ const Form: React.FC<{
         as={CustomTagsField}
       />
       <Field
-        name="directors"
+        name="director"
         label="Directors"
-        liveSuggestionsResolver={castSuggestionResolver}
+        liveSuggestionsResolver={directorSuggestionResolver}
         as={CustomTagsField}
       />
       <Field
@@ -542,10 +586,8 @@ function createUpdateDto(
   currentValues: MovieDetailsFormData,
   initialValues?: MovieDetailsFormData | null,
 ): Partial<MovieDetailsFormData> {
-  const { tags, cast, productionCountries, genres, ...rest } = getFormDiff(
-    currentValues,
-    initialValues,
-  );
+  const { tags, cast, director, productionCountries, genres, ...rest } =
+    getFormDiff(currentValues, initialValues);
 
   return rest;
 }

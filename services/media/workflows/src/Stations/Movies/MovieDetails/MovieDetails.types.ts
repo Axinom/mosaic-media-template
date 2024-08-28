@@ -7,6 +7,7 @@ export type MovieDetailsFormData = Nullable<
   tags?: string[];
   genres?: string[];
   cast?: string[];
+  director?: string[];
   productionCountries?: string[];
   businessType?: string[];
   adLanguages?: string[];

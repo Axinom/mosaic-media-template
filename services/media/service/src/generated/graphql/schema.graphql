@@ -690,6 +690,40 @@ type Query {
     filter: MoviesCastFilter
   ): MoviesCastsConnection
 
+  """Reads and enables pagination through a set of `MoviesDirector`."""
+  moviesDirectors(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesDirectorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesDirectorFilter
+  ): MoviesDirectorsConnection
+
   """Reads and enables pagination through a set of `MoviesImage`."""
   moviesImages(
     """Only read the first `n` values of the set."""
@@ -1638,6 +1672,7 @@ type Query {
   movie(id: Int!): Movie
   movieByExternalId(externalId: String!): Movie
   moviesCast(movieId: Int!, name: String!): MoviesCast
+  moviesDirector(movieId: Int!, name: String!): MoviesDirector
   moviesLicense(id: Int!): MoviesLicense
   moviesLicensesCountry(moviesLicenseId: Int!, code: IsoAlphaTwoCountryCodes!): MoviesLicensesCountry
   moviesMovieGenre(movieId: Int!, movieGenresId: Int!): MoviesMovieGenre
@@ -1784,6 +1819,30 @@ type Query {
     """
     filter: StringFilter
   ): GetMoviesCastsValuesConnection
+  getMoviesDirectorsValues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StringFilter
+  ): GetMoviesDirectorsValuesConnection
   getMoviesProductionCountriesValues(
     """Only read the first `n` values of the set."""
     first: Int
@@ -3682,6 +3741,12 @@ input MovieFilter {
   """Some related `moviesSnapshots` exist."""
   moviesSnapshotsExist: Boolean
 
+  """Filter by the object’s `moviesDirectors` relation."""
+  moviesDirectors: MovieToManyMoviesDirectorFilter
+
+  """Some related `moviesDirectors` exist."""
+  moviesDirectorsExist: Boolean
+
   """Checks for all expressions in this list."""
   and: [MovieFilter!]
 
@@ -4548,6 +4613,49 @@ input MovieToManyMoviesSnapshotFilter {
   No related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: MoviesSnapshotFilter
+}
+
+"""
+A filter to be used against many `MoviesDirector` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieToManyMoviesDirectorFilter {
+  """
+  Every related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesDirectorFilter
+
+  """
+  Some related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesDirectorFilter
+
+  """
+  No related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesDirectorFilter
+}
+
+"""
+A filter to be used against `MoviesDirector` object types. All fields are combined with a logical ‘and.’
+"""
+input MoviesDirectorFilter {
+  """Filter by the object’s `movieId` field."""
+  movieId: IntFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `movie` relation."""
+  movie: MovieFilter
+
+  """Checks for all expressions in this list."""
+  and: [MoviesDirectorFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MoviesDirectorFilter!]
+
+  """Negates the expression."""
+  not: MoviesDirectorFilter
 }
 
 """
@@ -7477,6 +7585,40 @@ type Movie {
     """
     filter: MoviesSnapshotFilter
   ): MoviesSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `MoviesDirector`."""
+  moviesDirectors(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesDirectorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesDirectorFilter
+  ): MoviesDirectorsConnection!
 }
 
 """
@@ -8121,6 +8263,70 @@ input MoviesSnapshotCondition {
 
   """Checks for equality with the object’s `snapshotId` field."""
   snapshotId: Int
+}
+
+"""
+A connection to a list of `MoviesDirector` values.
+@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
+"""
+type MoviesDirectorsConnection {
+  """A list of `MoviesDirector` objects."""
+  nodes: [MoviesDirector!]!
+
+  """
+  A list of edges which contains the `MoviesDirector` and cursor to aid in pagination.
+  """
+  edges: [MoviesDirectorsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `MoviesDirector` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN"""
+type MoviesDirector {
+  movieId: Int!
+  name: String!
+
+  """Reads a single `Movie` that is related to this `MoviesDirector`."""
+  movie: Movie
+}
+
+"""A `MoviesDirector` edge in the connection."""
+type MoviesDirectorsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `MoviesDirector` at the end of the edge."""
+  node: MoviesDirector!
+}
+
+"""Methods to use when ordering `MoviesDirector`."""
+enum MoviesDirectorsOrderBy {
+  NATURAL
+  MOVIE_ID_ASC
+  MOVIE_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `MoviesDirector` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input MoviesDirectorCondition {
+  """Checks for equality with the object’s `movieId` field."""
+  movieId: Int
+
+  """
+  Checks for equality with the object’s `name` field.
+  @notEmpty()
+  """
+  name: String
 }
 
 """A `MoviesSnapshot` edge in the connection."""
@@ -13575,6 +13781,29 @@ type GetMoviesCastsValueEdge {
 }
 
 """A connection to a list of `String` values."""
+type GetMoviesDirectorsValuesConnection {
+  """A list of `String` objects."""
+  nodes: [String]!
+
+  """
+  A list of edges which contains the `String` and cursor to aid in pagination.
+  """
+  edges: [GetMoviesDirectorsValueEdge!]!
+
+  """The count of *all* `String` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `String` edge in the connection."""
+type GetMoviesDirectorsValueEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `String` at the end of the edge."""
+  node: String
+}
+
+"""A connection to a list of `String` values."""
 type GetMoviesProductionCountriesValuesConnection {
   """A list of `String` objects."""
   nodes: [String]!
@@ -14091,6 +14320,14 @@ type Mutation {
     input: CreateMoviesCastInput!
   ): CreateMoviesCastPayload
 
+  """Creates a single `MoviesDirector`."""
+  createMoviesDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateMoviesDirectorInput!
+  ): CreateMoviesDirectorPayload
+
   """Creates a single `MoviesImage`."""
   createMoviesImage(
     """
@@ -14455,6 +14692,14 @@ type Mutation {
     input: UpdateMoviesCastInput!
   ): UpdateMoviesCastPayload
 
+  """Updates a single `MoviesDirector` using a unique key and a patch."""
+  updateMoviesDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateMoviesDirectorInput!
+  ): UpdateMoviesDirectorPayload
+
   """Updates a single `MoviesImage` using a unique key and a patch."""
   updateMoviesImageByMovieIdAndImageType(
     """
@@ -14802,6 +15047,14 @@ type Mutation {
     """
     input: DeleteMoviesCastInput!
   ): DeleteMoviesCastPayload
+
+  """Deletes a single `MoviesDirector` using a unique key."""
+  deleteMoviesDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteMoviesDirectorInput!
+  ): DeleteMoviesDirectorPayload
 
   """Deletes a single `MoviesImage` using a unique key."""
   deleteMoviesImageByMovieIdAndImageType(
@@ -16125,6 +16378,55 @@ input CreateMoviesCastInput {
 
 """An input for mutations affecting `MoviesCast`"""
 input MoviesCastInput {
+  movieId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""The output of our create `MoviesDirector` mutation."""
+type CreateMoviesDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `MoviesDirector` that was created by this mutation."""
+  moviesDirector: MoviesDirector
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Movie` that is related to this `MoviesDirector`."""
+  movie: Movie
+
+  """An edge for our `MoviesDirector`. May be used by Relay 1."""
+  moviesDirectorEdge(
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): MoviesDirectorsEdge
+}
+
+"""
+All input for the create `MoviesDirector` mutation.
+@permissions: MOVIE_EDITOR,ADMIN
+"""
+input CreateMoviesDirectorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `MoviesDirector` to be created by this mutation."""
+  moviesDirector: MoviesDirectorInput!
+}
+
+"""An input for mutations affecting `MoviesDirector`"""
+input MoviesDirectorInput {
   movieId: Int!
 
   """@notEmpty()"""
@@ -18373,6 +18675,63 @@ input MoviesCastPatch {
   name: String
 }
 
+"""The output of our update `MoviesDirector` mutation."""
+type UpdateMoviesDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `MoviesDirector` that was updated by this mutation."""
+  moviesDirector: MoviesDirector
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Movie` that is related to this `MoviesDirector`."""
+  movie: Movie
+
+  """An edge for our `MoviesDirector`. May be used by Relay 1."""
+  moviesDirectorEdge(
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): MoviesDirectorsEdge
+}
+
+"""
+All input for the `updateMoviesDirector` mutation.
+@permissions: MOVIE_EDITOR,ADMIN
+"""
+input UpdateMoviesDirectorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `MoviesDirector` being updated.
+  """
+  patch: MoviesDirectorPatch!
+  movieId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""
+Represents an update to a `MoviesDirector`. Fields that are set will be updated.
+"""
+input MoviesDirectorPatch {
+  movieId: Int
+
+  """@notEmpty()"""
+  name: String
+}
+
 """The output of our update `MoviesImage` mutation."""
 type UpdateMoviesImagePayload {
   """
@@ -20249,6 +20608,49 @@ All input for the `deleteMoviesCast` mutation.
 @permissions: MOVIES_EDIT,ADMIN
 """
 input DeleteMoviesCastInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  movieId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""The output of our delete `MoviesDirector` mutation."""
+type DeleteMoviesDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `MoviesDirector` that was deleted by this mutation."""
+  moviesDirector: MoviesDirector
+  deletedMoviesDirectorNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Movie` that is related to this `MoviesDirector`."""
+  movie: Movie
+
+  """An edge for our `MoviesDirector`. May be used by Relay 1."""
+  moviesDirectorEdge(
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): MoviesDirectorsEdge
+}
+
+"""
+All input for the `deleteMoviesDirector` mutation.
+@permissions: MOVIE_EDITOR,ADMIN
+"""
+input DeleteMoviesDirectorInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
