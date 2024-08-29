@@ -6,6 +6,12 @@ query Movie($id: Int!) {
     description
     externalId
     ageRating
+    rating
+    customRating
+    creditsStartTime
+    lengthInSeconds
+    dynamicField
+    extendedField
     moviesTags {
       nodes {
         name

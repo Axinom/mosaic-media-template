@@ -15,6 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  BigFloat: { input: any; output: any; }
   Cursor: { input: any; output: any; }
   Date: { input: any; output: any; }
   Datetime: { input: any; output: any; }
@@ -150,6 +151,32 @@ export enum AgeRatingsOrderBy {
   UpdatedUserAsc = 'UPDATED_USER_ASC',
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
+
+/** A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’ */
+export type BigFloatFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<Scalars['BigFloat']['input']>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<Scalars['BigFloat']['input']>>;
+};
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
@@ -3385,6 +3412,7 @@ export type DeleteMoviesDirectorInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   movieId: Scalars['Int']['input'];
+  /** @notEmpty() */
   name: Scalars['String']['input'];
 };
 
@@ -4547,11 +4575,12 @@ export type Episode = {
   collectionRelations: CollectionRelationsConnection;
   createdDate: Scalars['Datetime']['output'];
   createdUser: Scalars['String']['output'];
+  creditsStartTime?: Maybe<Scalars['String']['output']>;
+  customRating?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  dynamicField?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EpisodesCast`. */
   episodesCasts: EpisodesCastsConnection;
-  /** Reads and enables pagination through a set of `EpisodesDirector`. */
-  episodesDirectors: EpisodesDirectorsConnection;
   /** Reads and enables pagination through a set of `EpisodesImage`. */
   episodesImages: EpisodesImagesConnection;
   /** Reads and enables pagination through a set of `EpisodesLicense`. */
@@ -4566,14 +4595,17 @@ export type Episode = {
   episodesTrailers: EpisodesTrailersConnection;
   /** Reads and enables pagination through a set of `EpisodesTvshowGenre`. */
   episodesTvshowGenres: EpisodesTvshowGenresConnection;
+  extendedField?: Maybe<Scalars['String']['output']>;
   externalId?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   index: Scalars['Int']['output'];
+  lengthInSeconds?: Maybe<Scalars['BigFloat']['output']>;
   mainVideoId?: Maybe<Scalars['UUID']['output']>;
   originalTitle?: Maybe<Scalars['String']['output']>;
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
   publishedUser?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
+  rating?: Maybe<Scalars['BigFloat']['output']>;
   released?: Maybe<Scalars['Date']['output']>;
   /** Reads a single `Season` that is related to this `Episode`. */
   season?: Maybe<Season>;
@@ -4609,19 +4641,6 @@ export type EpisodeEpisodesCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesCastsOrderBy>>;
-};
-
-
-/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
-export type EpisodeEpisodesDirectorsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<EpisodesDirectorCondition>;
-  filter?: InputMaybe<EpisodesDirectorFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EpisodesDirectorsOrderBy>>;
 };
 
 
@@ -4723,14 +4742,24 @@ export type EpisodeCondition = {
   createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
   createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `customRating` field. */
+  customRating?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `extendedField` field. */
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
   externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `index` field. */
   index?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `mainVideoId` field. */
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `originalTitle` field. */
@@ -4741,6 +4770,8 @@ export type EpisodeCondition = {
   publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `released` field. */
   released?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
@@ -4775,8 +4806,14 @@ export type EpisodeFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `customRating` field. */
+  customRating?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `episodesCasts` relation. */
   episodesCasts?: InputMaybe<EpisodeToManyEpisodesCastFilter>;
   /** Some related `episodesCasts` exist. */
@@ -4813,12 +4850,16 @@ export type EpisodeFilter = {
   episodesTvshowGenres?: InputMaybe<EpisodeToManyEpisodesTvshowGenreFilter>;
   /** Some related `episodesTvshowGenres` exist. */
   episodesTvshowGenresExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `extendedField` field. */
+  extendedField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `externalId` field. */
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `index` field. */
   index?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `mainVideoId` field. */
   mainVideoId?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
@@ -4833,6 +4874,8 @@ export type EpisodeFilter = {
   publishedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
+  /** Filter by the object’s `rating` field. */
+  rating?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `season` relation. */
@@ -4889,11 +4932,17 @@ export type EpisodeImageTypeFilter = {
 /** An input for mutations affecting `Episode` */
 export type EpisodeInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   index: Scalars['Int']['input'];
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   seasonId?: InputMaybe<Scalars['Int']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
@@ -4908,11 +4957,17 @@ export type EpisodeInput = {
 /** Represents an update to a `Episode`. Fields that are set will be updated. */
 export type EpisodePatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   seasonId?: InputMaybe<Scalars['Int']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
@@ -5028,26 +5083,6 @@ export type EpisodesConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
-export type EpisodesDirector = {
-  __typename?: 'EpisodesDirector';
-  /** Reads a single `Episode` that is related to this `EpisodesDirector`. */
-  episode?: Maybe<Episode>;
-  episodeId: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
-};
-
-/**
- * A condition to be used against `EpisodesDirector` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type EpisodesDirectorCondition = {
-  /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['Int']['input']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: InputMaybe<Scalars['String']['input']>;
-};
-
 /** A filter to be used against `EpisodesDirector` object types. All fields are combined with a logical ‘and.’ */
 export type EpisodesDirectorFilter = {
   /** Checks for all expressions in this list. */
@@ -5063,42 +5098,6 @@ export type EpisodesDirectorFilter = {
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<EpisodesDirectorFilter>>;
 };
-
-/**
- * A connection to a list of `EpisodesDirector` values.
- * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
- */
-export type EpisodesDirectorsConnection = {
-  __typename?: 'EpisodesDirectorsConnection';
-  /** A list of edges which contains the `EpisodesDirector` and cursor to aid in pagination. */
-  edges: Array<EpisodesDirectorsEdge>;
-  /** A list of `EpisodesDirector` objects. */
-  nodes: Array<EpisodesDirector>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `EpisodesDirector` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `EpisodesDirector` edge in the connection. */
-export type EpisodesDirectorsEdge = {
-  __typename?: 'EpisodesDirectorsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `EpisodesDirector` at the end of the edge. */
-  node: EpisodesDirector;
-};
-
-/** Methods to use when ordering `EpisodesDirector`. */
-export enum EpisodesDirectorsOrderBy {
-  EpisodeIdAsc = 'EPISODE_ID_ASC',
-  EpisodeIdDesc = 'EPISODE_ID_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
 
 /** A `Episode` edge in the connection. */
 export type EpisodesEdge = {
@@ -5436,14 +5435,24 @@ export enum EpisodesOrderBy {
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
+  CreditsStartTimeAsc = 'CREDITS_START_TIME_ASC',
+  CreditsStartTimeDesc = 'CREDITS_START_TIME_DESC',
+  CustomRatingAsc = 'CUSTOM_RATING_ASC',
+  CustomRatingDesc = 'CUSTOM_RATING_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  DynamicFieldAsc = 'DYNAMIC_FIELD_ASC',
+  DynamicFieldDesc = 'DYNAMIC_FIELD_DESC',
+  ExtendedFieldAsc = 'EXTENDED_FIELD_ASC',
+  ExtendedFieldDesc = 'EXTENDED_FIELD_DESC',
   ExternalIdAsc = 'EXTERNAL_ID_ASC',
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   IndexAsc = 'INDEX_ASC',
   IndexDesc = 'INDEX_DESC',
+  LengthInSecondsAsc = 'LENGTH_IN_SECONDS_ASC',
+  LengthInSecondsDesc = 'LENGTH_IN_SECONDS_DESC',
   MainVideoIdAsc = 'MAIN_VIDEO_ID_ASC',
   MainVideoIdDesc = 'MAIN_VIDEO_ID_DESC',
   Natural = 'NATURAL',
@@ -5457,6 +5466,8 @@ export enum EpisodesOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  RatingAsc = 'RATING_ASC',
+  RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   SeasonIdAsc = 'SEASON_ID_ASC',
@@ -7595,9 +7606,14 @@ export type Movie = {
   collectionRelations: CollectionRelationsConnection;
   createdDate: Scalars['Datetime']['output'];
   createdUser: Scalars['String']['output'];
+  creditsStartTime?: Maybe<Scalars['String']['output']>;
+  customRating?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  dynamicField?: Maybe<Scalars['String']['output']>;
+  extendedField?: Maybe<Scalars['String']['output']>;
   externalId?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
+  lengthInSeconds?: Maybe<Scalars['BigFloat']['output']>;
   mainVideoId?: Maybe<Scalars['UUID']['output']>;
   /** Reads and enables pagination through a set of `MoviesCast`. */
   moviesCasts: MoviesCastsConnection;
@@ -7621,6 +7637,7 @@ export type Movie = {
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
   publishedUser?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
+  rating?: Maybe<Scalars['BigFloat']['output']>;
   released?: Maybe<Scalars['Date']['output']>;
   studio?: Maybe<Scalars['String']['output']>;
   synopsis?: Maybe<Scalars['String']['output']>;
@@ -7767,12 +7784,22 @@ export type MovieCondition = {
   createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
   createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `customRating` field. */
+  customRating?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `extendedField` field. */
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
   externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `mainVideoId` field. */
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `originalTitle` field. */
@@ -7783,6 +7810,8 @@ export type MovieCondition = {
   publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `released` field. */
   released?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `studio` field. */
@@ -7815,12 +7844,22 @@ export type MovieFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `customRating` field. */
+  customRating?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `extendedField` field. */
+  extendedField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `externalId` field. */
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `mainVideoId` field. */
   mainVideoId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `moviesCasts` relation. */
@@ -7871,6 +7910,8 @@ export type MovieFilter = {
   publishedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
+  /** Filter by the object’s `rating` field. */
+  rating?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `studio` field. */
@@ -8095,10 +8136,16 @@ export type MovieImageTypeFilter = {
 /** An input for mutations affecting `Movie` */
 export type MovieInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
@@ -8112,10 +8159,16 @@ export type MovieInput = {
 /** Represents an update to a `Movie`. Fields that are set will be updated. */
 export type MoviePatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
@@ -8246,7 +8299,10 @@ export type MoviesDirector = {
 export type MoviesDirectorCondition = {
   /** Checks for equality with the object’s `movieId` field. */
   movieId?: InputMaybe<Scalars['Int']['input']>;
-  /** Checks for equality with the object’s `name` field. */
+  /**
+   * Checks for equality with the object’s `name` field.
+   * @notEmpty()
+   */
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8269,12 +8325,14 @@ export type MoviesDirectorFilter = {
 /** An input for mutations affecting `MoviesDirector` */
 export type MoviesDirectorInput = {
   movieId: Scalars['Int']['input'];
+  /** @notEmpty() */
   name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `MoviesDirector`. Fields that are set will be updated. */
 export type MoviesDirectorPatch = {
   movieId?: InputMaybe<Scalars['Int']['input']>;
+  /** @notEmpty() */
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8732,12 +8790,22 @@ export enum MoviesOrderBy {
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
+  CreditsStartTimeAsc = 'CREDITS_START_TIME_ASC',
+  CreditsStartTimeDesc = 'CREDITS_START_TIME_DESC',
+  CustomRatingAsc = 'CUSTOM_RATING_ASC',
+  CustomRatingDesc = 'CUSTOM_RATING_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  DynamicFieldAsc = 'DYNAMIC_FIELD_ASC',
+  DynamicFieldDesc = 'DYNAMIC_FIELD_DESC',
+  ExtendedFieldAsc = 'EXTENDED_FIELD_ASC',
+  ExtendedFieldDesc = 'EXTENDED_FIELD_DESC',
   ExternalIdAsc = 'EXTERNAL_ID_ASC',
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  LengthInSecondsAsc = 'LENGTH_IN_SECONDS_ASC',
+  LengthInSecondsDesc = 'LENGTH_IN_SECONDS_DESC',
   MainVideoIdAsc = 'MAIN_VIDEO_ID_ASC',
   MainVideoIdDesc = 'MAIN_VIDEO_ID_DESC',
   Natural = 'NATURAL',
@@ -8751,6 +8819,8 @@ export enum MoviesOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  RatingAsc = 'RATING_ASC',
+  RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
@@ -12042,20 +12112,24 @@ export type Season = {
   collectionRelations: CollectionRelationsConnection;
   createdDate: Scalars['Datetime']['output'];
   createdUser: Scalars['String']['output'];
+  creditsStartTime?: Maybe<Scalars['String']['output']>;
+  customRating?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  dynamicField?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Episode`. */
   episodes: EpisodesConnection;
+  extendedField?: Maybe<Scalars['String']['output']>;
   externalId?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   index: Scalars['Int']['output'];
+  lengthInSeconds?: Maybe<Scalars['BigFloat']['output']>;
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
   publishedUser?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
+  rating?: Maybe<Scalars['BigFloat']['output']>;
   released?: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `SeasonsCast`. */
   seasonsCasts: SeasonsCastsConnection;
-  /** Reads and enables pagination through a set of `SeasonsDirector`. */
-  seasonsDirectors: SeasonsDirectorsConnection;
   /** Reads and enables pagination through a set of `SeasonsImage`. */
   seasonsImages: SeasonsImagesConnection;
   /** Reads and enables pagination through a set of `SeasonsLicense`. */
@@ -12116,19 +12190,6 @@ export type SeasonSeasonsCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsCastsOrderBy>>;
-};
-
-
-/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
-export type SeasonSeasonsDirectorsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<SeasonsDirectorCondition>;
-  filter?: InputMaybe<SeasonsDirectorFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<SeasonsDirectorsOrderBy>>;
 };
 
 
@@ -12230,20 +12291,32 @@ export type SeasonCondition = {
   createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
   createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `customRating` field. */
+  customRating?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `extendedField` field. */
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
   externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `index` field. */
   index?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
   publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `released` field. */
   released?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `studio` field. */
@@ -12272,18 +12345,28 @@ export type SeasonFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `customRating` field. */
+  customRating?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `episodes` relation. */
   episodes?: InputMaybe<SeasonToManyEpisodeFilter>;
   /** Some related `episodes` exist. */
   episodesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `extendedField` field. */
+  extendedField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `externalId` field. */
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `index` field. */
   index?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<BigFloatFilter>;
   /** Negates the expression. */
   not?: InputMaybe<SeasonFilter>;
   /** Checks for any expressions in this list. */
@@ -12294,6 +12377,8 @@ export type SeasonFilter = {
   publishedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
+  /** Filter by the object’s `rating` field. */
+  rating?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `seasonsCasts` relation. */
@@ -12384,9 +12469,15 @@ export type SeasonImageTypeFilter = {
 /** An input for mutations affecting `Season` */
 export type SeasonInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   index: Scalars['Int']['input'];
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
@@ -12396,9 +12487,15 @@ export type SeasonInput = {
 /** Represents an update to a `Season`. Fields that are set will be updated. */
 export type SeasonPatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
@@ -12509,26 +12606,6 @@ export type SeasonsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
-export type SeasonsDirector = {
-  __typename?: 'SeasonsDirector';
-  name: Scalars['String']['output'];
-  /** Reads a single `Season` that is related to this `SeasonsDirector`. */
-  season?: Maybe<Season>;
-  seasonId: Scalars['Int']['output'];
-};
-
-/**
- * A condition to be used against `SeasonsDirector` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type SeasonsDirectorCondition = {
-  /** Checks for equality with the object’s `name` field. */
-  name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']['input']>;
-};
-
 /** A filter to be used against `SeasonsDirector` object types. All fields are combined with a logical ‘and.’ */
 export type SeasonsDirectorFilter = {
   /** Checks for all expressions in this list. */
@@ -12544,42 +12621,6 @@ export type SeasonsDirectorFilter = {
   /** Filter by the object’s `seasonId` field. */
   seasonId?: InputMaybe<IntFilter>;
 };
-
-/**
- * A connection to a list of `SeasonsDirector` values.
- * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
- */
-export type SeasonsDirectorsConnection = {
-  __typename?: 'SeasonsDirectorsConnection';
-  /** A list of edges which contains the `SeasonsDirector` and cursor to aid in pagination. */
-  edges: Array<SeasonsDirectorsEdge>;
-  /** A list of `SeasonsDirector` objects. */
-  nodes: Array<SeasonsDirector>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `SeasonsDirector` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `SeasonsDirector` edge in the connection. */
-export type SeasonsDirectorsEdge = {
-  __typename?: 'SeasonsDirectorsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `SeasonsDirector` at the end of the edge. */
-  node: SeasonsDirector;
-};
-
-/** Methods to use when ordering `SeasonsDirector`. */
-export enum SeasonsDirectorsOrderBy {
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  SeasonIdAsc = 'SEASON_ID_ASC',
-  SeasonIdDesc = 'SEASON_ID_DESC'
-}
 
 /** A `Season` edge in the connection. */
 export type SeasonsEdge = {
@@ -12917,14 +12958,24 @@ export enum SeasonsOrderBy {
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
+  CreditsStartTimeAsc = 'CREDITS_START_TIME_ASC',
+  CreditsStartTimeDesc = 'CREDITS_START_TIME_DESC',
+  CustomRatingAsc = 'CUSTOM_RATING_ASC',
+  CustomRatingDesc = 'CUSTOM_RATING_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  DynamicFieldAsc = 'DYNAMIC_FIELD_ASC',
+  DynamicFieldDesc = 'DYNAMIC_FIELD_DESC',
+  ExtendedFieldAsc = 'EXTENDED_FIELD_ASC',
+  ExtendedFieldDesc = 'EXTENDED_FIELD_DESC',
   ExternalIdAsc = 'EXTERNAL_ID_ASC',
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   IndexAsc = 'INDEX_ASC',
   IndexDesc = 'INDEX_DESC',
+  LengthInSecondsAsc = 'LENGTH_IN_SECONDS_ASC',
+  LengthInSecondsDesc = 'LENGTH_IN_SECONDS_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -12934,6 +12985,8 @@ export enum SeasonsOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  RatingAsc = 'RATING_ASC',
+  RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
@@ -14270,13 +14323,19 @@ export type Tvshow = {
   collectionRelations: CollectionRelationsConnection;
   createdDate: Scalars['Datetime']['output'];
   createdUser: Scalars['String']['output'];
+  creditsStartTime?: Maybe<Scalars['String']['output']>;
+  customRating?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  dynamicField?: Maybe<Scalars['String']['output']>;
+  extendedField?: Maybe<Scalars['String']['output']>;
   externalId?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
+  lengthInSeconds?: Maybe<Scalars['BigFloat']['output']>;
   originalTitle?: Maybe<Scalars['String']['output']>;
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
   publishedUser?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
+  rating?: Maybe<Scalars['BigFloat']['output']>;
   released?: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `Season`. */
   seasons: SeasonsConnection;
@@ -14285,8 +14344,6 @@ export type Tvshow = {
   title: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `TvshowsCast`. */
   tvshowsCasts: TvshowsCastsConnection;
-  /** Reads and enables pagination through a set of `TvshowsDirector`. */
-  tvshowsDirectors: TvshowsDirectorsConnection;
   /** Reads and enables pagination through a set of `TvshowsImage`. */
   tvshowsImages: TvshowsImagesConnection;
   /** Reads and enables pagination through a set of `TvshowsLicense`. */
@@ -14342,19 +14399,6 @@ export type TvshowTvshowsCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsCastsOrderBy>>;
-};
-
-
-/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
-export type TvshowTvshowsDirectorsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<TvshowsDirectorCondition>;
-  filter?: InputMaybe<TvshowsDirectorFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<TvshowsDirectorsOrderBy>>;
 };
 
 
@@ -14456,12 +14500,22 @@ export type TvshowCondition = {
   createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
   createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `customRating` field. */
+  customRating?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `extendedField` field. */
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
   externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `originalTitle` field. */
   originalTitle?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishedDate` field. */
@@ -14470,6 +14524,8 @@ export type TvshowCondition = {
   publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `released` field. */
   released?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `studio` field. */
@@ -14502,12 +14558,22 @@ export type TvshowFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `customRating` field. */
+  customRating?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `extendedField` field. */
+  extendedField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `externalId` field. */
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<BigFloatFilter>;
   /** Negates the expression. */
   not?: InputMaybe<TvshowFilter>;
   /** Checks for any expressions in this list. */
@@ -14520,6 +14586,8 @@ export type TvshowFilter = {
   publishedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
+  /** Filter by the object’s `rating` field. */
+  rating?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `seasons` relation. */
@@ -14842,9 +14910,15 @@ export type TvshowImageTypeFilter = {
 /** An input for mutations affecting `Tvshow` */
 export type TvshowInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
@@ -14858,9 +14932,15 @@ export type TvshowInput = {
 /** Represents an update to a `Tvshow`. Fields that are set will be updated. */
 export type TvshowPatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
@@ -14975,26 +15055,6 @@ export type TvshowsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
-export type TvshowsDirector = {
-  __typename?: 'TvshowsDirector';
-  name: Scalars['String']['output'];
-  /** Reads a single `Tvshow` that is related to this `TvshowsDirector`. */
-  tvshow?: Maybe<Tvshow>;
-  tvshowId: Scalars['Int']['output'];
-};
-
-/**
- * A condition to be used against `TvshowsDirector` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type TvshowsDirectorCondition = {
-  /** Checks for equality with the object’s `name` field. */
-  name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']['input']>;
-};
-
 /** A filter to be used against `TvshowsDirector` object types. All fields are combined with a logical ‘and.’ */
 export type TvshowsDirectorFilter = {
   /** Checks for all expressions in this list. */
@@ -15010,42 +15070,6 @@ export type TvshowsDirectorFilter = {
   /** Filter by the object’s `tvshowId` field. */
   tvshowId?: InputMaybe<IntFilter>;
 };
-
-/**
- * A connection to a list of `TvshowsDirector` values.
- * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
- */
-export type TvshowsDirectorsConnection = {
-  __typename?: 'TvshowsDirectorsConnection';
-  /** A list of edges which contains the `TvshowsDirector` and cursor to aid in pagination. */
-  edges: Array<TvshowsDirectorsEdge>;
-  /** A list of `TvshowsDirector` objects. */
-  nodes: Array<TvshowsDirector>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `TvshowsDirector` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `TvshowsDirector` edge in the connection. */
-export type TvshowsDirectorsEdge = {
-  __typename?: 'TvshowsDirectorsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `TvshowsDirector` at the end of the edge. */
-  node: TvshowsDirector;
-};
-
-/** Methods to use when ordering `TvshowsDirector`. */
-export enum TvshowsDirectorsOrderBy {
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  TvshowIdAsc = 'TVSHOW_ID_ASC',
-  TvshowIdDesc = 'TVSHOW_ID_DESC'
-}
 
 /** A `Tvshow` edge in the connection. */
 export type TvshowsEdge = {
@@ -15383,12 +15407,22 @@ export enum TvshowsOrderBy {
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
+  CreditsStartTimeAsc = 'CREDITS_START_TIME_ASC',
+  CreditsStartTimeDesc = 'CREDITS_START_TIME_DESC',
+  CustomRatingAsc = 'CUSTOM_RATING_ASC',
+  CustomRatingDesc = 'CUSTOM_RATING_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  DynamicFieldAsc = 'DYNAMIC_FIELD_ASC',
+  DynamicFieldDesc = 'DYNAMIC_FIELD_DESC',
+  ExtendedFieldAsc = 'EXTENDED_FIELD_ASC',
+  ExtendedFieldDesc = 'EXTENDED_FIELD_DESC',
   ExternalIdAsc = 'EXTERNAL_ID_ASC',
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  LengthInSecondsAsc = 'LENGTH_IN_SECONDS_ASC',
+  LengthInSecondsDesc = 'LENGTH_IN_SECONDS_DESC',
   Natural = 'NATURAL',
   OriginalTitleAsc = 'ORIGINAL_TITLE_ASC',
   OriginalTitleDesc = 'ORIGINAL_TITLE_DESC',
@@ -15400,6 +15434,8 @@ export enum TvshowsOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  RatingAsc = 'RATING_ASC',
+  RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
@@ -16660,6 +16696,7 @@ export type UpdateMoviesDirectorInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   movieId: Scalars['Int']['input'];
+  /** @notEmpty() */
   name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `MoviesDirector` being updated. */
   patch: MoviesDirectorPatch;
@@ -17954,7 +17991,7 @@ export type MovieQueryVariables = Exact<{
 }>;
 
 
-export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null };
+export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, rating?: any | null, customRating?: string | null, creditsStartTime?: string | null, lengthInSeconds?: any | null, dynamicField?: string | null, extendedField?: string | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null };
 
 export type DeleteMovieMutationVariables = Exact<{
   input: DeleteMovieInput;
@@ -20928,6 +20965,12 @@ export const MovieDocument = gql`
     description
     externalId
     ageRating
+    rating
+    customRating
+    creditsStartTime
+    lengthInSeconds
+    dynamicField
+    extendedField
     moviesTags {
       nodes {
         name

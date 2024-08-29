@@ -1614,6 +1614,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating: string | null;
+      /**
+      * **episodes.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating: number | null;
+      /**
+      * **episodes.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating: string | null;
+      /**
+      * **episodes.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time: string | null;
+      /**
+      * **episodes.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **episodes.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field: string | null;
+      /**
+      * **episodes.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -1738,6 +1774,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating: string | null;
+      /**
+      * **episodes.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating: number | null;
+      /**
+      * **episodes.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating: string | null;
+      /**
+      * **episodes.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time: string | null;
+      /**
+      * **episodes.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **episodes.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field: string | null;
+      /**
+      * **episodes.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field: string | null;
     }
     export interface Whereable {
       /**
@@ -1862,6 +1934,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1986,6 +2094,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -2110,6 +2254,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'episodes_external_id_key' | 'episodes_pkey';
     export type Column = keyof Selectable;
@@ -5319,6 +5499,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating: string | null;
+      /**
+      * **movies.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating: number | null;
+      /**
+      * **movies.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating: string | null;
+      /**
+      * **movies.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time: string | null;
+      /**
+      * **movies.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **movies.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field: string | null;
+      /**
+      * **movies.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -5431,6 +5647,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating: string | null;
+      /**
+      * **movies.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating: number | null;
+      /**
+      * **movies.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating: string | null;
+      /**
+      * **movies.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time: string | null;
+      /**
+      * **movies.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **movies.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field: string | null;
+      /**
+      * **movies.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field: string | null;
     }
     export interface Whereable {
       /**
@@ -5543,6 +5795,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -5655,6 +5943,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -5767,6 +6091,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movies_external_id_key' | 'movies_pkey';
     export type Column = keyof Selectable;
@@ -6980,6 +7340,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating: string | null;
+      /**
+      * **seasons.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating: number | null;
+      /**
+      * **seasons.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating: string | null;
+      /**
+      * **seasons.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time: string | null;
+      /**
+      * **seasons.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **seasons.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field: string | null;
+      /**
+      * **seasons.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -7086,6 +7482,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating: string | null;
+      /**
+      * **seasons.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating: number | null;
+      /**
+      * **seasons.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating: string | null;
+      /**
+      * **seasons.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time: string | null;
+      /**
+      * **seasons.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **seasons.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field: string | null;
+      /**
+      * **seasons.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field: string | null;
     }
     export interface Whereable {
       /**
@@ -7192,6 +7624,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -7298,6 +7766,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -7404,6 +7908,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'seasons_external_id_key' | 'seasons_pkey';
     export type Column = keyof Selectable;
@@ -9841,6 +10381,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating: string | null;
+      /**
+      * **tvshows.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating: number | null;
+      /**
+      * **tvshows.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating: string | null;
+      /**
+      * **tvshows.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time: string | null;
+      /**
+      * **tvshows.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **tvshows.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field: string | null;
+      /**
+      * **tvshows.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -9947,6 +10523,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating: string | null;
+      /**
+      * **tvshows.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating: number | null;
+      /**
+      * **tvshows.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating: string | null;
+      /**
+      * **tvshows.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time: string | null;
+      /**
+      * **tvshows.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds: number | null;
+      /**
+      * **tvshows.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field: string | null;
+      /**
+      * **tvshows.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field: string | null;
     }
     export interface Whereable {
       /**
@@ -10053,6 +10665,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -10159,6 +10807,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -10265,6 +10949,42 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       age_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows.rating**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows.custom_rating**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows.credits_start_time**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows.length_in_seconds**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows.dynamic_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows.extended_field**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshows_external_id_key' | 'tvshows_pkey';
     export type Column = keyof Selectable;

@@ -70,10 +70,10 @@ export function useTvShowDetailsActions(id: number): {
       confirmationMode: 'Simple',
       onActionSelected: removeFromContentSet,
     },
-    {
-      label: 'Collection Assignment',
-      path: `/tvshows/${id}/CollectionsToTvshow`,
-    },
+    // {
+    //   label: 'Collection Assignment',
+    //   path: `/tvshows/${id}/CollectionsToTvshow`,
+    // },
     {
       label: 'Publish Now',
       confirmationMode: 'Simple',

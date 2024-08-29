@@ -67,10 +67,10 @@ export function useMovieDetailsActions(id: number): {
       confirmationMode: 'Simple',
       onActionSelected: removeFromContentSet,
     },
-    {
-      label: 'Collection Assignment',
-      path: `/movies/${id}/CollectionsToMovie`,
-    },
+    // {
+    //   label: 'Collection Assignment',
+    //   path: `/movies/${id}/CollectionsToMovie`,
+    // },
     {
       label: 'Publish Now',
       confirmationMode: 'Simple',

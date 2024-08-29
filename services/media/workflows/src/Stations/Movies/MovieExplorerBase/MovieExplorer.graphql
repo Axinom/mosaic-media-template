@@ -27,11 +27,6 @@ fragment MovieExplorerProperties on Movie {
       name
     }
   }
-  moviesDirectors {
-    nodes {
-      name
-    }
-  }
   released
   moviesProductionCountries {
     nodes {

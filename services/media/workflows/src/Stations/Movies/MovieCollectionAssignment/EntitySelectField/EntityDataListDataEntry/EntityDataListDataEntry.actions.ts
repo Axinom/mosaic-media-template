@@ -15,16 +15,16 @@ export const useAddOptions: UseAddOptionsResult = (
         if (selection.mode === 'SINGLE_ITEMS') {
           const items = selection.items;
           if (items && onActionClicked) {
-            items.forEach((item, index) => {
-              onActionClicked({
-                entityType: EntityType.Movie,
-                entityImages: item.moviesImages,
-                publishStatus: item.publishStatus,
-                title: item.title,
-                sortOrder: sortOrder + index,
-                entityId: item.id,
-              });
-            });
+            // items.forEach((item, index) => {
+            //   onActionClicked({
+            //     entityType: EntityType.Movie,
+            //     entityImages: item.moviesImages,
+            //     publishStatus: item.publishStatus,
+            //     title: item.title,
+            //     sortOrder: sortOrder + index,
+            //     entityId: item.id,
+            //   });
+            // });
           }
         }
       },

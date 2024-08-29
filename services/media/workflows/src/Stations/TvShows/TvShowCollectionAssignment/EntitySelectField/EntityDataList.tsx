@@ -70,11 +70,11 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
     data: CollectionRelatedEntity,
   ) => ActionData[] = (data) => {
     return [
-      {
-        label: 'Open Details',
-        path: createEntityUrl(data),
-        icon: IconName.NavigateRight,
-      },
+      // {
+      //   label: 'Open Details',
+      //   path: createEntityUrl(data),
+      //   icon: IconName.NavigateRight,
+      // },
       {
         label: 'Unassign',
         onActionSelected: () =>
@@ -102,7 +102,7 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
 const createEntityUrl = ({
   entityType,
   entityId,
-}: CollectionRelatedEntity): string => {
+}: CollectionRelatedEntity): any => {
   switch (entityType) {
     case EntityType.Tvshow:
       return `/tvshows/${entityId}`;
