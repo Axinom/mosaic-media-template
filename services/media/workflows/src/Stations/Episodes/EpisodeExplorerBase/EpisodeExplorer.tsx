@@ -28,6 +28,7 @@ import {
   useUnpublishEpisodeMutation,
 } from '../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
+import { EpisodeDetailsQuickEdit } from '../EpisodeDetails/EpisodeDetailsQuickEdit';
 import { useEpisodesFilters } from './EpisodeExplorer.filters';
 import { EpisodeData, EpisodeExplorerProps } from './EpisodeExplorer.types';
 import { ExplorerIndexRenderer } from './renderers/ExplorerIndexRenderer';
@@ -217,6 +218,12 @@ export const EpisodeExplorer: React.FC<EpisodeExplorerProps> = (props) => {
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
           inlineMenuActions={generateInlineMenuActions}
+          quickEditRegistrations={[
+            {
+              component: <EpisodeDetailsQuickEdit />,
+              label: 'Episode Details',
+            },
+          ]}
         />
       );
     case 'SelectionExplorer':
