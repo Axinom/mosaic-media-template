@@ -101,6 +101,13 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 
 
 --
+-- Name: business_type_enum; Type: DOMAIN; Schema: app_public; Owner: -
+--
+
+CREATE DOMAIN app_public.business_type_enum AS text;
+
+
+--
 -- Name: collection_image_type_enum; Type: DOMAIN; Schema: app_public; Owner: -
 --
 
@@ -4923,6 +4930,23 @@ CREATE TABLE app_private.messaging_counter (
 
 
 --
+-- Name: business_type; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.business_type (
+    value text NOT NULL,
+    description text
+);
+
+
+--
+-- Name: TABLE business_type; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.business_type IS '@enum';
+
+
+--
 -- Name: collection_image_type; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -5123,6 +5147,7 @@ CREATE TABLE app_public.episodes (
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
     ingest_correlation_id integer,
+    business_type app_public.business_type_enum DEFAULT 'premium_downloadable'::text NOT NULL,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5630,6 +5655,7 @@ CREATE TABLE app_public.movies (
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
     ingest_correlation_id integer,
+    business_type app_public.business_type_enum DEFAULT 'premium_downloadable'::text NOT NULL,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5885,7 +5911,8 @@ CREATE TABLE app_public.seasons (
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
-    ingest_correlation_id integer
+    ingest_correlation_id integer,
+    business_type app_public.business_type_enum DEFAULT 'premium_downloadable'::text NOT NULL
 );
 
 
@@ -6312,6 +6339,7 @@ CREATE TABLE app_public.tvshows (
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
     ingest_correlation_id integer,
+    business_type app_public.business_type_enum DEFAULT 'premium_downloadable'::text NOT NULL,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -6535,6 +6563,14 @@ ALTER TABLE ONLY app_hidden.outbox
 
 ALTER TABLE ONLY app_private.messaging_counter
     ADD CONSTRAINT messaging_counter_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: business_type business_type_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.business_type
+    ADD CONSTRAINT business_type_pkey PRIMARY KEY (value);
 
 
 --
@@ -10717,6 +10753,14 @@ ALTER TABLE ONLY app_public.collections_tags
 
 
 --
+-- Name: episodes episodes_business_type_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.episodes
+    ADD CONSTRAINT episodes_business_type_fkey FOREIGN KEY (business_type) REFERENCES app_public.business_type(value);
+
+
+--
 -- Name: episodes_casts episodes_casts_episode_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -10901,6 +10945,14 @@ ALTER TABLE ONLY app_public.ingest_items
 
 
 --
+-- Name: movies movies_business_type_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.movies
+    ADD CONSTRAINT movies_business_type_fkey FOREIGN KEY (business_type) REFERENCES app_public.business_type(value);
+
+
+--
 -- Name: movies_casts movies_casts_movie_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11010,6 +11062,14 @@ ALTER TABLE ONLY app_public.movies_tags
 
 ALTER TABLE ONLY app_public.movies_trailers
     ADD CONSTRAINT movies_trailers_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES app_public.movies(id) ON DELETE CASCADE;
+
+
+--
+-- Name: seasons seasons_business_type_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.seasons
+    ADD CONSTRAINT seasons_business_type_fkey FOREIGN KEY (business_type) REFERENCES app_public.business_type(value);
 
 
 --
@@ -11186,6 +11246,14 @@ ALTER TABLE ONLY app_public.snapshots
 
 ALTER TABLE ONLY app_public.snapshots
     ADD CONSTRAINT snapshots_validation_status_fkey FOREIGN KEY (validation_status) REFERENCES app_public.snapshot_validation_status(value);
+
+
+--
+-- Name: tvshows tvshows_business_type_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.tvshows
+    ADD CONSTRAINT tvshows_business_type_fkey FOREIGN KEY (business_type) REFERENCES app_public.business_type(value);
 
 
 --
@@ -14238,6 +14306,13 @@ GRANT ALL ON FUNCTION ax_utils.validation_valid_url_array(input_value text[]) TO
 
 
 --
+-- Name: TABLE business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT ON TABLE app_public.business_type TO media_service_login;
+
+
+--
 -- Name: TABLE collection_image_type; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -14466,6 +14541,13 @@ GRANT INSERT(main_video_id),UPDATE(main_video_id) ON TABLE app_public.episodes T
 --
 
 GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.episodes TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN episodes.business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.episodes TO media_service_gql_role;
 
 
 --
@@ -14973,6 +15055,13 @@ GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.movies TO media_service_
 
 
 --
+-- Name: COLUMN movies.business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.movies TO media_service_gql_role;
+
+
+--
 -- Name: TABLE movies_casts; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15173,6 +15262,13 @@ GRANT INSERT(released),UPDATE(released) ON TABLE app_public.seasons TO media_ser
 --
 
 GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.seasons TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN seasons.business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.seasons TO media_service_gql_role;
 
 
 --
@@ -15579,6 +15675,13 @@ GRANT INSERT(released),UPDATE(released) ON TABLE app_public.tvshows TO media_ser
 --
 
 GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.tvshows TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshows.business_type; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.tvshows TO media_service_gql_role;
 
 
 --
