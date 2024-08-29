@@ -28,6 +28,7 @@ import {
   useUnpublishTvShowMutation,
 } from '../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
+import { TvShowDetailsQuickEdit } from '../TvShowDetails/TvShowDetailsQuickEdit';
 import { useTvShowsFilters } from './TvShowExplorer.filters';
 import { TvShowData, TvShowExplorerProps } from './TvShowExplorer.types';
 
@@ -195,6 +196,9 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
           inlineMenuActions={generateInlineMenuActions}
+          quickEditRegistrations={[
+            { component: <TvShowDetailsQuickEdit />, label: 'TV Show Details' },
+          ]}
         />
       );
     case 'SelectionExplorer':
