@@ -3385,7 +3385,6 @@ export type DeleteMoviesDirectorInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   movieId: Scalars['Int']['input'];
-  /** @notEmpty() */
   name: Scalars['String']['input'];
 };
 
@@ -4551,6 +4550,8 @@ export type Episode = {
   description?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EpisodesCast`. */
   episodesCasts: EpisodesCastsConnection;
+  /** Reads and enables pagination through a set of `EpisodesDirector`. */
+  episodesDirectors: EpisodesDirectorsConnection;
   /** Reads and enables pagination through a set of `EpisodesImage`. */
   episodesImages: EpisodesImagesConnection;
   /** Reads and enables pagination through a set of `EpisodesLicense`. */
@@ -4608,6 +4609,19 @@ export type EpisodeEpisodesCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesCastsOrderBy>>;
+};
+
+
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
+export type EpisodeEpisodesDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EpisodesDirectorCondition>;
+  filter?: InputMaybe<EpisodesDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EpisodesDirectorsOrderBy>>;
 };
 
 
@@ -4767,6 +4781,10 @@ export type EpisodeFilter = {
   episodesCasts?: InputMaybe<EpisodeToManyEpisodesCastFilter>;
   /** Some related `episodesCasts` exist. */
   episodesCastsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `episodesDirectors` relation. */
+  episodesDirectors?: InputMaybe<EpisodeToManyEpisodesDirectorFilter>;
+  /** Some related `episodesDirectors` exist. */
+  episodesDirectorsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `episodesImages` relation. */
   episodesImages?: InputMaybe<EpisodeToManyEpisodesImageFilter>;
   /** Some related `episodesImages` exist. */
@@ -5009,6 +5027,78 @@ export type EpisodesConnection = {
   /** The count of *all* `Episode` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
+
+/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+export type EpisodesDirector = {
+  __typename?: 'EpisodesDirector';
+  /** Reads a single `Episode` that is related to this `EpisodesDirector`. */
+  episode?: Maybe<Episode>;
+  episodeId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `EpisodesDirector` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type EpisodesDirectorCondition = {
+  /** Checks for equality with the object’s `episodeId` field. */
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `EpisodesDirector` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodesDirectorFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EpisodesDirectorFilter>>;
+  /** Filter by the object’s `episode` relation. */
+  episode?: InputMaybe<EpisodeFilter>;
+  /** Filter by the object’s `episodeId` field. */
+  episodeId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EpisodesDirectorFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EpisodesDirectorFilter>>;
+};
+
+/**
+ * A connection to a list of `EpisodesDirector` values.
+ * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ */
+export type EpisodesDirectorsConnection = {
+  __typename?: 'EpisodesDirectorsConnection';
+  /** A list of edges which contains the `EpisodesDirector` and cursor to aid in pagination. */
+  edges: Array<EpisodesDirectorsEdge>;
+  /** A list of `EpisodesDirector` objects. */
+  nodes: Array<EpisodesDirector>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EpisodesDirector` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `EpisodesDirector` edge in the connection. */
+export type EpisodesDirectorsEdge = {
+  __typename?: 'EpisodesDirectorsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `EpisodesDirector` at the end of the edge. */
+  node: EpisodesDirector;
+};
+
+/** Methods to use when ordering `EpisodesDirector`. */
+export enum EpisodesDirectorsOrderBy {
+  EpisodeIdAsc = 'EPISODE_ID_ASC',
+  EpisodeIdDesc = 'EPISODE_ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
 
 /** A `Episode` edge in the connection. */
 export type EpisodesEdge = {
@@ -5849,6 +5939,16 @@ export type EpisodeToManyEpisodesCastFilter = {
   none?: InputMaybe<EpisodesCastFilter>;
   /** Some related `EpisodesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<EpisodesCastFilter>;
+};
+
+/** A filter to be used against many `EpisodesDirector` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyEpisodesDirectorFilter = {
+  /** Every related `EpisodesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesDirectorFilter>;
+  /** No related `EpisodesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesDirectorFilter>;
+  /** Some related `EpisodesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesDirectorFilter>;
 };
 
 /** A filter to be used against many `EpisodesImage` object types. All fields are combined with a logical ‘and.’ */
@@ -8146,10 +8246,7 @@ export type MoviesDirector = {
 export type MoviesDirectorCondition = {
   /** Checks for equality with the object’s `movieId` field. */
   movieId?: InputMaybe<Scalars['Int']['input']>;
-  /**
-   * Checks for equality with the object’s `name` field.
-   * @notEmpty()
-   */
+  /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -8172,14 +8269,12 @@ export type MoviesDirectorFilter = {
 /** An input for mutations affecting `MoviesDirector` */
 export type MoviesDirectorInput = {
   movieId: Scalars['Int']['input'];
-  /** @notEmpty() */
   name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `MoviesDirector`. Fields that are set will be updated. */
 export type MoviesDirectorPatch = {
   movieId?: InputMaybe<Scalars['Int']['input']>;
-  /** @notEmpty() */
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -11959,6 +12054,8 @@ export type Season = {
   released?: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `SeasonsCast`. */
   seasonsCasts: SeasonsCastsConnection;
+  /** Reads and enables pagination through a set of `SeasonsDirector`. */
+  seasonsDirectors: SeasonsDirectorsConnection;
   /** Reads and enables pagination through a set of `SeasonsImage`. */
   seasonsImages: SeasonsImagesConnection;
   /** Reads and enables pagination through a set of `SeasonsLicense`. */
@@ -12019,6 +12116,19 @@ export type SeasonSeasonsCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsCastsOrderBy>>;
+};
+
+
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
+export type SeasonSeasonsDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SeasonsDirectorCondition>;
+  filter?: InputMaybe<SeasonsDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SeasonsDirectorsOrderBy>>;
 };
 
 
@@ -12190,6 +12300,10 @@ export type SeasonFilter = {
   seasonsCasts?: InputMaybe<SeasonToManySeasonsCastFilter>;
   /** Some related `seasonsCasts` exist. */
   seasonsCastsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `seasonsDirectors` relation. */
+  seasonsDirectors?: InputMaybe<SeasonToManySeasonsDirectorFilter>;
+  /** Some related `seasonsDirectors` exist. */
+  seasonsDirectorsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `seasonsImages` relation. */
   seasonsImages?: InputMaybe<SeasonToManySeasonsImageFilter>;
   /** Some related `seasonsImages` exist. */
@@ -12394,6 +12508,78 @@ export type SeasonsConnection = {
   /** The count of *all* `Season` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
+
+/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+export type SeasonsDirector = {
+  __typename?: 'SeasonsDirector';
+  name: Scalars['String']['output'];
+  /** Reads a single `Season` that is related to this `SeasonsDirector`. */
+  season?: Maybe<Season>;
+  seasonId: Scalars['Int']['output'];
+};
+
+/**
+ * A condition to be used against `SeasonsDirector` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type SeasonsDirectorCondition = {
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `seasonId` field. */
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A filter to be used against `SeasonsDirector` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonsDirectorFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<SeasonsDirectorFilter>>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<SeasonsDirectorFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<SeasonsDirectorFilter>>;
+  /** Filter by the object’s `season` relation. */
+  season?: InputMaybe<SeasonFilter>;
+  /** Filter by the object’s `seasonId` field. */
+  seasonId?: InputMaybe<IntFilter>;
+};
+
+/**
+ * A connection to a list of `SeasonsDirector` values.
+ * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ */
+export type SeasonsDirectorsConnection = {
+  __typename?: 'SeasonsDirectorsConnection';
+  /** A list of edges which contains the `SeasonsDirector` and cursor to aid in pagination. */
+  edges: Array<SeasonsDirectorsEdge>;
+  /** A list of `SeasonsDirector` objects. */
+  nodes: Array<SeasonsDirector>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SeasonsDirector` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `SeasonsDirector` edge in the connection. */
+export type SeasonsDirectorsEdge = {
+  __typename?: 'SeasonsDirectorsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `SeasonsDirector` at the end of the edge. */
+  node: SeasonsDirector;
+};
+
+/** Methods to use when ordering `SeasonsDirector`. */
+export enum SeasonsDirectorsOrderBy {
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SeasonIdAsc = 'SEASON_ID_ASC',
+  SeasonIdDesc = 'SEASON_ID_DESC'
+}
 
 /** A `Season` edge in the connection. */
 export type SeasonsEdge = {
@@ -13238,6 +13424,16 @@ export type SeasonToManySeasonsCastFilter = {
   none?: InputMaybe<SeasonsCastFilter>;
   /** Some related `SeasonsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<SeasonsCastFilter>;
+};
+
+/** A filter to be used against many `SeasonsDirector` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManySeasonsDirectorFilter = {
+  /** Every related `SeasonsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsDirectorFilter>;
+  /** No related `SeasonsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsDirectorFilter>;
+  /** Some related `SeasonsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsDirectorFilter>;
 };
 
 /** A filter to be used against many `SeasonsImage` object types. All fields are combined with a logical ‘and.’ */
@@ -14089,6 +14285,8 @@ export type Tvshow = {
   title: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `TvshowsCast`. */
   tvshowsCasts: TvshowsCastsConnection;
+  /** Reads and enables pagination through a set of `TvshowsDirector`. */
+  tvshowsDirectors: TvshowsDirectorsConnection;
   /** Reads and enables pagination through a set of `TvshowsImage`. */
   tvshowsImages: TvshowsImagesConnection;
   /** Reads and enables pagination through a set of `TvshowsLicense`. */
@@ -14144,6 +14342,19 @@ export type TvshowTvshowsCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsCastsOrderBy>>;
+};
+
+
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
+export type TvshowTvshowsDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TvshowsDirectorCondition>;
+  filter?: InputMaybe<TvshowsDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TvshowsDirectorsOrderBy>>;
 };
 
 
@@ -14325,6 +14536,10 @@ export type TvshowFilter = {
   tvshowsCasts?: InputMaybe<TvshowToManyTvshowsCastFilter>;
   /** Some related `tvshowsCasts` exist. */
   tvshowsCastsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `tvshowsDirectors` relation. */
+  tvshowsDirectors?: InputMaybe<TvshowToManyTvshowsDirectorFilter>;
+  /** Some related `tvshowsDirectors` exist. */
+  tvshowsDirectorsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowsImages` relation. */
   tvshowsImages?: InputMaybe<TvshowToManyTvshowsImageFilter>;
   /** Some related `tvshowsImages` exist. */
@@ -14759,6 +14974,78 @@ export type TvshowsConnection = {
   /** The count of *all* `Tvshow` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
+
+/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+export type TvshowsDirector = {
+  __typename?: 'TvshowsDirector';
+  name: Scalars['String']['output'];
+  /** Reads a single `Tvshow` that is related to this `TvshowsDirector`. */
+  tvshow?: Maybe<Tvshow>;
+  tvshowId: Scalars['Int']['output'];
+};
+
+/**
+ * A condition to be used against `TvshowsDirector` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type TvshowsDirectorCondition = {
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `tvshowId` field. */
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A filter to be used against `TvshowsDirector` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowsDirectorFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<TvshowsDirectorFilter>>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<TvshowsDirectorFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<TvshowsDirectorFilter>>;
+  /** Filter by the object’s `tvshow` relation. */
+  tvshow?: InputMaybe<TvshowFilter>;
+  /** Filter by the object’s `tvshowId` field. */
+  tvshowId?: InputMaybe<IntFilter>;
+};
+
+/**
+ * A connection to a list of `TvshowsDirector` values.
+ * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ */
+export type TvshowsDirectorsConnection = {
+  __typename?: 'TvshowsDirectorsConnection';
+  /** A list of edges which contains the `TvshowsDirector` and cursor to aid in pagination. */
+  edges: Array<TvshowsDirectorsEdge>;
+  /** A list of `TvshowsDirector` objects. */
+  nodes: Array<TvshowsDirector>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TvshowsDirector` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `TvshowsDirector` edge in the connection. */
+export type TvshowsDirectorsEdge = {
+  __typename?: 'TvshowsDirectorsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `TvshowsDirector` at the end of the edge. */
+  node: TvshowsDirector;
+};
+
+/** Methods to use when ordering `TvshowsDirector`. */
+export enum TvshowsDirectorsOrderBy {
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TvshowIdAsc = 'TVSHOW_ID_ASC',
+  TvshowIdDesc = 'TVSHOW_ID_DESC'
+}
 
 /** A `Tvshow` edge in the connection. */
 export type TvshowsEdge = {
@@ -15605,6 +15892,16 @@ export type TvshowToManyTvshowsCastFilter = {
   some?: InputMaybe<TvshowsCastFilter>;
 };
 
+/** A filter to be used against many `TvshowsDirector` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyTvshowsDirectorFilter = {
+  /** Every related `TvshowsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsDirectorFilter>;
+  /** No related `TvshowsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsDirectorFilter>;
+  /** Some related `TvshowsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsDirectorFilter>;
+};
+
 /** A filter to be used against many `TvshowsImage` object types. All fields are combined with a logical ‘and.’ */
 export type TvshowToManyTvshowsImageFilter = {
   /** Every related `TvshowsImage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -16363,7 +16660,6 @@ export type UpdateMoviesDirectorInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   movieId: Scalars['Int']['input'];
-  /** @notEmpty() */
   name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `MoviesDirector` being updated. */
   patch: MoviesDirectorPatch;
