@@ -81,10 +81,18 @@ export function register(app: PiletApi, extensions: Extensions): void {
     categoryName: 'Content',
   });
 
-  app.registerPage('/movies', Movies, {
-    breadcrumb: () => 'Movies',
-    permissions: { 'media-service': ['ADMIN', 'MOVIES_EDIT', 'MOVIES_VIEW'] },
-  });
+  app.registerPage(
+    '/movies',
+    () => (
+      <ExtensionsContext.Provider value={extensions}>
+        <Movies />
+      </ExtensionsContext.Provider>
+    ),
+    {
+      breadcrumb: () => 'Movies',
+      permissions: { 'media-service': ['ADMIN', 'MOVIES_EDIT', 'MOVIES_VIEW'] },
+    },
+  );
   app.registerPage('/movies/create', MovieCreate, {
     breadcrumb: () => 'New Movie',
     permissions: { 'media-service': ['ADMIN', 'MOVIES_EDIT', 'MOVIES_VIEW'] },
