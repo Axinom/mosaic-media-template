@@ -62,12 +62,20 @@ export function register(app: PiletApi, extensions: Extensions): void {
     categoryName: 'Curation',
   });
 
-  app.registerPage('/collections', Collections, {
-    breadcrumb: () => 'Collections',
-    permissions: {
-      'media-service': ['ADMIN', 'COLLECTIONS_EDIT', 'COLLECTIONS_VIEW'],
+  app.registerPage(
+    '/collections',
+    () => (
+      <ExtensionsContext.Provider value={extensions}>
+        <Collections />
+      </ExtensionsContext.Provider>
+    ),
+    {
+      breadcrumb: () => 'Collections',
+      permissions: {
+        'media-service': ['ADMIN', 'COLLECTIONS_EDIT', 'COLLECTIONS_VIEW'],
+      },
     },
-  });
+  );
 
   app.registerPage('/collections/create', CollectionCreate, {
     breadcrumb: () => 'New Collection',

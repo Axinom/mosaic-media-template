@@ -64,10 +64,20 @@ export function register(app: PiletApi, extensions: Extensions): void {
     categoryName: 'Content',
   });
 
-  app.registerPage('/episodes', Episodes, {
-    breadcrumb: () => 'Episodes',
-    permissions: { 'media-service': ['ADMIN', 'TVSHOWS_EDIT', 'TVSHOWS_VIEW'] },
-  });
+  app.registerPage(
+    '/episodes',
+    () => (
+      <ExtensionsContext.Provider value={extensions}>
+        <Episodes />
+      </ExtensionsContext.Provider>
+    ),
+    {
+      breadcrumb: () => 'Episodes',
+      permissions: {
+        'media-service': ['ADMIN', 'TVSHOWS_EDIT', 'TVSHOWS_VIEW'],
+      },
+    },
+  );
 
   app.registerPage('/episodes/create', EpisodeCreate, {
     breadcrumb: () => 'New Episode',
