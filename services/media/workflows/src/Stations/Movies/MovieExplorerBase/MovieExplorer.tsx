@@ -26,7 +26,6 @@ import {
   useUnpublishMovieMutation,
 } from '../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
-import { MovieDetailsQuickEdit } from '../MovieDetails/MovieDetailsQuickEdit';
 import { useMoviesFilters } from './MovieExplorer.filters';
 import { MovieData, MovieExplorerProps } from './MovieExplorer.types';
 
@@ -186,9 +185,6 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
           inlineMenuActions={generateInlineMenuActions}
-          quickEditRegistrations={[
-            { component: <MovieDetailsQuickEdit />, label: 'Movie Details' },
-          ]}
         />
       );
     case 'SelectionExplorer':

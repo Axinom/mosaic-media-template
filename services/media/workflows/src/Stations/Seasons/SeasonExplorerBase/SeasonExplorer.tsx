@@ -28,7 +28,6 @@ import {
   useUnpublishSeasonMutation,
 } from '../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
-import { SeasonDetailsQuickEdit } from '../SeasonDetails/SeasonDetailsQuickEdit';
 import { SeasonIndexRenderer } from './renderers/SeasonIndexRenderer';
 import { SeasonParentRenderer } from './renderers/SeasonParentRenderer';
 import { useSeasonsFilters } from './SeasonExplorer.filters';
@@ -215,9 +214,6 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
           inlineMenuActions={generateInlineMenuActions}
-          quickEditRegistrations={[
-            { component: <SeasonDetailsQuickEdit />, label: 'Season Details' },
-          ]}
         />
       );
     case 'SelectionExplorer':
