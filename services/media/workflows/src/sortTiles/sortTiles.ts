@@ -14,7 +14,7 @@ const tilesOrder = [
   'Collections',
   'Ingest',
   'Snapshot Registry',
-  'Monetization',
+  // 'Monetization',
   'Settings',
 ];
 

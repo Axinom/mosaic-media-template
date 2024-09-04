@@ -44,7 +44,7 @@ export function useMoviesFilters(): {
     {
       // select from list
       label: 'Content Owners',
-      property: 'originalTitle',
+      property: 'contentOwner',
       type: FilterTypes.FreeText,
     },
     {
@@ -82,7 +82,7 @@ export function useMoviesFilters(): {
     },
     {
       label: 'License Countries',
-      property: 'moviesLicenses',
+      property: 'moviesProductionCountries',
       type: FilterTypes.FreeText,
     },
     {
@@ -105,7 +105,7 @@ export function useMoviesFilters(): {
     },
     {
       label: 'TVOD Tier',
-      property: 'moviesProductionCountries',
+      property: 'studio',
       type: FilterTypes.FreeText,
     },
     {
@@ -142,7 +142,8 @@ export function useMoviesFilters(): {
       // audioLanguages: 'includesInsensitive',
       moviesCasts: ['some', 'name', 'includesInsensitive'],
       externalId: 'includesInsensitive',
-      moviesLicenses: ['some', 'moviesLicensesCountries', 'some', 'code', 'in'],
+      contentOwner: 'includesInsensitive',
+      moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
       // validLicensing: 'includesInsensitive',
       // subtype: 'includesInsensitive',
       // businessType: 'includesInsensitive',

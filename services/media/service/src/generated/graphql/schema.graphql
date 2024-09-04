@@ -176,6 +176,40 @@ type Query {
     filter: CollectionsTagFilter
   ): CollectionsTagsConnection
 
+  """Reads and enables pagination through a set of `ContentOwner`."""
+  contentOwners(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ContentOwner`."""
+    orderBy: [ContentOwnersOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ContentOwnerCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ContentOwnerFilter
+  ): ContentOwnersConnection
+
   """Reads and enables pagination through a set of `Episode`."""
   episodes(
     """Only read the first `n` values of the set."""
@@ -1656,6 +1690,7 @@ type Query {
   collection(id: Int!): Collection
   collectionByExternalId(externalId: String!): Collection
   collectionsTag(collectionId: Int!, name: String!): CollectionsTag
+  contentOwner(id: UUID!): ContentOwner
   episode(id: Int!): Episode
   episodeByExternalId(externalId: String!): Episode
   episodesCast(episodeId: Int!, name: String!): EpisodesCast
@@ -3705,6 +3740,9 @@ input MovieFilter {
   """Filter by the object’s `extendedField` field."""
   extendedField: StringFilter
 
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
+
   """Filter by the object’s `moviesTags` relation."""
   moviesTags: MovieToManyMoviesTagFilter
 
@@ -4839,6 +4877,9 @@ input TvshowFilter {
   """Filter by the object’s `extendedField` field."""
   extendedField: StringFilter
 
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
+
   """Filter by the object’s `tvshowsTags` relation."""
   tvshowsTags: TvshowToManyTvshowsTagFilter
 
@@ -5042,6 +5083,9 @@ input TvshowsLicenseFilter {
 
   """Filter by the object’s `updatedDate` field."""
   updatedDate: DatetimeFilter
+
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
 
   """Filter by the object’s `tvshowsLicensesCountries` relation."""
   tvshowsLicensesCountries: TvshowsLicenseToManyTvshowsLicensesCountryFilter
@@ -5385,6 +5429,9 @@ input SeasonFilter {
   """Filter by the object’s `extendedField` field."""
   extendedField: StringFilter
 
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
+
   """Filter by the object’s `seasonsTags` relation."""
   seasonsTags: SeasonToManySeasonsTagFilter
 
@@ -5594,6 +5641,9 @@ input SeasonsLicenseFilter {
 
   """Filter by the object’s `updatedDate` field."""
   updatedDate: DatetimeFilter
+
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
 
   """Filter by the object’s `seasonsLicensesCountries` relation."""
   seasonsLicensesCountries: SeasonsLicenseToManySeasonsLicensesCountryFilter
@@ -5958,6 +6008,9 @@ input EpisodeFilter {
   """Filter by the object’s `extendedField` field."""
   extendedField: StringFilter
 
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
+
   """Filter by the object’s `episodesTags` relation."""
   episodesTags: EpisodeToManyEpisodesTagFilter
 
@@ -6161,6 +6214,9 @@ input EpisodesLicenseFilter {
 
   """Filter by the object’s `updatedDate` field."""
   updatedDate: DatetimeFilter
+
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
 
   """Filter by the object’s `episodesLicensesCountries` relation."""
   episodesLicensesCountries: EpisodesLicenseToManyEpisodesLicensesCountryFilter
@@ -7549,6 +7605,7 @@ type Movie {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 
   """Reads and enables pagination through a set of `MoviesTag`."""
   moviesTags(
@@ -8668,6 +8725,7 @@ type Tvshow {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 
   """Reads and enables pagination through a set of `TvshowsTag`."""
   tvshowsTags(
@@ -9168,6 +9226,7 @@ type TvshowsLicense {
   licenseEnd: Datetime
   createdDate: Datetime!
   updatedDate: Datetime!
+  contentOwner: String
 
   """Reads a single `Tvshow` that is related to this `TvshowsLicense`."""
   tvshow: Tvshow
@@ -9298,6 +9357,8 @@ enum TvshowsLicensesOrderBy {
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
   UPDATED_DATE_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -9324,6 +9385,9 @@ input TvshowsLicenseCondition {
 
   """Checks for equality with the object’s `updatedDate` field."""
   updatedDate: Datetime
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
 }
 
 """
@@ -9626,6 +9690,7 @@ type Season {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 
   """Reads a single `Tvshow` that is related to this `Season`."""
   tvshow: Tvshow
@@ -10129,6 +10194,7 @@ type SeasonsLicense {
   licenseEnd: Datetime
   createdDate: Datetime!
   updatedDate: Datetime!
+  contentOwner: String
 
   """Reads a single `Season` that is related to this `SeasonsLicense`."""
   season: Season
@@ -10259,6 +10325,8 @@ enum SeasonsLicensesOrderBy {
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
   UPDATED_DATE_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -10285,6 +10353,9 @@ input SeasonsLicenseCondition {
 
   """Checks for equality with the object’s `updatedDate` field."""
   updatedDate: Datetime
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
 }
 
 """
@@ -10553,6 +10624,7 @@ type Episode {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 
   """Reads a single `Season` that is related to this `Episode`."""
   season: Season
@@ -11024,6 +11096,7 @@ type EpisodesLicense {
   licenseEnd: Datetime
   createdDate: Datetime!
   updatedDate: Datetime!
+  contentOwner: String
 
   """Reads a single `Episode` that is related to this `EpisodesLicense`."""
   episode: Episode
@@ -11154,6 +11227,8 @@ enum EpisodesLicensesOrderBy {
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
   UPDATED_DATE_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -11180,6 +11255,9 @@ input EpisodesLicenseCondition {
 
   """Checks for equality with the object’s `updatedDate` field."""
   updatedDate: Datetime
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
 }
 
 """
@@ -11578,6 +11656,8 @@ enum EpisodesOrderBy {
   DYNAMIC_FIELD_DESC
   EXTENDED_FIELD_ASC
   EXTENDED_FIELD_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -11664,6 +11744,9 @@ input EpisodeCondition {
 
   """Checks for equality with the object’s `extendedField` field."""
   extendedField: String
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
 }
 
 """
@@ -11954,6 +12037,8 @@ enum SeasonsOrderBy {
   DYNAMIC_FIELD_DESC
   EXTENDED_FIELD_ASC
   EXTENDED_FIELD_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -12027,6 +12112,9 @@ input SeasonCondition {
 
   """Checks for equality with the object’s `extendedField` field."""
   extendedField: String
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
 }
 
 """Methods to use when ordering `TvshowsSnapshot`."""
@@ -12206,6 +12294,131 @@ input CollectionCondition {
 
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
+}
+
+"""A connection to a list of `ContentOwner` values."""
+type ContentOwnersConnection {
+  """A list of `ContentOwner` objects."""
+  nodes: [ContentOwner!]!
+
+  """
+  A list of edges which contains the `ContentOwner` and cursor to aid in pagination.
+  """
+  edges: [ContentOwnersEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ContentOwner` you could get from the connection."""
+  totalCount: Int!
+}
+
+""""""
+type ContentOwner {
+  id: UUID!
+  name: String!
+  sortOrder: Int!
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+}
+
+"""A `ContentOwner` edge in the connection."""
+type ContentOwnersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ContentOwner` at the end of the edge."""
+  node: ContentOwner!
+}
+
+"""Methods to use when ordering `ContentOwner`."""
+enum ContentOwnersOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  SORT_ORDER_ASC
+  SORT_ORDER_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `ContentOwner` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ContentOwnerCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """
+  Checks for equality with the object’s `name` field.
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String
+
+  """Checks for equality with the object’s `sortOrder` field."""
+  sortOrder: Int
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+}
+
+"""
+A filter to be used against `ContentOwner` object types. All fields are combined with a logical ‘and.’
+"""
+input ContentOwnerFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `sortOrder` field."""
+  sortOrder: IntFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [ContentOwnerFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ContentOwnerFilter!]
+
+  """Negates the expression."""
+  not: ContentOwnerFilter
 }
 
 """
@@ -13624,6 +13837,8 @@ enum MoviesOrderBy {
   DYNAMIC_FIELD_DESC
   EXTENDED_FIELD_ASC
   EXTENDED_FIELD_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -13704,6 +13919,9 @@ input MovieCondition {
 
   """Checks for equality with the object’s `extendedField` field."""
   extendedField: String
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
 }
 
 """
@@ -13996,6 +14214,8 @@ enum TvshowsOrderBy {
   DYNAMIC_FIELD_DESC
   EXTENDED_FIELD_ASC
   EXTENDED_FIELD_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -14073,6 +14293,9 @@ input TvshowCondition {
 
   """Checks for equality with the object’s `extendedField` field."""
   extendedField: String
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
 }
 
 """A connection to a list of `String` values."""
@@ -14634,6 +14857,14 @@ type Mutation {
     input: CreateCollectionsTagInput!
   ): CreateCollectionsTagPayload
 
+  """Creates a single `ContentOwner`."""
+  createContentOwner(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateContentOwnerInput!
+  ): CreateContentOwnerPayload
+
   """Creates a single `Episode`."""
   createEpisode(
     """
@@ -14994,6 +15225,14 @@ type Mutation {
     input: UpdateCollectionsTagInput!
   ): UpdateCollectionsTagPayload
 
+  """Updates a single `ContentOwner` using a unique key and a patch."""
+  updateContentOwner(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateContentOwnerInput!
+  ): UpdateContentOwnerPayload
+
   """Updates a single `Episode` using a unique key and a patch."""
   updateEpisode(
     """
@@ -15345,6 +15584,14 @@ type Mutation {
     """
     input: DeleteCollectionsTagInput!
   ): DeleteCollectionsTagPayload
+
+  """Deletes a single `ContentOwner` using a unique key."""
+  deleteContentOwner(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteContentOwnerInput!
+  ): DeleteContentOwnerPayload
 
   """Deletes a single `Episode` using a unique key."""
   deleteEpisode(
@@ -16185,6 +16432,52 @@ input CollectionsTagInput {
   name: String!
 }
 
+"""The output of our create `ContentOwner` mutation."""
+type CreateContentOwnerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ContentOwner` that was created by this mutation."""
+  contentOwner: ContentOwner
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ContentOwner`. May be used by Relay 1."""
+  contentOwnerEdge(
+    """The method to use when ordering `ContentOwner`."""
+    orderBy: [ContentOwnersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ContentOwnersEdge
+}
+
+"""All input for the create `ContentOwner` mutation."""
+input CreateContentOwnerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ContentOwner` to be created by this mutation."""
+  contentOwner: ContentOwnerInput!
+}
+
+"""An input for mutations affecting `ContentOwner`"""
+input ContentOwnerInput {
+  """
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String!
+  sortOrder: Int!
+}
+
 """The output of our create `Episode` mutation."""
 type CreateEpisodePayload {
   """
@@ -16250,6 +16543,7 @@ input EpisodeInput {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 }
 
 """The output of our create `EpisodesCast` mutation."""
@@ -16395,6 +16689,7 @@ input EpisodesLicenseInput {
   episodeId: Int!
   licenseStart: Datetime
   licenseEnd: Datetime
+  contentOwner: String
 }
 
 """The output of our create `EpisodesLicensesCountry` mutation."""
@@ -16755,6 +17050,7 @@ input MovieInput {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 }
 
 """The output of our create `MoviesCast` mutation."""
@@ -17256,6 +17552,7 @@ input SeasonInput {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 }
 
 """The output of our create `SeasonsCast` mutation."""
@@ -17401,6 +17698,7 @@ input SeasonsLicenseInput {
   seasonId: Int!
   licenseStart: Datetime
   licenseEnd: Datetime
+  contentOwner: String
 }
 
 """The output of our create `SeasonsLicensesCountry` mutation."""
@@ -17758,6 +18056,7 @@ input TvshowInput {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 }
 
 """The output of our create `TvshowsCast` mutation."""
@@ -17903,6 +18202,7 @@ input TvshowsLicenseInput {
   tvshowId: Int!
   licenseStart: Datetime
   licenseEnd: Datetime
+  contentOwner: String
 }
 
 """The output of our create `TvshowsLicensesCountry` mutation."""
@@ -18458,6 +18758,57 @@ input CollectionsTagPatch {
   name: String
 }
 
+"""The output of our update `ContentOwner` mutation."""
+type UpdateContentOwnerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ContentOwner` that was updated by this mutation."""
+  contentOwner: ContentOwner
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ContentOwner`. May be used by Relay 1."""
+  contentOwnerEdge(
+    """The method to use when ordering `ContentOwner`."""
+    orderBy: [ContentOwnersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ContentOwnersEdge
+}
+
+"""All input for the `updateContentOwner` mutation."""
+input UpdateContentOwnerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ContentOwner` being updated.
+  """
+  patch: ContentOwnerPatch!
+  id: UUID!
+}
+
+"""
+Represents an update to a `ContentOwner`. Fields that are set will be updated.
+"""
+input ContentOwnerPatch {
+  """
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String
+  sortOrder: Int
+}
+
 """The output of our update `Episode` mutation."""
 type UpdateEpisodePayload {
   """
@@ -18528,6 +18879,7 @@ input EpisodePatch {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 }
 
 """
@@ -18708,6 +19060,7 @@ input EpisodesLicensePatch {
   episodeId: Int
   licenseStart: Datetime
   licenseEnd: Datetime
+  contentOwner: String
 }
 
 """The output of our update `EpisodesLicensesCountry` mutation."""
@@ -19046,6 +19399,7 @@ input MoviePatch {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 }
 
 """
@@ -19513,6 +19867,7 @@ input SeasonPatch {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 }
 
 """
@@ -19693,6 +20048,7 @@ input SeasonsLicensePatch {
   seasonId: Int
   licenseStart: Datetime
   licenseEnd: Datetime
+  contentOwner: String
 }
 
 """The output of our update `SeasonsLicensesCountry` mutation."""
@@ -19978,6 +20334,7 @@ input TvshowPatch {
   lengthInSeconds: BigFloat
   dynamicField: String
   extendedField: String
+  contentOwner: String
 }
 
 """
@@ -20158,6 +20515,7 @@ input TvshowsLicensePatch {
   tvshowId: Int
   licenseStart: Datetime
   licenseEnd: Datetime
+  contentOwner: String
 }
 
 """The output of our update `TvshowsLicensesCountry` mutation."""
@@ -20548,6 +20906,40 @@ input DeleteCollectionsTagInput {
 
   """@notEmpty()"""
   name: String!
+}
+
+"""The output of our delete `ContentOwner` mutation."""
+type DeleteContentOwnerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ContentOwner` that was deleted by this mutation."""
+  contentOwner: ContentOwner
+  deletedContentOwnerNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ContentOwner`. May be used by Relay 1."""
+  contentOwnerEdge(
+    """The method to use when ordering `ContentOwner`."""
+    orderBy: [ContentOwnersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ContentOwnersEdge
+}
+
+"""All input for the `deleteContentOwner` mutation."""
+input DeleteContentOwnerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
 }
 
 """The output of our delete `Episode` mutation."""

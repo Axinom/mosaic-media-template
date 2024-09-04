@@ -91,6 +91,7 @@ export const MovieDetails: React.FC = () => {
     productionCountries,
     tags,
     allAgeRatings,
+    allContentOwners,
     director,
   } = useMemo(
     () => ({
@@ -112,6 +113,14 @@ export const MovieDetails: React.FC = () => {
       ),
       allAgeRatings:
         data?.ageRatings?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
+      allContentOwners:
+        data?.contentOwners?.nodes.map(
           (node) =>
             ({
               value: node.name,
@@ -294,6 +303,7 @@ export const MovieDetails: React.FC = () => {
       <Form
         genreOptions={Object.keys(allGenres)}
         ageRatingOptions={allAgeRatings}
+        contentOwnerOptions={allContentOwners}
       />
     </Details>
   );
@@ -391,7 +401,8 @@ const Panel: React.FC = () => {
 const Form: React.FC<{
   genreOptions?: string[];
   ageRatingOptions?: selectOption[];
-}> = ({ genreOptions, ageRatingOptions }) => {
+  contentOwnerOptions?: selectOption[];
+}> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchMovieTagsQuery,
@@ -456,13 +467,6 @@ const Form: React.FC<{
     'Arabic (ar)',
     'English (en)',
     'Hindi (hi)',
-  ];
-
-  const contentOwnerOptions: selectOption[] = [
-    { value: 'ACI', label: 'ACI' },
-    { value: 'BBI', label: 'BBI' },
-    { value: 'California Pictures', label: 'California Pictures' },
-    { value: 'FOX', label: 'FOX' },
   ];
 
   return (
@@ -553,7 +557,7 @@ const Form: React.FC<{
         as={SingleLineTextField}
       />
       <Field
-        name="contentOwners"
+        name="contentOwner"
         label="Content Owner"
         addEmptyOption={true}
         options={contentOwnerOptions}
@@ -561,7 +565,7 @@ const Form: React.FC<{
       />
       <Field
         //need new component
-        name="creditStartTime"
+        name="creditsStartTime"
         label="Credit Start Time"
         className={classes.externalId}
         as={SingleLineTextField}
@@ -573,7 +577,7 @@ const Form: React.FC<{
         as={SingleLineTextField}
       />
       <Field
-        name="custom"
+        name="extendedField"
         label="Custom"
         className={classes.externalId}
         as={TextAreaField}

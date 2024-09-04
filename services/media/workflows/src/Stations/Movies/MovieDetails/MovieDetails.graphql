@@ -6,6 +6,7 @@ query Movie($id: Int!) {
     description
     externalId
     ageRating
+    contentOwner
     rating
     customRating
     creditsStartTime
@@ -72,6 +73,13 @@ query Movie($id: Int!) {
     nodes {
       name
       id
+    }
+  }
+
+  contentOwners {
+    nodes {
+      name
+      sortOrder
     }
   }
 }

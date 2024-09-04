@@ -11,6 +11,8 @@ export enum Queries {
   collectionsImages = 'collectionsImages',
   collectionsTag = 'collectionsTag',
   collectionsTags = 'collectionsTags',
+  contentOwner = 'contentOwner',
+  contentOwners = 'contentOwners',
   episode = 'episode',
   episodeByExternalId = 'episodeByExternalId',
   episodes = 'episodes',

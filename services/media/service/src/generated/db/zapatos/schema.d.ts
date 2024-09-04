@@ -1331,6 +1331,235 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
+  export namespace content_owners {
+    export type Table = 'content_owners';
+    export interface Selectable {
+      /**
+      * **content_owners.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
+      * **content_owners.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **content_owners.sort_order**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      sort_order: number;
+      /**
+      * **content_owners.created_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
+      */
+      created_date: Date;
+      /**
+      * **content_owners.updated_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
+      */
+      updated_date: Date;
+      /**
+      * **content_owners.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user: string;
+      /**
+      * **content_owners.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **content_owners.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
+      * **content_owners.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **content_owners.sort_order**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      sort_order: number;
+      /**
+      * **content_owners.created_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
+      */
+      created_date: db.DateString;
+      /**
+      * **content_owners.updated_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
+      */
+      updated_date: db.DateString;
+      /**
+      * **content_owners.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user: string;
+      /**
+      * **content_owners.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user: string;
+    }
+    export interface Whereable {
+      /**
+      * **content_owners.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **content_owners.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **content_owners.sort_order**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      sort_order?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **content_owners.created_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
+      */
+      created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **content_owners.updated_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
+      */
+      updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **content_owners.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **content_owners.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **content_owners.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **content_owners.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **content_owners.sort_order**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      sort_order: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **content_owners.created_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
+      */
+      created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **content_owners.updated_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
+      */
+      updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **content_owners.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **content_owners.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **content_owners.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **content_owners.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **content_owners.sort_order**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      sort_order?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **content_owners.created_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
+      */
+      created_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **content_owners.updated_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
+      */
+      updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **content_owners.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **content_owners.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'content_owners_pkey' | 'idx_content_owners_name' | 'idx_content_owners_sort_order';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
   export namespace entity_type {
     export type Table = 'entity_type';
     export interface Selectable {
@@ -1650,6 +1879,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field: string | null;
+      /**
+      * **episodes.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -1810,6 +2045,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field: string | null;
+      /**
+      * **episodes.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -1970,6 +2211,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -2130,6 +2377,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -2290,6 +2543,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'episodes_external_id_key' | 'episodes_pkey';
     export type Column = keyof Selectable;
@@ -2604,6 +2863,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
+      /**
+      * **episodes_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -2642,6 +2907,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
+      /**
+      * **episodes_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -2680,6 +2951,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -2718,6 +2995,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -2756,6 +3039,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'episodes_licenses_pkey';
     export type Column = keyof Selectable;
@@ -5535,6 +5824,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field: string | null;
+      /**
+      * **movies.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -5683,6 +5978,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field: string | null;
+      /**
+      * **movies.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -5831,6 +6132,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -5979,6 +6286,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -6127,6 +6440,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movies_external_id_key' | 'movies_pkey';
     export type Column = keyof Selectable;
@@ -7376,6 +7695,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field: string | null;
+      /**
+      * **seasons.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -7518,6 +7843,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field: string | null;
+      /**
+      * **seasons.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -7660,6 +7991,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -7802,6 +8139,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -7944,6 +8287,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'seasons_external_id_key' | 'seasons_pkey';
     export type Column = keyof Selectable;
@@ -8258,6 +8607,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
+      /**
+      * **seasons_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -8296,6 +8651,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
+      /**
+      * **seasons_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -8334,6 +8695,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -8372,6 +8739,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -8410,6 +8783,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'seasons_licenses_pkey';
     export type Column = keyof Selectable;
@@ -10417,6 +10796,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field: string | null;
+      /**
+      * **tvshows.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -10559,6 +10944,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field: string | null;
+      /**
+      * **tvshows.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -10701,6 +11092,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -10843,6 +11240,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -10985,6 +11388,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshows_external_id_key' | 'tvshows_pkey';
     export type Column = keyof Selectable;
@@ -11299,6 +11708,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
+      /**
+      * **tvshows_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -11337,6 +11752,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
+      /**
+      * **tvshows_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -11375,6 +11796,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -11413,6 +11840,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -11451,6 +11884,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshows_licenses_pkey';
     export type Column = keyof Selectable;
@@ -11953,15 +12392,15 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = age_ratings.Table | collection_image_type.Table | collection_relations.Table | collections.Table | collections_images.Table | collections_snapshots.Table | collections_tags.Table | entity_type.Table | episode_image_type.Table | episodes.Table | episodes_casts.Table | episodes_directors.Table | episodes_images.Table | episodes_licenses.Table | episodes_licenses_countries.Table | episodes_production_countries.Table | episodes_snapshots.Table | episodes_tags.Table | episodes_trailers.Table | episodes_tvshow_genres.Table | ingest_documents.Table | ingest_entity_exists_status.Table | ingest_item_status.Table | ingest_item_step_status.Table | ingest_item_step_type.Table | ingest_item_steps.Table | ingest_item_type.Table | ingest_items.Table | ingest_status.Table | iso_alpha_two_country_codes.Table | messaging_counter.Table | movie_genres.Table | movie_image_type.Table | movies.Table | movies_casts.Table | movies_directors.Table | movies_images.Table | movies_licenses.Table | movies_licenses_countries.Table | movies_movie_genres.Table | movies_production_countries.Table | movies_snapshots.Table | movies_tags.Table | movies_trailers.Table | publish_status.Table | season_image_type.Table | seasons.Table | seasons_casts.Table | seasons_directors.Table | seasons_images.Table | seasons_licenses.Table | seasons_licenses_countries.Table | seasons_production_countries.Table | seasons_snapshots.Table | seasons_tags.Table | seasons_trailers.Table | seasons_tvshow_genres.Table | snapshot_state.Table | snapshot_validation_issue_context.Table | snapshot_validation_issue_severity.Table | snapshot_validation_results.Table | snapshot_validation_status.Table | snapshots.Table | tvshow_genres.Table | tvshow_image_type.Table | tvshows.Table | tvshows_casts.Table | tvshows_directors.Table | tvshows_images.Table | tvshows_licenses.Table | tvshows_licenses_countries.Table | tvshows_production_countries.Table | tvshows_snapshots.Table | tvshows_tags.Table | tvshows_trailers.Table | tvshows_tvshow_genres.Table;
-  export type Selectable = age_ratings.Selectable | collection_image_type.Selectable | collection_relations.Selectable | collections.Selectable | collections_images.Selectable | collections_snapshots.Selectable | collections_tags.Selectable | entity_type.Selectable | episode_image_type.Selectable | episodes.Selectable | episodes_casts.Selectable | episodes_directors.Selectable | episodes_images.Selectable | episodes_licenses.Selectable | episodes_licenses_countries.Selectable | episodes_production_countries.Selectable | episodes_snapshots.Selectable | episodes_tags.Selectable | episodes_trailers.Selectable | episodes_tvshow_genres.Selectable | ingest_documents.Selectable | ingest_entity_exists_status.Selectable | ingest_item_status.Selectable | ingest_item_step_status.Selectable | ingest_item_step_type.Selectable | ingest_item_steps.Selectable | ingest_item_type.Selectable | ingest_items.Selectable | ingest_status.Selectable | iso_alpha_two_country_codes.Selectable | messaging_counter.Selectable | movie_genres.Selectable | movie_image_type.Selectable | movies.Selectable | movies_casts.Selectable | movies_directors.Selectable | movies_images.Selectable | movies_licenses.Selectable | movies_licenses_countries.Selectable | movies_movie_genres.Selectable | movies_production_countries.Selectable | movies_snapshots.Selectable | movies_tags.Selectable | movies_trailers.Selectable | publish_status.Selectable | season_image_type.Selectable | seasons.Selectable | seasons_casts.Selectable | seasons_directors.Selectable | seasons_images.Selectable | seasons_licenses.Selectable | seasons_licenses_countries.Selectable | seasons_production_countries.Selectable | seasons_snapshots.Selectable | seasons_tags.Selectable | seasons_trailers.Selectable | seasons_tvshow_genres.Selectable | snapshot_state.Selectable | snapshot_validation_issue_context.Selectable | snapshot_validation_issue_severity.Selectable | snapshot_validation_results.Selectable | snapshot_validation_status.Selectable | snapshots.Selectable | tvshow_genres.Selectable | tvshow_image_type.Selectable | tvshows.Selectable | tvshows_casts.Selectable | tvshows_directors.Selectable | tvshows_images.Selectable | tvshows_licenses.Selectable | tvshows_licenses_countries.Selectable | tvshows_production_countries.Selectable | tvshows_snapshots.Selectable | tvshows_tags.Selectable | tvshows_trailers.Selectable | tvshows_tvshow_genres.Selectable;
-  export type JSONSelectable = age_ratings.JSONSelectable | collection_image_type.JSONSelectable | collection_relations.JSONSelectable | collections.JSONSelectable | collections_images.JSONSelectable | collections_snapshots.JSONSelectable | collections_tags.JSONSelectable | entity_type.JSONSelectable | episode_image_type.JSONSelectable | episodes.JSONSelectable | episodes_casts.JSONSelectable | episodes_directors.JSONSelectable | episodes_images.JSONSelectable | episodes_licenses.JSONSelectable | episodes_licenses_countries.JSONSelectable | episodes_production_countries.JSONSelectable | episodes_snapshots.JSONSelectable | episodes_tags.JSONSelectable | episodes_trailers.JSONSelectable | episodes_tvshow_genres.JSONSelectable | ingest_documents.JSONSelectable | ingest_entity_exists_status.JSONSelectable | ingest_item_status.JSONSelectable | ingest_item_step_status.JSONSelectable | ingest_item_step_type.JSONSelectable | ingest_item_steps.JSONSelectable | ingest_item_type.JSONSelectable | ingest_items.JSONSelectable | ingest_status.JSONSelectable | iso_alpha_two_country_codes.JSONSelectable | messaging_counter.JSONSelectable | movie_genres.JSONSelectable | movie_image_type.JSONSelectable | movies.JSONSelectable | movies_casts.JSONSelectable | movies_directors.JSONSelectable | movies_images.JSONSelectable | movies_licenses.JSONSelectable | movies_licenses_countries.JSONSelectable | movies_movie_genres.JSONSelectable | movies_production_countries.JSONSelectable | movies_snapshots.JSONSelectable | movies_tags.JSONSelectable | movies_trailers.JSONSelectable | publish_status.JSONSelectable | season_image_type.JSONSelectable | seasons.JSONSelectable | seasons_casts.JSONSelectable | seasons_directors.JSONSelectable | seasons_images.JSONSelectable | seasons_licenses.JSONSelectable | seasons_licenses_countries.JSONSelectable | seasons_production_countries.JSONSelectable | seasons_snapshots.JSONSelectable | seasons_tags.JSONSelectable | seasons_trailers.JSONSelectable | seasons_tvshow_genres.JSONSelectable | snapshot_state.JSONSelectable | snapshot_validation_issue_context.JSONSelectable | snapshot_validation_issue_severity.JSONSelectable | snapshot_validation_results.JSONSelectable | snapshot_validation_status.JSONSelectable | snapshots.JSONSelectable | tvshow_genres.JSONSelectable | tvshow_image_type.JSONSelectable | tvshows.JSONSelectable | tvshows_casts.JSONSelectable | tvshows_directors.JSONSelectable | tvshows_images.JSONSelectable | tvshows_licenses.JSONSelectable | tvshows_licenses_countries.JSONSelectable | tvshows_production_countries.JSONSelectable | tvshows_snapshots.JSONSelectable | tvshows_tags.JSONSelectable | tvshows_trailers.JSONSelectable | tvshows_tvshow_genres.JSONSelectable;
-  export type Whereable = age_ratings.Whereable | collection_image_type.Whereable | collection_relations.Whereable | collections.Whereable | collections_images.Whereable | collections_snapshots.Whereable | collections_tags.Whereable | entity_type.Whereable | episode_image_type.Whereable | episodes.Whereable | episodes_casts.Whereable | episodes_directors.Whereable | episodes_images.Whereable | episodes_licenses.Whereable | episodes_licenses_countries.Whereable | episodes_production_countries.Whereable | episodes_snapshots.Whereable | episodes_tags.Whereable | episodes_trailers.Whereable | episodes_tvshow_genres.Whereable | ingest_documents.Whereable | ingest_entity_exists_status.Whereable | ingest_item_status.Whereable | ingest_item_step_status.Whereable | ingest_item_step_type.Whereable | ingest_item_steps.Whereable | ingest_item_type.Whereable | ingest_items.Whereable | ingest_status.Whereable | iso_alpha_two_country_codes.Whereable | messaging_counter.Whereable | movie_genres.Whereable | movie_image_type.Whereable | movies.Whereable | movies_casts.Whereable | movies_directors.Whereable | movies_images.Whereable | movies_licenses.Whereable | movies_licenses_countries.Whereable | movies_movie_genres.Whereable | movies_production_countries.Whereable | movies_snapshots.Whereable | movies_tags.Whereable | movies_trailers.Whereable | publish_status.Whereable | season_image_type.Whereable | seasons.Whereable | seasons_casts.Whereable | seasons_directors.Whereable | seasons_images.Whereable | seasons_licenses.Whereable | seasons_licenses_countries.Whereable | seasons_production_countries.Whereable | seasons_snapshots.Whereable | seasons_tags.Whereable | seasons_trailers.Whereable | seasons_tvshow_genres.Whereable | snapshot_state.Whereable | snapshot_validation_issue_context.Whereable | snapshot_validation_issue_severity.Whereable | snapshot_validation_results.Whereable | snapshot_validation_status.Whereable | snapshots.Whereable | tvshow_genres.Whereable | tvshow_image_type.Whereable | tvshows.Whereable | tvshows_casts.Whereable | tvshows_directors.Whereable | tvshows_images.Whereable | tvshows_licenses.Whereable | tvshows_licenses_countries.Whereable | tvshows_production_countries.Whereable | tvshows_snapshots.Whereable | tvshows_tags.Whereable | tvshows_trailers.Whereable | tvshows_tvshow_genres.Whereable;
-  export type Insertable = age_ratings.Insertable | collection_image_type.Insertable | collection_relations.Insertable | collections.Insertable | collections_images.Insertable | collections_snapshots.Insertable | collections_tags.Insertable | entity_type.Insertable | episode_image_type.Insertable | episodes.Insertable | episodes_casts.Insertable | episodes_directors.Insertable | episodes_images.Insertable | episodes_licenses.Insertable | episodes_licenses_countries.Insertable | episodes_production_countries.Insertable | episodes_snapshots.Insertable | episodes_tags.Insertable | episodes_trailers.Insertable | episodes_tvshow_genres.Insertable | ingest_documents.Insertable | ingest_entity_exists_status.Insertable | ingest_item_status.Insertable | ingest_item_step_status.Insertable | ingest_item_step_type.Insertable | ingest_item_steps.Insertable | ingest_item_type.Insertable | ingest_items.Insertable | ingest_status.Insertable | iso_alpha_two_country_codes.Insertable | messaging_counter.Insertable | movie_genres.Insertable | movie_image_type.Insertable | movies.Insertable | movies_casts.Insertable | movies_directors.Insertable | movies_images.Insertable | movies_licenses.Insertable | movies_licenses_countries.Insertable | movies_movie_genres.Insertable | movies_production_countries.Insertable | movies_snapshots.Insertable | movies_tags.Insertable | movies_trailers.Insertable | publish_status.Insertable | season_image_type.Insertable | seasons.Insertable | seasons_casts.Insertable | seasons_directors.Insertable | seasons_images.Insertable | seasons_licenses.Insertable | seasons_licenses_countries.Insertable | seasons_production_countries.Insertable | seasons_snapshots.Insertable | seasons_tags.Insertable | seasons_trailers.Insertable | seasons_tvshow_genres.Insertable | snapshot_state.Insertable | snapshot_validation_issue_context.Insertable | snapshot_validation_issue_severity.Insertable | snapshot_validation_results.Insertable | snapshot_validation_status.Insertable | snapshots.Insertable | tvshow_genres.Insertable | tvshow_image_type.Insertable | tvshows.Insertable | tvshows_casts.Insertable | tvshows_directors.Insertable | tvshows_images.Insertable | tvshows_licenses.Insertable | tvshows_licenses_countries.Insertable | tvshows_production_countries.Insertable | tvshows_snapshots.Insertable | tvshows_tags.Insertable | tvshows_trailers.Insertable | tvshows_tvshow_genres.Insertable;
-  export type Updatable = age_ratings.Updatable | collection_image_type.Updatable | collection_relations.Updatable | collections.Updatable | collections_images.Updatable | collections_snapshots.Updatable | collections_tags.Updatable | entity_type.Updatable | episode_image_type.Updatable | episodes.Updatable | episodes_casts.Updatable | episodes_directors.Updatable | episodes_images.Updatable | episodes_licenses.Updatable | episodes_licenses_countries.Updatable | episodes_production_countries.Updatable | episodes_snapshots.Updatable | episodes_tags.Updatable | episodes_trailers.Updatable | episodes_tvshow_genres.Updatable | ingest_documents.Updatable | ingest_entity_exists_status.Updatable | ingest_item_status.Updatable | ingest_item_step_status.Updatable | ingest_item_step_type.Updatable | ingest_item_steps.Updatable | ingest_item_type.Updatable | ingest_items.Updatable | ingest_status.Updatable | iso_alpha_two_country_codes.Updatable | messaging_counter.Updatable | movie_genres.Updatable | movie_image_type.Updatable | movies.Updatable | movies_casts.Updatable | movies_directors.Updatable | movies_images.Updatable | movies_licenses.Updatable | movies_licenses_countries.Updatable | movies_movie_genres.Updatable | movies_production_countries.Updatable | movies_snapshots.Updatable | movies_tags.Updatable | movies_trailers.Updatable | publish_status.Updatable | season_image_type.Updatable | seasons.Updatable | seasons_casts.Updatable | seasons_directors.Updatable | seasons_images.Updatable | seasons_licenses.Updatable | seasons_licenses_countries.Updatable | seasons_production_countries.Updatable | seasons_snapshots.Updatable | seasons_tags.Updatable | seasons_trailers.Updatable | seasons_tvshow_genres.Updatable | snapshot_state.Updatable | snapshot_validation_issue_context.Updatable | snapshot_validation_issue_severity.Updatable | snapshot_validation_results.Updatable | snapshot_validation_status.Updatable | snapshots.Updatable | tvshow_genres.Updatable | tvshow_image_type.Updatable | tvshows.Updatable | tvshows_casts.Updatable | tvshows_directors.Updatable | tvshows_images.Updatable | tvshows_licenses.Updatable | tvshows_licenses_countries.Updatable | tvshows_production_countries.Updatable | tvshows_snapshots.Updatable | tvshows_tags.Updatable | tvshows_trailers.Updatable | tvshows_tvshow_genres.Updatable;
-  export type UniqueIndex = age_ratings.UniqueIndex | collection_image_type.UniqueIndex | collection_relations.UniqueIndex | collections.UniqueIndex | collections_images.UniqueIndex | collections_snapshots.UniqueIndex | collections_tags.UniqueIndex | entity_type.UniqueIndex | episode_image_type.UniqueIndex | episodes.UniqueIndex | episodes_casts.UniqueIndex | episodes_directors.UniqueIndex | episodes_images.UniqueIndex | episodes_licenses.UniqueIndex | episodes_licenses_countries.UniqueIndex | episodes_production_countries.UniqueIndex | episodes_snapshots.UniqueIndex | episodes_tags.UniqueIndex | episodes_trailers.UniqueIndex | episodes_tvshow_genres.UniqueIndex | ingest_documents.UniqueIndex | ingest_entity_exists_status.UniqueIndex | ingest_item_status.UniqueIndex | ingest_item_step_status.UniqueIndex | ingest_item_step_type.UniqueIndex | ingest_item_steps.UniqueIndex | ingest_item_type.UniqueIndex | ingest_items.UniqueIndex | ingest_status.UniqueIndex | iso_alpha_two_country_codes.UniqueIndex | messaging_counter.UniqueIndex | movie_genres.UniqueIndex | movie_image_type.UniqueIndex | movies.UniqueIndex | movies_casts.UniqueIndex | movies_directors.UniqueIndex | movies_images.UniqueIndex | movies_licenses.UniqueIndex | movies_licenses_countries.UniqueIndex | movies_movie_genres.UniqueIndex | movies_production_countries.UniqueIndex | movies_snapshots.UniqueIndex | movies_tags.UniqueIndex | movies_trailers.UniqueIndex | publish_status.UniqueIndex | season_image_type.UniqueIndex | seasons.UniqueIndex | seasons_casts.UniqueIndex | seasons_directors.UniqueIndex | seasons_images.UniqueIndex | seasons_licenses.UniqueIndex | seasons_licenses_countries.UniqueIndex | seasons_production_countries.UniqueIndex | seasons_snapshots.UniqueIndex | seasons_tags.UniqueIndex | seasons_trailers.UniqueIndex | seasons_tvshow_genres.UniqueIndex | snapshot_state.UniqueIndex | snapshot_validation_issue_context.UniqueIndex | snapshot_validation_issue_severity.UniqueIndex | snapshot_validation_results.UniqueIndex | snapshot_validation_status.UniqueIndex | snapshots.UniqueIndex | tvshow_genres.UniqueIndex | tvshow_image_type.UniqueIndex | tvshows.UniqueIndex | tvshows_casts.UniqueIndex | tvshows_directors.UniqueIndex | tvshows_images.UniqueIndex | tvshows_licenses.UniqueIndex | tvshows_licenses_countries.UniqueIndex | tvshows_production_countries.UniqueIndex | tvshows_snapshots.UniqueIndex | tvshows_tags.UniqueIndex | tvshows_trailers.UniqueIndex | tvshows_tvshow_genres.UniqueIndex;
-  export type Column = age_ratings.Column | collection_image_type.Column | collection_relations.Column | collections.Column | collections_images.Column | collections_snapshots.Column | collections_tags.Column | entity_type.Column | episode_image_type.Column | episodes.Column | episodes_casts.Column | episodes_directors.Column | episodes_images.Column | episodes_licenses.Column | episodes_licenses_countries.Column | episodes_production_countries.Column | episodes_snapshots.Column | episodes_tags.Column | episodes_trailers.Column | episodes_tvshow_genres.Column | ingest_documents.Column | ingest_entity_exists_status.Column | ingest_item_status.Column | ingest_item_step_status.Column | ingest_item_step_type.Column | ingest_item_steps.Column | ingest_item_type.Column | ingest_items.Column | ingest_status.Column | iso_alpha_two_country_codes.Column | messaging_counter.Column | movie_genres.Column | movie_image_type.Column | movies.Column | movies_casts.Column | movies_directors.Column | movies_images.Column | movies_licenses.Column | movies_licenses_countries.Column | movies_movie_genres.Column | movies_production_countries.Column | movies_snapshots.Column | movies_tags.Column | movies_trailers.Column | publish_status.Column | season_image_type.Column | seasons.Column | seasons_casts.Column | seasons_directors.Column | seasons_images.Column | seasons_licenses.Column | seasons_licenses_countries.Column | seasons_production_countries.Column | seasons_snapshots.Column | seasons_tags.Column | seasons_trailers.Column | seasons_tvshow_genres.Column | snapshot_state.Column | snapshot_validation_issue_context.Column | snapshot_validation_issue_severity.Column | snapshot_validation_results.Column | snapshot_validation_status.Column | snapshots.Column | tvshow_genres.Column | tvshow_image_type.Column | tvshows.Column | tvshows_casts.Column | tvshows_directors.Column | tvshows_images.Column | tvshows_licenses.Column | tvshows_licenses_countries.Column | tvshows_production_countries.Column | tvshows_snapshots.Column | tvshows_tags.Column | tvshows_trailers.Column | tvshows_tvshow_genres.Column;
-  export type AllTables = [age_ratings.Table, collection_image_type.Table, collection_relations.Table, collections.Table, collections_images.Table, collections_snapshots.Table, collections_tags.Table, entity_type.Table, episode_image_type.Table, episodes.Table, episodes_casts.Table, episodes_directors.Table, episodes_images.Table, episodes_licenses.Table, episodes_licenses_countries.Table, episodes_production_countries.Table, episodes_snapshots.Table, episodes_tags.Table, episodes_trailers.Table, episodes_tvshow_genres.Table, ingest_documents.Table, ingest_entity_exists_status.Table, ingest_item_status.Table, ingest_item_step_status.Table, ingest_item_step_type.Table, ingest_item_steps.Table, ingest_item_type.Table, ingest_items.Table, ingest_status.Table, iso_alpha_two_country_codes.Table, messaging_counter.Table, movie_genres.Table, movie_image_type.Table, movies.Table, movies_casts.Table, movies_directors.Table, movies_images.Table, movies_licenses.Table, movies_licenses_countries.Table, movies_movie_genres.Table, movies_production_countries.Table, movies_snapshots.Table, movies_tags.Table, movies_trailers.Table, publish_status.Table, season_image_type.Table, seasons.Table, seasons_casts.Table, seasons_directors.Table, seasons_images.Table, seasons_licenses.Table, seasons_licenses_countries.Table, seasons_production_countries.Table, seasons_snapshots.Table, seasons_tags.Table, seasons_trailers.Table, seasons_tvshow_genres.Table, snapshot_state.Table, snapshot_validation_issue_context.Table, snapshot_validation_issue_severity.Table, snapshot_validation_results.Table, snapshot_validation_status.Table, snapshots.Table, tvshow_genres.Table, tvshow_image_type.Table, tvshows.Table, tvshows_casts.Table, tvshows_directors.Table, tvshows_images.Table, tvshows_licenses.Table, tvshows_licenses_countries.Table, tvshows_production_countries.Table, tvshows_snapshots.Table, tvshows_tags.Table, tvshows_trailers.Table, tvshows_tvshow_genres.Table];
+  export type Table = age_ratings.Table | collection_image_type.Table | collection_relations.Table | collections.Table | collections_images.Table | collections_snapshots.Table | collections_tags.Table | content_owners.Table | entity_type.Table | episode_image_type.Table | episodes.Table | episodes_casts.Table | episodes_directors.Table | episodes_images.Table | episodes_licenses.Table | episodes_licenses_countries.Table | episodes_production_countries.Table | episodes_snapshots.Table | episodes_tags.Table | episodes_trailers.Table | episodes_tvshow_genres.Table | ingest_documents.Table | ingest_entity_exists_status.Table | ingest_item_status.Table | ingest_item_step_status.Table | ingest_item_step_type.Table | ingest_item_steps.Table | ingest_item_type.Table | ingest_items.Table | ingest_status.Table | iso_alpha_two_country_codes.Table | messaging_counter.Table | movie_genres.Table | movie_image_type.Table | movies.Table | movies_casts.Table | movies_directors.Table | movies_images.Table | movies_licenses.Table | movies_licenses_countries.Table | movies_movie_genres.Table | movies_production_countries.Table | movies_snapshots.Table | movies_tags.Table | movies_trailers.Table | publish_status.Table | season_image_type.Table | seasons.Table | seasons_casts.Table | seasons_directors.Table | seasons_images.Table | seasons_licenses.Table | seasons_licenses_countries.Table | seasons_production_countries.Table | seasons_snapshots.Table | seasons_tags.Table | seasons_trailers.Table | seasons_tvshow_genres.Table | snapshot_state.Table | snapshot_validation_issue_context.Table | snapshot_validation_issue_severity.Table | snapshot_validation_results.Table | snapshot_validation_status.Table | snapshots.Table | tvshow_genres.Table | tvshow_image_type.Table | tvshows.Table | tvshows_casts.Table | tvshows_directors.Table | tvshows_images.Table | tvshows_licenses.Table | tvshows_licenses_countries.Table | tvshows_production_countries.Table | tvshows_snapshots.Table | tvshows_tags.Table | tvshows_trailers.Table | tvshows_tvshow_genres.Table;
+  export type Selectable = age_ratings.Selectable | collection_image_type.Selectable | collection_relations.Selectable | collections.Selectable | collections_images.Selectable | collections_snapshots.Selectable | collections_tags.Selectable | content_owners.Selectable | entity_type.Selectable | episode_image_type.Selectable | episodes.Selectable | episodes_casts.Selectable | episodes_directors.Selectable | episodes_images.Selectable | episodes_licenses.Selectable | episodes_licenses_countries.Selectable | episodes_production_countries.Selectable | episodes_snapshots.Selectable | episodes_tags.Selectable | episodes_trailers.Selectable | episodes_tvshow_genres.Selectable | ingest_documents.Selectable | ingest_entity_exists_status.Selectable | ingest_item_status.Selectable | ingest_item_step_status.Selectable | ingest_item_step_type.Selectable | ingest_item_steps.Selectable | ingest_item_type.Selectable | ingest_items.Selectable | ingest_status.Selectable | iso_alpha_two_country_codes.Selectable | messaging_counter.Selectable | movie_genres.Selectable | movie_image_type.Selectable | movies.Selectable | movies_casts.Selectable | movies_directors.Selectable | movies_images.Selectable | movies_licenses.Selectable | movies_licenses_countries.Selectable | movies_movie_genres.Selectable | movies_production_countries.Selectable | movies_snapshots.Selectable | movies_tags.Selectable | movies_trailers.Selectable | publish_status.Selectable | season_image_type.Selectable | seasons.Selectable | seasons_casts.Selectable | seasons_directors.Selectable | seasons_images.Selectable | seasons_licenses.Selectable | seasons_licenses_countries.Selectable | seasons_production_countries.Selectable | seasons_snapshots.Selectable | seasons_tags.Selectable | seasons_trailers.Selectable | seasons_tvshow_genres.Selectable | snapshot_state.Selectable | snapshot_validation_issue_context.Selectable | snapshot_validation_issue_severity.Selectable | snapshot_validation_results.Selectable | snapshot_validation_status.Selectable | snapshots.Selectable | tvshow_genres.Selectable | tvshow_image_type.Selectable | tvshows.Selectable | tvshows_casts.Selectable | tvshows_directors.Selectable | tvshows_images.Selectable | tvshows_licenses.Selectable | tvshows_licenses_countries.Selectable | tvshows_production_countries.Selectable | tvshows_snapshots.Selectable | tvshows_tags.Selectable | tvshows_trailers.Selectable | tvshows_tvshow_genres.Selectable;
+  export type JSONSelectable = age_ratings.JSONSelectable | collection_image_type.JSONSelectable | collection_relations.JSONSelectable | collections.JSONSelectable | collections_images.JSONSelectable | collections_snapshots.JSONSelectable | collections_tags.JSONSelectable | content_owners.JSONSelectable | entity_type.JSONSelectable | episode_image_type.JSONSelectable | episodes.JSONSelectable | episodes_casts.JSONSelectable | episodes_directors.JSONSelectable | episodes_images.JSONSelectable | episodes_licenses.JSONSelectable | episodes_licenses_countries.JSONSelectable | episodes_production_countries.JSONSelectable | episodes_snapshots.JSONSelectable | episodes_tags.JSONSelectable | episodes_trailers.JSONSelectable | episodes_tvshow_genres.JSONSelectable | ingest_documents.JSONSelectable | ingest_entity_exists_status.JSONSelectable | ingest_item_status.JSONSelectable | ingest_item_step_status.JSONSelectable | ingest_item_step_type.JSONSelectable | ingest_item_steps.JSONSelectable | ingest_item_type.JSONSelectable | ingest_items.JSONSelectable | ingest_status.JSONSelectable | iso_alpha_two_country_codes.JSONSelectable | messaging_counter.JSONSelectable | movie_genres.JSONSelectable | movie_image_type.JSONSelectable | movies.JSONSelectable | movies_casts.JSONSelectable | movies_directors.JSONSelectable | movies_images.JSONSelectable | movies_licenses.JSONSelectable | movies_licenses_countries.JSONSelectable | movies_movie_genres.JSONSelectable | movies_production_countries.JSONSelectable | movies_snapshots.JSONSelectable | movies_tags.JSONSelectable | movies_trailers.JSONSelectable | publish_status.JSONSelectable | season_image_type.JSONSelectable | seasons.JSONSelectable | seasons_casts.JSONSelectable | seasons_directors.JSONSelectable | seasons_images.JSONSelectable | seasons_licenses.JSONSelectable | seasons_licenses_countries.JSONSelectable | seasons_production_countries.JSONSelectable | seasons_snapshots.JSONSelectable | seasons_tags.JSONSelectable | seasons_trailers.JSONSelectable | seasons_tvshow_genres.JSONSelectable | snapshot_state.JSONSelectable | snapshot_validation_issue_context.JSONSelectable | snapshot_validation_issue_severity.JSONSelectable | snapshot_validation_results.JSONSelectable | snapshot_validation_status.JSONSelectable | snapshots.JSONSelectable | tvshow_genres.JSONSelectable | tvshow_image_type.JSONSelectable | tvshows.JSONSelectable | tvshows_casts.JSONSelectable | tvshows_directors.JSONSelectable | tvshows_images.JSONSelectable | tvshows_licenses.JSONSelectable | tvshows_licenses_countries.JSONSelectable | tvshows_production_countries.JSONSelectable | tvshows_snapshots.JSONSelectable | tvshows_tags.JSONSelectable | tvshows_trailers.JSONSelectable | tvshows_tvshow_genres.JSONSelectable;
+  export type Whereable = age_ratings.Whereable | collection_image_type.Whereable | collection_relations.Whereable | collections.Whereable | collections_images.Whereable | collections_snapshots.Whereable | collections_tags.Whereable | content_owners.Whereable | entity_type.Whereable | episode_image_type.Whereable | episodes.Whereable | episodes_casts.Whereable | episodes_directors.Whereable | episodes_images.Whereable | episodes_licenses.Whereable | episodes_licenses_countries.Whereable | episodes_production_countries.Whereable | episodes_snapshots.Whereable | episodes_tags.Whereable | episodes_trailers.Whereable | episodes_tvshow_genres.Whereable | ingest_documents.Whereable | ingest_entity_exists_status.Whereable | ingest_item_status.Whereable | ingest_item_step_status.Whereable | ingest_item_step_type.Whereable | ingest_item_steps.Whereable | ingest_item_type.Whereable | ingest_items.Whereable | ingest_status.Whereable | iso_alpha_two_country_codes.Whereable | messaging_counter.Whereable | movie_genres.Whereable | movie_image_type.Whereable | movies.Whereable | movies_casts.Whereable | movies_directors.Whereable | movies_images.Whereable | movies_licenses.Whereable | movies_licenses_countries.Whereable | movies_movie_genres.Whereable | movies_production_countries.Whereable | movies_snapshots.Whereable | movies_tags.Whereable | movies_trailers.Whereable | publish_status.Whereable | season_image_type.Whereable | seasons.Whereable | seasons_casts.Whereable | seasons_directors.Whereable | seasons_images.Whereable | seasons_licenses.Whereable | seasons_licenses_countries.Whereable | seasons_production_countries.Whereable | seasons_snapshots.Whereable | seasons_tags.Whereable | seasons_trailers.Whereable | seasons_tvshow_genres.Whereable | snapshot_state.Whereable | snapshot_validation_issue_context.Whereable | snapshot_validation_issue_severity.Whereable | snapshot_validation_results.Whereable | snapshot_validation_status.Whereable | snapshots.Whereable | tvshow_genres.Whereable | tvshow_image_type.Whereable | tvshows.Whereable | tvshows_casts.Whereable | tvshows_directors.Whereable | tvshows_images.Whereable | tvshows_licenses.Whereable | tvshows_licenses_countries.Whereable | tvshows_production_countries.Whereable | tvshows_snapshots.Whereable | tvshows_tags.Whereable | tvshows_trailers.Whereable | tvshows_tvshow_genres.Whereable;
+  export type Insertable = age_ratings.Insertable | collection_image_type.Insertable | collection_relations.Insertable | collections.Insertable | collections_images.Insertable | collections_snapshots.Insertable | collections_tags.Insertable | content_owners.Insertable | entity_type.Insertable | episode_image_type.Insertable | episodes.Insertable | episodes_casts.Insertable | episodes_directors.Insertable | episodes_images.Insertable | episodes_licenses.Insertable | episodes_licenses_countries.Insertable | episodes_production_countries.Insertable | episodes_snapshots.Insertable | episodes_tags.Insertable | episodes_trailers.Insertable | episodes_tvshow_genres.Insertable | ingest_documents.Insertable | ingest_entity_exists_status.Insertable | ingest_item_status.Insertable | ingest_item_step_status.Insertable | ingest_item_step_type.Insertable | ingest_item_steps.Insertable | ingest_item_type.Insertable | ingest_items.Insertable | ingest_status.Insertable | iso_alpha_two_country_codes.Insertable | messaging_counter.Insertable | movie_genres.Insertable | movie_image_type.Insertable | movies.Insertable | movies_casts.Insertable | movies_directors.Insertable | movies_images.Insertable | movies_licenses.Insertable | movies_licenses_countries.Insertable | movies_movie_genres.Insertable | movies_production_countries.Insertable | movies_snapshots.Insertable | movies_tags.Insertable | movies_trailers.Insertable | publish_status.Insertable | season_image_type.Insertable | seasons.Insertable | seasons_casts.Insertable | seasons_directors.Insertable | seasons_images.Insertable | seasons_licenses.Insertable | seasons_licenses_countries.Insertable | seasons_production_countries.Insertable | seasons_snapshots.Insertable | seasons_tags.Insertable | seasons_trailers.Insertable | seasons_tvshow_genres.Insertable | snapshot_state.Insertable | snapshot_validation_issue_context.Insertable | snapshot_validation_issue_severity.Insertable | snapshot_validation_results.Insertable | snapshot_validation_status.Insertable | snapshots.Insertable | tvshow_genres.Insertable | tvshow_image_type.Insertable | tvshows.Insertable | tvshows_casts.Insertable | tvshows_directors.Insertable | tvshows_images.Insertable | tvshows_licenses.Insertable | tvshows_licenses_countries.Insertable | tvshows_production_countries.Insertable | tvshows_snapshots.Insertable | tvshows_tags.Insertable | tvshows_trailers.Insertable | tvshows_tvshow_genres.Insertable;
+  export type Updatable = age_ratings.Updatable | collection_image_type.Updatable | collection_relations.Updatable | collections.Updatable | collections_images.Updatable | collections_snapshots.Updatable | collections_tags.Updatable | content_owners.Updatable | entity_type.Updatable | episode_image_type.Updatable | episodes.Updatable | episodes_casts.Updatable | episodes_directors.Updatable | episodes_images.Updatable | episodes_licenses.Updatable | episodes_licenses_countries.Updatable | episodes_production_countries.Updatable | episodes_snapshots.Updatable | episodes_tags.Updatable | episodes_trailers.Updatable | episodes_tvshow_genres.Updatable | ingest_documents.Updatable | ingest_entity_exists_status.Updatable | ingest_item_status.Updatable | ingest_item_step_status.Updatable | ingest_item_step_type.Updatable | ingest_item_steps.Updatable | ingest_item_type.Updatable | ingest_items.Updatable | ingest_status.Updatable | iso_alpha_two_country_codes.Updatable | messaging_counter.Updatable | movie_genres.Updatable | movie_image_type.Updatable | movies.Updatable | movies_casts.Updatable | movies_directors.Updatable | movies_images.Updatable | movies_licenses.Updatable | movies_licenses_countries.Updatable | movies_movie_genres.Updatable | movies_production_countries.Updatable | movies_snapshots.Updatable | movies_tags.Updatable | movies_trailers.Updatable | publish_status.Updatable | season_image_type.Updatable | seasons.Updatable | seasons_casts.Updatable | seasons_directors.Updatable | seasons_images.Updatable | seasons_licenses.Updatable | seasons_licenses_countries.Updatable | seasons_production_countries.Updatable | seasons_snapshots.Updatable | seasons_tags.Updatable | seasons_trailers.Updatable | seasons_tvshow_genres.Updatable | snapshot_state.Updatable | snapshot_validation_issue_context.Updatable | snapshot_validation_issue_severity.Updatable | snapshot_validation_results.Updatable | snapshot_validation_status.Updatable | snapshots.Updatable | tvshow_genres.Updatable | tvshow_image_type.Updatable | tvshows.Updatable | tvshows_casts.Updatable | tvshows_directors.Updatable | tvshows_images.Updatable | tvshows_licenses.Updatable | tvshows_licenses_countries.Updatable | tvshows_production_countries.Updatable | tvshows_snapshots.Updatable | tvshows_tags.Updatable | tvshows_trailers.Updatable | tvshows_tvshow_genres.Updatable;
+  export type UniqueIndex = age_ratings.UniqueIndex | collection_image_type.UniqueIndex | collection_relations.UniqueIndex | collections.UniqueIndex | collections_images.UniqueIndex | collections_snapshots.UniqueIndex | collections_tags.UniqueIndex | content_owners.UniqueIndex | entity_type.UniqueIndex | episode_image_type.UniqueIndex | episodes.UniqueIndex | episodes_casts.UniqueIndex | episodes_directors.UniqueIndex | episodes_images.UniqueIndex | episodes_licenses.UniqueIndex | episodes_licenses_countries.UniqueIndex | episodes_production_countries.UniqueIndex | episodes_snapshots.UniqueIndex | episodes_tags.UniqueIndex | episodes_trailers.UniqueIndex | episodes_tvshow_genres.UniqueIndex | ingest_documents.UniqueIndex | ingest_entity_exists_status.UniqueIndex | ingest_item_status.UniqueIndex | ingest_item_step_status.UniqueIndex | ingest_item_step_type.UniqueIndex | ingest_item_steps.UniqueIndex | ingest_item_type.UniqueIndex | ingest_items.UniqueIndex | ingest_status.UniqueIndex | iso_alpha_two_country_codes.UniqueIndex | messaging_counter.UniqueIndex | movie_genres.UniqueIndex | movie_image_type.UniqueIndex | movies.UniqueIndex | movies_casts.UniqueIndex | movies_directors.UniqueIndex | movies_images.UniqueIndex | movies_licenses.UniqueIndex | movies_licenses_countries.UniqueIndex | movies_movie_genres.UniqueIndex | movies_production_countries.UniqueIndex | movies_snapshots.UniqueIndex | movies_tags.UniqueIndex | movies_trailers.UniqueIndex | publish_status.UniqueIndex | season_image_type.UniqueIndex | seasons.UniqueIndex | seasons_casts.UniqueIndex | seasons_directors.UniqueIndex | seasons_images.UniqueIndex | seasons_licenses.UniqueIndex | seasons_licenses_countries.UniqueIndex | seasons_production_countries.UniqueIndex | seasons_snapshots.UniqueIndex | seasons_tags.UniqueIndex | seasons_trailers.UniqueIndex | seasons_tvshow_genres.UniqueIndex | snapshot_state.UniqueIndex | snapshot_validation_issue_context.UniqueIndex | snapshot_validation_issue_severity.UniqueIndex | snapshot_validation_results.UniqueIndex | snapshot_validation_status.UniqueIndex | snapshots.UniqueIndex | tvshow_genres.UniqueIndex | tvshow_image_type.UniqueIndex | tvshows.UniqueIndex | tvshows_casts.UniqueIndex | tvshows_directors.UniqueIndex | tvshows_images.UniqueIndex | tvshows_licenses.UniqueIndex | tvshows_licenses_countries.UniqueIndex | tvshows_production_countries.UniqueIndex | tvshows_snapshots.UniqueIndex | tvshows_tags.UniqueIndex | tvshows_trailers.UniqueIndex | tvshows_tvshow_genres.UniqueIndex;
+  export type Column = age_ratings.Column | collection_image_type.Column | collection_relations.Column | collections.Column | collections_images.Column | collections_snapshots.Column | collections_tags.Column | content_owners.Column | entity_type.Column | episode_image_type.Column | episodes.Column | episodes_casts.Column | episodes_directors.Column | episodes_images.Column | episodes_licenses.Column | episodes_licenses_countries.Column | episodes_production_countries.Column | episodes_snapshots.Column | episodes_tags.Column | episodes_trailers.Column | episodes_tvshow_genres.Column | ingest_documents.Column | ingest_entity_exists_status.Column | ingest_item_status.Column | ingest_item_step_status.Column | ingest_item_step_type.Column | ingest_item_steps.Column | ingest_item_type.Column | ingest_items.Column | ingest_status.Column | iso_alpha_two_country_codes.Column | messaging_counter.Column | movie_genres.Column | movie_image_type.Column | movies.Column | movies_casts.Column | movies_directors.Column | movies_images.Column | movies_licenses.Column | movies_licenses_countries.Column | movies_movie_genres.Column | movies_production_countries.Column | movies_snapshots.Column | movies_tags.Column | movies_trailers.Column | publish_status.Column | season_image_type.Column | seasons.Column | seasons_casts.Column | seasons_directors.Column | seasons_images.Column | seasons_licenses.Column | seasons_licenses_countries.Column | seasons_production_countries.Column | seasons_snapshots.Column | seasons_tags.Column | seasons_trailers.Column | seasons_tvshow_genres.Column | snapshot_state.Column | snapshot_validation_issue_context.Column | snapshot_validation_issue_severity.Column | snapshot_validation_results.Column | snapshot_validation_status.Column | snapshots.Column | tvshow_genres.Column | tvshow_image_type.Column | tvshows.Column | tvshows_casts.Column | tvshows_directors.Column | tvshows_images.Column | tvshows_licenses.Column | tvshows_licenses_countries.Column | tvshows_production_countries.Column | tvshows_snapshots.Column | tvshows_tags.Column | tvshows_trailers.Column | tvshows_tvshow_genres.Column;
+  export type AllTables = [age_ratings.Table, collection_image_type.Table, collection_relations.Table, collections.Table, collections_images.Table, collections_snapshots.Table, collections_tags.Table, content_owners.Table, entity_type.Table, episode_image_type.Table, episodes.Table, episodes_casts.Table, episodes_directors.Table, episodes_images.Table, episodes_licenses.Table, episodes_licenses_countries.Table, episodes_production_countries.Table, episodes_snapshots.Table, episodes_tags.Table, episodes_trailers.Table, episodes_tvshow_genres.Table, ingest_documents.Table, ingest_entity_exists_status.Table, ingest_item_status.Table, ingest_item_step_status.Table, ingest_item_step_type.Table, ingest_item_steps.Table, ingest_item_type.Table, ingest_items.Table, ingest_status.Table, iso_alpha_two_country_codes.Table, messaging_counter.Table, movie_genres.Table, movie_image_type.Table, movies.Table, movies_casts.Table, movies_directors.Table, movies_images.Table, movies_licenses.Table, movies_licenses_countries.Table, movies_movie_genres.Table, movies_production_countries.Table, movies_snapshots.Table, movies_tags.Table, movies_trailers.Table, publish_status.Table, season_image_type.Table, seasons.Table, seasons_casts.Table, seasons_directors.Table, seasons_images.Table, seasons_licenses.Table, seasons_licenses_countries.Table, seasons_production_countries.Table, seasons_snapshots.Table, seasons_tags.Table, seasons_trailers.Table, seasons_tvshow_genres.Table, snapshot_state.Table, snapshot_validation_issue_context.Table, snapshot_validation_issue_severity.Table, snapshot_validation_results.Table, snapshot_validation_status.Table, snapshots.Table, tvshow_genres.Table, tvshow_image_type.Table, tvshows.Table, tvshows_casts.Table, tvshows_directors.Table, tvshows_images.Table, tvshows_licenses.Table, tvshows_licenses_countries.Table, tvshows_production_countries.Table, tvshows_snapshots.Table, tvshows_tags.Table, tvshows_trailers.Table, tvshows_tvshow_genres.Table];
   export type AllMaterializedViews = [];
 
 
@@ -11973,6 +12412,7 @@ declare module 'zapatos/schema' {
     collections_images: collections_images.Selectable;
     collections_snapshots: collections_snapshots.Selectable;
     collections_tags: collections_tags.Selectable;
+    content_owners: content_owners.Selectable;
     entity_type: entity_type.Selectable;
     episode_image_type: episode_image_type.Selectable;
     episodes: episodes.Selectable;
@@ -12052,6 +12492,7 @@ declare module 'zapatos/schema' {
     collections_images: collections_images.JSONSelectable;
     collections_snapshots: collections_snapshots.JSONSelectable;
     collections_tags: collections_tags.JSONSelectable;
+    content_owners: content_owners.JSONSelectable;
     entity_type: entity_type.JSONSelectable;
     episode_image_type: episode_image_type.JSONSelectable;
     episodes: episodes.JSONSelectable;
@@ -12131,6 +12572,7 @@ declare module 'zapatos/schema' {
     collections_images: collections_images.Whereable;
     collections_snapshots: collections_snapshots.Whereable;
     collections_tags: collections_tags.Whereable;
+    content_owners: content_owners.Whereable;
     entity_type: entity_type.Whereable;
     episode_image_type: episode_image_type.Whereable;
     episodes: episodes.Whereable;
@@ -12210,6 +12652,7 @@ declare module 'zapatos/schema' {
     collections_images: collections_images.Insertable;
     collections_snapshots: collections_snapshots.Insertable;
     collections_tags: collections_tags.Insertable;
+    content_owners: content_owners.Insertable;
     entity_type: entity_type.Insertable;
     episode_image_type: episode_image_type.Insertable;
     episodes: episodes.Insertable;
@@ -12289,6 +12732,7 @@ declare module 'zapatos/schema' {
     collections_images: collections_images.Updatable;
     collections_snapshots: collections_snapshots.Updatable;
     collections_tags: collections_tags.Updatable;
+    content_owners: content_owners.Updatable;
     entity_type: entity_type.Updatable;
     episode_image_type: episode_image_type.Updatable;
     episodes: episodes.Updatable;
@@ -12368,6 +12812,7 @@ declare module 'zapatos/schema' {
     collections_images: collections_images.UniqueIndex;
     collections_snapshots: collections_snapshots.UniqueIndex;
     collections_tags: collections_tags.UniqueIndex;
+    content_owners: content_owners.UniqueIndex;
     entity_type: entity_type.UniqueIndex;
     episode_image_type: episode_image_type.UniqueIndex;
     episodes: episodes.UniqueIndex;
@@ -12447,6 +12892,7 @@ declare module 'zapatos/schema' {
     collections_images: collections_images.Column;
     collections_snapshots: collections_snapshots.Column;
     collections_tags: collections_tags.Column;
+    content_owners: content_owners.Column;
     entity_type: entity_type.Column;
     episode_image_type: episode_image_type.Column;
     episodes: episodes.Column;
@@ -12526,6 +12972,7 @@ declare module 'zapatos/schema' {
     collections_images: collections_images.SQL;
     collections_snapshots: collections_snapshots.SQL;
     collections_tags: collections_tags.SQL;
+    content_owners: content_owners.SQL;
     entity_type: entity_type.SQL;
     episode_image_type: episode_image_type.SQL;
     episodes: episodes.SQL;

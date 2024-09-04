@@ -21,6 +21,10 @@ import {
   SelectEndpoints,
 } from './collections';
 import {
+  ContentOwnersReadOperations,
+  ContentOwnersWriteOperations,
+} from './contentowners';
+import {
   MovieGenresMutateOperations,
   MovieGenresReadOperations,
   MovieIgnoreOperations,
@@ -169,6 +173,16 @@ const permissions = [
     key: 'AGE_RATINGS_EDIT',
     title: 'AgeRatings: Edit',
     gqlOperations: [...AgeRatingsWriteOperations],
+  },
+  {
+    key: 'CONTENT_OWNERS_VIEW',
+    title: 'ContentOwners: View',
+    gqlOperations: [...ContentOwnersReadOperations],
+  },
+  {
+    key: 'CONTENT_OWNERS_EDIT',
+    title: 'ContentOwners: Edit',
+    gqlOperations: [...ContentOwnersWriteOperations],
   },
 ] as const;
 

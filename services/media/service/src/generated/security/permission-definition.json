@@ -895,6 +895,23 @@
         "updateAgeRating",
         "deleteAgeRating"
       ]
+    },
+    {
+      "key": "CONTENT_OWNERS_VIEW",
+      "title": "ContentOwners: View",
+      "gqlOperations": [
+        "contentOwners",
+        "contentOwner"
+      ]
+    },
+    {
+      "key": "CONTENT_OWNERS_EDIT",
+      "title": "ContentOwners: Edit",
+      "gqlOperations": [
+        "createContentOwner",
+        "updateContentOwner",
+        "deleteContentOwner"
+      ]
     }
   ]
 }

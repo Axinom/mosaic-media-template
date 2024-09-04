@@ -5,6 +5,7 @@ fragment MovieExplorerProperties on Movie {
   externalId
   mainVideoId
   ageRating
+  contentOwner
   moviesImages(condition: { imageType: COVER }) {
     nodes {
       imageId
@@ -31,15 +32,6 @@ fragment MovieExplorerProperties on Movie {
   moviesProductionCountries {
     nodes {
       name
-    }
-  }
-  moviesLicenses {
-    nodes {
-      moviesLicensesCountries {
-        nodes {
-          code
-        }
-      }
     }
   }
   collectionRelations {
