@@ -9,6 +9,9 @@ parameters:
     displayName: Build
     type: boolean
     default: true
+  - name: bd_perf
+    displayName: Release manifest to BD performance
+    type: boolean
   - name: nfn_acceptance
     displayName: Release manifest to NFN acceptance
     type: boolean
@@ -91,6 +94,42 @@ stages:
               repository: $(imageRepository)
               command: 'push'
               tags: '$(tag)'
+
+      - job: Upload_BD_perf
+        dependsOn: Build
+        displayName: 'Upload Manifest to BD performance'
+        condition: ${{ eq(parameters.bd_perf, true) }}
+        variables:
+          - group: vault-bd-perf
+        steps:
+          - bash: |
+              apt install -y jq
+              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
+              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
+              mv package.updated.json package.json
+              yarn install
+            displayName: 'Install Dev Dependencies'
+          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
+            displayName: 'Replace tokens'
+            inputs:
+              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
+              caseInsensitivePaths: false
+              includeDotPaths: false
+              missingVarAction: keep
+              missingVarLog: error
+              ifNoFilesFound: error
+          - task: Bash@3
+            displayName:
+              'Upload deployment configuration to BD performance environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "bd-mosaic-catalog-perf-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdPerf)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretPerf)
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
       - job: Upload_NFN_Acceptance
         dependsOn: Build

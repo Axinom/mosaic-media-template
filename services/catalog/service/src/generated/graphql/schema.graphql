@@ -954,6 +954,14 @@ input CollectionFilter {
   """Some related `images` exist."""
   imagesExist: Boolean
 
+  """
+  Filter by the object’s `collectionItemsRelationsByCollectionId` relation.
+  """
+  collectionItemsRelationsByCollectionId: CollectionToManyCollectionItemsRelationFilter
+
+  """Some related `collectionItemsRelationsByCollectionId` exist."""
+  collectionItemsRelationsByCollectionIdExist: Boolean
+
   """Filter by the object’s `items` relation."""
   items: CollectionToManyCollectionItemsRelationFilter
 
@@ -1080,9 +1088,6 @@ input CollectionItemsRelationFilter {
   """Filter by the object’s `id` field."""
   id: IntFilter
 
-  """Filter by the object’s `collectionId` field."""
-  collectionId: StringFilter
-
   """Filter by the object’s `movieId` field."""
   movieId: StringFilter
 
@@ -1097,6 +1102,12 @@ input CollectionItemsRelationFilter {
 
   """Filter by the object’s `orderNo` field."""
   orderNo: IntFilter
+
+  """Filter by the object’s `collectionFkId` field."""
+  collectionFkId: StringFilter
+
+  """Filter by the object’s `collectionId` field."""
+  collectionId: StringFilter
 
   """Filter by the object’s `movie` relation."""
   movie: MovieFilter
@@ -1127,6 +1138,12 @@ input CollectionItemsRelationFilter {
 
   """A related `collection` exists."""
   collectionExists: Boolean
+
+  """Filter by the object’s `collectionFk` relation."""
+  collectionFk: CollectionFilter
+
+  """A related `collectionFk` exists."""
+  collectionFkExists: Boolean
 
   """Checks for all expressions in this list."""
   and: [CollectionItemsRelationFilter!]
@@ -3452,7 +3469,6 @@ type CollectionItemsRelationsConnection {
 
 type CollectionItemsRelation {
   id: Int!
-  collectionId: String
   movieId: String
   tvshowId: String
   seasonId: String
@@ -3461,6 +3477,8 @@ type CollectionItemsRelation {
 
   """Type of the relation."""
   relationType: String
+  collectionFkId: String
+  collectionId: String
 
   """
   Reads a single `Movie` that is related to this `CollectionItemsRelation`.
@@ -3486,6 +3504,11 @@ type CollectionItemsRelation {
   Reads a single `Collection` that is related to this `CollectionItemsRelation`.
   """
   collection: Collection
+
+  """
+  Reads a single `Collection` that is related to this `CollectionItemsRelation`.
+  """
+  collectionFk: Collection
 }
 
 """Definition of the movie publish format."""
@@ -7038,8 +7061,6 @@ enum CollectionItemsRelationsOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
-  COLLECTION_ID_ASC
-  COLLECTION_ID_DESC
   MOVIE_ID_ASC
   MOVIE_ID_DESC
   TVSHOW_ID_ASC
@@ -7050,6 +7071,10 @@ enum CollectionItemsRelationsOrderBy {
   EPISODE_ID_DESC
   ORDER_NO_ASC
   ORDER_NO_DESC
+  COLLECTION_FK_ID_ASC
+  COLLECTION_FK_ID_DESC
+  COLLECTION_ID_ASC
+  COLLECTION_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -7061,9 +7086,6 @@ fields are tested for equality and combined with a logical ‘and.’
 input CollectionItemsRelationCondition {
   """Checks for equality with the object’s `id` field."""
   id: Int
-
-  """Checks for equality with the object’s `collectionId` field."""
-  collectionId: String
 
   """Checks for equality with the object’s `movieId` field."""
   movieId: String
@@ -7079,6 +7101,12 @@ input CollectionItemsRelationCondition {
 
   """Checks for equality with the object’s `orderNo` field."""
   orderNo: Int
+
+  """Checks for equality with the object’s `collectionFkId` field."""
+  collectionFkId: String
+
+  """Checks for equality with the object’s `collectionId` field."""
+  collectionId: String
 }
 
 """A `Collection` edge in the connection."""
