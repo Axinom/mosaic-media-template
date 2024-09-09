@@ -236,7 +236,6 @@ export const TvShowDetails: React.FC = () => {
           genres,
           cast,
           productionCountries,
-          businessType: [],
           adLanguages: [],
           sbLanguages: [],
           ccLanguages: [],
