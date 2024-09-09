@@ -344,7 +344,12 @@
         "updateIngestDocument",
         "populateMovies",
         "populateTvshows",
-        "populateCollections"
+        "populateCollections",
+        "language",
+        "languages",
+        "createLanguage",
+        "deleteLanguage",
+        "updateLanguage"
       ]
     },
     {
@@ -360,7 +365,9 @@
         "tvshowGenreMutated",
         "tvshowsTvshowGenresByTvshowGenresId",
         "seasonsTvshowGenresByTvshowGenresId",
-        "episodesTvshowGenresByTvshowGenresId"
+        "episodesTvshowGenresByTvshowGenresId",
+        "language",
+        "languages"
       ]
     },
     {
@@ -390,7 +397,10 @@
         "updateTvshowGenre",
         "publishTvshowGenres",
         "unpublishTvshowGenres",
-        "createTvshowGenresSnapshot"
+        "createTvshowGenresSnapshot",
+        "createLanguage",
+        "deleteLanguage",
+        "updateLanguage"
       ]
     },
     {

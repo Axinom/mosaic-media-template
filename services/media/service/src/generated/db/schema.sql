@@ -5017,6 +5017,7 @@ CREATE TABLE app_public.collections (
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
+    languages text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5578,6 +5579,26 @@ COMMENT ON TABLE app_public.iso_alpha_two_country_codes IS '@enum';
 
 
 --
+-- Name: languages; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.languages (
+    id uuid NOT NULL,
+    title text NOT NULL,
+    native text,
+    code text NOT NULL,
+    created_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_date timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_user text DEFAULT 'Unknown'::text NOT NULL,
+    updated_user text DEFAULT 'Unknown'::text NOT NULL,
+    CONSTRAINT code_is_trimmed CHECK (ax_utils.constraint_is_trimmed(code, 'The code must not start or end with whitespace value.'::text)),
+    CONSTRAINT code_max_length CHECK (ax_utils.constraint_max_length(code, 10, 'The code can only be %2$s characters long.'::text)),
+    CONSTRAINT code_not_empty CHECK (ax_utils.constraint_not_empty(code, 'The code cannot be empty.'::text)),
+    CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
+);
+
+
+--
 -- Name: movie_genres; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -5656,6 +5677,9 @@ CREATE TABLE app_public.movies (
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
     ingest_correlation_id integer,
     business_type app_public.business_type_enum DEFAULT 'premium_downloadable'::text NOT NULL,
+    audio_languages text,
+    subtitle_languages text,
+    caption_languages text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -6340,6 +6364,9 @@ CREATE TABLE app_public.tvshows (
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
     ingest_correlation_id integer,
     business_type app_public.business_type_enum DEFAULT 'premium_downloadable'::text NOT NULL,
+    audio_languages text,
+    subtitle_languages text,
+    caption_languages text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -6835,6 +6862,14 @@ ALTER TABLE ONLY app_public.ingest_status
 
 ALTER TABLE ONLY app_public.iso_alpha_two_country_codes
     ADD CONSTRAINT iso_alpha_two_country_codes_pkey PRIMARY KEY (value);
+
+
+--
+-- Name: languages languages_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.languages
+    ADD CONSTRAINT languages_pkey PRIMARY KEY (id);
 
 
 --
@@ -7403,6 +7438,13 @@ CREATE INDEX idx_collections_images_collection_id ON app_public.collections_imag
 
 
 --
+-- Name: idx_collections_languages; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_collections_languages ON app_public.collections USING btree (languages);
+
+
+--
 -- Name: idx_collections_publish_status; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -7872,6 +7914,13 @@ CREATE INDEX idx_ingest_items_type_desc_with_id ON app_public.ingest_items USING
 
 
 --
+-- Name: idx_languages_code; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_languages_code ON app_public.languages USING btree (code);
+
+
+--
 -- Name: idx_movie_genres_created_date_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -7918,6 +7967,13 @@ CREATE INDEX idx_movie_genres_updated_date_asc_with_id ON app_public.movie_genre
 --
 
 CREATE INDEX idx_movie_genres_updated_date_desc_with_id ON app_public.movie_genres USING btree (updated_date DESC, id);
+
+
+--
+-- Name: idx_movies_audio_languages; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movies_audio_languages ON app_public.movies USING btree (audio_languages);
 
 
 --
@@ -8684,6 +8740,13 @@ CREATE INDEX idx_tvshow_genres_updated_date_desc_with_id ON app_public.tvshow_ge
 
 
 --
+-- Name: idx_tvshows_audio_languages; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshows_audio_languages ON app_public.tvshows USING btree (audio_languages);
+
+
+--
 -- Name: idx_tvshows_casts_tvshow_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -8954,6 +9017,13 @@ CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.ingest_item_steps FOR
 --
 
 CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.ingest_items FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__timestamps();
+
+
+--
+-- Name: languages _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.languages FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__timestamps();
 
 
 --
@@ -9300,6 +9370,13 @@ CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_public.ingest_items 
 
 
 --
+-- Name: languages _200_username; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.languages FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE PROCEDURE ax_utils.tg__username();
+
+
+--
 -- Name: movie_genres _200_username; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -9339,6 +9416,13 @@ CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_public.tvshow_genres
 --
 
 CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_public.tvshows FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__username();
+
+
+--
+-- Name: languages _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.languages FOR EACH ROW EXECUTE PROCEDURE ax_utils.tg__username();
 
 
 --
@@ -11726,6 +11810,26 @@ CREATE POLICY ingest_items_authorization ON app_public.ingest_items USING ((( SE
 --
 
 CREATE POLICY ingest_items_authorization_delete ON app_public.ingest_items AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('INGESTS_EDIT,ADMIN'::text) AS user_has_permission));
+
+
+--
+-- Name: languages; Type: ROW SECURITY; Schema: app_public; Owner: -
+--
+
+ALTER TABLE app_public.languages ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: languages languages_authorization; Type: POLICY; Schema: app_public; Owner: -
+--
+
+CREATE POLICY languages_authorization ON app_public.languages USING ((( SELECT ax_utils.user_has_permission('LANGUAGES_VIEW,LANGUAGES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('LANGUAGES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+
+
+--
+-- Name: languages languages_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
+--
+
+CREATE POLICY languages_authorization_delete ON app_public.languages AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('LANGUAGES_EDIT,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -14411,6 +14515,13 @@ GRANT INSERT(description),UPDATE(description) ON TABLE app_public.collections TO
 
 
 --
+-- Name: COLUMN collections.languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(languages),UPDATE(languages) ON TABLE app_public.collections TO media_service_gql_role;
+
+
+--
 -- Name: SEQUENCE collections_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -14950,6 +15061,34 @@ GRANT SELECT ON TABLE app_public.iso_alpha_two_country_codes TO media_service_lo
 
 
 --
+-- Name: TABLE languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,DELETE ON TABLE app_public.languages TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN languages.title; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(title),UPDATE(title) ON TABLE app_public.languages TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN languages.native; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(native),UPDATE(native) ON TABLE app_public.languages TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN languages.code; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(code),UPDATE(code) ON TABLE app_public.languages TO media_service_gql_role;
+
+
+--
 -- Name: TABLE movie_genres; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15059,6 +15198,27 @@ GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.movies TO media_service_
 --
 
 GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.movies TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN movies.audio_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(audio_languages),UPDATE(audio_languages) ON TABLE app_public.movies TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN movies.subtitle_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(subtitle_languages),UPDATE(subtitle_languages) ON TABLE app_public.movies TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN movies.caption_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(caption_languages),UPDATE(caption_languages) ON TABLE app_public.movies TO media_service_gql_role;
 
 
 --
@@ -15682,6 +15842,27 @@ GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.tvshows TO media_service
 --
 
 GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.tvshows TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshows.audio_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(audio_languages),UPDATE(audio_languages) ON TABLE app_public.tvshows TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshows.subtitle_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(subtitle_languages),UPDATE(subtitle_languages) ON TABLE app_public.tvshows TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshows.caption_languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(caption_languages),UPDATE(caption_languages) ON TABLE app_public.tvshows TO media_service_gql_role;
 
 
 --

@@ -36,6 +36,7 @@ import {
   TvShowsMutateOperations,
   TvShowsReadOperations,
 } from './tvshows';
+import { AdministrationMutateOperations, AdministrationReadOperations } from './administration';
 
 /**
  * **IMPORTANT**
@@ -76,6 +77,8 @@ const permissions = [
       ...MoviesDevOperations,
       ...TvshowsDevOperations,
       ...CollectionDevOperations,
+      ...AdministrationReadOperations,
+      ...AdministrationMutateOperations
     ],
   },
   {
@@ -84,6 +87,7 @@ const permissions = [
     gqlOperations: [
       ...MovieGenresReadOperations,
       ...TvShowGenresReadOperations,
+      ...AdministrationReadOperations
     ],
   },
   {
@@ -94,6 +98,7 @@ const permissions = [
       ...MovieGenresMutateOperations,
       ...TvShowGenresReadOperations,
       ...TvShowGenresMutateOperations,
+      ...AdministrationMutateOperations
     ],
   },
   {

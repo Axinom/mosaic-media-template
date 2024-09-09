@@ -1,0 +1,74 @@
+--! Previous: sha1:212e2d2399c4bd449c936294bbf8fc5ca895903b
+--! Hash: sha1:ae2fdbffed6f779117c60b63a3b51bb94ce53958
+--! Message: add-languages-table-and-columns
+
+-- languages table
+DROP TABLE IF EXISTS app_public.languages CASCADE;
+CREATE TABLE app_public.languages (
+  id uuid PRIMARY KEY,
+  title TEXT NOT NULL,
+  native TEXT NULL,
+  code TEXT NOT NULL,
+
+  CONSTRAINT title_not_empty CHECK(ax_utils.constraint_not_empty(title, 'The title cannot be empty.')),
+  CONSTRAINT code_not_empty CHECK(ax_utils.constraint_not_empty(code, 'The code cannot be empty.')),
+  CONSTRAINT code_max_length CHECK(ax_utils.constraint_max_length(code, 10, 'The code can only be %2$s characters long.')),
+  CONSTRAINT code_is_trimmed CHECK(ax_utils.constraint_is_trimmed(code, 'The code must not start or end with whitespace value.'))
+);
+SELECT ax_define.define_audit_date_fields_on_table('languages', 'app_public');
+SELECT ax_define.define_audit_user_fields_on_table('languages', 'app_public', ':DEFAULT_USERNAME');
+SELECT ax_define.define_index('code', 'languages', 'app_public');
+SELECT ax_define.define_authentication('LANGUAGES_VIEW,LANGUAGES_EDIT,ADMIN', 'LANGUAGES_EDIT,ADMIN', 'languages', 'app_public');
+GRANT SELECT, DELETE ON app_public.languages TO ":DATABASE_GQL_ROLE";
+GRANT INSERT (
+  title,
+  native,
+  code
+) ON app_public.languages TO ":DATABASE_GQL_ROLE";
+GRANT UPDATE (
+  title,
+  native,
+  code
+) ON app_public.languages TO ":DATABASE_GQL_ROLE";
+
+-- add language columns to movies
+ALTER TABLE app_public.movies ADD COLUMN IF NOT EXISTS audio_languages TEXT;
+SELECT ax_define.define_index('audio_languages', 'movies', 'app_public');
+ALTER TABLE app_public.movies ADD COLUMN IF NOT EXISTS subtitle_languages TEXT;
+ALTER TABLE app_public.movies ADD COLUMN IF NOT EXISTS caption_languages TEXT;
+GRANT INSERT (
+    audio_languages, 
+    subtitle_languages,
+    caption_languages
+) ON app_public.movies TO ":DATABASE_GQL_ROLE";
+GRANT UPDATE (
+    audio_languages, 
+    subtitle_languages,
+    caption_languages
+) ON app_public.movies TO ":DATABASE_GQL_ROLE";
+
+-- add language columns to tvshows
+ALTER TABLE app_public.tvshows ADD COLUMN IF NOT EXISTS audio_languages TEXT;
+SELECT ax_define.define_index('audio_languages', 'tvshows', 'app_public');
+ALTER TABLE app_public.tvshows ADD COLUMN IF NOT EXISTS subtitle_languages TEXT;
+ALTER TABLE app_public.tvshows ADD COLUMN IF NOT EXISTS caption_languages TEXT;
+GRANT INSERT (
+    audio_languages, 
+    subtitle_languages,
+    caption_languages
+) ON app_public.tvshows TO ":DATABASE_GQL_ROLE";
+GRANT UPDATE (
+    audio_languages, 
+    subtitle_languages,
+    caption_languages
+) ON app_public.tvshows TO ":DATABASE_GQL_ROLE";
+
+-- add language columns to collections
+ALTER TABLE app_public.collections ADD COLUMN IF NOT EXISTS languages TEXT;
+SELECT ax_define.define_index('languages', 'collections', 'app_public');
+GRANT INSERT (
+    languages
+) ON app_public.collections TO ":DATABASE_GQL_ROLE";
+GRANT UPDATE (
+    languages
+) ON app_public.collections TO ":DATABASE_GQL_ROLE";
