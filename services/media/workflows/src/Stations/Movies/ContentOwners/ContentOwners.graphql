@@ -1,0 +1,41 @@
+query ContentOwners {
+  contentOwners(orderBy: SORT_ORDER_ASC) {
+    nodes {
+      createdDate
+      createdUser
+      id
+      name
+      sortOrder
+      updatedDate
+      updatedUser
+    }
+    totalCount
+  }
+}
+
+mutation CreateContentOwner($input: CreateContentOwnerInput!) {
+  createContentOwner(input: $input) {
+    contentOwner {
+      id
+      name
+    }
+  }
+}
+
+mutation UpdateContentOwner($input: UpdateContentOwnerInput!) {
+  updateContentOwner(input: $input) {
+    contentOwner {
+      id
+      name
+    }
+  }
+}
+
+mutation DeleteContentOwner($input: DeleteContentOwnerInput!) {
+  deleteContentOwner(input: $input) {
+    contentOwner {
+      id
+      name
+    }
+  }
+}

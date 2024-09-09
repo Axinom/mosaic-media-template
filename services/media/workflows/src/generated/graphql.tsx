@@ -18314,6 +18314,32 @@ export type DeleteAgeRatingMutationVariables = Exact<{
 
 export type DeleteAgeRatingMutation = { __typename?: 'Mutation', deleteAgeRating?: { __typename?: 'DeleteAgeRatingPayload', ageRating?: { __typename?: 'AgeRating', id: any, name: string } | null } | null };
 
+export type ContentOwnersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ContentOwnersQuery = { __typename?: 'Query', contentOwners?: { __typename?: 'ContentOwnersConnection', totalCount: number, nodes: Array<{ __typename?: 'ContentOwner', createdDate: any, createdUser: string, id: any, name: string, sortOrder: number, updatedDate: any, updatedUser: string }> } | null };
+
+export type CreateContentOwnerMutationVariables = Exact<{
+  input: CreateContentOwnerInput;
+}>;
+
+
+export type CreateContentOwnerMutation = { __typename?: 'Mutation', createContentOwner?: { __typename?: 'CreateContentOwnerPayload', contentOwner?: { __typename?: 'ContentOwner', id: any, name: string } | null } | null };
+
+export type UpdateContentOwnerMutationVariables = Exact<{
+  input: UpdateContentOwnerInput;
+}>;
+
+
+export type UpdateContentOwnerMutation = { __typename?: 'Mutation', updateContentOwner?: { __typename?: 'UpdateContentOwnerPayload', contentOwner?: { __typename?: 'ContentOwner', id: any, name: string } | null } | null };
+
+export type DeleteContentOwnerMutationVariables = Exact<{
+  input: DeleteContentOwnerInput;
+}>;
+
+
+export type DeleteContentOwnerMutation = { __typename?: 'Mutation', deleteContentOwner?: { __typename?: 'DeleteContentOwnerPayload', contentOwner?: { __typename?: 'ContentOwner', id: any, name: string } | null } | null };
+
 export type MovieRelatedCollectionsQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
@@ -21254,6 +21280,157 @@ export function useDeleteAgeRatingMutation(baseOptions?: Apollo.MutationHookOpti
 export type DeleteAgeRatingMutationHookResult = ReturnType<typeof useDeleteAgeRatingMutation>;
 export type DeleteAgeRatingMutationResult = Apollo.MutationResult<DeleteAgeRatingMutation>;
 export type DeleteAgeRatingMutationOptions = Apollo.BaseMutationOptions<DeleteAgeRatingMutation, DeleteAgeRatingMutationVariables>;
+export const ContentOwnersDocument = gql`
+    query ContentOwners {
+  contentOwners(orderBy: SORT_ORDER_ASC) {
+    nodes {
+      createdDate
+      createdUser
+      id
+      name
+      sortOrder
+      updatedDate
+      updatedUser
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useContentOwnersQuery__
+ *
+ * To run a query within a React component, call `useContentOwnersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useContentOwnersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useContentOwnersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useContentOwnersQuery(baseOptions?: Apollo.QueryHookOptions<ContentOwnersQuery, ContentOwnersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ContentOwnersQuery, ContentOwnersQueryVariables>(ContentOwnersDocument, options);
+      }
+export function useContentOwnersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ContentOwnersQuery, ContentOwnersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ContentOwnersQuery, ContentOwnersQueryVariables>(ContentOwnersDocument, options);
+        }
+export type ContentOwnersQueryHookResult = ReturnType<typeof useContentOwnersQuery>;
+export type ContentOwnersLazyQueryHookResult = ReturnType<typeof useContentOwnersLazyQuery>;
+export type ContentOwnersQueryResult = Apollo.QueryResult<ContentOwnersQuery, ContentOwnersQueryVariables>;
+export const CreateContentOwnerDocument = gql`
+    mutation CreateContentOwner($input: CreateContentOwnerInput!) {
+  createContentOwner(input: $input) {
+    contentOwner {
+      id
+      name
+    }
+  }
+}
+    `;
+export type CreateContentOwnerMutationFn = Apollo.MutationFunction<CreateContentOwnerMutation, CreateContentOwnerMutationVariables>;
+
+/**
+ * __useCreateContentOwnerMutation__
+ *
+ * To run a mutation, you first call `useCreateContentOwnerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateContentOwnerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createContentOwnerMutation, { data, loading, error }] = useCreateContentOwnerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateContentOwnerMutation(baseOptions?: Apollo.MutationHookOptions<CreateContentOwnerMutation, CreateContentOwnerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateContentOwnerMutation, CreateContentOwnerMutationVariables>(CreateContentOwnerDocument, options);
+      }
+export type CreateContentOwnerMutationHookResult = ReturnType<typeof useCreateContentOwnerMutation>;
+export type CreateContentOwnerMutationResult = Apollo.MutationResult<CreateContentOwnerMutation>;
+export type CreateContentOwnerMutationOptions = Apollo.BaseMutationOptions<CreateContentOwnerMutation, CreateContentOwnerMutationVariables>;
+export const UpdateContentOwnerDocument = gql`
+    mutation UpdateContentOwner($input: UpdateContentOwnerInput!) {
+  updateContentOwner(input: $input) {
+    contentOwner {
+      id
+      name
+    }
+  }
+}
+    `;
+export type UpdateContentOwnerMutationFn = Apollo.MutationFunction<UpdateContentOwnerMutation, UpdateContentOwnerMutationVariables>;
+
+/**
+ * __useUpdateContentOwnerMutation__
+ *
+ * To run a mutation, you first call `useUpdateContentOwnerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateContentOwnerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateContentOwnerMutation, { data, loading, error }] = useUpdateContentOwnerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateContentOwnerMutation(baseOptions?: Apollo.MutationHookOptions<UpdateContentOwnerMutation, UpdateContentOwnerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateContentOwnerMutation, UpdateContentOwnerMutationVariables>(UpdateContentOwnerDocument, options);
+      }
+export type UpdateContentOwnerMutationHookResult = ReturnType<typeof useUpdateContentOwnerMutation>;
+export type UpdateContentOwnerMutationResult = Apollo.MutationResult<UpdateContentOwnerMutation>;
+export type UpdateContentOwnerMutationOptions = Apollo.BaseMutationOptions<UpdateContentOwnerMutation, UpdateContentOwnerMutationVariables>;
+export const DeleteContentOwnerDocument = gql`
+    mutation DeleteContentOwner($input: DeleteContentOwnerInput!) {
+  deleteContentOwner(input: $input) {
+    contentOwner {
+      id
+      name
+    }
+  }
+}
+    `;
+export type DeleteContentOwnerMutationFn = Apollo.MutationFunction<DeleteContentOwnerMutation, DeleteContentOwnerMutationVariables>;
+
+/**
+ * __useDeleteContentOwnerMutation__
+ *
+ * To run a mutation, you first call `useDeleteContentOwnerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteContentOwnerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteContentOwnerMutation, { data, loading, error }] = useDeleteContentOwnerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteContentOwnerMutation(baseOptions?: Apollo.MutationHookOptions<DeleteContentOwnerMutation, DeleteContentOwnerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteContentOwnerMutation, DeleteContentOwnerMutationVariables>(DeleteContentOwnerDocument, options);
+      }
+export type DeleteContentOwnerMutationHookResult = ReturnType<typeof useDeleteContentOwnerMutation>;
+export type DeleteContentOwnerMutationResult = Apollo.MutationResult<DeleteContentOwnerMutation>;
+export type DeleteContentOwnerMutationOptions = Apollo.BaseMutationOptions<DeleteContentOwnerMutation, DeleteContentOwnerMutationVariables>;
 export const MovieRelatedCollectionsDocument = gql`
     query MovieRelatedCollections($id: Int!) {
   movie(id: $id) {

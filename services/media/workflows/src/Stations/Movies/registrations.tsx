@@ -8,6 +8,7 @@ import {
 } from '../../index';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
 import { AgeRatings } from './AgeRatings/AgeRatings';
+import { ContentOwners } from './ContentOwners/ContentOwners';
 import { MovieCollectionAssignment } from './MovieCollectionAssignment/MovieCollectionAssignment';
 import { MovieCreate } from './MovieCreate/MovieCreate';
 import { MovieDetails } from './MovieDetails/MovieDetails';
@@ -254,6 +255,35 @@ export function register(app: PiletApi, extensions: Extensions): void {
 
   app.registerPage('/settings/media/ageratings', AgeRatings, {
     breadcrumb: () => 'Age Ratings',
+    permissions: {
+      'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
+    },
+  });
+
+  const contentOwnersSettingsNav = {
+    name: 'content-owners',
+    path: '/settings/media/contentowners',
+    label: 'Content Owners',
+    icon: <MediaIcons icon={MediaIconName.MovieGenres} />,
+  };
+
+  app.registerTile(
+    {
+      ...contentOwnersSettingsNav,
+      kind: 'settings',
+      groupName: settingsGroupName,
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...contentOwnersSettingsNav,
+    parentName: parentName,
+    categoryName: 'Settings',
+  });
+
+  app.registerPage('/settings/media/contentowners', ContentOwners, {
+    breadcrumb: () => 'Content Owners',
     permissions: {
       'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
     },
