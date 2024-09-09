@@ -448,6 +448,27 @@
     react-transition-group "^4.3.0"
     yup "^0.32.11"
 
+"@axinom/mosaic-ui@0.51.0":
+  version "0.51.0"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.51.0.tgz#f577cabbea92b4d6802fe4b7543604fcde090726"
+  integrity sha512-zolS1oGZmCKhvb0uvb5pYleBAU3q3a8f6oXXrtPrsdVxDzI99617amlIgCJ+eRBNZmsfjF5n1dxjKQnpGJ4rtA==
+  dependencies:
+    "@axinom/mosaic-core" "^0.4.24"
+    "@faker-js/faker" "^7.4.0"
+    "@geoffcox/react-splitter" "^2.1.2"
+    "@popperjs/core" "^2.11.8"
+    clsx "^1.1.0"
+    lodash "^4.17.21"
+    luxon "^3.3.0"
+    react-beautiful-dnd "^13.1.1"
+    react-calendar "^3.3.1"
+    react-content-loader "^6.0.3"
+    react-imask "^6.4.3"
+    react-popper "^2.2.5"
+    react-tabs "4.3.0"
+    react-transition-group "^4.3.0"
+    yup "^0.32.11"
+
 "@azure/abort-controller@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@azure/abort-controller/-/abort-controller-1.1.0.tgz#788ee78457a55af8a1ad342acb182383d2119249"
