@@ -27,4 +27,14 @@ export const Constants = {
   IN_PROGRESS: 'In Progress',
   SUCCESS: 'Success',
   PARTIAL_SUCCESS: 'Partial Success',
+
+  //Business Types
+  ADVERTISEMENT: 'Advertisement',
+  ADVERTISEMENT_AUTHENTICATED: 'Advertisement Authenticated',
+  ADVERTISEMENT_DOWNLOADABLE: 'Advertisement Downloadable',
+  FREE: 'Free',
+  FREE_AUTHENTICATED: 'Free Authenticated',
+  FREE_DOWNLOADABLE: 'Free Downloadable',
+  PREMIUM: 'Premium',
+  PREMIUM_DOWNLOADABLE: 'Premium Downloadable',
 };

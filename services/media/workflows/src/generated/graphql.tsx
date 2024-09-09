@@ -231,6 +231,51 @@ export type BulkPublishingPayload = {
   totalCount?: Maybe<Scalars['Int']['output']>;
 };
 
+export enum BusinessType {
+  /** Advertisement */
+  Advertisement = 'ADVERTISEMENT',
+  /** Advertisement authenticated */
+  AdvertisementAuthenticated = 'ADVERTISEMENT_AUTHENTICATED',
+  /** Advertisement downloadable */
+  AdvertisementDownloadable = 'ADVERTISEMENT_DOWNLOADABLE',
+  /** Free */
+  Free = 'FREE',
+  /** Free authenticated */
+  FreeAuthenticated = 'FREE_AUTHENTICATED',
+  /** Free downloadable */
+  FreeDownloadable = 'FREE_DOWNLOADABLE',
+  /** Premium */
+  Premium = 'PREMIUM',
+  /** Premium downloadable */
+  PremiumDownloadable = 'PREMIUM_DOWNLOADABLE'
+}
+
+/** A filter to be used against BusinessType fields. All fields are combined with a logical ‘and.’ */
+export type BusinessTypeFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<BusinessType>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<BusinessType>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<BusinessType>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<BusinessType>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<BusinessType>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<BusinessType>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<BusinessType>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<BusinessType>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<BusinessType>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<BusinessType>>;
+};
+
 /** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type Collection = {
   __typename?: 'Collection';
@@ -4763,6 +4808,7 @@ export type EntityTypeFilter = {
 export type Episode = {
   __typename?: 'Episode';
   ageRating?: Maybe<Scalars['String']['output']>;
+  businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
@@ -4931,6 +4977,8 @@ export type EpisodeEpisodesTvshowGenresArgs = {
 export type EpisodeCondition = {
   /** Checks for equality with the object’s `ageRating` field. */
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessType>;
   /** Checks for equality with the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
@@ -4993,6 +5041,8 @@ export type EpisodeFilter = {
   ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<EpisodeFilter>>;
+  /** Filter by the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessTypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<EpisodeToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
@@ -5129,6 +5179,7 @@ export type EpisodeImageTypeFilter = {
 /** An input for mutations affecting `Episode` */
 export type EpisodeInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -5155,6 +5206,7 @@ export type EpisodeInput = {
 /** Represents an update to a `Episode`. Fields that are set will be updated. */
 export type EpisodePatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -5639,6 +5691,8 @@ export type EpisodesLicenseToManyEpisodesLicensesCountryFilter = {
 export enum EpisodesOrderBy {
   AgeRatingAsc = 'AGE_RATING_ASC',
   AgeRatingDesc = 'AGE_RATING_DESC',
+  BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
+  BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
   ContentOwnerAsc = 'CONTENT_OWNER_ASC',
   ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -7812,6 +7866,7 @@ export type JsonListFilter = {
 export type Movie = {
   __typename?: 'Movie';
   ageRating?: Maybe<Scalars['String']['output']>;
+  businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
@@ -7991,6 +8046,8 @@ export type MovieMoviesTrailersArgs = {
 export type MovieCondition = {
   /** Checks for equality with the object’s `ageRating` field. */
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessType>;
   /** Checks for equality with the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
@@ -8049,6 +8106,8 @@ export type MovieFilter = {
   ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<MovieFilter>>;
+  /** Filter by the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessTypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<MovieToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
@@ -8351,6 +8410,7 @@ export type MovieImageTypeFilter = {
 /** An input for mutations affecting `Movie` */
 export type MovieInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -8375,6 +8435,7 @@ export type MovieInput = {
 /** Represents an update to a `Movie`. Fields that are set will be updated. */
 export type MoviePatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -9003,6 +9064,8 @@ export enum MoviesMovieGenresOrderBy {
 export enum MoviesOrderBy {
   AgeRatingAsc = 'AGE_RATING_ASC',
   AgeRatingDesc = 'AGE_RATING_DESC',
+  BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
+  BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
   ContentOwnerAsc = 'CONTENT_OWNER_ASC',
   ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -12373,6 +12436,7 @@ export type QueryTvshowsTvshowGenresArgs = {
 export type Season = {
   __typename?: 'Season';
   ageRating?: Maybe<Scalars['String']['output']>;
+  businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
@@ -12553,6 +12617,8 @@ export type SeasonSeasonsTvshowGenresArgs = {
 export type SeasonCondition = {
   /** Checks for equality with the object’s `ageRating` field. */
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessType>;
   /** Checks for equality with the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
@@ -12605,6 +12671,8 @@ export type SeasonFilter = {
   ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<SeasonFilter>>;
+  /** Filter by the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessTypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<SeasonToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
@@ -12739,6 +12807,7 @@ export type SeasonImageTypeFilter = {
 /** An input for mutations affecting `Season` */
 export type SeasonInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -12758,6 +12827,7 @@ export type SeasonInput = {
 /** Represents an update to a `Season`. Fields that are set will be updated. */
 export type SeasonPatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -13235,6 +13305,8 @@ export type SeasonsLicenseToManySeasonsLicensesCountryFilter = {
 export enum SeasonsOrderBy {
   AgeRatingAsc = 'AGE_RATING_ASC',
   AgeRatingDesc = 'AGE_RATING_DESC',
+  BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
+  BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
   ContentOwnerAsc = 'CONTENT_OWNER_ASC',
   ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -14602,6 +14674,7 @@ export type Subscription = {
 export type Tvshow = {
   __typename?: 'Tvshow';
   ageRating?: Maybe<Scalars['String']['output']>;
+  businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
@@ -14780,6 +14853,8 @@ export type TvshowTvshowsTvshowGenresArgs = {
 export type TvshowCondition = {
   /** Checks for equality with the object’s `ageRating` field. */
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessType>;
   /** Checks for equality with the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
@@ -14836,6 +14911,8 @@ export type TvshowFilter = {
   ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<TvshowFilter>>;
+  /** Filter by the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessTypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<TvshowToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
@@ -15198,6 +15275,7 @@ export type TvshowImageTypeFilter = {
 /** An input for mutations affecting `Tvshow` */
 export type TvshowInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -15221,6 +15299,7 @@ export type TvshowInput = {
 /** Represents an update to a `Tvshow`. Fields that are set will be updated. */
 export type TvshowPatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -15702,6 +15781,8 @@ export type TvshowsLicenseToManyTvshowsLicensesCountryFilter = {
 export enum TvshowsOrderBy {
   AgeRatingAsc = 'AGE_RATING_ASC',
   AgeRatingDesc = 'AGE_RATING_DESC',
+  BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
+  BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
   ContentOwnerAsc = 'CONTENT_OWNER_ASC',
   ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -18359,7 +18440,7 @@ export type MovieQueryVariables = Exact<{
 }>;
 
 
-export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, rating?: any | null, customRating?: string | null, creditsStartTime?: string | null, lengthInSeconds?: any | null, dynamicField?: string | null, extendedField?: string | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null };
+export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, customRating?: string | null, creditsStartTime?: string | null, lengthInSeconds?: any | null, dynamicField?: string | null, extendedField?: string | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null };
 
 export type DeleteMovieMutationVariables = Exact<{
   input: DeleteMovieInput;
@@ -18421,7 +18502,7 @@ export type SearchMovieProductionCountriesQueryVariables = Exact<{
 
 export type SearchMovieProductionCountriesQuery = { __typename?: 'Query', getMoviesProductionCountriesValues?: { __typename?: 'GetMoviesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
 
-export type MovieExplorerPropertiesFragment = { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
+export type MovieExplorerPropertiesFragment = { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
 
 export type MoviesQueryVariables = Exact<{
   filter?: InputMaybe<MovieFilter>;
@@ -18430,12 +18511,12 @@ export type MoviesQueryVariables = Exact<{
 }>;
 
 
-export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
+export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
 
 export type MoviesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
+export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
 
 export type MovieGenresQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -19118,6 +19199,7 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
   mainVideoId
   ageRating
   contentOwner
+  businessType
   moviesImages(condition: {imageType: COVER}) {
     nodes {
       imageId
@@ -21526,6 +21608,7 @@ export const MovieDocument = gql`
     description
     externalId
     ageRating
+    businessType
     contentOwner
     rating
     customRating

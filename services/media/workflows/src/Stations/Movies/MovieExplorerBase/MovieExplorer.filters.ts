@@ -1,11 +1,11 @@
 import {
-  createDateRangeFilterValidators,
   filterToPostGraphileFilter,
   FilterType,
   FilterTypes,
   FilterValues,
 } from '@axinom/mosaic-ui';
-import { MovieFilter } from '../../../generated/graphql';
+import { BusinessType, MovieFilter } from '../../../generated/graphql';
+import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { MovieData } from './MovieExplorer.types';
 
 export function useMoviesFilters(): {
@@ -15,9 +15,6 @@ export function useMoviesFilters(): {
     excludeItems?: number[],
   ) => MovieFilter | undefined;
 } {
-  const [createFromDateFilterValidator, createToDateFilterValidator] =
-    createDateRangeFilterValidators<MovieData>();
-
   const filterOptions: FilterType<MovieData>[] = [
     {
       label: 'Title',
@@ -100,8 +97,12 @@ export function useMoviesFilters(): {
     {
       // select from list
       label: 'Business Type',
-      property: 'released',
-      type: FilterTypes.FreeText,
+      property: 'businessType',
+      type: FilterTypes.Options,
+      options: Object.keys(BusinessType).map((key) => ({
+        value: BusinessType[key],
+        label: getEnumLabel(BusinessType[key]),
+      })),
     },
     {
       label: 'TVOD Tier',
@@ -146,7 +147,7 @@ export function useMoviesFilters(): {
       moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
       // validLicensing: 'includesInsensitive',
       // subtype: 'includesInsensitive',
-      // businessType: 'includesInsensitive',
+      businessType: 'in',
       // tvodTier: 'includesInsensitive',
       // subscriptionPlans: 'includesInsensitive',
     });

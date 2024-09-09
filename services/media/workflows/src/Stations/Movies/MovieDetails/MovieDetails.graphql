@@ -6,6 +6,7 @@ query Movie($id: Int!) {
     description
     externalId
     ageRating
+    businessType
     contentOwner
     rating
     customRating

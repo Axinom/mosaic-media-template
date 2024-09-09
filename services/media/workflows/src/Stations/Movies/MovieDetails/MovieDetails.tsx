@@ -25,6 +25,7 @@ import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext } from '../../../externals';
 import {
+  BusinessType,
   Movie,
   MovieDocument,
   MovieGenre,
@@ -288,7 +289,6 @@ export const MovieDetails: React.FC = () => {
           cast,
           director,
           productionCountries,
-          businessType: [],
           adLanguages: [],
           sbLanguages: [],
           ccLanguages: [],
@@ -453,13 +453,6 @@ const Form: React.FC<{
     return data.getMoviesProductionCountriesValues?.nodes ?? [];
   };
 
-  const bTypeOptions: selectOption[] = [
-    { value: 'free', label: 'free' },
-    { value: 'free_authenticated', label: 'free_authenticated' },
-    { value: 'advertisement', label: 'advertisement' },
-    { value: 'premium', label: 'premium' },
-  ];
-
   const sTypeOptions: selectOption[] = [{ value: 'Movie', label: 'Movie' }];
 
   const languageOptions = [
@@ -478,7 +471,10 @@ const Form: React.FC<{
         name="businessType"
         label="Business Type"
         addEmptyOption={true}
-        options={bTypeOptions}
+        options={Object.keys(BusinessType).map((key) => ({
+          value: BusinessType[key],
+          label: getEnumLabel(BusinessType[key]),
+        }))}
         as={SelectField}
       />
       <Field
