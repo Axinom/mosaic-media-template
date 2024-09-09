@@ -72,7 +72,7 @@ export function useCollectionsFilters(): {
 
   const transformFilters = (
     filters: FilterValues<CollectionData>,
-    _excludeItems?: number[],
+    excludeItems?: number[],
   ): CollectionFilter | undefined => {
     return filterToPostGraphileFilter<CollectionFilter>(filters, {
       title: 'includes',
@@ -83,6 +83,20 @@ export function useCollectionsFilters(): {
       publishStatus: 'in',
       // subType: 'includes',
       // country: 'includes',
+      id: (value) => {
+        if (typeof value === 'number') {
+          // User filter
+          return {
+            equalTo: value,
+            notIn: excludeItems,
+          };
+        } else {
+          // Exclude items
+          return {
+            notIn: excludeItems,
+          };
+        }
+      },
     });
   };
 

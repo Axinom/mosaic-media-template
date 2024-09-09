@@ -1,10 +1,10 @@
 import { FieldHookConfig, useField } from 'formik';
 import React from 'react';
-import { CollectionRelatedEntity } from '../CollectionEntityManagement.types';
+import { MovieRelatedCollections } from '../CollectionEntityManagement.types';
 import { EntityDataList } from './EntityDataList';
 
 export const EntitySelectField: React.FC<
-  FieldHookConfig<CollectionRelatedEntity[]>
+  FieldHookConfig<MovieRelatedCollections[]>
 > = (props) => {
   const [field, , helpers] = useField(props);
 

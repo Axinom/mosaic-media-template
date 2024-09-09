@@ -42,7 +42,6 @@ export const useEntityDataListDataEntry = (
       <>
         <DynamicListDataEntry
           onActionClicked={(data) => {
-            console.log('xxxxx onactionclicked');
             setSortOrder(data.sortOrder);
           }}
           customAddButton={(onAddItem) => (

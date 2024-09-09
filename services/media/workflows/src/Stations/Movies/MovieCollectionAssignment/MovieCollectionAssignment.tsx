@@ -12,18 +12,17 @@ import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
-  EntityType,
   Mutation,
   MutationCreateCollectionRelationArgs,
   MutationDeleteCollectionRelationArgs,
   MutationUpdateCollectionRelationArgs,
 } from '../../../generated/graphql';
-import { CollectionRelatedEntity } from './CollectionEntityManagement.types';
-import { useCollectionRelatedEntities } from './CollectionEntityRelationMapper/CollectionEntityRelationMapper';
+import { MovieRelatedCollections } from './CollectionEntityManagement.types';
+import { useMovieRelatedCollections } from './CollectionEntityRelationMapper/CollectionEntityRelationMapper';
 import { EntitySelectField } from './EntitySelectField/EntitySelectField';
 
 interface FormData {
-  entities: CollectionRelatedEntity[] | undefined;
+  entities: MovieRelatedCollections[] | undefined;
 }
 
 const collectionEntityManagementSchema = Yup.object().shape<
@@ -33,13 +32,13 @@ const collectionEntityManagementSchema = Yup.object().shape<
 });
 
 export const MovieCollectionAssignment: React.FC = () => {
-  const collectionId = Number(
+  const movieId = Number(
     useParams<{
-      collectionId: string;
-    }>().collectionId,
+      movieId: string;
+    }>().movieId,
   );
 
-  const { loading, data, error } = useCollectionRelatedEntities(collectionId);
+  const { loading, data, error } = useMovieRelatedCollections(movieId);
 
   const onSubmit = useCallback(
     async (
@@ -54,28 +53,14 @@ export const MovieCollectionAssignment: React.FC = () => {
           current: formData.entities,
           original: initialData.data?.entities,
           generateCreateMutation: (item) => {
-            console.log('item.entityType', item);
-
-            const entityTypeId = (() => {
-              switch (item.entityType) {
-                case EntityType.Movie:
-                  return 'movieId';
-                default: {
-                  throw new Error(
-                    `Unsupported entityType found when calling generateCreateMutation.`,
-                  );
-                }
-              }
-            })();
-
             return generateUpdateGQLFragment<MutationCreateCollectionRelationArgs>(
               'createCollectionRelation',
               {
                 input: {
                   collectionRelation: {
-                    collectionId,
+                    collectionId: item?.entityId,
                     sortOrder: item.sortOrder,
-                    [entityTypeId]: item.entityId,
+                    movieId: movieId,
                   },
                 },
               },
@@ -96,7 +81,7 @@ export const MovieCollectionAssignment: React.FC = () => {
                 },
               },
             ),
-          key: 'id',
+          key: 'entityId',
         });
 
       const GqlMutationDocument = gql`mutation UpdateCollectionEntityAssignments {
@@ -105,17 +90,18 @@ export const MovieCollectionAssignment: React.FC = () => {
 
       await client.mutate({ mutation: GqlMutationDocument });
     },
-    [collectionId],
+    [movieId],
   );
 
   return (
     <Details<FormData>
       defaultTitle="Collection Assignment"
       subtitle="Add movie to one or more collections"
-      validationSchema={collectionEntityManagementSchema}
+      // validationSchema={collectionEntityManagementSchema}
       initialData={{
-        data: { entities: data },
+        data: { entities: data ?? [] },
         loading,
+        // entityNotFound: data?.filtered?.nodes === null,
         error: error?.message,
       }}
       saveData={onSubmit}

@@ -54,8 +54,6 @@ export const TvShowCollectionAssignment: React.FC = () => {
           current: formData.entities,
           original: initialData.data?.entities,
           generateCreateMutation: (item) => {
-            console.log('item.entityType', item);
-
             const entityTypeId = (() => {
               switch (item.entityType) {
                 case EntityType.Tvshow:

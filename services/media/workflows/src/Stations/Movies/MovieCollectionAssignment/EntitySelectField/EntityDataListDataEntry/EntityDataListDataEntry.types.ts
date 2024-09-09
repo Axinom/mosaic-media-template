@@ -1,13 +1,13 @@
 import { DynamicListDataEntryProps, UseModalResult } from '@axinom/mosaic-ui';
-import { CollectionRelatedEntity } from '../../CollectionEntityManagement.types';
+import { MovieRelatedCollections } from '../../CollectionEntityManagement.types';
 
 export interface UseEntityDataListDataEntryOptions {
-  excludeItems: CollectionRelatedEntity[];
+  excludeItems: MovieRelatedCollections[];
 }
 
 export interface UseEntityDataListDataEntryResult {
   EntityDataListDataEntry: React.FC<
-    DynamicListDataEntryProps<CollectionRelatedEntity>
+    DynamicListDataEntryProps<MovieRelatedCollections>
   >;
 }
 
@@ -16,7 +16,7 @@ export interface Option extends UseModalResult {
 }
 
 export type UseAddOptionsResult = (
-  onActionClicked: DynamicListDataEntryProps<CollectionRelatedEntity>['onActionClicked'],
+  onActionClicked: DynamicListDataEntryProps<MovieRelatedCollections>['onActionClicked'],
   excludes: Record<string, number[]>,
   sortOrder: number,
 ) => Option[];

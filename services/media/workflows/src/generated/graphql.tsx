@@ -18026,7 +18026,7 @@ export type CreateCollectionSnapshotMutationVariables = Exact<{
 
 export type CreateCollectionSnapshotMutation = { __typename?: 'Mutation', createCollectionSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
-export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, externalId?: string | null, description?: string | null, synopsis?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } };
+export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, externalId?: string | null, description?: string | null, synopsis?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
 
 export type CollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -18035,12 +18035,12 @@ export type CollectionsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, externalId?: string | null, description?: string | null, synopsis?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
+export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, externalId?: string | null, description?: string | null, synopsis?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
 
 export type CollectionsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, externalId?: string | null, description?: string | null, synopsis?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null } | null };
+export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, externalId?: string | null, description?: string | null, synopsis?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
 
 export type BulkDeleteCollectionsMutationVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -18313,6 +18313,13 @@ export type DeleteAgeRatingMutationVariables = Exact<{
 
 
 export type DeleteAgeRatingMutation = { __typename?: 'Mutation', deleteAgeRating?: { __typename?: 'DeleteAgeRatingPayload', ageRating?: { __typename?: 'AgeRating', id: any, name: string } | null } | null };
+
+export type MovieRelatedCollectionsQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type MovieRelatedCollectionsQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, collection?: { __typename?: 'Collection', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null }> } } | null };
 
 export type CreateMovieMutationVariables = Exact<{
   input: CreateMovieInput;
@@ -19004,6 +19011,11 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
   collectionsImages {
     nodes {
       imageId
+    }
+  }
+  collectionRelations(orderBy: SORT_ORDER_DESC) {
+    nodes {
+      sortOrder
     }
   }
 }
@@ -21242,6 +21254,56 @@ export function useDeleteAgeRatingMutation(baseOptions?: Apollo.MutationHookOpti
 export type DeleteAgeRatingMutationHookResult = ReturnType<typeof useDeleteAgeRatingMutation>;
 export type DeleteAgeRatingMutationResult = Apollo.MutationResult<DeleteAgeRatingMutation>;
 export type DeleteAgeRatingMutationOptions = Apollo.BaseMutationOptions<DeleteAgeRatingMutation, DeleteAgeRatingMutationVariables>;
+export const MovieRelatedCollectionsDocument = gql`
+    query MovieRelatedCollections($id: Int!) {
+  movie(id: $id) {
+    collectionRelations(orderBy: SORT_ORDER_ASC) {
+      nodes {
+        collection {
+          entityId: id
+          title
+          publishStatus
+          entityImages: collectionsImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+        id
+        sortOrder
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useMovieRelatedCollectionsQuery__
+ *
+ * To run a query within a React component, call `useMovieRelatedCollectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMovieRelatedCollectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMovieRelatedCollectionsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMovieRelatedCollectionsQuery(baseOptions: Apollo.QueryHookOptions<MovieRelatedCollectionsQuery, MovieRelatedCollectionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MovieRelatedCollectionsQuery, MovieRelatedCollectionsQueryVariables>(MovieRelatedCollectionsDocument, options);
+      }
+export function useMovieRelatedCollectionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MovieRelatedCollectionsQuery, MovieRelatedCollectionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MovieRelatedCollectionsQuery, MovieRelatedCollectionsQueryVariables>(MovieRelatedCollectionsDocument, options);
+        }
+export type MovieRelatedCollectionsQueryHookResult = ReturnType<typeof useMovieRelatedCollectionsQuery>;
+export type MovieRelatedCollectionsLazyQueryHookResult = ReturnType<typeof useMovieRelatedCollectionsLazyQuery>;
+export type MovieRelatedCollectionsQueryResult = Apollo.QueryResult<MovieRelatedCollectionsQuery, MovieRelatedCollectionsQueryVariables>;
 export const CreateMovieDocument = gql`
     mutation CreateMovie($input: CreateMovieInput!) {
   createMovie(input: $input) {

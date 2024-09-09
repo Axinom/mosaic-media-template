@@ -9,19 +9,19 @@ import React, { ReactNode, useCallback, useMemo } from 'react';
 import { EntityType } from '../../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../../Util/PublishStatusStateMap/PublishStatusStateMap';
 import { StringEnumRenderer } from '../../../../Util/StringEnumRenderer/StringEnumRenderer';
-import { CollectionRelatedEntity } from '../CollectionEntityManagement.types';
+import { MovieRelatedCollections } from '../CollectionEntityManagement.types';
 import { useEntityDataListDataEntry } from './EntityDataListDataEntry/EntityDataListDataEntry';
 //import { useEntityDataListDataEntry2 } from './EntityDataListDataEntry2';
 
 interface EntityDataListProps {
   /** Entities of the Collection */
-  value: CollectionRelatedEntity[];
+  value: MovieRelatedCollections[];
   /** Raised when the list has changed */
-  onChange: (values: CollectionRelatedEntity[]) => void;
+  onChange: (values: MovieRelatedCollections[]) => void;
 }
 
 type EntityIDEntityType =
-  `${CollectionRelatedEntity['entityId']}_${EntityType}`;
+  `${MovieRelatedCollections['entityId']}_${EntityType}`;
 
 export const EntityDataList: React.FC<EntityDataListProps> = ({
   onChange,
@@ -31,8 +31,8 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
     excludeItems: value,
   });
 
-  const columns: DynamicListColumn<CollectionRelatedEntity>[] = useMemo(
-    (): DynamicListColumn<CollectionRelatedEntity>[] => [
+  const columns: DynamicListColumn<MovieRelatedCollections>[] = useMemo(
+    (): DynamicListColumn<MovieRelatedCollections>[] => [
       {
         propertyName: 'publishStatus',
         label: 'State',
@@ -67,7 +67,7 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
   );
 
   const generateInlineMenuActions: (
-    data: CollectionRelatedEntity,
+    data: MovieRelatedCollections,
   ) => ActionData[] = (data) => {
     return [
       {
@@ -85,7 +85,7 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
   };
 
   return (
-    <DynamicDataList<CollectionRelatedEntity>
+    <DynamicDataList<MovieRelatedCollections>
       value={value}
       columns={columns}
       onChange={onChange}
@@ -102,9 +102,9 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
 const createEntityUrl = ({
   entityType,
   entityId,
-}: CollectionRelatedEntity): string => {
+}: MovieRelatedCollections): string => {
   switch (entityType) {
-    case EntityType.Movie:
+    case EntityType.Collection:
       return `/movies/${entityId}`;
   }
 };

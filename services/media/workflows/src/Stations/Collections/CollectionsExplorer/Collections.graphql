@@ -19,6 +19,11 @@ fragment CollectionExplorerProperties on Collection {
       imageId
     }
   }
+  collectionRelations(orderBy: SORT_ORDER_DESC) {
+    nodes {
+      sortOrder
+    }
+  }
 }
 
 query Collections(

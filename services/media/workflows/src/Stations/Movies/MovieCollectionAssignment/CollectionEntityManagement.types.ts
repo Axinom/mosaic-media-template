@@ -1,17 +1,15 @@
 import {
-  CollectionRelatedEntitiesQuery,
   EntityType,
+  MovieRelatedCollectionsQuery,
 } from '../../../generated/graphql';
 
-export type CollectionRelatedEntity = CollectionRelatedMovie & {
+export type MovieRelatedCollections = CollectionRelation['collection'] & {
   sortOrder: number;
+  entityId: number;
+  entityType: EntityType.Collection;
   id?: number;
 };
 
-export type CollectionRelatedMovie = CollectionRelation['movie'] & {
-  entityType: EntityType.Movie;
-};
-
 type CollectionRelation = NonNullable<
-  CollectionRelatedEntitiesQuery['collection']
+  MovieRelatedCollectionsQuery['movie']
 >['collectionRelations']['nodes'][number];

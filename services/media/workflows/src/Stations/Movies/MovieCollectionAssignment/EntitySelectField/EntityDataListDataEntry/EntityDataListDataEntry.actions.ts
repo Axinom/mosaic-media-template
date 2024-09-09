@@ -10,21 +10,25 @@ export const useAddOptions: UseAddOptionsResult = (
   {
     title: 'Add Collection',
     ...useCollectionSelectExplorerModal({
-      excludeItems: excludes[EntityType.Movie],
+      excludeItems: excludes[EntityType.Collection],
       onSelection: (selection) => {
         if (selection.mode === 'SINGLE_ITEMS') {
           const items = selection.items;
           if (items && onActionClicked) {
-            // items.forEach((item, index) => {
-            //   onActionClicked({
-            //     entityType: EntityType.Movie,
-            //     entityImages: item.moviesImages,
-            //     publishStatus: item.publishStatus,
-            //     title: item.title,
-            //     sortOrder: sortOrder + index,
-            //     entityId: item.id,
-            //   });
-            // });
+            items.forEach((item, index) => {
+              onActionClicked({
+                entityType: EntityType.Collection,
+                entityImages: item.collectionsImages,
+                publishStatus: item.publishStatus,
+                title: item.title,
+                sortOrder:
+                  sortOrder >
+                  (item?.collectionRelations?.nodes[0]?.sortOrder ?? 0) + 1
+                    ? sortOrder
+                    : (item?.collectionRelations?.nodes[0]?.sortOrder ?? 0) + 1,
+                entityId: item.id,
+              });
+            });
           }
         }
       },

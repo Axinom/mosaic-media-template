@@ -6,7 +6,7 @@ import {
   InlineMenu,
 } from '@axinom/mosaic-ui';
 import React, { useMemo, useState } from 'react';
-import { CollectionRelatedEntity } from '../../CollectionEntityManagement.types';
+import { MovieRelatedCollections } from '../../CollectionEntityManagement.types';
 import { useAddOptions } from './EntityDataListDataEntry.actions';
 import {
   UseEntityDataListDataEntryOptions,
@@ -17,7 +17,7 @@ export const useEntityDataListDataEntry = (
   options: UseEntityDataListDataEntryOptions,
 ): UseEntityDataListDataEntryResult => {
   const EntityDataListDataEntry: React.FC<
-    DynamicListDataEntryProps<CollectionRelatedEntity>
+    DynamicListDataEntryProps<MovieRelatedCollections>
   > = (props) => {
     const [sortOrder, setSortOrder] = useState<number>(-1);
     const { onActionClicked, ...rest } = props;
@@ -42,7 +42,6 @@ export const useEntityDataListDataEntry = (
       <>
         <DynamicListDataEntry
           onActionClicked={(data) => {
-            console.log('xxxxx onactionclicked');
             setSortOrder(data.sortOrder);
           }}
           customAddButton={(onAddItem) => (
@@ -59,6 +58,8 @@ export const useEntityDataListDataEntry = (
               onButtonClicked={onAddItem}
             />
           )}
+          allowReordering={false}
+          allowDragging={false}
           {...rest}
         />
 

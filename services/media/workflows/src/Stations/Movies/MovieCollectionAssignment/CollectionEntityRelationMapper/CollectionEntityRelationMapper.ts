@@ -2,33 +2,33 @@ import { ApolloError } from '@apollo/client';
 import { client } from '../../../../apolloClient';
 import {
   EntityType,
-  useCollectionRelatedEntitiesQuery,
+  useMovieRelatedCollectionsQuery,
 } from '../../../../generated/graphql';
-import { CollectionRelatedEntity } from '../CollectionEntityManagement.types';
+import { MovieRelatedCollections } from '../CollectionEntityManagement.types';
 
 interface useCollectionRelatedEntitiesResult {
-  data: CollectionRelatedEntity[] | undefined;
+  data: MovieRelatedCollections[] | undefined;
   loading: boolean;
   error?: ApolloError;
 }
 
-export const useCollectionRelatedEntities = (
-  _collectionId: number,
+export const useMovieRelatedCollections = (
+  movieId: number,
 ): useCollectionRelatedEntitiesResult => {
-  const { data, loading, error } = useCollectionRelatedEntitiesQuery({
+  const { data, loading, error } = useMovieRelatedCollectionsQuery({
     client,
-    variables: { id: 1 },
+    variables: { id: movieId },
     fetchPolicy: 'no-cache',
   });
 
-  const mappedData: CollectionRelatedEntity[] | undefined =
-    data?.collection?.collectionRelations.nodes.map((node) => {
-      if (node && node.movie) {
+  const mappedData: MovieRelatedCollections[] | undefined =
+    data?.movie?.collectionRelations.nodes.map((node) => {
+      if (node && node.collection) {
         return {
-          ...node.movie,
+          ...node.collection,
           id: node.id,
           sortOrder: node.sortOrder,
-          entityType: EntityType.Movie,
+          entityType: EntityType.Collection,
         };
       } else {
         throw new Error('Invalid Collection Entity');

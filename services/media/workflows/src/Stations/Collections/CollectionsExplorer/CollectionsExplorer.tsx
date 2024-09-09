@@ -80,13 +80,19 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
   // Data provider
   const dataProvider: ExplorerDataProvider<CollectionData> = {
     loadData: async ({ pagingInformation, sorting, filters }) => {
+      let filterWithExclusions = filters;
+
+      if (props.excludeItems) {
+        filterWithExclusions = { id: props.excludeItems, ...filters };
+      }
+
       const result = await client.query<
         CollectionsQuery,
         CollectionsQueryVariables
       >({
         query: CollectionsDocument,
         variables: {
-          filter: transformFilters(filters),
+          filter: transformFilters(filterWithExclusions, props.excludeItems),
           orderBy: sortToPostGraphileOrderBy(sorting, CollectionsOrderBy),
           after: pagingInformation,
         },
