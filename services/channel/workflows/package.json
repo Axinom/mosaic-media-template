@@ -68,7 +68,7 @@
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
     "rimraf": "^3.0.2",
-    "sass": "^1.69.5",
+    "sass": "^1.78.0",
     "tslib": "^1.14.1",
     "typescript": "^4.9.4",
     "typescript-plugin-css-modules": "^5.0.2"
