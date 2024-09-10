@@ -99,7 +99,7 @@ describe('Program Cue points business constraints', () => {
 
         expect(resp.errors).toMatchObject([
           {
-            code: 'DATABASE_VALIDATION_FAILED',
+            code: 'UNIQUE_CONSTRAINT_ERROR',
             details: undefined,
             message:
               'Attempt to create or update an element failed, as it would have resulted in a duplicate element.',
@@ -371,7 +371,7 @@ describe('Program Cue points business constraints', () => {
 
         expect(resp.errors).toMatchObject([
           {
-            code: 'DATABASE_VALIDATION_FAILED',
+            code: 'UNIQUE_CONSTRAINT_ERROR',
             details: undefined,
             message:
               'Attempt to create or update an element failed, as it would have resulted in a duplicate element.',
