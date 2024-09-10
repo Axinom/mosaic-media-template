@@ -57,6 +57,8 @@ export enum Queries {
   ingestItemStep = 'ingestItemStep',
   ingestItemSteps = 'ingestItemSteps',
   ingestItems = 'ingestItems',
+  language = 'language',
+  languages = 'languages',
   movie = 'movie',
   movieByExternalId = 'movieByExternalId',
   movieGenre = 'movieGenre',

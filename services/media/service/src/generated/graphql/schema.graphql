@@ -622,6 +622,40 @@ type Query {
     filter: IngestItemFilter
   ): IngestItemsConnection
 
+  """Reads and enables pagination through a set of `Language`."""
+  languages(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Language`."""
+    orderBy: [LanguagesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LanguageCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: LanguageFilter
+  ): LanguagesConnection
+
   """Reads and enables pagination through a set of `MovieGenre`."""
   movieGenres(
     """Only read the first `n` values of the set."""
@@ -1703,6 +1737,7 @@ type Query {
   ingestDocument(id: Int!): IngestDocument
   ingestItemStep(id: UUID!): IngestItemStep
   ingestItem(id: Int!): IngestItem
+  language(id: UUID!): Language
   movieGenre(id: Int!): MovieGenre
   movie(id: Int!): Movie
   movieByExternalId(externalId: String!): Movie
@@ -2548,6 +2583,7 @@ type Collection {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
+  languages: String
 
   """Reads and enables pagination through a set of `CollectionRelation`."""
   collectionRelations(
@@ -2846,6 +2882,9 @@ input CollectionFilter {
 
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
+
+  """Filter by the object’s `languages` field."""
+  languages: StringFilter
 
   """Filter by the object’s `collectionRelations` relation."""
   collectionRelations: CollectionToManyCollectionRelationFilter
@@ -3745,6 +3784,15 @@ input MovieFilter {
 
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
+
+  """Filter by the object’s `audioLanguages` field."""
+  audioLanguages: StringFilter
+
+  """Filter by the object’s `subtitleLanguages` field."""
+  subtitleLanguages: StringFilter
+
+  """Filter by the object’s `captionLanguages` field."""
+  captionLanguages: StringFilter
 
   """Filter by the object’s `moviesTags` relation."""
   moviesTags: MovieToManyMoviesTagFilter
@@ -4953,6 +5001,15 @@ input TvshowFilter {
 
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
+
+  """Filter by the object’s `audioLanguages` field."""
+  audioLanguages: StringFilter
+
+  """Filter by the object’s `subtitleLanguages` field."""
+  subtitleLanguages: StringFilter
+
+  """Filter by the object’s `captionLanguages` field."""
+  captionLanguages: StringFilter
 
   """Filter by the object’s `tvshowsTags` relation."""
   tvshowsTags: TvshowToManyTvshowsTagFilter
@@ -7687,6 +7744,9 @@ type Movie {
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
+  audioLanguages: String
+  subtitleLanguages: String
+  captionLanguages: String
 
   """Reads and enables pagination through a set of `MoviesTag`."""
   moviesTags(
@@ -8808,6 +8868,9 @@ type Tvshow {
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
+  audioLanguages: String
+  subtitleLanguages: String
+  captionLanguages: String
 
   """Reads and enables pagination through a set of `TvshowsTag`."""
   tvshowsTags(
@@ -12340,6 +12403,8 @@ enum CollectionsOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  LANGUAGES_ASC
+  LANGUAGES_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -12388,6 +12453,9 @@ input CollectionCondition {
 
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
+
+  """Checks for equality with the object’s `languages` field."""
+  languages: String
 }
 
 """A connection to a list of `ContentOwner` values."""
@@ -13772,6 +13840,146 @@ input IngestDocumentCondition {
 }
 
 """
+A connection to a list of `Language` values.
+@permissions: LANGUAGES_VIEW,LANGUAGES_EDIT,ADMIN
+"""
+type LanguagesConnection {
+  """A list of `Language` objects."""
+  nodes: [Language!]!
+
+  """
+  A list of edges which contains the `Language` and cursor to aid in pagination.
+  """
+  edges: [LanguagesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Language` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: LANGUAGES_VIEW,LANGUAGES_EDIT,ADMIN"""
+type Language {
+  id: UUID!
+  title: String!
+  native: String
+  code: String!
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+}
+
+"""A `Language` edge in the connection."""
+type LanguagesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Language` at the end of the edge."""
+  node: Language!
+}
+
+"""Methods to use when ordering `Language`."""
+enum LanguagesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  NATIVE_ASC
+  NATIVE_DESC
+  CODE_ASC
+  CODE_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Language` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input LanguageCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """
+  Checks for equality with the object’s `title` field.
+  @notEmpty()
+  """
+  title: String
+
+  """Checks for equality with the object’s `native` field."""
+  native: String
+
+  """
+  Checks for equality with the object’s `code` field.
+  @isTrimmed()
+  @maxLength(10)
+  @notEmpty()
+  """
+  code: String
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+}
+
+"""
+A filter to be used against `Language` object types. All fields are combined with a logical ‘and.’
+"""
+input LanguageFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `native` field."""
+  native: StringFilter
+
+  """Filter by the object’s `code` field."""
+  code: StringFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [LanguageFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [LanguageFilter!]
+
+  """Negates the expression."""
+  not: LanguageFilter
+}
+
+"""
 A connection to a list of `MovieGenre` values.
 @permissions: MOVIES_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN
 """
@@ -13935,6 +14143,12 @@ enum MoviesOrderBy {
   CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
+  AUDIO_LANGUAGES_ASC
+  AUDIO_LANGUAGES_DESC
+  SUBTITLE_LANGUAGES_ASC
+  SUBTITLE_LANGUAGES_DESC
+  CAPTION_LANGUAGES_ASC
+  CAPTION_LANGUAGES_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -14021,6 +14235,15 @@ input MovieCondition {
 
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
+
+  """Checks for equality with the object’s `audioLanguages` field."""
+  audioLanguages: String
+
+  """Checks for equality with the object’s `subtitleLanguages` field."""
+  subtitleLanguages: String
+
+  """Checks for equality with the object’s `captionLanguages` field."""
+  captionLanguages: String
 }
 
 """
@@ -14317,6 +14540,12 @@ enum TvshowsOrderBy {
   CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
+  AUDIO_LANGUAGES_ASC
+  AUDIO_LANGUAGES_DESC
+  SUBTITLE_LANGUAGES_ASC
+  SUBTITLE_LANGUAGES_DESC
+  CAPTION_LANGUAGES_ASC
+  CAPTION_LANGUAGES_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -14400,6 +14629,15 @@ input TvshowCondition {
 
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
+
+  """Checks for equality with the object’s `audioLanguages` field."""
+  audioLanguages: String
+
+  """Checks for equality with the object’s `subtitleLanguages` field."""
+  subtitleLanguages: String
+
+  """Checks for equality with the object’s `captionLanguages` field."""
+  captionLanguages: String
 }
 
 """A connection to a list of `String` values."""
@@ -15041,6 +15279,14 @@ type Mutation {
     input: CreateEpisodesTvshowGenreInput!
   ): CreateEpisodesTvshowGenrePayload
 
+  """Creates a single `Language`."""
+  createLanguage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLanguageInput!
+  ): CreateLanguagePayload
+
   """Creates a single `MovieGenre`."""
   createMovieGenre(
     """
@@ -15413,6 +15659,14 @@ type Mutation {
     input: UpdateIngestDocumentInput!
   ): UpdateIngestDocumentPayload
 
+  """Updates a single `Language` using a unique key and a patch."""
+  updateLanguage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLanguageInput!
+  ): UpdateLanguagePayload
+
   """Updates a single `MovieGenre` using a unique key and a patch."""
   updateMovieGenre(
     """
@@ -15776,6 +16030,14 @@ type Mutation {
     """
     input: DeleteEpisodesTvshowGenreInput!
   ): DeleteEpisodesTvshowGenrePayload
+
+  """Deletes a single `Language` using a unique key."""
+  deleteLanguage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLanguageInput!
+  ): DeleteLanguagePayload
 
   """Deletes a single `MovieGenre` using a unique key."""
   deleteMovieGenre(
@@ -16435,6 +16697,7 @@ input CollectionInput {
   externalId: String
   synopsis: String
   description: String
+  languages: String
 }
 
 """The output of our create `CollectionsImage` mutation."""
@@ -17047,6 +17310,58 @@ input EpisodesTvshowGenreInput {
   tvshowGenresId: Int!
 }
 
+"""The output of our create `Language` mutation."""
+type CreateLanguagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Language` that was created by this mutation."""
+  language: Language
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Language`. May be used by Relay 1."""
+  languageEdge(
+    """The method to use when ordering `Language`."""
+    orderBy: [LanguagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LanguagesEdge
+}
+
+"""
+All input for the create `Language` mutation.
+@permissions: LANGUAGES_EDIT,ADMIN
+"""
+input CreateLanguageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Language` to be created by this mutation."""
+  language: LanguageInput!
+}
+
+"""An input for mutations affecting `Language`"""
+input LanguageInput {
+  """@notEmpty()"""
+  title: String!
+  native: String
+
+  """
+  @isTrimmed()
+  @maxLength(10)
+  @notEmpty()
+  """
+  code: String!
+}
+
 """The output of our create `MovieGenre` mutation."""
 type CreateMovieGenrePayload {
   """
@@ -17157,6 +17472,9 @@ input MovieInput {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  audioLanguages: String
+  subtitleLanguages: String
+  captionLanguages: String
 }
 
 """The output of our create `MoviesCast` mutation."""
@@ -18165,6 +18483,9 @@ input TvshowInput {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  audioLanguages: String
+  subtitleLanguages: String
+  captionLanguages: String
 }
 
 """The output of our create `TvshowsCast` mutation."""
@@ -18735,6 +19056,7 @@ input CollectionPatch {
   externalId: String
   synopsis: String
   description: String
+  languages: String
 }
 
 """
@@ -19390,6 +19712,63 @@ input IngestDocumentPatch {
   title: String
 }
 
+"""The output of our update `Language` mutation."""
+type UpdateLanguagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Language` that was updated by this mutation."""
+  language: Language
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Language`. May be used by Relay 1."""
+  languageEdge(
+    """The method to use when ordering `Language`."""
+    orderBy: [LanguagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LanguagesEdge
+}
+
+"""
+All input for the `updateLanguage` mutation.
+@permissions: LANGUAGES_EDIT,ADMIN
+"""
+input UpdateLanguageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Language` being updated.
+  """
+  patch: LanguagePatch!
+  id: UUID!
+}
+
+"""
+Represents an update to a `Language`. Fields that are set will be updated.
+"""
+input LanguagePatch {
+  """@notEmpty()"""
+  title: String
+  native: String
+
+  """
+  @isTrimmed()
+  @maxLength(10)
+  @notEmpty()
+  """
+  code: String
+}
+
 """The output of our update `MovieGenre` mutation."""
 type UpdateMovieGenrePayload {
   """
@@ -19510,6 +19889,9 @@ input MoviePatch {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  audioLanguages: String
+  subtitleLanguages: String
+  captionLanguages: String
 }
 
 """
@@ -20447,6 +20829,9 @@ input TvshowPatch {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  audioLanguages: String
+  subtitleLanguages: String
+  captionLanguages: String
 }
 
 """
@@ -21449,6 +21834,43 @@ input DeleteEpisodesTvshowGenreInput {
   clientMutationId: String
   episodeId: Int!
   tvshowGenresId: Int!
+}
+
+"""The output of our delete `Language` mutation."""
+type DeleteLanguagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Language` that was deleted by this mutation."""
+  language: Language
+  deletedLanguageNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Language`. May be used by Relay 1."""
+  languageEdge(
+    """The method to use when ordering `Language`."""
+    orderBy: [LanguagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LanguagesEdge
+}
+
+"""
+All input for the `deleteLanguage` mutation.
+@permissions: LANGUAGES_EDIT,ADMIN
+"""
+input DeleteLanguageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
 }
 
 """The output of our delete `MovieGenre` mutation."""
