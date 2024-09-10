@@ -69,7 +69,7 @@
     "@types/yargs": "^16.0.5",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "axios": "^0.24.0",
+    "axios": "^0.28.0",
     "chalk": "^4.1.2",
     "cross-env": "^7.0.3",
     "dotenv": "^8.6.0",
