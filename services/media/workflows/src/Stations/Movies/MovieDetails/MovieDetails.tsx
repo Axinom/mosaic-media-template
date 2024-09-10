@@ -9,6 +9,7 @@ import {
   generateArrayMutations,
   getFormDiff,
   InfoPanel,
+  MaskedSingleLineText,
   Paragraph,
   Section,
   SelectField,
@@ -16,7 +17,7 @@ import {
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
-import { Field, useFormikContext } from 'formik';
+import { Field, useField, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useContext, useMemo } from 'react';
@@ -461,6 +462,16 @@ const Form: React.FC<{
     'English (en)',
     'Hindi (hi)',
   ];
+  const [, , helpers] = useField('creditsStartTime');
+
+  const validateRate = (value: string): boolean => {
+    return value.trim() === ''
+      ? false
+      : isNaN(parseFloat(value)) ||
+          parseFloat(value) < 0 ||
+          parseFloat(value) > 100 ||
+          !/^(\d{1,2}(\.\d{1,2})?|100(\.0{1,2})?)$/.test(value);
+  };
 
   return (
     <>
@@ -549,6 +560,7 @@ const Form: React.FC<{
       <Field
         name="rating"
         label="Rating"
+        validate={validateRate}
         className={classes.externalId}
         as={SingleLineTextField}
       />
@@ -560,11 +572,17 @@ const Form: React.FC<{
         as={SelectField}
       />
       <Field
-        //need new component
         name="creditsStartTime"
         label="Credit Start Time"
+        mask={'00:00:00'}
         className={classes.externalId}
-        as={SingleLineTextField}
+        onChange={(value: string) => {
+          helpers.setValue(value);
+        }}
+        lazy={false}
+        overwrite={true}
+        placeholderChar={0}
+        as={MaskedSingleLineText}
       />
       <Field
         name="customRating"
@@ -572,6 +590,7 @@ const Form: React.FC<{
         className={classes.externalId}
         as={SingleLineTextField}
       />
+
       <Field
         name="extendedField"
         label="Custom"
