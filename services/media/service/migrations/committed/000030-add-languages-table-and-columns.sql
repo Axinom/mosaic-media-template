@@ -1,5 +1,6 @@
 --! Previous: sha1:37bfaf08593c7d0e64629321869c56d82ef8a1ca
 --! Hash: sha1:e0f32167f32d7ddab3cb4e0063768643c8c95130
+--! Message: add-languages-table-and-columns
 
 -- languages table
 DROP TABLE IF EXISTS app_public.languages CASCADE;
