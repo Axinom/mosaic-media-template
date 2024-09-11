@@ -275,6 +275,11 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.24.tgz#d5df9bbb10538a7de8dcd60edec4c1b950c3259f"
   integrity sha512-uiuP/Dxpb2c/eJEiQ0F1+zwFGqecmwD0Tz37Ms0q0PQb3Vh+gvkZE29yOuQ/a7m4S1YSo6JqKHKoYXTfTXpong==
 
+"@axinom/mosaic-core@^0.4.25-rc.6":
+  version "0.4.25-rc.6"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.25-rc.6.tgz#bb1ce24511680558b125b2f7afc9fa7c7d17034f"
+  integrity sha512-MW324ndD+QaQq6mKjdGkxYeR5w37X8xUtIjHOjZcRlaog7ynQlnEV3LxuMU58epCDxzk60FRVnNYrzShBse3YQ==
+
 "@axinom/mosaic-db-common@0.41.0":
   version "0.41.0"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-db-common/-/mosaic-db-common-0.41.0.tgz#66c35d5068647f3e2925f3d35df0d92d120498be"
@@ -433,6 +438,27 @@
   integrity sha512-zolS1oGZmCKhvb0uvb5pYleBAU3q3a8f6oXXrtPrsdVxDzI99617amlIgCJ+eRBNZmsfjF5n1dxjKQnpGJ4rtA==
   dependencies:
     "@axinom/mosaic-core" "^0.4.24"
+    "@faker-js/faker" "^7.4.0"
+    "@geoffcox/react-splitter" "^2.1.2"
+    "@popperjs/core" "^2.11.8"
+    clsx "^1.1.0"
+    lodash "^4.17.21"
+    luxon "^3.3.0"
+    react-beautiful-dnd "^13.1.1"
+    react-calendar "^3.3.1"
+    react-content-loader "^6.0.3"
+    react-imask "^6.4.3"
+    react-popper "^2.2.5"
+    react-tabs "4.3.0"
+    react-transition-group "^4.3.0"
+    yup "^0.32.11"
+
+"@axinom/mosaic-ui@0.52.0-rc.6":
+  version "0.52.0-rc.6"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.52.0-rc.6.tgz#6f8964b9d116f2a0f68352b151360089beeff685"
+  integrity sha512-D4YVRLozzTwdWZQMMJy+/7hKOCVFgVv9ZdLyQESru2/n3sDIHoqEHCEb6/tfzQXxICWkD2Jj6RQrWHdlpKn1AA==
+  dependencies:
+    "@axinom/mosaic-core" "^0.4.25-rc.6"
     "@faker-js/faker" "^7.4.0"
     "@geoffcox/react-splitter" "^2.1.2"
     "@popperjs/core" "^2.11.8"
