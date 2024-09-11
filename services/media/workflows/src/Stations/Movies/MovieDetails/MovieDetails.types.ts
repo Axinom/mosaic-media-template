@@ -9,7 +9,4 @@ export type MovieDetailsFormData = Nullable<
   cast?: string[];
   director?: string[];
   productionCountries?: string[];
-  adLanguages?: string[];
-  sbLanguages?: string[];
-  ccLanguages?: string[];
 };

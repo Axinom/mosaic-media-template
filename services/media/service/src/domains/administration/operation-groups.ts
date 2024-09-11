@@ -3,10 +3,7 @@ import {
   Queries as Q,
 } from '../../generated/graphql/operations';
 
-export const AdministrationReadOperations = [
-  Q.language,
-  Q.languages,
-];
+export const AdministrationReadOperations = [Q.language, Q.languages];
 
 export const AdministrationMutateOperations = [
   M.createLanguage,

@@ -95,6 +95,7 @@ export const MovieDetails: React.FC = () => {
     allAgeRatings,
     allContentOwners,
     director,
+    allLanguages,
   } = useMemo(
     () => ({
       allGenres:
@@ -129,6 +130,8 @@ export const MovieDetails: React.FC = () => {
               label: node.name,
             } as selectOption),
         ) ?? [],
+
+      allLanguages: data?.languages?.nodes.map((node) => node.title),
     }),
     [data],
   );
@@ -290,9 +293,6 @@ export const MovieDetails: React.FC = () => {
           cast,
           director,
           productionCountries,
-          adLanguages: [],
-          sbLanguages: [],
-          ccLanguages: [],
         },
         loading,
         entityNotFound: data?.movie === null,
@@ -305,6 +305,7 @@ export const MovieDetails: React.FC = () => {
         genreOptions={Object.keys(allGenres)}
         ageRatingOptions={allAgeRatings}
         contentOwnerOptions={allContentOwners}
+        languageOptions={allLanguages}
       />
     </Details>
   );
@@ -403,7 +404,13 @@ const Form: React.FC<{
   genreOptions?: string[];
   ageRatingOptions?: selectOption[];
   contentOwnerOptions?: selectOption[];
-}> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
+  languageOptions?: string[];
+}> = ({
+  genreOptions,
+  ageRatingOptions,
+  contentOwnerOptions,
+  languageOptions,
+}) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchMovieTagsQuery,
@@ -456,12 +463,6 @@ const Form: React.FC<{
 
   const sTypeOptions: selectOption[] = [{ value: 'Movie', label: 'Movie' }];
 
-  const languageOptions = [
-    'Abkhaz (ab)',
-    'Arabic (ar)',
-    'English (en)',
-    'Hindi (hi)',
-  ];
   const [, , helpers] = useField('creditsStartTime');
 
   const validateRate = (value: string): boolean => {
@@ -540,19 +541,19 @@ const Form: React.FC<{
         as={SelectField}
       />
       <Field
-        name="adLanguages"
+        name="audioLanguages"
         label="Audio Languages"
         tagsOptions={languageOptions}
         as={TagsField}
       />
       <Field
-        name="sbLanguages"
+        name="subtitleLanguages"
         label="Subtitle Languages"
         tagsOptions={languageOptions}
         as={TagsField}
       />
       <Field
-        name="ccLanguages"
+        name="captionLanguages"
         label="Closed Caption Languages"
         tagsOptions={languageOptions}
         as={TagsField}

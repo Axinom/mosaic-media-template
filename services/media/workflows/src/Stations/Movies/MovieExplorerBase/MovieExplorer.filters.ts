@@ -52,19 +52,13 @@ export function useMoviesFilters(): {
     },
     {
       // select from list
-      label: 'Content Sets',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
-      // select from list
       label: 'Publishing Status',
       property: 'publishStatus',
       type: FilterTypes.FreeText,
     },
     {
       label: 'Audio Languages',
-      property: 'originalTitle',
+      property: 'audioLanguages',
       type: FilterTypes.FreeText,
     },
     {
@@ -109,12 +103,6 @@ export function useMoviesFilters(): {
       property: 'studio',
       type: FilterTypes.FreeText,
     },
-    {
-      // select from list
-      label: 'Subscription Plans',
-      property: 'studio',
-      type: FilterTypes.FreeText,
-    },
   ];
 
   const transformFilters = (
@@ -140,7 +128,7 @@ export function useMoviesFilters(): {
       // contentOwners: 'includesInsensitive',
       // contentSets: 'includesInsensitive',
       publishStatus: 'in',
-      // audioLanguages: 'includesInsensitive',
+      audioLanguages: 'equalTo',
       moviesCasts: ['some', 'name', 'includesInsensitive'],
       externalId: 'includesInsensitive',
       contentOwner: 'includesInsensitive',

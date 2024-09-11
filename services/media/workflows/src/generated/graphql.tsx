@@ -292,6 +292,7 @@ export type Collection = {
   description?: Maybe<Scalars['String']['output']>;
   externalId?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
+  languages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
   publishedUser?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
@@ -368,6 +369,8 @@ export type CollectionCondition = {
   externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `languages` field. */
+  languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `publishedDate` field. */
   publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
@@ -418,6 +421,8 @@ export type CollectionFilter = {
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `languages` field. */
+  languages?: InputMaybe<StringListFilter>;
   /** Negates the expression. */
   not?: InputMaybe<CollectionFilter>;
   /** Checks for any expressions in this list. */
@@ -473,6 +478,7 @@ export type CollectionImageTypeFilter = {
 export type CollectionInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
+  languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
@@ -485,6 +491,7 @@ export type CollectionInput = {
 export type CollectionPatch = {
   description?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
+  languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
@@ -775,6 +782,8 @@ export enum CollectionsOrderBy {
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  LanguagesAsc = 'LANGUAGES_ASC',
+  LanguagesDesc = 'LANGUAGES_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -1714,6 +1723,42 @@ export type CreateEpisodesTvshowGenrePayload = {
 /** The output of our create `EpisodesTvshowGenre` mutation. */
 export type CreateEpisodesTvshowGenrePayloadEpisodesTvshowGenreEdgeArgs = {
   orderBy?: InputMaybe<Array<EpisodesTvshowGenresOrderBy>>;
+};
+
+/**
+ * All input for the create `Language` mutation.
+ * @permissions: LANGUAGES_EDIT,ADMIN
+ */
+export type CreateLanguageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `Language` to be created by this mutation. */
+  language: LanguageInput;
+};
+
+/** The output of our create `Language` mutation. */
+export type CreateLanguagePayload = {
+  __typename?: 'CreateLanguagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `Language` that was created by this mutation. */
+  language?: Maybe<Language>;
+  /** An edge for our `Language`. May be used by Relay 1. */
+  languageEdge?: Maybe<LanguagesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `Language` mutation. */
+export type CreateLanguagePayloadLanguageEdgeArgs = {
+  orderBy?: InputMaybe<Array<LanguagesOrderBy>>;
 };
 
 /**
@@ -3511,6 +3556,42 @@ export type DeleteEpisodesTvshowGenrePayload = {
 /** The output of our delete `EpisodesTvshowGenre` mutation. */
 export type DeleteEpisodesTvshowGenrePayloadEpisodesTvshowGenreEdgeArgs = {
   orderBy?: InputMaybe<Array<EpisodesTvshowGenresOrderBy>>;
+};
+
+/**
+ * All input for the `deleteLanguage` mutation.
+ * @permissions: LANGUAGES_EDIT,ADMIN
+ */
+export type DeleteLanguageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `Language` mutation. */
+export type DeleteLanguagePayload = {
+  __typename?: 'DeleteLanguagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedLanguageNodeId?: Maybe<Scalars['ID']['output']>;
+  /** The `Language` that was deleted by this mutation. */
+  language?: Maybe<Language>;
+  /** An edge for our `Language`. May be used by Relay 1. */
+  languageEdge?: Maybe<LanguagesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `Language` mutation. */
+export type DeleteLanguagePayloadLanguageEdgeArgs = {
+  orderBy?: InputMaybe<Array<LanguagesOrderBy>>;
 };
 
 /**
@@ -7862,11 +7943,157 @@ export type JsonListFilter = {
   overlaps?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
 };
 
+/** @permissions: LANGUAGES_VIEW,LANGUAGES_EDIT,ADMIN */
+export type Language = {
+  __typename?: 'Language';
+  code: Scalars['String']['output'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  native?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `Language` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type LanguageCondition = {
+  /**
+   * Checks for equality with the object’s `code` field.
+   * @isTrimmed()
+   * @maxLength(10)
+   * @notEmpty()
+   */
+  code?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdDate` field. */
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdUser` field. */
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `native` field. */
+  native?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Checks for equality with the object’s `title` field.
+   * @notEmpty()
+   */
+  title?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `Language` object types. All fields are combined with a logical ‘and.’ */
+export type LanguageFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<LanguageFilter>>;
+  /** Filter by the object’s `code` field. */
+  code?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `native` field. */
+  native?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<LanguageFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<LanguageFilter>>;
+  /** Filter by the object’s `title` field. */
+  title?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/** An input for mutations affecting `Language` */
+export type LanguageInput = {
+  /**
+   * @isTrimmed()
+   * @maxLength(10)
+   * @notEmpty()
+   */
+  code: Scalars['String']['input'];
+  native?: InputMaybe<Scalars['String']['input']>;
+  /** @notEmpty() */
+  title: Scalars['String']['input'];
+};
+
+/** Represents an update to a `Language`. Fields that are set will be updated. */
+export type LanguagePatch = {
+  /**
+   * @isTrimmed()
+   * @maxLength(10)
+   * @notEmpty()
+   */
+  code?: InputMaybe<Scalars['String']['input']>;
+  native?: InputMaybe<Scalars['String']['input']>;
+  /** @notEmpty() */
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/**
+ * A connection to a list of `Language` values.
+ * @permissions: LANGUAGES_VIEW,LANGUAGES_EDIT,ADMIN
+ */
+export type LanguagesConnection = {
+  __typename?: 'LanguagesConnection';
+  /** A list of edges which contains the `Language` and cursor to aid in pagination. */
+  edges: Array<LanguagesEdge>;
+  /** A list of `Language` objects. */
+  nodes: Array<Language>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Language` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Language` edge in the connection. */
+export type LanguagesEdge = {
+  __typename?: 'LanguagesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Language` at the end of the edge. */
+  node: Language;
+};
+
+/** Methods to use when ordering `Language`. */
+export enum LanguagesOrderBy {
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NativeAsc = 'NATIVE_ASC',
+  NativeDesc = 'NATIVE_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
+
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type Movie = {
   __typename?: 'Movie';
   ageRating?: Maybe<Scalars['String']['output']>;
+  audioLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   businessType: BusinessType;
+  captionLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
@@ -7906,6 +8133,7 @@ export type Movie = {
   rating?: Maybe<Scalars['BigFloat']['output']>;
   released?: Maybe<Scalars['Date']['output']>;
   studio?: Maybe<Scalars['String']['output']>;
+  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   synopsis?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
   updatedDate: Scalars['Datetime']['output'];
@@ -8046,8 +8274,12 @@ export type MovieMoviesTrailersArgs = {
 export type MovieCondition = {
   /** Checks for equality with the object’s `ageRating` field. */
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `audioLanguages` field. */
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `businessType` field. */
   businessType?: InputMaybe<BusinessType>;
+  /** Checks for equality with the object’s `captionLanguages` field. */
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
@@ -8086,6 +8318,8 @@ export type MovieCondition = {
   released?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `studio` field. */
   studio?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `subtitleLanguages` field. */
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `synopsis` field. */
   synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -8106,8 +8340,12 @@ export type MovieFilter = {
   ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<MovieFilter>>;
+  /** Filter by the object’s `audioLanguages` field. */
+  audioLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `businessType` field. */
   businessType?: InputMaybe<BusinessTypeFilter>;
+  /** Filter by the object’s `captionLanguages` field. */
+  captionLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<MovieToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
@@ -8190,6 +8428,8 @@ export type MovieFilter = {
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `studio` field. */
   studio?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `subtitleLanguages` field. */
+  subtitleLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `synopsis` field. */
   synopsis?: InputMaybe<StringFilter>;
   /** Filter by the object’s `title` field. */
@@ -8410,7 +8650,9 @@ export type MovieImageTypeFilter = {
 /** An input for mutations affecting `Movie` */
 export type MovieInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   businessType?: InputMaybe<BusinessType>;
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -8424,6 +8666,7 @@ export type MovieInput = {
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
@@ -8435,7 +8678,9 @@ export type MovieInput = {
 /** Represents an update to a `Movie`. Fields that are set will be updated. */
 export type MoviePatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   businessType?: InputMaybe<BusinessType>;
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -8449,6 +8694,7 @@ export type MoviePatch = {
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
@@ -9064,8 +9310,12 @@ export enum MoviesMovieGenresOrderBy {
 export enum MoviesOrderBy {
   AgeRatingAsc = 'AGE_RATING_ASC',
   AgeRatingDesc = 'AGE_RATING_DESC',
+  AudioLanguagesAsc = 'AUDIO_LANGUAGES_ASC',
+  AudioLanguagesDesc = 'AUDIO_LANGUAGES_DESC',
   BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
   BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
+  CaptionLanguagesAsc = 'CAPTION_LANGUAGES_ASC',
+  CaptionLanguagesDesc = 'CAPTION_LANGUAGES_DESC',
   ContentOwnerAsc = 'CONTENT_OWNER_ASC',
   ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -9107,6 +9357,8 @@ export enum MoviesOrderBy {
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
   StudioDesc = 'STUDIO_DESC',
+  SubtitleLanguagesAsc = 'SUBTITLE_LANGUAGES_ASC',
+  SubtitleLanguagesDesc = 'SUBTITLE_LANGUAGES_DESC',
   SynopsisAsc = 'SYNOPSIS_ASC',
   SynopsisDesc = 'SYNOPSIS_DESC',
   TitleAsc = 'TITLE_ASC',
@@ -9622,6 +9874,8 @@ export type Mutation = {
   createEpisodesTrailer?: Maybe<CreateEpisodesTrailerPayload>;
   /** Creates a single `EpisodesTvshowGenre`. */
   createEpisodesTvshowGenre?: Maybe<CreateEpisodesTvshowGenrePayload>;
+  /** Creates a single `Language`. */
+  createLanguage?: Maybe<CreateLanguagePayload>;
   /** Creates a single `Movie`. */
   createMovie?: Maybe<CreateMoviePayload>;
   /** Creates a single `MovieGenre`. */
@@ -9733,6 +9987,8 @@ export type Mutation = {
   deleteEpisodesTrailer?: Maybe<DeleteEpisodesTrailerPayload>;
   /** Deletes a single `EpisodesTvshowGenre` using a unique key. */
   deleteEpisodesTvshowGenre?: Maybe<DeleteEpisodesTvshowGenrePayload>;
+  /** Deletes a single `Language` using a unique key. */
+  deleteLanguage?: Maybe<DeleteLanguagePayload>;
   /** Deletes a single `Movie` using a unique key. */
   deleteMovie?: Maybe<DeleteMoviePayload>;
   /** Deletes a single `Movie` using a unique key. */
@@ -9889,6 +10145,8 @@ export type Mutation = {
   updateEpisodesTag?: Maybe<UpdateEpisodesTagPayload>;
   /** Updates a single `IngestDocument` using a unique key and a patch. */
   updateIngestDocument?: Maybe<UpdateIngestDocumentPayload>;
+  /** Updates a single `Language` using a unique key and a patch. */
+  updateLanguage?: Maybe<UpdateLanguagePayload>;
   /** Updates a single `Movie` using a unique key and a patch. */
   updateMovie?: Maybe<UpdateMoviePayload>;
   /** Updates a single `Movie` using a unique key and a patch. */
@@ -10057,6 +10315,12 @@ export type MutationCreateEpisodesTrailerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateEpisodesTvshowGenreArgs = {
   input: CreateEpisodesTvshowGenreInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLanguageArgs = {
+  input: CreateLanguageInput;
 };
 
 
@@ -10399,6 +10663,12 @@ export type MutationDeleteEpisodesTrailerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteEpisodesTvshowGenreArgs = {
   input: DeleteEpisodesTvshowGenreInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLanguageArgs = {
+  input: DeleteLanguageInput;
 };
 
 
@@ -10931,6 +11201,12 @@ export type MutationUpdateIngestDocumentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLanguageArgs = {
+  input: UpdateLanguageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateMovieArgs = {
   input: UpdateMovieInput;
 };
@@ -11221,6 +11497,9 @@ export type Query = {
   ingestItemStep?: Maybe<IngestItemStep>;
   /** Reads and enables pagination through a set of `IngestItemStep`. */
   ingestItemSteps?: Maybe<IngestItemStepsConnection>;
+  language?: Maybe<Language>;
+  /** Reads and enables pagination through a set of `Language`. */
+  languages?: Maybe<LanguagesConnection>;
   movie?: Maybe<Movie>;
   movieByExternalId?: Maybe<Movie>;
   movieGenre?: Maybe<MovieGenre>;
@@ -11822,6 +12101,25 @@ export type QueryIngestItemStepsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<IngestItemStepsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLanguageArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLanguagesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<LanguageCondition>;
+  filter?: InputMaybe<LanguageFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<LanguagesOrderBy>>;
 };
 
 
@@ -14647,6 +14945,46 @@ export type StringFilter = {
   startsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** A filter to be used against String List fields. All fields are combined with a logical ‘and.’ */
+export type StringListFilter = {
+  /** Any array item is equal to the specified value. */
+  anyEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is greater than the specified value. */
+  anyGreaterThan?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is greater than or equal to the specified value. */
+  anyGreaterThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is less than the specified value. */
+  anyLessThan?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is less than or equal to the specified value. */
+  anyLessThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is not equal to the specified value. */
+  anyNotEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Contained by the specified list of values. */
+  containedBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Contains the specified list of values. */
+  contains?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Overlaps the specified list of values. */
+  overlaps?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 /** The root subscription type: contains realtime events you can subscribe to with the `subscription` operation. */
 export type Subscription = {
   __typename?: 'Subscription';
@@ -14674,7 +15012,9 @@ export type Subscription = {
 export type Tvshow = {
   __typename?: 'Tvshow';
   ageRating?: Maybe<Scalars['String']['output']>;
+  audioLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   businessType: BusinessType;
+  captionLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
@@ -14697,6 +15037,7 @@ export type Tvshow = {
   /** Reads and enables pagination through a set of `Season`. */
   seasons: SeasonsConnection;
   studio?: Maybe<Scalars['String']['output']>;
+  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   synopsis?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `TvshowsCast`. */
@@ -14853,8 +15194,12 @@ export type TvshowTvshowsTvshowGenresArgs = {
 export type TvshowCondition = {
   /** Checks for equality with the object’s `ageRating` field. */
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `audioLanguages` field. */
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `businessType` field. */
   businessType?: InputMaybe<BusinessType>;
+  /** Checks for equality with the object’s `captionLanguages` field. */
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
@@ -14891,6 +15236,8 @@ export type TvshowCondition = {
   released?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `studio` field. */
   studio?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `subtitleLanguages` field. */
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `synopsis` field. */
   synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -14911,8 +15258,12 @@ export type TvshowFilter = {
   ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<TvshowFilter>>;
+  /** Filter by the object’s `audioLanguages` field. */
+  audioLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `businessType` field. */
   businessType?: InputMaybe<BusinessTypeFilter>;
+  /** Filter by the object’s `captionLanguages` field. */
+  captionLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<TvshowToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
@@ -14961,6 +15312,8 @@ export type TvshowFilter = {
   seasonsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `studio` field. */
   studio?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `subtitleLanguages` field. */
+  subtitleLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `synopsis` field. */
   synopsis?: InputMaybe<StringFilter>;
   /** Filter by the object’s `title` field. */
@@ -15275,7 +15628,9 @@ export type TvshowImageTypeFilter = {
 /** An input for mutations affecting `Tvshow` */
 export type TvshowInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   businessType?: InputMaybe<BusinessType>;
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -15288,6 +15643,7 @@ export type TvshowInput = {
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
@@ -15299,7 +15655,9 @@ export type TvshowInput = {
 /** Represents an update to a `Tvshow`. Fields that are set will be updated. */
 export type TvshowPatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   businessType?: InputMaybe<BusinessType>;
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
   customRating?: InputMaybe<Scalars['String']['input']>;
@@ -15312,6 +15670,7 @@ export type TvshowPatch = {
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
@@ -15781,8 +16140,12 @@ export type TvshowsLicenseToManyTvshowsLicensesCountryFilter = {
 export enum TvshowsOrderBy {
   AgeRatingAsc = 'AGE_RATING_ASC',
   AgeRatingDesc = 'AGE_RATING_DESC',
+  AudioLanguagesAsc = 'AUDIO_LANGUAGES_ASC',
+  AudioLanguagesDesc = 'AUDIO_LANGUAGES_DESC',
   BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
   BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
+  CaptionLanguagesAsc = 'CAPTION_LANGUAGES_ASC',
+  CaptionLanguagesDesc = 'CAPTION_LANGUAGES_DESC',
   ContentOwnerAsc = 'CONTENT_OWNER_ASC',
   ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
@@ -15822,6 +16185,8 @@ export enum TvshowsOrderBy {
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
   StudioDesc = 'STUDIO_DESC',
+  SubtitleLanguagesAsc = 'SUBTITLE_LANGUAGES_ASC',
+  SubtitleLanguagesDesc = 'SUBTITLE_LANGUAGES_DESC',
   SynopsisAsc = 'SYNOPSIS_ASC',
   SynopsisDesc = 'SYNOPSIS_DESC',
   TitleAsc = 'TITLE_ASC',
@@ -16969,6 +17334,43 @@ export type UpdateIngestDocumentPayload = {
 /** The output of our update `IngestDocument` mutation. */
 export type UpdateIngestDocumentPayloadIngestDocumentEdgeArgs = {
   orderBy?: InputMaybe<Array<IngestDocumentsOrderBy>>;
+};
+
+/**
+ * All input for the `updateLanguage` mutation.
+ * @permissions: LANGUAGES_EDIT,ADMIN
+ */
+export type UpdateLanguageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `Language` being updated. */
+  patch: LanguagePatch;
+};
+
+/** The output of our update `Language` mutation. */
+export type UpdateLanguagePayload = {
+  __typename?: 'UpdateLanguagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `Language` that was updated by this mutation. */
+  language?: Maybe<Language>;
+  /** An edge for our `Language`. May be used by Relay 1. */
+  languageEdge?: Maybe<LanguagesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `Language` mutation. */
+export type UpdateLanguagePayloadLanguageEdgeArgs = {
+  orderBy?: InputMaybe<Array<LanguagesOrderBy>>;
 };
 
 /**
@@ -18421,6 +18823,80 @@ export type DeleteContentOwnerMutationVariables = Exact<{
 
 export type DeleteContentOwnerMutation = { __typename?: 'Mutation', deleteContentOwner?: { __typename?: 'DeleteContentOwnerPayload', contentOwner?: { __typename?: 'ContentOwner', id: any, name: string } | null } | null };
 
+export type CreateLanguageMutationVariables = Exact<{
+  input: CreateLanguageInput;
+}>;
+
+
+export type CreateLanguageMutation = { __typename?: 'Mutation', createLanguage?: { __typename?: 'CreateLanguagePayload', language?: { __typename?: 'Language', code: string, id: number, title: string } | null } | null };
+
+export type LanguageQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type LanguageQuery = { __typename?: 'Query', language?: { __typename?: 'Language', code: string, createdDate: any, createdUser: string, id: number, native?: string | null, title: string, updatedDate: any, updatedUser: string } | null };
+
+export type LanguageTitleQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type LanguageTitleQuery = { __typename?: 'Query', language?: { __typename?: 'Language', id: number, title: string } | null };
+
+export type DeleteLanguageMutationVariables = Exact<{
+  input: DeleteLanguageInput;
+}>;
+
+
+export type DeleteLanguageMutation = { __typename?: 'Mutation', deleteLanguage?: { __typename?: 'DeleteLanguagePayload', clientMutationId?: string | null } | null };
+
+export type UpdateLanguageMutationVariables = Exact<{
+  input: UpdateLanguageInput;
+}>;
+
+
+export type UpdateLanguageMutation = { __typename?: 'Mutation', updateLanguage?: { __typename?: 'UpdateLanguagePayload', clientMutationId?: string | null } | null };
+
+export type BulkDeleteMoviesMutationVariables = Exact<{
+  filter?: InputMaybe<MovieFilter>;
+}>;
+
+
+export type BulkDeleteMoviesMutation = { __typename?: 'Mutation', deleteMovies?: { __typename?: 'BulkMutationIntPayload', affectedIds?: Array<number | null> | null } | null };
+
+export type BulkPublishMoviesMutationVariables = Exact<{
+  filter?: InputMaybe<MovieFilter>;
+}>;
+
+
+export type BulkPublishMoviesMutation = { __typename?: 'Mutation', publishMovies?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
+
+export type BulkUnpublishMoviesMutationVariables = Exact<{
+  filter?: InputMaybe<MovieFilter>;
+}>;
+
+
+export type BulkUnpublishMoviesMutation = { __typename?: 'Mutation', unpublishMovies?: { __typename?: 'BulkMutationPayload', affectedIds?: Array<number | null> | null } | null };
+
+export type BulkCreateMovieSnapshotsMutationVariables = Exact<{
+  filter?: InputMaybe<MovieFilter>;
+}>;
+
+
+export type BulkCreateMovieSnapshotsMutation = { __typename?: 'Mutation', createMovieSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
+
+export type LanguageExplorerPropertiesFragment = { __typename?: 'Language', code: string, title: string, createdDate: any, createdUser: string, id: number, native?: string | null, updatedDate: any, updatedUser: string };
+
+export type LanguagesQueryVariables = Exact<{
+  filter?: InputMaybe<LanguageFilter>;
+  orderBy?: InputMaybe<Array<LanguagesOrderBy> | LanguagesOrderBy>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+}>;
+
+
+export type LanguagesQuery = { __typename?: 'Query', filtered?: { __typename?: 'LanguagesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Language', code: string, title: string, createdDate: any, createdUser: string, id: number, native?: string | null, updatedDate: any, updatedUser: string }> } | null, nonFiltered?: { __typename?: 'LanguagesConnection', totalCount: number } | null };
+
 export type MovieRelatedCollectionsQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
@@ -18440,7 +18916,7 @@ export type MovieQueryVariables = Exact<{
 }>;
 
 
-export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, customRating?: string | null, creditsStartTime?: string | null, lengthInSeconds?: any | null, dynamicField?: string | null, extendedField?: string | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null };
+export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, customRating?: string | null, creditsStartTime?: string | null, lengthInSeconds?: any | null, dynamicField?: string | null, extendedField?: string | null, captionLanguages?: Array<string | null> | null, audioLanguages?: Array<string | null> | null, subtitleLanguages?: Array<string | null> | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
 
 export type DeleteMovieMutationVariables = Exact<{
   input: DeleteMovieInput;
@@ -18502,7 +18978,7 @@ export type SearchMovieProductionCountriesQueryVariables = Exact<{
 
 export type SearchMovieProductionCountriesQuery = { __typename?: 'Query', getMoviesProductionCountriesValues?: { __typename?: 'GetMoviesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
 
-export type MovieExplorerPropertiesFragment = { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
+export type MovieExplorerPropertiesFragment = { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, audioLanguages?: Array<string | null> | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
 
 export type MoviesQueryVariables = Exact<{
   filter?: InputMaybe<MovieFilter>;
@@ -18511,12 +18987,12 @@ export type MoviesQueryVariables = Exact<{
 }>;
 
 
-export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
+export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, audioLanguages?: Array<string | null> | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
 
 export type MoviesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
+export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, audioLanguages?: Array<string | null> | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
 
 export type MovieGenresQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -18595,34 +19071,6 @@ export type MovieVideosQueryVariables = Exact<{
 
 
 export type MovieVideosQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', mainVideoId?: any | null, moviesTrailers: { __typename?: 'MoviesTrailersConnection', nodes: Array<{ __typename?: 'MoviesTrailer', videoId: any }> } } | null };
-
-export type BulkDeleteMoviesMutationVariables = Exact<{
-  filter?: InputMaybe<MovieFilter>;
-}>;
-
-
-export type BulkDeleteMoviesMutation = { __typename?: 'Mutation', deleteMovies?: { __typename?: 'BulkMutationIntPayload', affectedIds?: Array<number | null> | null } | null };
-
-export type BulkPublishMoviesMutationVariables = Exact<{
-  filter?: InputMaybe<MovieFilter>;
-}>;
-
-
-export type BulkPublishMoviesMutation = { __typename?: 'Mutation', publishMovies?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
-
-export type BulkUnpublishMoviesMutationVariables = Exact<{
-  filter?: InputMaybe<MovieFilter>;
-}>;
-
-
-export type BulkUnpublishMoviesMutation = { __typename?: 'Mutation', unpublishMovies?: { __typename?: 'BulkMutationPayload', affectedIds?: Array<number | null> | null } | null };
-
-export type BulkCreateMovieSnapshotsMutationVariables = Exact<{
-  filter?: InputMaybe<MovieFilter>;
-}>;
-
-
-export type BulkCreateMovieSnapshotsMutation = { __typename?: 'Mutation', createMovieSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
 
 export type PublishingSnapshotQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -19190,6 +19638,18 @@ export const IngestDocumentExplorerPropertiesFragmentDoc = gql`
   updatedDate
 }
     `;
+export const LanguageExplorerPropertiesFragmentDoc = gql`
+    fragment LanguageExplorerProperties on Language {
+  code
+  title
+  createdDate
+  createdUser
+  id
+  native
+  updatedDate
+  updatedUser
+}
+    `;
 export const MovieExplorerPropertiesFragmentDoc = gql`
     fragment MovieExplorerProperties on Movie {
   id
@@ -19200,6 +19660,7 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
   ageRating
   contentOwner
   businessType
+  audioLanguages
   moviesImages(condition: {imageType: COVER}) {
     nodes {
       imageId
@@ -21513,6 +21974,371 @@ export function useDeleteContentOwnerMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteContentOwnerMutationHookResult = ReturnType<typeof useDeleteContentOwnerMutation>;
 export type DeleteContentOwnerMutationResult = Apollo.MutationResult<DeleteContentOwnerMutation>;
 export type DeleteContentOwnerMutationOptions = Apollo.BaseMutationOptions<DeleteContentOwnerMutation, DeleteContentOwnerMutationVariables>;
+export const CreateLanguageDocument = gql`
+    mutation CreateLanguage($input: CreateLanguageInput!) {
+  createLanguage(input: $input) {
+    language {
+      code
+      id
+      title
+    }
+  }
+}
+    `;
+export type CreateLanguageMutationFn = Apollo.MutationFunction<CreateLanguageMutation, CreateLanguageMutationVariables>;
+
+/**
+ * __useCreateLanguageMutation__
+ *
+ * To run a mutation, you first call `useCreateLanguageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLanguageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLanguageMutation, { data, loading, error }] = useCreateLanguageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateLanguageMutation(baseOptions?: Apollo.MutationHookOptions<CreateLanguageMutation, CreateLanguageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateLanguageMutation, CreateLanguageMutationVariables>(CreateLanguageDocument, options);
+      }
+export type CreateLanguageMutationHookResult = ReturnType<typeof useCreateLanguageMutation>;
+export type CreateLanguageMutationResult = Apollo.MutationResult<CreateLanguageMutation>;
+export type CreateLanguageMutationOptions = Apollo.BaseMutationOptions<CreateLanguageMutation, CreateLanguageMutationVariables>;
+export const LanguageDocument = gql`
+    query Language($id: Int!) {
+  language(id: $id) {
+    code
+    createdDate
+    createdUser
+    id
+    native
+    title
+    updatedDate
+    updatedUser
+  }
+}
+    `;
+
+/**
+ * __useLanguageQuery__
+ *
+ * To run a query within a React component, call `useLanguageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLanguageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLanguageQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useLanguageQuery(baseOptions: Apollo.QueryHookOptions<LanguageQuery, LanguageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LanguageQuery, LanguageQueryVariables>(LanguageDocument, options);
+      }
+export function useLanguageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LanguageQuery, LanguageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LanguageQuery, LanguageQueryVariables>(LanguageDocument, options);
+        }
+export type LanguageQueryHookResult = ReturnType<typeof useLanguageQuery>;
+export type LanguageLazyQueryHookResult = ReturnType<typeof useLanguageLazyQuery>;
+export type LanguageQueryResult = Apollo.QueryResult<LanguageQuery, LanguageQueryVariables>;
+export const LanguageTitleDocument = gql`
+    query LanguageTitle($id: Int!) {
+  language(id: $id) {
+    id
+    title
+  }
+}
+    `;
+
+/**
+ * __useLanguageTitleQuery__
+ *
+ * To run a query within a React component, call `useLanguageTitleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLanguageTitleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLanguageTitleQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useLanguageTitleQuery(baseOptions: Apollo.QueryHookOptions<LanguageTitleQuery, LanguageTitleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LanguageTitleQuery, LanguageTitleQueryVariables>(LanguageTitleDocument, options);
+      }
+export function useLanguageTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LanguageTitleQuery, LanguageTitleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LanguageTitleQuery, LanguageTitleQueryVariables>(LanguageTitleDocument, options);
+        }
+export type LanguageTitleQueryHookResult = ReturnType<typeof useLanguageTitleQuery>;
+export type LanguageTitleLazyQueryHookResult = ReturnType<typeof useLanguageTitleLazyQuery>;
+export type LanguageTitleQueryResult = Apollo.QueryResult<LanguageTitleQuery, LanguageTitleQueryVariables>;
+export const DeleteLanguageDocument = gql`
+    mutation DeleteLanguage($input: DeleteLanguageInput!) {
+  deleteLanguage(input: $input) {
+    clientMutationId
+  }
+}
+    `;
+export type DeleteLanguageMutationFn = Apollo.MutationFunction<DeleteLanguageMutation, DeleteLanguageMutationVariables>;
+
+/**
+ * __useDeleteLanguageMutation__
+ *
+ * To run a mutation, you first call `useDeleteLanguageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLanguageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLanguageMutation, { data, loading, error }] = useDeleteLanguageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteLanguageMutation(baseOptions?: Apollo.MutationHookOptions<DeleteLanguageMutation, DeleteLanguageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteLanguageMutation, DeleteLanguageMutationVariables>(DeleteLanguageDocument, options);
+      }
+export type DeleteLanguageMutationHookResult = ReturnType<typeof useDeleteLanguageMutation>;
+export type DeleteLanguageMutationResult = Apollo.MutationResult<DeleteLanguageMutation>;
+export type DeleteLanguageMutationOptions = Apollo.BaseMutationOptions<DeleteLanguageMutation, DeleteLanguageMutationVariables>;
+export const UpdateLanguageDocument = gql`
+    mutation UpdateLanguage($input: UpdateLanguageInput!) {
+  updateLanguage(input: $input) {
+    clientMutationId
+  }
+}
+    `;
+export type UpdateLanguageMutationFn = Apollo.MutationFunction<UpdateLanguageMutation, UpdateLanguageMutationVariables>;
+
+/**
+ * __useUpdateLanguageMutation__
+ *
+ * To run a mutation, you first call `useUpdateLanguageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLanguageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLanguageMutation, { data, loading, error }] = useUpdateLanguageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateLanguageMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLanguageMutation, UpdateLanguageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLanguageMutation, UpdateLanguageMutationVariables>(UpdateLanguageDocument, options);
+      }
+export type UpdateLanguageMutationHookResult = ReturnType<typeof useUpdateLanguageMutation>;
+export type UpdateLanguageMutationResult = Apollo.MutationResult<UpdateLanguageMutation>;
+export type UpdateLanguageMutationOptions = Apollo.BaseMutationOptions<UpdateLanguageMutation, UpdateLanguageMutationVariables>;
+export const BulkDeleteMoviesDocument = gql`
+    mutation BulkDeleteMovies($filter: MovieFilter) {
+  deleteMovies(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkDeleteMoviesMutationFn = Apollo.MutationFunction<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
+
+/**
+ * __useBulkDeleteMoviesMutation__
+ *
+ * To run a mutation, you first call `useBulkDeleteMoviesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkDeleteMoviesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkDeleteMoviesMutation, { data, loading, error }] = useBulkDeleteMoviesMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkDeleteMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>(BulkDeleteMoviesDocument, options);
+      }
+export type BulkDeleteMoviesMutationHookResult = ReturnType<typeof useBulkDeleteMoviesMutation>;
+export type BulkDeleteMoviesMutationResult = Apollo.MutationResult<BulkDeleteMoviesMutation>;
+export type BulkDeleteMoviesMutationOptions = Apollo.BaseMutationOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
+export const BulkPublishMoviesDocument = gql`
+    mutation BulkPublishMovies($filter: MovieFilter) {
+  publishMovies(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkPublishMoviesMutationFn = Apollo.MutationFunction<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
+
+/**
+ * __useBulkPublishMoviesMutation__
+ *
+ * To run a mutation, you first call `useBulkPublishMoviesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkPublishMoviesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkPublishMoviesMutation, { data, loading, error }] = useBulkPublishMoviesMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkPublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>(BulkPublishMoviesDocument, options);
+      }
+export type BulkPublishMoviesMutationHookResult = ReturnType<typeof useBulkPublishMoviesMutation>;
+export type BulkPublishMoviesMutationResult = Apollo.MutationResult<BulkPublishMoviesMutation>;
+export type BulkPublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
+export const BulkUnpublishMoviesDocument = gql`
+    mutation BulkUnpublishMovies($filter: MovieFilter) {
+  unpublishMovies(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkUnpublishMoviesMutationFn = Apollo.MutationFunction<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
+
+/**
+ * __useBulkUnpublishMoviesMutation__
+ *
+ * To run a mutation, you first call `useBulkUnpublishMoviesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkUnpublishMoviesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkUnpublishMoviesMutation, { data, loading, error }] = useBulkUnpublishMoviesMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkUnpublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>(BulkUnpublishMoviesDocument, options);
+      }
+export type BulkUnpublishMoviesMutationHookResult = ReturnType<typeof useBulkUnpublishMoviesMutation>;
+export type BulkUnpublishMoviesMutationResult = Apollo.MutationResult<BulkUnpublishMoviesMutation>;
+export type BulkUnpublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
+export const BulkCreateMovieSnapshotsDocument = gql`
+    mutation BulkCreateMovieSnapshots($filter: MovieFilter) {
+  createMovieSnapshots(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkCreateMovieSnapshotsMutationFn = Apollo.MutationFunction<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
+
+/**
+ * __useBulkCreateMovieSnapshotsMutation__
+ *
+ * To run a mutation, you first call `useBulkCreateMovieSnapshotsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkCreateMovieSnapshotsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkCreateMovieSnapshotsMutation, { data, loading, error }] = useBulkCreateMovieSnapshotsMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkCreateMovieSnapshotsMutation(baseOptions?: Apollo.MutationHookOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>(BulkCreateMovieSnapshotsDocument, options);
+      }
+export type BulkCreateMovieSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateMovieSnapshotsMutation>;
+export type BulkCreateMovieSnapshotsMutationResult = Apollo.MutationResult<BulkCreateMovieSnapshotsMutation>;
+export type BulkCreateMovieSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
+export const LanguagesDocument = gql`
+    query Languages($filter: LanguageFilter, $orderBy: [LanguagesOrderBy!], $after: Cursor) {
+  filtered: languages(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...LanguageExplorerProperties
+    }
+  }
+  nonFiltered: languages {
+    totalCount
+  }
+}
+    ${LanguageExplorerPropertiesFragmentDoc}`;
+
+/**
+ * __useLanguagesQuery__
+ *
+ * To run a query within a React component, call `useLanguagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLanguagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLanguagesQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      orderBy: // value for 'orderBy'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useLanguagesQuery(baseOptions?: Apollo.QueryHookOptions<LanguagesQuery, LanguagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LanguagesQuery, LanguagesQueryVariables>(LanguagesDocument, options);
+      }
+export function useLanguagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LanguagesQuery, LanguagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LanguagesQuery, LanguagesQueryVariables>(LanguagesDocument, options);
+        }
+export type LanguagesQueryHookResult = ReturnType<typeof useLanguagesQuery>;
+export type LanguagesLazyQueryHookResult = ReturnType<typeof useLanguagesLazyQuery>;
+export type LanguagesQueryResult = Apollo.QueryResult<LanguagesQuery, LanguagesQueryVariables>;
 export const MovieRelatedCollectionsDocument = gql`
     query MovieRelatedCollections($id: Int!) {
   movie(id: $id) {
@@ -21616,6 +22442,9 @@ export const MovieDocument = gql`
     lengthInSeconds
     dynamicField
     extendedField
+    captionLanguages
+    audioLanguages
+    subtitleLanguages
     moviesTags {
       nodes {
         name
@@ -21680,6 +22509,12 @@ export const MovieDocument = gql`
     nodes {
       name
       sortOrder
+    }
+  }
+  languages {
+    nodes {
+      code
+      title
     }
   }
 }
@@ -22530,138 +23365,6 @@ export function useMovieVideosLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type MovieVideosQueryHookResult = ReturnType<typeof useMovieVideosQuery>;
 export type MovieVideosLazyQueryHookResult = ReturnType<typeof useMovieVideosLazyQuery>;
 export type MovieVideosQueryResult = Apollo.QueryResult<MovieVideosQuery, MovieVideosQueryVariables>;
-export const BulkDeleteMoviesDocument = gql`
-    mutation BulkDeleteMovies($filter: MovieFilter) {
-  deleteMovies(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkDeleteMoviesMutationFn = Apollo.MutationFunction<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
-
-/**
- * __useBulkDeleteMoviesMutation__
- *
- * To run a mutation, you first call `useBulkDeleteMoviesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkDeleteMoviesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkDeleteMoviesMutation, { data, loading, error }] = useBulkDeleteMoviesMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkDeleteMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>(BulkDeleteMoviesDocument, options);
-      }
-export type BulkDeleteMoviesMutationHookResult = ReturnType<typeof useBulkDeleteMoviesMutation>;
-export type BulkDeleteMoviesMutationResult = Apollo.MutationResult<BulkDeleteMoviesMutation>;
-export type BulkDeleteMoviesMutationOptions = Apollo.BaseMutationOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
-export const BulkPublishMoviesDocument = gql`
-    mutation BulkPublishMovies($filter: MovieFilter) {
-  publishMovies(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkPublishMoviesMutationFn = Apollo.MutationFunction<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
-
-/**
- * __useBulkPublishMoviesMutation__
- *
- * To run a mutation, you first call `useBulkPublishMoviesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkPublishMoviesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkPublishMoviesMutation, { data, loading, error }] = useBulkPublishMoviesMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkPublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>(BulkPublishMoviesDocument, options);
-      }
-export type BulkPublishMoviesMutationHookResult = ReturnType<typeof useBulkPublishMoviesMutation>;
-export type BulkPublishMoviesMutationResult = Apollo.MutationResult<BulkPublishMoviesMutation>;
-export type BulkPublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
-export const BulkUnpublishMoviesDocument = gql`
-    mutation BulkUnpublishMovies($filter: MovieFilter) {
-  unpublishMovies(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkUnpublishMoviesMutationFn = Apollo.MutationFunction<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
-
-/**
- * __useBulkUnpublishMoviesMutation__
- *
- * To run a mutation, you first call `useBulkUnpublishMoviesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkUnpublishMoviesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkUnpublishMoviesMutation, { data, loading, error }] = useBulkUnpublishMoviesMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkUnpublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>(BulkUnpublishMoviesDocument, options);
-      }
-export type BulkUnpublishMoviesMutationHookResult = ReturnType<typeof useBulkUnpublishMoviesMutation>;
-export type BulkUnpublishMoviesMutationResult = Apollo.MutationResult<BulkUnpublishMoviesMutation>;
-export type BulkUnpublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
-export const BulkCreateMovieSnapshotsDocument = gql`
-    mutation BulkCreateMovieSnapshots($filter: MovieFilter) {
-  createMovieSnapshots(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkCreateMovieSnapshotsMutationFn = Apollo.MutationFunction<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
-
-/**
- * __useBulkCreateMovieSnapshotsMutation__
- *
- * To run a mutation, you first call `useBulkCreateMovieSnapshotsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkCreateMovieSnapshotsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkCreateMovieSnapshotsMutation, { data, loading, error }] = useBulkCreateMovieSnapshotsMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkCreateMovieSnapshotsMutation(baseOptions?: Apollo.MutationHookOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>(BulkCreateMovieSnapshotsDocument, options);
-      }
-export type BulkCreateMovieSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateMovieSnapshotsMutation>;
-export type BulkCreateMovieSnapshotsMutationResult = Apollo.MutationResult<BulkCreateMovieSnapshotsMutation>;
-export type BulkCreateMovieSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
 export const PublishingSnapshotDocument = gql`
     query PublishingSnapshot($id: Int!) {
   snapshot(id: $id) {

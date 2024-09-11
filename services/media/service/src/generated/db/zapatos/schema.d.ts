@@ -841,10 +841,10 @@ declare module 'zapatos/schema' {
       publish_status: c.PublishStatusEnum;
       /**
       * **collections.languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      languages: string | null;
+      languages: string[] | null;
     }
     export interface JSONSelectable {
       /**
@@ -921,10 +921,10 @@ declare module 'zapatos/schema' {
       publish_status: c.PublishStatusEnum;
       /**
       * **collections.languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      languages: string | null;
+      languages: string[] | null;
     }
     export interface Whereable {
       /**
@@ -1001,10 +1001,10 @@ declare module 'zapatos/schema' {
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn>;
       /**
       * **collections.languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      languages?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1081,10 +1081,10 @@ declare module 'zapatos/schema' {
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment;
       /**
       * **collections.languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1161,10 +1161,10 @@ declare module 'zapatos/schema' {
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment>;
       /**
       * **collections.languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'collections_external_id_key' | 'collections_pkey';
     export type Column = keyof Selectable;
@@ -3002,6 +3002,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
+      /**
+      * **episodes_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -3040,6 +3046,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
+      /**
+      * **episodes_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -3078,6 +3090,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -3116,6 +3134,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -3154,6 +3178,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'episodes_licenses_pkey';
     export type Column = keyof Selectable;
@@ -5481,10 +5511,10 @@ declare module 'zapatos/schema' {
     export interface Selectable {
       /**
       * **languages.id**
-      * - `uuid` in database
-      * - `NOT NULL`, no default
+      * - `int4` in database
+      * - `NOT NULL`, identity column
       */
-      id: string;
+      id: number;
       /**
       * **languages.title**
       * - `text` in database
@@ -5531,10 +5561,10 @@ declare module 'zapatos/schema' {
     export interface JSONSelectable {
       /**
       * **languages.id**
-      * - `uuid` in database
-      * - `NOT NULL`, no default
+      * - `int4` in database
+      * - `NOT NULL`, identity column
       */
-      id: string;
+      id: number;
       /**
       * **languages.title**
       * - `text` in database
@@ -5581,10 +5611,10 @@ declare module 'zapatos/schema' {
     export interface Whereable {
       /**
       * **languages.id**
-      * - `uuid` in database
-      * - `NOT NULL`, no default
+      * - `int4` in database
+      * - `NOT NULL`, identity column
       */
-      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **languages.title**
       * - `text` in database
@@ -5631,10 +5661,10 @@ declare module 'zapatos/schema' {
     export interface Insertable {
       /**
       * **languages.id**
-      * - `uuid` in database
-      * - `NOT NULL`, no default
+      * - `int4` in database
+      * - `NOT NULL`, identity column
       */
-      id: string | db.Parameter<string> | db.SQLFragment;
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **languages.title**
       * - `text` in database
@@ -5681,10 +5711,10 @@ declare module 'zapatos/schema' {
     export interface Updatable {
       /**
       * **languages.id**
-      * - `uuid` in database
-      * - `NOT NULL`, no default
+      * - `int4` in database
+      * - `NOT NULL`, identity column
       */
-      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **languages.title**
       * - `text` in database
@@ -5728,7 +5758,7 @@ declare module 'zapatos/schema' {
       */
       updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'languages_pkey';
+    export type UniqueIndex = 'idx_languages_code' | 'idx_languages_title' | 'languages_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -6059,12 +6089,6 @@ declare module 'zapatos/schema' {
       */
       title: string;
       /**
-      * **movies.external_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      external_id: string | null;
-      /**
       * **movies.original_title**
       * - `text` in database
       * - Nullable, no default
@@ -6205,23 +6229,29 @@ declare module 'zapatos/schema' {
       */
       business_type: c.BusinessTypeEnum;
       /**
-      * **movies.audio_languages**
+      * **movies.external_id**
       * - `text` in database
       * - Nullable, no default
       */
-      audio_languages: string | null;
+      external_id: string | null;
+      /**
+      * **movies.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages: string[] | null;
       /**
       * **movies.subtitle_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      subtitle_languages: string | null;
+      subtitle_languages: string[] | null;
       /**
       * **movies.caption_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      caption_languages: string | null;
+      caption_languages: string[] | null;
     }
     export interface JSONSelectable {
       /**
@@ -6236,12 +6266,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       title: string;
-      /**
-      * **movies.external_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      external_id: string | null;
       /**
       * **movies.original_title**
       * - `text` in database
@@ -6383,23 +6407,29 @@ declare module 'zapatos/schema' {
       */
       business_type: c.BusinessTypeEnum;
       /**
-      * **movies.audio_languages**
+      * **movies.external_id**
       * - `text` in database
       * - Nullable, no default
       */
-      audio_languages: string | null;
+      external_id: string | null;
+      /**
+      * **movies.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages: string[] | null;
       /**
       * **movies.subtitle_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      subtitle_languages: string | null;
+      subtitle_languages: string[] | null;
       /**
       * **movies.caption_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      caption_languages: string | null;
+      caption_languages: string[] | null;
     }
     export interface Whereable {
       /**
@@ -6414,12 +6444,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **movies.external_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      external_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **movies.original_title**
       * - `text` in database
@@ -6561,23 +6585,29 @@ declare module 'zapatos/schema' {
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **movies.audio_languages**
+      * **movies.external_id**
       * - `text` in database
       * - Nullable, no default
       */
-      audio_languages?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      external_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
       /**
       * **movies.subtitle_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      subtitle_languages?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      subtitle_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
       /**
       * **movies.caption_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      caption_languages?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      caption_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -6592,12 +6622,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       title: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **movies.external_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      external_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **movies.original_title**
       * - `text` in database
@@ -6739,23 +6763,29 @@ declare module 'zapatos/schema' {
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment;
       /**
-      * **movies.audio_languages**
+      * **movies.external_id**
       * - `text` in database
       * - Nullable, no default
       */
-      audio_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      external_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
       /**
       * **movies.subtitle_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      subtitle_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
       /**
       * **movies.caption_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      caption_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -6770,12 +6800,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **movies.external_id**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      external_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **movies.original_title**
       * - `text` in database
@@ -6917,25 +6941,31 @@ declare module 'zapatos/schema' {
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment>;
       /**
-      * **movies.audio_languages**
+      * **movies.external_id**
       * - `text` in database
       * - Nullable, no default
       */
-      audio_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      external_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.audio_languages**
+      * - `_text` in database
+      * - Nullable, no default
+      */
+      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **movies.subtitle_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      subtitle_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **movies.caption_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      caption_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'movies_external_id_key' | 'movies_pkey';
+    export type UniqueIndex = 'movies_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -9125,6 +9155,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
+      /**
+      * **seasons_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -9163,6 +9199,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
+      /**
+      * **seasons_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -9201,6 +9243,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -9239,6 +9287,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -9277,6 +9331,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'seasons_licenses_pkey';
     export type Column = keyof Selectable;
@@ -11298,22 +11358,22 @@ declare module 'zapatos/schema' {
       business_type: c.BusinessTypeEnum;
       /**
       * **tvshows.audio_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      audio_languages: string | null;
+      audio_languages: string[] | null;
       /**
       * **tvshows.subtitle_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      subtitle_languages: string | null;
+      subtitle_languages: string[] | null;
       /**
       * **tvshows.caption_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      caption_languages: string | null;
+      caption_languages: string[] | null;
     }
     export interface JSONSelectable {
       /**
@@ -11470,22 +11530,22 @@ declare module 'zapatos/schema' {
       business_type: c.BusinessTypeEnum;
       /**
       * **tvshows.audio_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      audio_languages: string | null;
+      audio_languages: string[] | null;
       /**
       * **tvshows.subtitle_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      subtitle_languages: string | null;
+      subtitle_languages: string[] | null;
       /**
       * **tvshows.caption_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      caption_languages: string | null;
+      caption_languages: string[] | null;
     }
     export interface Whereable {
       /**
@@ -11642,22 +11702,22 @@ declare module 'zapatos/schema' {
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tvshows.audio_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      audio_languages?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      audio_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tvshows.subtitle_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      subtitle_languages?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      subtitle_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tvshows.caption_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      caption_languages?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      caption_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -11814,22 +11874,22 @@ declare module 'zapatos/schema' {
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment;
       /**
       * **tvshows.audio_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      audio_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
       /**
       * **tvshows.subtitle_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      subtitle_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
       /**
       * **tvshows.caption_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      caption_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -11986,22 +12046,22 @@ declare module 'zapatos/schema' {
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment>;
       /**
       * **tvshows.audio_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      audio_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **tvshows.subtitle_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      subtitle_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **tvshows.caption_languages**
-      * - `text` in database
+      * - `_text` in database
       * - Nullable, no default
       */
-      caption_languages?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshows_external_id_key' | 'tvshows_pkey';
     export type Column = keyof Selectable;
@@ -12316,6 +12376,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
+      /**
+      * **tvshows_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -12354,6 +12420,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
+      /**
+      * **tvshows_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner: string | null;
     }
     export interface Whereable {
       /**
@@ -12392,6 +12464,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -12430,6 +12508,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -12468,6 +12552,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows_licenses.content_owner**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshows_licenses_pkey';
     export type Column = keyof Selectable;

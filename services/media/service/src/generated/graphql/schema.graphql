@@ -1737,10 +1737,9 @@ type Query {
   ingestDocument(id: Int!): IngestDocument
   ingestItemStep(id: UUID!): IngestItemStep
   ingestItem(id: Int!): IngestItem
-  language(id: UUID!): Language
+  language(id: Int!): Language
   movieGenre(id: Int!): MovieGenre
   movie(id: Int!): Movie
-  movieByExternalId(externalId: String!): Movie
   moviesCast(movieId: Int!, name: String!): MoviesCast
   moviesDirector(movieId: Int!, name: String!): MoviesDirector
   moviesLicense(id: Int!): MoviesLicense
@@ -2583,7 +2582,7 @@ type Collection {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
-  languages: String
+  languages: [String]
 
   """Reads and enables pagination through a set of `CollectionRelation`."""
   collectionRelations(
@@ -2884,7 +2883,7 @@ input CollectionFilter {
   publishStatus: PublishStatusFilter
 
   """Filter by the object’s `languages` field."""
-  languages: StringFilter
+  languages: StringListFilter
 
   """Filter by the object’s `collectionRelations` relation."""
   collectionRelations: CollectionToManyCollectionRelationFilter
@@ -2960,6 +2959,69 @@ input PublishStatusFilter {
 
   """Greater than or equal to the specified value."""
   greaterThanOrEqualTo: PublishStatus
+}
+
+"""
+A filter to be used against String List fields. All fields are combined with a logical ‘and.’
+"""
+input StringListFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: [String]
+
+  """Not equal to the specified value."""
+  notEqualTo: [String]
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: [String]
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: [String]
+
+  """Less than the specified value."""
+  lessThan: [String]
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: [String]
+
+  """Greater than the specified value."""
+  greaterThan: [String]
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: [String]
+
+  """Contains the specified list of values."""
+  contains: [String]
+
+  """Contained by the specified list of values."""
+  containedBy: [String]
+
+  """Overlaps the specified list of values."""
+  overlaps: [String]
+
+  """Any array item is equal to the specified value."""
+  anyEqualTo: String
+
+  """Any array item is not equal to the specified value."""
+  anyNotEqualTo: String
+
+  """Any array item is less than the specified value."""
+  anyLessThan: String
+
+  """Any array item is less than or equal to the specified value."""
+  anyLessThanOrEqualTo: String
+
+  """Any array item is greater than the specified value."""
+  anyGreaterThan: String
+
+  """Any array item is greater than or equal to the specified value."""
+  anyGreaterThanOrEqualTo: String
 }
 
 """
@@ -3716,9 +3778,6 @@ input MovieFilter {
   """Filter by the object’s `title` field."""
   title: StringFilter
 
-  """Filter by the object’s `externalId` field."""
-  externalId: StringFilter
-
   """Filter by the object’s `originalTitle` field."""
   originalTitle: StringFilter
 
@@ -3785,14 +3844,17 @@ input MovieFilter {
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
 
+  """Filter by the object’s `externalId` field."""
+  externalId: StringFilter
+
   """Filter by the object’s `audioLanguages` field."""
-  audioLanguages: StringFilter
+  audioLanguages: StringListFilter
 
   """Filter by the object’s `subtitleLanguages` field."""
-  subtitleLanguages: StringFilter
+  subtitleLanguages: StringListFilter
 
   """Filter by the object’s `captionLanguages` field."""
-  captionLanguages: StringFilter
+  captionLanguages: StringListFilter
 
   """Filter by the object’s `moviesTags` relation."""
   moviesTags: MovieToManyMoviesTagFilter
@@ -5003,13 +5065,13 @@ input TvshowFilter {
   businessType: BusinessTypeFilter
 
   """Filter by the object’s `audioLanguages` field."""
-  audioLanguages: StringFilter
+  audioLanguages: StringListFilter
 
   """Filter by the object’s `subtitleLanguages` field."""
-  subtitleLanguages: StringFilter
+  subtitleLanguages: StringListFilter
 
   """Filter by the object’s `captionLanguages` field."""
-  captionLanguages: StringFilter
+  captionLanguages: StringListFilter
 
   """Filter by the object’s `tvshowsTags` relation."""
   tvshowsTags: TvshowToManyTvshowsTagFilter
@@ -7721,7 +7783,6 @@ type MoviesSnapshot {
 type Movie {
   id: Int!
   title: String!
-  externalId: String
   originalTitle: String
   synopsis: String
   description: String
@@ -7744,9 +7805,10 @@ type Movie {
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  externalId: String
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 
   """Reads and enables pagination through a set of `MoviesTag`."""
   moviesTags(
@@ -8868,9 +8930,9 @@ type Tvshow {
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 
   """Reads and enables pagination through a set of `TvshowsTag`."""
   tvshowsTags(
@@ -12455,7 +12517,7 @@ input CollectionCondition {
   publishStatus: PublishStatus
 
   """Checks for equality with the object’s `languages` field."""
-  languages: String
+  languages: [String]
 }
 
 """A connection to a list of `ContentOwner` values."""
@@ -13861,7 +13923,7 @@ type LanguagesConnection {
 
 """@permissions: LANGUAGES_VIEW,LANGUAGES_EDIT,ADMIN"""
 type Language {
-  id: UUID!
+  id: Int!
   title: String!
   native: String
   code: String!
@@ -13909,7 +13971,7 @@ for equality and combined with a logical ‘and.’
 """
 input LanguageCondition {
   """Checks for equality with the object’s `id` field."""
-  id: UUID
+  id: Int
 
   """
   Checks for equality with the object’s `title` field.
@@ -13946,7 +14008,7 @@ A filter to be used against `Language` object types. All fields are combined wit
 """
 input LanguageFilter {
   """Filter by the object’s `id` field."""
-  id: UUIDFilter
+  id: IntFilter
 
   """Filter by the object’s `title` field."""
   title: StringFilter
@@ -14097,8 +14159,6 @@ enum MoviesOrderBy {
   ID_DESC
   TITLE_ASC
   TITLE_DESC
-  EXTERNAL_ID_ASC
-  EXTERNAL_ID_DESC
   ORIGINAL_TITLE_ASC
   ORIGINAL_TITLE_DESC
   SYNOPSIS_ASC
@@ -14143,6 +14203,8 @@ enum MoviesOrderBy {
   CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
+  EXTERNAL_ID_ASC
+  EXTERNAL_ID_DESC
   AUDIO_LANGUAGES_ASC
   AUDIO_LANGUAGES_DESC
   SUBTITLE_LANGUAGES_ASC
@@ -14166,9 +14228,6 @@ input MovieCondition {
   @notEmpty()
   """
   title: String
-
-  """Checks for equality with the object’s `externalId` field."""
-  externalId: String
 
   """Checks for equality with the object’s `originalTitle` field."""
   originalTitle: String
@@ -14236,14 +14295,17 @@ input MovieCondition {
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
 
+  """Checks for equality with the object’s `externalId` field."""
+  externalId: String
+
   """Checks for equality with the object’s `audioLanguages` field."""
-  audioLanguages: String
+  audioLanguages: [String]
 
   """Checks for equality with the object’s `subtitleLanguages` field."""
-  subtitleLanguages: String
+  subtitleLanguages: [String]
 
   """Checks for equality with the object’s `captionLanguages` field."""
-  captionLanguages: String
+  captionLanguages: [String]
 }
 
 """
@@ -14631,13 +14693,13 @@ input TvshowCondition {
   businessType: BusinessType
 
   """Checks for equality with the object’s `audioLanguages` field."""
-  audioLanguages: String
+  audioLanguages: [String]
 
   """Checks for equality with the object’s `subtitleLanguages` field."""
-  subtitleLanguages: String
+  subtitleLanguages: [String]
 
   """Checks for equality with the object’s `captionLanguages` field."""
-  captionLanguages: String
+  captionLanguages: [String]
 }
 
 """A connection to a list of `String` values."""
@@ -15683,14 +15745,6 @@ type Mutation {
     input: UpdateMovieInput!
   ): UpdateMoviePayload
 
-  """Updates a single `Movie` using a unique key and a patch."""
-  updateMovieByExternalId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateMovieByExternalIdInput!
-  ): UpdateMoviePayload
-
   """Updates a single `MoviesCast` using a unique key and a patch."""
   updateMoviesCast(
     """
@@ -16053,14 +16107,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteMovieInput!
-  ): DeleteMoviePayload
-
-  """Deletes a single `Movie` using a unique key."""
-  deleteMovieByExternalId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteMovieByExternalIdInput!
   ): DeleteMoviePayload
 
   """Deletes a single `MoviesCast` using a unique key."""
@@ -16697,7 +16743,7 @@ input CollectionInput {
   externalId: String
   synopsis: String
   description: String
-  languages: String
+  languages: [String]
 }
 
 """The output of our create `CollectionsImage` mutation."""
@@ -17456,7 +17502,6 @@ input MovieInput {
   @notEmpty()
   """
   title: String!
-  externalId: String
   originalTitle: String
   synopsis: String
   description: String
@@ -17472,9 +17517,9 @@ input MovieInput {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 }
 
 """The output of our create `MoviesCast` mutation."""
@@ -18483,9 +18528,9 @@ input TvshowInput {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 }
 
 """The output of our create `TvshowsCast` mutation."""
@@ -19056,7 +19101,7 @@ input CollectionPatch {
   externalId: String
   synopsis: String
   description: String
-  languages: String
+  languages: [String]
 }
 
 """
@@ -19750,7 +19795,7 @@ input UpdateLanguageInput {
   An object where the defined keys will be set on the `Language` being updated.
   """
   patch: LanguagePatch!
-  id: UUID!
+  id: Int!
 }
 
 """
@@ -19873,7 +19918,6 @@ input MoviePatch {
   @notEmpty()
   """
   title: String
-  externalId: String
   originalTitle: String
   synopsis: String
   description: String
@@ -19889,27 +19933,9 @@ input MoviePatch {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
-}
-
-"""
-All input for the `updateMovieByExternalId` mutation.
-@permissions: MOVIES_EDIT,ADMIN
-"""
-input UpdateMovieByExternalIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `Movie` being updated.
-  """
-  patch: MoviePatch!
-  externalId: String!
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 }
 
 """The output of our update `MoviesCast` mutation."""
@@ -20829,9 +20855,9 @@ input TvshowPatch {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 }
 
 """
@@ -21870,7 +21896,7 @@ input DeleteLanguageInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: UUID!
+  id: Int!
 }
 
 """The output of our delete `MovieGenre` mutation."""
@@ -21945,19 +21971,6 @@ input DeleteMovieInput {
   """
   clientMutationId: String
   id: Int!
-}
-
-"""
-All input for the `deleteMovieByExternalId` mutation.
-@permissions: MOVIES_EDIT,ADMIN
-"""
-input DeleteMovieByExternalIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  externalId: String!
 }
 
 """The output of our delete `MoviesCast` mutation."""
