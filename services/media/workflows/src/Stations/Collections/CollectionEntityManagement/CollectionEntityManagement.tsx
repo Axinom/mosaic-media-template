@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { CollectionDetailsForm } from '../CollectionDetails/CollectionDetailsForm';
+import { CollectionEntityManagementForm } from './CollectionEntityManagementForm';
 
 export const CollectionEntityManagement: React.FC = () => {
   const collectionId = Number(
@@ -9,5 +9,5 @@ export const CollectionEntityManagement: React.FC = () => {
     }>().collectionId,
   );
 
-  return <CollectionDetailsForm collectionId={collectionId} />;
+  return <CollectionEntityManagementForm collectionId={collectionId} />;
 };
