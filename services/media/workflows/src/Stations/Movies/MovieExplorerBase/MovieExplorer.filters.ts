@@ -91,11 +91,11 @@ export function useMoviesFilters(): {
         label: getEnumLabel(BusinessType[key]),
       })),
     },
-    {
-      label: 'TVOD Tier',
-      property: 'studio',
-      type: FilterTypes.FreeText,
-    },
+    // {
+    //   label: 'TVOD Tier',
+    //   property: 'studio',
+    //   type: FilterTypes.FreeText,
+    // },
   ];
 
   const transformFilters = (
