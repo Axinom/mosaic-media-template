@@ -6,8 +6,4 @@ export type TvShowDetailsFormData =
     genres?: string[];
     cast?: string[];
     productionCountries?: string[];
-    businessType?: string[];
-    adLanguages?: string[];
-    sbLanguages?: string[];
-    ccLanguages?: string[];
   };

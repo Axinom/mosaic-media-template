@@ -6,7 +6,8 @@ import {
   FilterValues,
   transformRange,
 } from '@axinom/mosaic-ui';
-import { TvshowFilter } from '../../../generated/graphql';
+import { PublishStatus, TvshowFilter } from '../../../generated/graphql';
+import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { TvShowData } from './TvShowExplorer.types';
 
 export function useTvShowsFilters(): {
@@ -21,73 +22,12 @@ export function useTvShowsFilters(): {
 
   const filterOptions: FilterType<TvShowData>[] = [
     {
-      label: 'Asset Types',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
       label: 'Title',
       property: 'title',
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Genre',
-      property: 'tvshowsTvshowGenres',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Tags',
-      property: 'tvshowsTags',
-      type: FilterTypes.FreeText,
-    },
-    {
-      // select from list
-      label: 'Content Owners',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
-      // select from list
-      label: 'Age Ratings',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
-      // select from list
-      label: 'Content Sets',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
-      // select from list
-      label: 'Publishing Status',
-      property: 'publishStatus',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Audio Languages',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Cast',
-      property: 'tvshowsCasts',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'License Countries',
-      property: 'tvshowsProductionCountries',
-      type: FilterTypes.FreeText,
-    },
-    {
-      // select from list [Valid License, No Valid License]
-      label: 'TV Show Valid Licensing',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
-      // select from list [Valid License, No Valid License]
-      label: 'Episode Valid Licensing',
+      label: 'Original Title',
       property: 'originalTitle',
       type: FilterTypes.FreeText,
     },
@@ -97,33 +37,79 @@ export function useTvShowsFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
-      label: 'Business Type',
-      property: 'originalTitle',
+      label: 'Tags',
+      property: 'tvshowsTags',
       type: FilterTypes.FreeText,
     },
     {
-      label: 'TVOD Tier',
-      property: 'originalTitle',
+      label: 'Genre',
+      property: 'tvshowsTvshowGenres',
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
-      label: 'TV Show Sub Type',
-      property: 'originalTitle',
+      label: 'Cast',
+      property: 'tvshowsCasts',
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
-      label: 'Episode Sub Type',
-      property: 'originalTitle',
+      label: 'Release Period (From)',
+      property: 'released',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('released'),
+    },
+    {
+      label: 'Release Period (To)',
+      property: 'released',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('released'),
+    },
+    {
+      label: 'Production Country',
+      property: 'tvshowsProductionCountries',
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
-      label: 'Subscription Plans',
-      property: 'originalTitle',
+      label: 'Studio',
+      property: 'studio',
       type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Publication Status',
+      property: 'publishStatus',
+      type: FilterTypes.Options,
+      options: Object.keys(PublishStatus).map((key) => ({
+        value: PublishStatus[key],
+        label: getEnumLabel(PublishStatus[key]),
+      })),
+    },
+    {
+      label: 'Publication Period (From)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Publication Period (To)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Creation Period (From)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'Creation Period (To)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'ID',
+      property: 'id',
+      type: FilterTypes.Numeric,
     },
   ];
 

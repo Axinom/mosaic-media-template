@@ -5,7 +5,6 @@ query TvShow($id: Int!) {
     synopsis
     description
     externalId
-    ageRating
     tvshowsTags {
       nodes {
         name
@@ -55,13 +54,6 @@ query TvShow($id: Int!) {
   tvshowGenres {
     nodes {
       title
-      id
-    }
-  }
-
-  ageRatings {
-    nodes {
-      name
       id
     }
   }
