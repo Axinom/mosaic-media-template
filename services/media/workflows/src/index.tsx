@@ -45,11 +45,6 @@ export function setup(app: PiletApi): void {
 
   app.setNavigationTreeTransformer(transformNavigationTree);
 
-  // setTimeout(() => {
-  //   app.unregisterTile(TileNames.ImageNavigation);
-  // }, 5000);
-  // app.unregisterTile('monetization');
-
   app.registerNavigationItem({
     icon: <MediaIcons icon={MediaIconName.Movie} />,
     label: settingsGroupName,

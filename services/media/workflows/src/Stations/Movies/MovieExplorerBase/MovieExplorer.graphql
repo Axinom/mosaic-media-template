@@ -8,6 +8,7 @@ fragment MovieExplorerProperties on Movie {
   contentOwner
   businessType
   audioLanguages
+  assetSubtype
   moviesImages(condition: { imageType: COVER }) {
     nodes {
       imageId

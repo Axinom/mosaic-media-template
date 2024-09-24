@@ -22,7 +22,6 @@ export function useMoviesFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
       label: 'Genre',
       property: 'moviesMovieGenres',
       type: FilterTypes.FreeText,
@@ -33,25 +32,21 @@ export function useMoviesFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
       label: 'Collections',
       property: 'collectionRelations',
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
       label: 'Content Owners',
       property: 'contentOwner',
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
       label: 'Age Ratings',
       property: 'ageRating',
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
       label: 'Publishing Status',
       property: 'publishStatus',
       type: FilterTypes.FreeText,
@@ -83,13 +78,11 @@ export function useMoviesFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
       label: 'Sub Type',
-      property: '__typename',
+      property: 'assetSubtype',
       type: FilterTypes.FreeText,
     },
     {
-      // select from list
       label: 'Business Type',
       property: 'businessType',
       type: FilterTypes.Options,
@@ -125,8 +118,6 @@ export function useMoviesFilters(): {
         'includesInsensitive',
       ],
       ageRating: 'includesInsensitive',
-      // contentOwners: 'includesInsensitive',
-      // contentSets: 'includesInsensitive',
       publishStatus: 'in',
       audioLanguages: 'equalTo',
       moviesCasts: ['some', 'name', 'includesInsensitive'],
@@ -134,10 +125,9 @@ export function useMoviesFilters(): {
       contentOwner: 'includesInsensitive',
       moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
       // validLicensing: 'includesInsensitive',
-      // subtype: 'includesInsensitive',
+      assetSubtype: 'equalTo',
       businessType: 'in',
       // tvodTier: 'includesInsensitive',
-      // subscriptionPlans: 'includesInsensitive',
     });
   };
 
