@@ -37,4 +37,15 @@ export const Constants = {
   FREE_DOWNLOADABLE: 'Free Downloadable',
   PREMIUM: 'Premium',
   PREMIUM_DOWNLOADABLE: 'Premium Downloadable',
+
+  //Asset SubTypes
+  ALBUM: 'Album',
+  AUDIO_TRACK: 'Audio Track',
+  CONTENT_SET: 'Content set',
+  CUSTOM: 'Custom',
+  FILE: 'File',
+  PROMOTION: 'Promotion',
+  SUBSCRIPTION_PLAN: 'Subscription plan',
+  TV_SHOW: 'TV Show',
+  UNKNOWN: 'Unknown',
 };

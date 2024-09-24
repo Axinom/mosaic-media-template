@@ -152,6 +152,61 @@ export enum AgeRatingsOrderBy {
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
 
+export enum AssetSubtype {
+  /** Album */
+  Album = 'ALBUM',
+  /** Audio Track */
+  AudioTrack = 'AUDIO_TRACK',
+  /** Collection */
+  Collection = 'COLLECTION',
+  /** Content Set */
+  ContentSet = 'CONTENT_SET',
+  /** Custom */
+  Custom = 'CUSTOM',
+  /** Episode */
+  Episode = 'EPISODE',
+  /** File */
+  File = 'FILE',
+  /** Movie */
+  Movie = 'MOVIE',
+  /** Promotion */
+  Promotion = 'PROMOTION',
+  /** Season */
+  Season = 'SEASON',
+  /** Subscription Plan */
+  SubscriptionPlan = 'SUBSCRIPTION_PLAN',
+  /** TV Show */
+  TvShow = 'TV_SHOW',
+  /** Unknown */
+  Unknown = 'UNKNOWN'
+}
+
+/** A filter to be used against AssetSubtype fields. All fields are combined with a logical ‘and.’ */
+export type AssetSubtypeFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<AssetSubtype>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<AssetSubtype>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<AssetSubtype>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<AssetSubtype>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<AssetSubtype>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<AssetSubtype>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<AssetSubtype>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<AssetSubtype>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<AssetSubtype>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<AssetSubtype>>;
+};
+
 /** A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’ */
 export type BigFloatFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -279,6 +334,7 @@ export type BusinessTypeFilter = {
 /** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type Collection = {
   __typename?: 'Collection';
+  assetSubtype: AssetSubtype;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   /** Reads and enables pagination through a set of `CollectionsImage`. */
@@ -359,6 +415,8 @@ export type CollectionCollectionsTagsArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type CollectionCondition = {
+  /** Checks for equality with the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtype>;
   /** Checks for equality with the object’s `createdDate` field. */
   createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
@@ -395,6 +453,8 @@ export type CollectionCondition = {
 export type CollectionFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<CollectionFilter>>;
+  /** Filter by the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<CollectionToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
@@ -476,6 +536,7 @@ export type CollectionImageTypeFilter = {
 
 /** An input for mutations affecting `Collection` */
 export type CollectionInput = {
+  assetSubtype?: InputMaybe<AssetSubtype>;
   description?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -489,6 +550,7 @@ export type CollectionInput = {
 
 /** Represents an update to a `Collection`. Fields that are set will be updated. */
 export type CollectionPatch = {
+  assetSubtype?: InputMaybe<AssetSubtype>;
   description?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -772,6 +834,8 @@ export enum CollectionsImagesOrderBy {
 
 /** Methods to use when ordering `Collection`. */
 export enum CollectionsOrderBy {
+  AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
+  AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
@@ -3595,19 +3659,6 @@ export type DeleteLanguagePayloadLanguageEdgeArgs = {
 };
 
 /**
- * All input for the `deleteMovieByExternalId` mutation.
- * @permissions: MOVIES_EDIT,ADMIN
- */
-export type DeleteMovieByExternalIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  externalId: Scalars['String']['input'];
-};
-
-/**
  * All input for the `deleteMovieGenre` mutation.
  * @permissions: SETTINGS_EDIT,ADMIN
  */
@@ -4889,6 +4940,7 @@ export type EntityTypeFilter = {
 export type Episode = {
   __typename?: 'Episode';
   ageRating?: Maybe<Scalars['String']['output']>;
+  assetSubtype: AssetSubtype;
   businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
@@ -5058,6 +5110,8 @@ export type EpisodeEpisodesTvshowGenresArgs = {
 export type EpisodeCondition = {
   /** Checks for equality with the object’s `ageRating` field. */
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtype>;
   /** Checks for equality with the object’s `businessType` field. */
   businessType?: InputMaybe<BusinessType>;
   /** Checks for equality with the object’s `contentOwner` field. */
@@ -5122,6 +5176,8 @@ export type EpisodeFilter = {
   ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<EpisodeFilter>>;
+  /** Filter by the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtypeFilter>;
   /** Filter by the object’s `businessType` field. */
   businessType?: InputMaybe<BusinessTypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
@@ -5260,6 +5316,7 @@ export type EpisodeImageTypeFilter = {
 /** An input for mutations affecting `Episode` */
 export type EpisodeInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
   businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
@@ -5287,6 +5344,7 @@ export type EpisodeInput = {
 /** Represents an update to a `Episode`. Fields that are set will be updated. */
 export type EpisodePatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
   businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
@@ -5772,6 +5830,8 @@ export type EpisodesLicenseToManyEpisodesLicensesCountryFilter = {
 export enum EpisodesOrderBy {
   AgeRatingAsc = 'AGE_RATING_ASC',
   AgeRatingDesc = 'AGE_RATING_DESC',
+  AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
+  AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
   BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
   BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
   ContentOwnerAsc = 'CONTENT_OWNER_ASC',
@@ -8091,6 +8151,7 @@ export enum LanguagesOrderBy {
 export type Movie = {
   __typename?: 'Movie';
   ageRating?: Maybe<Scalars['String']['output']>;
+  assetSubtype: AssetSubtype;
   audioLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   businessType: BusinessType;
   captionLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -8274,6 +8335,8 @@ export type MovieMoviesTrailersArgs = {
 export type MovieCondition = {
   /** Checks for equality with the object’s `ageRating` field. */
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtype>;
   /** Checks for equality with the object’s `audioLanguages` field. */
   audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `businessType` field. */
@@ -8340,6 +8403,8 @@ export type MovieFilter = {
   ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<MovieFilter>>;
+  /** Filter by the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtypeFilter>;
   /** Filter by the object’s `audioLanguages` field. */
   audioLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `businessType` field. */
@@ -8650,6 +8715,7 @@ export type MovieImageTypeFilter = {
 /** An input for mutations affecting `Movie` */
 export type MovieInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
   audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   businessType?: InputMaybe<BusinessType>;
   captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -8678,6 +8744,7 @@ export type MovieInput = {
 /** Represents an update to a `Movie`. Fields that are set will be updated. */
 export type MoviePatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
   audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   businessType?: InputMaybe<BusinessType>;
   captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -8687,7 +8754,6 @@ export type MoviePatch = {
   description?: InputMaybe<Scalars['String']['input']>;
   dynamicField?: InputMaybe<Scalars['String']['input']>;
   extendedField?: InputMaybe<Scalars['String']['input']>;
-  externalId?: InputMaybe<Scalars['String']['input']>;
   lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
@@ -9310,6 +9376,8 @@ export enum MoviesMovieGenresOrderBy {
 export enum MoviesOrderBy {
   AgeRatingAsc = 'AGE_RATING_ASC',
   AgeRatingDesc = 'AGE_RATING_DESC',
+  AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
+  AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
   AudioLanguagesAsc = 'AUDIO_LANGUAGES_ASC',
   AudioLanguagesDesc = 'AUDIO_LANGUAGES_DESC',
   BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
@@ -9991,8 +10059,6 @@ export type Mutation = {
   deleteLanguage?: Maybe<DeleteLanguagePayload>;
   /** Deletes a single `Movie` using a unique key. */
   deleteMovie?: Maybe<DeleteMoviePayload>;
-  /** Deletes a single `Movie` using a unique key. */
-  deleteMovieByExternalId?: Maybe<DeleteMoviePayload>;
   /** Deletes a single `MovieGenre` using a unique key. */
   deleteMovieGenre?: Maybe<DeleteMovieGenrePayload>;
   deleteMovieGenres?: Maybe<BulkMutationIntPayload>;
@@ -10149,8 +10215,6 @@ export type Mutation = {
   updateLanguage?: Maybe<UpdateLanguagePayload>;
   /** Updates a single `Movie` using a unique key and a patch. */
   updateMovie?: Maybe<UpdateMoviePayload>;
-  /** Updates a single `Movie` using a unique key and a patch. */
-  updateMovieByExternalId?: Maybe<UpdateMoviePayload>;
   /** Updates a single `MovieGenre` using a unique key and a patch. */
   updateMovieGenre?: Maybe<UpdateMovieGenrePayload>;
   /** Updates a single `MoviesCast` using a unique key and a patch. */
@@ -10675,12 +10739,6 @@ export type MutationDeleteLanguageArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteMovieArgs = {
   input: DeleteMovieInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteMovieByExternalIdArgs = {
-  input: DeleteMovieByExternalIdInput;
 };
 
 
@@ -11213,12 +11271,6 @@ export type MutationUpdateMovieArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateMovieByExternalIdArgs = {
-  input: UpdateMovieByExternalIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateMovieGenreArgs = {
   input: UpdateMovieGenreInput;
 };
@@ -11501,7 +11553,6 @@ export type Query = {
   /** Reads and enables pagination through a set of `Language`. */
   languages?: Maybe<LanguagesConnection>;
   movie?: Maybe<Movie>;
-  movieByExternalId?: Maybe<Movie>;
   movieGenre?: Maybe<MovieGenre>;
   /** Reads and enables pagination through a set of `MovieGenre`. */
   movieGenres?: Maybe<MovieGenresConnection>;
@@ -12130,12 +12181,6 @@ export type QueryMovieArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryMovieByExternalIdArgs = {
-  externalId: Scalars['String']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryMovieGenreArgs = {
   id: Scalars['Int']['input'];
 };
@@ -12734,6 +12779,7 @@ export type QueryTvshowsTvshowGenresArgs = {
 export type Season = {
   __typename?: 'Season';
   ageRating?: Maybe<Scalars['String']['output']>;
+  assetSubtype: AssetSubtype;
   businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
@@ -12915,6 +12961,8 @@ export type SeasonSeasonsTvshowGenresArgs = {
 export type SeasonCondition = {
   /** Checks for equality with the object’s `ageRating` field. */
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtype>;
   /** Checks for equality with the object’s `businessType` field. */
   businessType?: InputMaybe<BusinessType>;
   /** Checks for equality with the object’s `contentOwner` field. */
@@ -12969,6 +13017,8 @@ export type SeasonFilter = {
   ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<SeasonFilter>>;
+  /** Filter by the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtypeFilter>;
   /** Filter by the object’s `businessType` field. */
   businessType?: InputMaybe<BusinessTypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
@@ -13105,6 +13155,7 @@ export type SeasonImageTypeFilter = {
 /** An input for mutations affecting `Season` */
 export type SeasonInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
   businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
@@ -13125,6 +13176,7 @@ export type SeasonInput = {
 /** Represents an update to a `Season`. Fields that are set will be updated. */
 export type SeasonPatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
   businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
   creditsStartTime?: InputMaybe<Scalars['String']['input']>;
@@ -13603,6 +13655,8 @@ export type SeasonsLicenseToManySeasonsLicensesCountryFilter = {
 export enum SeasonsOrderBy {
   AgeRatingAsc = 'AGE_RATING_ASC',
   AgeRatingDesc = 'AGE_RATING_DESC',
+  AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
+  AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
   BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
   BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
   ContentOwnerAsc = 'CONTENT_OWNER_ASC',
@@ -15012,6 +15066,7 @@ export type Subscription = {
 export type Tvshow = {
   __typename?: 'Tvshow';
   ageRating?: Maybe<Scalars['String']['output']>;
+  assetSubtype: AssetSubtype;
   audioLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   businessType: BusinessType;
   captionLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -15194,6 +15249,8 @@ export type TvshowTvshowsTvshowGenresArgs = {
 export type TvshowCondition = {
   /** Checks for equality with the object’s `ageRating` field. */
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtype>;
   /** Checks for equality with the object’s `audioLanguages` field. */
   audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `businessType` field. */
@@ -15258,6 +15315,8 @@ export type TvshowFilter = {
   ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<TvshowFilter>>;
+  /** Filter by the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtypeFilter>;
   /** Filter by the object’s `audioLanguages` field. */
   audioLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `businessType` field. */
@@ -15628,6 +15687,7 @@ export type TvshowImageTypeFilter = {
 /** An input for mutations affecting `Tvshow` */
 export type TvshowInput = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
   audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   businessType?: InputMaybe<BusinessType>;
   captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -15655,6 +15715,7 @@ export type TvshowInput = {
 /** Represents an update to a `Tvshow`. Fields that are set will be updated. */
 export type TvshowPatch = {
   ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
   audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   businessType?: InputMaybe<BusinessType>;
   captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -16140,6 +16201,8 @@ export type TvshowsLicenseToManyTvshowsLicensesCountryFilter = {
 export enum TvshowsOrderBy {
   AgeRatingAsc = 'AGE_RATING_ASC',
   AgeRatingDesc = 'AGE_RATING_DESC',
+  AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
+  AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
   AudioLanguagesAsc = 'AUDIO_LANGUAGES_ASC',
   AudioLanguagesDesc = 'AUDIO_LANGUAGES_DESC',
   BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
@@ -17371,21 +17434,6 @@ export type UpdateLanguagePayload = {
 /** The output of our update `Language` mutation. */
 export type UpdateLanguagePayloadLanguageEdgeArgs = {
   orderBy?: InputMaybe<Array<LanguagesOrderBy>>;
-};
-
-/**
- * All input for the `updateMovieByExternalId` mutation.
- * @permissions: MOVIES_EDIT,ADMIN
- */
-export type UpdateMovieByExternalIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  externalId: Scalars['String']['input'];
-  /** An object where the defined keys will be set on the `Movie` being updated. */
-  patch: MoviePatch;
 };
 
 /**
@@ -18916,7 +18964,7 @@ export type MovieQueryVariables = Exact<{
 }>;
 
 
-export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, customRating?: string | null, creditsStartTime?: string | null, lengthInSeconds?: any | null, dynamicField?: string | null, extendedField?: string | null, captionLanguages?: Array<string | null> | null, audioLanguages?: Array<string | null> | null, subtitleLanguages?: Array<string | null> | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
+export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, customRating?: string | null, creditsStartTime?: string | null, lengthInSeconds?: any | null, dynamicField?: string | null, extendedField?: string | null, captionLanguages?: Array<string | null> | null, audioLanguages?: Array<string | null> | null, subtitleLanguages?: Array<string | null> | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
 
 export type DeleteMovieMutationVariables = Exact<{
   input: DeleteMovieInput;
@@ -22445,6 +22493,7 @@ export const MovieDocument = gql`
     captionLanguages
     audioLanguages
     subtitleLanguages
+    assetSubtype
     moviesTags {
       nodes {
         name

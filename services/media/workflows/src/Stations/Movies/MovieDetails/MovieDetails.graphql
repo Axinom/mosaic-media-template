@@ -17,6 +17,7 @@ query Movie($id: Int!) {
     captionLanguages
     audioLanguages
     subtitleLanguages
+    assetSubtype
     moviesTags {
       nodes {
         name

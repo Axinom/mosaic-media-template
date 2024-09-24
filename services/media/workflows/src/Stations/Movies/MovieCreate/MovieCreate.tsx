@@ -28,12 +28,15 @@ export const MovieCreate: React.FC = () => {
 
   const saveData = useCallback(
     async (formData: FormData): Promise<SubmitResponse> => {
+      const ContentProviderKey = 0;
+      const AssetType = 0;
       return (
         await movieCreate({
           variables: {
             input: {
               movie: {
                 title: formData.title,
+                externalId: `${ContentProviderKey}-${AssetType}-movie-${new Date().getTime()}`,
               },
             },
           },

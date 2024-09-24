@@ -1,5 +1,5 @@
 --! Previous: sha1:37bfaf08593c7d0e64629321869c56d82ef8a1ca
---! Hash: sha1:e0f32167f32d7ddab3cb4e0063768643c8c95130
+--! Hash: sha1:6f5aff0dd82afacff25fb930518391d684bdd997
 --! Message: add-languages-table-and-columns
 
 -- languages table
@@ -34,10 +34,11 @@ GRANT UPDATE (
 ) ON app_public.languages TO ":DATABASE_GQL_ROLE";
 
 -- add language columns to movies
-ALTER TABLE app_public.movies ADD COLUMN IF NOT EXISTS audio_languages TEXT[];
+
+ALTER TABLE app_public.movies ADD COLUMN IF NOT EXISTS audio_languages TEXT[] DEFAULT '{}';
 SELECT ax_define.define_index('audio_languages', 'movies', 'app_public');
-ALTER TABLE app_public.movies ADD COLUMN IF NOT EXISTS subtitle_languages TEXT[];
-ALTER TABLE app_public.movies ADD COLUMN IF NOT EXISTS caption_languages TEXT[];
+ALTER TABLE app_public.movies ADD COLUMN IF NOT EXISTS subtitle_languages TEXT[] DEFAULT '{}';
+ALTER TABLE app_public.movies ADD COLUMN IF NOT EXISTS caption_languages TEXT[] DEFAULT '{}';
 GRANT INSERT (
     audio_languages, 
     subtitle_languages,
@@ -50,10 +51,11 @@ GRANT UPDATE (
 ) ON app_public.movies TO ":DATABASE_GQL_ROLE";
 
 -- add language columns to tvshows
-ALTER TABLE app_public.tvshows ADD COLUMN IF NOT EXISTS audio_languages TEXT[];
+
+ALTER TABLE app_public.tvshows ADD COLUMN IF NOT EXISTS audio_languages TEXT[] DEFAULT '{}';
 SELECT ax_define.define_index('audio_languages', 'tvshows', 'app_public');
-ALTER TABLE app_public.tvshows ADD COLUMN IF NOT EXISTS subtitle_languages TEXT[];
-ALTER TABLE app_public.tvshows ADD COLUMN IF NOT EXISTS caption_languages TEXT[];
+ALTER TABLE app_public.tvshows ADD COLUMN IF NOT EXISTS subtitle_languages TEXT[] DEFAULT '{}';
+ALTER TABLE app_public.tvshows ADD COLUMN IF NOT EXISTS caption_languages TEXT[] DEFAULT '{}';
 GRANT INSERT (
     audio_languages, 
     subtitle_languages,
@@ -66,7 +68,8 @@ GRANT UPDATE (
 ) ON app_public.tvshows TO ":DATABASE_GQL_ROLE";
 
 -- add language columns to collections
-ALTER TABLE app_public.collections ADD COLUMN IF NOT EXISTS languages TEXT[];
+ALTER TABLE app_public.collections DROP COLUMN IF EXISTS languages;
+ALTER TABLE app_public.collections ADD COLUMN IF NOT EXISTS languages TEXT[] DEFAULT '{}';
 SELECT ax_define.define_index('languages', 'collections', 'app_public');
 GRANT INSERT (
     languages

@@ -32,7 +32,9 @@ export const sortTiles = (data: HomeTileData[]): HomeTileData[] => {
 
   return [
     ...orderDefinedElements.sort(comparePatternBased),
-    ...orderNotDefinedElements.sort(compareAlphabetical),
+    ...orderNotDefinedElements
+      .sort(compareAlphabetical)
+      .filter((value) => value.label !== 'Monetization'),
   ];
 };
 

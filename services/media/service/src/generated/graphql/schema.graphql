@@ -1740,6 +1740,7 @@ type Query {
   language(id: Int!): Language
   movieGenre(id: Int!): MovieGenre
   movie(id: Int!): Movie
+  movieByExternalId(externalId: String!): Movie
   moviesCast(movieId: Int!, name: String!): MoviesCast
   moviesDirector(movieId: Int!, name: String!): MoviesDirector
   moviesLicense(id: Int!): MoviesLicense
@@ -2582,6 +2583,7 @@ type Collection {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
+  assetSubtype: AssetSubtype!
   languages: [String]
 
   """Reads and enables pagination through a set of `CollectionRelation`."""
@@ -2730,6 +2732,47 @@ enum PublishStatus {
 
   """Changed"""
   CHANGED
+}
+
+enum AssetSubtype {
+  """Movie"""
+  MOVIE
+
+  """TV Show"""
+  TV_SHOW
+
+  """Season"""
+  SEASON
+
+  """Episode"""
+  EPISODE
+
+  """Collection"""
+  COLLECTION
+
+  """Album"""
+  ALBUM
+
+  """Audio Track"""
+  AUDIO_TRACK
+
+  """Subscription Plan"""
+  SUBSCRIPTION_PLAN
+
+  """File"""
+  FILE
+
+  """Promotion"""
+  PROMOTION
+
+  """Custom"""
+  CUSTOM
+
+  """Content Set"""
+  CONTENT_SET
+
+  """Unknown"""
+  UNKNOWN
 }
 
 """Methods to use when ordering `CollectionRelation`."""
@@ -2882,6 +2925,9 @@ input CollectionFilter {
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
 
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
+
   """Filter by the object’s `languages` field."""
   languages: StringListFilter
 
@@ -2959,6 +3005,48 @@ input PublishStatusFilter {
 
   """Greater than or equal to the specified value."""
   greaterThanOrEqualTo: PublishStatus
+}
+
+"""
+A filter to be used against AssetSubtype fields. All fields are combined with a logical ‘and.’
+"""
+input AssetSubtypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: AssetSubtype
+
+  """Not equal to the specified value."""
+  notEqualTo: AssetSubtype
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: AssetSubtype
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: AssetSubtype
+
+  """Included in the specified list."""
+  in: [AssetSubtype!]
+
+  """Not included in the specified list."""
+  notIn: [AssetSubtype!]
+
+  """Less than the specified value."""
+  lessThan: AssetSubtype
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: AssetSubtype
+
+  """Greater than the specified value."""
+  greaterThan: AssetSubtype
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: AssetSubtype
 }
 
 """
@@ -3778,6 +3866,9 @@ input MovieFilter {
   """Filter by the object’s `title` field."""
   title: StringFilter
 
+  """Filter by the object’s `externalId` field."""
+  externalId: StringFilter
+
   """Filter by the object’s `originalTitle` field."""
   originalTitle: StringFilter
 
@@ -3844,8 +3935,8 @@ input MovieFilter {
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
 
-  """Filter by the object’s `externalId` field."""
-  externalId: StringFilter
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
 
   """Filter by the object’s `audioLanguages` field."""
   audioLanguages: StringListFilter
@@ -5064,6 +5155,9 @@ input TvshowFilter {
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
 
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
+
   """Filter by the object’s `audioLanguages` field."""
   audioLanguages: StringListFilter
 
@@ -5276,9 +5370,6 @@ input TvshowsLicenseFilter {
 
   """Filter by the object’s `updatedDate` field."""
   updatedDate: DatetimeFilter
-
-  """Filter by the object’s `contentOwner` field."""
-  contentOwner: StringFilter
 
   """Filter by the object’s `tvshowsLicensesCountries` relation."""
   tvshowsLicensesCountries: TvshowsLicenseToManyTvshowsLicensesCountryFilter
@@ -5628,6 +5719,9 @@ input SeasonFilter {
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
 
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
+
   """Filter by the object’s `seasonsTags` relation."""
   seasonsTags: SeasonToManySeasonsTagFilter
 
@@ -5837,9 +5931,6 @@ input SeasonsLicenseFilter {
 
   """Filter by the object’s `updatedDate` field."""
   updatedDate: DatetimeFilter
-
-  """Filter by the object’s `contentOwner` field."""
-  contentOwner: StringFilter
 
   """Filter by the object’s `seasonsLicensesCountries` relation."""
   seasonsLicensesCountries: SeasonsLicenseToManySeasonsLicensesCountryFilter
@@ -6210,6 +6301,9 @@ input EpisodeFilter {
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
 
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
+
   """Filter by the object’s `episodesTags` relation."""
   episodesTags: EpisodeToManyEpisodesTagFilter
 
@@ -6413,9 +6507,6 @@ input EpisodesLicenseFilter {
 
   """Filter by the object’s `updatedDate` field."""
   updatedDate: DatetimeFilter
-
-  """Filter by the object’s `contentOwner` field."""
-  contentOwner: StringFilter
 
   """Filter by the object’s `episodesLicensesCountries` relation."""
   episodesLicensesCountries: EpisodesLicenseToManyEpisodesLicensesCountryFilter
@@ -7783,6 +7874,7 @@ type MoviesSnapshot {
 type Movie {
   id: Int!
   title: String!
+  externalId: String
   originalTitle: String
   synopsis: String
   description: String
@@ -7805,7 +7897,7 @@ type Movie {
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
-  externalId: String
+  assetSubtype: AssetSubtype!
   audioLanguages: [String]
   subtitleLanguages: [String]
   captionLanguages: [String]
@@ -8930,6 +9022,7 @@ type Tvshow {
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
+  assetSubtype: AssetSubtype!
   audioLanguages: [String]
   subtitleLanguages: [String]
   captionLanguages: [String]
@@ -9433,7 +9526,6 @@ type TvshowsLicense {
   licenseEnd: Datetime
   createdDate: Datetime!
   updatedDate: Datetime!
-  contentOwner: String
 
   """Reads a single `Tvshow` that is related to this `TvshowsLicense`."""
   tvshow: Tvshow
@@ -9564,8 +9656,6 @@ enum TvshowsLicensesOrderBy {
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
   UPDATED_DATE_DESC
-  CONTENT_OWNER_ASC
-  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -9592,9 +9682,6 @@ input TvshowsLicenseCondition {
 
   """Checks for equality with the object’s `updatedDate` field."""
   updatedDate: Datetime
-
-  """Checks for equality with the object’s `contentOwner` field."""
-  contentOwner: String
 }
 
 """
@@ -9899,6 +9986,7 @@ type Season {
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
+  assetSubtype: AssetSubtype!
 
   """Reads a single `Tvshow` that is related to this `Season`."""
   tvshow: Tvshow
@@ -10402,7 +10490,6 @@ type SeasonsLicense {
   licenseEnd: Datetime
   createdDate: Datetime!
   updatedDate: Datetime!
-  contentOwner: String
 
   """Reads a single `Season` that is related to this `SeasonsLicense`."""
   season: Season
@@ -10533,8 +10620,6 @@ enum SeasonsLicensesOrderBy {
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
   UPDATED_DATE_DESC
-  CONTENT_OWNER_ASC
-  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -10561,9 +10646,6 @@ input SeasonsLicenseCondition {
 
   """Checks for equality with the object’s `updatedDate` field."""
   updatedDate: Datetime
-
-  """Checks for equality with the object’s `contentOwner` field."""
-  contentOwner: String
 }
 
 """
@@ -10834,6 +10916,7 @@ type Episode {
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
+  assetSubtype: AssetSubtype!
 
   """Reads a single `Season` that is related to this `Episode`."""
   season: Season
@@ -11305,7 +11388,6 @@ type EpisodesLicense {
   licenseEnd: Datetime
   createdDate: Datetime!
   updatedDate: Datetime!
-  contentOwner: String
 
   """Reads a single `Episode` that is related to this `EpisodesLicense`."""
   episode: Episode
@@ -11436,8 +11518,6 @@ enum EpisodesLicensesOrderBy {
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
   UPDATED_DATE_DESC
-  CONTENT_OWNER_ASC
-  CONTENT_OWNER_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -11464,9 +11544,6 @@ input EpisodesLicenseCondition {
 
   """Checks for equality with the object’s `updatedDate` field."""
   updatedDate: Datetime
-
-  """Checks for equality with the object’s `contentOwner` field."""
-  contentOwner: String
 }
 
 """
@@ -11869,6 +11946,8 @@ enum EpisodesOrderBy {
   CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -11961,6 +12040,9 @@ input EpisodeCondition {
 
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
+
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtype
 }
 
 """
@@ -12255,6 +12337,8 @@ enum SeasonsOrderBy {
   CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -12334,6 +12418,9 @@ input SeasonCondition {
 
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
+
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtype
 }
 
 """Methods to use when ordering `TvshowsSnapshot`."""
@@ -12465,6 +12552,8 @@ enum CollectionsOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   LANGUAGES_ASC
   LANGUAGES_DESC
   PRIMARY_KEY_ASC
@@ -12515,6 +12604,9 @@ input CollectionCondition {
 
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
+
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtype
 
   """Checks for equality with the object’s `languages` field."""
   languages: [String]
@@ -14159,6 +14251,8 @@ enum MoviesOrderBy {
   ID_DESC
   TITLE_ASC
   TITLE_DESC
+  EXTERNAL_ID_ASC
+  EXTERNAL_ID_DESC
   ORIGINAL_TITLE_ASC
   ORIGINAL_TITLE_DESC
   SYNOPSIS_ASC
@@ -14203,8 +14297,8 @@ enum MoviesOrderBy {
   CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
-  EXTERNAL_ID_ASC
-  EXTERNAL_ID_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   AUDIO_LANGUAGES_ASC
   AUDIO_LANGUAGES_DESC
   SUBTITLE_LANGUAGES_ASC
@@ -14228,6 +14322,9 @@ input MovieCondition {
   @notEmpty()
   """
   title: String
+
+  """Checks for equality with the object’s `externalId` field."""
+  externalId: String
 
   """Checks for equality with the object’s `originalTitle` field."""
   originalTitle: String
@@ -14295,8 +14392,8 @@ input MovieCondition {
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
 
-  """Checks for equality with the object’s `externalId` field."""
-  externalId: String
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtype
 
   """Checks for equality with the object’s `audioLanguages` field."""
   audioLanguages: [String]
@@ -14602,6 +14699,8 @@ enum TvshowsOrderBy {
   CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   AUDIO_LANGUAGES_ASC
   AUDIO_LANGUAGES_DESC
   SUBTITLE_LANGUAGES_ASC
@@ -14691,6 +14790,9 @@ input TvshowCondition {
 
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
+
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtype
 
   """Checks for equality with the object’s `audioLanguages` field."""
   audioLanguages: [String]
@@ -15745,6 +15847,14 @@ type Mutation {
     input: UpdateMovieInput!
   ): UpdateMoviePayload
 
+  """Updates a single `Movie` using a unique key and a patch."""
+  updateMovieByExternalId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateMovieByExternalIdInput!
+  ): UpdateMoviePayload
+
   """Updates a single `MoviesCast` using a unique key and a patch."""
   updateMoviesCast(
     """
@@ -16107,6 +16217,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteMovieInput!
+  ): DeleteMoviePayload
+
+  """Deletes a single `Movie` using a unique key."""
+  deleteMovieByExternalId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteMovieByExternalIdInput!
   ): DeleteMoviePayload
 
   """Deletes a single `MoviesCast` using a unique key."""
@@ -16743,6 +16861,7 @@ input CollectionInput {
   externalId: String
   synopsis: String
   description: String
+  assetSubtype: AssetSubtype
   languages: [String]
 }
 
@@ -16958,6 +17077,7 @@ input EpisodeInput {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
 }
 
 """The output of our create `EpisodesCast` mutation."""
@@ -17103,7 +17223,6 @@ input EpisodesLicenseInput {
   episodeId: Int!
   licenseStart: Datetime
   licenseEnd: Datetime
-  contentOwner: String
 }
 
 """The output of our create `EpisodesLicensesCountry` mutation."""
@@ -17502,6 +17621,7 @@ input MovieInput {
   @notEmpty()
   """
   title: String!
+  externalId: String
   originalTitle: String
   synopsis: String
   description: String
@@ -17517,6 +17637,7 @@ input MovieInput {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
   audioLanguages: [String]
   subtitleLanguages: [String]
   captionLanguages: [String]
@@ -18023,6 +18144,7 @@ input SeasonInput {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
 }
 
 """The output of our create `SeasonsCast` mutation."""
@@ -18168,7 +18290,6 @@ input SeasonsLicenseInput {
   seasonId: Int!
   licenseStart: Datetime
   licenseEnd: Datetime
-  contentOwner: String
 }
 
 """The output of our create `SeasonsLicensesCountry` mutation."""
@@ -18528,6 +18649,7 @@ input TvshowInput {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
   audioLanguages: [String]
   subtitleLanguages: [String]
   captionLanguages: [String]
@@ -18676,7 +18798,6 @@ input TvshowsLicenseInput {
   tvshowId: Int!
   licenseStart: Datetime
   licenseEnd: Datetime
-  contentOwner: String
 }
 
 """The output of our create `TvshowsLicensesCountry` mutation."""
@@ -19101,6 +19222,7 @@ input CollectionPatch {
   externalId: String
   synopsis: String
   description: String
+  assetSubtype: AssetSubtype
   languages: [String]
 }
 
@@ -19356,6 +19478,7 @@ input EpisodePatch {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
 }
 
 """
@@ -19536,7 +19659,6 @@ input EpisodesLicensePatch {
   episodeId: Int
   licenseStart: Datetime
   licenseEnd: Datetime
-  contentOwner: String
 }
 
 """The output of our update `EpisodesLicensesCountry` mutation."""
@@ -19918,6 +20040,7 @@ input MoviePatch {
   @notEmpty()
   """
   title: String
+  externalId: String
   originalTitle: String
   synopsis: String
   description: String
@@ -19933,9 +20056,28 @@ input MoviePatch {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
   audioLanguages: [String]
   subtitleLanguages: [String]
   captionLanguages: [String]
+}
+
+"""
+All input for the `updateMovieByExternalId` mutation.
+@permissions: MOVIES_EDIT,ADMIN
+"""
+input UpdateMovieByExternalIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Movie` being updated.
+  """
+  patch: MoviePatch!
+  externalId: String!
 }
 
 """The output of our update `MoviesCast` mutation."""
@@ -20387,6 +20529,7 @@ input SeasonPatch {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
 }
 
 """
@@ -20567,7 +20710,6 @@ input SeasonsLicensePatch {
   seasonId: Int
   licenseStart: Datetime
   licenseEnd: Datetime
-  contentOwner: String
 }
 
 """The output of our update `SeasonsLicensesCountry` mutation."""
@@ -20855,6 +20997,7 @@ input TvshowPatch {
   extendedField: String
   contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
   audioLanguages: [String]
   subtitleLanguages: [String]
   captionLanguages: [String]
@@ -21038,7 +21181,6 @@ input TvshowsLicensePatch {
   tvshowId: Int
   licenseStart: Datetime
   licenseEnd: Datetime
-  contentOwner: String
 }
 
 """The output of our update `TvshowsLicensesCountry` mutation."""
@@ -21971,6 +22113,19 @@ input DeleteMovieInput {
   """
   clientMutationId: String
   id: Int!
+}
+
+"""
+All input for the `deleteMovieByExternalId` mutation.
+@permissions: MOVIES_EDIT,ADMIN
+"""
+input DeleteMovieByExternalIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  externalId: String!
 }
 
 """The output of our delete `MoviesCast` mutation."""
