@@ -777,6 +777,8 @@ export enum ErrorCodesEnum {
   LocaleNotFound = 'LOCALE_NOT_FOUND',
   /** The localization source entity was not found. */
   LocalizationSourceEntityNotFound = 'LOCALIZATION_SOURCE_ENTITY_NOT_FOUND',
+  /** Could not apply all localizations. */
+  LocalizationsFailed = 'LOCALIZATIONS_FAILED',
   /** Malformed access token received */
   MalformedToken = 'MALFORMED_TOKEN',
   /** The token is not an Authenticated End-User */
@@ -797,6 +799,8 @@ export enum ErrorCodesEnum {
   ObjectIsMissingProperties = 'OBJECT_IS_MISSING_PROPERTIES',
   /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
   SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
+  /** Could not localize the desired entity as the source entity is not fully created yet. */
+  SourceEntityNotFullyInitialized = 'SOURCE_ENTITY_NOT_FULLY_INITIALIZED',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
   /** User is authenticated, but subject information was not found. Please contact Axinom Support. */
@@ -1537,8 +1541,6 @@ export type Mutation = {
   /** Deletes a single `LocalizationSourceEntity` using a unique key. */
   deleteLocalizationSourceEntity?: Maybe<DeleteLocalizationSourceEntityPayload>;
   localizeEntity?: Maybe<LocalizeEntityPayload>;
-  populateLocalizations?: Maybe<PopulatePayload>;
-  truncateLocalizations?: Maybe<TruncateLocalizationsPayload>;
   /** Updates a single `Locale` using a unique key and a patch. */
   updateLocale?: Maybe<UpdateLocalePayload>;
   /** Updates a single `LocalizationSourceEntity` using a unique key and a patch. */
@@ -1584,12 +1586,6 @@ export type MutationLocalizeEntityArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationPopulateLocalizationsArgs = {
-  input: PopulateInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateLocaleArgs = {
   input: UpdateLocaleInput;
 };
@@ -1617,25 +1613,6 @@ export type PageInfo = {
   hasPreviousPage: Scalars['Boolean'];
   /** When paginating backwards, the cursor to continue. */
   startCursor?: Maybe<Scalars['Cursor']>;
-};
-
-/** Populate Localizations input type */
-export type PopulateInput = {
-  /** Define how many entity definitions with fields should be created. */
-  entityDefinitionsCount?: InputMaybe<Scalars['Int']>;
-  /** Define how many locales should be created (if any). No matter the count it will always ensure there is one default locale creating en-US if none exists. */
-  localesCount?: InputMaybe<Scalars['Int']>;
-  /** Define how many source entities should be created. This would also create the corresponding localized entities and fields. */
-  sourceEntitiesCount?: InputMaybe<Scalars['Int']>;
-};
-
-export type PopulatePayload = {
-  __typename?: 'PopulatePayload';
-  entityDefinitionsCount: Scalars['Int'];
-  localesCount: Scalars['Int'];
-  localizedEntitiesCount: Scalars['Int'];
-  query?: Maybe<Query>;
-  sourceEntitiesCount: Scalars['Int'];
 };
 
 /** The input to prepare localizations of a specific entity for publishing. */
@@ -1862,11 +1839,6 @@ export type Subscription = {
   localizationSourceEntityMutated?: Maybe<LocalizationSourceEntitySubscriptionPayload>;
   /** Triggered when a LocalizedEntity is mutated (insert, update or delete).  */
   localizedEntityMutated?: Maybe<LocalizedEntitySubscriptionPayload>;
-};
-
-export type TruncateLocalizationsPayload = {
-  __typename?: 'TruncateLocalizationsPayload';
-  completed: Scalars['Boolean'];
 };
 
 export enum UiFieldType {

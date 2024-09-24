@@ -1,0 +1,8 @@
+.datalist {
+  display: grid;
+  grid-template-columns: 1fr 100px;
+
+  .rightAlignment {
+    text-align: right;
+  }
+}

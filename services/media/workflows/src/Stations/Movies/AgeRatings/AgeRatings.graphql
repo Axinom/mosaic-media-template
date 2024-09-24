@@ -1,0 +1,41 @@
+query AgeRatings {
+  ageRatings(orderBy: SORT_ORDER_ASC) {
+    nodes {
+      id
+      name
+      createdDate
+      createdUser
+      sortOrder
+      updatedDate
+      updatedUser
+    }
+    totalCount
+  }
+}
+
+mutation CreateAgeRating($input: CreateAgeRatingInput!) {
+  createAgeRating(input: $input) {
+    ageRating {
+      id
+      name
+    }
+  }
+}
+
+mutation UpdateAgeRating($input: UpdateAgeRatingInput!) {
+  updateAgeRating(input: $input) {
+    ageRating {
+      id
+      name
+    }
+  }
+}
+
+mutation DeleteAgeRating($input: DeleteAgeRatingInput!) {
+  deleteAgeRating(input: $input) {
+    ageRating {
+      id
+      name
+    }
+  }
+}

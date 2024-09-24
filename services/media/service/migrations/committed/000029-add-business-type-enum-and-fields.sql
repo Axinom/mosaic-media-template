@@ -1,5 +1,5 @@
---! Previous: sha1:d7c481931580f6acf907cf543994742775ae710c
---! Hash: sha1:212e2d2399c4bd449c936294bbf8fc5ca895903b
+--! Previous: sha1:21814d0401fb1de058b31f328da5c9ab873591f6
+--! Hash: sha1:37bfaf08593c7d0e64629321869c56d82ef8a1ca
 --! Message: add-business-type-enum-and-fields
 
 -- business-type enum

@@ -5,6 +5,19 @@ query Movie($id: Int!) {
     synopsis
     description
     externalId
+    ageRating
+    businessType
+    contentOwner
+    rating
+    customRating
+    creditsStartTime
+    lengthInSeconds
+    dynamicField
+    extendedField
+    captionLanguages
+    audioLanguages
+    subtitleLanguages
+    assetSubtype
     moviesTags {
       nodes {
         name
@@ -18,6 +31,11 @@ query Movie($id: Int!) {
       }
     }
     moviesCasts {
+      nodes {
+        name
+      }
+    }
+    moviesDirectors {
       nodes {
         name
       }
@@ -55,6 +73,27 @@ query Movie($id: Int!) {
       id
     }
   }
+
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
+
+  contentOwners {
+    nodes {
+      name
+      sortOrder
+    }
+  }
+
+  languages {
+    nodes {
+      code
+      title
+    }
+  }
 }
 
 mutation DeleteMovie($input: DeleteMovieInput!) {
@@ -83,19 +122,37 @@ query MovieTitle($id: Int!) {
 }
 
 query SearchMovieTags($searchKey: String!, $limit: Int!) {
-  getMoviesTagsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getMoviesTagsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }
 
 query SearchMovieCast($searchKey: String!, $limit: Int!) {
-  getMoviesCastsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getMoviesCastsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
+    nodes
+  }
+}
+
+query SearchMovieDirector($searchKey: String!, $limit: Int!) {
+  getMoviesDirectorsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }
 
 query SearchMovieProductionCountries($searchKey: String!, $limit: Int!) {
-  getMoviesProductionCountriesValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getMoviesProductionCountriesValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }

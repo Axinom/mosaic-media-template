@@ -48,6 +48,7 @@
         "unpublishTvshowGenres",
         "createTvshowGenresSnapshot",
         "getMoviesCastsValues",
+        "getMoviesDirectorsValues",
         "getMoviesProductionCountriesValues",
         "getMoviesTagsValues",
         "movie",
@@ -72,6 +73,8 @@
         "snapshotValidationResults",
         "movieMutated",
         "movieGenres",
+        "moviesDirector",
+        "moviesDirectors",
         "createMovie",
         "createMoviesCast",
         "createMoviesImage",
@@ -85,6 +88,7 @@
         "deleteMovieByExternalId",
         "deleteMovies",
         "deleteMoviesCast",
+        "deleteMoviesDirector",
         "deleteMoviesImageByMovieIdAndImageType",
         "deleteMoviesLicense",
         "deleteMoviesLicenses",
@@ -96,6 +100,7 @@
         "updateMovie",
         "updateMovieByExternalId",
         "updateMoviesCast",
+        "updateMoviesDirector",
         "updateMoviesImageByMovieIdAndImageType",
         "updateMoviesLicense",
         "updateMoviesLicensesCountry",
@@ -107,6 +112,7 @@
         "unpublishMovies",
         "createMovieSnapshot",
         "createMovieSnapshots",
+        "createMoviesDirector",
         "getTvshowsCastsValues",
         "getTvshowsProductionCountriesValues",
         "getTvshowsTagsValues",
@@ -408,6 +414,7 @@
       "title": "Movies: View",
       "gqlOperations": [
         "getMoviesCastsValues",
+        "getMoviesDirectorsValues",
         "getMoviesProductionCountriesValues",
         "getMoviesTagsValues",
         "movie",
@@ -432,6 +439,8 @@
         "snapshotValidationResults",
         "movieMutated",
         "movieGenres",
+        "moviesDirector",
+        "moviesDirectors",
         "snapshot",
         "snapshots",
         "snapshotValidationResults",
@@ -443,6 +452,7 @@
       "title": "Movies: Edit",
       "gqlOperations": [
         "getMoviesCastsValues",
+        "getMoviesDirectorsValues",
         "getMoviesProductionCountriesValues",
         "getMoviesTagsValues",
         "movie",
@@ -467,6 +477,8 @@
         "snapshotValidationResults",
         "movieMutated",
         "movieGenres",
+        "moviesDirector",
+        "moviesDirectors",
         "createMovie",
         "createMoviesCast",
         "createMoviesImage",
@@ -480,6 +492,7 @@
         "deleteMovieByExternalId",
         "deleteMovies",
         "deleteMoviesCast",
+        "deleteMoviesDirector",
         "deleteMoviesImageByMovieIdAndImageType",
         "deleteMoviesLicense",
         "deleteMoviesLicenses",
@@ -491,6 +504,7 @@
         "updateMovie",
         "updateMovieByExternalId",
         "updateMoviesCast",
+        "updateMoviesDirector",
         "updateMoviesImageByMovieIdAndImageType",
         "updateMoviesLicense",
         "updateMoviesLicensesCountry",
@@ -502,6 +516,7 @@
         "unpublishMovies",
         "createMovieSnapshot",
         "createMovieSnapshots",
+        "createMoviesDirector",
         "snapshot",
         "snapshots",
         "snapshotValidationResults",
@@ -872,6 +887,40 @@
         "ingestDocumentMutated",
         "startIngest",
         "updateIngestDocument"
+      ]
+    },
+    {
+      "key": "AGE_RATINGS_VIEW",
+      "title": "AgeRatings: View",
+      "gqlOperations": [
+        "ageRatings",
+        "ageRating"
+      ]
+    },
+    {
+      "key": "AGE_RATINGS_EDIT",
+      "title": "AgeRatings: Edit",
+      "gqlOperations": [
+        "createAgeRating",
+        "updateAgeRating",
+        "deleteAgeRating"
+      ]
+    },
+    {
+      "key": "CONTENT_OWNERS_VIEW",
+      "title": "ContentOwners: View",
+      "gqlOperations": [
+        "contentOwners",
+        "contentOwner"
+      ]
+    },
+    {
+      "key": "CONTENT_OWNERS_EDIT",
+      "title": "ContentOwners: Edit",
+      "gqlOperations": [
+        "createContentOwner",
+        "updateContentOwner",
+        "deleteContentOwner"
       ]
     }
   ]

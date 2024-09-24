@@ -17,10 +17,8 @@ export function useCollectionsFilters(): {
     excludeItems?: number[],
   ) => CollectionFilter | undefined;
 } {
-  const [
-    createFromDateFilterValidator,
-    createToDateFilterValidator,
-  ] = createDateRangeFilterValidators<CollectionData>();
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<CollectionData>();
 
   const filterOptions: FilterType<CollectionData>[] = [
     {
@@ -80,16 +78,29 @@ export function useCollectionsFilters(): {
 
   const transformFilters = (
     filters: FilterValues<CollectionData>,
-    _excludeItems?: number[],
+    excludeItems?: number[],
   ): CollectionFilter | undefined => {
     return filterToPostGraphileFilter<CollectionFilter>(filters, {
       title: 'includes',
       externalId: 'includes',
       collectionsTags: ['some', 'name', 'includes'],
       publishStatus: 'in',
-      id: 'equalTo',
       createdDate: transformRange,
       publishedDate: transformRange,
+      id: (value) => {
+        if (typeof value === 'number') {
+          // User filter
+          return {
+            equalTo: value,
+            notIn: excludeItems,
+          };
+        } else {
+          // Exclude items
+          return {
+            notIn: excludeItems,
+          };
+        }
+      },
     });
   };
 

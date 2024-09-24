@@ -10,12 +10,20 @@ import {
   SnapshotsReadOperations,
 } from '../publishing';
 import {
+  AgeRatingsReadOperations,
+  AgeRatingsWriteOperations,
+} from './ageratings';
+import {
   CollectionDevOperations,
   CollectionsIgnoreOperations,
   CollectionsMutateOperations,
   CollectionsReadOperations,
   SelectEndpoints,
 } from './collections';
+import {
+  ContentOwnersReadOperations,
+  ContentOwnersWriteOperations,
+} from './contentowners';
 import {
   MovieGenresMutateOperations,
   MovieGenresReadOperations,
@@ -160,6 +168,26 @@ const permissions = [
     key: 'INGESTS_EDIT',
     title: 'Ingests: Edit',
     gqlOperations: [...IngestReadOperations, ...IngestMutateOperations],
+  },
+  {
+    key: 'AGE_RATINGS_VIEW',
+    title: 'AgeRatings: View',
+    gqlOperations: [...AgeRatingsReadOperations],
+  },
+  {
+    key: 'AGE_RATINGS_EDIT',
+    title: 'AgeRatings: Edit',
+    gqlOperations: [...AgeRatingsWriteOperations],
+  },
+  {
+    key: 'CONTENT_OWNERS_VIEW',
+    title: 'ContentOwners: View',
+    gqlOperations: [...ContentOwnersReadOperations],
+  },
+  {
+    key: 'CONTENT_OWNERS_EDIT',
+    title: 'ContentOwners: Edit',
+    gqlOperations: [...ContentOwnersWriteOperations],
   },
 ] as const;
 

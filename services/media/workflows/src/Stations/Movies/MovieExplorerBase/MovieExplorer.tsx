@@ -2,7 +2,6 @@ import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-in
 import {
   ActionData,
   Column,
-  createConnectionRenderer,
   DateRenderer,
   ExplorerDataProvider,
   IconName,
@@ -14,9 +13,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { client } from '../../../apolloClient';
 import {
-  MoviesCastsConnection,
   MoviesDocument,
-  MoviesMovieGenresConnection,
   MoviesMutatedDocument,
   MoviesMutatedSubscription,
   MoviesOrderBy,
@@ -63,30 +60,15 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
       size: '80px',
     },
     { label: 'Title', propertyName: 'title', size: '2fr' },
-    { label: 'External ID', propertyName: 'externalId' },
+    { label: 'Subtype', propertyName: '__typename', size: '1fr' },
+    { label: 'Published', propertyName: 'publishedDate' },
     {
-      label: 'Cast',
-      propertyName: 'moviesCasts',
-      sortable: false,
-      render: createConnectionRenderer<MoviesCastsConnection>((node) => {
-        return node.name;
-      }),
-    },
-    {
-      label: 'Genres',
-      propertyName: 'moviesMovieGenres',
-      sortable: false,
-      render: createConnectionRenderer<MoviesMovieGenresConnection>((node) => {
-        return node.movieGenres?.title;
-      }),
-    },
-    { label: 'Released', propertyName: 'released' },
-    { label: 'Created At', propertyName: 'createdDate', render: DateRenderer },
-    {
-      label: 'Last Modified At',
+      label: 'Last Modified',
       propertyName: 'updatedDate',
       render: DateRenderer,
     },
+    { label: 'Modified By', propertyName: 'updatedUser' },
+    { label: 'External ID', propertyName: 'externalId' },
   ];
 
   // Data provider

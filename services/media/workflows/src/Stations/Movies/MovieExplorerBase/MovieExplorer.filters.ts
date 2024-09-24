@@ -1,12 +1,10 @@
 import {
-  createDateRangeFilterValidators,
   filterToPostGraphileFilter,
   FilterType,
   FilterTypes,
   FilterValues,
-  transformRange,
 } from '@axinom/mosaic-ui';
-import { MovieFilter, PublishStatus } from '../../../generated/graphql';
+import { BusinessType, MovieFilter } from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { MovieData } from './MovieExplorer.types';
 
@@ -17,28 +15,10 @@ export function useMoviesFilters(): {
     excludeItems?: number[],
   ) => MovieFilter | undefined;
 } {
-  const [createFromDateFilterValidator, createToDateFilterValidator] =
-    createDateRangeFilterValidators<MovieData>();
-
   const filterOptions: FilterType<MovieData>[] = [
     {
       label: 'Title',
       property: 'title',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Original Title',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'External ID',
-      property: 'externalId',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Tags',
-      property: 'moviesTags',
       type: FilterTypes.FreeText,
     },
     {
@@ -47,126 +27,107 @@ export function useMoviesFilters(): {
       type: FilterTypes.FreeText,
     },
     {
+      label: 'Tags',
+      property: 'moviesTags',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Collections',
+      property: 'collectionRelations',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Content Owners',
+      property: 'contentOwner',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Age Ratings',
+      property: 'ageRating',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Publishing Status',
+      property: 'publishStatus',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Audio Languages',
+      property: 'audioLanguages',
+      type: FilterTypes.FreeText,
+    },
+    {
       label: 'Cast',
       property: 'moviesCasts',
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Release Period (From)',
-      property: 'released',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('released'),
+      label: 'External ID',
+      property: 'externalId',
+      type: FilterTypes.FreeText,
     },
     {
-      label: 'Release Period (To)',
-      property: 'released',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('released'),
-    },
-    {
-      label: 'Production Country',
+      label: 'License Countries',
       property: 'moviesProductionCountries',
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Studio',
-      property: 'studio',
+      // select from list [Valid License, No Valid License]
+      label: 'Valid Licensing',
+      property: 'originalTitle',
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Publication Status',
-      property: 'publishStatus',
+      label: 'Sub Type',
+      property: 'assetSubtype',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Business Type',
+      property: 'businessType',
       type: FilterTypes.Options,
-      options: Object.keys(PublishStatus).map((key) => ({
-        value: PublishStatus[key],
-        label: getEnumLabel(PublishStatus[key]),
+      options: Object.keys(BusinessType).map((key) => ({
+        value: BusinessType[key],
+        label: getEnumLabel(BusinessType[key]),
       })),
     },
-    {
-      label: 'Publication Period (From)',
-      property: 'publishedDate',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('publishedDate'),
-    },
-    {
-      label: 'Publication Period (To)',
-      property: 'publishedDate',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('publishedDate'),
-    },
-    {
-      label: 'Creation Period (From)',
-      property: 'createdDate',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('createdDate'),
-    },
-    {
-      label: 'Creation Period (To)',
-      property: 'createdDate',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('createdDate'),
-    },
-    {
-      label: 'ID',
-      property: 'id',
-      type: FilterTypes.Numeric,
-    },
-    {
-      label: 'Main Video',
-      property: 'mainVideoId',
-      type: FilterTypes.Options,
-      options: [
-        {
-          label: 'Assigned',
-          value: true,
-        },
-        {
-          label: 'Not Assigned',
-          value: false,
-        },
-      ],
-    },
+    // {
+    //   label: 'TVOD Tier',
+    //   property: 'studio',
+    //   type: FilterTypes.FreeText,
+    // },
   ];
 
   const transformFilters = (
     filters: FilterValues<MovieData>,
-    excludeItems?: number[],
+    _excludeItems?: number[],
   ): MovieFilter | undefined => {
     return filterToPostGraphileFilter<MovieFilter>(filters, {
       title: 'includesInsensitive',
-      originalTitle: 'includesInsensitive',
-      externalId: 'includesInsensitive',
-      moviesTags: ['some', 'name', 'includesInsensitive'],
       moviesMovieGenres: [
         'some',
         'movieGenres',
         'title',
         'includesInsensitive',
       ],
-      moviesCasts: ['some', 'name', 'includesInsensitive'],
-      moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
-      studio: 'includesInsensitive',
+      moviesTags: ['some', 'name', 'includesInsensitive'],
+      collectionRelations: [
+        'some',
+        'collection',
+        'title',
+        'includesInsensitive',
+      ],
+      ageRating: 'includesInsensitive',
       publishStatus: 'in',
-      id: (value) => {
-        if (typeof value === 'number') {
-          // User filter
-          return {
-            equalTo: value,
-            notIn: excludeItems,
-          };
-        } else {
-          // Exclude items
-          return {
-            notIn: excludeItems,
-          };
-        }
-      },
-      released: transformRange,
-      createdDate: transformRange,
-      publishedDate: transformRange,
-      mainVideoId: (value) => ({
-        isNull: !value,
-      }),
+      audioLanguages: 'equalTo',
+      moviesCasts: ['some', 'name', 'includesInsensitive'],
+      externalId: 'includesInsensitive',
+      contentOwner: 'includesInsensitive',
+      moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
+      // validLicensing: 'includesInsensitive',
+      assetSubtype: 'equalTo',
+      businessType: 'in',
+      // tvodTier: 'includesInsensitive',
     });
   };
 

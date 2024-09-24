@@ -1,0 +1,35 @@
+fragment LanguageExplorerProperties on Language {
+  code
+  title
+  createdDate
+  createdUser
+  id
+  native
+  updatedDate
+  updatedUser
+}
+
+query Languages(
+  $filter: LanguageFilter
+  $orderBy: [LanguagesOrderBy!]
+  $after: Cursor
+) {
+  filtered: languages(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...LanguageExplorerProperties
+    }
+  }
+  nonFiltered: languages {
+    totalCount
+  }
+}

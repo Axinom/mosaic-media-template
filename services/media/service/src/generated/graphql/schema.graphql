@@ -6,6 +6,40 @@ type Query {
   """
   query: Query!
 
+  """Reads and enables pagination through a set of `AgeRating`."""
+  ageRatings(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `AgeRating`."""
+    orderBy: [AgeRatingsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgeRatingCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AgeRatingFilter
+  ): AgeRatingsConnection
+
   """Reads and enables pagination through a set of `CollectionRelation`."""
   collectionRelations(
     """Only read the first `n` values of the set."""
@@ -141,6 +175,40 @@ type Query {
     """
     filter: CollectionsTagFilter
   ): CollectionsTagsConnection
+
+  """Reads and enables pagination through a set of `ContentOwner`."""
+  contentOwners(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ContentOwner`."""
+    orderBy: [ContentOwnersOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ContentOwnerCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ContentOwnerFilter
+  ): ContentOwnersConnection
 
   """Reads and enables pagination through a set of `Episode`."""
   episodes(
@@ -689,6 +757,40 @@ type Query {
     """
     filter: MoviesCastFilter
   ): MoviesCastsConnection
+
+  """Reads and enables pagination through a set of `MoviesDirector`."""
+  moviesDirectors(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesDirectorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesDirectorFilter
+  ): MoviesDirectorsConnection
 
   """Reads and enables pagination through a set of `MoviesImage`."""
   moviesImages(
@@ -1617,10 +1719,12 @@ type Query {
     """
     filter: TvshowsTvshowGenreFilter
   ): TvshowsTvshowGenresConnection
+  ageRating(id: UUID!): AgeRating
   collectionRelation(id: Int!): CollectionRelation
   collection(id: Int!): Collection
   collectionByExternalId(externalId: String!): Collection
   collectionsTag(collectionId: Int!, name: String!): CollectionsTag
+  contentOwner(id: UUID!): ContentOwner
   episode(id: Int!): Episode
   episodeByExternalId(externalId: String!): Episode
   episodesCast(episodeId: Int!, name: String!): EpisodesCast
@@ -1633,11 +1737,12 @@ type Query {
   ingestDocument(id: Int!): IngestDocument
   ingestItemStep(id: UUID!): IngestItemStep
   ingestItem(id: Int!): IngestItem
-  language(id: UUID!): Language
+  language(id: Int!): Language
   movieGenre(id: Int!): MovieGenre
   movie(id: Int!): Movie
   movieByExternalId(externalId: String!): Movie
   moviesCast(movieId: Int!, name: String!): MoviesCast
+  moviesDirector(movieId: Int!, name: String!): MoviesDirector
   moviesLicense(id: Int!): MoviesLicense
   moviesLicensesCountry(moviesLicenseId: Int!, code: IsoAlphaTwoCountryCodes!): MoviesLicensesCountry
   moviesMovieGenre(movieId: Int!, movieGenresId: Int!): MoviesMovieGenre
@@ -1784,6 +1889,30 @@ type Query {
     """
     filter: StringFilter
   ): GetMoviesCastsValuesConnection
+  getMoviesDirectorsValues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StringFilter
+  ): GetMoviesDirectorsValuesConnection
   getMoviesProductionCountriesValues(
     """Only read the first `n` values of the set."""
     first: Int
@@ -1978,6 +2107,418 @@ type Query {
   ): GetTvshowsTagsValuesConnection
 }
 
+"""A connection to a list of `AgeRating` values."""
+type AgeRatingsConnection {
+  """A list of `AgeRating` objects."""
+  nodes: [AgeRating!]!
+
+  """
+  A list of edges which contains the `AgeRating` and cursor to aid in pagination.
+  """
+  edges: [AgeRatingsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AgeRating` you could get from the connection."""
+  totalCount: Int!
+}
+
+""""""
+type AgeRating {
+  id: UUID!
+  name: String!
+  sortOrder: Int!
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+}
+
+"""
+A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
+"""
+scalar UUID
+
+"""
+A point in time as described by the [ISO
+8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+"""
+scalar Datetime
+
+"""A `AgeRating` edge in the connection."""
+type AgeRatingsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AgeRating` at the end of the edge."""
+  node: AgeRating!
+}
+
+"""A location in a connection that can be used for resuming pagination."""
+scalar Cursor
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+}
+
+"""Methods to use when ordering `AgeRating`."""
+enum AgeRatingsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  SORT_ORDER_ASC
+  SORT_ORDER_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `AgeRating` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input AgeRatingCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """
+  Checks for equality with the object’s `name` field.
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String
+
+  """Checks for equality with the object’s `sortOrder` field."""
+  sortOrder: Int
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+}
+
+"""
+A filter to be used against `AgeRating` object types. All fields are combined with a logical ‘and.’
+"""
+input AgeRatingFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `sortOrder` field."""
+  sortOrder: IntFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [AgeRatingFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AgeRatingFilter!]
+
+  """Negates the expression."""
+  not: AgeRatingFilter
+}
+
+"""
+A filter to be used against UUID fields. All fields are combined with a logical ‘and.’
+"""
+input UUIDFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: UUID
+
+  """Not equal to the specified value."""
+  notEqualTo: UUID
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: UUID
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: UUID
+
+  """Included in the specified list."""
+  in: [UUID!]
+
+  """Not included in the specified list."""
+  notIn: [UUID!]
+
+  """Less than the specified value."""
+  lessThan: UUID
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: UUID
+
+  """Greater than the specified value."""
+  greaterThan: UUID
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: UUID
+}
+
+"""
+A filter to be used against String fields. All fields are combined with a logical ‘and.’
+"""
+input StringFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: String
+
+  """Not equal to the specified value."""
+  notEqualTo: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: String
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: String
+
+  """Included in the specified list."""
+  in: [String!]
+
+  """Not included in the specified list."""
+  notIn: [String!]
+
+  """Less than the specified value."""
+  lessThan: String
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: String
+
+  """Greater than the specified value."""
+  greaterThan: String
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: String
+
+  """Contains the specified string (case-sensitive)."""
+  includes: String
+
+  """Does not contain the specified string (case-sensitive)."""
+  notIncludes: String
+
+  """Contains the specified string (case-insensitive)."""
+  includesInsensitive: String
+
+  """Does not contain the specified string (case-insensitive)."""
+  notIncludesInsensitive: String
+
+  """Starts with the specified string (case-sensitive)."""
+  startsWith: String
+
+  """Does not start with the specified string (case-sensitive)."""
+  notStartsWith: String
+
+  """Starts with the specified string (case-insensitive)."""
+  startsWithInsensitive: String
+
+  """Does not start with the specified string (case-insensitive)."""
+  notStartsWithInsensitive: String
+
+  """Ends with the specified string (case-sensitive)."""
+  endsWith: String
+
+  """Does not end with the specified string (case-sensitive)."""
+  notEndsWith: String
+
+  """Ends with the specified string (case-insensitive)."""
+  endsWithInsensitive: String
+
+  """Does not end with the specified string (case-insensitive)."""
+  notEndsWithInsensitive: String
+
+  """
+  Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  like: String
+
+  """
+  Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLike: String
+
+  """
+  Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  likeInsensitive: String
+
+  """
+  Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLikeInsensitive: String
+
+  """Equal to the specified value (case-insensitive)."""
+  equalToInsensitive: String
+
+  """Not equal to the specified value (case-insensitive)."""
+  notEqualToInsensitive: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  distinctFromInsensitive: String
+
+  """
+  Equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  notDistinctFromInsensitive: String
+
+  """Included in the specified list (case-insensitive)."""
+  inInsensitive: [String!]
+
+  """Not included in the specified list (case-insensitive)."""
+  notInInsensitive: [String!]
+
+  """Less than the specified value (case-insensitive)."""
+  lessThanInsensitive: String
+
+  """Less than or equal to the specified value (case-insensitive)."""
+  lessThanOrEqualToInsensitive: String
+
+  """Greater than the specified value (case-insensitive)."""
+  greaterThanInsensitive: String
+
+  """Greater than or equal to the specified value (case-insensitive)."""
+  greaterThanOrEqualToInsensitive: String
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’
+"""
+input DatetimeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Datetime
+
+  """Not equal to the specified value."""
+  notEqualTo: Datetime
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Datetime
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Datetime
+
+  """Included in the specified list."""
+  in: [Datetime!]
+
+  """Not included in the specified list."""
+  notIn: [Datetime!]
+
+  """Less than the specified value."""
+  lessThan: Datetime
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Datetime
+
+  """Greater than the specified value."""
+  greaterThan: Datetime
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Datetime
+}
+
 """
 A connection to a list of `CollectionRelation` values.
 @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
@@ -2042,7 +2583,8 @@ type Collection {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
-  languages: String
+  assetSubtype: AssetSubtype!
+  languages: [String]
 
   """Reads and enables pagination through a set of `CollectionRelation`."""
   collectionRelations(
@@ -2181,12 +2723,6 @@ type Collection {
   ): CollectionsSnapshotsConnection!
 }
 
-"""
-A point in time as described by the [ISO
-8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
-"""
-scalar Datetime
-
 enum PublishStatus {
   """Not published"""
   NOT_PUBLISHED
@@ -2198,8 +2734,46 @@ enum PublishStatus {
   CHANGED
 }
 
-"""A location in a connection that can be used for resuming pagination."""
-scalar Cursor
+enum AssetSubtype {
+  """Movie"""
+  MOVIE
+
+  """TV Show"""
+  TV_SHOW
+
+  """Season"""
+  SEASON
+
+  """Episode"""
+  EPISODE
+
+  """Collection"""
+  COLLECTION
+
+  """Album"""
+  ALBUM
+
+  """Audio Track"""
+  AUDIO_TRACK
+
+  """Subscription Plan"""
+  SUBSCRIPTION_PLAN
+
+  """File"""
+  FILE
+
+  """Promotion"""
+  PROMOTION
+
+  """Custom"""
+  CUSTOM
+
+  """Content Set"""
+  CONTENT_SET
+
+  """Unknown"""
+  UNKNOWN
+}
 
 """Methods to use when ordering `CollectionRelation`."""
 enum CollectionRelationsOrderBy {
@@ -2312,48 +2886,6 @@ input CollectionRelationFilter {
 }
 
 """
-A filter to be used against Int fields. All fields are combined with a logical ‘and.’
-"""
-input IntFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Int
-
-  """Not equal to the specified value."""
-  notEqualTo: Int
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Int
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Int
-
-  """Included in the specified list."""
-  in: [Int!]
-
-  """Not included in the specified list."""
-  notIn: [Int!]
-
-  """Less than the specified value."""
-  lessThan: Int
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Int
-
-  """Greater than the specified value."""
-  greaterThan: Int
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Int
-}
-
-"""
 A filter to be used against `Collection` object types. All fields are combined with a logical ‘and.’
 """
 input CollectionFilter {
@@ -2393,8 +2925,11 @@ input CollectionFilter {
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
 
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
+
   """Filter by the object’s `languages` field."""
-  languages: StringFilter
+  languages: StringListFilter
 
   """Filter by the object’s `collectionRelations` relation."""
   collectionRelations: CollectionToManyCollectionRelationFilter
@@ -2428,180 +2963,6 @@ input CollectionFilter {
 
   """Negates the expression."""
   not: CollectionFilter
-}
-
-"""
-A filter to be used against String fields. All fields are combined with a logical ‘and.’
-"""
-input StringFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: String
-
-  """Not equal to the specified value."""
-  notEqualTo: String
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: String
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: String
-
-  """Included in the specified list."""
-  in: [String!]
-
-  """Not included in the specified list."""
-  notIn: [String!]
-
-  """Less than the specified value."""
-  lessThan: String
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: String
-
-  """Greater than the specified value."""
-  greaterThan: String
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: String
-
-  """Contains the specified string (case-sensitive)."""
-  includes: String
-
-  """Does not contain the specified string (case-sensitive)."""
-  notIncludes: String
-
-  """Contains the specified string (case-insensitive)."""
-  includesInsensitive: String
-
-  """Does not contain the specified string (case-insensitive)."""
-  notIncludesInsensitive: String
-
-  """Starts with the specified string (case-sensitive)."""
-  startsWith: String
-
-  """Does not start with the specified string (case-sensitive)."""
-  notStartsWith: String
-
-  """Starts with the specified string (case-insensitive)."""
-  startsWithInsensitive: String
-
-  """Does not start with the specified string (case-insensitive)."""
-  notStartsWithInsensitive: String
-
-  """Ends with the specified string (case-sensitive)."""
-  endsWith: String
-
-  """Does not end with the specified string (case-sensitive)."""
-  notEndsWith: String
-
-  """Ends with the specified string (case-insensitive)."""
-  endsWithInsensitive: String
-
-  """Does not end with the specified string (case-insensitive)."""
-  notEndsWithInsensitive: String
-
-  """
-  Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  like: String
-
-  """
-  Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  notLike: String
-
-  """
-  Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  likeInsensitive: String
-
-  """
-  Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
-  """
-  notLikeInsensitive: String
-
-  """Equal to the specified value (case-insensitive)."""
-  equalToInsensitive: String
-
-  """Not equal to the specified value (case-insensitive)."""
-  notEqualToInsensitive: String
-
-  """
-  Not equal to the specified value, treating null like an ordinary value (case-insensitive).
-  """
-  distinctFromInsensitive: String
-
-  """
-  Equal to the specified value, treating null like an ordinary value (case-insensitive).
-  """
-  notDistinctFromInsensitive: String
-
-  """Included in the specified list (case-insensitive)."""
-  inInsensitive: [String!]
-
-  """Not included in the specified list (case-insensitive)."""
-  notInInsensitive: [String!]
-
-  """Less than the specified value (case-insensitive)."""
-  lessThanInsensitive: String
-
-  """Less than or equal to the specified value (case-insensitive)."""
-  lessThanOrEqualToInsensitive: String
-
-  """Greater than the specified value (case-insensitive)."""
-  greaterThanInsensitive: String
-
-  """Greater than or equal to the specified value (case-insensitive)."""
-  greaterThanOrEqualToInsensitive: String
-}
-
-"""
-A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’
-"""
-input DatetimeFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Datetime
-
-  """Not equal to the specified value."""
-  notEqualTo: Datetime
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Datetime
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Datetime
-
-  """Included in the specified list."""
-  in: [Datetime!]
-
-  """Not included in the specified list."""
-  notIn: [Datetime!]
-
-  """Less than the specified value."""
-  lessThan: Datetime
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Datetime
-
-  """Greater than the specified value."""
-  greaterThan: Datetime
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Datetime
 }
 
 """
@@ -2644,6 +3005,111 @@ input PublishStatusFilter {
 
   """Greater than or equal to the specified value."""
   greaterThanOrEqualTo: PublishStatus
+}
+
+"""
+A filter to be used against AssetSubtype fields. All fields are combined with a logical ‘and.’
+"""
+input AssetSubtypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: AssetSubtype
+
+  """Not equal to the specified value."""
+  notEqualTo: AssetSubtype
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: AssetSubtype
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: AssetSubtype
+
+  """Included in the specified list."""
+  in: [AssetSubtype!]
+
+  """Not included in the specified list."""
+  notIn: [AssetSubtype!]
+
+  """Less than the specified value."""
+  lessThan: AssetSubtype
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: AssetSubtype
+
+  """Greater than the specified value."""
+  greaterThan: AssetSubtype
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: AssetSubtype
+}
+
+"""
+A filter to be used against String List fields. All fields are combined with a logical ‘and.’
+"""
+input StringListFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: [String]
+
+  """Not equal to the specified value."""
+  notEqualTo: [String]
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: [String]
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: [String]
+
+  """Less than the specified value."""
+  lessThan: [String]
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: [String]
+
+  """Greater than the specified value."""
+  greaterThan: [String]
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: [String]
+
+  """Contains the specified list of values."""
+  contains: [String]
+
+  """Contained by the specified list of values."""
+  containedBy: [String]
+
+  """Overlaps the specified list of values."""
+  overlaps: [String]
+
+  """Any array item is equal to the specified value."""
+  anyEqualTo: String
+
+  """Any array item is not equal to the specified value."""
+  anyNotEqualTo: String
+
+  """Any array item is less than the specified value."""
+  anyLessThan: String
+
+  """Any array item is less than or equal to the specified value."""
+  anyLessThanOrEqualTo: String
+
+  """Any array item is greater than the specified value."""
+  anyGreaterThan: String
+
+  """Any array item is greater than or equal to the specified value."""
+  anyGreaterThanOrEqualTo: String
 }
 
 """
@@ -2754,53 +3220,6 @@ input CollectionsImageFilter {
   """Negates the expression."""
   not: CollectionsImageFilter
 }
-
-"""
-A filter to be used against UUID fields. All fields are combined with a logical ‘and.’
-"""
-input UUIDFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: UUID
-
-  """Not equal to the specified value."""
-  notEqualTo: UUID
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: UUID
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: UUID
-
-  """Included in the specified list."""
-  in: [UUID!]
-
-  """Not included in the specified list."""
-  notIn: [UUID!]
-
-  """Less than the specified value."""
-  lessThan: UUID
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: UUID
-
-  """Greater than the specified value."""
-  greaterThan: UUID
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: UUID
-}
-
-"""
-A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
-"""
-scalar UUID
 
 """
 A filter to be used against CollectionImageType fields. All fields are combined with a logical ‘and.’
@@ -3489,17 +3908,44 @@ input MovieFilter {
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
 
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
+
+  """Filter by the object’s `rating` field."""
+  rating: BigFloatFilter
+
+  """Filter by the object’s `customRating` field."""
+  customRating: StringFilter
+
+  """Filter by the object’s `creditsStartTime` field."""
+  creditsStartTime: StringFilter
+
+  """Filter by the object’s `lengthInSeconds` field."""
+  lengthInSeconds: BigFloatFilter
+
+  """Filter by the object’s `dynamicField` field."""
+  dynamicField: StringFilter
+
+  """Filter by the object’s `extendedField` field."""
+  extendedField: StringFilter
+
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
+
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
 
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
+
   """Filter by the object’s `audioLanguages` field."""
-  audioLanguages: StringFilter
+  audioLanguages: StringListFilter
 
   """Filter by the object’s `subtitleLanguages` field."""
-  subtitleLanguages: StringFilter
+  subtitleLanguages: StringListFilter
 
   """Filter by the object’s `captionLanguages` field."""
-  captionLanguages: StringFilter
+  captionLanguages: StringListFilter
 
   """Filter by the object’s `moviesTags` relation."""
   moviesTags: MovieToManyMoviesTagFilter
@@ -3555,6 +4001,12 @@ input MovieFilter {
   """Some related `moviesSnapshots` exist."""
   moviesSnapshotsExist: Boolean
 
+  """Filter by the object’s `moviesDirectors` relation."""
+  moviesDirectors: MovieToManyMoviesDirectorFilter
+
+  """Some related `moviesDirectors` exist."""
+  moviesDirectorsExist: Boolean
+
   """Checks for all expressions in this list."""
   and: [MovieFilter!]
 
@@ -3609,6 +4061,53 @@ input DateFilter {
 
 """The day, does not include a time."""
 scalar Date
+
+"""
+A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’
+"""
+input BigFloatFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigFloat
+
+  """Not equal to the specified value."""
+  notEqualTo: BigFloat
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigFloat
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigFloat
+
+  """Included in the specified list."""
+  in: [BigFloat!]
+
+  """Not included in the specified list."""
+  notIn: [BigFloat!]
+
+  """Less than the specified value."""
+  lessThan: BigFloat
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigFloat
+
+  """Greater than the specified value."""
+  greaterThan: BigFloat
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigFloat
+}
+
+"""
+A floating point number that requires more precision than IEEE 754 binary 64
+"""
+scalar BigFloat
 
 """
 A filter to be used against BusinessType fields. All fields are combined with a logical ‘and.’
@@ -4492,6 +4991,49 @@ input MovieToManyMoviesSnapshotFilter {
 }
 
 """
+A filter to be used against many `MoviesDirector` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieToManyMoviesDirectorFilter {
+  """
+  Every related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesDirectorFilter
+
+  """
+  Some related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesDirectorFilter
+
+  """
+  No related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesDirectorFilter
+}
+
+"""
+A filter to be used against `MoviesDirector` object types. All fields are combined with a logical ‘and.’
+"""
+input MoviesDirectorFilter {
+  """Filter by the object’s `movieId` field."""
+  movieId: IntFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `movie` relation."""
+  movie: MovieFilter
+
+  """Checks for all expressions in this list."""
+  and: [MoviesDirectorFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MoviesDirectorFilter!]
+
+  """Negates the expression."""
+  not: MoviesDirectorFilter
+}
+
+"""
 A filter to be used against many `TvshowsSnapshot` object types. All fields are combined with a logical ‘and.’
 """
 input SnapshotToManyTvshowsSnapshotFilter {
@@ -4586,17 +5128,44 @@ input TvshowFilter {
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
 
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
+
+  """Filter by the object’s `rating` field."""
+  rating: BigFloatFilter
+
+  """Filter by the object’s `customRating` field."""
+  customRating: StringFilter
+
+  """Filter by the object’s `creditsStartTime` field."""
+  creditsStartTime: StringFilter
+
+  """Filter by the object’s `lengthInSeconds` field."""
+  lengthInSeconds: BigFloatFilter
+
+  """Filter by the object’s `dynamicField` field."""
+  dynamicField: StringFilter
+
+  """Filter by the object’s `extendedField` field."""
+  extendedField: StringFilter
+
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
+
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
 
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
+
   """Filter by the object’s `audioLanguages` field."""
-  audioLanguages: StringFilter
+  audioLanguages: StringListFilter
 
   """Filter by the object’s `subtitleLanguages` field."""
-  subtitleLanguages: StringFilter
+  subtitleLanguages: StringListFilter
 
   """Filter by the object’s `captionLanguages` field."""
-  captionLanguages: StringFilter
+  captionLanguages: StringListFilter
 
   """Filter by the object’s `tvshowsTags` relation."""
   tvshowsTags: TvshowToManyTvshowsTagFilter
@@ -4657,6 +5226,12 @@ input TvshowFilter {
 
   """Some related `tvshowsSnapshots` exist."""
   tvshowsSnapshotsExist: Boolean
+
+  """Filter by the object’s `tvshowsDirectors` relation."""
+  tvshowsDirectors: TvshowToManyTvshowsDirectorFilter
+
+  """Some related `tvshowsDirectors` exist."""
+  tvshowsDirectorsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [TvshowFilter!]
@@ -5117,8 +5692,35 @@ input SeasonFilter {
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
 
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
+
+  """Filter by the object’s `rating` field."""
+  rating: BigFloatFilter
+
+  """Filter by the object’s `customRating` field."""
+  customRating: StringFilter
+
+  """Filter by the object’s `creditsStartTime` field."""
+  creditsStartTime: StringFilter
+
+  """Filter by the object’s `lengthInSeconds` field."""
+  lengthInSeconds: BigFloatFilter
+
+  """Filter by the object’s `dynamicField` field."""
+  dynamicField: StringFilter
+
+  """Filter by the object’s `extendedField` field."""
+  extendedField: StringFilter
+
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
+
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
+
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
 
   """Filter by the object’s `seasonsTags` relation."""
   seasonsTags: SeasonToManySeasonsTagFilter
@@ -5179,6 +5781,12 @@ input SeasonFilter {
 
   """Some related `seasonsSnapshots` exist."""
   seasonsSnapshotsExist: Boolean
+
+  """Filter by the object’s `seasonsDirectors` relation."""
+  seasonsDirectors: SeasonToManySeasonsDirectorFilter
+
+  """Some related `seasonsDirectors` exist."""
+  seasonsDirectorsExist: Boolean
 
   """Filter by the object’s `tvshow` relation."""
   tvshow: TvshowFilter
@@ -5666,8 +6274,35 @@ input EpisodeFilter {
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
 
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
+
+  """Filter by the object’s `rating` field."""
+  rating: BigFloatFilter
+
+  """Filter by the object’s `customRating` field."""
+  customRating: StringFilter
+
+  """Filter by the object’s `creditsStartTime` field."""
+  creditsStartTime: StringFilter
+
+  """Filter by the object’s `lengthInSeconds` field."""
+  lengthInSeconds: BigFloatFilter
+
+  """Filter by the object’s `dynamicField` field."""
+  dynamicField: StringFilter
+
+  """Filter by the object’s `extendedField` field."""
+  extendedField: StringFilter
+
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
+
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
+
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
 
   """Filter by the object’s `episodesTags` relation."""
   episodesTags: EpisodeToManyEpisodesTagFilter
@@ -5722,6 +6357,12 @@ input EpisodeFilter {
 
   """Some related `episodesSnapshots` exist."""
   episodesSnapshotsExist: Boolean
+
+  """Filter by the object’s `episodesDirectors` relation."""
+  episodesDirectors: EpisodeToManyEpisodesDirectorFilter
+
+  """Some related `episodesDirectors` exist."""
+  episodesDirectorsExist: Boolean
 
   """Filter by the object’s `season` relation."""
   season: SeasonFilter
@@ -6224,6 +6865,49 @@ input EpisodesSnapshotFilter {
 }
 
 """
+A filter to be used against many `EpisodesDirector` object types. All fields are combined with a logical ‘and.’
+"""
+input EpisodeToManyEpisodesDirectorFilter {
+  """
+  Every related `EpisodesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: EpisodesDirectorFilter
+
+  """
+  Some related `EpisodesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: EpisodesDirectorFilter
+
+  """
+  No related `EpisodesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: EpisodesDirectorFilter
+}
+
+"""
+A filter to be used against `EpisodesDirector` object types. All fields are combined with a logical ‘and.’
+"""
+input EpisodesDirectorFilter {
+  """Filter by the object’s `episodeId` field."""
+  episodeId: IntFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `episode` relation."""
+  episode: EpisodeFilter
+
+  """Checks for all expressions in this list."""
+  and: [EpisodesDirectorFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [EpisodesDirectorFilter!]
+
+  """Negates the expression."""
+  not: EpisodesDirectorFilter
+}
+
+"""
 A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’
 """
 input SeasonToManyCollectionRelationFilter {
@@ -6287,6 +6971,49 @@ input SeasonsSnapshotFilter {
 
   """Negates the expression."""
   not: SeasonsSnapshotFilter
+}
+
+"""
+A filter to be used against many `SeasonsDirector` object types. All fields are combined with a logical ‘and.’
+"""
+input SeasonToManySeasonsDirectorFilter {
+  """
+  Every related `SeasonsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: SeasonsDirectorFilter
+
+  """
+  Some related `SeasonsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: SeasonsDirectorFilter
+
+  """
+  No related `SeasonsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: SeasonsDirectorFilter
+}
+
+"""
+A filter to be used against `SeasonsDirector` object types. All fields are combined with a logical ‘and.’
+"""
+input SeasonsDirectorFilter {
+  """Filter by the object’s `seasonId` field."""
+  seasonId: IntFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `season` relation."""
+  season: SeasonFilter
+
+  """Checks for all expressions in this list."""
+  and: [SeasonsDirectorFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [SeasonsDirectorFilter!]
+
+  """Negates the expression."""
+  not: SeasonsDirectorFilter
 }
 
 """
@@ -6509,6 +7236,49 @@ input TvshowToManyTvshowsSnapshotFilter {
 }
 
 """
+A filter to be used against many `TvshowsDirector` object types. All fields are combined with a logical ‘and.’
+"""
+input TvshowToManyTvshowsDirectorFilter {
+  """
+  Every related `TvshowsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TvshowsDirectorFilter
+
+  """
+  Some related `TvshowsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TvshowsDirectorFilter
+
+  """
+  No related `TvshowsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TvshowsDirectorFilter
+}
+
+"""
+A filter to be used against `TvshowsDirector` object types. All fields are combined with a logical ‘and.’
+"""
+input TvshowsDirectorFilter {
+  """Filter by the object’s `tvshowId` field."""
+  tvshowId: IntFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `tvshow` relation."""
+  tvshow: TvshowFilter
+
+  """Checks for all expressions in this list."""
+  and: [TvshowsDirectorFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TvshowsDirectorFilter!]
+
+  """Negates the expression."""
+  not: TvshowsDirectorFilter
+}
+
+"""
 A filter to be used against many `SeasonsSnapshot` object types. All fields are combined with a logical ‘and.’
 """
 input SnapshotToManySeasonsSnapshotFilter {
@@ -6604,21 +7374,6 @@ type CollectionsTagsEdge {
 
   """The `CollectionsTag` at the end of the edge."""
   node: CollectionsTag!
-}
-
-"""Information about pagination in a connection."""
-type PageInfo {
-  """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
-  startCursor: Cursor
-
-  """When paginating forwards, the cursor to continue."""
-  endCursor: Cursor
 }
 
 """Methods to use when ordering `CollectionsTag`."""
@@ -7133,10 +7888,19 @@ type Movie {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType!
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  assetSubtype: AssetSubtype!
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 
   """Reads and enables pagination through a set of `MoviesTag`."""
   moviesTags(
@@ -7445,6 +8209,40 @@ type Movie {
     """
     filter: MoviesSnapshotFilter
   ): MoviesSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `MoviesDirector`."""
+  moviesDirectors(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesDirectorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesDirectorFilter
+  ): MoviesDirectorsConnection!
 }
 
 """
@@ -8091,6 +8889,70 @@ input MoviesSnapshotCondition {
   snapshotId: Int
 }
 
+"""
+A connection to a list of `MoviesDirector` values.
+@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
+"""
+type MoviesDirectorsConnection {
+  """A list of `MoviesDirector` objects."""
+  nodes: [MoviesDirector!]!
+
+  """
+  A list of edges which contains the `MoviesDirector` and cursor to aid in pagination.
+  """
+  edges: [MoviesDirectorsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `MoviesDirector` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN"""
+type MoviesDirector {
+  movieId: Int!
+  name: String!
+
+  """Reads a single `Movie` that is related to this `MoviesDirector`."""
+  movie: Movie
+}
+
+"""A `MoviesDirector` edge in the connection."""
+type MoviesDirectorsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `MoviesDirector` at the end of the edge."""
+  node: MoviesDirector!
+}
+
+"""Methods to use when ordering `MoviesDirector`."""
+enum MoviesDirectorsOrderBy {
+  NATURAL
+  MOVIE_ID_ASC
+  MOVIE_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `MoviesDirector` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input MoviesDirectorCondition {
+  """Checks for equality with the object’s `movieId` field."""
+  movieId: Int
+
+  """
+  Checks for equality with the object’s `name` field.
+  @notEmpty()
+  """
+  name: String
+}
+
 """A `MoviesSnapshot` edge in the connection."""
 type MoviesSnapshotsEdge {
   """A cursor for use in pagination."""
@@ -8151,10 +9013,19 @@ type Tvshow {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType!
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  assetSubtype: AssetSubtype!
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 
   """Reads and enables pagination through a set of `TvshowsTag`."""
   tvshowsTags(
@@ -9106,7 +9977,16 @@ type Season {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType!
+  assetSubtype: AssetSubtype!
 
   """Reads a single `Tvshow` that is related to this `Season`."""
   tvshow: Tvshow
@@ -10027,7 +10907,16 @@ type Episode {
   createdUser: String!
   updatedUser: String!
   publishStatus: PublishStatus!
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType!
+  assetSubtype: AssetSubtype!
 
   """Reads a single `Season` that is related to this `Episode`."""
   season: Season
@@ -11039,8 +11928,26 @@ enum EpisodesOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
+  RATING_ASC
+  RATING_DESC
+  CUSTOM_RATING_ASC
+  CUSTOM_RATING_DESC
+  CREDITS_START_TIME_ASC
+  CREDITS_START_TIME_DESC
+  LENGTH_IN_SECONDS_ASC
+  LENGTH_IN_SECONDS_DESC
+  DYNAMIC_FIELD_ASC
+  DYNAMIC_FIELD_DESC
+  EXTENDED_FIELD_ASC
+  EXTENDED_FIELD_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -11107,8 +12014,35 @@ input EpisodeCondition {
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
 
+  """Checks for equality with the object’s `ageRating` field."""
+  ageRating: String
+
+  """Checks for equality with the object’s `rating` field."""
+  rating: BigFloat
+
+  """Checks for equality with the object’s `customRating` field."""
+  customRating: String
+
+  """Checks for equality with the object’s `creditsStartTime` field."""
+  creditsStartTime: String
+
+  """Checks for equality with the object’s `lengthInSeconds` field."""
+  lengthInSeconds: BigFloat
+
+  """Checks for equality with the object’s `dynamicField` field."""
+  dynamicField: String
+
+  """Checks for equality with the object’s `extendedField` field."""
+  extendedField: String
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
+
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
+
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtype
 }
 
 """
@@ -11385,8 +12319,26 @@ enum SeasonsOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
+  RATING_ASC
+  RATING_DESC
+  CUSTOM_RATING_ASC
+  CUSTOM_RATING_DESC
+  CREDITS_START_TIME_ASC
+  CREDITS_START_TIME_DESC
+  LENGTH_IN_SECONDS_ASC
+  LENGTH_IN_SECONDS_DESC
+  DYNAMIC_FIELD_ASC
+  DYNAMIC_FIELD_DESC
+  EXTENDED_FIELD_ASC
+  EXTENDED_FIELD_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -11440,8 +12392,35 @@ input SeasonCondition {
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
 
+  """Checks for equality with the object’s `ageRating` field."""
+  ageRating: String
+
+  """Checks for equality with the object’s `rating` field."""
+  rating: BigFloat
+
+  """Checks for equality with the object’s `customRating` field."""
+  customRating: String
+
+  """Checks for equality with the object’s `creditsStartTime` field."""
+  creditsStartTime: String
+
+  """Checks for equality with the object’s `lengthInSeconds` field."""
+  lengthInSeconds: BigFloat
+
+  """Checks for equality with the object’s `dynamicField` field."""
+  dynamicField: String
+
+  """Checks for equality with the object’s `extendedField` field."""
+  extendedField: String
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
+
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
+
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtype
 }
 
 """Methods to use when ordering `TvshowsSnapshot`."""
@@ -11573,6 +12552,8 @@ enum CollectionsOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   LANGUAGES_ASC
   LANGUAGES_DESC
   PRIMARY_KEY_ASC
@@ -11624,8 +12605,136 @@ input CollectionCondition {
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
 
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtype
+
   """Checks for equality with the object’s `languages` field."""
-  languages: String
+  languages: [String]
+}
+
+"""A connection to a list of `ContentOwner` values."""
+type ContentOwnersConnection {
+  """A list of `ContentOwner` objects."""
+  nodes: [ContentOwner!]!
+
+  """
+  A list of edges which contains the `ContentOwner` and cursor to aid in pagination.
+  """
+  edges: [ContentOwnersEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `ContentOwner` you could get from the connection."""
+  totalCount: Int!
+}
+
+""""""
+type ContentOwner {
+  id: UUID!
+  name: String!
+  sortOrder: Int!
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+}
+
+"""A `ContentOwner` edge in the connection."""
+type ContentOwnersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ContentOwner` at the end of the edge."""
+  node: ContentOwner!
+}
+
+"""Methods to use when ordering `ContentOwner`."""
+enum ContentOwnersOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  SORT_ORDER_ASC
+  SORT_ORDER_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `ContentOwner` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ContentOwnerCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """
+  Checks for equality with the object’s `name` field.
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String
+
+  """Checks for equality with the object’s `sortOrder` field."""
+  sortOrder: Int
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+}
+
+"""
+A filter to be used against `ContentOwner` object types. All fields are combined with a logical ‘and.’
+"""
+input ContentOwnerFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `sortOrder` field."""
+  sortOrder: IntFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [ContentOwnerFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ContentOwnerFilter!]
+
+  """Negates the expression."""
+  not: ContentOwnerFilter
 }
 
 """
@@ -12906,7 +14015,7 @@ type LanguagesConnection {
 
 """@permissions: LANGUAGES_VIEW,LANGUAGES_EDIT,ADMIN"""
 type Language {
-  id: UUID!
+  id: Int!
   title: String!
   native: String
   code: String!
@@ -12954,7 +14063,7 @@ for equality and combined with a logical ‘and.’
 """
 input LanguageCondition {
   """Checks for equality with the object’s `id` field."""
-  id: UUID
+  id: Int
 
   """
   Checks for equality with the object’s `title` field.
@@ -12991,7 +14100,7 @@ A filter to be used against `Language` object types. All fields are combined wit
 """
 input LanguageFilter {
   """Filter by the object’s `id` field."""
-  id: UUIDFilter
+  id: IntFilter
 
   """Filter by the object’s `title` field."""
   title: StringFilter
@@ -13170,8 +14279,26 @@ enum MoviesOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
+  RATING_ASC
+  RATING_DESC
+  CUSTOM_RATING_ASC
+  CUSTOM_RATING_DESC
+  CREDITS_START_TIME_ASC
+  CREDITS_START_TIME_DESC
+  LENGTH_IN_SECONDS_ASC
+  LENGTH_IN_SECONDS_DESC
+  DYNAMIC_FIELD_ASC
+  DYNAMIC_FIELD_DESC
+  EXTENDED_FIELD_ASC
+  EXTENDED_FIELD_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   AUDIO_LANGUAGES_ASC
   AUDIO_LANGUAGES_DESC
   SUBTITLE_LANGUAGES_ASC
@@ -13238,17 +14365,44 @@ input MovieCondition {
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
 
+  """Checks for equality with the object’s `ageRating` field."""
+  ageRating: String
+
+  """Checks for equality with the object’s `rating` field."""
+  rating: BigFloat
+
+  """Checks for equality with the object’s `customRating` field."""
+  customRating: String
+
+  """Checks for equality with the object’s `creditsStartTime` field."""
+  creditsStartTime: String
+
+  """Checks for equality with the object’s `lengthInSeconds` field."""
+  lengthInSeconds: BigFloat
+
+  """Checks for equality with the object’s `dynamicField` field."""
+  dynamicField: String
+
+  """Checks for equality with the object’s `extendedField` field."""
+  extendedField: String
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
+
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
 
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtype
+
   """Checks for equality with the object’s `audioLanguages` field."""
-  audioLanguages: String
+  audioLanguages: [String]
 
   """Checks for equality with the object’s `subtitleLanguages` field."""
-  subtitleLanguages: String
+  subtitleLanguages: [String]
 
   """Checks for equality with the object’s `captionLanguages` field."""
-  captionLanguages: String
+  captionLanguages: [String]
 }
 
 """
@@ -13527,8 +14681,26 @@ enum TvshowsOrderBy {
   UPDATED_USER_DESC
   PUBLISH_STATUS_ASC
   PUBLISH_STATUS_DESC
+  AGE_RATING_ASC
+  AGE_RATING_DESC
+  RATING_ASC
+  RATING_DESC
+  CUSTOM_RATING_ASC
+  CUSTOM_RATING_DESC
+  CREDITS_START_TIME_ASC
+  CREDITS_START_TIME_DESC
+  LENGTH_IN_SECONDS_ASC
+  LENGTH_IN_SECONDS_DESC
+  DYNAMIC_FIELD_ASC
+  DYNAMIC_FIELD_DESC
+  EXTENDED_FIELD_ASC
+  EXTENDED_FIELD_DESC
+  CONTENT_OWNER_ASC
+  CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
+  ASSET_SUBTYPE_ASC
+  ASSET_SUBTYPE_DESC
   AUDIO_LANGUAGES_ASC
   AUDIO_LANGUAGES_DESC
   SUBTITLE_LANGUAGES_ASC
@@ -13592,17 +14764,44 @@ input TvshowCondition {
   """Checks for equality with the object’s `publishStatus` field."""
   publishStatus: PublishStatus
 
+  """Checks for equality with the object’s `ageRating` field."""
+  ageRating: String
+
+  """Checks for equality with the object’s `rating` field."""
+  rating: BigFloat
+
+  """Checks for equality with the object’s `customRating` field."""
+  customRating: String
+
+  """Checks for equality with the object’s `creditsStartTime` field."""
+  creditsStartTime: String
+
+  """Checks for equality with the object’s `lengthInSeconds` field."""
+  lengthInSeconds: BigFloat
+
+  """Checks for equality with the object’s `dynamicField` field."""
+  dynamicField: String
+
+  """Checks for equality with the object’s `extendedField` field."""
+  extendedField: String
+
+  """Checks for equality with the object’s `contentOwner` field."""
+  contentOwner: String
+
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
 
+  """Checks for equality with the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtype
+
   """Checks for equality with the object’s `audioLanguages` field."""
-  audioLanguages: String
+  audioLanguages: [String]
 
   """Checks for equality with the object’s `subtitleLanguages` field."""
-  subtitleLanguages: String
+  subtitleLanguages: [String]
 
   """Checks for equality with the object’s `captionLanguages` field."""
-  captionLanguages: String
+  captionLanguages: [String]
 }
 
 """A connection to a list of `String` values."""
@@ -13713,6 +14912,29 @@ type GetMoviesCastsValuesConnection {
 
 """A `String` edge in the connection."""
 type GetMoviesCastsValueEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `String` at the end of the edge."""
+  node: String
+}
+
+"""A connection to a list of `String` values."""
+type GetMoviesDirectorsValuesConnection {
+  """A list of `String` objects."""
+  nodes: [String]!
+
+  """
+  A list of edges which contains the `String` and cursor to aid in pagination.
+  """
+  edges: [GetMoviesDirectorsValueEdge!]!
+
+  """The count of *all* `String` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `String` edge in the connection."""
+type GetMoviesDirectorsValueEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -14101,6 +15323,14 @@ enum ErrorCodesEnum {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  """Creates a single `AgeRating`."""
+  createAgeRating(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAgeRatingInput!
+  ): CreateAgeRatingPayload
+
   """Creates a single `CollectionRelation`."""
   createCollectionRelation(
     """
@@ -14132,6 +15362,14 @@ type Mutation {
     """
     input: CreateCollectionsTagInput!
   ): CreateCollectionsTagPayload
+
+  """Creates a single `ContentOwner`."""
+  createContentOwner(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateContentOwnerInput!
+  ): CreateContentOwnerPayload
 
   """Creates a single `Episode`."""
   createEpisode(
@@ -14236,6 +15474,14 @@ type Mutation {
     """
     input: CreateMoviesCastInput!
   ): CreateMoviesCastPayload
+
+  """Creates a single `MoviesDirector`."""
+  createMoviesDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateMoviesDirectorInput!
+  ): CreateMoviesDirectorPayload
 
   """Creates a single `MoviesImage`."""
   createMoviesImage(
@@ -14445,6 +15691,14 @@ type Mutation {
     input: CreateTvshowsTvshowGenreInput!
   ): CreateTvshowsTvshowGenrePayload
 
+  """Updates a single `AgeRating` using a unique key and a patch."""
+  updateAgeRating(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAgeRatingInput!
+  ): UpdateAgeRatingPayload
+
   """Updates a single `CollectionRelation` using a unique key and a patch."""
   updateCollectionRelation(
     """
@@ -14484,6 +15738,14 @@ type Mutation {
     """
     input: UpdateCollectionsTagInput!
   ): UpdateCollectionsTagPayload
+
+  """Updates a single `ContentOwner` using a unique key and a patch."""
+  updateContentOwner(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateContentOwnerInput!
+  ): UpdateContentOwnerPayload
 
   """Updates a single `Episode` using a unique key and a patch."""
   updateEpisode(
@@ -14600,6 +15862,14 @@ type Mutation {
     """
     input: UpdateMoviesCastInput!
   ): UpdateMoviesCastPayload
+
+  """Updates a single `MoviesDirector` using a unique key and a patch."""
+  updateMoviesDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateMoviesDirectorInput!
+  ): UpdateMoviesDirectorPayload
 
   """Updates a single `MoviesImage` using a unique key and a patch."""
   updateMoviesImageByMovieIdAndImageType(
@@ -14789,6 +16059,14 @@ type Mutation {
     input: UpdateTvshowsTagInput!
   ): UpdateTvshowsTagPayload
 
+  """Deletes a single `AgeRating` using a unique key."""
+  deleteAgeRating(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAgeRatingInput!
+  ): DeleteAgeRatingPayload
+
   """Deletes a single `CollectionRelation` using a unique key."""
   deleteCollectionRelation(
     """
@@ -14828,6 +16106,14 @@ type Mutation {
     """
     input: DeleteCollectionsTagInput!
   ): DeleteCollectionsTagPayload
+
+  """Deletes a single `ContentOwner` using a unique key."""
+  deleteContentOwner(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteContentOwnerInput!
+  ): DeleteContentOwnerPayload
 
   """Deletes a single `Episode` using a unique key."""
   deleteEpisode(
@@ -14948,6 +16234,14 @@ type Mutation {
     """
     input: DeleteMoviesCastInput!
   ): DeleteMoviesCastPayload
+
+  """Deletes a single `MoviesDirector` using a unique key."""
+  deleteMoviesDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteMoviesDirectorInput!
+  ): DeleteMoviesDirectorPayload
 
   """Deletes a single `MoviesImage` using a unique key."""
   deleteMoviesImageByMovieIdAndImageType(
@@ -15407,6 +16701,52 @@ type Mutation {
   ): PopulatePayload
 }
 
+"""The output of our create `AgeRating` mutation."""
+type CreateAgeRatingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgeRating` that was created by this mutation."""
+  ageRating: AgeRating
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgeRating`. May be used by Relay 1."""
+  ageRatingEdge(
+    """The method to use when ordering `AgeRating`."""
+    orderBy: [AgeRatingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgeRatingsEdge
+}
+
+"""All input for the create `AgeRating` mutation."""
+input CreateAgeRatingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `AgeRating` to be created by this mutation."""
+  ageRating: AgeRatingInput!
+}
+
+"""An input for mutations affecting `AgeRating`"""
+input AgeRatingInput {
+  """
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String!
+  sortOrder: Int!
+}
+
 """The output of our create `CollectionRelation` mutation."""
 type CreateCollectionRelationPayload {
   """
@@ -15521,7 +16861,8 @@ input CollectionInput {
   externalId: String
   synopsis: String
   description: String
-  languages: String
+  assetSubtype: AssetSubtype
+  languages: [String]
 }
 
 """The output of our create `CollectionsImage` mutation."""
@@ -15623,6 +16964,52 @@ input CollectionsTagInput {
   name: String!
 }
 
+"""The output of our create `ContentOwner` mutation."""
+type CreateContentOwnerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ContentOwner` that was created by this mutation."""
+  contentOwner: ContentOwner
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ContentOwner`. May be used by Relay 1."""
+  contentOwnerEdge(
+    """The method to use when ordering `ContentOwner`."""
+    orderBy: [ContentOwnersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ContentOwnersEdge
+}
+
+"""All input for the create `ContentOwner` mutation."""
+input CreateContentOwnerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ContentOwner` to be created by this mutation."""
+  contentOwner: ContentOwnerInput!
+}
+
+"""An input for mutations affecting `ContentOwner`"""
+input ContentOwnerInput {
+  """
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String!
+  sortOrder: Int!
+}
+
 """The output of our create `Episode` mutation."""
 type CreateEpisodePayload {
   """
@@ -15681,7 +17068,16 @@ input EpisodeInput {
   studio: String
   released: Date
   mainVideoId: UUID
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
 }
 
 """The output of our create `EpisodesCast` mutation."""
@@ -16232,10 +17628,19 @@ input MovieInput {
   studio: String
   released: Date
   mainVideoId: UUID
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  assetSubtype: AssetSubtype
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 }
 
 """The output of our create `MoviesCast` mutation."""
@@ -16281,6 +17686,55 @@ input CreateMoviesCastInput {
 
 """An input for mutations affecting `MoviesCast`"""
 input MoviesCastInput {
+  movieId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""The output of our create `MoviesDirector` mutation."""
+type CreateMoviesDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `MoviesDirector` that was created by this mutation."""
+  moviesDirector: MoviesDirector
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Movie` that is related to this `MoviesDirector`."""
+  movie: Movie
+
+  """An edge for our `MoviesDirector`. May be used by Relay 1."""
+  moviesDirectorEdge(
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): MoviesDirectorsEdge
+}
+
+"""
+All input for the create `MoviesDirector` mutation.
+@permissions: MOVIE_EDITOR,ADMIN
+"""
+input CreateMoviesDirectorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `MoviesDirector` to be created by this mutation."""
+  moviesDirector: MoviesDirectorInput!
+}
+
+"""An input for mutations affecting `MoviesDirector`"""
+input MoviesDirectorInput {
   movieId: Int!
 
   """@notEmpty()"""
@@ -16681,7 +18135,16 @@ input SeasonInput {
   description: String
   studio: String
   released: Date
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
 }
 
 """The output of our create `SeasonsCast` mutation."""
@@ -17177,10 +18640,19 @@ input TvshowInput {
   description: String
   studio: String
   released: Date
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  assetSubtype: AssetSubtype
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 }
 
 """The output of our create `TvshowsCast` mutation."""
@@ -17576,6 +19048,57 @@ input TvshowsTvshowGenreInput {
   tvshowGenresId: Int!
 }
 
+"""The output of our update `AgeRating` mutation."""
+type UpdateAgeRatingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgeRating` that was updated by this mutation."""
+  ageRating: AgeRating
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgeRating`. May be used by Relay 1."""
+  ageRatingEdge(
+    """The method to use when ordering `AgeRating`."""
+    orderBy: [AgeRatingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgeRatingsEdge
+}
+
+"""All input for the `updateAgeRating` mutation."""
+input UpdateAgeRatingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `AgeRating` being updated.
+  """
+  patch: AgeRatingPatch!
+  id: UUID!
+}
+
+"""
+Represents an update to a `AgeRating`. Fields that are set will be updated.
+"""
+input AgeRatingPatch {
+  """
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String
+  sortOrder: Int
+}
+
 """The output of our update `CollectionRelation` mutation."""
 type UpdateCollectionRelationPayload {
   """
@@ -17699,7 +19222,8 @@ input CollectionPatch {
   externalId: String
   synopsis: String
   description: String
-  languages: String
+  assetSubtype: AssetSubtype
+  languages: [String]
 }
 
 """
@@ -17831,6 +19355,57 @@ input CollectionsTagPatch {
   name: String
 }
 
+"""The output of our update `ContentOwner` mutation."""
+type UpdateContentOwnerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ContentOwner` that was updated by this mutation."""
+  contentOwner: ContentOwner
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ContentOwner`. May be used by Relay 1."""
+  contentOwnerEdge(
+    """The method to use when ordering `ContentOwner`."""
+    orderBy: [ContentOwnersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ContentOwnersEdge
+}
+
+"""All input for the `updateContentOwner` mutation."""
+input UpdateContentOwnerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ContentOwner` being updated.
+  """
+  patch: ContentOwnerPatch!
+  id: UUID!
+}
+
+"""
+Represents an update to a `ContentOwner`. Fields that are set will be updated.
+"""
+input ContentOwnerPatch {
+  """
+  @isTrimmed()
+  @maxLength(50)
+  @notEmpty()
+  """
+  name: String
+  sortOrder: Int
+}
+
 """The output of our update `Episode` mutation."""
 type UpdateEpisodePayload {
   """
@@ -17894,7 +19469,16 @@ input EpisodePatch {
   studio: String
   released: Date
   mainVideoId: UUID
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
 }
 
 """
@@ -18333,7 +19917,7 @@ input UpdateLanguageInput {
   An object where the defined keys will be set on the `Language` being updated.
   """
   patch: LanguagePatch!
-  id: UUID!
+  id: Int!
 }
 
 """
@@ -18463,10 +20047,19 @@ input MoviePatch {
   studio: String
   released: Date
   mainVideoId: UUID
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  assetSubtype: AssetSubtype
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 }
 
 """
@@ -18538,6 +20131,63 @@ input UpdateMoviesCastInput {
 Represents an update to a `MoviesCast`. Fields that are set will be updated.
 """
 input MoviesCastPatch {
+  """@notEmpty()"""
+  name: String
+}
+
+"""The output of our update `MoviesDirector` mutation."""
+type UpdateMoviesDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `MoviesDirector` that was updated by this mutation."""
+  moviesDirector: MoviesDirector
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Movie` that is related to this `MoviesDirector`."""
+  movie: Movie
+
+  """An edge for our `MoviesDirector`. May be used by Relay 1."""
+  moviesDirectorEdge(
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): MoviesDirectorsEdge
+}
+
+"""
+All input for the `updateMoviesDirector` mutation.
+@permissions: MOVIE_EDITOR,ADMIN
+"""
+input UpdateMoviesDirectorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `MoviesDirector` being updated.
+  """
+  patch: MoviesDirectorPatch!
+  movieId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""
+Represents an update to a `MoviesDirector`. Fields that are set will be updated.
+"""
+input MoviesDirectorPatch {
+  movieId: Int
+
   """@notEmpty()"""
   name: String
 }
@@ -18870,7 +20520,16 @@ input SeasonPatch {
   description: String
   studio: String
   released: Date
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType
+  assetSubtype: AssetSubtype
 }
 
 """
@@ -19329,10 +20988,19 @@ input TvshowPatch {
   description: String
   studio: String
   released: Date
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
   businessType: BusinessType
-  audioLanguages: String
-  subtitleLanguages: String
-  captionLanguages: String
+  assetSubtype: AssetSubtype
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
 }
 
 """
@@ -19681,6 +21349,40 @@ input TvshowsTagPatch {
   name: String
 }
 
+"""The output of our delete `AgeRating` mutation."""
+type DeleteAgeRatingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AgeRating` that was deleted by this mutation."""
+  ageRating: AgeRating
+  deletedAgeRatingNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AgeRating`. May be used by Relay 1."""
+  ageRatingEdge(
+    """The method to use when ordering `AgeRating`."""
+    orderBy: [AgeRatingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AgeRatingsEdge
+}
+
+"""All input for the `deleteAgeRating` mutation."""
+input DeleteAgeRatingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
 """The output of our delete `CollectionRelation` mutation."""
 type DeleteCollectionRelationPayload {
   """
@@ -19869,6 +21571,40 @@ input DeleteCollectionsTagInput {
 
   """@notEmpty()"""
   name: String!
+}
+
+"""The output of our delete `ContentOwner` mutation."""
+type DeleteContentOwnerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ContentOwner` that was deleted by this mutation."""
+  contentOwner: ContentOwner
+  deletedContentOwnerNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ContentOwner`. May be used by Relay 1."""
+  contentOwnerEdge(
+    """The method to use when ordering `ContentOwner`."""
+    orderBy: [ContentOwnersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ContentOwnersEdge
+}
+
+"""All input for the `deleteContentOwner` mutation."""
+input DeleteContentOwnerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
 }
 
 """The output of our delete `Episode` mutation."""
@@ -20302,7 +22038,7 @@ input DeleteLanguageInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: UUID!
+  id: Int!
 }
 
 """The output of our delete `MovieGenre` mutation."""
@@ -20424,6 +22160,49 @@ All input for the `deleteMoviesCast` mutation.
 @permissions: MOVIES_EDIT,ADMIN
 """
 input DeleteMoviesCastInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  movieId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""The output of our delete `MoviesDirector` mutation."""
+type DeleteMoviesDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `MoviesDirector` that was deleted by this mutation."""
+  moviesDirector: MoviesDirector
+  deletedMoviesDirectorNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Movie` that is related to this `MoviesDirector`."""
+  movie: Movie
+
+  """An edge for our `MoviesDirector`. May be used by Relay 1."""
+  moviesDirectorEdge(
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): MoviesDirectorsEdge
+}
+
+"""
+All input for the `deleteMoviesDirector` mutation.
+@permissions: MOVIE_EDITOR,ADMIN
+"""
+input DeleteMoviesDirectorInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

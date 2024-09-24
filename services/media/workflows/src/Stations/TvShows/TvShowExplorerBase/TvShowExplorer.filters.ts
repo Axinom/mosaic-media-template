@@ -17,10 +17,8 @@ export function useTvShowsFilters(): {
     excludeItems?: number[],
   ) => TvshowFilter | undefined;
 } {
-  const [
-    createFromDateFilterValidator,
-    createToDateFilterValidator,
-  ] = createDateRangeFilterValidators<TvShowData>();
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<TvShowData>();
 
   const filterOptions: FilterType<TvShowData>[] = [
     {

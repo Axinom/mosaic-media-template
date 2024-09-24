@@ -1,0 +1,20 @@
+query MovieRelatedCollections($id: Int!) {
+  movie(id: $id) {
+    collectionRelations(orderBy: SORT_ORDER_ASC) {
+      nodes {
+        collection {
+          entityId: id
+          title
+          publishStatus
+          entityImages: collectionsImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+        id
+        sortOrder
+      }
+    }
+  }
+}
