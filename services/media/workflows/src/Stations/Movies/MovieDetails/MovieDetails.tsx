@@ -60,7 +60,6 @@ import {
   useMovieQuery,
 } from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
-import { ValidateRating } from '../../../Util/UtilFunctions/UtilFunctions';
 import { useMovieDetailsActions } from './MovieDetails.actions';
 import classes from './MovieDetails.module.scss';
 import { MovieDetailsFormData } from './MovieDetails.types';
@@ -478,6 +477,15 @@ const Form: React.FC<{
   };
 
   const [, , helpers] = useField('creditsStartTime');
+
+  const ValidateRating = (value: string): boolean => {
+    return value === null || value.trim() === ''
+      ? false
+      : isNaN(parseFloat(value)) ||
+          parseFloat(value) < 0 ||
+          parseFloat(value) > 100 ||
+          !/^(\d{1,2}(\.\d{1,2})?|100(\.0{1,2})?)$/.test(value);
+  };
 
   return (
     <>
