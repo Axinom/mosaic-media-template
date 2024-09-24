@@ -4,6 +4,7 @@ import {
   FilterType,
   FilterTypes,
   FilterValues,
+  transformRange,
 } from '@axinom/mosaic-ui';
 import { CollectionFilter, PublishStatus } from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
@@ -36,20 +37,6 @@ export function useCollectionsFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Language',
-      property: 'id', // should be language
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Type',
-      property: 'collectionsTags', //should be type
-      type: FilterTypes.Options,
-      options: [
-        { value: 'Manual', label: 'Manual' },
-        { value: 'Automatic', label: 'Automatic' },
-      ],
-    },
-    {
       label: 'Publication Status',
       property: 'publishStatus',
       type: FilterTypes.Options,
@@ -59,13 +46,32 @@ export function useCollectionsFilters(): {
       })),
     },
     {
-      label: 'Subtype',
-      property: 'id', //should be subtype
-      type: FilterTypes.Numeric,
+      label: 'Publication Period (From)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('publishedDate'),
     },
     {
-      label: 'Countries',
-      property: 'id', //should be country
+      label: 'Publication Period (To)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Creation Period (From)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'Creation Period (To)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'ID',
+      property: 'id',
       type: FilterTypes.Numeric,
     },
   ];
@@ -78,11 +84,9 @@ export function useCollectionsFilters(): {
       title: 'includes',
       externalId: 'includes',
       collectionsTags: ['some', 'name', 'includes'],
-      // language: 'in',
-      // type: 'in',
       publishStatus: 'in',
-      // subType: 'includes',
-      // country: 'includes',
+      createdDate: transformRange,
+      publishedDate: transformRange,
       id: (value) => {
         if (typeof value === 'number') {
           // User filter

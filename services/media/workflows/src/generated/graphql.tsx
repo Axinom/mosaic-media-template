@@ -3659,6 +3659,19 @@ export type DeleteLanguagePayloadLanguageEdgeArgs = {
 };
 
 /**
+ * All input for the `deleteMovieByExternalId` mutation.
+ * @permissions: MOVIES_EDIT,ADMIN
+ */
+export type DeleteMovieByExternalIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
+};
+
+/**
  * All input for the `deleteMovieGenre` mutation.
  * @permissions: SETTINGS_EDIT,ADMIN
  */
@@ -5594,7 +5607,6 @@ export enum EpisodesImagesOrderBy {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodesLicense = {
   __typename?: 'EpisodesLicense';
-  contentOwner?: Maybe<Scalars['String']['output']>;
   createdDate: Scalars['Datetime']['output'];
   /** Reads a single `Episode` that is related to this `EpisodesLicense`. */
   episode?: Maybe<Episode>;
@@ -5625,8 +5637,6 @@ export type EpisodesLicenseEpisodesLicensesCountriesArgs = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type EpisodesLicenseCondition = {
-  /** Checks for equality with the object’s `contentOwner` field. */
-  contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
   createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `episodeId` field. */
@@ -5645,8 +5655,6 @@ export type EpisodesLicenseCondition = {
 export type EpisodesLicenseFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<EpisodesLicenseFilter>>;
-  /** Filter by the object’s `contentOwner` field. */
-  contentOwner?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `episode` relation. */
@@ -5673,7 +5681,6 @@ export type EpisodesLicenseFilter = {
 
 /** An input for mutations affecting `EpisodesLicense` */
 export type EpisodesLicenseInput = {
-  contentOwner?: InputMaybe<Scalars['String']['input']>;
   episodeId: Scalars['Int']['input'];
   licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
   licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
@@ -5681,7 +5688,6 @@ export type EpisodesLicenseInput = {
 
 /** Represents an update to a `EpisodesLicense`. Fields that are set will be updated. */
 export type EpisodesLicensePatch = {
-  contentOwner?: InputMaybe<Scalars['String']['input']>;
   episodeId?: InputMaybe<Scalars['Int']['input']>;
   licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
   licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
@@ -5797,8 +5803,6 @@ export type EpisodesLicensesEdge = {
 
 /** Methods to use when ordering `EpisodesLicense`. */
 export enum EpisodesLicensesOrderBy {
-  ContentOwnerAsc = 'CONTENT_OWNER_ASC',
-  ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   EpisodeIdAsc = 'EPISODE_ID_ASC',
@@ -8754,6 +8758,7 @@ export type MoviePatch = {
   description?: InputMaybe<Scalars['String']['input']>;
   dynamicField?: InputMaybe<Scalars['String']['input']>;
   extendedField?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
   lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
@@ -10059,6 +10064,8 @@ export type Mutation = {
   deleteLanguage?: Maybe<DeleteLanguagePayload>;
   /** Deletes a single `Movie` using a unique key. */
   deleteMovie?: Maybe<DeleteMoviePayload>;
+  /** Deletes a single `Movie` using a unique key. */
+  deleteMovieByExternalId?: Maybe<DeleteMoviePayload>;
   /** Deletes a single `MovieGenre` using a unique key. */
   deleteMovieGenre?: Maybe<DeleteMovieGenrePayload>;
   deleteMovieGenres?: Maybe<BulkMutationIntPayload>;
@@ -10215,6 +10222,8 @@ export type Mutation = {
   updateLanguage?: Maybe<UpdateLanguagePayload>;
   /** Updates a single `Movie` using a unique key and a patch. */
   updateMovie?: Maybe<UpdateMoviePayload>;
+  /** Updates a single `Movie` using a unique key and a patch. */
+  updateMovieByExternalId?: Maybe<UpdateMoviePayload>;
   /** Updates a single `MovieGenre` using a unique key and a patch. */
   updateMovieGenre?: Maybe<UpdateMovieGenrePayload>;
   /** Updates a single `MoviesCast` using a unique key and a patch. */
@@ -10739,6 +10748,12 @@ export type MutationDeleteLanguageArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteMovieArgs = {
   input: DeleteMovieInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteMovieByExternalIdArgs = {
+  input: DeleteMovieByExternalIdInput;
 };
 
 
@@ -11271,6 +11286,12 @@ export type MutationUpdateMovieArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateMovieByExternalIdArgs = {
+  input: UpdateMovieByExternalIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateMovieGenreArgs = {
   input: UpdateMovieGenreInput;
 };
@@ -11553,6 +11574,7 @@ export type Query = {
   /** Reads and enables pagination through a set of `Language`. */
   languages?: Maybe<LanguagesConnection>;
   movie?: Maybe<Movie>;
+  movieByExternalId?: Maybe<Movie>;
   movieGenre?: Maybe<MovieGenre>;
   /** Reads and enables pagination through a set of `MovieGenre`. */
   movieGenres?: Maybe<MovieGenresConnection>;
@@ -12177,6 +12199,12 @@ export type QueryLanguagesArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryMovieArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMovieByExternalIdArgs = {
+  externalId: Scalars['String']['input'];
 };
 
 
@@ -13419,7 +13447,6 @@ export enum SeasonsImagesOrderBy {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonsLicense = {
   __typename?: 'SeasonsLicense';
-  contentOwner?: Maybe<Scalars['String']['output']>;
   createdDate: Scalars['Datetime']['output'];
   id: Scalars['Int']['output'];
   licenseEnd?: Maybe<Scalars['Datetime']['output']>;
@@ -13450,8 +13477,6 @@ export type SeasonsLicenseSeasonsLicensesCountriesArgs = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type SeasonsLicenseCondition = {
-  /** Checks for equality with the object’s `contentOwner` field. */
-  contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
   createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -13470,8 +13495,6 @@ export type SeasonsLicenseCondition = {
 export type SeasonsLicenseFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<SeasonsLicenseFilter>>;
-  /** Filter by the object’s `contentOwner` field. */
-  contentOwner?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `id` field. */
@@ -13498,7 +13521,6 @@ export type SeasonsLicenseFilter = {
 
 /** An input for mutations affecting `SeasonsLicense` */
 export type SeasonsLicenseInput = {
-  contentOwner?: InputMaybe<Scalars['String']['input']>;
   licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
   licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
   seasonId: Scalars['Int']['input'];
@@ -13506,7 +13528,6 @@ export type SeasonsLicenseInput = {
 
 /** Represents an update to a `SeasonsLicense`. Fields that are set will be updated. */
 export type SeasonsLicensePatch = {
-  contentOwner?: InputMaybe<Scalars['String']['input']>;
   licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
   licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
   seasonId?: InputMaybe<Scalars['Int']['input']>;
@@ -13622,8 +13643,6 @@ export type SeasonsLicensesEdge = {
 
 /** Methods to use when ordering `SeasonsLicense`. */
 export enum SeasonsLicensesOrderBy {
-  ContentOwnerAsc = 'CONTENT_OWNER_ASC',
-  ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   IdAsc = 'ID_ASC',
@@ -15965,7 +15984,6 @@ export enum TvshowsImagesOrderBy {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowsLicense = {
   __typename?: 'TvshowsLicense';
-  contentOwner?: Maybe<Scalars['String']['output']>;
   createdDate: Scalars['Datetime']['output'];
   id: Scalars['Int']['output'];
   licenseEnd?: Maybe<Scalars['Datetime']['output']>;
@@ -15996,8 +16014,6 @@ export type TvshowsLicenseTvshowsLicensesCountriesArgs = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type TvshowsLicenseCondition = {
-  /** Checks for equality with the object’s `contentOwner` field. */
-  contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
   createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -16016,8 +16032,6 @@ export type TvshowsLicenseCondition = {
 export type TvshowsLicenseFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<TvshowsLicenseFilter>>;
-  /** Filter by the object’s `contentOwner` field. */
-  contentOwner?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `id` field. */
@@ -16044,7 +16058,6 @@ export type TvshowsLicenseFilter = {
 
 /** An input for mutations affecting `TvshowsLicense` */
 export type TvshowsLicenseInput = {
-  contentOwner?: InputMaybe<Scalars['String']['input']>;
   licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
   licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
   tvshowId: Scalars['Int']['input'];
@@ -16052,7 +16065,6 @@ export type TvshowsLicenseInput = {
 
 /** Represents an update to a `TvshowsLicense`. Fields that are set will be updated. */
 export type TvshowsLicensePatch = {
-  contentOwner?: InputMaybe<Scalars['String']['input']>;
   licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
   licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
   tvshowId?: InputMaybe<Scalars['Int']['input']>;
@@ -16168,8 +16180,6 @@ export type TvshowsLicensesEdge = {
 
 /** Methods to use when ordering `TvshowsLicense`. */
 export enum TvshowsLicensesOrderBy {
-  ContentOwnerAsc = 'CONTENT_OWNER_ASC',
-  ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   IdAsc = 'ID_ASC',
@@ -17437,6 +17447,21 @@ export type UpdateLanguagePayloadLanguageEdgeArgs = {
 };
 
 /**
+ * All input for the `updateMovieByExternalId` mutation.
+ * @permissions: MOVIES_EDIT,ADMIN
+ */
+export type UpdateMovieByExternalIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `Movie` being updated. */
+  patch: MoviePatch;
+};
+
+/**
  * All input for the `updateMovieGenre` mutation.
  * @permissions: SETTINGS_EDIT,ADMIN
  */
@@ -18557,7 +18582,7 @@ export type CreateCollectionSnapshotMutationVariables = Exact<{
 
 export type CreateCollectionSnapshotMutation = { __typename?: 'Mutation', createCollectionSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
-export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, externalId?: string | null, description?: string | null, synopsis?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
+export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
 
 export type CollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -18566,12 +18591,12 @@ export type CollectionsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, externalId?: string | null, description?: string | null, synopsis?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
+export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
 
 export type CollectionsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, externalId?: string | null, description?: string | null, synopsis?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
+export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
 
 export type BulkDeleteCollectionsMutationVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -19392,13 +19417,6 @@ export type BulkCreateSeasonSnapshotsMutationVariables = Exact<{
 
 export type BulkCreateSeasonSnapshotsMutation = { __typename?: 'Mutation', createSeasonSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
 
-export type CollectionRelatedEntitiesForTvShowsQueryVariables = Exact<{
-  id: Scalars['Int']['input'];
-}>;
-
-
-export type CollectionRelatedEntitiesForTvShowsQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, tvshow?: { __typename?: 'Tvshow', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null }> } } | null };
-
 export type CreateTvShowMutationVariables = Exact<{
   input: CreateTvshowInput;
 }>;
@@ -19411,7 +19429,7 @@ export type TvShowQueryVariables = Exact<{
 }>;
 
 
-export type TvShowQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, seasons: { __typename?: 'SeasonsConnection', totalCount: number }, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageType: TvshowImageType, imageId: any }> }, tvshowsTrailers: { __typename?: 'TvshowsTrailersConnection', totalCount: number } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null };
+export type TvShowQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, seasons: { __typename?: 'SeasonsConnection', totalCount: number }, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageType: TvshowImageType, imageId: any }> }, tvshowsTrailers: { __typename?: 'TvshowsTrailersConnection', totalCount: number } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null };
 
 export type DeleteTvShowMutationVariables = Exact<{
   input: DeleteTvshowInput;
@@ -19599,8 +19617,6 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
   id
   title
   externalId
-  description
-  synopsis
   collectionsTags {
     nodes {
       name
@@ -19609,7 +19625,6 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
   publishedDate
   createdDate
   updatedDate
-  updatedUser
   publishStatus
   collectionsImages {
     nodes {
@@ -24849,56 +24864,6 @@ export function useBulkCreateSeasonSnapshotsMutation(baseOptions?: Apollo.Mutati
 export type BulkCreateSeasonSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateSeasonSnapshotsMutation>;
 export type BulkCreateSeasonSnapshotsMutationResult = Apollo.MutationResult<BulkCreateSeasonSnapshotsMutation>;
 export type BulkCreateSeasonSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateSeasonSnapshotsMutation, BulkCreateSeasonSnapshotsMutationVariables>;
-export const CollectionRelatedEntitiesForTvShowsDocument = gql`
-    query CollectionRelatedEntitiesForTvShows($id: Int!) {
-  collection(id: $id) {
-    collectionRelations(orderBy: SORT_ORDER_ASC) {
-      nodes {
-        tvshow {
-          entityId: id
-          title
-          publishStatus
-          entityImages: tvshowsImages {
-            nodes {
-              imageId
-            }
-          }
-        }
-        id
-        sortOrder
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useCollectionRelatedEntitiesForTvShowsQuery__
- *
- * To run a query within a React component, call `useCollectionRelatedEntitiesForTvShowsQuery` and pass it any options that fit your needs.
- * When your component renders, `useCollectionRelatedEntitiesForTvShowsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCollectionRelatedEntitiesForTvShowsQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useCollectionRelatedEntitiesForTvShowsQuery(baseOptions: Apollo.QueryHookOptions<CollectionRelatedEntitiesForTvShowsQuery, CollectionRelatedEntitiesForTvShowsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CollectionRelatedEntitiesForTvShowsQuery, CollectionRelatedEntitiesForTvShowsQueryVariables>(CollectionRelatedEntitiesForTvShowsDocument, options);
-      }
-export function useCollectionRelatedEntitiesForTvShowsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CollectionRelatedEntitiesForTvShowsQuery, CollectionRelatedEntitiesForTvShowsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CollectionRelatedEntitiesForTvShowsQuery, CollectionRelatedEntitiesForTvShowsQueryVariables>(CollectionRelatedEntitiesForTvShowsDocument, options);
-        }
-export type CollectionRelatedEntitiesForTvShowsQueryHookResult = ReturnType<typeof useCollectionRelatedEntitiesForTvShowsQuery>;
-export type CollectionRelatedEntitiesForTvShowsLazyQueryHookResult = ReturnType<typeof useCollectionRelatedEntitiesForTvShowsLazyQuery>;
-export type CollectionRelatedEntitiesForTvShowsQueryResult = Apollo.QueryResult<CollectionRelatedEntitiesForTvShowsQuery, CollectionRelatedEntitiesForTvShowsQueryVariables>;
 export const CreateTvShowDocument = gql`
     mutation CreateTvShow($input: CreateTvshowInput!) {
   createTvshow(input: $input) {
@@ -24943,7 +24908,6 @@ export const TvShowDocument = gql`
     synopsis
     description
     externalId
-    ageRating
     tvshowsTags {
       nodes {
         name
@@ -24992,12 +24956,6 @@ export const TvShowDocument = gql`
   tvshowGenres {
     nodes {
       title
-      id
-    }
-  }
-  ageRatings {
-    nodes {
-      name
       id
     }
   }
