@@ -387,10 +387,10 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-messages/-/mosaic-messages-0.48.0.tgz#e33b0acb51722fea5df74ca67583ad36118d7bb5"
   integrity sha512-O3hQtaEz26ehxDMkQZUf/euDFuBdHkJb9+VuK0OgjZFa7hr0Ejq5RxZMHq6zU8bX8g5W5UfDiID7a3OsG9WYRg==
 
-"@axinom/mosaic-portal@0.36.0":
-  version "0.36.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.36.0.tgz#895862e80709b7e338b9cd67510f8fee1da41e3f"
-  integrity sha512-f7Px0uLb7/6SAuJAbcwhYuKSz2Jl1gcpjBnhl4Kr5gUeY0mwx3wBqopFc+02NWGGU9FS8L6YQ9WtOFhr+Jv52A==
+"@axinom/mosaic-portal@0.36.2":
+  version "0.36.2"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.36.2.tgz#406a2a41408056f43cb7c38c267a58c1aee282cf"
+  integrity sha512-Rt+q5S4pbmW5dw/lfdMRm2jIp4z968vrv6aUdEUtcMxpOeSmqI+LPOzK20KuHRaBa9IZ1JHnoyH1NndKDGjIHg==
 
 "@axinom/mosaic-service-common@0.54.0", "@axinom/mosaic-service-common@^0.54.0":
   version "0.54.0"
@@ -431,10 +431,10 @@
     pg-transactional-outbox "^0.5.7"
     prom-client "^15.1.0"
 
-"@axinom/mosaic-ui@0.52.0":
-  version "0.52.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.52.0.tgz#c57d9eb88962364133ed2438621a36c2a5ba0b24"
-  integrity sha512-ZBkKszjWQTGrbb6SOqsvUoHTeaDzno3Hqsb4FpDl6Q31Jdgt/qcB/r3OFTMXLAwy2Orqav5FGYzFxyYFICQwHg==
+"@axinom/mosaic-ui@0.52.1":
+  version "0.52.1"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.52.1.tgz#445dbaae0f60e950fbda94fa1c580bcb11d4db8c"
+  integrity sha512-FrlHljMFak7aHtPO/0vLEy4LUr9cPRj40Ky6rnwc8C1/lacLzlEyu509v67b7i2ZxzQ73qTbl5hpWHU0HvnznA==
   dependencies:
     "@axinom/mosaic-core" "^0.4.25"
     "@faker-js/faker" "^7.4.0"
