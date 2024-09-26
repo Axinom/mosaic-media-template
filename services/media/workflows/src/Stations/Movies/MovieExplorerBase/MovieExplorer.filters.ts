@@ -72,10 +72,13 @@ export function useMoviesFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      // select from list [Valid License, No Valid License]
       label: 'Valid Licensing',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
+      property: 'moviesLicenses',
+      options: [
+        { value: 'Valid License', label: 'Valid License' },
+        { value: 'No Valid License', label: 'No Valid License' },
+      ],
+      type: FilterTypes.Options,
     },
     {
       label: 'Sub Type',
@@ -124,10 +127,27 @@ export function useMoviesFilters(): {
       externalId: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
       moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
-      // validLicensing: 'includesInsensitive',
+      moviesLicenses: (value) => {
+        if (value === 'Valid License') {
+          return {
+            some: {
+              licenseEnd: {
+                greaterThan: new Date(),
+              },
+            },
+          };
+        } else {
+          return {
+            every: {
+              licenseEnd: {
+                lessThanOrEqualTo: '2024-09-29T18:30:00+00:00',
+              },
+            },
+          };
+        }
+      },
       assetSubtype: 'equalTo',
       businessType: 'in',
-      // tvodTier: 'includesInsensitive',
     });
   };
 

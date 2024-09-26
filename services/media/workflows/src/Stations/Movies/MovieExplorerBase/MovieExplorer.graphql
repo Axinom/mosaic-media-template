@@ -9,6 +9,12 @@ fragment MovieExplorerProperties on Movie {
   businessType
   audioLanguages
   assetSubtype
+  moviesLicenses {
+    nodes {
+      licenseEnd
+      licenseStart
+    }
+  }
   moviesImages(condition: { imageType: COVER }) {
     nodes {
       imageId
