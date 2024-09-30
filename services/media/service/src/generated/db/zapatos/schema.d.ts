@@ -919,17 +919,17 @@ declare module 'zapatos/schema' {
       */
       publish_status: c.PublishStatusEnum;
       /**
-      * **collections.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'COLLECTION'::text`
-      */
-      asset_subtype: c.AssetSubtypeEnum;
-      /**
       * **collections.languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
       */
       languages: string[] | null;
+      /**
+      * **collections.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'COLLECTION'::text`
+      */
+      asset_subtype: c.AssetSubtypeEnum;
     }
     export interface JSONSelectable {
       /**
@@ -1005,17 +1005,17 @@ declare module 'zapatos/schema' {
       */
       publish_status: c.PublishStatusEnum;
       /**
-      * **collections.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'COLLECTION'::text`
-      */
-      asset_subtype: c.AssetSubtypeEnum;
-      /**
       * **collections.languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
       */
       languages: string[] | null;
+      /**
+      * **collections.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'COLLECTION'::text`
+      */
+      asset_subtype: c.AssetSubtypeEnum;
     }
     export interface Whereable {
       /**
@@ -1091,17 +1091,17 @@ declare module 'zapatos/schema' {
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **collections.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'COLLECTION'::text`
-      */
-      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **collections.languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
       */
       languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collections.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'COLLECTION'::text`
+      */
+      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1177,17 +1177,17 @@ declare module 'zapatos/schema' {
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment;
       /**
-      * **collections.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'COLLECTION'::text`
-      */
-      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment;
-      /**
       * **collections.languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
       */
       languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **collections.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'COLLECTION'::text`
+      */
+      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1263,17 +1263,17 @@ declare module 'zapatos/schema' {
       */
       publish_status?: c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PublishStatusEnum | db.Parameter<c.PublishStatusEnum> | db.DefaultType | db.SQLFragment>;
       /**
-      * **collections.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'COLLECTION'::text`
-      */
-      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment>;
-      /**
       * **collections.languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
       */
       languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **collections.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'COLLECTION'::text`
+      */
+      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'collections_external_id_key' | 'collections_pkey';
     export type Column = keyof Selectable;
@@ -6344,12 +6344,6 @@ declare module 'zapatos/schema' {
       */
       business_type: c.BusinessTypeEnum;
       /**
-      * **movies.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'MOVIE'::text`
-      */
-      asset_subtype: c.AssetSubtypeEnum;
-      /**
       * **movies.audio_languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
@@ -6367,6 +6361,12 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'{}'::text[]`
       */
       caption_languages: string[] | null;
+      /**
+      * **movies.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'MOVIE'::text`
+      */
+      asset_subtype: c.AssetSubtypeEnum;
     }
     export interface JSONSelectable {
       /**
@@ -6528,12 +6528,6 @@ declare module 'zapatos/schema' {
       */
       business_type: c.BusinessTypeEnum;
       /**
-      * **movies.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'MOVIE'::text`
-      */
-      asset_subtype: c.AssetSubtypeEnum;
-      /**
       * **movies.audio_languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
@@ -6551,6 +6545,12 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'{}'::text[]`
       */
       caption_languages: string[] | null;
+      /**
+      * **movies.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'MOVIE'::text`
+      */
+      asset_subtype: c.AssetSubtypeEnum;
     }
     export interface Whereable {
       /**
@@ -6712,12 +6712,6 @@ declare module 'zapatos/schema' {
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **movies.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'MOVIE'::text`
-      */
-      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **movies.audio_languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
@@ -6735,6 +6729,12 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'{}'::text[]`
       */
       caption_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'MOVIE'::text`
+      */
+      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -6896,12 +6896,6 @@ declare module 'zapatos/schema' {
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment;
       /**
-      * **movies.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'MOVIE'::text`
-      */
-      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment;
-      /**
       * **movies.audio_languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
@@ -6919,6 +6913,12 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'{}'::text[]`
       */
       caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'MOVIE'::text`
+      */
+      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -7080,12 +7080,6 @@ declare module 'zapatos/schema' {
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment>;
       /**
-      * **movies.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'MOVIE'::text`
-      */
-      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment>;
-      /**
       * **movies.audio_languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
@@ -7103,6 +7097,12 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'{}'::text[]`
       */
       caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'MOVIE'::text`
+      */
+      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movies_external_id_key' | 'movies_pkey';
     export type Column = keyof Selectable;
@@ -11496,12 +11496,6 @@ declare module 'zapatos/schema' {
       */
       business_type: c.BusinessTypeEnum;
       /**
-      * **tvshows.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'TV_SHOW'::text`
-      */
-      asset_subtype: c.AssetSubtypeEnum;
-      /**
       * **tvshows.audio_languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
@@ -11519,6 +11513,12 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'{}'::text[]`
       */
       caption_languages: string[] | null;
+      /**
+      * **tvshows.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'TV_SHOW'::text`
+      */
+      asset_subtype: c.AssetSubtypeEnum;
     }
     export interface JSONSelectable {
       /**
@@ -11674,12 +11674,6 @@ declare module 'zapatos/schema' {
       */
       business_type: c.BusinessTypeEnum;
       /**
-      * **tvshows.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'TV_SHOW'::text`
-      */
-      asset_subtype: c.AssetSubtypeEnum;
-      /**
       * **tvshows.audio_languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
@@ -11697,6 +11691,12 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'{}'::text[]`
       */
       caption_languages: string[] | null;
+      /**
+      * **tvshows.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'TV_SHOW'::text`
+      */
+      asset_subtype: c.AssetSubtypeEnum;
     }
     export interface Whereable {
       /**
@@ -11852,12 +11852,6 @@ declare module 'zapatos/schema' {
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **tvshows.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'TV_SHOW'::text`
-      */
-      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **tvshows.audio_languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
@@ -11875,6 +11869,12 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'{}'::text[]`
       */
       caption_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'TV_SHOW'::text`
+      */
+      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -12030,12 +12030,6 @@ declare module 'zapatos/schema' {
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment;
       /**
-      * **tvshows.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'TV_SHOW'::text`
-      */
-      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment;
-      /**
       * **tvshows.audio_languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
@@ -12053,6 +12047,12 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'{}'::text[]`
       */
       caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'TV_SHOW'::text`
+      */
+      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -12208,12 +12208,6 @@ declare module 'zapatos/schema' {
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment>;
       /**
-      * **tvshows.asset_subtype**
-      * - `asset_subtype_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'TV_SHOW'::text`
-      */
-      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment>;
-      /**
       * **tvshows.audio_languages**
       * - `_text` in database
       * - Nullable, default: `'{}'::text[]`
@@ -12231,6 +12225,12 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'{}'::text[]`
       */
       caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows.asset_subtype**
+      * - `asset_subtype_enum` (base type: `text`) in database
+      * - `NOT NULL`, default: `'TV_SHOW'::text`
+      */
+      asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshows_external_id_key' | 'tvshows_pkey';
     export type Column = keyof Selectable;
