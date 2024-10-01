@@ -48,4 +48,10 @@ export const Constants = {
   SUBSCRIPTION_PLAN: 'Subscription plan',
   TV_SHOW: 'TV Show',
   UNKNOWN: 'Unknown',
+
+  //Image types
+  COVER: 'Cover',
+  CLEAN_COVER: 'Clean Cover',
+  TEASER: 'Teaser',
+  LIST: 'List',
 };

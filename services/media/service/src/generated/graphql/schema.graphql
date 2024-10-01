@@ -4903,8 +4903,11 @@ enum MovieImageType {
   """Cover"""
   COVER
 
-  """Teaser"""
-  TEASER
+  """Clean Cover"""
+  CLEAN_COVER
+
+  """List"""
+  LIST
 }
 
 """

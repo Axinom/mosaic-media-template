@@ -52,7 +52,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
     {
       ...collectionsNav,
       kind: 'home',
-      type: 'small',
+      type: 'large',
     },
     false,
   );

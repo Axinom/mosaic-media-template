@@ -8684,10 +8684,12 @@ export type MovieGenreToManyMoviesMovieGenreFilter = {
 };
 
 export enum MovieImageType {
+  /** Clean Cover */
+  CleanCover = 'CLEAN_COVER',
   /** Cover */
   Cover = 'COVER',
-  /** Teaser */
-  Teaser = 'TEASER'
+  /** List */
+  List = 'LIST'
 }
 
 /** A filter to be used against MovieImageType fields. All fields are combined with a logical ‘and.’ */
