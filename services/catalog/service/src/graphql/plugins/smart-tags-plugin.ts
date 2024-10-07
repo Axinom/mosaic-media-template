@@ -963,7 +963,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           countries: {
             description: 'Array of countries where the license applies.',
-            ...disableFilterAndOrder,
           },
           start_time: {
             description: 'Time when license becomes valid.',

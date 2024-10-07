@@ -3861,10 +3861,31 @@ CREATE INDEX idx_episode_images_episode_id ON app_public.episode_images USING bt
 
 
 --
+-- Name: idx_episode_licenses_countries; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_episode_licenses_countries ON app_public.episode_licenses USING btree (countries);
+
+
+--
+-- Name: idx_episode_licenses_end_time; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_episode_licenses_end_time ON app_public.episode_licenses USING btree (end_time);
+
+
+--
 -- Name: idx_episode_licenses_episode_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
 CREATE INDEX idx_episode_licenses_episode_id ON app_public.episode_licenses USING btree (episode_id);
+
+
+--
+-- Name: idx_episode_licenses_start_time; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_episode_licenses_start_time ON app_public.episode_licenses USING btree (start_time);
 
 
 --
@@ -4099,10 +4120,31 @@ CREATE INDEX idx_season_images_season_id ON app_public.season_images USING btree
 
 
 --
+-- Name: idx_season_licenses_countries; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_season_licenses_countries ON app_public.season_licenses USING btree (countries);
+
+
+--
+-- Name: idx_season_licenses_end_time; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_season_licenses_end_time ON app_public.season_licenses USING btree (end_time);
+
+
+--
 -- Name: idx_season_licenses_season_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
 CREATE INDEX idx_season_licenses_season_id ON app_public.season_licenses USING btree (season_id);
+
+
+--
+-- Name: idx_season_licenses_start_time; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_season_licenses_start_time ON app_public.season_licenses USING btree (start_time);
 
 
 --
