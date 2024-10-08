@@ -50,8 +50,9 @@ export const Constants = {
   UNKNOWN: 'Unknown',
 
   //Image types
-  COVER: 'Cover',
-  CLEAN_COVER: 'Clean Cover',
-  TEASER: 'Teaser',
-  LIST: 'List',
+  COVER_1X1: 'Cover 1x1',
+  COVER_16X9: 'Cover 16x9',
+  CLEAN_COVER_1X1: 'Clean Cover 1x1',
+  CLEAN_COVER_16X9: 'Clean Cover 16x9',
+  LIST_9X13: 'List 9x13',
 };

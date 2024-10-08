@@ -338,7 +338,7 @@ const Panel: React.FC = () => {
 
     values.moviesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case MovieImageType.Cover:
+        case MovieImageType.Cover_1X1:
           coverImageCount++;
           coverImageId = imageId;
           break;

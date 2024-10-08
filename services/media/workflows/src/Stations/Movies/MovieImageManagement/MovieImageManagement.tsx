@@ -41,7 +41,7 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
             label={label}
             as={imageSelectField}
             maxItems={1}
-            title="Select Image juh"
+            title="Select Image"
             imageScope="movie"
           />
         );
