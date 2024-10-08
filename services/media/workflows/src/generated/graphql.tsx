@@ -8684,10 +8684,16 @@ export type MovieGenreToManyMoviesMovieGenreFilter = {
 };
 
 export enum MovieImageType {
-  /** Cover */
-  Cover = 'COVER',
-  /** Teaser */
-  Teaser = 'TEASER'
+  /** Clean Cover 16x9 */
+  CleanCover_16X9 = 'CLEAN_COVER_16X9',
+  /** Clean Cover 1x1 */
+  CleanCover_1X1 = 'CLEAN_COVER_1X1',
+  /** Cover 16x9 */
+  Cover_16X9 = 'COVER_16X9',
+  /** Cover 1x1 */
+  Cover_1X1 = 'COVER_1X1',
+  /** List 9x13 */
+  List_9X13 = 'LIST_9X13'
 }
 
 /** A filter to be used against MovieImageType fields. All fields are combined with a logical ‘and.’ */
@@ -19731,7 +19737,7 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
       licenseStart
     }
   }
-  moviesImages(condition: {imageType: COVER}) {
+  moviesImages(condition: {imageType: COVER_1X1}) {
     nodes {
       imageId
     }

@@ -335,16 +335,12 @@ const Panel: React.FC = () => {
   return useMemo(() => {
     let coverImageId: ID;
     let coverImageCount = 0;
-    let teaserImageCount = 0;
 
     values.moviesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case MovieImageType.Cover:
+        case MovieImageType.Cover_1X1:
           coverImageCount++;
           coverImageId = imageId;
-          break;
-        case MovieImageType.Teaser:
-          teaserImageCount++;
           break;
         default:
           break;
@@ -390,10 +386,6 @@ const Panel: React.FC = () => {
               <div>Cover</div>
               <div className={classes.rightAlignment}>
                 {coverImageCount} / 1
-              </div>
-              <div>Teaser</div>
-              <div className={classes.rightAlignment}>
-                {teaserImageCount} / 1
               </div>
             </div>
           </Paragraph>
