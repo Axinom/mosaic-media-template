@@ -278,7 +278,7 @@ type Query {
     filter: TvshowFilter
   ): TvshowsConnection
   channel(id: String!): Channel
-  collection(id: String!): Collection
+  collection(id: String!, countryCode: String): Collection
   episode(id: String!, countryCode: String): Episode
   movieGenre(id: String!): MovieGenre
   movie(id: String!, countryCode: String): Movie
@@ -1717,17 +1717,17 @@ input MovieVideoFilter {
   """Filter by the object’s `mainUrl` field."""
   mainUrl: StringFilter
 
-  """Filter by the object’s `cuePoints` relation."""
-  cuePoints: MovieVideoToManyMovieVideoCuePointFilter
-
-  """Some related `cuePoints` exist."""
-  cuePointsExist: Boolean
-
   """Filter by the object’s `videoStreams` relation."""
   videoStreams: MovieVideoToManyMovieVideoStreamFilter
 
   """Some related `videoStreams` exist."""
   videoStreamsExist: Boolean
+
+  """Filter by the object’s `cuePoints` relation."""
+  cuePoints: MovieVideoToManyMovieVideoCuePointFilter
+
+  """Some related `cuePoints` exist."""
+  cuePointsExist: Boolean
 
   """Filter by the object’s `movie` relation."""
   movie: MovieFilter
@@ -1793,52 +1793,6 @@ max value for a JavaScript number. Therefore all big integers will be output as
 strings and not numbers.
 """
 scalar BigInt
-
-"""
-A filter to be used against many `MovieVideoCuePoint` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieVideoToManyMovieVideoCuePointFilter {
-  """
-  Every related `MovieVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MovieVideoCuePointFilter
-
-  """
-  Some related `MovieVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MovieVideoCuePointFilter
-
-  """
-  No related `MovieVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MovieVideoCuePointFilter
-}
-
-"""
-A filter to be used against `MovieVideoCuePoint` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieVideoCuePointFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `videoId` field."""
-  videoId: IntFilter
-
-  """Filter by the object’s `video` relation."""
-  video: MovieVideoFilter
-
-  """A related `video` exists."""
-  videoExists: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [MovieVideoCuePointFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MovieVideoCuePointFilter!]
-
-  """Negates the expression."""
-  not: MovieVideoCuePointFilter
-}
 
 """
 A filter to be used against many `MovieVideoStream` object types. All fields are combined with a logical ‘and.’
@@ -1943,6 +1897,52 @@ enum VideoStreamType {
 
   """Closed caption"""
   CLOSED_CAPTION
+}
+
+"""
+A filter to be used against many `MovieVideoCuePoint` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieVideoToManyMovieVideoCuePointFilter {
+  """
+  Every related `MovieVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MovieVideoCuePointFilter
+
+  """
+  Some related `MovieVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MovieVideoCuePointFilter
+
+  """
+  No related `MovieVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MovieVideoCuePointFilter
+}
+
+"""
+A filter to be used against `MovieVideoCuePoint` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieVideoCuePointFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `videoId` field."""
+  videoId: IntFilter
+
+  """Filter by the object’s `video` relation."""
+  video: MovieVideoFilter
+
+  """A related `video` exists."""
+  videoExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [MovieVideoCuePointFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MovieVideoCuePointFilter!]
+
+  """Negates the expression."""
+  not: MovieVideoCuePointFilter
 }
 
 """
@@ -2732,17 +2732,17 @@ input EpisodeVideoFilter {
   """Filter by the object’s `mainUrl` field."""
   mainUrl: StringFilter
 
-  """Filter by the object’s `cuePoints` relation."""
-  cuePoints: EpisodeVideoToManyEpisodeVideoCuePointFilter
-
-  """Some related `cuePoints` exist."""
-  cuePointsExist: Boolean
-
   """Filter by the object’s `videoStreams` relation."""
   videoStreams: EpisodeVideoToManyEpisodeVideoStreamFilter
 
   """Some related `videoStreams` exist."""
   videoStreamsExist: Boolean
+
+  """Filter by the object’s `cuePoints` relation."""
+  cuePoints: EpisodeVideoToManyEpisodeVideoCuePointFilter
+
+  """Some related `cuePoints` exist."""
+  cuePointsExist: Boolean
 
   """Filter by the object’s `episode` relation."""
   episode: EpisodeFilter
@@ -2758,52 +2758,6 @@ input EpisodeVideoFilter {
 
   """Negates the expression."""
   not: EpisodeVideoFilter
-}
-
-"""
-A filter to be used against many `EpisodeVideoCuePoint` object types. All fields are combined with a logical ‘and.’
-"""
-input EpisodeVideoToManyEpisodeVideoCuePointFilter {
-  """
-  Every related `EpisodeVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: EpisodeVideoCuePointFilter
-
-  """
-  Some related `EpisodeVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: EpisodeVideoCuePointFilter
-
-  """
-  No related `EpisodeVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: EpisodeVideoCuePointFilter
-}
-
-"""
-A filter to be used against `EpisodeVideoCuePoint` object types. All fields are combined with a logical ‘and.’
-"""
-input EpisodeVideoCuePointFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `videoId` field."""
-  videoId: IntFilter
-
-  """Filter by the object’s `video` relation."""
-  video: EpisodeVideoFilter
-
-  """A related `video` exists."""
-  videoExists: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [EpisodeVideoCuePointFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [EpisodeVideoCuePointFilter!]
-
-  """Negates the expression."""
-  not: EpisodeVideoCuePointFilter
 }
 
 """
@@ -2853,6 +2807,52 @@ input EpisodeVideoStreamFilter {
 
   """Negates the expression."""
   not: EpisodeVideoStreamFilter
+}
+
+"""
+A filter to be used against many `EpisodeVideoCuePoint` object types. All fields are combined with a logical ‘and.’
+"""
+input EpisodeVideoToManyEpisodeVideoCuePointFilter {
+  """
+  Every related `EpisodeVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: EpisodeVideoCuePointFilter
+
+  """
+  Some related `EpisodeVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: EpisodeVideoCuePointFilter
+
+  """
+  No related `EpisodeVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: EpisodeVideoCuePointFilter
+}
+
+"""
+A filter to be used against `EpisodeVideoCuePoint` object types. All fields are combined with a logical ‘and.’
+"""
+input EpisodeVideoCuePointFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `videoId` field."""
+  videoId: IntFilter
+
+  """Filter by the object’s `video` relation."""
+  video: EpisodeVideoFilter
+
+  """A related `video` exists."""
+  videoExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [EpisodeVideoCuePointFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [EpisodeVideoCuePointFilter!]
+
+  """Negates the expression."""
+  not: EpisodeVideoCuePointFilter
 }
 
 """
@@ -3030,17 +3030,17 @@ input SeasonVideoFilter {
   """Filter by the object’s `mainUrl` field."""
   mainUrl: StringFilter
 
-  """Filter by the object’s `cuePoints` relation."""
-  cuePoints: SeasonVideoToManySeasonVideoCuePointFilter
-
-  """Some related `cuePoints` exist."""
-  cuePointsExist: Boolean
-
   """Filter by the object’s `videoStreams` relation."""
   videoStreams: SeasonVideoToManySeasonVideoStreamFilter
 
   """Some related `videoStreams` exist."""
   videoStreamsExist: Boolean
+
+  """Filter by the object’s `cuePoints` relation."""
+  cuePoints: SeasonVideoToManySeasonVideoCuePointFilter
+
+  """Some related `cuePoints` exist."""
+  cuePointsExist: Boolean
 
   """Filter by the object’s `season` relation."""
   season: SeasonFilter
@@ -3056,52 +3056,6 @@ input SeasonVideoFilter {
 
   """Negates the expression."""
   not: SeasonVideoFilter
-}
-
-"""
-A filter to be used against many `SeasonVideoCuePoint` object types. All fields are combined with a logical ‘and.’
-"""
-input SeasonVideoToManySeasonVideoCuePointFilter {
-  """
-  Every related `SeasonVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: SeasonVideoCuePointFilter
-
-  """
-  Some related `SeasonVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: SeasonVideoCuePointFilter
-
-  """
-  No related `SeasonVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: SeasonVideoCuePointFilter
-}
-
-"""
-A filter to be used against `SeasonVideoCuePoint` object types. All fields are combined with a logical ‘and.’
-"""
-input SeasonVideoCuePointFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `videoId` field."""
-  videoId: IntFilter
-
-  """Filter by the object’s `video` relation."""
-  video: SeasonVideoFilter
-
-  """A related `video` exists."""
-  videoExists: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [SeasonVideoCuePointFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [SeasonVideoCuePointFilter!]
-
-  """Negates the expression."""
-  not: SeasonVideoCuePointFilter
 }
 
 """
@@ -3151,6 +3105,52 @@ input SeasonVideoStreamFilter {
 
   """Negates the expression."""
   not: SeasonVideoStreamFilter
+}
+
+"""
+A filter to be used against many `SeasonVideoCuePoint` object types. All fields are combined with a logical ‘and.’
+"""
+input SeasonVideoToManySeasonVideoCuePointFilter {
+  """
+  Every related `SeasonVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: SeasonVideoCuePointFilter
+
+  """
+  Some related `SeasonVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: SeasonVideoCuePointFilter
+
+  """
+  No related `SeasonVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: SeasonVideoCuePointFilter
+}
+
+"""
+A filter to be used against `SeasonVideoCuePoint` object types. All fields are combined with a logical ‘and.’
+"""
+input SeasonVideoCuePointFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `videoId` field."""
+  videoId: IntFilter
+
+  """Filter by the object’s `video` relation."""
+  video: SeasonVideoFilter
+
+  """A related `video` exists."""
+  videoExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [SeasonVideoCuePointFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [SeasonVideoCuePointFilter!]
+
+  """Negates the expression."""
+  not: SeasonVideoCuePointFilter
 }
 
 """
@@ -3328,17 +3328,17 @@ input TvshowVideoFilter {
   """Filter by the object’s `mainUrl` field."""
   mainUrl: StringFilter
 
-  """Filter by the object’s `cuePoints` relation."""
-  cuePoints: TvshowVideoToManyTvshowVideoCuePointFilter
-
-  """Some related `cuePoints` exist."""
-  cuePointsExist: Boolean
-
   """Filter by the object’s `videoStreams` relation."""
   videoStreams: TvshowVideoToManyTvshowVideoStreamFilter
 
   """Some related `videoStreams` exist."""
   videoStreamsExist: Boolean
+
+  """Filter by the object’s `cuePoints` relation."""
+  cuePoints: TvshowVideoToManyTvshowVideoCuePointFilter
+
+  """Some related `cuePoints` exist."""
+  cuePointsExist: Boolean
 
   """Filter by the object’s `tvshow` relation."""
   tvshow: TvshowFilter
@@ -3354,52 +3354,6 @@ input TvshowVideoFilter {
 
   """Negates the expression."""
   not: TvshowVideoFilter
-}
-
-"""
-A filter to be used against many `TvshowVideoCuePoint` object types. All fields are combined with a logical ‘and.’
-"""
-input TvshowVideoToManyTvshowVideoCuePointFilter {
-  """
-  Every related `TvshowVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: TvshowVideoCuePointFilter
-
-  """
-  Some related `TvshowVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: TvshowVideoCuePointFilter
-
-  """
-  No related `TvshowVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: TvshowVideoCuePointFilter
-}
-
-"""
-A filter to be used against `TvshowVideoCuePoint` object types. All fields are combined with a logical ‘and.’
-"""
-input TvshowVideoCuePointFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `videoId` field."""
-  videoId: IntFilter
-
-  """Filter by the object’s `video` relation."""
-  video: TvshowVideoFilter
-
-  """A related `video` exists."""
-  videoExists: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [TvshowVideoCuePointFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [TvshowVideoCuePointFilter!]
-
-  """Negates the expression."""
-  not: TvshowVideoCuePointFilter
 }
 
 """
@@ -3449,6 +3403,52 @@ input TvshowVideoStreamFilter {
 
   """Negates the expression."""
   not: TvshowVideoStreamFilter
+}
+
+"""
+A filter to be used against many `TvshowVideoCuePoint` object types. All fields are combined with a logical ‘and.’
+"""
+input TvshowVideoToManyTvshowVideoCuePointFilter {
+  """
+  Every related `TvshowVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TvshowVideoCuePointFilter
+
+  """
+  Some related `TvshowVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TvshowVideoCuePointFilter
+
+  """
+  No related `TvshowVideoCuePoint` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TvshowVideoCuePointFilter
+}
+
+"""
+A filter to be used against `TvshowVideoCuePoint` object types. All fields are combined with a logical ‘and.’
+"""
+input TvshowVideoCuePointFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `videoId` field."""
+  videoId: IntFilter
+
+  """Filter by the object’s `video` relation."""
+  video: TvshowVideoFilter
+
+  """A related `video` exists."""
+  videoExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [TvshowVideoCuePointFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TvshowVideoCuePointFilter!]
+
+  """Negates the expression."""
+  not: TvshowVideoCuePointFilter
 }
 
 """A connection to a list of `CollectionItemsRelation` values."""
@@ -4025,40 +4025,6 @@ type MovieVideo {
   """Reads a single `Movie` that is related to this `MovieVideo`."""
   movie: Movie
 
-  """Reads and enables pagination through a set of `MovieVideoCuePoint`."""
-  cuePoints(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MovieVideoCuePoint`."""
-    orderBy: [MovieVideoCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MovieVideoCuePointCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MovieVideoCuePointFilter
-  ): MovieVideoCuePointsConnection!
-
   """Reads and enables pagination through a set of `MovieVideoStream`."""
   videoStreams(
     """Only read the first `n` values of the set."""
@@ -4092,77 +4058,40 @@ type MovieVideo {
     """
     filter: MovieVideoStreamFilter
   ): MovieVideoStreamsConnection!
-}
 
-"""A connection to a list of `MovieVideoCuePoint` values."""
-type MovieVideoCuePointsConnection {
-  """A list of `MovieVideoCuePoint` objects."""
-  nodes: [MovieVideoCuePoint!]!
+  """Reads and enables pagination through a set of `MovieVideoCuePoint`."""
+  cuePoints(
+    """Only read the first `n` values of the set."""
+    first: Int
 
-  """
-  A list of edges which contains the `MovieVideoCuePoint` and cursor to aid in pagination.
-  """
-  edges: [MovieVideoCuePointsEdge!]!
+    """Only read the last `n` values of the set."""
+    last: Int
 
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
 
-  """
-  The count of *all* `MovieVideoCuePoint` you could get from the connection.
-  """
-  totalCount: Int!
-}
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
 
-"""Video cue point metadata"""
-type MovieVideoCuePoint {
-  id: Int!
-  videoId: Int
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
 
-  """Type of the cue point"""
-  cuePointTypeKey: String!
+    """The method to use when ordering `MovieVideoCuePoint`."""
+    orderBy: [MovieVideoCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
 
-  """Time in seconds at which the cue point is set within the video"""
-  timeInSeconds: Float!
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MovieVideoCuePointCondition
 
-  """Additional information associated with the cue point"""
-  value: String
-
-  """
-  Reads a single `MovieVideo` that is related to this `MovieVideoCuePoint`.
-  """
-  video: MovieVideo
-}
-
-"""A `MovieVideoCuePoint` edge in the connection."""
-type MovieVideoCuePointsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `MovieVideoCuePoint` at the end of the edge."""
-  node: MovieVideoCuePoint!
-}
-
-"""Methods to use when ordering `MovieVideoCuePoint`."""
-enum MovieVideoCuePointsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  VIDEO_ID_ASC
-  VIDEO_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `MovieVideoCuePoint` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input MovieVideoCuePointCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `videoId` field."""
-  videoId: Int
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MovieVideoCuePointFilter
+  ): MovieVideoCuePointsConnection!
 }
 
 """A connection to a list of `MovieVideoStream` values."""
@@ -4281,6 +4210,77 @@ input MovieVideoStreamCondition {
 
   """Checks for equality with the object’s `type` field."""
   type: VideoStreamType
+}
+
+"""A connection to a list of `MovieVideoCuePoint` values."""
+type MovieVideoCuePointsConnection {
+  """A list of `MovieVideoCuePoint` objects."""
+  nodes: [MovieVideoCuePoint!]!
+
+  """
+  A list of edges which contains the `MovieVideoCuePoint` and cursor to aid in pagination.
+  """
+  edges: [MovieVideoCuePointsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `MovieVideoCuePoint` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""Video cue point metadata"""
+type MovieVideoCuePoint {
+  id: Int!
+  videoId: Int
+
+  """Type of the cue point"""
+  cuePointTypeKey: String!
+
+  """Time in seconds at which the cue point is set within the video"""
+  timeInSeconds: Float!
+
+  """Additional information associated with the cue point"""
+  value: String
+
+  """
+  Reads a single `MovieVideo` that is related to this `MovieVideoCuePoint`.
+  """
+  video: MovieVideo
+}
+
+"""A `MovieVideoCuePoint` edge in the connection."""
+type MovieVideoCuePointsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `MovieVideoCuePoint` at the end of the edge."""
+  node: MovieVideoCuePoint!
+}
+
+"""Methods to use when ordering `MovieVideoCuePoint`."""
+enum MovieVideoCuePointsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  VIDEO_ID_ASC
+  VIDEO_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `MovieVideoCuePoint` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input MovieVideoCuePointCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `videoId` field."""
+  videoId: Int
 }
 
 """A `MovieVideo` edge in the connection."""
@@ -5313,40 +5313,6 @@ type EpisodeVideo {
   """Reads a single `Episode` that is related to this `EpisodeVideo`."""
   episode: Episode
 
-  """Reads and enables pagination through a set of `EpisodeVideoCuePoint`."""
-  cuePoints(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `EpisodeVideoCuePoint`."""
-    orderBy: [EpisodeVideoCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodeVideoCuePointCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodeVideoCuePointFilter
-  ): EpisodeVideoCuePointsConnection!
-
   """Reads and enables pagination through a set of `EpisodeVideoStream`."""
   videoStreams(
     """Only read the first `n` values of the set."""
@@ -5380,77 +5346,40 @@ type EpisodeVideo {
     """
     filter: EpisodeVideoStreamFilter
   ): EpisodeVideoStreamsConnection!
-}
 
-"""A connection to a list of `EpisodeVideoCuePoint` values."""
-type EpisodeVideoCuePointsConnection {
-  """A list of `EpisodeVideoCuePoint` objects."""
-  nodes: [EpisodeVideoCuePoint!]!
+  """Reads and enables pagination through a set of `EpisodeVideoCuePoint`."""
+  cuePoints(
+    """Only read the first `n` values of the set."""
+    first: Int
 
-  """
-  A list of edges which contains the `EpisodeVideoCuePoint` and cursor to aid in pagination.
-  """
-  edges: [EpisodeVideoCuePointsEdge!]!
+    """Only read the last `n` values of the set."""
+    last: Int
 
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
 
-  """
-  The count of *all* `EpisodeVideoCuePoint` you could get from the connection.
-  """
-  totalCount: Int!
-}
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
 
-"""Video cue point metadata"""
-type EpisodeVideoCuePoint {
-  id: Int!
-  videoId: Int
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
 
-  """Type of the cue point"""
-  cuePointTypeKey: String!
+    """The method to use when ordering `EpisodeVideoCuePoint`."""
+    orderBy: [EpisodeVideoCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
 
-  """Time in seconds at which the cue point is set within the video"""
-  timeInSeconds: Float!
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodeVideoCuePointCondition
 
-  """Additional information associated with the cue point"""
-  value: String
-
-  """
-  Reads a single `EpisodeVideo` that is related to this `EpisodeVideoCuePoint`.
-  """
-  video: EpisodeVideo
-}
-
-"""A `EpisodeVideoCuePoint` edge in the connection."""
-type EpisodeVideoCuePointsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EpisodeVideoCuePoint` at the end of the edge."""
-  node: EpisodeVideoCuePoint!
-}
-
-"""Methods to use when ordering `EpisodeVideoCuePoint`."""
-enum EpisodeVideoCuePointsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  VIDEO_ID_ASC
-  VIDEO_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `EpisodeVideoCuePoint` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input EpisodeVideoCuePointCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `videoId` field."""
-  videoId: Int
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodeVideoCuePointFilter
+  ): EpisodeVideoCuePointsConnection!
 }
 
 """A connection to a list of `EpisodeVideoStream` values."""
@@ -5569,6 +5498,77 @@ input EpisodeVideoStreamCondition {
 
   """Checks for equality with the object’s `type` field."""
   type: VideoStreamType
+}
+
+"""A connection to a list of `EpisodeVideoCuePoint` values."""
+type EpisodeVideoCuePointsConnection {
+  """A list of `EpisodeVideoCuePoint` objects."""
+  nodes: [EpisodeVideoCuePoint!]!
+
+  """
+  A list of edges which contains the `EpisodeVideoCuePoint` and cursor to aid in pagination.
+  """
+  edges: [EpisodeVideoCuePointsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EpisodeVideoCuePoint` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""Video cue point metadata"""
+type EpisodeVideoCuePoint {
+  id: Int!
+  videoId: Int
+
+  """Type of the cue point"""
+  cuePointTypeKey: String!
+
+  """Time in seconds at which the cue point is set within the video"""
+  timeInSeconds: Float!
+
+  """Additional information associated with the cue point"""
+  value: String
+
+  """
+  Reads a single `EpisodeVideo` that is related to this `EpisodeVideoCuePoint`.
+  """
+  video: EpisodeVideo
+}
+
+"""A `EpisodeVideoCuePoint` edge in the connection."""
+type EpisodeVideoCuePointsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EpisodeVideoCuePoint` at the end of the edge."""
+  node: EpisodeVideoCuePoint!
+}
+
+"""Methods to use when ordering `EpisodeVideoCuePoint`."""
+enum EpisodeVideoCuePointsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  VIDEO_ID_ASC
+  VIDEO_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `EpisodeVideoCuePoint` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input EpisodeVideoCuePointCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `videoId` field."""
+  videoId: Int
 }
 
 """A `EpisodeVideo` edge in the connection."""
@@ -6044,40 +6044,6 @@ type SeasonVideo {
   """Reads a single `Season` that is related to this `SeasonVideo`."""
   season: Season
 
-  """Reads and enables pagination through a set of `SeasonVideoCuePoint`."""
-  cuePoints(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `SeasonVideoCuePoint`."""
-    orderBy: [SeasonVideoCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: SeasonVideoCuePointCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: SeasonVideoCuePointFilter
-  ): SeasonVideoCuePointsConnection!
-
   """Reads and enables pagination through a set of `SeasonVideoStream`."""
   videoStreams(
     """Only read the first `n` values of the set."""
@@ -6111,77 +6077,40 @@ type SeasonVideo {
     """
     filter: SeasonVideoStreamFilter
   ): SeasonVideoStreamsConnection!
-}
 
-"""A connection to a list of `SeasonVideoCuePoint` values."""
-type SeasonVideoCuePointsConnection {
-  """A list of `SeasonVideoCuePoint` objects."""
-  nodes: [SeasonVideoCuePoint!]!
+  """Reads and enables pagination through a set of `SeasonVideoCuePoint`."""
+  cuePoints(
+    """Only read the first `n` values of the set."""
+    first: Int
 
-  """
-  A list of edges which contains the `SeasonVideoCuePoint` and cursor to aid in pagination.
-  """
-  edges: [SeasonVideoCuePointsEdge!]!
+    """Only read the last `n` values of the set."""
+    last: Int
 
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
 
-  """
-  The count of *all* `SeasonVideoCuePoint` you could get from the connection.
-  """
-  totalCount: Int!
-}
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
 
-"""Video cue point metadata"""
-type SeasonVideoCuePoint {
-  id: Int!
-  videoId: Int
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
 
-  """Type of the cue point"""
-  cuePointTypeKey: String!
+    """The method to use when ordering `SeasonVideoCuePoint`."""
+    orderBy: [SeasonVideoCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
 
-  """Time in seconds at which the cue point is set within the video"""
-  timeInSeconds: Float!
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SeasonVideoCuePointCondition
 
-  """Additional information associated with the cue point"""
-  value: String
-
-  """
-  Reads a single `SeasonVideo` that is related to this `SeasonVideoCuePoint`.
-  """
-  video: SeasonVideo
-}
-
-"""A `SeasonVideoCuePoint` edge in the connection."""
-type SeasonVideoCuePointsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `SeasonVideoCuePoint` at the end of the edge."""
-  node: SeasonVideoCuePoint!
-}
-
-"""Methods to use when ordering `SeasonVideoCuePoint`."""
-enum SeasonVideoCuePointsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  VIDEO_ID_ASC
-  VIDEO_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `SeasonVideoCuePoint` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input SeasonVideoCuePointCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `videoId` field."""
-  videoId: Int
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SeasonVideoCuePointFilter
+  ): SeasonVideoCuePointsConnection!
 }
 
 """A connection to a list of `SeasonVideoStream` values."""
@@ -6300,6 +6229,77 @@ input SeasonVideoStreamCondition {
 
   """Checks for equality with the object’s `type` field."""
   type: VideoStreamType
+}
+
+"""A connection to a list of `SeasonVideoCuePoint` values."""
+type SeasonVideoCuePointsConnection {
+  """A list of `SeasonVideoCuePoint` objects."""
+  nodes: [SeasonVideoCuePoint!]!
+
+  """
+  A list of edges which contains the `SeasonVideoCuePoint` and cursor to aid in pagination.
+  """
+  edges: [SeasonVideoCuePointsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `SeasonVideoCuePoint` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""Video cue point metadata"""
+type SeasonVideoCuePoint {
+  id: Int!
+  videoId: Int
+
+  """Type of the cue point"""
+  cuePointTypeKey: String!
+
+  """Time in seconds at which the cue point is set within the video"""
+  timeInSeconds: Float!
+
+  """Additional information associated with the cue point"""
+  value: String
+
+  """
+  Reads a single `SeasonVideo` that is related to this `SeasonVideoCuePoint`.
+  """
+  video: SeasonVideo
+}
+
+"""A `SeasonVideoCuePoint` edge in the connection."""
+type SeasonVideoCuePointsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `SeasonVideoCuePoint` at the end of the edge."""
+  node: SeasonVideoCuePoint!
+}
+
+"""Methods to use when ordering `SeasonVideoCuePoint`."""
+enum SeasonVideoCuePointsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  VIDEO_ID_ASC
+  VIDEO_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `SeasonVideoCuePoint` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input SeasonVideoCuePointCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `videoId` field."""
+  videoId: Int
 }
 
 """A `SeasonVideo` edge in the connection."""
@@ -6750,40 +6750,6 @@ type TvshowVideo {
   """Reads a single `Tvshow` that is related to this `TvshowVideo`."""
   tvshow: Tvshow
 
-  """Reads and enables pagination through a set of `TvshowVideoCuePoint`."""
-  cuePoints(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `TvshowVideoCuePoint`."""
-    orderBy: [TvshowVideoCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TvshowVideoCuePointCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TvshowVideoCuePointFilter
-  ): TvshowVideoCuePointsConnection!
-
   """Reads and enables pagination through a set of `TvshowVideoStream`."""
   videoStreams(
     """Only read the first `n` values of the set."""
@@ -6817,77 +6783,40 @@ type TvshowVideo {
     """
     filter: TvshowVideoStreamFilter
   ): TvshowVideoStreamsConnection!
-}
 
-"""A connection to a list of `TvshowVideoCuePoint` values."""
-type TvshowVideoCuePointsConnection {
-  """A list of `TvshowVideoCuePoint` objects."""
-  nodes: [TvshowVideoCuePoint!]!
+  """Reads and enables pagination through a set of `TvshowVideoCuePoint`."""
+  cuePoints(
+    """Only read the first `n` values of the set."""
+    first: Int
 
-  """
-  A list of edges which contains the `TvshowVideoCuePoint` and cursor to aid in pagination.
-  """
-  edges: [TvshowVideoCuePointsEdge!]!
+    """Only read the last `n` values of the set."""
+    last: Int
 
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
 
-  """
-  The count of *all* `TvshowVideoCuePoint` you could get from the connection.
-  """
-  totalCount: Int!
-}
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
 
-"""Video cue point metadata"""
-type TvshowVideoCuePoint {
-  id: Int!
-  videoId: Int
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
 
-  """Type of the cue point"""
-  cuePointTypeKey: String!
+    """The method to use when ordering `TvshowVideoCuePoint`."""
+    orderBy: [TvshowVideoCuePointsOrderBy!] = [PRIMARY_KEY_ASC]
 
-  """Time in seconds at which the cue point is set within the video"""
-  timeInSeconds: Float!
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TvshowVideoCuePointCondition
 
-  """Additional information associated with the cue point"""
-  value: String
-
-  """
-  Reads a single `TvshowVideo` that is related to this `TvshowVideoCuePoint`.
-  """
-  video: TvshowVideo
-}
-
-"""A `TvshowVideoCuePoint` edge in the connection."""
-type TvshowVideoCuePointsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `TvshowVideoCuePoint` at the end of the edge."""
-  node: TvshowVideoCuePoint!
-}
-
-"""Methods to use when ordering `TvshowVideoCuePoint`."""
-enum TvshowVideoCuePointsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  VIDEO_ID_ASC
-  VIDEO_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `TvshowVideoCuePoint` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input TvshowVideoCuePointCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `videoId` field."""
-  videoId: Int
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TvshowVideoCuePointFilter
+  ): TvshowVideoCuePointsConnection!
 }
 
 """A connection to a list of `TvshowVideoStream` values."""
@@ -7006,6 +6935,77 @@ input TvshowVideoStreamCondition {
 
   """Checks for equality with the object’s `type` field."""
   type: VideoStreamType
+}
+
+"""A connection to a list of `TvshowVideoCuePoint` values."""
+type TvshowVideoCuePointsConnection {
+  """A list of `TvshowVideoCuePoint` objects."""
+  nodes: [TvshowVideoCuePoint!]!
+
+  """
+  A list of edges which contains the `TvshowVideoCuePoint` and cursor to aid in pagination.
+  """
+  edges: [TvshowVideoCuePointsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `TvshowVideoCuePoint` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""Video cue point metadata"""
+type TvshowVideoCuePoint {
+  id: Int!
+  videoId: Int
+
+  """Type of the cue point"""
+  cuePointTypeKey: String!
+
+  """Time in seconds at which the cue point is set within the video"""
+  timeInSeconds: Float!
+
+  """Additional information associated with the cue point"""
+  value: String
+
+  """
+  Reads a single `TvshowVideo` that is related to this `TvshowVideoCuePoint`.
+  """
+  video: TvshowVideo
+}
+
+"""A `TvshowVideoCuePoint` edge in the connection."""
+type TvshowVideoCuePointsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TvshowVideoCuePoint` at the end of the edge."""
+  node: TvshowVideoCuePoint!
+}
+
+"""Methods to use when ordering `TvshowVideoCuePoint`."""
+enum TvshowVideoCuePointsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  VIDEO_ID_ASC
+  VIDEO_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `TvshowVideoCuePoint` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input TvshowVideoCuePointCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `videoId` field."""
+  videoId: Int
 }
 
 """A `TvshowVideo` edge in the connection."""
