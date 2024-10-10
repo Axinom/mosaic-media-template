@@ -29,11 +29,32 @@ type FormData = Record<MovieImageType, string[]>;
 const Form: React.FC<{ imageSelectField: unknown }> = ({
   imageSelectField,
 }) => {
+  const customSortedMovieImageTypes = Object.values(MovieImageType).sort(
+    (a, b) => {
+      const order = [
+        'COVER_1X1',
+        'COVER_16X9',
+        'CLEAN_COVER_1X1',
+        'CLEAN_COVER_16X9',
+        'LIST_9X13',
+      ];
+      return order.indexOf(a) - order.indexOf(b);
+    },
+  );
+
+  const movieImageTypesObject = customSortedMovieImageTypes.reduce(
+    (acc, curr) => {
+      acc[curr] = curr;
+      return acc;
+    },
+    {} as { [key: string]: string },
+  );
+
   return (
     <>
-      {Object.keys(MovieImageType).map((type) => {
-        const field = MovieImageType[type];
-        const label = getEnumLabel(MovieImageType[type]);
+      {Object.keys(movieImageTypesObject).map((type) => {
+        const field = movieImageTypesObject[type];
+        const label = getEnumLabel(movieImageTypesObject[type]);
         return (
           <Field
             key={field}
