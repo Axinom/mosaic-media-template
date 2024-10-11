@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import { resolve } from 'path';
 
 const url = resolve(
@@ -13,4 +13,4 @@ const start =
     : process.platform === 'win32'
     ? 'start'
     : 'xdg-open';
-exec(`${start} ${url}`);
+execFile(start, [url]);
