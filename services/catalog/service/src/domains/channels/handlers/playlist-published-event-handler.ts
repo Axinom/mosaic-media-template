@@ -75,6 +75,7 @@ export class PlaylistPublishedEventHandler extends TransactionalInboxMessageHand
                 path: p.image.path,
                 width: p.image.width,
                 height: p.image.height,
+                alt_text: p.image.alt_text,
               },
             });
           }

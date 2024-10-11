@@ -13594,6 +13594,11 @@ enum ErrorCodesEnum {
   DATABASE_VALIDATION_FAILED
 
   """
+  Attempt to create or update an element failed, as it would have resulted in a duplicate element.
+  """
+  UNIQUE_CONSTRAINT_ERROR
+
+  """
   An authorization database error has occurred. The user might not have enough permissions.
   """
   DATABASE_PERMISSIONS_CHECK_FAILED

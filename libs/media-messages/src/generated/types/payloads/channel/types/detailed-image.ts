@@ -22,6 +22,10 @@ export interface DetailedImage {
    * Height of the image.
    */
   height?: number | null;
+  /**
+   * Alternative text for the image.
+   */
+  alt_text?: string | null;
 
   [k: string]: unknown;
 }

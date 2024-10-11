@@ -2130,7 +2130,8 @@ CREATE TABLE app_public.channel_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    alt_text text
 );
 
 
@@ -2235,7 +2236,8 @@ CREATE TABLE app_public.collection_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    alt_text text
 );
 
 
@@ -2403,7 +2405,8 @@ CREATE TABLE app_public.episode_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    alt_text text
 );
 
 
@@ -2758,7 +2761,8 @@ CREATE TABLE app_public.movie_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    alt_text text
 );
 
 
@@ -3026,7 +3030,8 @@ CREATE TABLE app_public.program_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    alt_text text
 );
 
 
@@ -3162,7 +3167,8 @@ CREATE TABLE app_public.season_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    alt_text text
 );
 
 
@@ -3504,7 +3510,8 @@ CREATE TABLE app_public.tvshow_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    alt_text text
 );
 
 
