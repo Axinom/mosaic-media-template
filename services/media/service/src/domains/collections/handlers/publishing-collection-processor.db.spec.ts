@@ -157,6 +157,7 @@ describe('publishingCollectionProcessor', () => {
         height: 222,
         type: 'COVER',
         path: 'test/path.png',
+        alt_text: 'Some alt text',
       };
       const imageWarning: SnapshotValidationResult = {
         context: 'IMAGE',
@@ -366,7 +367,9 @@ describe('publishingCollectionProcessor', () => {
         {
           result: {
             content_id: 'collection-1',
-            images: [{ type: 'COVER', width: 0, height: 0, path: '' }],
+            images: [
+              { type: 'COVER', width: 0, height: 0, path: '', alt_text: '' },
+            ],
             related_items: [{}],
             localizations: [
               { title: 123, is_default_locale: 'no', language_tag: null },
@@ -486,6 +489,7 @@ describe('publishingCollectionProcessor', () => {
                 width: 100,
                 height: 100,
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
+                alt_text: 'Cover alt text',
               },
             ],
             localizations: [
@@ -542,6 +546,7 @@ describe('publishingCollectionProcessor', () => {
                 height: 1012,
                 type: 'COVER',
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
+                alt_text: 'Cover alt text',
               },
             ],
             related_items: [

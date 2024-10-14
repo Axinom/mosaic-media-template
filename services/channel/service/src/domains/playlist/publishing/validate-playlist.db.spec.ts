@@ -47,6 +47,7 @@ describe('validatePlaylist', () => {
         width: 100,
         height: 100,
         type: 'test_cover',
+        alt_text: 'Some alt text',
       };
     });
   };
