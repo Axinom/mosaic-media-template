@@ -10,7 +10,7 @@ parameters:
     type: boolean
     default: true
   - name: int
-    displayName: Release manifest to INT
+    displayName: Release to INT
     type: boolean
     default: true
   - name: nfn_acceptance
@@ -96,9 +96,9 @@ stages:
               command: 'push'
               tags: '$(tag)'
 
-      - job: Upload_INT
+      - job: Release_INT
         dependsOn: Build
-        displayName: 'Upload Manifest to INT'
+        displayName: 'Release to INT'
         condition: ${{ eq(parameters.int, true) }}
         variables:
           - group: vault-int
@@ -121,7 +121,7 @@ stages:
               ifNoFilesFound: error
           - task: Bash@3
             displayName:
-              'Upload deployment configuration to INT environment'
+              'Upload manifest'
             inputs:
               targetType: 'inline'
               script: |
@@ -131,20 +131,21 @@ stages:
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
               ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
               HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
-          - task: Bash@3
-            displayName:
-              'Deploy Mosaic service'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m mosaic-media-int-$(tag) -n "media-service-$(tag)"
-
-                # pilet -> -p pilet-workflows@version_number -> get from workflow pipeline
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+          # - task: Bash@3
+          #   displayName:
+          #     'Deploy Mosaic service'
+          #   inputs:
+          #     targetType: 'inline'
+          #     script: |
+          #       # workflows are deployed separately onto each env, thus we can't assume latest runID was for needed env
+          #       # -p media-workflows@1.0.0-$(resources.pipeline.media-workflow.runID)
+                
+          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m mosaic-media-int-$(tag) -n "media-service-$(tag)"
+          #   env:
+          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
+          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
+          #     ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+          #     HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
       - job: Upload_NFN_Acceptance
         dependsOn: Build
