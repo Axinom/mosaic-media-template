@@ -495,6 +495,7 @@ type ChannelImage {
 
   """Height of the image in pixels."""
   height: Int
+  altText: String
 
   """Reads a single `Channel` that is related to this `ChannelImage`."""
   channel: Channel
@@ -534,6 +535,8 @@ enum ChannelImagesOrderBy {
   ID_DESC
   CHANNEL_ID_ASC
   CHANNEL_ID_DESC
+  ALT_TEXT_ASC
+  ALT_TEXT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -548,6 +551,9 @@ input ChannelImageCondition {
 
   """Checks for equality with the object’s `channelId` field."""
   channelId: String
+
+  """Checks for equality with the object’s `altText` field."""
+  altText: String
 }
 
 """
@@ -559,6 +565,9 @@ input ChannelImageFilter {
 
   """Filter by the object’s `channelId` field."""
   channelId: StringFilter
+
+  """Filter by the object’s `altText` field."""
+  altText: StringFilter
 
   """Checks for all expressions in this list."""
   and: [ChannelImageFilter!]
@@ -1210,6 +1219,7 @@ type MovieImage {
 
   """Height of the image in pixels."""
   height: Int
+  altText: String
 
   """Reads a single `Movie` that is related to this `MovieImage`."""
   movie: Movie
@@ -1231,6 +1241,8 @@ enum MovieImagesOrderBy {
   ID_DESC
   MOVIE_ID_ASC
   MOVIE_ID_DESC
+  ALT_TEXT_ASC
+  ALT_TEXT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -1245,6 +1257,9 @@ input MovieImageCondition {
 
   """Checks for equality with the object’s `movieId` field."""
   movieId: String
+
+  """Checks for equality with the object’s `altText` field."""
+  altText: String
 }
 
 """
@@ -1256,6 +1271,9 @@ input MovieImageFilter {
 
   """Filter by the object’s `movieId` field."""
   movieId: StringFilter
+
+  """Filter by the object’s `altText` field."""
+  altText: StringFilter
 
   """Checks for all expressions in this list."""
   and: [MovieImageFilter!]
@@ -2624,6 +2642,7 @@ type TvshowImage {
 
   """Height of the image in pixels."""
   height: Int
+  altText: String
 
   """Reads a single `Tvshow` that is related to this `TvshowImage`."""
   tvshow: Tvshow
@@ -2645,6 +2664,8 @@ enum TvshowImagesOrderBy {
   ID_DESC
   TVSHOW_ID_ASC
   TVSHOW_ID_DESC
+  ALT_TEXT_ASC
+  ALT_TEXT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -2659,6 +2680,9 @@ input TvshowImageCondition {
 
   """Checks for equality with the object’s `tvshowId` field."""
   tvshowId: String
+
+  """Checks for equality with the object’s `altText` field."""
+  altText: String
 }
 
 """
@@ -2670,6 +2694,9 @@ input TvshowImageFilter {
 
   """Filter by the object’s `tvshowId` field."""
   tvshowId: StringFilter
+
+  """Filter by the object’s `altText` field."""
+  altText: StringFilter
 
   """Checks for all expressions in this list."""
   and: [TvshowImageFilter!]
@@ -3391,6 +3418,7 @@ type SeasonImage {
 
   """Height of the image in pixels."""
   height: Int
+  altText: String
 
   """Reads a single `Season` that is related to this `SeasonImage`."""
   season: Season
@@ -3412,6 +3440,8 @@ enum SeasonImagesOrderBy {
   ID_DESC
   SEASON_ID_ASC
   SEASON_ID_DESC
+  ALT_TEXT_ASC
+  ALT_TEXT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -3426,6 +3456,9 @@ input SeasonImageCondition {
 
   """Checks for equality with the object’s `seasonId` field."""
   seasonId: String
+
+  """Checks for equality with the object’s `altText` field."""
+  altText: String
 }
 
 """
@@ -3437,6 +3470,9 @@ input SeasonImageFilter {
 
   """Filter by the object’s `seasonId` field."""
   seasonId: StringFilter
+
+  """Filter by the object’s `altText` field."""
+  altText: StringFilter
 
   """Checks for all expressions in this list."""
   and: [SeasonImageFilter!]
@@ -4082,6 +4118,7 @@ type EpisodeImage {
 
   """Height of the image in pixels."""
   height: Int
+  altText: String
 
   """Reads a single `Episode` that is related to this `EpisodeImage`."""
   episode: Episode
@@ -4103,6 +4140,8 @@ enum EpisodeImagesOrderBy {
   ID_DESC
   EPISODE_ID_ASC
   EPISODE_ID_DESC
+  ALT_TEXT_ASC
+  ALT_TEXT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -4117,6 +4156,9 @@ input EpisodeImageCondition {
 
   """Checks for equality with the object’s `episodeId` field."""
   episodeId: String
+
+  """Checks for equality with the object’s `altText` field."""
+  altText: String
 }
 
 """
@@ -4128,6 +4170,9 @@ input EpisodeImageFilter {
 
   """Filter by the object’s `episodeId` field."""
   episodeId: StringFilter
+
+  """Filter by the object’s `altText` field."""
+  altText: StringFilter
 
   """Checks for all expressions in this list."""
   and: [EpisodeImageFilter!]
@@ -4677,6 +4722,7 @@ type ProgramImage {
 
   """Height of the image in pixels."""
   height: Int
+  altText: String
 
   """Reads a single `Program` that is related to this `ProgramImage`."""
   program: Program
@@ -4698,6 +4744,8 @@ enum ProgramImagesOrderBy {
   ID_DESC
   PROGRAM_ID_ASC
   PROGRAM_ID_DESC
+  ALT_TEXT_ASC
+  ALT_TEXT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -4712,6 +4760,9 @@ input ProgramImageCondition {
 
   """Checks for equality with the object’s `programId` field."""
   programId: Int
+
+  """Checks for equality with the object’s `altText` field."""
+  altText: String
 }
 
 """
@@ -4723,6 +4774,9 @@ input ProgramImageFilter {
 
   """Filter by the object’s `programId` field."""
   programId: IntFilter
+
+  """Filter by the object’s `altText` field."""
+  altText: StringFilter
 
   """Checks for all expressions in this list."""
   and: [ProgramImageFilter!]
@@ -5031,6 +5085,7 @@ type CollectionImage {
 
   """Height of the image in pixels."""
   height: Int
+  altText: String
 
   """Reads a single `Collection` that is related to this `CollectionImage`."""
   collection: Collection
@@ -5052,6 +5107,8 @@ enum CollectionImagesOrderBy {
   ID_DESC
   COLLECTION_ID_ASC
   COLLECTION_ID_DESC
+  ALT_TEXT_ASC
+  ALT_TEXT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -5066,6 +5123,9 @@ input CollectionImageCondition {
 
   """Checks for equality with the object’s `collectionId` field."""
   collectionId: String
+
+  """Checks for equality with the object’s `altText` field."""
+  altText: String
 }
 
 """
@@ -5077,6 +5137,9 @@ input CollectionImageFilter {
 
   """Filter by the object’s `collectionId` field."""
   collectionId: StringFilter
+
+  """Filter by the object’s `altText` field."""
+  altText: StringFilter
 
   """Checks for all expressions in this list."""
   and: [CollectionImageFilter!]
@@ -5715,6 +5778,11 @@ enum ErrorCodesEnum {
   An expected and handled database constraint error has occurred. The actual message will have more information.
   """
   DATABASE_VALIDATION_FAILED
+
+  """
+  Attempt to create or update an element failed, as it would have resulted in a duplicate element.
+  """
+  UNIQUE_CONSTRAINT_ERROR
 
   """
   An authorization database error has occurred. The user might not have enough permissions.

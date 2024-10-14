@@ -54,6 +54,7 @@ describe('createChannelPublishPayload', () => {
         path: 'test/image.png',
         height: 100,
         width: 100,
+        alt_text: 'Some alt text',
       },
     ];
   };

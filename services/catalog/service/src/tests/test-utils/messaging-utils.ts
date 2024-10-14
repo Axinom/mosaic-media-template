@@ -275,6 +275,7 @@ function createImage(): Image {
     width: 480,
     height: 320,
     path: '/some/image/path.png',
+    alt_text: 'Some alt text',
   };
 }
 

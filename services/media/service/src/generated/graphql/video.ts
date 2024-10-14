@@ -103,6 +103,107 @@ export type AmazonS3RegionFilter = {
   notIn?: InputMaybe<Array<AmazonS3Region>>;
 };
 
+export enum AudioFormat {
+  /** AAC */
+  Aac = 'AAC',
+  /** AC3 */
+  Ac3 = 'AC3'
+}
+
+/** A filter to be used against AudioFormat fields. All fields are combined with a logical ‘and.’ */
+export type AudioFormatFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<AudioFormat>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<AudioFormat>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<AudioFormat>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<AudioFormat>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<AudioFormat>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<AudioFormat>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<AudioFormat>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<AudioFormat>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<AudioFormat>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<AudioFormat>>;
+};
+
+export enum AudioRepresentationCreate {
+  /** Always */
+  Always = 'ALWAYS',
+  /** On Matching Sound */
+  OnMatchingSound = 'ON_MATCHING_SOUND'
+}
+
+/** A filter to be used against AudioRepresentationCreate fields. All fields are combined with a logical ‘and.’ */
+export type AudioRepresentationCreateFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<AudioRepresentationCreate>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<AudioRepresentationCreate>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<AudioRepresentationCreate>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<AudioRepresentationCreate>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<AudioRepresentationCreate>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<AudioRepresentationCreate>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<AudioRepresentationCreate>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<AudioRepresentationCreate>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<AudioRepresentationCreate>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<AudioRepresentationCreate>>;
+};
+
+export enum AudioRepresentationSound {
+  /** Five Point One */
+  FivePointOne = 'FIVE_POINT_ONE',
+  /** Mono */
+  Mono = 'MONO',
+  /** Stereo */
+  Stereo = 'STEREO'
+}
+
+/** A filter to be used against AudioRepresentationSound fields. All fields are combined with a logical ‘and.’ */
+export type AudioRepresentationSoundFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<AudioRepresentationSound>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<AudioRepresentationSound>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<AudioRepresentationSound>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<AudioRepresentationSound>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<AudioRepresentationSound>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<AudioRepresentationSound>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<AudioRepresentationSound>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<AudioRepresentationSound>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<AudioRepresentationSound>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<AudioRepresentationSound>>;
+};
+
 /** A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’ */
 export type BigIntFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -220,6 +321,44 @@ export type CreateCustomVideoPayload = {
 };
 
 /**
+ * All input for the create `EncodingAudioRepresentation` mutation.
+ * @permissions: SETTINGS_EDIT,ADMIN
+ */
+export type CreateEncodingAudioRepresentationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `EncodingAudioRepresentation` to be created by this mutation. */
+  encodingAudioRepresentation: EncodingAudioRepresentationInput;
+};
+
+/** The output of our create `EncodingAudioRepresentation` mutation. */
+export type CreateEncodingAudioRepresentationPayload = {
+  __typename?: 'CreateEncodingAudioRepresentationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `EncodingAudioRepresentation` that was created by this mutation. */
+  encodingAudioRepresentation?: Maybe<EncodingAudioRepresentation>;
+  /** An edge for our `EncodingAudioRepresentation`. May be used by Relay 1. */
+  encodingAudioRepresentationEdge?: Maybe<EncodingAudioRepresentationsEdge>;
+  /** Reads a single `EncodingProcessingProfile` that is related to this `EncodingAudioRepresentation`. */
+  encodingProcessingProfile?: Maybe<EncodingProcessingProfile>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `EncodingAudioRepresentation` mutation. */
+export type CreateEncodingAudioRepresentationPayloadEncodingAudioRepresentationEdgeArgs = {
+  orderBy?: InputMaybe<Array<EncodingAudioRepresentationsOrderBy>>;
+};
+
+/**
  * All input for the create `EncodingDrmProfile` mutation.
  * @permissions: SETTINGS_EDIT,ADMIN
  */
@@ -327,6 +466,42 @@ export type CreateEncodingVideoRepresentationPayload = {
 /** The output of our create `EncodingVideoRepresentation` mutation. */
 export type CreateEncodingVideoRepresentationPayloadEncodingVideoRepresentationEdgeArgs = {
   orderBy?: InputMaybe<Array<EncodingVideoRepresentationsOrderBy>>;
+};
+
+/**
+ * All input for the create `EncodingWatermarkProfile` mutation.
+ * @permissions: ADMIN
+ */
+export type CreateEncodingWatermarkProfileInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `EncodingWatermarkProfile` to be created by this mutation. */
+  encodingWatermarkProfile: EncodingWatermarkProfileInput;
+};
+
+/** The output of our create `EncodingWatermarkProfile` mutation. */
+export type CreateEncodingWatermarkProfilePayload = {
+  __typename?: 'CreateEncodingWatermarkProfilePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `EncodingWatermarkProfile` that was created by this mutation. */
+  encodingWatermarkProfile?: Maybe<EncodingWatermarkProfile>;
+  /** An edge for our `EncodingWatermarkProfile`. May be used by Relay 1. */
+  encodingWatermarkProfileEdge?: Maybe<EncodingWatermarkProfilesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `EncodingWatermarkProfile` mutation. */
+export type CreateEncodingWatermarkProfilePayloadEncodingWatermarkProfileEdgeArgs = {
+  orderBy?: InputMaybe<Array<EncodingWatermarkProfilesOrderBy>>;
 };
 
 /**
@@ -829,6 +1004,43 @@ export type DeleteCuePointPayloadCuePointEdgeArgs = {
 };
 
 /**
+ * All input for the `deleteEncodingAudioRepresentation` mutation.
+ * @permissions: SETTINGS_EDIT,ADMIN
+ */
+export type DeleteEncodingAudioRepresentationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `EncodingAudioRepresentation` mutation. */
+export type DeleteEncodingAudioRepresentationPayload = {
+  __typename?: 'DeleteEncodingAudioRepresentationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `EncodingAudioRepresentation` that was deleted by this mutation. */
+  encodingAudioRepresentation?: Maybe<EncodingAudioRepresentation>;
+  /** An edge for our `EncodingAudioRepresentation`. May be used by Relay 1. */
+  encodingAudioRepresentationEdge?: Maybe<EncodingAudioRepresentationsEdge>;
+  /** Reads a single `EncodingProcessingProfile` that is related to this `EncodingAudioRepresentation`. */
+  encodingProcessingProfile?: Maybe<EncodingProcessingProfile>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `EncodingAudioRepresentation` mutation. */
+export type DeleteEncodingAudioRepresentationPayloadEncodingAudioRepresentationEdgeArgs = {
+  orderBy?: InputMaybe<Array<EncodingAudioRepresentationsOrderBy>>;
+};
+
+/**
  * All input for the `deleteEncodingProcessingProfile` mutation.
  * @permissions: SETTINGS_EDIT,ADMIN
  */
@@ -900,6 +1112,41 @@ export type DeleteEncodingVideoRepresentationPayloadEncodingVideoRepresentationE
   orderBy?: InputMaybe<Array<EncodingVideoRepresentationsOrderBy>>;
 };
 
+/**
+ * All input for the `deleteEncodingWatermarkProfile` mutation.
+ * @permissions: ADMIN
+ */
+export type DeleteEncodingWatermarkProfileInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `EncodingWatermarkProfile` mutation. */
+export type DeleteEncodingWatermarkProfilePayload = {
+  __typename?: 'DeleteEncodingWatermarkProfilePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `EncodingWatermarkProfile` that was deleted by this mutation. */
+  encodingWatermarkProfile?: Maybe<EncodingWatermarkProfile>;
+  /** An edge for our `EncodingWatermarkProfile`. May be used by Relay 1. */
+  encodingWatermarkProfileEdge?: Maybe<EncodingWatermarkProfilesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `EncodingWatermarkProfile` mutation. */
+export type DeleteEncodingWatermarkProfilePayloadEncodingWatermarkProfileEdgeArgs = {
+  orderBy?: InputMaybe<Array<EncodingWatermarkProfilesOrderBy>>;
+};
+
 export type DeleteEntitlementWebhookConfigurationPayload = {
   __typename?: 'DeleteEntitlementWebhookConfigurationPayload';
   deleted: Scalars['Boolean'];
@@ -910,6 +1157,41 @@ export type DeleteManifestWebhookConfigurationPayload = {
   __typename?: 'DeleteManifestWebhookConfigurationPayload';
   deleted: Scalars['Boolean'];
   query?: Maybe<Query>;
+};
+
+/**
+ * All input for the `deleteVideo` mutation.
+ * @permissions: VIDEOS_ENCODE,VIDEOS_EDIT,CUSTOM_VIDEOS_EDIT,ADMIN
+ */
+export type DeleteVideoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `Video` mutation. */
+export type DeleteVideoPayload = {
+  __typename?: 'DeleteVideoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Video` that was deleted by this mutation. */
+  video?: Maybe<Video>;
+  /** An edge for our `Video`. May be used by Relay 1. */
+  videoEdge?: Maybe<VideosEdge>;
+};
+
+
+/** The output of our delete `Video` mutation. */
+export type DeleteVideoPayloadVideoEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideosOrderBy>>;
 };
 
 /**
@@ -1027,6 +1309,7 @@ export type EncodeVideoInput = {
   clientMutationId?: InputMaybe<Scalars['String']>;
   processingProfileId: Scalars['UUID'];
   videoRelativePath: Scalars['String'];
+  watermarkProfileIds?: InputMaybe<Array<Scalars['UUID']>>;
 };
 
 export type EncodeVideoPayload = {
@@ -1297,6 +1580,143 @@ export enum EncodingAcquisitionProfilesOrderBy {
   ProviderDesc = 'PROVIDER_DESC',
   TitleAsc = 'TITLE_ASC',
   TitleDesc = 'TITLE_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
+
+/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,VIDEOS_ENCODE,ADMIN */
+export type EncodingAudioRepresentation = {
+  __typename?: 'EncodingAudioRepresentation';
+  audioFormat: AudioFormat;
+  bitrateInKbps?: Maybe<Scalars['Int']>;
+  createCondition: AudioRepresentationCreate;
+  createdDate: Scalars['Datetime'];
+  createdUser: Scalars['String'];
+  /** Reads a single `EncodingProcessingProfile` that is related to this `EncodingAudioRepresentation`. */
+  encodingProcessingProfile?: Maybe<EncodingProcessingProfile>;
+  encodingProcessingProfileId: Scalars['UUID'];
+  id: Scalars['UUID'];
+  sound: AudioRepresentationSound;
+  updatedDate: Scalars['Datetime'];
+  updatedUser: Scalars['String'];
+};
+
+/**
+ * A condition to be used against `EncodingAudioRepresentation` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type EncodingAudioRepresentationCondition = {
+  /** Checks for equality with the object’s `audioFormat` field. */
+  audioFormat?: InputMaybe<AudioFormat>;
+  /** Checks for equality with the object’s `bitrateInKbps` field. */
+  bitrateInKbps?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `createCondition` field. */
+  createCondition?: InputMaybe<AudioRepresentationCreate>;
+  /** Checks for equality with the object’s `createdDate` field. */
+  createdDate?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `createdUser` field. */
+  createdUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `encodingProcessingProfileId` field. */
+  encodingProcessingProfileId?: InputMaybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `sound` field. */
+  sound?: InputMaybe<AudioRepresentationSound>;
+  /** Checks for equality with the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<Scalars['String']>;
+};
+
+/** A filter to be used against `EncodingAudioRepresentation` object types. All fields are combined with a logical ‘and.’ */
+export type EncodingAudioRepresentationFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EncodingAudioRepresentationFilter>>;
+  /** Filter by the object’s `audioFormat` field. */
+  audioFormat?: InputMaybe<AudioFormatFilter>;
+  /** Filter by the object’s `bitrateInKbps` field. */
+  bitrateInKbps?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `createCondition` field. */
+  createCondition?: InputMaybe<AudioRepresentationCreateFilter>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `encodingProcessingProfile` relation. */
+  encodingProcessingProfile?: InputMaybe<EncodingProcessingProfileFilter>;
+  /** Filter by the object’s `encodingProcessingProfileId` field. */
+  encodingProcessingProfileId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EncodingAudioRepresentationFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EncodingAudioRepresentationFilter>>;
+  /** Filter by the object’s `sound` field. */
+  sound?: InputMaybe<AudioRepresentationSoundFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/** An input for mutations affecting `EncodingAudioRepresentation` */
+export type EncodingAudioRepresentationInput = {
+  audioFormat: AudioFormat;
+  bitrateInKbps?: InputMaybe<Scalars['Int']>;
+  createCondition: AudioRepresentationCreate;
+  encodingProcessingProfileId: Scalars['UUID'];
+  sound: AudioRepresentationSound;
+};
+
+/**
+ * A connection to a list of `EncodingAudioRepresentation` values.
+ * @permissions: SETTINGS_VIEW,SETTINGS_EDIT,VIDEOS_ENCODE,ADMIN
+ */
+export type EncodingAudioRepresentationsConnection = {
+  __typename?: 'EncodingAudioRepresentationsConnection';
+  /** A list of edges which contains the `EncodingAudioRepresentation` and cursor to aid in pagination. */
+  edges: Array<EncodingAudioRepresentationsEdge>;
+  /** A list of `EncodingAudioRepresentation` objects. */
+  nodes: Array<EncodingAudioRepresentation>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EncodingAudioRepresentation` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `EncodingAudioRepresentation` edge in the connection. */
+export type EncodingAudioRepresentationsEdge = {
+  __typename?: 'EncodingAudioRepresentationsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `EncodingAudioRepresentation` at the end of the edge. */
+  node: EncodingAudioRepresentation;
+};
+
+/** Methods to use when ordering `EncodingAudioRepresentation`. */
+export enum EncodingAudioRepresentationsOrderBy {
+  AudioFormatAsc = 'AUDIO_FORMAT_ASC',
+  AudioFormatDesc = 'AUDIO_FORMAT_DESC',
+  BitrateInKbpsAsc = 'BITRATE_IN_KBPS_ASC',
+  BitrateInKbpsDesc = 'BITRATE_IN_KBPS_DESC',
+  CreateConditionAsc = 'CREATE_CONDITION_ASC',
+  CreateConditionDesc = 'CREATE_CONDITION_DESC',
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  EncodingProcessingProfileIdAsc = 'ENCODING_PROCESSING_PROFILE_ID_ASC',
+  EncodingProcessingProfileIdDesc = 'ENCODING_PROCESSING_PROFILE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SoundAsc = 'SOUND_ASC',
+  SoundDesc = 'SOUND_DESC',
   UpdatedDateAsc = 'UPDATED_DATE_ASC',
   UpdatedDateDesc = 'UPDATED_DATE_DESC',
   UpdatedUserAsc = 'UPDATED_USER_ASC',
@@ -1639,14 +2059,21 @@ export type EncodingProcessingProfile = {
   dashManifestName?: Maybe<Scalars['String']>;
   deleteFilesFromSourceWhenDone: Scalars['Boolean'];
   drmProtection: DrmProtection;
+  /** Reads and enables pagination through a set of `EncodingAudioRepresentation`. */
+  encodingAudioRepresentations: EncodingAudioRepresentationsConnection;
   encodingMode: EncodingMode;
   /** Reads and enables pagination through a set of `EncodingVideoRepresentation`. */
   encodingVideoRepresentations: EncodingVideoRepresentationsConnection;
   explicitIv?: Maybe<Scalars['String']>;
   extractAndApplyHdr: Scalars['Boolean'];
   extractAndApplyHdr10Plus: Scalars['Boolean'];
+  failOnNoAudioTracks: Scalars['Boolean'];
+  failOnNoCaptionTracks: Scalars['Boolean'];
+  failOnNoSubtitleTracks: Scalars['Boolean'];
+  failOnNoVideoTracks: Scalars['Boolean'];
   forceAspectRatioToStandard: Scalars['Boolean'];
   forcePixelAspectRatioTo1: Scalars['Boolean'];
+  forensicWatermarking?: Maybe<ForensicWatermarking>;
   hlsManifestName?: Maybe<Scalars['String']>;
   id: Scalars['UUID'];
   manifestName?: Maybe<Scalars['String']>;
@@ -1666,6 +2093,19 @@ export type EncodingProcessingProfile = {
   videoFormat: VideoFormat;
   videoStreamExpression?: Maybe<Scalars['String']>;
   videoSyncMethod: VideoSyncMethod;
+};
+
+
+/** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,VIDEOS_ENCODE,ADMIN */
+export type EncodingProcessingProfileEncodingAudioRepresentationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<EncodingAudioRepresentationCondition>;
+  filter?: InputMaybe<EncodingAudioRepresentationFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<EncodingAudioRepresentationsOrderBy>>;
 };
 
 
@@ -1742,10 +2182,20 @@ export type EncodingProcessingProfileCondition = {
   extractAndApplyHdr?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `extractAndApplyHdr10Plus` field. */
   extractAndApplyHdr10Plus?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `failOnNoAudioTracks` field. */
+  failOnNoAudioTracks?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `failOnNoCaptionTracks` field. */
+  failOnNoCaptionTracks?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `failOnNoSubtitleTracks` field. */
+  failOnNoSubtitleTracks?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `failOnNoVideoTracks` field. */
+  failOnNoVideoTracks?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `forceAspectRatioToStandard` field. */
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `forcePixelAspectRatioTo1` field. */
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `forensicWatermarking` field. */
+  forensicWatermarking?: InputMaybe<ForensicWatermarking>;
   /**
    * Checks for equality with the object’s `hlsManifestName` field.
    * @matchesPattern()
@@ -1836,6 +2286,10 @@ export type EncodingProcessingProfileFilter = {
   deleteFilesFromSourceWhenDone?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `drmProtection` field. */
   drmProtection?: InputMaybe<DrmProtectionFilter>;
+  /** Filter by the object’s `encodingAudioRepresentations` relation. */
+  encodingAudioRepresentations?: InputMaybe<EncodingProcessingProfileToManyEncodingAudioRepresentationFilter>;
+  /** Some related `encodingAudioRepresentations` exist. */
+  encodingAudioRepresentationsExist?: InputMaybe<Scalars['Boolean']>;
   /** Filter by the object’s `encodingMode` field. */
   encodingMode?: InputMaybe<EncodingModeFilter>;
   /** Filter by the object’s `encodingVideoRepresentations` relation. */
@@ -1848,10 +2302,20 @@ export type EncodingProcessingProfileFilter = {
   extractAndApplyHdr?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `extractAndApplyHdr10Plus` field. */
   extractAndApplyHdr10Plus?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `failOnNoAudioTracks` field. */
+  failOnNoAudioTracks?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `failOnNoCaptionTracks` field. */
+  failOnNoCaptionTracks?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `failOnNoSubtitleTracks` field. */
+  failOnNoSubtitleTracks?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `failOnNoVideoTracks` field. */
+  failOnNoVideoTracks?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `forceAspectRatioToStandard` field. */
   forceAspectRatioToStandard?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `forcePixelAspectRatioTo1` field. */
   forcePixelAspectRatioTo1?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `forensicWatermarking` field. */
+  forensicWatermarking?: InputMaybe<ForensicWatermarkingFilter>;
   /** Filter by the object’s `hlsManifestName` field. */
   hlsManifestName?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
@@ -1923,8 +2387,13 @@ export type EncodingProcessingProfileInput = {
   explicitIv?: InputMaybe<Scalars['String']>;
   extractAndApplyHdr?: InputMaybe<Scalars['Boolean']>;
   extractAndApplyHdr10Plus?: InputMaybe<Scalars['Boolean']>;
+  failOnNoAudioTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoCaptionTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoSubtitleTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoVideoTracks?: InputMaybe<Scalars['Boolean']>;
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
+  forensicWatermarking?: InputMaybe<ForensicWatermarking>;
   /** @matchesPattern() */
   hlsManifestName?: InputMaybe<Scalars['String']>;
   /** @matchesPattern() */
@@ -1984,8 +2453,13 @@ export type EncodingProcessingProfilePatch = {
   explicitIv?: InputMaybe<Scalars['String']>;
   extractAndApplyHdr?: InputMaybe<Scalars['Boolean']>;
   extractAndApplyHdr10Plus?: InputMaybe<Scalars['Boolean']>;
+  failOnNoAudioTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoCaptionTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoSubtitleTracks?: InputMaybe<Scalars['Boolean']>;
+  failOnNoVideoTracks?: InputMaybe<Scalars['Boolean']>;
   forceAspectRatioToStandard?: InputMaybe<Scalars['Boolean']>;
   forcePixelAspectRatioTo1?: InputMaybe<Scalars['Boolean']>;
+  forensicWatermarking?: InputMaybe<ForensicWatermarking>;
   /** @matchesPattern() */
   hlsManifestName?: InputMaybe<Scalars['String']>;
   /** @matchesPattern() */
@@ -2075,10 +2549,20 @@ export enum EncodingProcessingProfilesOrderBy {
   ExtractAndApplyHdrDesc = 'EXTRACT_AND_APPLY_HDR_DESC',
   ExtractAndApplyHdr10PlusAsc = 'EXTRACT_AND_APPLY_HDR10PLUS_ASC',
   ExtractAndApplyHdr10PlusDesc = 'EXTRACT_AND_APPLY_HDR10PLUS_DESC',
+  FailOnNoAudioTracksAsc = 'FAIL_ON_NO_AUDIO_TRACKS_ASC',
+  FailOnNoAudioTracksDesc = 'FAIL_ON_NO_AUDIO_TRACKS_DESC',
+  FailOnNoCaptionTracksAsc = 'FAIL_ON_NO_CAPTION_TRACKS_ASC',
+  FailOnNoCaptionTracksDesc = 'FAIL_ON_NO_CAPTION_TRACKS_DESC',
+  FailOnNoSubtitleTracksAsc = 'FAIL_ON_NO_SUBTITLE_TRACKS_ASC',
+  FailOnNoSubtitleTracksDesc = 'FAIL_ON_NO_SUBTITLE_TRACKS_DESC',
+  FailOnNoVideoTracksAsc = 'FAIL_ON_NO_VIDEO_TRACKS_ASC',
+  FailOnNoVideoTracksDesc = 'FAIL_ON_NO_VIDEO_TRACKS_DESC',
   ForceAspectRatioToStandardAsc = 'FORCE_ASPECT_RATIO_TO_STANDARD_ASC',
   ForceAspectRatioToStandardDesc = 'FORCE_ASPECT_RATIO_TO_STANDARD_DESC',
   ForcePixelAspectRatioTo_1Asc = 'FORCE_PIXEL_ASPECT_RATIO_TO_1_ASC',
   ForcePixelAspectRatioTo_1Desc = 'FORCE_PIXEL_ASPECT_RATIO_TO_1_DESC',
+  ForensicWatermarkingAsc = 'FORENSIC_WATERMARKING_ASC',
+  ForensicWatermarkingDesc = 'FORENSIC_WATERMARKING_DESC',
   HlsManifestNameAsc = 'HLS_MANIFEST_NAME_ASC',
   HlsManifestNameDesc = 'HLS_MANIFEST_NAME_DESC',
   IdAsc = 'ID_ASC',
@@ -2121,6 +2605,16 @@ export enum EncodingProcessingProfilesOrderBy {
   VideoSyncMethodAsc = 'VIDEO_SYNC_METHOD_ASC',
   VideoSyncMethodDesc = 'VIDEO_SYNC_METHOD_DESC'
 }
+
+/** A filter to be used against many `EncodingAudioRepresentation` object types. All fields are combined with a logical ‘and.’ */
+export type EncodingProcessingProfileToManyEncodingAudioRepresentationFilter = {
+  /** Every related `EncodingAudioRepresentation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EncodingAudioRepresentationFilter>;
+  /** No related `EncodingAudioRepresentation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EncodingAudioRepresentationFilter>;
+  /** Some related `EncodingAudioRepresentation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EncodingAudioRepresentationFilter>;
+};
 
 /** A filter to be used against many `EncodingVideoRepresentation` object types. All fields are combined with a logical ‘and.’ */
 export type EncodingProcessingProfileToManyEncodingVideoRepresentationFilter = {
@@ -2533,6 +3027,227 @@ export enum EncodingVideoRepresentationsOrderBy {
   WidthDesc = 'WIDTH_DESC'
 }
 
+/** @permissions: VIDEOS_ENCODE,ADMIN */
+export type EncodingWatermarkProfile = {
+  __typename?: 'EncodingWatermarkProfile';
+  createdDate: Scalars['Datetime'];
+  createdUser: Scalars['String'];
+  endTime?: Maybe<Scalars['String']>;
+  fadeInDuration?: Maybe<Scalars['Int']>;
+  fadeOutDuration?: Maybe<Scalars['Int']>;
+  id: Scalars['UUID'];
+  imageId: Scalars['UUID'];
+  opacity: Scalars['Int'];
+  positionX: Scalars['Int'];
+  positionY: Scalars['Int'];
+  size: Scalars['Int'];
+  startTime?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+  updatedDate: Scalars['Datetime'];
+  updatedUser: Scalars['String'];
+  useByDefault: Scalars['Boolean'];
+};
+
+/**
+ * A condition to be used against `EncodingWatermarkProfile` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type EncodingWatermarkProfileCondition = {
+  /** Checks for equality with the object’s `createdDate` field. */
+  createdDate?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `createdUser` field. */
+  createdUser?: InputMaybe<Scalars['String']>;
+  /**
+   * Checks for equality with the object’s `endTime` field.
+   * @matchesPattern()
+   */
+  endTime?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `fadeInDuration` field. */
+  fadeInDuration?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `fadeOutDuration` field. */
+  fadeOutDuration?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `imageId` field. */
+  imageId?: InputMaybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `opacity` field. */
+  opacity?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `positionX` field. */
+  positionX?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `positionY` field. */
+  positionY?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `size` field. */
+  size?: InputMaybe<Scalars['Int']>;
+  /**
+   * Checks for equality with the object’s `startTime` field.
+   * @matchesPattern()
+   */
+  startTime?: InputMaybe<Scalars['String']>;
+  /**
+   * Checks for equality with the object’s `title` field.
+   * @isTrimmed()
+   * @maxLength(100)
+   * @notEmpty()
+   */
+  title?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `useByDefault` field. */
+  useByDefault?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** A filter to be used against `EncodingWatermarkProfile` object types. All fields are combined with a logical ‘and.’ */
+export type EncodingWatermarkProfileFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EncodingWatermarkProfileFilter>>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `endTime` field. */
+  endTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `fadeInDuration` field. */
+  fadeInDuration?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `fadeOutDuration` field. */
+  fadeOutDuration?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `imageId` field. */
+  imageId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EncodingWatermarkProfileFilter>;
+  /** Filter by the object’s `opacity` field. */
+  opacity?: InputMaybe<IntFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EncodingWatermarkProfileFilter>>;
+  /** Filter by the object’s `positionX` field. */
+  positionX?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `positionY` field. */
+  positionY?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `size` field. */
+  size?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `startTime` field. */
+  startTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `useByDefault` field. */
+  useByDefault?: InputMaybe<BooleanFilter>;
+};
+
+/** An input for mutations affecting `EncodingWatermarkProfile` */
+export type EncodingWatermarkProfileInput = {
+  /** @matchesPattern() */
+  endTime?: InputMaybe<Scalars['String']>;
+  fadeInDuration?: InputMaybe<Scalars['Int']>;
+  fadeOutDuration?: InputMaybe<Scalars['Int']>;
+  imageId: Scalars['UUID'];
+  opacity?: InputMaybe<Scalars['Int']>;
+  positionX?: InputMaybe<Scalars['Int']>;
+  positionY?: InputMaybe<Scalars['Int']>;
+  size?: InputMaybe<Scalars['Int']>;
+  /** @matchesPattern() */
+  startTime?: InputMaybe<Scalars['String']>;
+  /**
+   * @isTrimmed()
+   * @maxLength(100)
+   * @notEmpty()
+   */
+  title: Scalars['String'];
+  useByDefault?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Represents an update to a `EncodingWatermarkProfile`. Fields that are set will be updated. */
+export type EncodingWatermarkProfilePatch = {
+  /** @matchesPattern() */
+  endTime?: InputMaybe<Scalars['String']>;
+  fadeInDuration?: InputMaybe<Scalars['Int']>;
+  fadeOutDuration?: InputMaybe<Scalars['Int']>;
+  imageId?: InputMaybe<Scalars['UUID']>;
+  opacity?: InputMaybe<Scalars['Int']>;
+  positionX?: InputMaybe<Scalars['Int']>;
+  positionY?: InputMaybe<Scalars['Int']>;
+  size?: InputMaybe<Scalars['Int']>;
+  /** @matchesPattern() */
+  startTime?: InputMaybe<Scalars['String']>;
+  /**
+   * @isTrimmed()
+   * @maxLength(100)
+   * @notEmpty()
+   */
+  title?: InputMaybe<Scalars['String']>;
+  useByDefault?: InputMaybe<Scalars['Boolean']>;
+};
+
+/**
+ * A connection to a list of `EncodingWatermarkProfile` values.
+ * @permissions: VIDEOS_ENCODE,ADMIN
+ */
+export type EncodingWatermarkProfilesConnection = {
+  __typename?: 'EncodingWatermarkProfilesConnection';
+  /** A list of edges which contains the `EncodingWatermarkProfile` and cursor to aid in pagination. */
+  edges: Array<EncodingWatermarkProfilesEdge>;
+  /** A list of `EncodingWatermarkProfile` objects. */
+  nodes: Array<EncodingWatermarkProfile>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EncodingWatermarkProfile` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `EncodingWatermarkProfile` edge in the connection. */
+export type EncodingWatermarkProfilesEdge = {
+  __typename?: 'EncodingWatermarkProfilesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `EncodingWatermarkProfile` at the end of the edge. */
+  node: EncodingWatermarkProfile;
+};
+
+/** Methods to use when ordering `EncodingWatermarkProfile`. */
+export enum EncodingWatermarkProfilesOrderBy {
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  EndTimeAsc = 'END_TIME_ASC',
+  EndTimeDesc = 'END_TIME_DESC',
+  FadeInDurationAsc = 'FADE_IN_DURATION_ASC',
+  FadeInDurationDesc = 'FADE_IN_DURATION_DESC',
+  FadeOutDurationAsc = 'FADE_OUT_DURATION_ASC',
+  FadeOutDurationDesc = 'FADE_OUT_DURATION_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ImageIdAsc = 'IMAGE_ID_ASC',
+  ImageIdDesc = 'IMAGE_ID_DESC',
+  Natural = 'NATURAL',
+  OpacityAsc = 'OPACITY_ASC',
+  OpacityDesc = 'OPACITY_DESC',
+  PositionXAsc = 'POSITION_X_ASC',
+  PositionXDesc = 'POSITION_X_DESC',
+  PositionYAsc = 'POSITION_Y_ASC',
+  PositionYDesc = 'POSITION_Y_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SizeAsc = 'SIZE_ASC',
+  SizeDesc = 'SIZE_DESC',
+  StartTimeAsc = 'START_TIME_ASC',
+  StartTimeDesc = 'START_TIME_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC',
+  UseByDefaultAsc = 'USE_BY_DEFAULT_ASC',
+  UseByDefaultDesc = 'USE_BY_DEFAULT_DESC'
+}
+
 /** Exposes all error codes and messages for errors that a service requests can throw. In some cases, messages that are actually thrown can be different, since they can include more details or a single code can used for different errors of the same type. */
 export enum ErrorCodesEnum {
   /** Access Token has expired. */
@@ -2655,6 +3370,10 @@ export enum ErrorCodesEnum {
   HostingServiceNotAccessible = 'HOSTING_SERVICE_NOT_ACCESSIBLE',
   /** The Identity service is not accessible. Please contact Axinom support. */
   IdentityServiceNotAccessible = 'IDENTITY_SERVICE_NOT_ACCESSIBLE',
+  /** The request to the Image service failed. Please try again or contact Axinom support. */
+  ImageServiceNotAccessible = 'IMAGE_SERVICE_NOT_ACCESSIBLE',
+  /** The request to the Image service failed due to unauthorized access. Please make sure that you have at least 'IMAGES_VIEW' permissions on the Image Service. */
+  ImageServiceUnauthorized = 'IMAGE_SERVICE_UNAUTHORIZED',
   /** An unhandled and unexpected error has occurred. Please contact the service support. */
   InternalServerError = 'INTERNAL_SERVER_ERROR',
   /** An attempt to generate a webhook response has failed. If payload is provided, errors cannot be provided. Use 'warnings' instead. */
@@ -2725,6 +3444,8 @@ export enum ErrorCodesEnum {
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
+  /** Attempt to create or update an element failed, as it would have resulted in a duplicate element. */
+  UniqueConstraintError = 'UNIQUE_CONSTRAINT_ERROR',
   /** Unrecognized CMAF encoding [%s] found. */
   UnrecognizedCmafEncoding = 'UNRECOGNIZED_CMAF_ENCODING',
   /** Unsupported storage provider */
@@ -2739,13 +3460,19 @@ export enum ErrorCodesEnum {
   ValueIsNotObject = 'VALUE_IS_NOT_OBJECT',
   /** The selected source video was already processed. */
   VideoAlreadyProcessed = 'VIDEO_ALREADY_PROCESSED',
+  /** Unable to find the video to delete as both video ID and source location are not specified. */
+  VideoIdentifiersNotProvided = 'VIDEO_IDENTIFIERS_NOT_PROVIDED',
   /** The video was not found. */
   VideoNotFound = 'VIDEO_NOT_FOUND',
   /** Unable to create a video because provided relative path is empty. */
   VideoRelativePathEmpty = 'VIDEO_RELATIVE_PATH_EMPTY',
   /** The Video Representation must have width and/or height defined. */
   VideoRepresentationDimensionsNotSet = 'VIDEO_REPRESENTATION_DIMENSIONS_NOT_SET',
-  /** Unable to make a request to the webhook URL '%s'. Please make sure that the endpoint is reachable. */
+  /** Could not find the watermark image(s) with ID %s. */
+  WatermarkImageNotFound = 'WATERMARK_IMAGE_NOT_FOUND',
+  /** The watermark profile was not found. */
+  WatermarkProfileNotFound = 'WATERMARK_PROFILE_NOT_FOUND',
+  /** Unable to make a request to the webhook URL '%s'. Please make sure that the endpoint is correct and reachable. */
   WebhookEndpointNotReachable = 'WEBHOOK_ENDPOINT_NOT_REACHABLE',
   /** Validation of webhook payload has failed. */
   WebhookPayloadValidationFailed = 'WEBHOOK_PAYLOAD_VALIDATION_FAILED',
@@ -2753,7 +3480,7 @@ export enum ErrorCodesEnum {
   WebhookRequestFailure = 'WEBHOOK_REQUEST_FAILURE',
   /** Generation of a webhook request has failed. */
   WebhookRequestGenerationFailed = 'WEBHOOK_REQUEST_GENERATION_FAILED',
-  /** The webhook for the URL '%s' responded with error(s). Please check the details for more information. */
+  /** The webhook for the URL '%s' responded with error(s): %s */
   WebhookRespondedWithErrors = 'WEBHOOK_RESPONDED_WITH_ERRORS',
   /** The request to get the %s secret succeeded, but the secret was not found. Please contact Axinom Support. */
   WebhookSecretNotFound = 'WEBHOOK_SECRET_NOT_FOUND',
@@ -2789,6 +3516,37 @@ export type FloatFilter = {
   notEqualTo?: InputMaybe<Scalars['Float']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['Float']>>;
+};
+
+export enum ForensicWatermarking {
+  /** Content Armor */
+  ContentArmor = 'CONTENT_ARMOR'
+}
+
+/** A filter to be used against ForensicWatermarking fields. All fields are combined with a logical ‘and.’ */
+export type ForensicWatermarkingFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<ForensicWatermarking>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<ForensicWatermarking>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<ForensicWatermarking>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<ForensicWatermarking>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<ForensicWatermarking>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<ForensicWatermarking>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<ForensicWatermarking>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<ForensicWatermarking>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<ForensicWatermarking>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<ForensicWatermarking>>;
 };
 
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
@@ -2949,24 +3707,34 @@ export type Mutation = {
   createCustomVideo?: Maybe<CreateCustomVideoPayload>;
   /** Creates a single `VideoStream`. */
   createCustomVideoStream?: Maybe<CreateVideoStreamPayload>;
+  /** Creates a single `EncodingAudioRepresentation`. */
+  createEncodingAudioRepresentation?: Maybe<CreateEncodingAudioRepresentationPayload>;
   /** Creates a single `EncodingDrmProfile`. */
   createEncodingDrmProfile?: Maybe<CreateEncodingDrmProfilePayload>;
   /** Creates a single `EncodingProcessingProfile`. */
   createEncodingProcessingProfile?: Maybe<CreateEncodingProcessingProfilePayload>;
   /** Creates a single `EncodingVideoRepresentation`. */
   createEncodingVideoRepresentation?: Maybe<CreateEncodingVideoRepresentationPayload>;
+  /** Creates a single `EncodingWatermarkProfile`. */
+  createEncodingWatermarkProfile?: Maybe<CreateEncodingWatermarkProfilePayload>;
   /** Creates a single `VideosTag`. */
   createVideosTag?: Maybe<CreateVideosTagPayload>;
   /** Deletes a single `CuePoint` using a unique key. */
   deleteCuePoint?: Maybe<DeleteCuePointPayload>;
   /** Deletes a single `VideoStream` using a unique key. */
   deleteCustomVideoStream?: Maybe<DeleteVideoStreamPayload>;
+  /** Deletes a single `EncodingAudioRepresentation` using a unique key. */
+  deleteEncodingAudioRepresentation?: Maybe<DeleteEncodingAudioRepresentationPayload>;
   /** Deletes a single `EncodingProcessingProfile` using a unique key. */
   deleteEncodingProcessingProfile?: Maybe<DeleteEncodingProcessingProfilePayload>;
   /** Deletes a single `EncodingVideoRepresentation` using a unique key. */
   deleteEncodingVideoRepresentation?: Maybe<DeleteEncodingVideoRepresentationPayload>;
+  /** Deletes a single `EncodingWatermarkProfile` using a unique key. */
+  deleteEncodingWatermarkProfile?: Maybe<DeleteEncodingWatermarkProfilePayload>;
   deleteEntitlementWebhookConfiguration: DeleteEntitlementWebhookConfigurationPayload;
   deleteManifestWebhookConfiguration: DeleteManifestWebhookConfigurationPayload;
+  /** Deletes a single `Video` using a unique key. */
+  deleteVideo?: Maybe<DeleteVideoPayload>;
   /** Deletes a single `VideosTag` using a unique key. */
   deleteVideosTag?: Maybe<DeleteVideosTagPayload>;
   encodeVideo?: Maybe<EncodeVideoPayload>;
@@ -2981,6 +3749,7 @@ export type Mutation = {
   setGeneralSettings: GeneralSetting;
   setHostingAzureAcquisitionProfile: EncodingAcquisitionProfile;
   setHostingAzurePublishingProfile: EncodingPublishingProfile;
+  startVideosDeletion?: Maybe<BulkMutationUuidPayload>;
   truncateVideos?: Maybe<TruncateVideosPayload>;
   unarchiveVideos?: Maybe<BulkMutationUuidPayload>;
   updateAmazonS3AcquisitionProfile: EncodingAcquisitionProfile;
@@ -2999,6 +3768,8 @@ export type Mutation = {
   updateEncodingProcessingProfile?: Maybe<UpdateEncodingProcessingProfilePayload>;
   /** Updates a single `EncodingVideoRepresentation` using a unique key and a patch. */
   updateEncodingVideoRepresentation?: Maybe<UpdateEncodingVideoRepresentationPayload>;
+  /** Updates a single `EncodingWatermarkProfile` using a unique key and a patch. */
+  updateEncodingWatermarkProfile?: Maybe<UpdateEncodingWatermarkProfilePayload>;
   updateHostingAzureAcquisitionProfile: EncodingAcquisitionProfile;
   updateHostingAzurePublishingProfile: EncodingPublishingProfile;
   /** Updates a single `Video` using a unique key and a patch. */
@@ -3033,6 +3804,12 @@ export type MutationCreateCustomVideoStreamArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateEncodingAudioRepresentationArgs = {
+  input: CreateEncodingAudioRepresentationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateEncodingDrmProfileArgs = {
   input: CreateEncodingDrmProfileInput;
 };
@@ -3047,6 +3824,12 @@ export type MutationCreateEncodingProcessingProfileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateEncodingVideoRepresentationArgs = {
   input: CreateEncodingVideoRepresentationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateEncodingWatermarkProfileArgs = {
+  input: CreateEncodingWatermarkProfileInput;
 };
 
 
@@ -3069,6 +3852,12 @@ export type MutationDeleteCustomVideoStreamArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEncodingAudioRepresentationArgs = {
+  input: DeleteEncodingAudioRepresentationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteEncodingProcessingProfileArgs = {
   input: DeleteEncodingProcessingProfileInput;
 };
@@ -3077,6 +3866,18 @@ export type MutationDeleteEncodingProcessingProfileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteEncodingVideoRepresentationArgs = {
   input: DeleteEncodingVideoRepresentationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEncodingWatermarkProfileArgs = {
+  input: DeleteEncodingWatermarkProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVideoArgs = {
+  input: DeleteVideoInput;
 };
 
 
@@ -3147,6 +3948,12 @@ export type MutationSetHostingAzurePublishingProfileArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationStartVideosDeletionArgs = {
+  filter?: InputMaybe<VideoFilter>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUnarchiveVideosArgs = {
   filter?: InputMaybe<VideoFilter>;
 };
@@ -3209,6 +4016,12 @@ export type MutationUpdateEncodingProcessingProfileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateEncodingVideoRepresentationArgs = {
   input: UpdateEncodingVideoRepresentationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEncodingWatermarkProfileArgs = {
+  input: UpdateEncodingWatermarkProfileInput;
 };
 
 
@@ -3398,6 +4211,9 @@ export type Query = {
   encodingAcquisitionProfile?: Maybe<EncodingAcquisitionProfile>;
   /** Reads and enables pagination through a set of `EncodingAcquisitionProfile`. */
   encodingAcquisitionProfiles?: Maybe<EncodingAcquisitionProfilesConnection>;
+  encodingAudioRepresentation?: Maybe<EncodingAudioRepresentation>;
+  /** Reads and enables pagination through a set of `EncodingAudioRepresentation`. */
+  encodingAudioRepresentations?: Maybe<EncodingAudioRepresentationsConnection>;
   encodingDrmProfile?: Maybe<EncodingDrmProfile>;
   /** Reads and enables pagination through a set of `EncodingDrmProfile`. */
   encodingDrmProfiles?: Maybe<EncodingDrmProfilesConnection>;
@@ -3413,6 +4229,9 @@ export type Query = {
   encodingVideoRepresentation?: Maybe<EncodingVideoRepresentation>;
   /** Reads and enables pagination through a set of `EncodingVideoRepresentation`. */
   encodingVideoRepresentations?: Maybe<EncodingVideoRepresentationsConnection>;
+  encodingWatermarkProfile?: Maybe<EncodingWatermarkProfile>;
+  /** Reads and enables pagination through a set of `EncodingWatermarkProfile`. */
+  encodingWatermarkProfiles?: Maybe<EncodingWatermarkProfilesConnection>;
   getGeneralSettings?: Maybe<GeneralSetting>;
   getVideosTagsValues?: Maybe<GetVideosTagsValuesConnection>;
   playbackVideo: PlaybackVideoPayload;
@@ -3488,6 +4307,25 @@ export type QueryEncodingAcquisitionProfilesArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<EncodingAcquisitionProfilesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEncodingAudioRepresentationArgs = {
+  id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEncodingAudioRepresentationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<EncodingAudioRepresentationCondition>;
+  filter?: InputMaybe<EncodingAudioRepresentationFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<EncodingAudioRepresentationsOrderBy>>;
 };
 
 
@@ -3587,6 +4425,25 @@ export type QueryEncodingVideoRepresentationsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryEncodingWatermarkProfileArgs = {
+  id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEncodingWatermarkProfilesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<EncodingWatermarkProfileCondition>;
+  filter?: InputMaybe<EncodingWatermarkProfileFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<EncodingWatermarkProfilesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryGetVideosTagsValuesArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -3669,6 +4526,7 @@ export type QueryVideoStreamsArgs = {
 export type RetryEncodeVideoInput = {
   processingProfileId: Scalars['UUID'];
   videoId: Scalars['UUID'];
+  watermarkProfileIds?: InputMaybe<Array<Scalars['UUID']>>;
 };
 
 export type RetryEncodeVideoPayload = {
@@ -4171,6 +5029,43 @@ export type UpdateEncodingVideoRepresentationPayload = {
 /** The output of our update `EncodingVideoRepresentation` mutation. */
 export type UpdateEncodingVideoRepresentationPayloadEncodingVideoRepresentationEdgeArgs = {
   orderBy?: InputMaybe<Array<EncodingVideoRepresentationsOrderBy>>;
+};
+
+/**
+ * All input for the `updateEncodingWatermarkProfile` mutation.
+ * @permissions: ADMIN
+ */
+export type UpdateEncodingWatermarkProfileInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+  /** An object where the defined keys will be set on the `EncodingWatermarkProfile` being updated. */
+  patch: EncodingWatermarkProfilePatch;
+};
+
+/** The output of our update `EncodingWatermarkProfile` mutation. */
+export type UpdateEncodingWatermarkProfilePayload = {
+  __typename?: 'UpdateEncodingWatermarkProfilePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `EncodingWatermarkProfile` that was updated by this mutation. */
+  encodingWatermarkProfile?: Maybe<EncodingWatermarkProfile>;
+  /** An edge for our `EncodingWatermarkProfile`. May be used by Relay 1. */
+  encodingWatermarkProfileEdge?: Maybe<EncodingWatermarkProfilesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `EncodingWatermarkProfile` mutation. */
+export type UpdateEncodingWatermarkProfilePayloadEncodingWatermarkProfileEdgeArgs = {
+  orderBy?: InputMaybe<Array<EncodingWatermarkProfilesOrderBy>>;
 };
 
 export type UpdateHostingAzureAcquisitionProfileInput = {

@@ -76,6 +76,7 @@ export const toDetailedImage = (image: GqlImage): DetailedImage => {
     height: image.height,
     type: image.imageTypeKey,
     path: image.transformationPath,
+    alt_text: image.altText,
   };
 };
 

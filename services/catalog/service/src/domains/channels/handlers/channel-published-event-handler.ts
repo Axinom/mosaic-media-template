@@ -51,6 +51,7 @@ export class ChannelPublishedEventHandler extends TransactionalInboxMessageHandl
             path: image.path,
             width: image.width,
             height: image.height,
+            alt_text: image.alt_text,
           }),
         ),
       ).run(txnClient);

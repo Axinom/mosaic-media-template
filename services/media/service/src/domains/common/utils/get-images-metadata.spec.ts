@@ -108,6 +108,7 @@ describe('getImagesMetadata', () => {
       height: 222,
       imageTypeKey: 'movie_teaser',
       transformationPath: '/some/path.png',
+      altText: 'some alt text',
     };
     result = () => {
       return createApiObject([image1]);
@@ -130,6 +131,7 @@ describe('getImagesMetadata', () => {
           height: image1.height,
           type: 'COVER',
           path: image1.transformationPath,
+          alt_text: image1.altText,
         },
       ],
       validation: [
@@ -188,6 +190,7 @@ describe('getImagesMetadata', () => {
       height: 222,
       imageTypeKey: 'movie_cover',
       transformationPath: '/some/path.png',
+      altText: 'some alt text',
     };
     result = () => {
       return createApiObject([image1]);
@@ -215,6 +218,7 @@ describe('getImagesMetadata', () => {
           height: image1.height,
           type: 'COVER',
           path: image1.transformationPath,
+          alt_text: image1.altText,
         },
       ],
       validation: [
@@ -235,6 +239,7 @@ describe('getImagesMetadata', () => {
       height: 222,
       imageTypeKey: 'movie_cover',
       transformationPath: '/some/path.png',
+      altText: 'some alt text',
     };
     const image2: GqlImage = {
       id: imageId2,
@@ -242,6 +247,7 @@ describe('getImagesMetadata', () => {
       height: 444,
       imageTypeKey: 'movie_teaser',
       transformationPath: '/some/path.png',
+      altText: 'some other alt text',
     };
     result = () => {
       return createApiObject([image1, image2]);
@@ -269,12 +275,14 @@ describe('getImagesMetadata', () => {
           height: image1.height,
           type: 'COVER',
           path: image1.transformationPath,
+          alt_text: image1.altText,
         },
         {
           width: image2.width,
           height: image2.height,
           type: 'TEASER',
           path: image2.transformationPath,
+          alt_text: image2.altText,
         },
       ],
       validation: [],

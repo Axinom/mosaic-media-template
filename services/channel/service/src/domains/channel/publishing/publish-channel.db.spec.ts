@@ -55,6 +55,7 @@ describe('publishChannel', () => {
         width: 100,
         height: 100,
         type: 'test_cover',
+        alt_text: 'Some alt text',
       };
     });
   };
@@ -501,6 +502,7 @@ describe('publishChannel', () => {
                   path: `test/${imageId}/image.png`,
                   type: 'test_cover',
                   width: 100,
+                  alt_text: 'Some alt text',
                 },
               ],
               placeholder_video: createVideos([videoId])[0],

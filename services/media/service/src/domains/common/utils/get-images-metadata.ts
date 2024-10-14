@@ -94,6 +94,7 @@ export const getImagesMetadata = async (
         height: gqlImage.height,
         type: imageAssignment.image_type,
         path: gqlImage.transformationPath,
+        alt_text: gqlImage.altText,
       });
     }
 

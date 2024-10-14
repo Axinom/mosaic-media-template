@@ -50,6 +50,10 @@
         "height": {
           "description": "Height of the image.",
           "type": ["integer", "null"]
+        },
+        "alt_text": {
+          "description": "Alternative text for the image.",
+          "type": ["string", "null"]
         }
       }
     },

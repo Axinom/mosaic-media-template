@@ -216,6 +216,8 @@ export enum ErrorCodesEnum {
   AccessTokenRequired = 'ACCESS_TOKEN_REQUIRED',
   /** Access token verification failed */
   AccessTokenVerificationFailed = 'ACCESS_TOKEN_VERIFICATION_FAILED',
+  /** The email has not yet been verified for use. Please check your inbox for verification instructions. */
+  AccountNotVerified = 'ACCOUNT_NOT_VERIFIED',
   /** An active signing key already exists for the application. */
   ActiveSigningKeyExists = 'ACTIVE_SIGNING_KEY_EXISTS',
   /** The assertion check for the identifier %s failed. */
@@ -244,12 +246,16 @@ export enum ErrorCodesEnum {
   CannotDisableCoreService = 'CANNOT_DISABLE_CORE_SERVICE',
   /** Unable to enable Tenant as there are currently no Tenant Administrators in active state. */
   CannotEnableTenant = 'CANNOT_ENABLE_TENANT',
+  /** Client ID and Client Secret are required to enable the identity provider. */
+  ClientIdSecretRequired = 'CLIENT_ID_SECRET_REQUIRED',
   /** Error updating service account client secret. */
   ClientSecretUpdateFailed = 'CLIENT_SECRET_UPDATE_FAILED',
   /** The service [%s] does not support the [%s] command. */
   CommandNotSupported = 'COMMAND_NOT_SUPPORTED',
   /** Contains invalid permissions. */
   ContainsInvalidPermissions = 'CONTAINS_INVALID_PERMISSIONS',
+  /** Custom branding is not allowed for this identity provider. */
+  CustomBrandingNotAllowed = 'CUSTOM_BRANDING_NOT_ALLOWED',
   /** customStepFunctionName missing in orchestration step. */
   CustomStepFunctionNameMissing = 'CUSTOM_STEP_FUNCTION_NAME_MISSING',
   /** A database operation has failed because of a lock timeout. */
@@ -290,6 +296,8 @@ export enum ErrorCodesEnum {
   IdpAuthUrlGenerationError = 'IDP_AUTH_URL_GENERATION_ERROR',
   /** IDP configuration does not exist. */
   IdpConfigDoesNotExist = 'IDP_CONFIG_DOES_NOT_EXIST',
+  /** Invalid IDP Configuration. */
+  IdpConfigInvalid = 'IDP_CONFIG_INVALID',
   /** Built in IDP configuration is only available for Google IDP. */
   IdpConfigOnlyAvailableForGoogle = 'IDP_CONFIG_ONLY_AVAILABLE_FOR_GOOGLE',
   /** An error occurred while validating IDP Configuration. */
@@ -392,6 +400,12 @@ export enum ErrorCodesEnum {
   ServiceAccountNotExists = 'SERVICE_ACCOUNT_NOT_EXISTS',
   /** The service-id is required for service-state-change-events. */
   ServiceIdNotFound = 'SERVICE_ID_NOT_FOUND',
+  /** Sign in with credentials failed with an error message: [%s]. */
+  SignInWithCredentialsAuthFlowError = 'SIGN_IN_WITH_CREDENTIALS_AUTH_FLOW_ERROR',
+  /** Sign In With Credentials call failed. */
+  SignInWithCredentialsFailed = 'SIGN_IN_WITH_CREDENTIALS_FAILED',
+  /** Invalid username or password. Please try again. */
+  SignInWithCredentialsInvalidCredentials = 'SIGN_IN_WITH_CREDENTIALS_INVALID_CREDENTIALS',
   /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
   SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
   /** An error occurred while rotating signing keys. */
@@ -430,10 +444,14 @@ export enum ErrorCodesEnum {
   Unauthorized = 'UNAUTHORIZED',
   /** Unexpected null or undefined value received. */
   UnexpectedNullUndefined = 'UNEXPECTED_NULL_UNDEFINED',
+  /** Unhandled Axios error. */
+  UnhandledAxiosError = 'UNHANDLED_AXIOS_ERROR',
   /** An unhandled database-related error has occurred. Please contact the service support. */
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
+  /** Attempt to create or update an element failed, as it would have resulted in a duplicate element. */
+  UniqueConstraintError = 'UNIQUE_CONSTRAINT_ERROR',
   /** Environment created with an unsupported template [%s]. */
   UnsupportedTemplate = 'UNSUPPORTED_TEMPLATE',
   /** Unsupported token type received to generateLongLivedToken. The token must be a JWT type. */

@@ -261,6 +261,43 @@ export type DatetimeFilter = {
 };
 
 /**
+ * All input for the `deleteImage` mutation.
+ * @permissions: IMAGES_EDIT,ADMIN
+ */
+export type DeleteImageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `Image` mutation. */
+export type DeleteImagePayload = {
+  __typename?: 'DeleteImagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Image` that was deleted by this mutation. */
+  image?: Maybe<Image>;
+  /** An edge for our `Image`. May be used by Relay 1. */
+  imageEdge?: Maybe<ImagesEdge>;
+  /** Reads a single `ImageType` that is related to this `Image`. */
+  imageType?: Maybe<ImageType>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `Image` mutation. */
+export type DeleteImagePayloadImageEdgeArgs = {
+  orderBy?: InputMaybe<Array<ImagesOrderBy>>;
+};
+
+/**
  * All input for the `deleteImagesTag` mutation.
  * @permissions: IMAGES_EDIT,ADMIN
  */
@@ -382,6 +419,8 @@ export enum ErrorCodesEnum {
   IdentityServiceNotAccessible = 'IDENTITY_SERVICE_NOT_ACCESSIBLE',
   /** Unable to download image from Amazon S3 storage. Please contact Axinom support. */
   ImageDownloadFromAcquisitionStorageFailed = 'IMAGE_DOWNLOAD_FROM_ACQUISITION_STORAGE_FAILED',
+  /** Unable to find the image to delete as both image ID and original source location are not specified. */
+  ImageIdentifiersNotProvided = 'IMAGE_IDENTIFIERS_NOT_PROVIDED',
   /** The image path is invalid. */
   ImageInvalidPath = 'IMAGE_INVALID_PATH',
   /** Could not read the image file to get the image metadata. */
@@ -456,6 +495,8 @@ export enum ErrorCodesEnum {
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
+  /** Attempt to create or update an element failed, as it would have resulted in a duplicate element. */
+  UniqueConstraintError = 'UNIQUE_CONSTRAINT_ERROR',
   /** Unable to update the profile because no update values were provided. */
   UpdateInputIsEmpty = 'UPDATE_INPUT_IS_EMPTY',
   /** The image upload webhook returned errors. */
@@ -512,6 +553,7 @@ export type GetImagesTagsValuesConnection = {
 /** @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN */
 export type Image = {
   __typename?: 'Image';
+  altText?: Maybe<Scalars['String']>;
   createdDate: Scalars['Datetime'];
   createdUser: Scalars['String'];
   filename: Scalars['String'];
@@ -875,6 +917,11 @@ export enum ImageAcquisitionProfilesOrderBy {
 
 /** A condition to be used against `Image` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type ImageCondition = {
+  /**
+   * Checks for equality with the object’s `altText` field.
+   * @maxLength(1000)
+   */
+  altText?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `createdDate` field. */
   createdDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `createdUser` field. */
@@ -917,6 +964,8 @@ export type ImageCondition = {
 
 /** A filter to be used against `Image` object types. All fields are combined with a logical ‘and.’ */
 export type ImageFilter = {
+  /** Filter by the object’s `altText` field. */
+  altText?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<ImageFilter>>;
   /** Filter by the object’s `createdDate` field. */
@@ -967,6 +1016,8 @@ export type ImageFilter = {
 
 /** Represents an update to a `Image`. Fields that are set will be updated. */
 export type ImagePatch = {
+  /** @maxLength(1000) */
+  altText?: InputMaybe<Scalars['String']>;
   focalX?: InputMaybe<Scalars['BigFloat']>;
   focalY?: InputMaybe<Scalars['BigFloat']>;
   isArchived?: InputMaybe<Scalars['Boolean']>;
@@ -1004,6 +1055,8 @@ export type ImagesEdge = {
 
 /** Methods to use when ordering `Image`. */
 export enum ImagesOrderBy {
+  AltTextAsc = 'ALT_TEXT_ASC',
+  AltTextDesc = 'ALT_TEXT_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
@@ -1140,6 +1193,8 @@ export type ImagesTagsEdge = {
 
 /** Methods to use when ordering `ImagesTag`. */
 export enum ImagesTagsOrderBy {
+  ImageByImageIdAltTextAsc = 'IMAGE_BY_IMAGE_ID__ALT_TEXT_ASC',
+  ImageByImageIdAltTextDesc = 'IMAGE_BY_IMAGE_ID__ALT_TEXT_DESC',
   ImageByImageIdCreatedDateAsc = 'IMAGE_BY_IMAGE_ID__CREATED_DATE_ASC',
   ImageByImageIdCreatedDateDesc = 'IMAGE_BY_IMAGE_ID__CREATED_DATE_DESC',
   ImageByImageIdCreatedUserAsc = 'IMAGE_BY_IMAGE_ID__CREATED_USER_ASC',
@@ -1390,6 +1445,8 @@ export type Mutation = {
   clearImageUploadWebhookSecret: ClearImageUploadWebhookSecretPayload;
   /** Creates a single `ImagesTag`. */
   createImagesTag?: Maybe<CreateImagesTagPayload>;
+  /** Deletes a single `Image` using a unique key. */
+  deleteImage?: Maybe<DeleteImagePayload>;
   /** Deletes a single `ImagesTag` using a unique key. */
   deleteImagesTag?: Maybe<DeleteImagesTagPayload>;
   /** Mutation do delete an existing image upload webhook configuration. */
@@ -1403,6 +1460,7 @@ export type Mutation = {
   /** Mutation to set General Settings in Image Service. */
   setGeneralSettings: GeneralSetting;
   setHostingAzureAcquisitionProfile: ImageAcquisitionProfile;
+  startImagesDeletion?: Maybe<BulkMutationUuidPayload>;
   truncateImages?: Maybe<TruncateImagesPayload>;
   unarchiveImages?: Maybe<BulkMutationUuidPayload>;
   updateAmazonS3AcquisitionProfile: ImageAcquisitionProfile;
@@ -1425,6 +1483,12 @@ export type MutationArchiveImagesArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateImagesTagArgs = {
   input: CreateImagesTagInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteImageArgs = {
+  input: DeleteImageInput;
 };
 
 
@@ -1461,6 +1525,12 @@ export type MutationSetGeneralSettingsArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSetHostingAzureAcquisitionProfileArgs = {
   input: SetHostingAzureAcquisitionProfileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationStartImagesDeletionArgs = {
+  filter?: InputMaybe<ImageFilter>;
 };
 
 
@@ -1941,7 +2011,7 @@ export type GetImagesQueryVariables = Exact<{
 }>;
 
 
-export type GetImagesQuery = { __typename?: 'Query', images?: { __typename?: 'ImagesConnection', nodes: Array<{ __typename?: 'Image', id: any, height?: number | null, width?: number | null, imageTypeKey: string, transformationPath: string }> } | null };
+export type GetImagesQuery = { __typename?: 'Query', images?: { __typename?: 'ImagesConnection', nodes: Array<{ __typename?: 'Image', id: any, height?: number | null, width?: number | null, imageTypeKey: string, transformationPath: string, altText?: string | null }> } | null };
 
 
 export const GetImagesDocument = gql`
@@ -1953,6 +2023,7 @@ export const GetImagesDocument = gql`
       width
       imageTypeKey
       transformationPath
+      altText
     }
   }
 }

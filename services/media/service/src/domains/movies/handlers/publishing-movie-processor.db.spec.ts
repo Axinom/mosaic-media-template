@@ -215,6 +215,7 @@ describe('publishingMovieProcessor', () => {
         height: 222,
         type: 'COVER',
         path: 'test/path.png',
+        alt_text: 'Some alt text',
       };
       const imageWarning: SnapshotValidationResult = {
         context: 'IMAGE',
@@ -490,7 +491,9 @@ describe('publishingMovieProcessor', () => {
               },
             ],
             genre_ids: ['test'],
-            images: [{ type: 'COVER', width: 0, height: 0, path: '' }],
+            images: [
+              { type: 'COVER', width: 0, height: 0, path: '', alt_text: '' },
+            ],
             videos: [
               {
                 type: 'MAIN',
@@ -678,6 +681,7 @@ describe('publishingMovieProcessor', () => {
                 width: 100,
                 height: 100,
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
+                alt_text: 'Cover alt text',
               },
             ],
             videos: [
@@ -775,12 +779,14 @@ describe('publishingMovieProcessor', () => {
                 height: 1012,
                 type: 'COVER',
                 path: '/transform/0000000000000000-0000000000000000/9FqubDgdtLaSjXmnBc9UNf.jpg',
+                alt_text: 'Cover alt text',
               },
               {
                 width: 1800,
                 height: 1012,
                 type: 'TEASER',
                 path: '/transform/0000000000000000-0000000000000000/43BncavVQvDmjxiwQtt3kd.jpg',
+                alt_text: 'Teaser alt text',
               },
             ],
             videos: [
