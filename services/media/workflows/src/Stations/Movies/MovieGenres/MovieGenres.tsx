@@ -9,12 +9,14 @@ import {
   formatDateTime,
   generateArrayMutationsWithUpdates,
   InfoPanel,
+  ObjectSchemaDefinition,
   Paragraph,
   Section,
 } from '@axinom/mosaic-ui';
 import { useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import React, { useCallback, useMemo } from 'react';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { Constants } from '../../../constants';
 import {
@@ -112,6 +114,28 @@ const Form: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<MovieGenresFormData>();
   const localizationPath = getLocalizationEntryPoint('movie_genre');
 
+  const rowValidationSchema = useMemo(
+    () =>
+      Yup.object<ObjectSchemaDefinition>({
+        title: Yup.string()
+          .label('Title')
+          .trim()
+          .required()
+          .test((value, context) => {
+            if (
+              value &&
+              (values.genres || []).find((item) => item.title === value)
+            ) {
+              return context.createError({
+                message: ({ label }) => `${label} must be unique`,
+              });
+            }
+            return true;
+          }),
+      }),
+    [values],
+  );
+
   const generateInlineMenuActions: ((data) => ActionData[]) | undefined =
     localizationPath
       ? ({ id: genreId }) => {
@@ -156,6 +180,7 @@ const Form: React.FC = () => {
       }}
       stickyHeader={false}
       inlineMenuActions={generateInlineMenuActions}
+      rowValidationSchema={rowValidationSchema}
     />
   );
 };
