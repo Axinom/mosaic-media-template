@@ -15,7 +15,7 @@ community.
 ## How to Contribute
 
 If you are interested in contributing to our project, we encourage you to review
-our [documentation](https://portal.axinom.com/mosaic/documentation) and our
+our [documentation](https://docs.axinom.com) and our
 [issue tracker](https://github.com/Axinom/mosaic-media-template/issues) to find
 out what needs to be done. We also welcome contributions that improve our
 documentation, test coverage, and other aspects of the project that aren't

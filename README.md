@@ -1,9 +1,9 @@
-# Mosaic Media Template Solution
+# Mosaic Media Template
 
 ## About the Package
 
 This package is part of the Axinom Mosaic development platform. More information
-can be found at https://portal.axinom.com/mosaic.
+can be found at https://docs.axinom.com.
 
 ## License
 
@@ -23,13 +23,13 @@ To get started with developing your own customized solution based on the Mosaic
 Media Template, run the following command:
 
 ```shell
-npx -p @axinom/mosaic-cli mosaic create
+npx -p @axinom/mosaic-cli@latest mosaic create
 ```
 
 This process will guide you through the creation of a new Mosaic project based
 on the Mosaic Media Template.  
 See
-[the CLI documentation](https://portal.axinom.com/mosaic/documentation/axinom-mosaic-cli#_mosaic_create)
+[the CLI documentation](https://docs.axinom.com/platform/packages/mosaic-cli#mosaic-create)
 for more details.
 
 ## Prerequisites
@@ -235,7 +235,7 @@ the supplied arguments.
 
 A detailed guide on how to deploy services via Mosaic Hosting Service can be
 found at
-https://portal.axinom.com/mosaic/documentation/deploy-a-customized-service-with-hosting-service
+https://docs.axinom.com/platform/hosting/deploy-a-customized-service
 
 ### Quick Deploy
 

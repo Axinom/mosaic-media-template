@@ -5,10 +5,8 @@ to create live channels, providing a seamless experience for our users. It is
 based on the beta version of the Unified Streaming Virtual Channels solution.
 
 If you want to learn more about the responsibilities of VOD-to-Live Services in
-a
-[FAST solution](https://portal.axinom.com/mosaic/documentation/media/fast-channels),
-please refer to the
-[VOD-to-Live Service documentation](https://portal.axinom.com/mosaic/documentation/media/vod-to-live-service).
+a FAST solution, please refer to the
+[VOD-to-Live Service](https://docs.axinom.com/services/vod-to-live) and [Channel Service](https://docs.axinom.com/services/channel) documentation.
 
 The root `package.json` contains beside the media specific script the `*:all`
 scripts that include the Channel Service and VOD-to-Live Service as well:
