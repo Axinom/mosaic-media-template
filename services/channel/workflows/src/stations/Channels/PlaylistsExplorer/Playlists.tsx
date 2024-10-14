@@ -77,6 +77,11 @@ export const Playlists: React.FC = () => {
       render: DateRenderer,
     },
     {
+      propertyName: 'title',
+      size: '1.5fr',
+      label: 'Title',
+    },
+    {
       propertyName: 'programs',
       size: '0.8fr',
       label: 'Programs',
