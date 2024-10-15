@@ -10,7 +10,7 @@ parameters:
     type: boolean
     default: true
   - name: int
-    displayName: Release to INT
+    displayName: Release manifest to INT
     type: boolean
     default: true
   - name: nfn_acceptance
@@ -173,7 +173,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-media-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnAcc)
@@ -207,7 +207,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+                yarn mosaic hosting manifest upload -n "nfn-mosaic-media-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnProd)
@@ -241,7 +241,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                yarn mosaic hosting manifest upload -n "lov-mosaic-catalog-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+                yarn mosaic hosting manifest upload -n "lov-mosaic-media-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
@@ -275,7 +275,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                yarn mosaic hosting manifest upload -n "lov-mosaic-catalog-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+                yarn mosaic hosting manifest upload -n "lov-mosaic-media-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
