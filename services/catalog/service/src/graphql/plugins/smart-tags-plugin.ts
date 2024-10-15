@@ -1,6 +1,7 @@
 import { makeJSONPgSmartTagsPlugin } from 'graphile-utils';
 
 const disableFilterAndOrder = { tags: { omit: 'filter,order' } };
+const disableFilter = { tags: { omit: 'filter' } };
 
 /**
  * Smart tags to adjust and enhance the generated GraphQL API.
@@ -611,7 +612,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
           index: {
             description: 'Season number',
-            ...disableFilterAndOrder,
+            ...disableFilter,
           },
           studio: {
             description: 'Name of the producing studio.',
@@ -963,7 +964,6 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
         attribute: {
           countries: {
             description: 'Array of countries where the license applies.',
-            ...disableFilterAndOrder,
           },
           start_time: {
             description: 'Time when license becomes valid.',

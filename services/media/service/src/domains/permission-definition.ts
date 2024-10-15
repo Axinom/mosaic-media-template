@@ -10,12 +10,20 @@ import {
   SnapshotsReadOperations,
 } from '../publishing';
 import {
+  AgeRatingsReadOperations,
+  AgeRatingsWriteOperations,
+} from './ageratings';
+import {
   CollectionDevOperations,
   CollectionsIgnoreOperations,
   CollectionsMutateOperations,
   CollectionsReadOperations,
   SelectEndpoints,
 } from './collections';
+import {
+  ContentOwnersReadOperations,
+  ContentOwnersWriteOperations,
+} from './contentowners';
 import {
   MovieGenresMutateOperations,
   MovieGenresReadOperations,
@@ -36,6 +44,7 @@ import {
   TvShowsMutateOperations,
   TvShowsReadOperations,
 } from './tvshows';
+import { AdministrationMutateOperations, AdministrationReadOperations } from './administration';
 
 /**
  * **IMPORTANT**
@@ -76,6 +85,8 @@ const permissions = [
       ...MoviesDevOperations,
       ...TvshowsDevOperations,
       ...CollectionDevOperations,
+      ...AdministrationReadOperations,
+      ...AdministrationMutateOperations
     ],
   },
   {
@@ -84,6 +95,7 @@ const permissions = [
     gqlOperations: [
       ...MovieGenresReadOperations,
       ...TvShowGenresReadOperations,
+      ...AdministrationReadOperations
     ],
   },
   {
@@ -94,6 +106,7 @@ const permissions = [
       ...MovieGenresMutateOperations,
       ...TvShowGenresReadOperations,
       ...TvShowGenresMutateOperations,
+      ...AdministrationMutateOperations
     ],
   },
   {
@@ -155,6 +168,26 @@ const permissions = [
     key: 'INGESTS_EDIT',
     title: 'Ingests: Edit',
     gqlOperations: [...IngestReadOperations, ...IngestMutateOperations],
+  },
+  {
+    key: 'AGE_RATINGS_VIEW',
+    title: 'AgeRatings: View',
+    gqlOperations: [...AgeRatingsReadOperations],
+  },
+  {
+    key: 'AGE_RATINGS_EDIT',
+    title: 'AgeRatings: Edit',
+    gqlOperations: [...AgeRatingsWriteOperations],
+  },
+  {
+    key: 'CONTENT_OWNERS_VIEW',
+    title: 'ContentOwners: View',
+    gqlOperations: [...ContentOwnersReadOperations],
+  },
+  {
+    key: 'CONTENT_OWNERS_EDIT',
+    title: 'ContentOwners: Edit',
+    gqlOperations: [...ContentOwnersWriteOperations],
   },
 ] as const;
 

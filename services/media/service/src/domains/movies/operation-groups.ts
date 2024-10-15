@@ -41,6 +41,7 @@ export const MovieGenresMutateOperations = [
 
 export const MoviesReadOperations = [
   Q.getMoviesCastsValues,
+  Q.getMoviesDirectorsValues,
   Q.getMoviesProductionCountriesValues,
   Q.getMoviesTagsValues,
   Q.movie,
@@ -65,6 +66,8 @@ export const MoviesReadOperations = [
   Sub.snapshotValidationResults,
   S.movieMutated,
   R.movieGenres,
+  Q.moviesDirector,
+  Q.moviesDirectors,
 ];
 
 export const MoviesMutateOperations = [
@@ -81,6 +84,7 @@ export const MoviesMutateOperations = [
   M.deleteMovieByExternalId,
   M.deleteMovies,
   M.deleteMoviesCast,
+  M.deleteMoviesDirector,
   M.deleteMoviesImageByMovieIdAndImageType,
   M.deleteMoviesLicense,
   M.deleteMoviesLicenses,
@@ -92,6 +96,7 @@ export const MoviesMutateOperations = [
   M.updateMovie,
   M.updateMovieByExternalId,
   M.updateMoviesCast,
+  M.updateMoviesDirector,
   M.updateMoviesImageByMovieIdAndImageType,
   M.updateMoviesLicense,
   M.updateMoviesLicensesCountry,
@@ -103,6 +108,7 @@ export const MoviesMutateOperations = [
   M.unpublishMovies,
   M.createMovieSnapshot,
   M.createMovieSnapshots,
+  M.createMoviesDirector,
 ];
 
 export const MoviesDevOperations = [M.populateMovies];

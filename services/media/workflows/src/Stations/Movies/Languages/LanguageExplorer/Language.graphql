@@ -1,0 +1,23 @@
+mutation BulkDeleteMovies($filter: MovieFilter) {
+  deleteMovies(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkPublishMovies($filter: MovieFilter) {
+  publishMovies(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkUnpublishMovies($filter: MovieFilter) {
+  unpublishMovies(filter: $filter) {
+    affectedIds
+  }
+}
+
+mutation BulkCreateMovieSnapshots($filter: MovieFilter) {
+  createMovieSnapshots(filter: $filter) {
+    affectedIds
+  }
+}

@@ -18,6 +18,7 @@ import {
   MutationUpdateMoviesImageByMovieIdAndImageTypeArgs,
   useMovieImagesQuery,
 } from '../../../generated/graphql';
+import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 
 type ImageNodes = Pick<MoviesImage, 'imageId' | 'imageType'> & {
   __typename: 'MoviesImage';
@@ -28,15 +29,37 @@ type FormData = Record<MovieImageType, string[]>;
 const Form: React.FC<{ imageSelectField: unknown }> = ({
   imageSelectField,
 }) => {
+  const customSortedMovieImageTypes = Object.values(MovieImageType).sort(
+    (a, b) => {
+      const order = [
+        'COVER_1X1',
+        'COVER_16X9',
+        'CLEAN_COVER_1X1',
+        'CLEAN_COVER_16X9',
+        'LIST_9X13',
+      ];
+      return order.indexOf(a) - order.indexOf(b);
+    },
+  );
+
+  const movieImageTypesObject = customSortedMovieImageTypes.reduce(
+    (acc, curr) => {
+      acc[curr] = curr;
+      return acc;
+    },
+    {} as { [key: string]: string },
+  );
+
   return (
     <>
-      {Object.keys(MovieImageType).map((type) => {
-        const field = MovieImageType[type];
+      {Object.keys(movieImageTypesObject).map((type) => {
+        const field = movieImageTypesObject[type];
+        const label = getEnumLabel(movieImageTypesObject[type]);
         return (
           <Field
             key={field}
             name={field}
-            label={type}
+            label={label}
             as={imageSelectField}
             maxItems={1}
             title="Select Image"
@@ -70,9 +93,8 @@ export const MovieImageManagement: React.FC = () => {
       formData: FormData,
       initialData: DetailsProps<FormData>['initialData'],
     ): Promise<void> => {
-      const generateUpdateGQLFragment = createUpdateGQLFragmentGenerator<
-        Mutation
-      >();
+      const generateUpdateGQLFragment =
+        createUpdateGQLFragmentGenerator<Mutation>();
 
       const mutations: string[] = [];
 
@@ -94,25 +116,27 @@ export const MovieImageManagement: React.FC = () => {
         );
 
       const generateDeleteMutation = (imageType: MovieImageType): string =>
-        generateUpdateGQLFragment<
-          MutationDeleteMoviesImageByMovieIdAndImageTypeArgs
-        >('deleteMoviesImageByMovieIdAndImageType', {
-          input: { movieId, imageType: { type: 'enum', value: imageType } },
-        });
+        generateUpdateGQLFragment<MutationDeleteMoviesImageByMovieIdAndImageTypeArgs>(
+          'deleteMoviesImageByMovieIdAndImageType',
+          {
+            input: { movieId, imageType: { type: 'enum', value: imageType } },
+          },
+        );
 
       const generateUpdateMutation = (
         imageId: string,
         imageType: MovieImageType,
       ): string =>
-        generateUpdateGQLFragment<
-          MutationUpdateMoviesImageByMovieIdAndImageTypeArgs
-        >('updateMoviesImageByMovieIdAndImageType', {
-          input: {
-            patch: { imageId },
-            movieId,
-            imageType: { type: 'enum', value: imageType },
+        generateUpdateGQLFragment<MutationUpdateMoviesImageByMovieIdAndImageTypeArgs>(
+          'updateMoviesImageByMovieIdAndImageType',
+          {
+            input: {
+              patch: { imageId },
+              movieId,
+              imageType: { type: 'enum', value: imageType },
+            },
           },
-        });
+        );
 
       Object.entries(formData ?? {}).forEach(([imageType, imageId], idx) => {
         const [imgId] = imageId;

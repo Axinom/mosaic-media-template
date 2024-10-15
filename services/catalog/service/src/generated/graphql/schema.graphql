@@ -278,7 +278,7 @@ type Query {
     filter: TvshowFilter
   ): TvshowsConnection
   channel(id: String!): Channel
-  collection(id: String!): Collection
+  collection(id: String!, countryCode: String): Collection
   episode(id: String!, countryCode: String): Episode
   movieGenre(id: String!): MovieGenre
   movie(id: String!, countryCode: String): Movie
@@ -2649,6 +2649,9 @@ input EpisodeLicenseFilter {
 
   """Filter by the object’s `episodeId` field."""
   episodeId: StringFilter
+
+  """Filter by the object’s `countries` field."""
+  countries: StringListFilter
 
   """Filter by the object’s `startTime` field."""
   startTime: DatetimeFilter
@@ -5196,6 +5199,8 @@ enum EpisodeLicensesOrderBy {
   ID_DESC
   EPISODE_ID_ASC
   EPISODE_ID_DESC
+  COUNTRIES_ASC
+  COUNTRIES_DESC
   START_TIME_ASC
   START_TIME_DESC
   END_TIME_ASC
@@ -5224,6 +5229,9 @@ input EpisodeLicenseCondition {
 
   """Checks for equality with the object’s `episodeId` field."""
   episodeId: String
+
+  """Checks for equality with the object’s `countries` field."""
+  countries: [String]
 
   """Checks for equality with the object’s `startTime` field."""
   startTime: Datetime
@@ -6357,6 +6365,8 @@ enum SeasonsOrderBy {
   ID_DESC
   TVSHOW_ID_ASC
   TVSHOW_ID_DESC
+  INDEX_ASC
+  INDEX_DESC
   DIRECTORS_ASC
   DIRECTORS_DESC
   DYNAMIC_FIELD_ASC

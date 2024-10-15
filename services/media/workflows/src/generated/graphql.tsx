@@ -5,80 +5,336 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Cursor: any;
-  Date: any;
-  Datetime: any;
-  IngestDocumentObject: any;
-  IngestItemObject: any;
-  JSON: any;
-  Upload: any;
-  UUID: any;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  BigFloat: { input: any; output: any; }
+  Cursor: { input: any; output: any; }
+  Date: { input: any; output: any; }
+  Datetime: { input: any; output: any; }
+  IngestDocumentObject: { input: any; output: any; }
+  IngestItemObject: { input: any; output: any; }
+  JSON: { input: any; output: any; }
+  Upload: { input: any; output: any; }
+  UUID: { input: any; output: any; }
+};
+
+export type AgeRating = {
+  __typename?: 'AgeRating';
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  id: Scalars['UUID']['output'];
+  name: Scalars['String']['output'];
+  sortOrder: Scalars['Int']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `AgeRating` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type AgeRatingCondition = {
+  /** Checks for equality with the object’s `createdDate` field. */
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdUser` field. */
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /**
+   * Checks for equality with the object’s `name` field.
+   * @isTrimmed()
+   * @maxLength(50)
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `sortOrder` field. */
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `AgeRating` object types. All fields are combined with a logical ‘and.’ */
+export type AgeRatingFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<AgeRatingFilter>>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<AgeRatingFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<AgeRatingFilter>>;
+  /** Filter by the object’s `sortOrder` field. */
+  sortOrder?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/** An input for mutations affecting `AgeRating` */
+export type AgeRatingInput = {
+  /**
+   * @isTrimmed()
+   * @maxLength(50)
+   * @notEmpty()
+   */
+  name: Scalars['String']['input'];
+  sortOrder: Scalars['Int']['input'];
+};
+
+/** Represents an update to a `AgeRating`. Fields that are set will be updated. */
+export type AgeRatingPatch = {
+  /**
+   * @isTrimmed()
+   * @maxLength(50)
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A connection to a list of `AgeRating` values. */
+export type AgeRatingsConnection = {
+  __typename?: 'AgeRatingsConnection';
+  /** A list of edges which contains the `AgeRating` and cursor to aid in pagination. */
+  edges: Array<AgeRatingsEdge>;
+  /** A list of `AgeRating` objects. */
+  nodes: Array<AgeRating>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AgeRating` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AgeRating` edge in the connection. */
+export type AgeRatingsEdge = {
+  __typename?: 'AgeRatingsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AgeRating` at the end of the edge. */
+  node: AgeRating;
+};
+
+/** Methods to use when ordering `AgeRating`. */
+export enum AgeRatingsOrderBy {
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SortOrderAsc = 'SORT_ORDER_ASC',
+  SortOrderDesc = 'SORT_ORDER_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
+
+export enum AssetSubtype {
+  /** Album */
+  Album = 'ALBUM',
+  /** Audio Track */
+  AudioTrack = 'AUDIO_TRACK',
+  /** Collection */
+  Collection = 'COLLECTION',
+  /** Content Set */
+  ContentSet = 'CONTENT_SET',
+  /** Custom */
+  Custom = 'CUSTOM',
+  /** Episode */
+  Episode = 'EPISODE',
+  /** File */
+  File = 'FILE',
+  /** Movie */
+  Movie = 'MOVIE',
+  /** Promotion */
+  Promotion = 'PROMOTION',
+  /** Season */
+  Season = 'SEASON',
+  /** Subscription Plan */
+  SubscriptionPlan = 'SUBSCRIPTION_PLAN',
+  /** TV Show */
+  TvShow = 'TV_SHOW',
+  /** Unknown */
+  Unknown = 'UNKNOWN'
+}
+
+/** A filter to be used against AssetSubtype fields. All fields are combined with a logical ‘and.’ */
+export type AssetSubtypeFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<AssetSubtype>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<AssetSubtype>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<AssetSubtype>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<AssetSubtype>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<AssetSubtype>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<AssetSubtype>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<AssetSubtype>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<AssetSubtype>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<AssetSubtype>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<AssetSubtype>>;
+};
+
+/** A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’ */
+export type BigFloatFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<Scalars['BigFloat']['input']>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<Scalars['BigFloat']['input']>>;
 };
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Boolean']>;
+  distinctFrom?: InputMaybe<Scalars['Boolean']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Boolean']>;
+  equalTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Boolean']>;
+  greaterThan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Boolean']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Boolean']>>;
+  in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Boolean']>;
+  lessThan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Boolean']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Boolean']>;
+  notDistinctFrom?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Boolean']>;
+  notEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Boolean']>>;
+  notIn?: InputMaybe<Array<Scalars['Boolean']['input']>>;
 };
 
 /** Bulk mutation payload type. */
 export type BulkMutationIntPayload = {
   __typename?: 'BulkMutationIntPayload';
-  affectedIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  totalCount?: Maybe<Scalars['Int']>;
+  affectedIds?: Maybe<Array<Maybe<Scalars['Int']['output']>>>;
+  totalCount?: Maybe<Scalars['Int']['output']>;
 };
 
 /** Bulk mutation payload type. */
 export type BulkMutationPayload = {
   __typename?: 'BulkMutationPayload';
   /** Array of affected item IDs */
-  affectedIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  affectedIds?: Maybe<Array<Maybe<Scalars['Int']['output']>>>;
   /** Total number of affected items. */
-  totalCount?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']['output']>;
 };
 
 /** Bulk mutation payload type. */
 export type BulkPublishingPayload = {
   __typename?: 'BulkPublishingPayload';
   /** Array of affected item IDs */
-  affectedIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  affectedIds?: Maybe<Array<Maybe<Scalars['Int']['output']>>>;
   /** Publish job ID that will be assigned to all snapshots created in this bulk operation. */
-  publishingJobId?: Maybe<Scalars['String']>;
+  publishingJobId?: Maybe<Scalars['String']['output']>;
   /** Total number of affected items. */
-  totalCount?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export enum BusinessType {
+  /** Advertisement */
+  Advertisement = 'ADVERTISEMENT',
+  /** Advertisement authenticated */
+  AdvertisementAuthenticated = 'ADVERTISEMENT_AUTHENTICATED',
+  /** Advertisement downloadable */
+  AdvertisementDownloadable = 'ADVERTISEMENT_DOWNLOADABLE',
+  /** Free */
+  Free = 'FREE',
+  /** Free authenticated */
+  FreeAuthenticated = 'FREE_AUTHENTICATED',
+  /** Free downloadable */
+  FreeDownloadable = 'FREE_DOWNLOADABLE',
+  /** Premium */
+  Premium = 'PREMIUM',
+  /** Premium downloadable */
+  PremiumDownloadable = 'PREMIUM_DOWNLOADABLE'
+}
+
+/** A filter to be used against BusinessType fields. All fields are combined with a logical ‘and.’ */
+export type BusinessTypeFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<BusinessType>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<BusinessType>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<BusinessType>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<BusinessType>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<BusinessType>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<BusinessType>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<BusinessType>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<BusinessType>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<BusinessType>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<BusinessType>>;
 };
 
 /** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type Collection = {
   __typename?: 'Collection';
+  assetSubtype: AssetSubtype;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   /** Reads and enables pagination through a set of `CollectionsImage`. */
@@ -87,69 +343,70 @@ export type Collection = {
   collectionsSnapshots: CollectionsSnapshotsConnection;
   /** Reads and enables pagination through a set of `CollectionsTag`. */
   collectionsTags: CollectionsTagsConnection;
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  externalId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  publishedDate?: Maybe<Scalars['Datetime']>;
-  publishedUser?: Maybe<Scalars['String']>;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  externalId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  languages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  publishedDate?: Maybe<Scalars['Datetime']['output']>;
+  publishedUser?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
-  synopsis?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  synopsis?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type CollectionCollectionRelationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionRelationCondition>;
   filter?: InputMaybe<CollectionRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionRelationsOrderBy>>;
 };
 
 
 /** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type CollectionCollectionsImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionsImageCondition>;
   filter?: InputMaybe<CollectionsImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionsImagesOrderBy>>;
 };
 
 
 /** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type CollectionCollectionsSnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionsSnapshotCondition>;
   filter?: InputMaybe<CollectionsSnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionsSnapshotsOrderBy>>;
 };
 
 
 /** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type CollectionCollectionsTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionsTagCondition>;
   filter?: InputMaybe<CollectionsTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionsTagsOrderBy>>;
 };
 
@@ -158,56 +415,62 @@ export type CollectionCollectionsTagsArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type CollectionCondition = {
+  /** Checks for equality with the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtype>;
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
-  externalId?: InputMaybe<Scalars['String']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `languages` field. */
+  languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `publishedDate` field. */
-  publishedDate?: InputMaybe<Scalars['Datetime']>;
+  publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
-  publishedUser?: InputMaybe<Scalars['String']>;
+  publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `synopsis` field. */
-  synopsis?: InputMaybe<Scalars['String']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * Checks for equality with the object’s `title` field.
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Collection` object types. All fields are combined with a logical ‘and.’ */
 export type CollectionFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<CollectionFilter>>;
+  /** Filter by the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<CollectionToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
-  collectionRelationsExist?: InputMaybe<Scalars['Boolean']>;
+  collectionRelationsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `collectionsImages` relation. */
   collectionsImages?: InputMaybe<CollectionToManyCollectionsImageFilter>;
   /** Some related `collectionsImages` exist. */
-  collectionsImagesExist?: InputMaybe<Scalars['Boolean']>;
+  collectionsImagesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `collectionsSnapshots` relation. */
   collectionsSnapshots?: InputMaybe<CollectionToManyCollectionsSnapshotFilter>;
   /** Some related `collectionsSnapshots` exist. */
-  collectionsSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
+  collectionsSnapshotsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `collectionsTags` relation. */
   collectionsTags?: InputMaybe<CollectionToManyCollectionsTagFilter>;
   /** Some related `collectionsTags` exist. */
-  collectionsTagsExist?: InputMaybe<Scalars['Boolean']>;
+  collectionsTagsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
@@ -218,6 +481,8 @@ export type CollectionFilter = {
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `languages` field. */
+  languages?: InputMaybe<StringListFilter>;
   /** Negates the expression. */
   not?: InputMaybe<CollectionFilter>;
   /** Checks for any expressions in this list. */
@@ -256,7 +521,7 @@ export type CollectionImageTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<CollectionImageType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<CollectionImageType>;
   /** Less than or equal to the specified value. */
@@ -271,26 +536,30 @@ export type CollectionImageTypeFilter = {
 
 /** An input for mutations affecting `Collection` */
 export type CollectionInput = {
-  description?: InputMaybe<Scalars['String']>;
-  externalId?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
    * @notEmpty()
    */
-  title: Scalars['String'];
+  title: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Collection`. Fields that are set will be updated. */
 export type CollectionPatch = {
-  description?: InputMaybe<Scalars['String']>;
-  externalId?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
@@ -298,21 +567,21 @@ export type CollectionRelation = {
   __typename?: 'CollectionRelation';
   /** Reads a single `Collection` that is related to this `CollectionRelation`. */
   collection?: Maybe<Collection>;
-  collectionId: Scalars['Int'];
+  collectionId: Scalars['Int']['output'];
   /** Reads a single `Episode` that is related to this `CollectionRelation`. */
   episode?: Maybe<Episode>;
-  episodeId?: Maybe<Scalars['Int']>;
-  id: Scalars['Int'];
+  episodeId?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   /** Reads a single `Movie` that is related to this `CollectionRelation`. */
   movie?: Maybe<Movie>;
-  movieId?: Maybe<Scalars['Int']>;
+  movieId?: Maybe<Scalars['Int']['output']>;
   /** Reads a single `Season` that is related to this `CollectionRelation`. */
   season?: Maybe<Season>;
-  seasonId?: Maybe<Scalars['Int']>;
-  sortOrder: Scalars['Int'];
+  seasonId?: Maybe<Scalars['Int']['output']>;
+  sortOrder: Scalars['Int']['output'];
   /** Reads a single `Tvshow` that is related to this `CollectionRelation`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId?: Maybe<Scalars['Int']>;
+  tvshowId?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -321,19 +590,19 @@ export type CollectionRelation = {
  */
 export type CollectionRelationCondition = {
   /** Checks for equality with the object’s `collectionId` field. */
-  collectionId?: InputMaybe<Scalars['Int']>;
+  collectionId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['Int']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['Int']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `sortOrder` field. */
-  sortOrder?: InputMaybe<Scalars['Int']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
@@ -347,7 +616,7 @@ export type CollectionRelationFilter = {
   /** Filter by the object’s `episode` relation. */
   episode?: InputMaybe<EpisodeFilter>;
   /** A related `episode` exists. */
-  episodeExists?: InputMaybe<Scalars['Boolean']>;
+  episodeExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `episodeId` field. */
   episodeId?: InputMaybe<IntFilter>;
   /** Filter by the object’s `id` field. */
@@ -355,7 +624,7 @@ export type CollectionRelationFilter = {
   /** Filter by the object’s `movie` relation. */
   movie?: InputMaybe<MovieFilter>;
   /** A related `movie` exists. */
-  movieExists?: InputMaybe<Scalars['Boolean']>;
+  movieExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `movieId` field. */
   movieId?: InputMaybe<IntFilter>;
   /** Negates the expression. */
@@ -365,7 +634,7 @@ export type CollectionRelationFilter = {
   /** Filter by the object’s `season` relation. */
   season?: InputMaybe<SeasonFilter>;
   /** A related `season` exists. */
-  seasonExists?: InputMaybe<Scalars['Boolean']>;
+  seasonExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `seasonId` field. */
   seasonId?: InputMaybe<IntFilter>;
   /** Filter by the object’s `sortOrder` field. */
@@ -373,30 +642,30 @@ export type CollectionRelationFilter = {
   /** Filter by the object’s `tvshow` relation. */
   tvshow?: InputMaybe<TvshowFilter>;
   /** A related `tvshow` exists. */
-  tvshowExists?: InputMaybe<Scalars['Boolean']>;
+  tvshowExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowId` field. */
   tvshowId?: InputMaybe<IntFilter>;
 };
 
 /** An input for mutations affecting `CollectionRelation` */
 export type CollectionRelationInput = {
-  collectionId: Scalars['Int'];
-  episodeId?: InputMaybe<Scalars['Int']>;
-  id?: InputMaybe<Scalars['Int']>;
-  movieId?: InputMaybe<Scalars['Int']>;
-  seasonId?: InputMaybe<Scalars['Int']>;
-  sortOrder: Scalars['Int'];
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  collectionId: Scalars['Int']['input'];
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
+  sortOrder: Scalars['Int']['input'];
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Represents an update to a `CollectionRelation`. Fields that are set will be updated. */
 export type CollectionRelationPatch = {
-  collectionId?: InputMaybe<Scalars['Int']>;
-  episodeId?: InputMaybe<Scalars['Int']>;
-  movieId?: InputMaybe<Scalars['Int']>;
-  seasonId?: InputMaybe<Scalars['Int']>;
-  sortOrder?: InputMaybe<Scalars['Int']>;
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  collectionId?: InputMaybe<Scalars['Int']['input']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -412,14 +681,14 @@ export type CollectionRelationsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `CollectionRelation` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `CollectionRelation` edge in the connection. */
 export type CollectionRelationsEdge = {
   __typename?: 'CollectionRelationsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `CollectionRelation` at the end of the edge. */
   node: CollectionRelation;
 };
@@ -458,14 +727,14 @@ export type CollectionsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Collection` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Collection` edge in the connection. */
 export type CollectionsEdge = {
   __typename?: 'CollectionsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Collection` at the end of the edge. */
   node: Collection;
 };
@@ -475,8 +744,8 @@ export type CollectionsImage = {
   __typename?: 'CollectionsImage';
   /** Reads a single `Collection` that is related to this `CollectionsImage`. */
   collection?: Maybe<Collection>;
-  collectionId: Scalars['Int'];
-  imageId: Scalars['UUID'];
+  collectionId: Scalars['Int']['output'];
+  imageId: Scalars['UUID']['output'];
   imageType: CollectionImageType;
 };
 
@@ -486,9 +755,9 @@ export type CollectionsImage = {
  */
 export type CollectionsImageCondition = {
   /** Checks for equality with the object’s `collectionId` field. */
-  collectionId?: InputMaybe<Scalars['Int']>;
+  collectionId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `imageId` field. */
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `imageType` field. */
   imageType?: InputMaybe<CollectionImageType>;
 };
@@ -513,15 +782,15 @@ export type CollectionsImageFilter = {
 
 /** An input for mutations affecting `CollectionsImage` */
 export type CollectionsImageInput = {
-  collectionId: Scalars['Int'];
-  imageId: Scalars['UUID'];
+  collectionId: Scalars['Int']['input'];
+  imageId: Scalars['UUID']['input'];
   imageType: CollectionImageType;
 };
 
 /** Represents an update to a `CollectionsImage`. Fields that are set will be updated. */
 export type CollectionsImagePatch = {
-  collectionId?: InputMaybe<Scalars['Int']>;
-  imageId?: InputMaybe<Scalars['UUID']>;
+  collectionId?: InputMaybe<Scalars['Int']['input']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   imageType?: InputMaybe<CollectionImageType>;
 };
 
@@ -538,14 +807,14 @@ export type CollectionsImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `CollectionsImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `CollectionsImage` edge in the connection. */
 export type CollectionsImagesEdge = {
   __typename?: 'CollectionsImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `CollectionsImage` at the end of the edge. */
   node: CollectionsImage;
 };
@@ -565,6 +834,8 @@ export enum CollectionsImagesOrderBy {
 
 /** Methods to use when ordering `Collection`. */
 export enum CollectionsOrderBy {
+  AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
+  AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
@@ -575,6 +846,8 @@ export enum CollectionsOrderBy {
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  LanguagesAsc = 'LANGUAGES_ASC',
+  LanguagesDesc = 'LANGUAGES_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -599,10 +872,10 @@ export type CollectionsSnapshot = {
   __typename?: 'CollectionsSnapshot';
   /** Reads a single `Collection` that is related to this `CollectionsSnapshot`. */
   collection?: Maybe<Collection>;
-  collectionId: Scalars['Int'];
+  collectionId: Scalars['Int']['output'];
   /** Reads a single `Snapshot` that is related to this `CollectionsSnapshot`. */
   snapshot?: Maybe<Snapshot>;
-  snapshotId: Scalars['Int'];
+  snapshotId: Scalars['Int']['output'];
 };
 
 /**
@@ -611,9 +884,9 @@ export type CollectionsSnapshot = {
  */
 export type CollectionsSnapshotCondition = {
   /** Checks for equality with the object’s `collectionId` field. */
-  collectionId?: InputMaybe<Scalars['Int']>;
+  collectionId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `snapshotId` field. */
-  snapshotId?: InputMaybe<Scalars['Int']>;
+  snapshotId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `CollectionsSnapshot` object types. All fields are combined with a logical ‘and.’ */
@@ -647,14 +920,14 @@ export type CollectionsSnapshotsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `CollectionsSnapshot` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `CollectionsSnapshot` edge in the connection. */
 export type CollectionsSnapshotsEdge = {
   __typename?: 'CollectionsSnapshotsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `CollectionsSnapshot` at the end of the edge. */
   node: CollectionsSnapshot;
 };
@@ -675,8 +948,8 @@ export type CollectionsTag = {
   __typename?: 'CollectionsTag';
   /** Reads a single `Collection` that is related to this `CollectionsTag`. */
   collection?: Maybe<Collection>;
-  collectionId: Scalars['Int'];
-  name: Scalars['String'];
+  collectionId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 /**
@@ -685,12 +958,12 @@ export type CollectionsTag = {
  */
 export type CollectionsTagCondition = {
   /** Checks for equality with the object’s `collectionId` field. */
-  collectionId?: InputMaybe<Scalars['Int']>;
+  collectionId?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `CollectionsTag` object types. All fields are combined with a logical ‘and.’ */
@@ -711,15 +984,15 @@ export type CollectionsTagFilter = {
 
 /** An input for mutations affecting `CollectionsTag` */
 export type CollectionsTagInput = {
-  collectionId: Scalars['Int'];
+  collectionId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `CollectionsTag`. Fields that are set will be updated. */
 export type CollectionsTagPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -735,14 +1008,14 @@ export type CollectionsTagsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `CollectionsTag` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `CollectionsTag` edge in the connection. */
 export type CollectionsTagsEdge = {
   __typename?: 'CollectionsTagsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `CollectionsTag` at the end of the edge. */
   node: CollectionsTag;
 };
@@ -777,9 +1050,9 @@ export type CollectionSubscriptionPayload = {
   __typename?: 'CollectionSubscriptionPayload';
   collection?: Maybe<Collection>;
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<CollectionSubscriptionEventKey>;
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
 };
 
 /** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
@@ -822,6 +1095,165 @@ export type CollectionToManyCollectionsTagFilter = {
   some?: InputMaybe<CollectionsTagFilter>;
 };
 
+export type ContentOwner = {
+  __typename?: 'ContentOwner';
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  id: Scalars['UUID']['output'];
+  name: Scalars['String']['output'];
+  sortOrder: Scalars['Int']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `ContentOwner` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type ContentOwnerCondition = {
+  /** Checks for equality with the object’s `createdDate` field. */
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdUser` field. */
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /**
+   * Checks for equality with the object’s `name` field.
+   * @isTrimmed()
+   * @maxLength(50)
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `sortOrder` field. */
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `ContentOwner` object types. All fields are combined with a logical ‘and.’ */
+export type ContentOwnerFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ContentOwnerFilter>>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<ContentOwnerFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ContentOwnerFilter>>;
+  /** Filter by the object’s `sortOrder` field. */
+  sortOrder?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/** An input for mutations affecting `ContentOwner` */
+export type ContentOwnerInput = {
+  /**
+   * @isTrimmed()
+   * @maxLength(50)
+   * @notEmpty()
+   */
+  name: Scalars['String']['input'];
+  sortOrder: Scalars['Int']['input'];
+};
+
+/** Represents an update to a `ContentOwner`. Fields that are set will be updated. */
+export type ContentOwnerPatch = {
+  /**
+   * @isTrimmed()
+   * @maxLength(50)
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A connection to a list of `ContentOwner` values. */
+export type ContentOwnersConnection = {
+  __typename?: 'ContentOwnersConnection';
+  /** A list of edges which contains the `ContentOwner` and cursor to aid in pagination. */
+  edges: Array<ContentOwnersEdge>;
+  /** A list of `ContentOwner` objects. */
+  nodes: Array<ContentOwner>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ContentOwner` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `ContentOwner` edge in the connection. */
+export type ContentOwnersEdge = {
+  __typename?: 'ContentOwnersEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `ContentOwner` at the end of the edge. */
+  node: ContentOwner;
+};
+
+/** Methods to use when ordering `ContentOwner`. */
+export enum ContentOwnersOrderBy {
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SortOrderAsc = 'SORT_ORDER_ASC',
+  SortOrderDesc = 'SORT_ORDER_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
+
+/** All input for the create `AgeRating` mutation. */
+export type CreateAgeRatingInput = {
+  /** The `AgeRating` to be created by this mutation. */
+  ageRating: AgeRatingInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The output of our create `AgeRating` mutation. */
+export type CreateAgeRatingPayload = {
+  __typename?: 'CreateAgeRatingPayload';
+  /** The `AgeRating` that was created by this mutation. */
+  ageRating?: Maybe<AgeRating>;
+  /** An edge for our `AgeRating`. May be used by Relay 1. */
+  ageRatingEdge?: Maybe<AgeRatingsEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `AgeRating` mutation. */
+export type CreateAgeRatingPayloadAgeRatingEdgeArgs = {
+  orderBy?: InputMaybe<Array<AgeRatingsOrderBy>>;
+};
+
 /**
  * All input for the create `Collection` mutation.
  * @permissions: COLLECTIONS_EDIT,ADMIN
@@ -831,7 +1263,7 @@ export type CreateCollectionInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Collection` to be created by this mutation. */
   collection: CollectionInput;
 };
@@ -843,7 +1275,7 @@ export type CreateCollectionPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Collection` that was created by this mutation. */
   collection?: Maybe<Collection>;
   /** An edge for our `Collection`. May be used by Relay 1. */
@@ -867,7 +1299,7 @@ export type CreateCollectionRelationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `CollectionRelation` to be created by this mutation. */
   collectionRelation: CollectionRelationInput;
 };
@@ -879,7 +1311,7 @@ export type CreateCollectionRelationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionRelation`. */
   collection?: Maybe<Collection>;
   /** The `CollectionRelation` that was created by this mutation. */
@@ -913,7 +1345,7 @@ export type CreateCollectionsImageInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `CollectionsImage` to be created by this mutation. */
   collectionsImage: CollectionsImageInput;
 };
@@ -925,7 +1357,7 @@ export type CreateCollectionsImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionsImage`. */
   collection?: Maybe<Collection>;
   /** The `CollectionsImage` that was created by this mutation. */
@@ -951,7 +1383,7 @@ export type CreateCollectionsTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `CollectionsTag` to be created by this mutation. */
   collectionsTag: CollectionsTagInput;
 };
@@ -963,7 +1395,7 @@ export type CreateCollectionsTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionsTag`. */
   collection?: Maybe<Collection>;
   /** The `CollectionsTag` that was created by this mutation. */
@@ -980,6 +1412,39 @@ export type CreateCollectionsTagPayloadCollectionsTagEdgeArgs = {
   orderBy?: InputMaybe<Array<CollectionsTagsOrderBy>>;
 };
 
+/** All input for the create `ContentOwner` mutation. */
+export type CreateContentOwnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `ContentOwner` to be created by this mutation. */
+  contentOwner: ContentOwnerInput;
+};
+
+/** The output of our create `ContentOwner` mutation. */
+export type CreateContentOwnerPayload = {
+  __typename?: 'CreateContentOwnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `ContentOwner` that was created by this mutation. */
+  contentOwner?: Maybe<ContentOwner>;
+  /** An edge for our `ContentOwner`. May be used by Relay 1. */
+  contentOwnerEdge?: Maybe<ContentOwnersEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `ContentOwner` mutation. */
+export type CreateContentOwnerPayloadContentOwnerEdgeArgs = {
+  orderBy?: InputMaybe<Array<ContentOwnersOrderBy>>;
+};
+
 /**
  * All input for the create `Episode` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
@@ -989,7 +1454,7 @@ export type CreateEpisodeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Episode` to be created by this mutation. */
   episode: EpisodeInput;
 };
@@ -1001,7 +1466,7 @@ export type CreateEpisodePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Episode` that was created by this mutation. */
   episode?: Maybe<Episode>;
   /** An edge for our `Episode`. May be used by Relay 1. */
@@ -1027,7 +1492,7 @@ export type CreateEpisodesCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `EpisodesCast` to be created by this mutation. */
   episodesCast: EpisodesCastInput;
 };
@@ -1039,7 +1504,7 @@ export type CreateEpisodesCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesCast`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesCast` that was created by this mutation. */
@@ -1065,7 +1530,7 @@ export type CreateEpisodesImageInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `EpisodesImage` to be created by this mutation. */
   episodesImage: EpisodesImageInput;
 };
@@ -1077,7 +1542,7 @@ export type CreateEpisodesImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesImage`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesImage` that was created by this mutation. */
@@ -1103,7 +1568,7 @@ export type CreateEpisodesLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `EpisodesLicense` to be created by this mutation. */
   episodesLicense: EpisodesLicenseInput;
 };
@@ -1115,7 +1580,7 @@ export type CreateEpisodesLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesLicense`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesLicense` that was created by this mutation. */
@@ -1141,7 +1606,7 @@ export type CreateEpisodesLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `EpisodesLicensesCountry` to be created by this mutation. */
   episodesLicensesCountry: EpisodesLicensesCountryInput;
 };
@@ -1153,7 +1618,7 @@ export type CreateEpisodesLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `EpisodesLicense` that is related to this `EpisodesLicensesCountry`. */
   episodesLicense?: Maybe<EpisodesLicense>;
   /** The `EpisodesLicensesCountry` that was created by this mutation. */
@@ -1179,7 +1644,7 @@ export type CreateEpisodesProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `EpisodesProductionCountry` to be created by this mutation. */
   episodesProductionCountry: EpisodesProductionCountryInput;
 };
@@ -1191,7 +1656,7 @@ export type CreateEpisodesProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesProductionCountry`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesProductionCountry` that was created by this mutation. */
@@ -1217,7 +1682,7 @@ export type CreateEpisodesTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `EpisodesTag` to be created by this mutation. */
   episodesTag: EpisodesTagInput;
 };
@@ -1229,7 +1694,7 @@ export type CreateEpisodesTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesTag`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesTag` that was created by this mutation. */
@@ -1255,7 +1720,7 @@ export type CreateEpisodesTrailerInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `EpisodesTrailer` to be created by this mutation. */
   episodesTrailer: EpisodesTrailerInput;
 };
@@ -1267,7 +1732,7 @@ export type CreateEpisodesTrailerPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesTrailer`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesTrailer` that was created by this mutation. */
@@ -1293,7 +1758,7 @@ export type CreateEpisodesTvshowGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `EpisodesTvshowGenre` to be created by this mutation. */
   episodesTvshowGenre: EpisodesTvshowGenreInput;
 };
@@ -1305,7 +1770,7 @@ export type CreateEpisodesTvshowGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesTvshowGenre`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesTvshowGenre` that was created by this mutation. */
@@ -1325,6 +1790,42 @@ export type CreateEpisodesTvshowGenrePayloadEpisodesTvshowGenreEdgeArgs = {
 };
 
 /**
+ * All input for the create `Language` mutation.
+ * @permissions: LANGUAGES_EDIT,ADMIN
+ */
+export type CreateLanguageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `Language` to be created by this mutation. */
+  language: LanguageInput;
+};
+
+/** The output of our create `Language` mutation. */
+export type CreateLanguagePayload = {
+  __typename?: 'CreateLanguagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `Language` that was created by this mutation. */
+  language?: Maybe<Language>;
+  /** An edge for our `Language`. May be used by Relay 1. */
+  languageEdge?: Maybe<LanguagesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `Language` mutation. */
+export type CreateLanguagePayloadLanguageEdgeArgs = {
+  orderBy?: InputMaybe<Array<LanguagesOrderBy>>;
+};
+
+/**
  * All input for the create `MovieGenre` mutation.
  * @permissions: SETTINGS_EDIT,ADMIN
  */
@@ -1333,7 +1834,7 @@ export type CreateMovieGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `MovieGenre` to be created by this mutation. */
   movieGenre: MovieGenreInput;
 };
@@ -1345,7 +1846,7 @@ export type CreateMovieGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `MovieGenre` that was created by this mutation. */
   movieGenre?: Maybe<MovieGenre>;
   /** An edge for our `MovieGenre`. May be used by Relay 1. */
@@ -1369,7 +1870,7 @@ export type CreateMovieInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Movie` to be created by this mutation. */
   movie: MovieInput;
 };
@@ -1381,7 +1882,7 @@ export type CreateMoviePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Movie` that was created by this mutation. */
   movie?: Maybe<Movie>;
   /** An edge for our `Movie`. May be used by Relay 1. */
@@ -1405,7 +1906,7 @@ export type CreateMoviesCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `MoviesCast` to be created by this mutation. */
   moviesCast: MoviesCastInput;
 };
@@ -1417,7 +1918,7 @@ export type CreateMoviesCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesCast`. */
   movie?: Maybe<Movie>;
   /** The `MoviesCast` that was created by this mutation. */
@@ -1435,6 +1936,44 @@ export type CreateMoviesCastPayloadMoviesCastEdgeArgs = {
 };
 
 /**
+ * All input for the create `MoviesDirector` mutation.
+ * @permissions: MOVIE_EDITOR,ADMIN
+ */
+export type CreateMoviesDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `MoviesDirector` to be created by this mutation. */
+  moviesDirector: MoviesDirectorInput;
+};
+
+/** The output of our create `MoviesDirector` mutation. */
+export type CreateMoviesDirectorPayload = {
+  __typename?: 'CreateMoviesDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Movie` that is related to this `MoviesDirector`. */
+  movie?: Maybe<Movie>;
+  /** The `MoviesDirector` that was created by this mutation. */
+  moviesDirector?: Maybe<MoviesDirector>;
+  /** An edge for our `MoviesDirector`. May be used by Relay 1. */
+  moviesDirectorEdge?: Maybe<MoviesDirectorsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `MoviesDirector` mutation. */
+export type CreateMoviesDirectorPayloadMoviesDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<MoviesDirectorsOrderBy>>;
+};
+
+/**
  * All input for the create `MoviesImage` mutation.
  * @permissions: MOVIES_EDIT,ADMIN
  */
@@ -1443,7 +1982,7 @@ export type CreateMoviesImageInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `MoviesImage` to be created by this mutation. */
   moviesImage: MoviesImageInput;
 };
@@ -1455,7 +1994,7 @@ export type CreateMoviesImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesImage`. */
   movie?: Maybe<Movie>;
   /** The `MoviesImage` that was created by this mutation. */
@@ -1481,7 +2020,7 @@ export type CreateMoviesLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `MoviesLicense` to be created by this mutation. */
   moviesLicense: MoviesLicenseInput;
 };
@@ -1493,7 +2032,7 @@ export type CreateMoviesLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesLicense`. */
   movie?: Maybe<Movie>;
   /** The `MoviesLicense` that was created by this mutation. */
@@ -1519,7 +2058,7 @@ export type CreateMoviesLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `MoviesLicensesCountry` to be created by this mutation. */
   moviesLicensesCountry: MoviesLicensesCountryInput;
 };
@@ -1531,7 +2070,7 @@ export type CreateMoviesLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `MoviesLicense` that is related to this `MoviesLicensesCountry`. */
   moviesLicense?: Maybe<MoviesLicense>;
   /** The `MoviesLicensesCountry` that was created by this mutation. */
@@ -1557,7 +2096,7 @@ export type CreateMoviesMovieGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `MoviesMovieGenre` to be created by this mutation. */
   moviesMovieGenre: MoviesMovieGenreInput;
 };
@@ -1569,7 +2108,7 @@ export type CreateMoviesMovieGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesMovieGenre`. */
   movie?: Maybe<Movie>;
   /** Reads a single `MovieGenre` that is related to this `MoviesMovieGenre`. */
@@ -1597,7 +2136,7 @@ export type CreateMoviesProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `MoviesProductionCountry` to be created by this mutation. */
   moviesProductionCountry: MoviesProductionCountryInput;
 };
@@ -1609,7 +2148,7 @@ export type CreateMoviesProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesProductionCountry`. */
   movie?: Maybe<Movie>;
   /** The `MoviesProductionCountry` that was created by this mutation. */
@@ -1635,7 +2174,7 @@ export type CreateMoviesTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `MoviesTag` to be created by this mutation. */
   moviesTag: MoviesTagInput;
 };
@@ -1647,7 +2186,7 @@ export type CreateMoviesTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesTag`. */
   movie?: Maybe<Movie>;
   /** The `MoviesTag` that was created by this mutation. */
@@ -1673,7 +2212,7 @@ export type CreateMoviesTrailerInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `MoviesTrailer` to be created by this mutation. */
   moviesTrailer: MoviesTrailerInput;
 };
@@ -1685,7 +2224,7 @@ export type CreateMoviesTrailerPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesTrailer`. */
   movie?: Maybe<Movie>;
   /** The `MoviesTrailer` that was created by this mutation. */
@@ -1711,7 +2250,7 @@ export type CreateSeasonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Season` to be created by this mutation. */
   season: SeasonInput;
 };
@@ -1723,7 +2262,7 @@ export type CreateSeasonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Season` that was created by this mutation. */
@@ -1749,7 +2288,7 @@ export type CreateSeasonsCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `SeasonsCast` to be created by this mutation. */
   seasonsCast: SeasonsCastInput;
 };
@@ -1761,7 +2300,7 @@ export type CreateSeasonsCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsCast`. */
@@ -1787,7 +2326,7 @@ export type CreateSeasonsImageInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `SeasonsImage` to be created by this mutation. */
   seasonsImage: SeasonsImageInput;
 };
@@ -1799,7 +2338,7 @@ export type CreateSeasonsImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsImage`. */
@@ -1825,7 +2364,7 @@ export type CreateSeasonsLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `SeasonsLicense` to be created by this mutation. */
   seasonsLicense: SeasonsLicenseInput;
 };
@@ -1837,7 +2376,7 @@ export type CreateSeasonsLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsLicense`. */
@@ -1863,7 +2402,7 @@ export type CreateSeasonsLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `SeasonsLicensesCountry` to be created by this mutation. */
   seasonsLicensesCountry: SeasonsLicensesCountryInput;
 };
@@ -1875,7 +2414,7 @@ export type CreateSeasonsLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `SeasonsLicense` that is related to this `SeasonsLicensesCountry`. */
@@ -1901,7 +2440,7 @@ export type CreateSeasonsProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `SeasonsProductionCountry` to be created by this mutation. */
   seasonsProductionCountry: SeasonsProductionCountryInput;
 };
@@ -1913,7 +2452,7 @@ export type CreateSeasonsProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsProductionCountry`. */
@@ -1939,7 +2478,7 @@ export type CreateSeasonsTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `SeasonsTag` to be created by this mutation. */
   seasonsTag: SeasonsTagInput;
 };
@@ -1951,7 +2490,7 @@ export type CreateSeasonsTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsTag`. */
@@ -1977,7 +2516,7 @@ export type CreateSeasonsTrailerInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `SeasonsTrailer` to be created by this mutation. */
   seasonsTrailer: SeasonsTrailerInput;
 };
@@ -1989,7 +2528,7 @@ export type CreateSeasonsTrailerPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsTrailer`. */
@@ -2015,7 +2554,7 @@ export type CreateSeasonsTvshowGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `SeasonsTvshowGenre` to be created by this mutation. */
   seasonsTvshowGenre: SeasonsTvshowGenreInput;
 };
@@ -2027,7 +2566,7 @@ export type CreateSeasonsTvshowGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsTvshowGenre`. */
@@ -2055,7 +2594,7 @@ export type CreateTvshowGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TvshowGenre` to be created by this mutation. */
   tvshowGenre: TvshowGenreInput;
 };
@@ -2067,7 +2606,7 @@ export type CreateTvshowGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `TvshowGenre` that was created by this mutation. */
@@ -2091,7 +2630,7 @@ export type CreateTvshowInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Tvshow` to be created by this mutation. */
   tvshow: TvshowInput;
 };
@@ -2103,7 +2642,7 @@ export type CreateTvshowPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Tvshow` that was created by this mutation. */
@@ -2127,7 +2666,7 @@ export type CreateTvshowsCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TvshowsCast` to be created by this mutation. */
   tvshowsCast: TvshowsCastInput;
 };
@@ -2139,7 +2678,7 @@ export type CreateTvshowsCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsCast`. */
@@ -2165,7 +2704,7 @@ export type CreateTvshowsImageInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TvshowsImage` to be created by this mutation. */
   tvshowsImage: TvshowsImageInput;
 };
@@ -2177,7 +2716,7 @@ export type CreateTvshowsImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsImage`. */
@@ -2203,7 +2742,7 @@ export type CreateTvshowsLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TvshowsLicense` to be created by this mutation. */
   tvshowsLicense: TvshowsLicenseInput;
 };
@@ -2215,7 +2754,7 @@ export type CreateTvshowsLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsLicense`. */
@@ -2241,7 +2780,7 @@ export type CreateTvshowsLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TvshowsLicensesCountry` to be created by this mutation. */
   tvshowsLicensesCountry: TvshowsLicensesCountryInput;
 };
@@ -2253,7 +2792,7 @@ export type CreateTvshowsLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `TvshowsLicense` that is related to this `TvshowsLicensesCountry`. */
@@ -2279,7 +2818,7 @@ export type CreateTvshowsProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TvshowsProductionCountry` to be created by this mutation. */
   tvshowsProductionCountry: TvshowsProductionCountryInput;
 };
@@ -2291,7 +2830,7 @@ export type CreateTvshowsProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsProductionCountry`. */
@@ -2317,7 +2856,7 @@ export type CreateTvshowsTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TvshowsTag` to be created by this mutation. */
   tvshowsTag: TvshowsTagInput;
 };
@@ -2329,7 +2868,7 @@ export type CreateTvshowsTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsTag`. */
@@ -2355,7 +2894,7 @@ export type CreateTvshowsTrailerInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TvshowsTrailer` to be created by this mutation. */
   tvshowsTrailer: TvshowsTrailerInput;
 };
@@ -2367,7 +2906,7 @@ export type CreateTvshowsTrailerPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsTrailer`. */
@@ -2393,7 +2932,7 @@ export type CreateTvshowsTvshowGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TvshowsTvshowGenre` to be created by this mutation. */
   tvshowsTvshowGenre: TvshowsTvshowGenreInput;
 };
@@ -2405,7 +2944,7 @@ export type CreateTvshowsTvshowGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsTvshowGenre`. */
@@ -2427,53 +2966,86 @@ export type CreateTvshowsTvshowGenrePayloadTvshowsTvshowGenreEdgeArgs = {
 /** A filter to be used against Date fields. All fields are combined with a logical ‘and.’ */
 export type DateFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Date']>;
+  distinctFrom?: InputMaybe<Scalars['Date']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Date']>;
+  equalTo?: InputMaybe<Scalars['Date']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Date']>;
+  greaterThan?: InputMaybe<Scalars['Date']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Date']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Date']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Date']>>;
+  in?: InputMaybe<Array<Scalars['Date']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Date']>;
+  lessThan?: InputMaybe<Scalars['Date']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Date']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Date']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Date']>;
+  notDistinctFrom?: InputMaybe<Scalars['Date']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Date']>;
+  notEqualTo?: InputMaybe<Scalars['Date']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Date']>>;
+  notIn?: InputMaybe<Array<Scalars['Date']['input']>>;
 };
 
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Datetime']>;
+  distinctFrom?: InputMaybe<Scalars['Datetime']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Datetime']>;
+  equalTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Datetime']>;
+  greaterThan?: InputMaybe<Scalars['Datetime']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Datetime']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Datetime']>>;
+  in?: InputMaybe<Array<Scalars['Datetime']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Datetime']>;
+  lessThan?: InputMaybe<Scalars['Datetime']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Datetime']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Datetime']>;
+  notDistinctFrom?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Datetime']>;
+  notEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Datetime']>>;
+  notIn?: InputMaybe<Array<Scalars['Datetime']['input']>>;
+};
+
+/** All input for the `deleteAgeRating` mutation. */
+export type DeleteAgeRatingInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `AgeRating` mutation. */
+export type DeleteAgeRatingPayload = {
+  __typename?: 'DeleteAgeRatingPayload';
+  /** The `AgeRating` that was deleted by this mutation. */
+  ageRating?: Maybe<AgeRating>;
+  /** An edge for our `AgeRating`. May be used by Relay 1. */
+  ageRatingEdge?: Maybe<AgeRatingsEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedAgeRatingNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `AgeRating` mutation. */
+export type DeleteAgeRatingPayloadAgeRatingEdgeArgs = {
+  orderBy?: InputMaybe<Array<AgeRatingsOrderBy>>;
 };
 
 /**
@@ -2485,8 +3057,8 @@ export type DeleteCollectionByExternalIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  externalId: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
 };
 
 /**
@@ -2498,8 +3070,8 @@ export type DeleteCollectionInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `Collection` mutation. */
@@ -2509,12 +3081,12 @@ export type DeleteCollectionPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Collection` that was deleted by this mutation. */
   collection?: Maybe<Collection>;
   /** An edge for our `Collection`. May be used by Relay 1. */
   collectionEdge?: Maybe<CollectionsEdge>;
-  deletedCollectionNodeId?: Maybe<Scalars['ID']>;
+  deletedCollectionNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
@@ -2534,8 +3106,8 @@ export type DeleteCollectionRelationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `CollectionRelation` mutation. */
@@ -2545,14 +3117,14 @@ export type DeleteCollectionRelationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionRelation`. */
   collection?: Maybe<Collection>;
   /** The `CollectionRelation` that was deleted by this mutation. */
   collectionRelation?: Maybe<CollectionRelation>;
   /** An edge for our `CollectionRelation`. May be used by Relay 1. */
   collectionRelationEdge?: Maybe<CollectionRelationsEdge>;
-  deletedCollectionRelationNodeId?: Maybe<Scalars['ID']>;
+  deletedCollectionRelationNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Episode` that is related to this `CollectionRelation`. */
   episode?: Maybe<Episode>;
   /** Reads a single `Movie` that is related to this `CollectionRelation`. */
@@ -2580,8 +3152,8 @@ export type DeleteCollectionsImageByCollectionIdAndImageTypeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  collectionId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  collectionId: Scalars['Int']['input'];
   imageType: CollectionImageType;
 };
 
@@ -2592,14 +3164,14 @@ export type DeleteCollectionsImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionsImage`. */
   collection?: Maybe<Collection>;
   /** The `CollectionsImage` that was deleted by this mutation. */
   collectionsImage?: Maybe<CollectionsImage>;
   /** An edge for our `CollectionsImage`. May be used by Relay 1. */
   collectionsImageEdge?: Maybe<CollectionsImagesEdge>;
-  deletedCollectionsImageNodeId?: Maybe<Scalars['ID']>;
+  deletedCollectionsImageNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
@@ -2619,10 +3191,10 @@ export type DeleteCollectionsTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  collectionId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  collectionId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** The output of our delete `CollectionsTag` mutation. */
@@ -2632,14 +3204,14 @@ export type DeleteCollectionsTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionsTag`. */
   collection?: Maybe<Collection>;
   /** The `CollectionsTag` that was deleted by this mutation. */
   collectionsTag?: Maybe<CollectionsTag>;
   /** An edge for our `CollectionsTag`. May be used by Relay 1. */
   collectionsTagEdge?: Maybe<CollectionsTagsEdge>;
-  deletedCollectionsTagNodeId?: Maybe<Scalars['ID']>;
+  deletedCollectionsTagNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
@@ -2648,6 +3220,39 @@ export type DeleteCollectionsTagPayload = {
 /** The output of our delete `CollectionsTag` mutation. */
 export type DeleteCollectionsTagPayloadCollectionsTagEdgeArgs = {
   orderBy?: InputMaybe<Array<CollectionsTagsOrderBy>>;
+};
+
+/** All input for the `deleteContentOwner` mutation. */
+export type DeleteContentOwnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `ContentOwner` mutation. */
+export type DeleteContentOwnerPayload = {
+  __typename?: 'DeleteContentOwnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `ContentOwner` that was deleted by this mutation. */
+  contentOwner?: Maybe<ContentOwner>;
+  /** An edge for our `ContentOwner`. May be used by Relay 1. */
+  contentOwnerEdge?: Maybe<ContentOwnersEdge>;
+  deletedContentOwnerNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `ContentOwner` mutation. */
+export type DeleteContentOwnerPayloadContentOwnerEdgeArgs = {
+  orderBy?: InputMaybe<Array<ContentOwnersOrderBy>>;
 };
 
 /**
@@ -2659,8 +3264,8 @@ export type DeleteEpisodeByExternalIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  externalId: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
 };
 
 /**
@@ -2672,8 +3277,8 @@ export type DeleteEpisodeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `Episode` mutation. */
@@ -2683,8 +3288,8 @@ export type DeleteEpisodePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedEpisodeNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEpisodeNodeId?: Maybe<Scalars['ID']['output']>;
   /** The `Episode` that was deleted by this mutation. */
   episode?: Maybe<Episode>;
   /** An edge for our `Episode`. May be used by Relay 1. */
@@ -2710,10 +3315,10 @@ export type DeleteEpisodesCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  episodeId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** The output of our delete `EpisodesCast` mutation. */
@@ -2723,8 +3328,8 @@ export type DeleteEpisodesCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedEpisodesCastNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEpisodesCastNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesCast`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesCast` that was deleted by this mutation. */
@@ -2750,8 +3355,8 @@ export type DeleteEpisodesImageByEpisodeIdAndImageTypeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  episodeId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
   imageType: EpisodeImageType;
 };
 
@@ -2762,8 +3367,8 @@ export type DeleteEpisodesImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedEpisodesImageNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEpisodesImageNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesImage`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesImage` that was deleted by this mutation. */
@@ -2789,8 +3394,8 @@ export type DeleteEpisodesLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `EpisodesLicense` mutation. */
@@ -2800,8 +3405,8 @@ export type DeleteEpisodesLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedEpisodesLicenseNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEpisodesLicenseNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesLicense`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesLicense` that was deleted by this mutation. */
@@ -2827,9 +3432,9 @@ export type DeleteEpisodesLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code: IsoAlphaTwoCountryCodes;
-  episodesLicenseId: Scalars['Int'];
+  episodesLicenseId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `EpisodesLicensesCountry` mutation. */
@@ -2839,8 +3444,8 @@ export type DeleteEpisodesLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedEpisodesLicensesCountryNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEpisodesLicensesCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `EpisodesLicense` that is related to this `EpisodesLicensesCountry`. */
   episodesLicense?: Maybe<EpisodesLicense>;
   /** The `EpisodesLicensesCountry` that was deleted by this mutation. */
@@ -2866,10 +3471,10 @@ export type DeleteEpisodesProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  episodeId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** The output of our delete `EpisodesProductionCountry` mutation. */
@@ -2879,8 +3484,8 @@ export type DeleteEpisodesProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedEpisodesProductionCountryNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEpisodesProductionCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesProductionCountry`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesProductionCountry` that was deleted by this mutation. */
@@ -2906,10 +3511,10 @@ export type DeleteEpisodesTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  episodeId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** The output of our delete `EpisodesTag` mutation. */
@@ -2919,8 +3524,8 @@ export type DeleteEpisodesTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedEpisodesTagNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEpisodesTagNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesTag`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesTag` that was deleted by this mutation. */
@@ -2946,9 +3551,9 @@ export type DeleteEpisodesTrailerInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  episodeId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `EpisodesTrailer` mutation. */
@@ -2958,8 +3563,8 @@ export type DeleteEpisodesTrailerPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedEpisodesTrailerNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEpisodesTrailerNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesTrailer`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesTrailer` that was deleted by this mutation. */
@@ -2985,9 +3590,9 @@ export type DeleteEpisodesTvshowGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  episodeId: Scalars['Int'];
-  tvshowGenresId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
+  tvshowGenresId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `EpisodesTvshowGenre` mutation. */
@@ -2997,8 +3602,8 @@ export type DeleteEpisodesTvshowGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedEpisodesTvshowGenreNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEpisodesTvshowGenreNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesTvshowGenre`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesTvshowGenre` that was deleted by this mutation. */
@@ -3018,6 +3623,42 @@ export type DeleteEpisodesTvshowGenrePayloadEpisodesTvshowGenreEdgeArgs = {
 };
 
 /**
+ * All input for the `deleteLanguage` mutation.
+ * @permissions: LANGUAGES_EDIT,ADMIN
+ */
+export type DeleteLanguageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `Language` mutation. */
+export type DeleteLanguagePayload = {
+  __typename?: 'DeleteLanguagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedLanguageNodeId?: Maybe<Scalars['ID']['output']>;
+  /** The `Language` that was deleted by this mutation. */
+  language?: Maybe<Language>;
+  /** An edge for our `Language`. May be used by Relay 1. */
+  languageEdge?: Maybe<LanguagesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `Language` mutation. */
+export type DeleteLanguagePayloadLanguageEdgeArgs = {
+  orderBy?: InputMaybe<Array<LanguagesOrderBy>>;
+};
+
+/**
  * All input for the `deleteMovieByExternalId` mutation.
  * @permissions: MOVIES_EDIT,ADMIN
  */
@@ -3026,8 +3667,8 @@ export type DeleteMovieByExternalIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  externalId: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
 };
 
 /**
@@ -3039,8 +3680,8 @@ export type DeleteMovieGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `MovieGenre` mutation. */
@@ -3050,8 +3691,8 @@ export type DeleteMovieGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedMovieGenreNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMovieGenreNodeId?: Maybe<Scalars['ID']['output']>;
   /** The `MovieGenre` that was deleted by this mutation. */
   movieGenre?: Maybe<MovieGenre>;
   /** An edge for our `MovieGenre`. May be used by Relay 1. */
@@ -3075,8 +3716,8 @@ export type DeleteMovieInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `Movie` mutation. */
@@ -3086,8 +3727,8 @@ export type DeleteMoviePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedMovieNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMovieNodeId?: Maybe<Scalars['ID']['output']>;
   /** The `Movie` that was deleted by this mutation. */
   movie?: Maybe<Movie>;
   /** An edge for our `Movie`. May be used by Relay 1. */
@@ -3111,10 +3752,10 @@ export type DeleteMoviesCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  movieId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** The output of our delete `MoviesCast` mutation. */
@@ -3124,8 +3765,8 @@ export type DeleteMoviesCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedMoviesCastNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMoviesCastNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesCast`. */
   movie?: Maybe<Movie>;
   /** The `MoviesCast` that was deleted by this mutation. */
@@ -3143,6 +3784,46 @@ export type DeleteMoviesCastPayloadMoviesCastEdgeArgs = {
 };
 
 /**
+ * All input for the `deleteMoviesDirector` mutation.
+ * @permissions: MOVIE_EDITOR,ADMIN
+ */
+export type DeleteMoviesDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+};
+
+/** The output of our delete `MoviesDirector` mutation. */
+export type DeleteMoviesDirectorPayload = {
+  __typename?: 'DeleteMoviesDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMoviesDirectorNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Reads a single `Movie` that is related to this `MoviesDirector`. */
+  movie?: Maybe<Movie>;
+  /** The `MoviesDirector` that was deleted by this mutation. */
+  moviesDirector?: Maybe<MoviesDirector>;
+  /** An edge for our `MoviesDirector`. May be used by Relay 1. */
+  moviesDirectorEdge?: Maybe<MoviesDirectorsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `MoviesDirector` mutation. */
+export type DeleteMoviesDirectorPayloadMoviesDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<MoviesDirectorsOrderBy>>;
+};
+
+/**
  * All input for the `deleteMoviesImageByMovieIdAndImageType` mutation.
  * @permissions: MOVIES_EDIT,ADMIN
  */
@@ -3151,9 +3832,9 @@ export type DeleteMoviesImageByMovieIdAndImageTypeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   imageType: MovieImageType;
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `MoviesImage` mutation. */
@@ -3163,8 +3844,8 @@ export type DeleteMoviesImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedMoviesImageNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMoviesImageNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesImage`. */
   movie?: Maybe<Movie>;
   /** The `MoviesImage` that was deleted by this mutation. */
@@ -3190,8 +3871,8 @@ export type DeleteMoviesLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `MoviesLicense` mutation. */
@@ -3201,8 +3882,8 @@ export type DeleteMoviesLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedMoviesLicenseNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMoviesLicenseNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesLicense`. */
   movie?: Maybe<Movie>;
   /** The `MoviesLicense` that was deleted by this mutation. */
@@ -3228,9 +3909,9 @@ export type DeleteMoviesLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code: IsoAlphaTwoCountryCodes;
-  moviesLicenseId: Scalars['Int'];
+  moviesLicenseId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `MoviesLicensesCountry` mutation. */
@@ -3240,8 +3921,8 @@ export type DeleteMoviesLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedMoviesLicensesCountryNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMoviesLicensesCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `MoviesLicense` that is related to this `MoviesLicensesCountry`. */
   moviesLicense?: Maybe<MoviesLicense>;
   /** The `MoviesLicensesCountry` that was deleted by this mutation. */
@@ -3267,9 +3948,9 @@ export type DeleteMoviesMovieGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  movieGenresId: Scalars['Int'];
-  movieId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieGenresId: Scalars['Int']['input'];
+  movieId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `MoviesMovieGenre` mutation. */
@@ -3279,8 +3960,8 @@ export type DeleteMoviesMovieGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedMoviesMovieGenreNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMoviesMovieGenreNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesMovieGenre`. */
   movie?: Maybe<Movie>;
   /** Reads a single `MovieGenre` that is related to this `MoviesMovieGenre`. */
@@ -3308,10 +3989,10 @@ export type DeleteMoviesProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  movieId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** The output of our delete `MoviesProductionCountry` mutation. */
@@ -3321,8 +4002,8 @@ export type DeleteMoviesProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedMoviesProductionCountryNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMoviesProductionCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesProductionCountry`. */
   movie?: Maybe<Movie>;
   /** The `MoviesProductionCountry` that was deleted by this mutation. */
@@ -3348,10 +4029,10 @@ export type DeleteMoviesTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  movieId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** The output of our delete `MoviesTag` mutation. */
@@ -3361,8 +4042,8 @@ export type DeleteMoviesTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedMoviesTagNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMoviesTagNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesTag`. */
   movie?: Maybe<Movie>;
   /** The `MoviesTag` that was deleted by this mutation. */
@@ -3388,9 +4069,9 @@ export type DeleteMoviesTrailerInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  movieId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `MoviesTrailer` mutation. */
@@ -3400,8 +4081,8 @@ export type DeleteMoviesTrailerPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedMoviesTrailerNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMoviesTrailerNodeId?: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesTrailer`. */
   movie?: Maybe<Movie>;
   /** The `MoviesTrailer` that was deleted by this mutation. */
@@ -3427,8 +4108,8 @@ export type DeleteSeasonByExternalIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  externalId: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
 };
 
 /**
@@ -3440,8 +4121,8 @@ export type DeleteSeasonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `Season` mutation. */
@@ -3451,8 +4132,8 @@ export type DeleteSeasonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedSeasonNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSeasonNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Season` that was deleted by this mutation. */
@@ -3478,10 +4159,10 @@ export type DeleteSeasonsCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
-  seasonId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `SeasonsCast` mutation. */
@@ -3491,8 +4172,8 @@ export type DeleteSeasonsCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedSeasonsCastNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSeasonsCastNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsCast`. */
@@ -3518,9 +4199,9 @@ export type DeleteSeasonsImageBySeasonIdAndImageTypeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   imageType: SeasonImageType;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `SeasonsImage` mutation. */
@@ -3530,8 +4211,8 @@ export type DeleteSeasonsImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedSeasonsImageNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSeasonsImageNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsImage`. */
@@ -3557,8 +4238,8 @@ export type DeleteSeasonsLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `SeasonsLicense` mutation. */
@@ -3568,8 +4249,8 @@ export type DeleteSeasonsLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedSeasonsLicenseNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSeasonsLicenseNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsLicense`. */
@@ -3595,9 +4276,9 @@ export type DeleteSeasonsLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code: IsoAlphaTwoCountryCodes;
-  seasonsLicenseId: Scalars['Int'];
+  seasonsLicenseId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `SeasonsLicensesCountry` mutation. */
@@ -3607,8 +4288,8 @@ export type DeleteSeasonsLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedSeasonsLicensesCountryNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSeasonsLicensesCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `SeasonsLicense` that is related to this `SeasonsLicensesCountry`. */
@@ -3634,10 +4315,10 @@ export type DeleteSeasonsProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
-  seasonId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `SeasonsProductionCountry` mutation. */
@@ -3647,8 +4328,8 @@ export type DeleteSeasonsProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedSeasonsProductionCountryNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSeasonsProductionCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsProductionCountry`. */
@@ -3674,10 +4355,10 @@ export type DeleteSeasonsTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
-  seasonId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `SeasonsTag` mutation. */
@@ -3687,8 +4368,8 @@ export type DeleteSeasonsTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedSeasonsTagNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSeasonsTagNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsTag`. */
@@ -3714,9 +4395,9 @@ export type DeleteSeasonsTrailerInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  seasonId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  seasonId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `SeasonsTrailer` mutation. */
@@ -3726,8 +4407,8 @@ export type DeleteSeasonsTrailerPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedSeasonsTrailerNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSeasonsTrailerNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsTrailer`. */
@@ -3753,9 +4434,9 @@ export type DeleteSeasonsTvshowGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  seasonId: Scalars['Int'];
-  tvshowGenresId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  seasonId: Scalars['Int']['input'];
+  tvshowGenresId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `SeasonsTvshowGenre` mutation. */
@@ -3765,8 +4446,8 @@ export type DeleteSeasonsTvshowGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedSeasonsTvshowGenreNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSeasonsTvshowGenreNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsTvshowGenre`. */
@@ -3797,8 +4478,8 @@ export type DeleteSnapshotInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `Snapshot` mutation. */
@@ -3808,8 +4489,8 @@ export type DeleteSnapshotPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedSnapshotNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSnapshotNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Snapshot` that was deleted by this mutation. */
@@ -3833,8 +4514,8 @@ export type DeleteTvshowByExternalIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  externalId: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
 };
 
 /**
@@ -3846,8 +4527,8 @@ export type DeleteTvshowGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `TvshowGenre` mutation. */
@@ -3857,8 +4538,8 @@ export type DeleteTvshowGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedTvshowGenreNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowGenreNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `TvshowGenre` that was deleted by this mutation. */
@@ -3882,8 +4563,8 @@ export type DeleteTvshowInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `Tvshow` mutation. */
@@ -3893,8 +4574,8 @@ export type DeleteTvshowPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedTvshowNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Tvshow` that was deleted by this mutation. */
@@ -3918,10 +4599,10 @@ export type DeleteTvshowsCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
-  tvshowId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `TvshowsCast` mutation. */
@@ -3931,8 +4612,8 @@ export type DeleteTvshowsCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedTvshowsCastNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowsCastNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsCast`. */
@@ -3958,9 +4639,9 @@ export type DeleteTvshowsImageByTvshowIdAndImageTypeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   imageType: TvshowImageType;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `TvshowsImage` mutation. */
@@ -3970,8 +4651,8 @@ export type DeleteTvshowsImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedTvshowsImageNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowsImageNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsImage`. */
@@ -3997,8 +4678,8 @@ export type DeleteTvshowsLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 /** The output of our delete `TvshowsLicense` mutation. */
@@ -4008,8 +4689,8 @@ export type DeleteTvshowsLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedTvshowsLicenseNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowsLicenseNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsLicense`. */
@@ -4035,9 +4716,9 @@ export type DeleteTvshowsLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code: IsoAlphaTwoCountryCodes;
-  tvshowsLicenseId: Scalars['Int'];
+  tvshowsLicenseId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `TvshowsLicensesCountry` mutation. */
@@ -4047,8 +4728,8 @@ export type DeleteTvshowsLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedTvshowsLicensesCountryNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowsLicensesCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `TvshowsLicense` that is related to this `TvshowsLicensesCountry`. */
@@ -4074,10 +4755,10 @@ export type DeleteTvshowsProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
-  tvshowId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `TvshowsProductionCountry` mutation. */
@@ -4087,8 +4768,8 @@ export type DeleteTvshowsProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedTvshowsProductionCountryNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowsProductionCountryNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsProductionCountry`. */
@@ -4114,10 +4795,10 @@ export type DeleteTvshowsTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
-  tvshowId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `TvshowsTag` mutation. */
@@ -4127,8 +4808,8 @@ export type DeleteTvshowsTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedTvshowsTagNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowsTagNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsTag`. */
@@ -4154,9 +4835,9 @@ export type DeleteTvshowsTrailerInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  tvshowId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  tvshowId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 /** The output of our delete `TvshowsTrailer` mutation. */
@@ -4166,8 +4847,8 @@ export type DeleteTvshowsTrailerPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedTvshowsTrailerNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowsTrailerNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsTrailer`. */
@@ -4193,9 +4874,9 @@ export type DeleteTvshowsTvshowGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  tvshowGenresId: Scalars['Int'];
-  tvshowId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  tvshowGenresId: Scalars['Int']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** The output of our delete `TvshowsTvshowGenre` mutation. */
@@ -4205,8 +4886,8 @@ export type DeleteTvshowsTvshowGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
-  deletedTvshowsTvshowGenreNodeId?: Maybe<Scalars['ID']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowsTvshowGenreNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsTvshowGenre`. */
@@ -4255,7 +4936,7 @@ export type EntityTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<EntityType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<EntityType>;
   /** Less than or equal to the specified value. */
@@ -4271,11 +4952,18 @@ export type EntityTypeFilter = {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type Episode = {
   __typename?: 'Episode';
+  ageRating?: Maybe<Scalars['String']['output']>;
+  assetSubtype: AssetSubtype;
+  businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
+  contentOwner?: Maybe<Scalars['String']['output']>;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  creditsStartTime?: Maybe<Scalars['String']['output']>;
+  customRating?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  dynamicField?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EpisodesCast`. */
   episodesCasts: EpisodesCastsConnection;
   /** Reads and enables pagination through a set of `EpisodesImage`. */
@@ -4292,238 +4980,283 @@ export type Episode = {
   episodesTrailers: EpisodesTrailersConnection;
   /** Reads and enables pagination through a set of `EpisodesTvshowGenre`. */
   episodesTvshowGenres: EpisodesTvshowGenresConnection;
-  externalId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  index: Scalars['Int'];
-  mainVideoId?: Maybe<Scalars['UUID']>;
-  originalTitle?: Maybe<Scalars['String']>;
-  publishedDate?: Maybe<Scalars['Datetime']>;
-  publishedUser?: Maybe<Scalars['String']>;
+  extendedField?: Maybe<Scalars['String']['output']>;
+  externalId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  index: Scalars['Int']['output'];
+  lengthInSeconds?: Maybe<Scalars['BigFloat']['output']>;
+  mainVideoId?: Maybe<Scalars['UUID']['output']>;
+  originalTitle?: Maybe<Scalars['String']['output']>;
+  publishedDate?: Maybe<Scalars['Datetime']['output']>;
+  publishedUser?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
-  released?: Maybe<Scalars['Date']>;
+  rating?: Maybe<Scalars['BigFloat']['output']>;
+  released?: Maybe<Scalars['Date']['output']>;
   /** Reads a single `Season` that is related to this `Episode`. */
   season?: Maybe<Season>;
-  seasonId?: Maybe<Scalars['Int']>;
-  studio?: Maybe<Scalars['String']>;
-  synopsis?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  seasonId?: Maybe<Scalars['Int']['output']>;
+  studio?: Maybe<Scalars['String']['output']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodeCollectionRelationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionRelationCondition>;
   filter?: InputMaybe<CollectionRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionRelationsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodeEpisodesCastsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesCastCondition>;
   filter?: InputMaybe<EpisodesCastFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesCastsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodeEpisodesImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesImageCondition>;
   filter?: InputMaybe<EpisodesImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesImagesOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodeEpisodesLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesLicenseCondition>;
   filter?: InputMaybe<EpisodesLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesLicensesOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodeEpisodesProductionCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesProductionCountryCondition>;
   filter?: InputMaybe<EpisodesProductionCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesProductionCountriesOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodeEpisodesSnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesSnapshotCondition>;
   filter?: InputMaybe<EpisodesSnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesSnapshotsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodeEpisodesTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesTagCondition>;
   filter?: InputMaybe<EpisodesTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesTagsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodeEpisodesTrailersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesTrailerCondition>;
   filter?: InputMaybe<EpisodesTrailerFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesTrailersOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodeEpisodesTvshowGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesTvshowGenreCondition>;
   filter?: InputMaybe<EpisodesTvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesTvshowGenresOrderBy>>;
 };
 
 /** A condition to be used against `Episode` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type EpisodeCondition = {
+  /** Checks for equality with the object’s `ageRating` field. */
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  /** Checks for equality with the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessType>;
+  /** Checks for equality with the object’s `contentOwner` field. */
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `customRating` field. */
+  customRating?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `extendedField` field. */
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
-  externalId?: InputMaybe<Scalars['String']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `index` field. */
-  index?: InputMaybe<Scalars['Int']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `mainVideoId` field. */
-  mainVideoId?: InputMaybe<Scalars['UUID']>;
+  mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `originalTitle` field. */
-  originalTitle?: InputMaybe<Scalars['String']>;
+  originalTitle?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishedDate` field. */
-  publishedDate?: InputMaybe<Scalars['Datetime']>;
+  publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
-  publishedUser?: InputMaybe<Scalars['String']>;
+  publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `released` field. */
-  released?: InputMaybe<Scalars['Date']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `studio` field. */
-  studio?: InputMaybe<Scalars['String']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `synopsis` field. */
-  synopsis?: InputMaybe<Scalars['String']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * Checks for equality with the object’s `title` field.
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Episode` object types. All fields are combined with a logical ‘and.’ */
 export type EpisodeFilter = {
+  /** Filter by the object’s `ageRating` field. */
+  ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<EpisodeFilter>>;
+  /** Filter by the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtypeFilter>;
+  /** Filter by the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessTypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<EpisodeToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
-  collectionRelationsExist?: InputMaybe<Scalars['Boolean']>;
+  collectionRelationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `contentOwner` field. */
+  contentOwner?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `customRating` field. */
+  customRating?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `episodesCasts` relation. */
   episodesCasts?: InputMaybe<EpisodeToManyEpisodesCastFilter>;
   /** Some related `episodesCasts` exist. */
-  episodesCastsExist?: InputMaybe<Scalars['Boolean']>;
+  episodesCastsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `episodesDirectors` relation. */
+  episodesDirectors?: InputMaybe<EpisodeToManyEpisodesDirectorFilter>;
+  /** Some related `episodesDirectors` exist. */
+  episodesDirectorsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `episodesImages` relation. */
   episodesImages?: InputMaybe<EpisodeToManyEpisodesImageFilter>;
   /** Some related `episodesImages` exist. */
-  episodesImagesExist?: InputMaybe<Scalars['Boolean']>;
+  episodesImagesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `episodesLicenses` relation. */
   episodesLicenses?: InputMaybe<EpisodeToManyEpisodesLicenseFilter>;
   /** Some related `episodesLicenses` exist. */
-  episodesLicensesExist?: InputMaybe<Scalars['Boolean']>;
+  episodesLicensesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `episodesProductionCountries` relation. */
   episodesProductionCountries?: InputMaybe<EpisodeToManyEpisodesProductionCountryFilter>;
   /** Some related `episodesProductionCountries` exist. */
-  episodesProductionCountriesExist?: InputMaybe<Scalars['Boolean']>;
+  episodesProductionCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `episodesSnapshots` relation. */
   episodesSnapshots?: InputMaybe<EpisodeToManyEpisodesSnapshotFilter>;
   /** Some related `episodesSnapshots` exist. */
-  episodesSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
+  episodesSnapshotsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `episodesTags` relation. */
   episodesTags?: InputMaybe<EpisodeToManyEpisodesTagFilter>;
   /** Some related `episodesTags` exist. */
-  episodesTagsExist?: InputMaybe<Scalars['Boolean']>;
+  episodesTagsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `episodesTrailers` relation. */
   episodesTrailers?: InputMaybe<EpisodeToManyEpisodesTrailerFilter>;
   /** Some related `episodesTrailers` exist. */
-  episodesTrailersExist?: InputMaybe<Scalars['Boolean']>;
+  episodesTrailersExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `episodesTvshowGenres` relation. */
   episodesTvshowGenres?: InputMaybe<EpisodeToManyEpisodesTvshowGenreFilter>;
   /** Some related `episodesTvshowGenres` exist. */
-  episodesTvshowGenresExist?: InputMaybe<Scalars['Boolean']>;
+  episodesTvshowGenresExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `extendedField` field. */
+  extendedField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `externalId` field. */
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `index` field. */
   index?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `mainVideoId` field. */
   mainVideoId?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
@@ -4538,12 +5271,14 @@ export type EpisodeFilter = {
   publishedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
+  /** Filter by the object’s `rating` field. */
+  rating?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `season` relation. */
   season?: InputMaybe<SeasonFilter>;
   /** A related `season` exists. */
-  seasonExists?: InputMaybe<Scalars['Boolean']>;
+  seasonExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `seasonId` field. */
   seasonId?: InputMaybe<IntFilter>;
   /** Filter by the object’s `studio` field. */
@@ -4578,7 +5313,7 @@ export type EpisodeImageTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<EpisodeImageType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<EpisodeImageType>;
   /** Less than or equal to the specified value. */
@@ -4593,38 +5328,58 @@ export type EpisodeImageTypeFilter = {
 
 /** An input for mutations affecting `Episode` */
 export type EpisodeInput = {
-  description?: InputMaybe<Scalars['String']>;
-  externalId?: InputMaybe<Scalars['String']>;
-  index: Scalars['Int'];
-  mainVideoId?: InputMaybe<Scalars['UUID']>;
-  originalTitle?: InputMaybe<Scalars['String']>;
-  released?: InputMaybe<Scalars['Date']>;
-  seasonId?: InputMaybe<Scalars['Int']>;
-  studio?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  businessType?: InputMaybe<BusinessType>;
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  index: Scalars['Int']['input'];
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
+  mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
+  originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
    * @notEmpty()
    */
-  title: Scalars['String'];
+  title: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Episode`. Fields that are set will be updated. */
 export type EpisodePatch = {
-  description?: InputMaybe<Scalars['String']>;
-  externalId?: InputMaybe<Scalars['String']>;
-  index?: InputMaybe<Scalars['Int']>;
-  mainVideoId?: InputMaybe<Scalars['UUID']>;
-  originalTitle?: InputMaybe<Scalars['String']>;
-  released?: InputMaybe<Scalars['Date']>;
-  seasonId?: InputMaybe<Scalars['Int']>;
-  studio?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  businessType?: InputMaybe<BusinessType>;
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
+  mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
+  originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
@@ -4632,8 +5387,8 @@ export type EpisodesCast = {
   __typename?: 'EpisodesCast';
   /** Reads a single `Episode` that is related to this `EpisodesCast`. */
   episode?: Maybe<Episode>;
-  episodeId: Scalars['Int'];
-  name: Scalars['String'];
+  episodeId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 /**
@@ -4642,12 +5397,12 @@ export type EpisodesCast = {
  */
 export type EpisodesCastCondition = {
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['Int']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `EpisodesCast` object types. All fields are combined with a logical ‘and.’ */
@@ -4668,15 +5423,15 @@ export type EpisodesCastFilter = {
 
 /** An input for mutations affecting `EpisodesCast` */
 export type EpisodesCastInput = {
-  episodeId: Scalars['Int'];
+  episodeId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `EpisodesCast`. Fields that are set will be updated. */
 export type EpisodesCastPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -4692,14 +5447,14 @@ export type EpisodesCastsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodesCast` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodesCast` edge in the connection. */
 export type EpisodesCastsEdge = {
   __typename?: 'EpisodesCastsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodesCast` at the end of the edge. */
   node: EpisodesCast;
 };
@@ -4728,14 +5483,30 @@ export type EpisodesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Episode` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A filter to be used against `EpisodesDirector` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodesDirectorFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EpisodesDirectorFilter>>;
+  /** Filter by the object’s `episode` relation. */
+  episode?: InputMaybe<EpisodeFilter>;
+  /** Filter by the object’s `episodeId` field. */
+  episodeId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EpisodesDirectorFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EpisodesDirectorFilter>>;
 };
 
 /** A `Episode` edge in the connection. */
 export type EpisodesEdge = {
   __typename?: 'EpisodesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Episode` at the end of the edge. */
   node: Episode;
 };
@@ -4745,8 +5516,8 @@ export type EpisodesImage = {
   __typename?: 'EpisodesImage';
   /** Reads a single `Episode` that is related to this `EpisodesImage`. */
   episode?: Maybe<Episode>;
-  episodeId: Scalars['Int'];
-  imageId: Scalars['UUID'];
+  episodeId: Scalars['Int']['output'];
+  imageId: Scalars['UUID']['output'];
   imageType: EpisodeImageType;
 };
 
@@ -4756,9 +5527,9 @@ export type EpisodesImage = {
  */
 export type EpisodesImageCondition = {
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['Int']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `imageId` field. */
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `imageType` field. */
   imageType?: InputMaybe<EpisodeImageType>;
 };
@@ -4783,15 +5554,15 @@ export type EpisodesImageFilter = {
 
 /** An input for mutations affecting `EpisodesImage` */
 export type EpisodesImageInput = {
-  episodeId: Scalars['Int'];
-  imageId: Scalars['UUID'];
+  episodeId: Scalars['Int']['input'];
+  imageId: Scalars['UUID']['input'];
   imageType: EpisodeImageType;
 };
 
 /** Represents an update to a `EpisodesImage`. Fields that are set will be updated. */
 export type EpisodesImagePatch = {
-  episodeId?: InputMaybe<Scalars['Int']>;
-  imageId?: InputMaybe<Scalars['UUID']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   imageType?: InputMaybe<EpisodeImageType>;
 };
 
@@ -4808,14 +5579,14 @@ export type EpisodesImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodesImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodesImage` edge in the connection. */
 export type EpisodesImagesEdge = {
   __typename?: 'EpisodesImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodesImage` at the end of the edge. */
   node: EpisodesImage;
 };
@@ -4836,28 +5607,28 @@ export enum EpisodesImagesOrderBy {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodesLicense = {
   __typename?: 'EpisodesLicense';
-  createdDate: Scalars['Datetime'];
+  createdDate: Scalars['Datetime']['output'];
   /** Reads a single `Episode` that is related to this `EpisodesLicense`. */
   episode?: Maybe<Episode>;
-  episodeId: Scalars['Int'];
+  episodeId: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `EpisodesLicensesCountry`. */
   episodesLicensesCountries: EpisodesLicensesCountriesConnection;
-  id: Scalars['Int'];
-  licenseEnd?: Maybe<Scalars['Datetime']>;
-  licenseStart?: Maybe<Scalars['Datetime']>;
-  updatedDate: Scalars['Datetime'];
+  id: Scalars['Int']['output'];
+  licenseEnd?: Maybe<Scalars['Datetime']['output']>;
+  licenseStart?: Maybe<Scalars['Datetime']['output']>;
+  updatedDate: Scalars['Datetime']['output'];
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type EpisodesLicenseEpisodesLicensesCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesLicensesCountryCondition>;
   filter?: InputMaybe<EpisodesLicensesCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesLicensesCountriesOrderBy>>;
 };
 
@@ -4867,17 +5638,17 @@ export type EpisodesLicenseEpisodesLicensesCountriesArgs = {
  */
 export type EpisodesLicenseCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['Int']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `licenseEnd` field. */
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `licenseStart` field. */
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A filter to be used against `EpisodesLicense` object types. All fields are combined with a logical ‘and.’ */
@@ -4893,7 +5664,7 @@ export type EpisodesLicenseFilter = {
   /** Filter by the object’s `episodesLicensesCountries` relation. */
   episodesLicensesCountries?: InputMaybe<EpisodesLicenseToManyEpisodesLicensesCountryFilter>;
   /** Some related `episodesLicensesCountries` exist. */
-  episodesLicensesCountriesExist?: InputMaybe<Scalars['Boolean']>;
+  episodesLicensesCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `licenseEnd` field. */
@@ -4910,16 +5681,16 @@ export type EpisodesLicenseFilter = {
 
 /** An input for mutations affecting `EpisodesLicense` */
 export type EpisodesLicenseInput = {
-  episodeId: Scalars['Int'];
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
+  episodeId: Scalars['Int']['input'];
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Represents an update to a `EpisodesLicense`. Fields that are set will be updated. */
 export type EpisodesLicensePatch = {
-  episodeId?: InputMaybe<Scalars['Int']>;
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /**
@@ -4935,7 +5706,7 @@ export type EpisodesLicensesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodesLicense` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /**
@@ -4951,14 +5722,14 @@ export type EpisodesLicensesCountriesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodesLicensesCountry` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodesLicensesCountry` edge in the connection. */
 export type EpisodesLicensesCountriesEdge = {
   __typename?: 'EpisodesLicensesCountriesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodesLicensesCountry` at the end of the edge. */
   node: EpisodesLicensesCountry;
 };
@@ -4980,7 +5751,7 @@ export type EpisodesLicensesCountry = {
   code: IsoAlphaTwoCountryCodes;
   /** Reads a single `EpisodesLicense` that is related to this `EpisodesLicensesCountry`. */
   episodesLicense?: Maybe<EpisodesLicense>;
-  episodesLicenseId: Scalars['Int'];
+  episodesLicenseId: Scalars['Int']['output'];
 };
 
 /**
@@ -4991,7 +5762,7 @@ export type EpisodesLicensesCountryCondition = {
   /** Checks for equality with the object’s `code` field. */
   code?: InputMaybe<IsoAlphaTwoCountryCodes>;
   /** Checks for equality with the object’s `episodesLicenseId` field. */
-  episodesLicenseId?: InputMaybe<Scalars['Int']>;
+  episodesLicenseId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `EpisodesLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
@@ -5013,7 +5784,7 @@ export type EpisodesLicensesCountryFilter = {
 /** An input for mutations affecting `EpisodesLicensesCountry` */
 export type EpisodesLicensesCountryInput = {
   code: IsoAlphaTwoCountryCodes;
-  episodesLicenseId: Scalars['Int'];
+  episodesLicenseId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `EpisodesLicensesCountry`. Fields that are set will be updated. */
@@ -5025,7 +5796,7 @@ export type EpisodesLicensesCountryPatch = {
 export type EpisodesLicensesEdge = {
   __typename?: 'EpisodesLicensesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodesLicense` at the end of the edge. */
   node: EpisodesLicense;
 };
@@ -5061,18 +5832,36 @@ export type EpisodesLicenseToManyEpisodesLicensesCountryFilter = {
 
 /** Methods to use when ordering `Episode`. */
 export enum EpisodesOrderBy {
+  AgeRatingAsc = 'AGE_RATING_ASC',
+  AgeRatingDesc = 'AGE_RATING_DESC',
+  AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
+  AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
+  BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
+  BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
+  ContentOwnerAsc = 'CONTENT_OWNER_ASC',
+  ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
+  CreditsStartTimeAsc = 'CREDITS_START_TIME_ASC',
+  CreditsStartTimeDesc = 'CREDITS_START_TIME_DESC',
+  CustomRatingAsc = 'CUSTOM_RATING_ASC',
+  CustomRatingDesc = 'CUSTOM_RATING_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  DynamicFieldAsc = 'DYNAMIC_FIELD_ASC',
+  DynamicFieldDesc = 'DYNAMIC_FIELD_DESC',
+  ExtendedFieldAsc = 'EXTENDED_FIELD_ASC',
+  ExtendedFieldDesc = 'EXTENDED_FIELD_DESC',
   ExternalIdAsc = 'EXTERNAL_ID_ASC',
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   IndexAsc = 'INDEX_ASC',
   IndexDesc = 'INDEX_DESC',
+  LengthInSecondsAsc = 'LENGTH_IN_SECONDS_ASC',
+  LengthInSecondsDesc = 'LENGTH_IN_SECONDS_DESC',
   MainVideoIdAsc = 'MAIN_VIDEO_ID_ASC',
   MainVideoIdDesc = 'MAIN_VIDEO_ID_DESC',
   Natural = 'NATURAL',
@@ -5086,6 +5875,8 @@ export enum EpisodesOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  RatingAsc = 'RATING_ASC',
+  RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   SeasonIdAsc = 'SEASON_ID_ASC',
@@ -5115,14 +5906,14 @@ export type EpisodesProductionCountriesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodesProductionCountry` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodesProductionCountry` edge in the connection. */
 export type EpisodesProductionCountriesEdge = {
   __typename?: 'EpisodesProductionCountriesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodesProductionCountry` at the end of the edge. */
   node: EpisodesProductionCountry;
 };
@@ -5143,8 +5934,8 @@ export type EpisodesProductionCountry = {
   __typename?: 'EpisodesProductionCountry';
   /** Reads a single `Episode` that is related to this `EpisodesProductionCountry`. */
   episode?: Maybe<Episode>;
-  episodeId: Scalars['Int'];
-  name: Scalars['String'];
+  episodeId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 /**
@@ -5153,12 +5944,12 @@ export type EpisodesProductionCountry = {
  */
 export type EpisodesProductionCountryCondition = {
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['Int']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `EpisodesProductionCountry` object types. All fields are combined with a logical ‘and.’ */
@@ -5179,15 +5970,15 @@ export type EpisodesProductionCountryFilter = {
 
 /** An input for mutations affecting `EpisodesProductionCountry` */
 export type EpisodesProductionCountryInput = {
-  episodeId: Scalars['Int'];
+  episodeId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `EpisodesProductionCountry`. Fields that are set will be updated. */
 export type EpisodesProductionCountryPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
@@ -5195,10 +5986,10 @@ export type EpisodesSnapshot = {
   __typename?: 'EpisodesSnapshot';
   /** Reads a single `Episode` that is related to this `EpisodesSnapshot`. */
   episode?: Maybe<Episode>;
-  episodeId: Scalars['Int'];
+  episodeId: Scalars['Int']['output'];
   /** Reads a single `Snapshot` that is related to this `EpisodesSnapshot`. */
   snapshot?: Maybe<Snapshot>;
-  snapshotId: Scalars['Int'];
+  snapshotId: Scalars['Int']['output'];
 };
 
 /**
@@ -5207,9 +5998,9 @@ export type EpisodesSnapshot = {
  */
 export type EpisodesSnapshotCondition = {
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['Int']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `snapshotId` field. */
-  snapshotId?: InputMaybe<Scalars['Int']>;
+  snapshotId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `EpisodesSnapshot` object types. All fields are combined with a logical ‘and.’ */
@@ -5243,14 +6034,14 @@ export type EpisodesSnapshotsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodesSnapshot` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodesSnapshot` edge in the connection. */
 export type EpisodesSnapshotsEdge = {
   __typename?: 'EpisodesSnapshotsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodesSnapshot` at the end of the edge. */
   node: EpisodesSnapshot;
 };
@@ -5271,8 +6062,8 @@ export type EpisodesTag = {
   __typename?: 'EpisodesTag';
   /** Reads a single `Episode` that is related to this `EpisodesTag`. */
   episode?: Maybe<Episode>;
-  episodeId: Scalars['Int'];
-  name: Scalars['String'];
+  episodeId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 /**
@@ -5281,12 +6072,12 @@ export type EpisodesTag = {
  */
 export type EpisodesTagCondition = {
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['Int']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `EpisodesTag` object types. All fields are combined with a logical ‘and.’ */
@@ -5307,15 +6098,15 @@ export type EpisodesTagFilter = {
 
 /** An input for mutations affecting `EpisodesTag` */
 export type EpisodesTagInput = {
-  episodeId: Scalars['Int'];
+  episodeId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `EpisodesTag`. Fields that are set will be updated. */
 export type EpisodesTagPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -5331,14 +6122,14 @@ export type EpisodesTagsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodesTag` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodesTag` edge in the connection. */
 export type EpisodesTagsEdge = {
   __typename?: 'EpisodesTagsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodesTag` at the end of the edge. */
   node: EpisodesTag;
 };
@@ -5359,8 +6150,8 @@ export type EpisodesTrailer = {
   __typename?: 'EpisodesTrailer';
   /** Reads a single `Episode` that is related to this `EpisodesTrailer`. */
   episode?: Maybe<Episode>;
-  episodeId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  episodeId: Scalars['Int']['output'];
+  videoId: Scalars['UUID']['output'];
 };
 
 /**
@@ -5369,9 +6160,9 @@ export type EpisodesTrailer = {
  */
 export type EpisodesTrailerCondition = {
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['Int']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['UUID']>;
+  videoId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A filter to be used against `EpisodesTrailer` object types. All fields are combined with a logical ‘and.’ */
@@ -5392,8 +6183,8 @@ export type EpisodesTrailerFilter = {
 
 /** An input for mutations affecting `EpisodesTrailer` */
 export type EpisodesTrailerInput = {
-  episodeId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  episodeId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 /**
@@ -5409,14 +6200,14 @@ export type EpisodesTrailersConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodesTrailer` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodesTrailer` edge in the connection. */
 export type EpisodesTrailersEdge = {
   __typename?: 'EpisodesTrailersEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodesTrailer` at the end of the edge. */
   node: EpisodesTrailer;
 };
@@ -5437,10 +6228,10 @@ export type EpisodesTvshowGenre = {
   __typename?: 'EpisodesTvshowGenre';
   /** Reads a single `Episode` that is related to this `EpisodesTvshowGenre`. */
   episode?: Maybe<Episode>;
-  episodeId: Scalars['Int'];
+  episodeId: Scalars['Int']['output'];
   /** Reads a single `TvshowGenre` that is related to this `EpisodesTvshowGenre`. */
   tvshowGenres?: Maybe<TvshowGenre>;
-  tvshowGenresId: Scalars['Int'];
+  tvshowGenresId: Scalars['Int']['output'];
 };
 
 /**
@@ -5449,9 +6240,9 @@ export type EpisodesTvshowGenre = {
  */
 export type EpisodesTvshowGenreCondition = {
   /** Checks for equality with the object’s `episodeId` field. */
-  episodeId?: InputMaybe<Scalars['Int']>;
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tvshowGenresId` field. */
-  tvshowGenresId?: InputMaybe<Scalars['Int']>;
+  tvshowGenresId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `EpisodesTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
@@ -5474,8 +6265,8 @@ export type EpisodesTvshowGenreFilter = {
 
 /** An input for mutations affecting `EpisodesTvshowGenre` */
 export type EpisodesTvshowGenreInput = {
-  episodeId: Scalars['Int'];
-  tvshowGenresId: Scalars['Int'];
+  episodeId: Scalars['Int']['input'];
+  tvshowGenresId: Scalars['Int']['input'];
 };
 
 /**
@@ -5491,14 +6282,14 @@ export type EpisodesTvshowGenresConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `EpisodesTvshowGenre` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `EpisodesTvshowGenre` edge in the connection. */
 export type EpisodesTvshowGenresEdge = {
   __typename?: 'EpisodesTvshowGenresEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `EpisodesTvshowGenre` at the end of the edge. */
   node: EpisodesTvshowGenre;
 };
@@ -5545,9 +6336,9 @@ export type EpisodeSubscriptionPayload = {
   __typename?: 'EpisodeSubscriptionPayload';
   episode?: Maybe<Episode>;
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<EpisodeSubscriptionEventKey>;
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
 };
 
 /** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
@@ -5568,6 +6359,16 @@ export type EpisodeToManyEpisodesCastFilter = {
   none?: InputMaybe<EpisodesCastFilter>;
   /** Some related `EpisodesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<EpisodesCastFilter>;
+};
+
+/** A filter to be used against many `EpisodesDirector` object types. All fields are combined with a logical ‘and.’ */
+export type EpisodeToManyEpisodesDirectorFilter = {
+  /** Every related `EpisodesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodesDirectorFilter>;
+  /** No related `EpisodesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodesDirectorFilter>;
+  /** Some related `EpisodesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodesDirectorFilter>;
 };
 
 /** A filter to be used against many `EpisodesImage` object types. All fields are combined with a logical ‘and.’ */
@@ -5752,9 +6553,9 @@ export enum ErrorCodesEnum {
 export type GetCollectionsTagsValueEdge = {
   __typename?: 'GetCollectionsTagsValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5763,18 +6564,18 @@ export type GetCollectionsTagsValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetCollectionsTagsValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetEpisodesCastsValueEdge = {
   __typename?: 'GetEpisodesCastsValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5783,18 +6584,18 @@ export type GetEpisodesCastsValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetEpisodesCastsValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetEpisodesProductionCountriesValueEdge = {
   __typename?: 'GetEpisodesProductionCountriesValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5803,18 +6604,18 @@ export type GetEpisodesProductionCountriesValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetEpisodesProductionCountriesValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetEpisodesTagsValueEdge = {
   __typename?: 'GetEpisodesTagsValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5823,18 +6624,18 @@ export type GetEpisodesTagsValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetEpisodesTagsValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetMoviesCastsValueEdge = {
   __typename?: 'GetMoviesCastsValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5843,18 +6644,38 @@ export type GetMoviesCastsValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetMoviesCastsValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `String` edge in the connection. */
+export type GetMoviesDirectorsValueEdge = {
+  __typename?: 'GetMoviesDirectorsValueEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']['output']>;
+};
+
+/** A connection to a list of `String` values. */
+export type GetMoviesDirectorsValuesConnection = {
+  __typename?: 'GetMoviesDirectorsValuesConnection';
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<GetMoviesDirectorsValueEdge>;
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']['output']>>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetMoviesProductionCountriesValueEdge = {
   __typename?: 'GetMoviesProductionCountriesValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5863,18 +6684,18 @@ export type GetMoviesProductionCountriesValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetMoviesProductionCountriesValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetMoviesTagsValueEdge = {
   __typename?: 'GetMoviesTagsValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5883,18 +6704,18 @@ export type GetMoviesTagsValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetMoviesTagsValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetSeasonsCastsValueEdge = {
   __typename?: 'GetSeasonsCastsValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5903,18 +6724,18 @@ export type GetSeasonsCastsValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetSeasonsCastsValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetSeasonsProductionCountriesValueEdge = {
   __typename?: 'GetSeasonsProductionCountriesValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5923,18 +6744,18 @@ export type GetSeasonsProductionCountriesValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetSeasonsProductionCountriesValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetSeasonsTagsValueEdge = {
   __typename?: 'GetSeasonsTagsValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5943,18 +6764,18 @@ export type GetSeasonsTagsValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetSeasonsTagsValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetTvshowsCastsValueEdge = {
   __typename?: 'GetTvshowsCastsValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5963,18 +6784,18 @@ export type GetTvshowsCastsValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetTvshowsCastsValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetTvshowsProductionCountriesValueEdge = {
   __typename?: 'GetTvshowsProductionCountriesValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -5983,18 +6804,18 @@ export type GetTvshowsProductionCountriesValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetTvshowsProductionCountriesValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `String` edge in the connection. */
 export type GetTvshowsTagsValueEdge = {
   __typename?: 'GetTvshowsTagsValueEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
+  node?: Maybe<Scalars['String']['output']>;
 };
 
 /** A connection to a list of `String` values. */
@@ -6003,43 +6824,43 @@ export type GetTvshowsTagsValuesConnection = {
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetTvshowsTagsValueEdge>;
   /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
+  nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** @permissions: INGESTS_VIEW,INGESTS_EDIT,ADMIN */
 export type IngestDocument = {
   __typename?: 'IngestDocument';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  document: Scalars['IngestDocumentObject'];
-  documentCreated?: Maybe<Scalars['Datetime']>;
-  errorCount: Scalars['Int'];
-  errors: Array<Maybe<Scalars['JSON']>>;
-  id: Scalars['Int'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  document: Scalars['IngestDocumentObject']['output'];
+  documentCreated?: Maybe<Scalars['Datetime']['output']>;
+  errorCount: Scalars['Int']['output'];
+  errors: Array<Maybe<Scalars['JSON']['output']>>;
+  id: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `IngestItem`. */
   ingestItems: IngestItemsConnection;
-  inProgressCount: Scalars['Int'];
-  itemsCount: Scalars['Int'];
-  name: Scalars['String'];
+  inProgressCount: Scalars['Int']['output'];
+  itemsCount: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
   status: IngestStatus;
-  successCount: Scalars['Int'];
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  successCount: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: INGESTS_VIEW,INGESTS_EDIT,ADMIN */
 export type IngestDocumentIngestItemsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<IngestItemCondition>;
   filter?: InputMaybe<IngestItemFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<IngestItemsOrderBy>>;
 };
 
@@ -6049,39 +6870,39 @@ export type IngestDocumentIngestItemsArgs = {
  */
 export type IngestDocumentCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `document` field. */
-  document?: InputMaybe<Scalars['IngestDocumentObject']>;
+  document?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Checks for equality with the object’s `documentCreated` field. */
-  documentCreated?: InputMaybe<Scalars['Datetime']>;
+  documentCreated?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `errorCount` field. */
-  errorCount?: InputMaybe<Scalars['Int']>;
+  errorCount?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `errors` field. */
-  errors?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  errors?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `inProgressCount` field. */
-  inProgressCount?: InputMaybe<Scalars['Int']>;
+  inProgressCount?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `itemsCount` field. */
-  itemsCount?: InputMaybe<Scalars['Int']>;
+  itemsCount?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `name` field. */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `status` field. */
   status?: InputMaybe<IngestStatus>;
   /** Checks for equality with the object’s `successCount` field. */
-  successCount?: InputMaybe<Scalars['Int']>;
+  successCount?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `title` field.
    * @maxLength(50)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `IngestDocument` object types. All fields are combined with a logical ‘and.’ */
@@ -6105,7 +6926,7 @@ export type IngestDocumentFilter = {
   /** Filter by the object’s `ingestItems` relation. */
   ingestItems?: InputMaybe<IngestDocumentToManyIngestItemFilter>;
   /** Some related `ingestItems` exist. */
-  ingestItemsExist?: InputMaybe<Scalars['Boolean']>;
+  ingestItemsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `inProgressCount` field. */
   inProgressCount?: InputMaybe<IntFilter>;
   /** Filter by the object’s `itemsCount` field. */
@@ -6131,37 +6952,37 @@ export type IngestDocumentFilter = {
 /** A filter to be used against IngestDocumentObject fields. All fields are combined with a logical ‘and.’ */
 export type IngestDocumentObjectFilter = {
   /** Contained by the specified JSON. */
-  containedBy?: InputMaybe<Scalars['IngestDocumentObject']>;
+  containedBy?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Contains the specified JSON. */
-  contains?: InputMaybe<Scalars['IngestDocumentObject']>;
+  contains?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Contains all of the specified keys. */
-  containsAllKeys?: InputMaybe<Array<Scalars['String']>>;
+  containsAllKeys?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Contains any of the specified keys. */
-  containsAnyKeys?: InputMaybe<Array<Scalars['String']>>;
+  containsAnyKeys?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Contains the specified key. */
-  containsKey?: InputMaybe<Scalars['String']>;
+  containsKey?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['IngestDocumentObject']>;
+  distinctFrom?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['IngestDocumentObject']>;
+  equalTo?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['IngestDocumentObject']>;
+  greaterThan?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['IngestDocumentObject']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['IngestDocumentObject']>>;
+  in?: InputMaybe<Array<Scalars['IngestDocumentObject']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['IngestDocumentObject']>;
+  lessThan?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['IngestDocumentObject']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['IngestDocumentObject']>;
+  notDistinctFrom?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['IngestDocumentObject']>;
+  notEqualTo?: InputMaybe<Scalars['IngestDocumentObject']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['IngestDocumentObject']>>;
+  notIn?: InputMaybe<Array<Scalars['IngestDocumentObject']['input']>>;
 };
 
 /** Represents an update to a `IngestDocument`. Fields that are set will be updated. */
@@ -6170,7 +6991,7 @@ export type IngestDocumentPatch = {
    * @maxLength(50)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -6186,14 +7007,14 @@ export type IngestDocumentsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `IngestDocument` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `IngestDocument` edge in the connection. */
 export type IngestDocumentsEdge = {
   __typename?: 'IngestDocumentsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `IngestDocument` at the end of the edge. */
   node: IngestDocument;
 };
@@ -6247,9 +7068,9 @@ export enum IngestDocumentSubscriptionEventKey {
 export type IngestDocumentSubscriptionPayload = {
   __typename?: 'IngestDocumentSubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<IngestDocumentSubscriptionEventKey>;
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
   ingestDocument?: Maybe<IngestDocument>;
 };
 
@@ -6285,7 +7106,7 @@ export type IngestEntityExistsStatusFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<IngestEntityExistsStatus>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<IngestEntityExistsStatus>;
   /** Less than or equal to the specified value. */
@@ -6301,37 +7122,37 @@ export type IngestEntityExistsStatusFilter = {
 /** @permissions: INGESTS_VIEW,INGESTS_EDIT,ADMIN */
 export type IngestItem = {
   __typename?: 'IngestItem';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  displayTitle: Scalars['String'];
-  entityId: Scalars['Int'];
-  errors: Array<Maybe<Scalars['JSON']>>;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  displayTitle: Scalars['String']['output'];
+  entityId: Scalars['Int']['output'];
+  errors: Array<Maybe<Scalars['JSON']['output']>>;
   existsStatus: IngestEntityExistsStatus;
-  externalId: Scalars['String'];
-  id: Scalars['Int'];
+  externalId: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
   /** Reads a single `IngestDocument` that is related to this `IngestItem`. */
   ingestDocument?: Maybe<IngestDocument>;
-  ingestDocumentId: Scalars['Int'];
+  ingestDocumentId: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `IngestItemStep`. */
   ingestItemSteps: IngestItemStepsConnection;
-  item: Scalars['IngestItemObject'];
-  processedTrailerIds: Array<Maybe<Scalars['UUID']>>;
+  item: Scalars['IngestItemObject']['output'];
+  processedTrailerIds: Array<Maybe<Scalars['UUID']['output']>>;
   status: IngestItemStatus;
   type: IngestItemType;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: INGESTS_VIEW,INGESTS_EDIT,ADMIN */
 export type IngestItemIngestItemStepsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<IngestItemStepCondition>;
   filter?: InputMaybe<IngestItemStepFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<IngestItemStepsOrderBy>>;
 };
 
@@ -6341,35 +7162,35 @@ export type IngestItemIngestItemStepsArgs = {
  */
 export type IngestItemCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `displayTitle` field. */
-  displayTitle?: InputMaybe<Scalars['String']>;
+  displayTitle?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `entityId` field. */
-  entityId?: InputMaybe<Scalars['Int']>;
+  entityId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `errors` field. */
-  errors?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  errors?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Checks for equality with the object’s `existsStatus` field. */
   existsStatus?: InputMaybe<IngestEntityExistsStatus>;
   /** Checks for equality with the object’s `externalId` field. */
-  externalId?: InputMaybe<Scalars['String']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `ingestDocumentId` field. */
-  ingestDocumentId?: InputMaybe<Scalars['Int']>;
+  ingestDocumentId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `item` field. */
-  item?: InputMaybe<Scalars['IngestItemObject']>;
+  item?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Checks for equality with the object’s `processedTrailerIds` field. */
-  processedTrailerIds?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  processedTrailerIds?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Checks for equality with the object’s `status` field. */
   status?: InputMaybe<IngestItemStatus>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<IngestItemType>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `IngestItem` object types. All fields are combined with a logical ‘and.’ */
@@ -6399,7 +7220,7 @@ export type IngestItemFilter = {
   /** Filter by the object’s `ingestItemSteps` relation. */
   ingestItemSteps?: InputMaybe<IngestItemToManyIngestItemStepFilter>;
   /** Some related `ingestItemSteps` exist. */
-  ingestItemStepsExist?: InputMaybe<Scalars['Boolean']>;
+  ingestItemStepsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `item` field. */
   item?: InputMaybe<IngestItemObjectFilter>;
   /** Negates the expression. */
@@ -6421,37 +7242,37 @@ export type IngestItemFilter = {
 /** A filter to be used against IngestItemObject fields. All fields are combined with a logical ‘and.’ */
 export type IngestItemObjectFilter = {
   /** Contained by the specified JSON. */
-  containedBy?: InputMaybe<Scalars['IngestItemObject']>;
+  containedBy?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Contains the specified JSON. */
-  contains?: InputMaybe<Scalars['IngestItemObject']>;
+  contains?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Contains all of the specified keys. */
-  containsAllKeys?: InputMaybe<Array<Scalars['String']>>;
+  containsAllKeys?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Contains any of the specified keys. */
-  containsAnyKeys?: InputMaybe<Array<Scalars['String']>>;
+  containsAnyKeys?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Contains the specified key. */
-  containsKey?: InputMaybe<Scalars['String']>;
+  containsKey?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['IngestItemObject']>;
+  distinctFrom?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['IngestItemObject']>;
+  equalTo?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['IngestItemObject']>;
+  greaterThan?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['IngestItemObject']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['IngestItemObject']>>;
+  in?: InputMaybe<Array<Scalars['IngestItemObject']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['IngestItemObject']>;
+  lessThan?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['IngestItemObject']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['IngestItemObject']>;
+  notDistinctFrom?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['IngestItemObject']>;
+  notEqualTo?: InputMaybe<Scalars['IngestItemObject']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['IngestItemObject']>>;
+  notIn?: InputMaybe<Array<Scalars['IngestItemObject']['input']>>;
 };
 
 /**
@@ -6467,14 +7288,14 @@ export type IngestItemsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `IngestItem` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `IngestItem` edge in the connection. */
 export type IngestItemsEdge = {
   __typename?: 'IngestItemsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `IngestItem` at the end of the edge. */
   node: IngestItem;
 };
@@ -6538,7 +7359,7 @@ export type IngestItemStatusFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<IngestItemStatus>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<IngestItemStatus>;
   /** Less than or equal to the specified value. */
@@ -6554,19 +7375,19 @@ export type IngestItemStatusFilter = {
 /** @permissions: INGESTS_VIEW,INGESTS_EDIT,ADMIN */
 export type IngestItemStep = {
   __typename?: 'IngestItemStep';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  entityId?: Maybe<Scalars['String']>;
-  id: Scalars['UUID'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  entityId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['UUID']['output'];
   /** Reads a single `IngestItem` that is related to this `IngestItemStep`. */
   ingestItem?: Maybe<IngestItem>;
-  ingestItemId: Scalars['Int'];
-  responseMessage?: Maybe<Scalars['String']>;
+  ingestItemId: Scalars['Int']['output'];
+  responseMessage?: Maybe<Scalars['String']['output']>;
   status: IngestItemStepStatus;
-  subType: Scalars['String'];
+  subType: Scalars['String']['output'];
   type: IngestItemStepType;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 /**
@@ -6575,27 +7396,27 @@ export type IngestItemStep = {
  */
 export type IngestItemStepCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `entityId` field. */
-  entityId?: InputMaybe<Scalars['String']>;
+  entityId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['UUID']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `ingestItemId` field. */
-  ingestItemId?: InputMaybe<Scalars['Int']>;
+  ingestItemId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `responseMessage` field. */
-  responseMessage?: InputMaybe<Scalars['String']>;
+  responseMessage?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `status` field. */
   status?: InputMaybe<IngestItemStepStatus>;
   /** Checks for equality with the object’s `subType` field. */
-  subType?: InputMaybe<Scalars['String']>;
+  subType?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<IngestItemStepType>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `IngestItemStep` object types. All fields are combined with a logical ‘and.’ */
@@ -6645,14 +7466,14 @@ export type IngestItemStepsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `IngestItemStep` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `IngestItemStep` edge in the connection. */
 export type IngestItemStepsEdge = {
   __typename?: 'IngestItemStepsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `IngestItemStep` at the end of the edge. */
   node: IngestItemStep;
 };
@@ -6708,7 +7529,7 @@ export type IngestItemStepStatusFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<IngestItemStepStatus>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<IngestItemStepStatus>;
   /** Less than or equal to the specified value. */
@@ -6745,7 +7566,7 @@ export type IngestItemStepTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<IngestItemStepType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<IngestItemStepType>;
   /** Less than or equal to the specified value. */
@@ -6792,7 +7613,7 @@ export type IngestItemTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<IngestItemType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<IngestItemType>;
   /** Less than or equal to the specified value. */
@@ -6829,7 +7650,7 @@ export type IngestStatusFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<IngestStatus>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<IngestStatus>;
   /** Less than or equal to the specified value. */
@@ -6845,27 +7666,27 @@ export type IngestStatusFilter = {
 /** A filter to be used against Int fields. All fields are combined with a logical ‘and.’ */
 export type IntFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['Int']>;
+  distinctFrom?: InputMaybe<Scalars['Int']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['Int']>;
+  equalTo?: InputMaybe<Scalars['Int']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['Int']>;
+  greaterThan?: InputMaybe<Scalars['Int']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['Int']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['Int']>>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['Int']>;
+  lessThan?: InputMaybe<Scalars['Int']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['Int']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['Int']>;
+  notDistinctFrom?: InputMaybe<Scalars['Int']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['Int']>;
+  notEqualTo?: InputMaybe<Scalars['Int']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['Int']>>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
 export enum IsoAlphaTwoCountryCodes {
@@ -7133,7 +7954,7 @@ export type IsoAlphaTwoCountryCodesFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<IsoAlphaTwoCountryCodes>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<IsoAlphaTwoCountryCodes>;
   /** Less than or equal to the specified value. */
@@ -7149,56 +7970,213 @@ export type IsoAlphaTwoCountryCodesFilter = {
 /** A filter to be used against JSON List fields. All fields are combined with a logical ‘and.’ */
 export type JsonListFilter = {
   /** Any array item is equal to the specified value. */
-  anyEqualTo?: InputMaybe<Scalars['JSON']>;
+  anyEqualTo?: InputMaybe<Scalars['JSON']['input']>;
   /** Any array item is greater than the specified value. */
-  anyGreaterThan?: InputMaybe<Scalars['JSON']>;
+  anyGreaterThan?: InputMaybe<Scalars['JSON']['input']>;
   /** Any array item is greater than or equal to the specified value. */
-  anyGreaterThanOrEqualTo?: InputMaybe<Scalars['JSON']>;
+  anyGreaterThanOrEqualTo?: InputMaybe<Scalars['JSON']['input']>;
   /** Any array item is less than the specified value. */
-  anyLessThan?: InputMaybe<Scalars['JSON']>;
+  anyLessThan?: InputMaybe<Scalars['JSON']['input']>;
   /** Any array item is less than or equal to the specified value. */
-  anyLessThanOrEqualTo?: InputMaybe<Scalars['JSON']>;
+  anyLessThanOrEqualTo?: InputMaybe<Scalars['JSON']['input']>;
   /** Any array item is not equal to the specified value. */
-  anyNotEqualTo?: InputMaybe<Scalars['JSON']>;
+  anyNotEqualTo?: InputMaybe<Scalars['JSON']['input']>;
   /** Contained by the specified list of values. */
-  containedBy?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  containedBy?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Contains the specified list of values. */
-  contains?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  contains?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  distinctFrom?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  equalTo?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  greaterThan?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  greaterThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  lessThan?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  lessThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  notDistinctFrom?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  notEqualTo?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   /** Overlaps the specified list of values. */
-  overlaps?: InputMaybe<Array<InputMaybe<Scalars['JSON']>>>;
+  overlaps?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
 };
+
+/** @permissions: LANGUAGES_VIEW,LANGUAGES_EDIT,ADMIN */
+export type Language = {
+  __typename?: 'Language';
+  code: Scalars['String']['output'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  native?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `Language` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type LanguageCondition = {
+  /**
+   * Checks for equality with the object’s `code` field.
+   * @isTrimmed()
+   * @maxLength(10)
+   * @notEmpty()
+   */
+  code?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdDate` field. */
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdUser` field. */
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `native` field. */
+  native?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Checks for equality with the object’s `title` field.
+   * @notEmpty()
+   */
+  title?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `Language` object types. All fields are combined with a logical ‘and.’ */
+export type LanguageFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<LanguageFilter>>;
+  /** Filter by the object’s `code` field. */
+  code?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `native` field. */
+  native?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<LanguageFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<LanguageFilter>>;
+  /** Filter by the object’s `title` field. */
+  title?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/** An input for mutations affecting `Language` */
+export type LanguageInput = {
+  /**
+   * @isTrimmed()
+   * @maxLength(10)
+   * @notEmpty()
+   */
+  code: Scalars['String']['input'];
+  native?: InputMaybe<Scalars['String']['input']>;
+  /** @notEmpty() */
+  title: Scalars['String']['input'];
+};
+
+/** Represents an update to a `Language`. Fields that are set will be updated. */
+export type LanguagePatch = {
+  /**
+   * @isTrimmed()
+   * @maxLength(10)
+   * @notEmpty()
+   */
+  code?: InputMaybe<Scalars['String']['input']>;
+  native?: InputMaybe<Scalars['String']['input']>;
+  /** @notEmpty() */
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+/**
+ * A connection to a list of `Language` values.
+ * @permissions: LANGUAGES_VIEW,LANGUAGES_EDIT,ADMIN
+ */
+export type LanguagesConnection = {
+  __typename?: 'LanguagesConnection';
+  /** A list of edges which contains the `Language` and cursor to aid in pagination. */
+  edges: Array<LanguagesEdge>;
+  /** A list of `Language` objects. */
+  nodes: Array<Language>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Language` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Language` edge in the connection. */
+export type LanguagesEdge = {
+  __typename?: 'LanguagesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Language` at the end of the edge. */
+  node: Language;
+};
+
+/** Methods to use when ordering `Language`. */
+export enum LanguagesOrderBy {
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NativeAsc = 'NATIVE_ASC',
+  NativeDesc = 'NATIVE_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type Movie = {
   __typename?: 'Movie';
+  ageRating?: Maybe<Scalars['String']['output']>;
+  assetSubtype: AssetSubtype;
+  audioLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  businessType: BusinessType;
+  captionLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  externalId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  mainVideoId?: Maybe<Scalars['UUID']>;
+  contentOwner?: Maybe<Scalars['String']['output']>;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  creditsStartTime?: Maybe<Scalars['String']['output']>;
+  customRating?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  dynamicField?: Maybe<Scalars['String']['output']>;
+  extendedField?: Maybe<Scalars['String']['output']>;
+  externalId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  lengthInSeconds?: Maybe<Scalars['BigFloat']['output']>;
+  mainVideoId?: Maybe<Scalars['UUID']['output']>;
   /** Reads and enables pagination through a set of `MoviesCast`. */
   moviesCasts: MoviesCastsConnection;
+  /** Reads and enables pagination through a set of `MoviesDirector`. */
+  moviesDirectors: MoviesDirectorsConnection;
   /** Reads and enables pagination through a set of `MoviesImage`. */
   moviesImages: MoviesImagesConnection;
   /** Reads and enables pagination through a set of `MoviesLicense`. */
@@ -7213,227 +8191,294 @@ export type Movie = {
   moviesTags: MoviesTagsConnection;
   /** Reads and enables pagination through a set of `MoviesTrailer`. */
   moviesTrailers: MoviesTrailersConnection;
-  originalTitle?: Maybe<Scalars['String']>;
-  publishedDate?: Maybe<Scalars['Datetime']>;
-  publishedUser?: Maybe<Scalars['String']>;
+  originalTitle?: Maybe<Scalars['String']['output']>;
+  publishedDate?: Maybe<Scalars['Datetime']['output']>;
+  publishedUser?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
-  released?: Maybe<Scalars['Date']>;
-  studio?: Maybe<Scalars['String']>;
-  synopsis?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  rating?: Maybe<Scalars['BigFloat']['output']>;
+  released?: Maybe<Scalars['Date']['output']>;
+  studio?: Maybe<Scalars['String']['output']>;
+  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  synopsis?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MovieCollectionRelationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionRelationCondition>;
   filter?: InputMaybe<CollectionRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionRelationsOrderBy>>;
 };
 
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MovieMoviesCastsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesCastCondition>;
   filter?: InputMaybe<MoviesCastFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesCastsOrderBy>>;
 };
 
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
+export type MovieMoviesDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<MoviesDirectorCondition>;
+  filter?: InputMaybe<MoviesDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MoviesDirectorsOrderBy>>;
+};
+
+
+/** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MovieMoviesImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesImageCondition>;
   filter?: InputMaybe<MoviesImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesImagesOrderBy>>;
 };
 
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MovieMoviesLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesLicenseCondition>;
   filter?: InputMaybe<MoviesLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesLicensesOrderBy>>;
 };
 
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MovieMoviesMovieGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesMovieGenreCondition>;
   filter?: InputMaybe<MoviesMovieGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesMovieGenresOrderBy>>;
 };
 
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MovieMoviesProductionCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesProductionCountryCondition>;
   filter?: InputMaybe<MoviesProductionCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesProductionCountriesOrderBy>>;
 };
 
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MovieMoviesSnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesSnapshotCondition>;
   filter?: InputMaybe<MoviesSnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesSnapshotsOrderBy>>;
 };
 
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MovieMoviesTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesTagCondition>;
   filter?: InputMaybe<MoviesTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesTagsOrderBy>>;
 };
 
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MovieMoviesTrailersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesTrailerCondition>;
   filter?: InputMaybe<MoviesTrailerFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesTrailersOrderBy>>;
 };
 
 /** A condition to be used against `Movie` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type MovieCondition = {
+  /** Checks for equality with the object’s `ageRating` field. */
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  /** Checks for equality with the object’s `audioLanguages` field. */
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Checks for equality with the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessType>;
+  /** Checks for equality with the object’s `captionLanguages` field. */
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Checks for equality with the object’s `contentOwner` field. */
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `customRating` field. */
+  customRating?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `extendedField` field. */
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
-  externalId?: InputMaybe<Scalars['String']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `mainVideoId` field. */
-  mainVideoId?: InputMaybe<Scalars['UUID']>;
+  mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `originalTitle` field. */
-  originalTitle?: InputMaybe<Scalars['String']>;
+  originalTitle?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishedDate` field. */
-  publishedDate?: InputMaybe<Scalars['Datetime']>;
+  publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
-  publishedUser?: InputMaybe<Scalars['String']>;
+  publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `released` field. */
-  released?: InputMaybe<Scalars['Date']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `studio` field. */
-  studio?: InputMaybe<Scalars['String']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `subtitleLanguages` field. */
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `synopsis` field. */
-  synopsis?: InputMaybe<Scalars['String']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * Checks for equality with the object’s `title` field.
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Movie` object types. All fields are combined with a logical ‘and.’ */
 export type MovieFilter = {
+  /** Filter by the object’s `ageRating` field. */
+  ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<MovieFilter>>;
+  /** Filter by the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtypeFilter>;
+  /** Filter by the object’s `audioLanguages` field. */
+  audioLanguages?: InputMaybe<StringListFilter>;
+  /** Filter by the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessTypeFilter>;
+  /** Filter by the object’s `captionLanguages` field. */
+  captionLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<MovieToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
-  collectionRelationsExist?: InputMaybe<Scalars['Boolean']>;
+  collectionRelationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `contentOwner` field. */
+  contentOwner?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `customRating` field. */
+  customRating?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `extendedField` field. */
+  extendedField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `externalId` field. */
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `mainVideoId` field. */
   mainVideoId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `moviesCasts` relation. */
   moviesCasts?: InputMaybe<MovieToManyMoviesCastFilter>;
   /** Some related `moviesCasts` exist. */
-  moviesCastsExist?: InputMaybe<Scalars['Boolean']>;
+  moviesCastsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `moviesDirectors` relation. */
+  moviesDirectors?: InputMaybe<MovieToManyMoviesDirectorFilter>;
+  /** Some related `moviesDirectors` exist. */
+  moviesDirectorsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `moviesImages` relation. */
   moviesImages?: InputMaybe<MovieToManyMoviesImageFilter>;
   /** Some related `moviesImages` exist. */
-  moviesImagesExist?: InputMaybe<Scalars['Boolean']>;
+  moviesImagesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `moviesLicenses` relation. */
   moviesLicenses?: InputMaybe<MovieToManyMoviesLicenseFilter>;
   /** Some related `moviesLicenses` exist. */
-  moviesLicensesExist?: InputMaybe<Scalars['Boolean']>;
+  moviesLicensesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `moviesMovieGenres` relation. */
   moviesMovieGenres?: InputMaybe<MovieToManyMoviesMovieGenreFilter>;
   /** Some related `moviesMovieGenres` exist. */
-  moviesMovieGenresExist?: InputMaybe<Scalars['Boolean']>;
+  moviesMovieGenresExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `moviesProductionCountries` relation. */
   moviesProductionCountries?: InputMaybe<MovieToManyMoviesProductionCountryFilter>;
   /** Some related `moviesProductionCountries` exist. */
-  moviesProductionCountriesExist?: InputMaybe<Scalars['Boolean']>;
+  moviesProductionCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `moviesSnapshots` relation. */
   moviesSnapshots?: InputMaybe<MovieToManyMoviesSnapshotFilter>;
   /** Some related `moviesSnapshots` exist. */
-  moviesSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
+  moviesSnapshotsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `moviesTags` relation. */
   moviesTags?: InputMaybe<MovieToManyMoviesTagFilter>;
   /** Some related `moviesTags` exist. */
-  moviesTagsExist?: InputMaybe<Scalars['Boolean']>;
+  moviesTagsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `moviesTrailers` relation. */
   moviesTrailers?: InputMaybe<MovieToManyMoviesTrailerFilter>;
   /** Some related `moviesTrailers` exist. */
-  moviesTrailersExist?: InputMaybe<Scalars['Boolean']>;
+  moviesTrailersExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Negates the expression. */
   not?: InputMaybe<MovieFilter>;
   /** Checks for any expressions in this list. */
@@ -7446,10 +8491,14 @@ export type MovieFilter = {
   publishedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
+  /** Filter by the object’s `rating` field. */
+  rating?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `studio` field. */
   studio?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `subtitleLanguages` field. */
+  subtitleLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `synopsis` field. */
   synopsis?: InputMaybe<StringFilter>;
   /** Filter by the object’s `title` field. */
@@ -7463,27 +8512,27 @@ export type MovieFilter = {
 /** @permissions: MOVIES_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type MovieGenre = {
   __typename?: 'MovieGenre';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  id: Scalars['Int'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `MoviesMovieGenre`. */
   moviesMovieGenresByMovieGenresId: MoviesMovieGenresConnection;
-  sortOrder: Scalars['Int'];
-  title: Scalars['String'];
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  sortOrder: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: MOVIES_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type MovieGenreMoviesMovieGenresByMovieGenresIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesMovieGenreCondition>;
   filter?: InputMaybe<MoviesMovieGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesMovieGenresOrderBy>>;
 };
 
@@ -7493,24 +8542,24 @@ export type MovieGenreMoviesMovieGenresByMovieGenresIdArgs = {
  */
 export type MovieGenreCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `sortOrder` field. */
-  sortOrder?: InputMaybe<Scalars['Int']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `title` field.
    * @isTrimmed()
    * @maxLength(50)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `MovieGenre` object types. All fields are combined with a logical ‘and.’ */
@@ -7526,7 +8575,7 @@ export type MovieGenreFilter = {
   /** Filter by the object’s `moviesMovieGenresByMovieGenresId` relation. */
   moviesMovieGenresByMovieGenresId?: InputMaybe<MovieGenreToManyMoviesMovieGenreFilter>;
   /** Some related `moviesMovieGenresByMovieGenresId` exist. */
-  moviesMovieGenresByMovieGenresIdExist?: InputMaybe<Scalars['Boolean']>;
+  moviesMovieGenresByMovieGenresIdExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Negates the expression. */
   not?: InputMaybe<MovieGenreFilter>;
   /** Checks for any expressions in this list. */
@@ -7543,24 +8592,24 @@ export type MovieGenreFilter = {
 
 /** An input for mutations affecting `MovieGenre` */
 export type MovieGenreInput = {
-  sortOrder: Scalars['Int'];
+  sortOrder: Scalars['Int']['input'];
   /**
    * @isTrimmed()
    * @maxLength(50)
    * @notEmpty()
    */
-  title: Scalars['String'];
+  title: Scalars['String']['input'];
 };
 
 /** Represents an update to a `MovieGenre`. Fields that are set will be updated. */
 export type MovieGenrePatch = {
-  sortOrder?: InputMaybe<Scalars['Int']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
   /**
    * @isTrimmed()
    * @maxLength(50)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -7576,14 +8625,14 @@ export type MovieGenresConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MovieGenre` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MovieGenre` edge in the connection. */
 export type MovieGenresEdge = {
   __typename?: 'MovieGenresEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MovieGenre` at the end of the edge. */
   node: MovieGenre;
 };
@@ -7618,9 +8667,9 @@ export enum MovieGenreSubscriptionEventKey {
 export type MovieGenreSubscriptionPayload = {
   __typename?: 'MovieGenreSubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<MovieGenreSubscriptionEventKey>;
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
   movieGenre?: Maybe<MovieGenre>;
 };
 
@@ -7635,10 +8684,16 @@ export type MovieGenreToManyMoviesMovieGenreFilter = {
 };
 
 export enum MovieImageType {
-  /** Cover */
-  Cover = 'COVER',
-  /** Teaser */
-  Teaser = 'TEASER'
+  /** Clean Cover 16x9 */
+  CleanCover_16X9 = 'CLEAN_COVER_16X9',
+  /** Clean Cover 1x1 */
+  CleanCover_1X1 = 'CLEAN_COVER_1X1',
+  /** Cover 16x9 */
+  Cover_16X9 = 'COVER_16X9',
+  /** Cover 1x1 */
+  Cover_1X1 = 'COVER_1X1',
+  /** List 9x13 */
+  List_9X13 = 'LIST_9X13'
 }
 
 /** A filter to be used against MovieImageType fields. All fields are combined with a logical ‘and.’ */
@@ -7654,7 +8709,7 @@ export type MovieImageTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<MovieImageType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<MovieImageType>;
   /** Less than or equal to the specified value. */
@@ -7669,34 +8724,60 @@ export type MovieImageTypeFilter = {
 
 /** An input for mutations affecting `Movie` */
 export type MovieInput = {
-  description?: InputMaybe<Scalars['String']>;
-  externalId?: InputMaybe<Scalars['String']>;
-  mainVideoId?: InputMaybe<Scalars['UUID']>;
-  originalTitle?: InputMaybe<Scalars['String']>;
-  released?: InputMaybe<Scalars['Date']>;
-  studio?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  businessType?: InputMaybe<BusinessType>;
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
+  mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
+  originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
    * @notEmpty()
    */
-  title: Scalars['String'];
+  title: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Movie`. Fields that are set will be updated. */
 export type MoviePatch = {
-  description?: InputMaybe<Scalars['String']>;
-  externalId?: InputMaybe<Scalars['String']>;
-  mainVideoId?: InputMaybe<Scalars['UUID']>;
-  originalTitle?: InputMaybe<Scalars['String']>;
-  released?: InputMaybe<Scalars['Date']>;
-  studio?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  businessType?: InputMaybe<BusinessType>;
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
+  mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
+  originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
@@ -7704,8 +8785,8 @@ export type MoviesCast = {
   __typename?: 'MoviesCast';
   /** Reads a single `Movie` that is related to this `MoviesCast`. */
   movie?: Maybe<Movie>;
-  movieId: Scalars['Int'];
-  name: Scalars['String'];
+  movieId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 /**
@@ -7714,12 +8795,12 @@ export type MoviesCast = {
  */
 export type MoviesCastCondition = {
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['Int']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `MoviesCast` object types. All fields are combined with a logical ‘and.’ */
@@ -7740,15 +8821,15 @@ export type MoviesCastFilter = {
 
 /** An input for mutations affecting `MoviesCast` */
 export type MoviesCastInput = {
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `MoviesCast`. Fields that are set will be updated. */
 export type MoviesCastPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -7764,14 +8845,14 @@ export type MoviesCastsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MoviesCast` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MoviesCast` edge in the connection. */
 export type MoviesCastsEdge = {
   __typename?: 'MoviesCastsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MoviesCast` at the end of the edge. */
   node: MoviesCast;
 };
@@ -7800,14 +8881,103 @@ export type MoviesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Movie` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
+
+/** @permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN */
+export type MoviesDirector = {
+  __typename?: 'MoviesDirector';
+  /** Reads a single `Movie` that is related to this `MoviesDirector`. */
+  movie?: Maybe<Movie>;
+  movieId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `MoviesDirector` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type MoviesDirectorCondition = {
+  /** Checks for equality with the object’s `movieId` field. */
+  movieId?: InputMaybe<Scalars['Int']['input']>;
+  /**
+   * Checks for equality with the object’s `name` field.
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `MoviesDirector` object types. All fields are combined with a logical ‘and.’ */
+export type MoviesDirectorFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<MoviesDirectorFilter>>;
+  /** Filter by the object’s `movie` relation. */
+  movie?: InputMaybe<MovieFilter>;
+  /** Filter by the object’s `movieId` field. */
+  movieId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<MoviesDirectorFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<MoviesDirectorFilter>>;
+};
+
+/** An input for mutations affecting `MoviesDirector` */
+export type MoviesDirectorInput = {
+  movieId: Scalars['Int']['input'];
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+};
+
+/** Represents an update to a `MoviesDirector`. Fields that are set will be updated. */
+export type MoviesDirectorPatch = {
+  movieId?: InputMaybe<Scalars['Int']['input']>;
+  /** @notEmpty() */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/**
+ * A connection to a list of `MoviesDirector` values.
+ * @permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
+ */
+export type MoviesDirectorsConnection = {
+  __typename?: 'MoviesDirectorsConnection';
+  /** A list of edges which contains the `MoviesDirector` and cursor to aid in pagination. */
+  edges: Array<MoviesDirectorsEdge>;
+  /** A list of `MoviesDirector` objects. */
+  nodes: Array<MoviesDirector>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `MoviesDirector` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `MoviesDirector` edge in the connection. */
+export type MoviesDirectorsEdge = {
+  __typename?: 'MoviesDirectorsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `MoviesDirector` at the end of the edge. */
+  node: MoviesDirector;
+};
+
+/** Methods to use when ordering `MoviesDirector`. */
+export enum MoviesDirectorsOrderBy {
+  MovieIdAsc = 'MOVIE_ID_ASC',
+  MovieIdDesc = 'MOVIE_ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
 
 /** A `Movie` edge in the connection. */
 export type MoviesEdge = {
   __typename?: 'MoviesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Movie` at the end of the edge. */
   node: Movie;
 };
@@ -7815,11 +8985,11 @@ export type MoviesEdge = {
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MoviesImage = {
   __typename?: 'MoviesImage';
-  imageId: Scalars['UUID'];
+  imageId: Scalars['UUID']['output'];
   imageType: MovieImageType;
   /** Reads a single `Movie` that is related to this `MoviesImage`. */
   movie?: Maybe<Movie>;
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['output'];
 };
 
 /**
@@ -7828,11 +8998,11 @@ export type MoviesImage = {
  */
 export type MoviesImageCondition = {
   /** Checks for equality with the object’s `imageId` field. */
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `imageType` field. */
   imageType?: InputMaybe<MovieImageType>;
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['Int']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `MoviesImage` object types. All fields are combined with a logical ‘and.’ */
@@ -7855,16 +9025,16 @@ export type MoviesImageFilter = {
 
 /** An input for mutations affecting `MoviesImage` */
 export type MoviesImageInput = {
-  imageId: Scalars['UUID'];
+  imageId: Scalars['UUID']['input'];
   imageType: MovieImageType;
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `MoviesImage`. Fields that are set will be updated. */
 export type MoviesImagePatch = {
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   imageType?: InputMaybe<MovieImageType>;
-  movieId?: InputMaybe<Scalars['Int']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -7880,14 +9050,14 @@ export type MoviesImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MoviesImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MoviesImage` edge in the connection. */
 export type MoviesImagesEdge = {
   __typename?: 'MoviesImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MoviesImage` at the end of the edge. */
   node: MoviesImage;
 };
@@ -7908,28 +9078,28 @@ export enum MoviesImagesOrderBy {
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MoviesLicense = {
   __typename?: 'MoviesLicense';
-  createdDate: Scalars['Datetime'];
-  id: Scalars['Int'];
-  licenseEnd?: Maybe<Scalars['Datetime']>;
-  licenseStart?: Maybe<Scalars['Datetime']>;
+  createdDate: Scalars['Datetime']['output'];
+  id: Scalars['Int']['output'];
+  licenseEnd?: Maybe<Scalars['Datetime']['output']>;
+  licenseStart?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesLicense`. */
   movie?: Maybe<Movie>;
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `MoviesLicensesCountry`. */
   moviesLicensesCountries: MoviesLicensesCountriesConnection;
-  updatedDate: Scalars['Datetime'];
+  updatedDate: Scalars['Datetime']['output'];
 };
 
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
 export type MoviesLicenseMoviesLicensesCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesLicensesCountryCondition>;
   filter?: InputMaybe<MoviesLicensesCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesLicensesCountriesOrderBy>>;
 };
 
@@ -7939,17 +9109,17 @@ export type MoviesLicenseMoviesLicensesCountriesArgs = {
  */
 export type MoviesLicenseCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `licenseEnd` field. */
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `licenseStart` field. */
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['Int']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A filter to be used against `MoviesLicense` object types. All fields are combined with a logical ‘and.’ */
@@ -7971,7 +9141,7 @@ export type MoviesLicenseFilter = {
   /** Filter by the object’s `moviesLicensesCountries` relation. */
   moviesLicensesCountries?: InputMaybe<MoviesLicenseToManyMoviesLicensesCountryFilter>;
   /** Some related `moviesLicensesCountries` exist. */
-  moviesLicensesCountriesExist?: InputMaybe<Scalars['Boolean']>;
+  moviesLicensesCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Negates the expression. */
   not?: InputMaybe<MoviesLicenseFilter>;
   /** Checks for any expressions in this list. */
@@ -7982,16 +9152,16 @@ export type MoviesLicenseFilter = {
 
 /** An input for mutations affecting `MoviesLicense` */
 export type MoviesLicenseInput = {
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
-  movieId: Scalars['Int'];
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
+  movieId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `MoviesLicense`. Fields that are set will be updated. */
 export type MoviesLicensePatch = {
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
-  movieId?: InputMaybe<Scalars['Int']>;
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -8007,7 +9177,7 @@ export type MoviesLicensesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MoviesLicense` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /**
@@ -8023,14 +9193,14 @@ export type MoviesLicensesCountriesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MoviesLicensesCountry` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MoviesLicensesCountry` edge in the connection. */
 export type MoviesLicensesCountriesEdge = {
   __typename?: 'MoviesLicensesCountriesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MoviesLicensesCountry` at the end of the edge. */
   node: MoviesLicensesCountry;
 };
@@ -8052,7 +9222,7 @@ export type MoviesLicensesCountry = {
   code: IsoAlphaTwoCountryCodes;
   /** Reads a single `MoviesLicense` that is related to this `MoviesLicensesCountry`. */
   moviesLicense?: Maybe<MoviesLicense>;
-  moviesLicenseId: Scalars['Int'];
+  moviesLicenseId: Scalars['Int']['output'];
 };
 
 /**
@@ -8063,7 +9233,7 @@ export type MoviesLicensesCountryCondition = {
   /** Checks for equality with the object’s `code` field. */
   code?: InputMaybe<IsoAlphaTwoCountryCodes>;
   /** Checks for equality with the object’s `moviesLicenseId` field. */
-  moviesLicenseId?: InputMaybe<Scalars['Int']>;
+  moviesLicenseId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `MoviesLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
@@ -8085,7 +9255,7 @@ export type MoviesLicensesCountryFilter = {
 /** An input for mutations affecting `MoviesLicensesCountry` */
 export type MoviesLicensesCountryInput = {
   code: IsoAlphaTwoCountryCodes;
-  moviesLicenseId: Scalars['Int'];
+  moviesLicenseId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `MoviesLicensesCountry`. Fields that are set will be updated. */
@@ -8097,7 +9267,7 @@ export type MoviesLicensesCountryPatch = {
 export type MoviesLicensesEdge = {
   __typename?: 'MoviesLicensesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MoviesLicense` at the end of the edge. */
   node: MoviesLicense;
 };
@@ -8138,8 +9308,8 @@ export type MoviesMovieGenre = {
   movie?: Maybe<Movie>;
   /** Reads a single `MovieGenre` that is related to this `MoviesMovieGenre`. */
   movieGenres?: Maybe<MovieGenre>;
-  movieGenresId: Scalars['Int'];
-  movieId: Scalars['Int'];
+  movieGenresId: Scalars['Int']['output'];
+  movieId: Scalars['Int']['output'];
 };
 
 /**
@@ -8148,9 +9318,9 @@ export type MoviesMovieGenre = {
  */
 export type MoviesMovieGenreCondition = {
   /** Checks for equality with the object’s `movieGenresId` field. */
-  movieGenresId?: InputMaybe<Scalars['Int']>;
+  movieGenresId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['Int']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’ */
@@ -8173,8 +9343,8 @@ export type MoviesMovieGenreFilter = {
 
 /** An input for mutations affecting `MoviesMovieGenre` */
 export type MoviesMovieGenreInput = {
-  movieGenresId: Scalars['Int'];
-  movieId: Scalars['Int'];
+  movieGenresId: Scalars['Int']['input'];
+  movieId: Scalars['Int']['input'];
 };
 
 /**
@@ -8190,14 +9360,14 @@ export type MoviesMovieGenresConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MoviesMovieGenre` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MoviesMovieGenre` edge in the connection. */
 export type MoviesMovieGenresEdge = {
   __typename?: 'MoviesMovieGenresEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MoviesMovieGenre` at the end of the edge. */
   node: MoviesMovieGenre;
 };
@@ -8215,16 +9385,38 @@ export enum MoviesMovieGenresOrderBy {
 
 /** Methods to use when ordering `Movie`. */
 export enum MoviesOrderBy {
+  AgeRatingAsc = 'AGE_RATING_ASC',
+  AgeRatingDesc = 'AGE_RATING_DESC',
+  AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
+  AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
+  AudioLanguagesAsc = 'AUDIO_LANGUAGES_ASC',
+  AudioLanguagesDesc = 'AUDIO_LANGUAGES_DESC',
+  BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
+  BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
+  CaptionLanguagesAsc = 'CAPTION_LANGUAGES_ASC',
+  CaptionLanguagesDesc = 'CAPTION_LANGUAGES_DESC',
+  ContentOwnerAsc = 'CONTENT_OWNER_ASC',
+  ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
+  CreditsStartTimeAsc = 'CREDITS_START_TIME_ASC',
+  CreditsStartTimeDesc = 'CREDITS_START_TIME_DESC',
+  CustomRatingAsc = 'CUSTOM_RATING_ASC',
+  CustomRatingDesc = 'CUSTOM_RATING_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  DynamicFieldAsc = 'DYNAMIC_FIELD_ASC',
+  DynamicFieldDesc = 'DYNAMIC_FIELD_DESC',
+  ExtendedFieldAsc = 'EXTENDED_FIELD_ASC',
+  ExtendedFieldDesc = 'EXTENDED_FIELD_DESC',
   ExternalIdAsc = 'EXTERNAL_ID_ASC',
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  LengthInSecondsAsc = 'LENGTH_IN_SECONDS_ASC',
+  LengthInSecondsDesc = 'LENGTH_IN_SECONDS_DESC',
   MainVideoIdAsc = 'MAIN_VIDEO_ID_ASC',
   MainVideoIdDesc = 'MAIN_VIDEO_ID_DESC',
   Natural = 'NATURAL',
@@ -8238,10 +9430,14 @@ export enum MoviesOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  RatingAsc = 'RATING_ASC',
+  RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
   StudioDesc = 'STUDIO_DESC',
+  SubtitleLanguagesAsc = 'SUBTITLE_LANGUAGES_ASC',
+  SubtitleLanguagesDesc = 'SUBTITLE_LANGUAGES_DESC',
   SynopsisAsc = 'SYNOPSIS_ASC',
   SynopsisDesc = 'SYNOPSIS_DESC',
   TitleAsc = 'TITLE_ASC',
@@ -8265,14 +9461,14 @@ export type MoviesProductionCountriesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MoviesProductionCountry` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MoviesProductionCountry` edge in the connection. */
 export type MoviesProductionCountriesEdge = {
   __typename?: 'MoviesProductionCountriesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MoviesProductionCountry` at the end of the edge. */
   node: MoviesProductionCountry;
 };
@@ -8293,8 +9489,8 @@ export type MoviesProductionCountry = {
   __typename?: 'MoviesProductionCountry';
   /** Reads a single `Movie` that is related to this `MoviesProductionCountry`. */
   movie?: Maybe<Movie>;
-  movieId: Scalars['Int'];
-  name: Scalars['String'];
+  movieId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 /**
@@ -8303,12 +9499,12 @@ export type MoviesProductionCountry = {
  */
 export type MoviesProductionCountryCondition = {
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['Int']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `MoviesProductionCountry` object types. All fields are combined with a logical ‘and.’ */
@@ -8329,15 +9525,15 @@ export type MoviesProductionCountryFilter = {
 
 /** An input for mutations affecting `MoviesProductionCountry` */
 export type MoviesProductionCountryInput = {
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `MoviesProductionCountry`. Fields that are set will be updated. */
 export type MoviesProductionCountryPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** @permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN */
@@ -8345,10 +9541,10 @@ export type MoviesSnapshot = {
   __typename?: 'MoviesSnapshot';
   /** Reads a single `Movie` that is related to this `MoviesSnapshot`. */
   movie?: Maybe<Movie>;
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['output'];
   /** Reads a single `Snapshot` that is related to this `MoviesSnapshot`. */
   snapshot?: Maybe<Snapshot>;
-  snapshotId: Scalars['Int'];
+  snapshotId: Scalars['Int']['output'];
 };
 
 /**
@@ -8357,9 +9553,9 @@ export type MoviesSnapshot = {
  */
 export type MoviesSnapshotCondition = {
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['Int']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `snapshotId` field. */
-  snapshotId?: InputMaybe<Scalars['Int']>;
+  snapshotId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `MoviesSnapshot` object types. All fields are combined with a logical ‘and.’ */
@@ -8393,14 +9589,14 @@ export type MoviesSnapshotsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MoviesSnapshot` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MoviesSnapshot` edge in the connection. */
 export type MoviesSnapshotsEdge = {
   __typename?: 'MoviesSnapshotsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MoviesSnapshot` at the end of the edge. */
   node: MoviesSnapshot;
 };
@@ -8421,8 +9617,8 @@ export type MoviesTag = {
   __typename?: 'MoviesTag';
   /** Reads a single `Movie` that is related to this `MoviesTag`. */
   movie?: Maybe<Movie>;
-  movieId: Scalars['Int'];
-  name: Scalars['String'];
+  movieId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 /**
@@ -8431,12 +9627,12 @@ export type MoviesTag = {
  */
 export type MoviesTagCondition = {
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['Int']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `MoviesTag` object types. All fields are combined with a logical ‘and.’ */
@@ -8457,15 +9653,15 @@ export type MoviesTagFilter = {
 
 /** An input for mutations affecting `MoviesTag` */
 export type MoviesTagInput = {
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `MoviesTag`. Fields that are set will be updated. */
 export type MoviesTagPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -8481,14 +9677,14 @@ export type MoviesTagsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MoviesTag` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MoviesTag` edge in the connection. */
 export type MoviesTagsEdge = {
   __typename?: 'MoviesTagsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MoviesTag` at the end of the edge. */
   node: MoviesTag;
 };
@@ -8509,8 +9705,8 @@ export type MoviesTrailer = {
   __typename?: 'MoviesTrailer';
   /** Reads a single `Movie` that is related to this `MoviesTrailer`. */
   movie?: Maybe<Movie>;
-  movieId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  movieId: Scalars['Int']['output'];
+  videoId: Scalars['UUID']['output'];
 };
 
 /**
@@ -8519,9 +9715,9 @@ export type MoviesTrailer = {
  */
 export type MoviesTrailerCondition = {
   /** Checks for equality with the object’s `movieId` field. */
-  movieId?: InputMaybe<Scalars['Int']>;
+  movieId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['UUID']>;
+  videoId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A filter to be used against `MoviesTrailer` object types. All fields are combined with a logical ‘and.’ */
@@ -8542,8 +9738,8 @@ export type MoviesTrailerFilter = {
 
 /** An input for mutations affecting `MoviesTrailer` */
 export type MoviesTrailerInput = {
-  movieId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  movieId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 /**
@@ -8559,14 +9755,14 @@ export type MoviesTrailersConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `MoviesTrailer` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `MoviesTrailer` edge in the connection. */
 export type MoviesTrailersEdge = {
   __typename?: 'MoviesTrailersEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `MoviesTrailer` at the end of the edge. */
   node: MoviesTrailer;
 };
@@ -8612,9 +9808,9 @@ export enum MovieSubscriptionEventKey {
 export type MovieSubscriptionPayload = {
   __typename?: 'MovieSubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<MovieSubscriptionEventKey>;
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
   movie?: Maybe<Movie>;
 };
 
@@ -8636,6 +9832,16 @@ export type MovieToManyMoviesCastFilter = {
   none?: InputMaybe<MoviesCastFilter>;
   /** Some related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<MoviesCastFilter>;
+};
+
+/** A filter to be used against many `MoviesDirector` object types. All fields are combined with a logical ‘and.’ */
+export type MovieToManyMoviesDirectorFilter = {
+  /** Every related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MoviesDirectorFilter>;
+  /** No related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MoviesDirectorFilter>;
+  /** Some related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MoviesDirectorFilter>;
 };
 
 /** A filter to be used against many `MoviesImage` object types. All fields are combined with a logical ‘and.’ */
@@ -8711,6 +9917,8 @@ export type MovieToManyMoviesTrailerFilter = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Creates a single `AgeRating`. */
+  createAgeRating?: Maybe<CreateAgeRatingPayload>;
   /** Creates a single `Collection`. */
   createCollection?: Maybe<CreateCollectionPayload>;
   /** Creates a single `CollectionRelation`. */
@@ -8722,6 +9930,8 @@ export type Mutation = {
   createCollectionSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `CollectionsTag`. */
   createCollectionsTag?: Maybe<CreateCollectionsTagPayload>;
+  /** Creates a single `ContentOwner`. */
+  createContentOwner?: Maybe<CreateContentOwnerPayload>;
   /** Creates a single `Episode`. */
   createEpisode?: Maybe<CreateEpisodePayload>;
   /** Creates a single `EpisodesCast`. */
@@ -8743,6 +9953,8 @@ export type Mutation = {
   createEpisodesTrailer?: Maybe<CreateEpisodesTrailerPayload>;
   /** Creates a single `EpisodesTvshowGenre`. */
   createEpisodesTvshowGenre?: Maybe<CreateEpisodesTvshowGenrePayload>;
+  /** Creates a single `Language`. */
+  createLanguage?: Maybe<CreateLanguagePayload>;
   /** Creates a single `Movie`. */
   createMovie?: Maybe<CreateMoviePayload>;
   /** Creates a single `MovieGenre`. */
@@ -8751,6 +9963,8 @@ export type Mutation = {
   createMovieGenresSnapshot?: Maybe<Snapshot>;
   /** Creates a single `MoviesCast`. */
   createMoviesCast?: Maybe<CreateMoviesCastPayload>;
+  /** Creates a single `MoviesDirector`. */
+  createMoviesDirector?: Maybe<CreateMoviesDirectorPayload>;
   /** Creates a single `MoviesImage`. */
   createMoviesImage?: Maybe<CreateMoviesImagePayload>;
   /** Creates a single `MoviesLicense`. */
@@ -8814,6 +10028,8 @@ export type Mutation = {
   createTvshowsTrailer?: Maybe<CreateTvshowsTrailerPayload>;
   /** Creates a single `TvshowsTvshowGenre`. */
   createTvshowsTvshowGenre?: Maybe<CreateTvshowsTvshowGenrePayload>;
+  /** Deletes a single `AgeRating` using a unique key. */
+  deleteAgeRating?: Maybe<DeleteAgeRatingPayload>;
   /** Deletes a single `Collection` using a unique key. */
   deleteCollection?: Maybe<DeleteCollectionPayload>;
   /** Deletes a single `Collection` using a unique key. */
@@ -8826,6 +10042,8 @@ export type Mutation = {
   deleteCollectionsImageByCollectionIdAndImageType?: Maybe<DeleteCollectionsImagePayload>;
   /** Deletes a single `CollectionsTag` using a unique key. */
   deleteCollectionsTag?: Maybe<DeleteCollectionsTagPayload>;
+  /** Deletes a single `ContentOwner` using a unique key. */
+  deleteContentOwner?: Maybe<DeleteContentOwnerPayload>;
   /** Deletes a single `Episode` using a unique key. */
   deleteEpisode?: Maybe<DeleteEpisodePayload>;
   /** Deletes a single `Episode` using a unique key. */
@@ -8848,6 +10066,8 @@ export type Mutation = {
   deleteEpisodesTrailer?: Maybe<DeleteEpisodesTrailerPayload>;
   /** Deletes a single `EpisodesTvshowGenre` using a unique key. */
   deleteEpisodesTvshowGenre?: Maybe<DeleteEpisodesTvshowGenrePayload>;
+  /** Deletes a single `Language` using a unique key. */
+  deleteLanguage?: Maybe<DeleteLanguagePayload>;
   /** Deletes a single `Movie` using a unique key. */
   deleteMovie?: Maybe<DeleteMoviePayload>;
   /** Deletes a single `Movie` using a unique key. */
@@ -8858,6 +10078,8 @@ export type Mutation = {
   deleteMovies?: Maybe<BulkMutationIntPayload>;
   /** Deletes a single `MoviesCast` using a unique key. */
   deleteMoviesCast?: Maybe<DeleteMoviesCastPayload>;
+  /** Deletes a single `MoviesDirector` using a unique key. */
+  deleteMoviesDirector?: Maybe<DeleteMoviesDirectorPayload>;
   /** Deletes a single `MoviesImage` using a unique key. */
   deleteMoviesImageByMovieIdAndImageType?: Maybe<DeleteMoviesImagePayload>;
   /** Deletes a single `MoviesLicense` using a unique key. */
@@ -8970,6 +10192,8 @@ export type Mutation = {
   /** Unpublishes the currently published Tvshow genres snapshot. */
   unpublishTvshowGenres?: Maybe<Snapshot>;
   unpublishTvshows?: Maybe<BulkMutationPayload>;
+  /** Updates a single `AgeRating` using a unique key and a patch. */
+  updateAgeRating?: Maybe<UpdateAgeRatingPayload>;
   /** Updates a single `Collection` using a unique key and a patch. */
   updateCollection?: Maybe<UpdateCollectionPayload>;
   /** Updates a single `Collection` using a unique key and a patch. */
@@ -8980,6 +10204,8 @@ export type Mutation = {
   updateCollectionsImageByCollectionIdAndImageType?: Maybe<UpdateCollectionsImagePayload>;
   /** Updates a single `CollectionsTag` using a unique key and a patch. */
   updateCollectionsTag?: Maybe<UpdateCollectionsTagPayload>;
+  /** Updates a single `ContentOwner` using a unique key and a patch. */
+  updateContentOwner?: Maybe<UpdateContentOwnerPayload>;
   /** Updates a single `Episode` using a unique key and a patch. */
   updateEpisode?: Maybe<UpdateEpisodePayload>;
   /** Updates a single `Episode` using a unique key and a patch. */
@@ -8998,6 +10224,8 @@ export type Mutation = {
   updateEpisodesTag?: Maybe<UpdateEpisodesTagPayload>;
   /** Updates a single `IngestDocument` using a unique key and a patch. */
   updateIngestDocument?: Maybe<UpdateIngestDocumentPayload>;
+  /** Updates a single `Language` using a unique key and a patch. */
+  updateLanguage?: Maybe<UpdateLanguagePayload>;
   /** Updates a single `Movie` using a unique key and a patch. */
   updateMovie?: Maybe<UpdateMoviePayload>;
   /** Updates a single `Movie` using a unique key and a patch. */
@@ -9006,6 +10234,8 @@ export type Mutation = {
   updateMovieGenre?: Maybe<UpdateMovieGenrePayload>;
   /** Updates a single `MoviesCast` using a unique key and a patch. */
   updateMoviesCast?: Maybe<UpdateMoviesCastPayload>;
+  /** Updates a single `MoviesDirector` using a unique key and a patch. */
+  updateMoviesDirector?: Maybe<UpdateMoviesDirectorPayload>;
   /** Updates a single `MoviesImage` using a unique key and a patch. */
   updateMoviesImageByMovieIdAndImageType?: Maybe<UpdateMoviesImagePayload>;
   /** Updates a single `MoviesLicense` using a unique key and a patch. */
@@ -9054,6 +10284,12 @@ export type Mutation = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAgeRatingArgs = {
+  input: CreateAgeRatingInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCollectionArgs = {
   input: CreateCollectionInput;
 };
@@ -9073,7 +10309,7 @@ export type MutationCreateCollectionsImageArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCollectionSnapshotArgs = {
-  collectionId: Scalars['Int'];
+  collectionId: Scalars['Int']['input'];
 };
 
 
@@ -9086,6 +10322,12 @@ export type MutationCreateCollectionSnapshotsArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCollectionsTagArgs = {
   input: CreateCollectionsTagInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateContentOwnerArgs = {
+  input: CreateContentOwnerInput;
 };
 
 
@@ -9121,7 +10363,7 @@ export type MutationCreateEpisodesLicensesCountryArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateEpisodeSnapshotArgs = {
-  episodeId: Scalars['Int'];
+  episodeId: Scalars['Int']['input'];
 };
 
 
@@ -9156,6 +10398,12 @@ export type MutationCreateEpisodesTvshowGenreArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLanguageArgs = {
+  input: CreateLanguageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateMovieArgs = {
   input: CreateMovieInput;
 };
@@ -9170,6 +10418,12 @@ export type MutationCreateMovieGenreArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateMoviesCastArgs = {
   input: CreateMoviesCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateMoviesDirectorArgs = {
+  input: CreateMoviesDirectorInput;
 };
 
 
@@ -9199,7 +10453,7 @@ export type MutationCreateMoviesMovieGenreArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateMovieSnapshotArgs = {
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['input'];
 };
 
 
@@ -9259,7 +10513,7 @@ export type MutationCreateSeasonsLicensesCountryArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateSeasonSnapshotArgs = {
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
 };
 
 
@@ -9331,7 +10585,7 @@ export type MutationCreateTvshowsLicensesCountryArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateTvshowSnapshotArgs = {
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 
@@ -9362,6 +10616,12 @@ export type MutationCreateTvshowsTrailerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateTvshowsTvshowGenreArgs = {
   input: CreateTvshowsTvshowGenreInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAgeRatingArgs = {
+  input: DeleteAgeRatingInput;
 };
 
 
@@ -9404,6 +10664,12 @@ export type MutationDeleteCollectionsImageByCollectionIdAndImageTypeArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteCollectionsTagArgs = {
   input: DeleteCollectionsTagInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteContentOwnerArgs = {
+  input: DeleteContentOwnerInput;
 };
 
 
@@ -9480,6 +10746,12 @@ export type MutationDeleteEpisodesTvshowGenreArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLanguageArgs = {
+  input: DeleteLanguageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteMovieArgs = {
   input: DeleteMovieInput;
 };
@@ -9512,6 +10784,12 @@ export type MutationDeleteMoviesArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteMoviesCastArgs = {
   input: DeleteMoviesCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteMoviesDirectorArgs = {
+  input: DeleteMoviesDirectorInput;
 };
 
 
@@ -9751,7 +11029,7 @@ export type MutationPopulateTvshowsArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationPublishCollectionArgs = {
-  collectionId: Scalars['Int'];
+  collectionId: Scalars['Int']['input'];
 };
 
 
@@ -9763,7 +11041,7 @@ export type MutationPublishCollectionsArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationPublishEpisodeArgs = {
-  episodeId: Scalars['Int'];
+  episodeId: Scalars['Int']['input'];
 };
 
 
@@ -9775,7 +11053,7 @@ export type MutationPublishEpisodesArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationPublishMovieArgs = {
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['input'];
 };
 
 
@@ -9787,7 +11065,7 @@ export type MutationPublishMoviesArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationPublishSeasonArgs = {
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
 };
 
 
@@ -9799,7 +11077,7 @@ export type MutationPublishSeasonsArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationPublishSnapshotArgs = {
-  snapshotId: Scalars['Int'];
+  snapshotId: Scalars['Int']['input'];
 };
 
 
@@ -9811,7 +11089,7 @@ export type MutationPublishSnapshotsArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationPublishTvshowArgs = {
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 
@@ -9835,7 +11113,7 @@ export type MutationStartIngestArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUnpublishCollectionArgs = {
-  collectionId: Scalars['Int'];
+  collectionId: Scalars['Int']['input'];
 };
 
 
@@ -9847,7 +11125,7 @@ export type MutationUnpublishCollectionsArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUnpublishEpisodeArgs = {
-  episodeId: Scalars['Int'];
+  episodeId: Scalars['Int']['input'];
 };
 
 
@@ -9859,7 +11137,7 @@ export type MutationUnpublishEpisodesArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUnpublishMovieArgs = {
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['input'];
 };
 
 
@@ -9871,7 +11149,7 @@ export type MutationUnpublishMoviesArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUnpublishSeasonArgs = {
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
 };
 
 
@@ -9883,7 +11161,7 @@ export type MutationUnpublishSeasonsArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUnpublishSnapshotArgs = {
-  snapshotId: Scalars['Int'];
+  snapshotId: Scalars['Int']['input'];
 };
 
 
@@ -9895,13 +11173,19 @@ export type MutationUnpublishSnapshotsArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUnpublishTvshowArgs = {
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUnpublishTvshowsArgs = {
   filter?: InputMaybe<TvshowFilter>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAgeRatingArgs = {
+  input: UpdateAgeRatingInput;
 };
 
 
@@ -9932,6 +11216,12 @@ export type MutationUpdateCollectionsImageByCollectionIdAndImageTypeArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateCollectionsTagArgs = {
   input: UpdateCollectionsTagInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateContentOwnerArgs = {
+  input: UpdateContentOwnerInput;
 };
 
 
@@ -9990,6 +11280,12 @@ export type MutationUpdateIngestDocumentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLanguageArgs = {
+  input: UpdateLanguageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateMovieArgs = {
   input: UpdateMovieInput;
 };
@@ -10010,6 +11306,12 @@ export type MutationUpdateMovieGenreArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateMoviesCastArgs = {
   input: UpdateMoviesCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateMoviesDirectorArgs = {
+  input: UpdateMoviesDirectorInput;
 };
 
 
@@ -10148,23 +11450,23 @@ export type MutationUpdateTvshowsTagArgs = {
 export type PageInfo = {
   __typename?: 'PageInfo';
   /** When paginating forwards, the cursor to continue. */
-  endCursor?: Maybe<Scalars['Cursor']>;
+  endCursor?: Maybe<Scalars['Cursor']['output']>;
   /** When paginating forwards, are there more items? */
-  hasNextPage: Scalars['Boolean'];
+  hasNextPage: Scalars['Boolean']['output'];
   /** When paginating backwards, are there more items? */
-  hasPreviousPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean']['output'];
   /** When paginating backwards, the cursor to continue. */
-  startCursor?: Maybe<Scalars['Cursor']>;
+  startCursor?: Maybe<Scalars['Cursor']['output']>;
 };
 
 export type PopulateInput = {
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  count: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  count: Scalars['Int']['input'];
 };
 
 export type PopulatePayload = {
   __typename?: 'PopulatePayload';
-  count: Scalars['Int'];
+  count: Scalars['Int']['output'];
   query?: Maybe<Query>;
 };
 
@@ -10190,7 +11492,7 @@ export type PublishStatusFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<PublishStatus>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<PublishStatus>;
   /** Less than or equal to the specified value. */
@@ -10206,6 +11508,9 @@ export type PublishStatusFilter = {
 /** The root query type which gives access points into the data universe. */
 export type Query = {
   __typename?: 'Query';
+  ageRating?: Maybe<AgeRating>;
+  /** Reads and enables pagination through a set of `AgeRating`. */
+  ageRatings?: Maybe<AgeRatingsConnection>;
   collection?: Maybe<Collection>;
   collectionByExternalId?: Maybe<Collection>;
   collectionRelation?: Maybe<CollectionRelation>;
@@ -10218,6 +11523,9 @@ export type Query = {
   collectionsTag?: Maybe<CollectionsTag>;
   /** Reads and enables pagination through a set of `CollectionsTag`. */
   collectionsTags?: Maybe<CollectionsTagsConnection>;
+  contentOwner?: Maybe<ContentOwner>;
+  /** Reads and enables pagination through a set of `ContentOwner`. */
+  contentOwners?: Maybe<ContentOwnersConnection>;
   episode?: Maybe<Episode>;
   episodeByExternalId?: Maybe<Episode>;
   /** Reads and enables pagination through a set of `Episode`. */
@@ -10250,6 +11558,7 @@ export type Query = {
   getEpisodesProductionCountriesValues?: Maybe<GetEpisodesProductionCountriesValuesConnection>;
   getEpisodesTagsValues?: Maybe<GetEpisodesTagsValuesConnection>;
   getMoviesCastsValues?: Maybe<GetMoviesCastsValuesConnection>;
+  getMoviesDirectorsValues?: Maybe<GetMoviesDirectorsValuesConnection>;
   getMoviesProductionCountriesValues?: Maybe<GetMoviesProductionCountriesValuesConnection>;
   getMoviesTagsValues?: Maybe<GetMoviesTagsValuesConnection>;
   getSeasonsCastsValues?: Maybe<GetSeasonsCastsValuesConnection>;
@@ -10267,6 +11576,9 @@ export type Query = {
   ingestItemStep?: Maybe<IngestItemStep>;
   /** Reads and enables pagination through a set of `IngestItemStep`. */
   ingestItemSteps?: Maybe<IngestItemStepsConnection>;
+  language?: Maybe<Language>;
+  /** Reads and enables pagination through a set of `Language`. */
+  languages?: Maybe<LanguagesConnection>;
   movie?: Maybe<Movie>;
   movieByExternalId?: Maybe<Movie>;
   movieGenre?: Maybe<MovieGenre>;
@@ -10277,6 +11589,9 @@ export type Query = {
   moviesCast?: Maybe<MoviesCast>;
   /** Reads and enables pagination through a set of `MoviesCast`. */
   moviesCasts?: Maybe<MoviesCastsConnection>;
+  moviesDirector?: Maybe<MoviesDirector>;
+  /** Reads and enables pagination through a set of `MoviesDirector`. */
+  moviesDirectors?: Maybe<MoviesDirectorsConnection>;
   /** Reads and enables pagination through a set of `MoviesImage`. */
   moviesImages?: Maybe<MoviesImagesConnection>;
   moviesLicense?: Maybe<MoviesLicense>;
@@ -10366,168 +11681,206 @@ export type Query = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAgeRatingArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAgeRatingsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AgeRatingCondition>;
+  filter?: InputMaybe<AgeRatingFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AgeRatingsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryCollectionArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCollectionByExternalIdArgs = {
-  externalId: Scalars['String'];
+  externalId: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCollectionRelationArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCollectionRelationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionRelationCondition>;
   filter?: InputMaybe<CollectionRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionRelationsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCollectionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionCondition>;
   filter?: InputMaybe<CollectionFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCollectionsImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionsImageCondition>;
   filter?: InputMaybe<CollectionsImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionsImagesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCollectionsTagArgs = {
-  collectionId: Scalars['Int'];
-  name: Scalars['String'];
+  collectionId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCollectionsTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionsTagCondition>;
   filter?: InputMaybe<CollectionsTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionsTagsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryContentOwnerArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryContentOwnersArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ContentOwnerCondition>;
+  filter?: InputMaybe<ContentOwnerFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ContentOwnersOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryEpisodeArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodeByExternalIdArgs = {
-  externalId: Scalars['String'];
+  externalId: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodeCondition>;
   filter?: InputMaybe<EpisodeFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesCastArgs = {
-  episodeId: Scalars['Int'];
-  name: Scalars['String'];
+  episodeId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesCastsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesCastCondition>;
   filter?: InputMaybe<EpisodesCastFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesCastsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesImageCondition>;
   filter?: InputMaybe<EpisodesImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesImagesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesLicenseArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesLicenseCondition>;
   filter?: InputMaybe<EpisodesLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesLicensesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesLicensesCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesLicensesCountryCondition>;
   filter?: InputMaybe<EpisodesLicensesCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesLicensesCountriesOrderBy>>;
 };
 
@@ -10535,395 +11888,445 @@ export type QueryEpisodesLicensesCountriesArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesLicensesCountryArgs = {
   code: IsoAlphaTwoCountryCodes;
-  episodesLicenseId: Scalars['Int'];
+  episodesLicenseId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesProductionCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesProductionCountryCondition>;
   filter?: InputMaybe<EpisodesProductionCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesProductionCountriesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesProductionCountryArgs = {
-  episodeId: Scalars['Int'];
-  name: Scalars['String'];
+  episodeId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesTagArgs = {
-  episodeId: Scalars['Int'];
-  name: Scalars['String'];
+  episodeId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesTagCondition>;
   filter?: InputMaybe<EpisodesTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesTagsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesTrailerArgs = {
-  episodeId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  episodeId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesTrailersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesTrailerCondition>;
   filter?: InputMaybe<EpisodesTrailerFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesTrailersOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesTvshowGenreArgs = {
-  episodeId: Scalars['Int'];
-  tvshowGenresId: Scalars['Int'];
+  episodeId: Scalars['Int']['input'];
+  tvshowGenresId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEpisodesTvshowGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesTvshowGenreCondition>;
   filter?: InputMaybe<EpisodesTvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesTvshowGenresOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetCollectionsTagsValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetEpisodesCastsValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetEpisodesProductionCountriesValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetEpisodesTagsValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetMoviesCastsValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetMoviesDirectorsValuesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<StringFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetMoviesProductionCountriesValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetMoviesTagsValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetSeasonsCastsValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetSeasonsProductionCountriesValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetSeasonsTagsValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetTvshowsCastsValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetTvshowsProductionCountriesValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetTvshowsTagsValuesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryIngestDocumentArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryIngestDocumentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<IngestDocumentCondition>;
   filter?: InputMaybe<IngestDocumentFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<IngestDocumentsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryIngestItemArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryIngestItemsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<IngestItemCondition>;
   filter?: InputMaybe<IngestItemFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<IngestItemsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryIngestItemStepArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryIngestItemStepsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<IngestItemStepCondition>;
   filter?: InputMaybe<IngestItemStepFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<IngestItemStepsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLanguageArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLanguagesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<LanguageCondition>;
+  filter?: InputMaybe<LanguageFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<LanguagesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryMovieArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMovieByExternalIdArgs = {
-  externalId: Scalars['String'];
+  externalId: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMovieGenreArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMovieGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MovieGenreCondition>;
   filter?: InputMaybe<MovieGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MovieGenresOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MovieCondition>;
   filter?: InputMaybe<MovieFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesCastArgs = {
-  movieId: Scalars['Int'];
-  name: Scalars['String'];
+  movieId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesCastsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesCastCondition>;
   filter?: InputMaybe<MoviesCastFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesCastsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryMoviesDirectorArgs = {
+  movieId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMoviesDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<MoviesDirectorCondition>;
+  filter?: InputMaybe<MoviesDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MoviesDirectorsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryMoviesImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesImageCondition>;
   filter?: InputMaybe<MoviesImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesImagesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesLicenseArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesLicenseCondition>;
   filter?: InputMaybe<MoviesLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesLicensesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesLicensesCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesLicensesCountryCondition>;
   filter?: InputMaybe<MoviesLicensesCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesLicensesCountriesOrderBy>>;
 };
 
@@ -10931,176 +12334,176 @@ export type QueryMoviesLicensesCountriesArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesLicensesCountryArgs = {
   code: IsoAlphaTwoCountryCodes;
-  moviesLicenseId: Scalars['Int'];
+  moviesLicenseId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesMovieGenreArgs = {
-  movieGenresId: Scalars['Int'];
-  movieId: Scalars['Int'];
+  movieGenresId: Scalars['Int']['input'];
+  movieId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesMovieGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesMovieGenreCondition>;
   filter?: InputMaybe<MoviesMovieGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesMovieGenresOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesProductionCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesProductionCountryCondition>;
   filter?: InputMaybe<MoviesProductionCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesProductionCountriesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesProductionCountryArgs = {
-  movieId: Scalars['Int'];
-  name: Scalars['String'];
+  movieId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesTagArgs = {
-  movieId: Scalars['Int'];
-  name: Scalars['String'];
+  movieId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesTagCondition>;
   filter?: InputMaybe<MoviesTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesTagsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesTrailerArgs = {
-  movieId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  movieId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMoviesTrailersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesTrailerCondition>;
   filter?: InputMaybe<MoviesTrailerFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesTrailersOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonByExternalIdArgs = {
-  externalId: Scalars['String'];
+  externalId: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonCondition>;
   filter?: InputMaybe<SeasonFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsCastArgs = {
-  name: Scalars['String'];
-  seasonId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsCastsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsCastCondition>;
   filter?: InputMaybe<SeasonsCastFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsCastsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsImageCondition>;
   filter?: InputMaybe<SeasonsImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsImagesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsLicenseArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsLicenseCondition>;
   filter?: InputMaybe<SeasonsLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsLicensesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsLicensesCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsLicensesCountryCondition>;
   filter?: InputMaybe<SeasonsLicensesCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsLicensesCountriesOrderBy>>;
 };
 
@@ -11108,214 +12511,214 @@ export type QuerySeasonsLicensesCountriesArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsLicensesCountryArgs = {
   code: IsoAlphaTwoCountryCodes;
-  seasonsLicenseId: Scalars['Int'];
+  seasonsLicenseId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsProductionCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsProductionCountryCondition>;
   filter?: InputMaybe<SeasonsProductionCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsProductionCountriesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsProductionCountryArgs = {
-  name: Scalars['String'];
-  seasonId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsTagArgs = {
-  name: Scalars['String'];
-  seasonId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsTagCondition>;
   filter?: InputMaybe<SeasonsTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsTagsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsTrailerArgs = {
-  seasonId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  seasonId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsTrailersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsTrailerCondition>;
   filter?: InputMaybe<SeasonsTrailerFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsTrailersOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsTvshowGenreArgs = {
-  seasonId: Scalars['Int'];
-  tvshowGenresId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
+  tvshowGenresId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySeasonsTvshowGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsTvshowGenreCondition>;
   filter?: InputMaybe<SeasonsTvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsTvshowGenresOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySnapshotArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SnapshotCondition>;
   filter?: InputMaybe<SnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SnapshotsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowByExternalIdArgs = {
-  externalId: Scalars['String'];
+  externalId: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowGenreArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowGenreCondition>;
   filter?: InputMaybe<TvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowGenresOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowCondition>;
   filter?: InputMaybe<TvshowFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsCastArgs = {
-  name: Scalars['String'];
-  tvshowId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsCastsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsCastCondition>;
   filter?: InputMaybe<TvshowsCastFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsCastsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsImageCondition>;
   filter?: InputMaybe<TvshowsImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsImagesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsLicenseArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsLicenseCondition>;
   filter?: InputMaybe<TvshowsLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsLicensesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsLicensesCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsLicensesCountryCondition>;
   filter?: InputMaybe<TvshowsLicensesCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsLicensesCountriesOrderBy>>;
 };
 
@@ -11323,106 +12726,116 @@ export type QueryTvshowsLicensesCountriesArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsLicensesCountryArgs = {
   code: IsoAlphaTwoCountryCodes;
-  tvshowsLicenseId: Scalars['Int'];
+  tvshowsLicenseId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsProductionCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsProductionCountryCondition>;
   filter?: InputMaybe<TvshowsProductionCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsProductionCountriesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsProductionCountryArgs = {
-  name: Scalars['String'];
-  tvshowId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsTagArgs = {
-  name: Scalars['String'];
-  tvshowId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsTagCondition>;
   filter?: InputMaybe<TvshowsTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsTagsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsTrailerArgs = {
-  tvshowId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  tvshowId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsTrailersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsTrailerCondition>;
   filter?: InputMaybe<TvshowsTrailerFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsTrailersOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsTvshowGenreArgs = {
-  tvshowGenresId: Scalars['Int'];
-  tvshowId: Scalars['Int'];
+  tvshowGenresId: Scalars['Int']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTvshowsTvshowGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsTvshowGenreCondition>;
   filter?: InputMaybe<TvshowsTvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsTvshowGenresOrderBy>>;
 };
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type Season = {
   __typename?: 'Season';
+  ageRating?: Maybe<Scalars['String']['output']>;
+  assetSubtype: AssetSubtype;
+  businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
+  contentOwner?: Maybe<Scalars['String']['output']>;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  creditsStartTime?: Maybe<Scalars['String']['output']>;
+  customRating?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  dynamicField?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Episode`. */
   episodes: EpisodesConnection;
-  externalId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  index: Scalars['Int'];
-  publishedDate?: Maybe<Scalars['Datetime']>;
-  publishedUser?: Maybe<Scalars['String']>;
+  extendedField?: Maybe<Scalars['String']['output']>;
+  externalId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  index: Scalars['Int']['output'];
+  lengthInSeconds?: Maybe<Scalars['BigFloat']['output']>;
+  publishedDate?: Maybe<Scalars['Datetime']['output']>;
+  publishedUser?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
-  released?: Maybe<Scalars['Date']>;
+  rating?: Maybe<Scalars['BigFloat']['output']>;
+  released?: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `SeasonsCast`. */
   seasonsCasts: SeasonsCastsConnection;
   /** Reads and enables pagination through a set of `SeasonsImage`. */
@@ -11439,203 +12852,241 @@ export type Season = {
   seasonsTrailers: SeasonsTrailersConnection;
   /** Reads and enables pagination through a set of `SeasonsTvshowGenre`. */
   seasonsTvshowGenres: SeasonsTvshowGenresConnection;
-  studio?: Maybe<Scalars['String']>;
-  synopsis?: Maybe<Scalars['String']>;
+  studio?: Maybe<Scalars['String']['output']>;
+  synopsis?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Tvshow` that is related to this `Season`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId?: Maybe<Scalars['Int']>;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  tvshowId?: Maybe<Scalars['Int']['output']>;
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonCollectionRelationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionRelationCondition>;
   filter?: InputMaybe<CollectionRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionRelationsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonEpisodesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodeCondition>;
   filter?: InputMaybe<EpisodeFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonSeasonsCastsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsCastCondition>;
   filter?: InputMaybe<SeasonsCastFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsCastsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonSeasonsImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsImageCondition>;
   filter?: InputMaybe<SeasonsImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsImagesOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonSeasonsLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsLicenseCondition>;
   filter?: InputMaybe<SeasonsLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsLicensesOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonSeasonsProductionCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsProductionCountryCondition>;
   filter?: InputMaybe<SeasonsProductionCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsProductionCountriesOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonSeasonsSnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsSnapshotCondition>;
   filter?: InputMaybe<SeasonsSnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsSnapshotsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonSeasonsTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsTagCondition>;
   filter?: InputMaybe<SeasonsTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsTagsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonSeasonsTrailersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsTrailerCondition>;
   filter?: InputMaybe<SeasonsTrailerFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsTrailersOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonSeasonsTvshowGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsTvshowGenreCondition>;
   filter?: InputMaybe<SeasonsTvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsTvshowGenresOrderBy>>;
 };
 
 /** A condition to be used against `Season` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type SeasonCondition = {
+  /** Checks for equality with the object’s `ageRating` field. */
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  /** Checks for equality with the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessType>;
+  /** Checks for equality with the object’s `contentOwner` field. */
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `customRating` field. */
+  customRating?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `extendedField` field. */
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
-  externalId?: InputMaybe<Scalars['String']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `index` field. */
-  index?: InputMaybe<Scalars['Int']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `publishedDate` field. */
-  publishedDate?: InputMaybe<Scalars['Datetime']>;
+  publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
-  publishedUser?: InputMaybe<Scalars['String']>;
+  publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `released` field. */
-  released?: InputMaybe<Scalars['Date']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `studio` field. */
-  studio?: InputMaybe<Scalars['String']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `synopsis` field. */
-  synopsis?: InputMaybe<Scalars['String']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Season` object types. All fields are combined with a logical ‘and.’ */
 export type SeasonFilter = {
+  /** Filter by the object’s `ageRating` field. */
+  ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<SeasonFilter>>;
+  /** Filter by the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtypeFilter>;
+  /** Filter by the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessTypeFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<SeasonToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
-  collectionRelationsExist?: InputMaybe<Scalars['Boolean']>;
+  collectionRelationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `contentOwner` field. */
+  contentOwner?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `customRating` field. */
+  customRating?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `episodes` relation. */
   episodes?: InputMaybe<SeasonToManyEpisodeFilter>;
   /** Some related `episodes` exist. */
-  episodesExist?: InputMaybe<Scalars['Boolean']>;
+  episodesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `extendedField` field. */
+  extendedField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `externalId` field. */
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `index` field. */
   index?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<BigFloatFilter>;
   /** Negates the expression. */
   not?: InputMaybe<SeasonFilter>;
   /** Checks for any expressions in this list. */
@@ -11646,40 +13097,46 @@ export type SeasonFilter = {
   publishedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
+  /** Filter by the object’s `rating` field. */
+  rating?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `seasonsCasts` relation. */
   seasonsCasts?: InputMaybe<SeasonToManySeasonsCastFilter>;
   /** Some related `seasonsCasts` exist. */
-  seasonsCastsExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsCastsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `seasonsDirectors` relation. */
+  seasonsDirectors?: InputMaybe<SeasonToManySeasonsDirectorFilter>;
+  /** Some related `seasonsDirectors` exist. */
+  seasonsDirectorsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `seasonsImages` relation. */
   seasonsImages?: InputMaybe<SeasonToManySeasonsImageFilter>;
   /** Some related `seasonsImages` exist. */
-  seasonsImagesExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsImagesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `seasonsLicenses` relation. */
   seasonsLicenses?: InputMaybe<SeasonToManySeasonsLicenseFilter>;
   /** Some related `seasonsLicenses` exist. */
-  seasonsLicensesExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsLicensesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `seasonsProductionCountries` relation. */
   seasonsProductionCountries?: InputMaybe<SeasonToManySeasonsProductionCountryFilter>;
   /** Some related `seasonsProductionCountries` exist. */
-  seasonsProductionCountriesExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsProductionCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `seasonsSnapshots` relation. */
   seasonsSnapshots?: InputMaybe<SeasonToManySeasonsSnapshotFilter>;
   /** Some related `seasonsSnapshots` exist. */
-  seasonsSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsSnapshotsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `seasonsTags` relation. */
   seasonsTags?: InputMaybe<SeasonToManySeasonsTagFilter>;
   /** Some related `seasonsTags` exist. */
-  seasonsTagsExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsTagsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `seasonsTrailers` relation. */
   seasonsTrailers?: InputMaybe<SeasonToManySeasonsTrailerFilter>;
   /** Some related `seasonsTrailers` exist. */
-  seasonsTrailersExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsTrailersExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `seasonsTvshowGenres` relation. */
   seasonsTvshowGenres?: InputMaybe<SeasonToManySeasonsTvshowGenreFilter>;
   /** Some related `seasonsTvshowGenres` exist. */
-  seasonsTvshowGenresExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsTvshowGenresExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `studio` field. */
   studio?: InputMaybe<StringFilter>;
   /** Filter by the object’s `synopsis` field. */
@@ -11687,7 +13144,7 @@ export type SeasonFilter = {
   /** Filter by the object’s `tvshow` relation. */
   tvshow?: InputMaybe<TvshowFilter>;
   /** A related `tvshow` exists. */
-  tvshowExists?: InputMaybe<Scalars['Boolean']>;
+  tvshowExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowId` field. */
   tvshowId?: InputMaybe<IntFilter>;
   /** Filter by the object’s `updatedDate` field. */
@@ -11716,7 +13173,7 @@ export type SeasonImageTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<SeasonImageType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<SeasonImageType>;
   /** Less than or equal to the specified value. */
@@ -11731,33 +13188,53 @@ export type SeasonImageTypeFilter = {
 
 /** An input for mutations affecting `Season` */
 export type SeasonInput = {
-  description?: InputMaybe<Scalars['String']>;
-  externalId?: InputMaybe<Scalars['String']>;
-  index: Scalars['Int'];
-  released?: InputMaybe<Scalars['Date']>;
-  studio?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  businessType?: InputMaybe<BusinessType>;
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  index: Scalars['Int']['input'];
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Represents an update to a `Season`. Fields that are set will be updated. */
 export type SeasonPatch = {
-  description?: InputMaybe<Scalars['String']>;
-  externalId?: InputMaybe<Scalars['String']>;
-  index?: InputMaybe<Scalars['Int']>;
-  released?: InputMaybe<Scalars['Date']>;
-  studio?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  businessType?: InputMaybe<BusinessType>;
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  index?: InputMaybe<Scalars['Int']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonsCast = {
   __typename?: 'SeasonsCast';
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** Reads a single `Season` that is related to this `SeasonsCast`. */
   season?: Maybe<Season>;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['output'];
 };
 
 /**
@@ -11769,9 +13246,9 @@ export type SeasonsCastCondition = {
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `SeasonsCast` object types. All fields are combined with a logical ‘and.’ */
@@ -11793,14 +13270,14 @@ export type SeasonsCastFilter = {
 /** An input for mutations affecting `SeasonsCast` */
 export type SeasonsCastInput = {
   /** @notEmpty() */
-  name: Scalars['String'];
-  seasonId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `SeasonsCast`. Fields that are set will be updated. */
 export type SeasonsCastPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -11816,14 +13293,14 @@ export type SeasonsCastsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonsCast` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonsCast` edge in the connection. */
 export type SeasonsCastsEdge = {
   __typename?: 'SeasonsCastsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonsCast` at the end of the edge. */
   node: SeasonsCast;
 };
@@ -11852,14 +13329,30 @@ export type SeasonsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Season` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A filter to be used against `SeasonsDirector` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonsDirectorFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<SeasonsDirectorFilter>>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<SeasonsDirectorFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<SeasonsDirectorFilter>>;
+  /** Filter by the object’s `season` relation. */
+  season?: InputMaybe<SeasonFilter>;
+  /** Filter by the object’s `seasonId` field. */
+  seasonId?: InputMaybe<IntFilter>;
 };
 
 /** A `Season` edge in the connection. */
 export type SeasonsEdge = {
   __typename?: 'SeasonsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Season` at the end of the edge. */
   node: Season;
 };
@@ -11867,11 +13360,11 @@ export type SeasonsEdge = {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonsImage = {
   __typename?: 'SeasonsImage';
-  imageId: Scalars['UUID'];
+  imageId: Scalars['UUID']['output'];
   imageType: SeasonImageType;
   /** Reads a single `Season` that is related to this `SeasonsImage`. */
   season?: Maybe<Season>;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['output'];
 };
 
 /**
@@ -11880,11 +13373,11 @@ export type SeasonsImage = {
  */
 export type SeasonsImageCondition = {
   /** Checks for equality with the object’s `imageId` field. */
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `imageType` field. */
   imageType?: InputMaybe<SeasonImageType>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `SeasonsImage` object types. All fields are combined with a logical ‘and.’ */
@@ -11907,16 +13400,16 @@ export type SeasonsImageFilter = {
 
 /** An input for mutations affecting `SeasonsImage` */
 export type SeasonsImageInput = {
-  imageId: Scalars['UUID'];
+  imageId: Scalars['UUID']['input'];
   imageType: SeasonImageType;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `SeasonsImage`. Fields that are set will be updated. */
 export type SeasonsImagePatch = {
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   imageType?: InputMaybe<SeasonImageType>;
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -11932,14 +13425,14 @@ export type SeasonsImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonsImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonsImage` edge in the connection. */
 export type SeasonsImagesEdge = {
   __typename?: 'SeasonsImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonsImage` at the end of the edge. */
   node: SeasonsImage;
 };
@@ -11960,28 +13453,28 @@ export enum SeasonsImagesOrderBy {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonsLicense = {
   __typename?: 'SeasonsLicense';
-  createdDate: Scalars['Datetime'];
-  id: Scalars['Int'];
-  licenseEnd?: Maybe<Scalars['Datetime']>;
-  licenseStart?: Maybe<Scalars['Datetime']>;
+  createdDate: Scalars['Datetime']['output'];
+  id: Scalars['Int']['output'];
+  licenseEnd?: Maybe<Scalars['Datetime']['output']>;
+  licenseStart?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Season` that is related to this `SeasonsLicense`. */
   season?: Maybe<Season>;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `SeasonsLicensesCountry`. */
   seasonsLicensesCountries: SeasonsLicensesCountriesConnection;
-  updatedDate: Scalars['Datetime'];
+  updatedDate: Scalars['Datetime']['output'];
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonsLicenseSeasonsLicensesCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsLicensesCountryCondition>;
   filter?: InputMaybe<SeasonsLicensesCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsLicensesCountriesOrderBy>>;
 };
 
@@ -11991,17 +13484,17 @@ export type SeasonsLicenseSeasonsLicensesCountriesArgs = {
  */
 export type SeasonsLicenseCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `licenseEnd` field. */
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `licenseStart` field. */
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A filter to be used against `SeasonsLicense` object types. All fields are combined with a logical ‘and.’ */
@@ -12027,23 +13520,23 @@ export type SeasonsLicenseFilter = {
   /** Filter by the object’s `seasonsLicensesCountries` relation. */
   seasonsLicensesCountries?: InputMaybe<SeasonsLicenseToManySeasonsLicensesCountryFilter>;
   /** Some related `seasonsLicensesCountries` exist. */
-  seasonsLicensesCountriesExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsLicensesCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<DatetimeFilter>;
 };
 
 /** An input for mutations affecting `SeasonsLicense` */
 export type SeasonsLicenseInput = {
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
-  seasonId: Scalars['Int'];
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
+  seasonId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `SeasonsLicense`. Fields that are set will be updated. */
 export type SeasonsLicensePatch = {
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
-  seasonId?: InputMaybe<Scalars['Int']>;
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -12059,7 +13552,7 @@ export type SeasonsLicensesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonsLicense` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /**
@@ -12075,14 +13568,14 @@ export type SeasonsLicensesCountriesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonsLicensesCountry` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonsLicensesCountry` edge in the connection. */
 export type SeasonsLicensesCountriesEdge = {
   __typename?: 'SeasonsLicensesCountriesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonsLicensesCountry` at the end of the edge. */
   node: SeasonsLicensesCountry;
 };
@@ -12104,7 +13597,7 @@ export type SeasonsLicensesCountry = {
   code: IsoAlphaTwoCountryCodes;
   /** Reads a single `SeasonsLicense` that is related to this `SeasonsLicensesCountry`. */
   seasonsLicense?: Maybe<SeasonsLicense>;
-  seasonsLicenseId: Scalars['Int'];
+  seasonsLicenseId: Scalars['Int']['output'];
 };
 
 /**
@@ -12115,7 +13608,7 @@ export type SeasonsLicensesCountryCondition = {
   /** Checks for equality with the object’s `code` field. */
   code?: InputMaybe<IsoAlphaTwoCountryCodes>;
   /** Checks for equality with the object’s `seasonsLicenseId` field. */
-  seasonsLicenseId?: InputMaybe<Scalars['Int']>;
+  seasonsLicenseId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `SeasonsLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
@@ -12137,7 +13630,7 @@ export type SeasonsLicensesCountryFilter = {
 /** An input for mutations affecting `SeasonsLicensesCountry` */
 export type SeasonsLicensesCountryInput = {
   code: IsoAlphaTwoCountryCodes;
-  seasonsLicenseId: Scalars['Int'];
+  seasonsLicenseId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `SeasonsLicensesCountry`. Fields that are set will be updated. */
@@ -12149,7 +13642,7 @@ export type SeasonsLicensesCountryPatch = {
 export type SeasonsLicensesEdge = {
   __typename?: 'SeasonsLicensesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonsLicense` at the end of the edge. */
   node: SeasonsLicense;
 };
@@ -12185,18 +13678,36 @@ export type SeasonsLicenseToManySeasonsLicensesCountryFilter = {
 
 /** Methods to use when ordering `Season`. */
 export enum SeasonsOrderBy {
+  AgeRatingAsc = 'AGE_RATING_ASC',
+  AgeRatingDesc = 'AGE_RATING_DESC',
+  AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
+  AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
+  BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
+  BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
+  ContentOwnerAsc = 'CONTENT_OWNER_ASC',
+  ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
+  CreditsStartTimeAsc = 'CREDITS_START_TIME_ASC',
+  CreditsStartTimeDesc = 'CREDITS_START_TIME_DESC',
+  CustomRatingAsc = 'CUSTOM_RATING_ASC',
+  CustomRatingDesc = 'CUSTOM_RATING_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  DynamicFieldAsc = 'DYNAMIC_FIELD_ASC',
+  DynamicFieldDesc = 'DYNAMIC_FIELD_DESC',
+  ExtendedFieldAsc = 'EXTENDED_FIELD_ASC',
+  ExtendedFieldDesc = 'EXTENDED_FIELD_DESC',
   ExternalIdAsc = 'EXTERNAL_ID_ASC',
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   IndexAsc = 'INDEX_ASC',
   IndexDesc = 'INDEX_DESC',
+  LengthInSecondsAsc = 'LENGTH_IN_SECONDS_ASC',
+  LengthInSecondsDesc = 'LENGTH_IN_SECONDS_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -12206,6 +13717,8 @@ export enum SeasonsOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  RatingAsc = 'RATING_ASC',
+  RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
@@ -12233,14 +13746,14 @@ export type SeasonsProductionCountriesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonsProductionCountry` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonsProductionCountry` edge in the connection. */
 export type SeasonsProductionCountriesEdge = {
   __typename?: 'SeasonsProductionCountriesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonsProductionCountry` at the end of the edge. */
   node: SeasonsProductionCountry;
 };
@@ -12259,10 +13772,10 @@ export enum SeasonsProductionCountriesOrderBy {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonsProductionCountry = {
   __typename?: 'SeasonsProductionCountry';
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** Reads a single `Season` that is related to this `SeasonsProductionCountry`. */
   season?: Maybe<Season>;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['output'];
 };
 
 /**
@@ -12274,9 +13787,9 @@ export type SeasonsProductionCountryCondition = {
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `SeasonsProductionCountry` object types. All fields are combined with a logical ‘and.’ */
@@ -12298,14 +13811,14 @@ export type SeasonsProductionCountryFilter = {
 /** An input for mutations affecting `SeasonsProductionCountry` */
 export type SeasonsProductionCountryInput = {
   /** @notEmpty() */
-  name: Scalars['String'];
-  seasonId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `SeasonsProductionCountry`. Fields that are set will be updated. */
 export type SeasonsProductionCountryPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
@@ -12313,10 +13826,10 @@ export type SeasonsSnapshot = {
   __typename?: 'SeasonsSnapshot';
   /** Reads a single `Season` that is related to this `SeasonsSnapshot`. */
   season?: Maybe<Season>;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['output'];
   /** Reads a single `Snapshot` that is related to this `SeasonsSnapshot`. */
   snapshot?: Maybe<Snapshot>;
-  snapshotId: Scalars['Int'];
+  snapshotId: Scalars['Int']['output'];
 };
 
 /**
@@ -12325,9 +13838,9 @@ export type SeasonsSnapshot = {
  */
 export type SeasonsSnapshotCondition = {
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `snapshotId` field. */
-  snapshotId?: InputMaybe<Scalars['Int']>;
+  snapshotId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `SeasonsSnapshot` object types. All fields are combined with a logical ‘and.’ */
@@ -12361,14 +13874,14 @@ export type SeasonsSnapshotsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonsSnapshot` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonsSnapshot` edge in the connection. */
 export type SeasonsSnapshotsEdge = {
   __typename?: 'SeasonsSnapshotsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonsSnapshot` at the end of the edge. */
   node: SeasonsSnapshot;
 };
@@ -12387,10 +13900,10 @@ export enum SeasonsSnapshotsOrderBy {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type SeasonsTag = {
   __typename?: 'SeasonsTag';
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** Reads a single `Season` that is related to this `SeasonsTag`. */
   season?: Maybe<Season>;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['output'];
 };
 
 /**
@@ -12402,9 +13915,9 @@ export type SeasonsTagCondition = {
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `SeasonsTag` object types. All fields are combined with a logical ‘and.’ */
@@ -12426,14 +13939,14 @@ export type SeasonsTagFilter = {
 /** An input for mutations affecting `SeasonsTag` */
 export type SeasonsTagInput = {
   /** @notEmpty() */
-  name: Scalars['String'];
-  seasonId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `SeasonsTag`. Fields that are set will be updated. */
 export type SeasonsTagPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -12449,14 +13962,14 @@ export type SeasonsTagsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonsTag` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonsTag` edge in the connection. */
 export type SeasonsTagsEdge = {
   __typename?: 'SeasonsTagsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonsTag` at the end of the edge. */
   node: SeasonsTag;
 };
@@ -12477,8 +13990,8 @@ export type SeasonsTrailer = {
   __typename?: 'SeasonsTrailer';
   /** Reads a single `Season` that is related to this `SeasonsTrailer`. */
   season?: Maybe<Season>;
-  seasonId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  seasonId: Scalars['Int']['output'];
+  videoId: Scalars['UUID']['output'];
 };
 
 /**
@@ -12487,9 +14000,9 @@ export type SeasonsTrailer = {
  */
 export type SeasonsTrailerCondition = {
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['UUID']>;
+  videoId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A filter to be used against `SeasonsTrailer` object types. All fields are combined with a logical ‘and.’ */
@@ -12510,8 +14023,8 @@ export type SeasonsTrailerFilter = {
 
 /** An input for mutations affecting `SeasonsTrailer` */
 export type SeasonsTrailerInput = {
-  seasonId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  seasonId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 /**
@@ -12527,14 +14040,14 @@ export type SeasonsTrailersConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonsTrailer` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonsTrailer` edge in the connection. */
 export type SeasonsTrailersEdge = {
   __typename?: 'SeasonsTrailersEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonsTrailer` at the end of the edge. */
   node: SeasonsTrailer;
 };
@@ -12555,10 +14068,10 @@ export type SeasonsTvshowGenre = {
   __typename?: 'SeasonsTvshowGenre';
   /** Reads a single `Season` that is related to this `SeasonsTvshowGenre`. */
   season?: Maybe<Season>;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['output'];
   /** Reads a single `TvshowGenre` that is related to this `SeasonsTvshowGenre`. */
   tvshowGenres?: Maybe<TvshowGenre>;
-  tvshowGenresId: Scalars['Int'];
+  tvshowGenresId: Scalars['Int']['output'];
 };
 
 /**
@@ -12567,9 +14080,9 @@ export type SeasonsTvshowGenre = {
  */
 export type SeasonsTvshowGenreCondition = {
   /** Checks for equality with the object’s `seasonId` field. */
-  seasonId?: InputMaybe<Scalars['Int']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tvshowGenresId` field. */
-  tvshowGenresId?: InputMaybe<Scalars['Int']>;
+  tvshowGenresId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `SeasonsTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
@@ -12592,8 +14105,8 @@ export type SeasonsTvshowGenreFilter = {
 
 /** An input for mutations affecting `SeasonsTvshowGenre` */
 export type SeasonsTvshowGenreInput = {
-  seasonId: Scalars['Int'];
-  tvshowGenresId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
+  tvshowGenresId: Scalars['Int']['input'];
 };
 
 /**
@@ -12609,14 +14122,14 @@ export type SeasonsTvshowGenresConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SeasonsTvshowGenre` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SeasonsTvshowGenre` edge in the connection. */
 export type SeasonsTvshowGenresEdge = {
   __typename?: 'SeasonsTvshowGenresEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SeasonsTvshowGenre` at the end of the edge. */
   node: SeasonsTvshowGenre;
 };
@@ -12662,9 +14175,9 @@ export enum SeasonSubscriptionEventKey {
 export type SeasonSubscriptionPayload = {
   __typename?: 'SeasonSubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<SeasonSubscriptionEventKey>;
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
   season?: Maybe<Season>;
 };
 
@@ -12696,6 +14209,16 @@ export type SeasonToManySeasonsCastFilter = {
   none?: InputMaybe<SeasonsCastFilter>;
   /** Some related `SeasonsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<SeasonsCastFilter>;
+};
+
+/** A filter to be used against many `SeasonsDirector` object types. All fields are combined with a logical ‘and.’ */
+export type SeasonToManySeasonsDirectorFilter = {
+  /** Every related `SeasonsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonsDirectorFilter>;
+  /** No related `SeasonsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonsDirectorFilter>;
+  /** Some related `SeasonsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonsDirectorFilter>;
 };
 
 /** A filter to be used against many `SeasonsImage` object types. All fields are combined with a logical ‘and.’ */
@@ -12776,33 +14299,33 @@ export type Snapshot = {
   __typename?: 'Snapshot';
   /** Reads and enables pagination through a set of `CollectionsSnapshot`. */
   collectionsSnapshots: CollectionsSnapshotsConnection;
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  entityId: Scalars['Int'];
-  entityTitle?: Maybe<Scalars['String']>;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  entityId: Scalars['Int']['output'];
+  entityTitle?: Maybe<Scalars['String']['output']>;
   entityType: EntityType;
   /** Reads and enables pagination through a set of `EpisodesSnapshot`. */
   episodesSnapshots: EpisodesSnapshotsConnection;
-  id: Scalars['Int'];
-  isListSnapshot: Scalars['Boolean'];
-  jobId: Scalars['String'];
+  id: Scalars['Int']['output'];
+  isListSnapshot: Scalars['Boolean']['output'];
+  jobId: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `MoviesSnapshot`. */
   moviesSnapshots: MoviesSnapshotsConnection;
-  publishedDate?: Maybe<Scalars['Datetime']>;
-  publishId: Scalars['String'];
-  scheduledDate?: Maybe<Scalars['Datetime']>;
+  publishedDate?: Maybe<Scalars['Datetime']['output']>;
+  publishId: Scalars['String']['output'];
+  scheduledDate?: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `SeasonsSnapshot`. */
   seasonsSnapshots: SeasonsSnapshotsConnection;
-  snapshotJson?: Maybe<Scalars['JSON']>;
-  snapshotNo: Scalars['Int'];
+  snapshotJson?: Maybe<Scalars['JSON']['output']>;
+  snapshotNo: Scalars['Int']['output'];
   snapshotState: SnapshotState;
   /** Reads and enables pagination through a set of `SnapshotValidationResult`. */
   snapshotValidationResults: SnapshotValidationResultsConnection;
   /** Reads and enables pagination through a set of `TvshowsSnapshot`. */
   tvshowsSnapshots: TvshowsSnapshotsConnection;
-  unpublishedDate?: Maybe<Scalars['Datetime']>;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  unpublishedDate?: Maybe<Scalars['Datetime']['output']>;
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
   validationStatus?: Maybe<SnapshotValidationStatus>;
 };
 
@@ -12812,13 +14335,13 @@ export type Snapshot = {
  * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotCollectionsSnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionsSnapshotCondition>;
   filter?: InputMaybe<CollectionsSnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionsSnapshotsOrderBy>>;
 };
 
@@ -12828,13 +14351,13 @@ export type SnapshotCollectionsSnapshotsArgs = {
  * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotEpisodesSnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesSnapshotCondition>;
   filter?: InputMaybe<EpisodesSnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesSnapshotsOrderBy>>;
 };
 
@@ -12844,13 +14367,13 @@ export type SnapshotEpisodesSnapshotsArgs = {
  * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotMoviesSnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<MoviesSnapshotCondition>;
   filter?: InputMaybe<MoviesSnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MoviesSnapshotsOrderBy>>;
 };
 
@@ -12860,13 +14383,13 @@ export type SnapshotMoviesSnapshotsArgs = {
  * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotSeasonsSnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsSnapshotCondition>;
   filter?: InputMaybe<SeasonsSnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsSnapshotsOrderBy>>;
 };
 
@@ -12876,13 +14399,13 @@ export type SnapshotSeasonsSnapshotsArgs = {
  * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotSnapshotValidationResultsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SnapshotValidationResultCondition>;
   filter?: InputMaybe<SnapshotValidationResultFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SnapshotValidationResultsOrderBy>>;
 };
 
@@ -12892,13 +14415,13 @@ export type SnapshotSnapshotValidationResultsArgs = {
  * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotTvshowsSnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsSnapshotCondition>;
   filter?: InputMaybe<TvshowsSnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsSnapshotsOrderBy>>;
 };
 
@@ -12908,39 +14431,39 @@ export type SnapshotTvshowsSnapshotsArgs = {
  */
 export type SnapshotCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `entityId` field. */
-  entityId?: InputMaybe<Scalars['Int']>;
+  entityId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `entityTitle` field. */
-  entityTitle?: InputMaybe<Scalars['String']>;
+  entityTitle?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `entityType` field. */
   entityType?: InputMaybe<EntityType>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `isListSnapshot` field. */
-  isListSnapshot?: InputMaybe<Scalars['Boolean']>;
+  isListSnapshot?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `jobId` field. */
-  jobId?: InputMaybe<Scalars['String']>;
+  jobId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishedDate` field. */
-  publishedDate?: InputMaybe<Scalars['Datetime']>;
+  publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishId` field. */
-  publishId?: InputMaybe<Scalars['String']>;
+  publishId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `scheduledDate` field. */
-  scheduledDate?: InputMaybe<Scalars['Datetime']>;
+  scheduledDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `snapshotJson` field. */
-  snapshotJson?: InputMaybe<Scalars['JSON']>;
+  snapshotJson?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `snapshotNo` field. */
-  snapshotNo?: InputMaybe<Scalars['Int']>;
+  snapshotNo?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `snapshotState` field. */
   snapshotState?: InputMaybe<SnapshotState>;
   /** Checks for equality with the object’s `unpublishedDate` field. */
-  unpublishedDate?: InputMaybe<Scalars['Datetime']>;
+  unpublishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `validationStatus` field. */
   validationStatus?: InputMaybe<SnapshotValidationStatus>;
 };
@@ -12952,7 +14475,7 @@ export type SnapshotFilter = {
   /** Filter by the object’s `collectionsSnapshots` relation. */
   collectionsSnapshots?: InputMaybe<SnapshotToManyCollectionsSnapshotFilter>;
   /** Some related `collectionsSnapshots` exist. */
-  collectionsSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
+  collectionsSnapshotsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
@@ -12966,7 +14489,7 @@ export type SnapshotFilter = {
   /** Filter by the object’s `episodesSnapshots` relation. */
   episodesSnapshots?: InputMaybe<SnapshotToManyEpisodesSnapshotFilter>;
   /** Some related `episodesSnapshots` exist. */
-  episodesSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
+  episodesSnapshotsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `isListSnapshot` field. */
@@ -12976,7 +14499,7 @@ export type SnapshotFilter = {
   /** Filter by the object’s `moviesSnapshots` relation. */
   moviesSnapshots?: InputMaybe<SnapshotToManyMoviesSnapshotFilter>;
   /** Some related `moviesSnapshots` exist. */
-  moviesSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
+  moviesSnapshotsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Negates the expression. */
   not?: InputMaybe<SnapshotFilter>;
   /** Checks for any expressions in this list. */
@@ -12990,7 +14513,7 @@ export type SnapshotFilter = {
   /** Filter by the object’s `seasonsSnapshots` relation. */
   seasonsSnapshots?: InputMaybe<SnapshotToManySeasonsSnapshotFilter>;
   /** Some related `seasonsSnapshots` exist. */
-  seasonsSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsSnapshotsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `snapshotNo` field. */
   snapshotNo?: InputMaybe<IntFilter>;
   /** Filter by the object’s `snapshotState` field. */
@@ -12998,11 +14521,11 @@ export type SnapshotFilter = {
   /** Filter by the object’s `snapshotValidationResults` relation. */
   snapshotValidationResults?: InputMaybe<SnapshotToManySnapshotValidationResultFilter>;
   /** Some related `snapshotValidationResults` exist. */
-  snapshotValidationResultsExist?: InputMaybe<Scalars['Boolean']>;
+  snapshotValidationResultsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowsSnapshots` relation. */
   tvshowsSnapshots?: InputMaybe<SnapshotToManyTvshowsSnapshotFilter>;
   /** Some related `tvshowsSnapshots` exist. */
-  tvshowsSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsSnapshotsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `unpublishedDate` field. */
   unpublishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `updatedDate` field. */
@@ -13026,14 +14549,14 @@ export type SnapshotsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Snapshot` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Snapshot` edge in the connection. */
 export type SnapshotsEdge = {
   __typename?: 'SnapshotsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Snapshot` at the end of the edge. */
   node: Snapshot;
 };
@@ -13115,7 +14638,7 @@ export type SnapshotStateFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<SnapshotState>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<SnapshotState>;
   /** Less than or equal to the specified value. */
@@ -13140,9 +14663,9 @@ export enum SnapshotSubscriptionEventKey {
 export type SnapshotSubscriptionPayload = {
   __typename?: 'SnapshotSubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<SnapshotSubscriptionEventKey>;
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
   snapshot?: Maybe<Snapshot>;
 };
 
@@ -13232,7 +14755,7 @@ export type SnapshotValidationIssueContextFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<SnapshotValidationIssueContext>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<SnapshotValidationIssueContext>;
   /** Less than or equal to the specified value. */
@@ -13265,7 +14788,7 @@ export type SnapshotValidationIssueSeverityFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<SnapshotValidationIssueSeverity>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<SnapshotValidationIssueSeverity>;
   /** Less than or equal to the specified value. */
@@ -13283,12 +14806,12 @@ export type SnapshotValidationResult = {
   __typename?: 'SnapshotValidationResult';
   context: SnapshotValidationIssueContext;
   entityType: EntityType;
-  id: Scalars['Int'];
-  message: Scalars['String'];
+  id: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
   severity: SnapshotValidationIssueSeverity;
   /** Reads a single `Snapshot` that is related to this `SnapshotValidationResult`. */
   snapshot?: Maybe<Snapshot>;
-  snapshotId: Scalars['Int'];
+  snapshotId: Scalars['Int']['output'];
 };
 
 /**
@@ -13301,13 +14824,13 @@ export type SnapshotValidationResultCondition = {
   /** Checks for equality with the object’s `entityType` field. */
   entityType?: InputMaybe<EntityType>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `message` field. */
-  message?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `severity` field. */
   severity?: InputMaybe<SnapshotValidationIssueSeverity>;
   /** Checks for equality with the object’s `snapshotId` field. */
-  snapshotId?: InputMaybe<Scalars['Int']>;
+  snapshotId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `SnapshotValidationResult` object types. All fields are combined with a logical ‘and.’ */
@@ -13347,14 +14870,14 @@ export type SnapshotValidationResultsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `SnapshotValidationResult` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `SnapshotValidationResult` edge in the connection. */
 export type SnapshotValidationResultsEdge = {
   __typename?: 'SnapshotValidationResultsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `SnapshotValidationResult` at the end of the edge. */
   node: SnapshotValidationResult;
 };
@@ -13400,7 +14923,7 @@ export type SnapshotValidationStatusFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<SnapshotValidationStatus>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<SnapshotValidationStatus>;
   /** Less than or equal to the specified value. */
@@ -13414,7 +14937,7 @@ export type SnapshotValidationStatusFilter = {
 };
 
 export type StartIngestInput = {
-  file: Scalars['Upload'];
+  file: Scalars['Upload']['input'];
 };
 
 export type StartIngestPayload = {
@@ -13426,79 +14949,119 @@ export type StartIngestPayload = {
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
 export type StringFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['String']>;
+  distinctFrom?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value, treating null like an ordinary value (case-insensitive). */
-  distinctFromInsensitive?: InputMaybe<Scalars['String']>;
+  distinctFromInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Ends with the specified string (case-sensitive). */
-  endsWith?: InputMaybe<Scalars['String']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
   /** Ends with the specified string (case-insensitive). */
-  endsWithInsensitive?: InputMaybe<Scalars['String']>;
+  endsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['String']>;
+  equalTo?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value (case-insensitive). */
-  equalToInsensitive?: InputMaybe<Scalars['String']>;
+  equalToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['String']>;
+  greaterThan?: InputMaybe<Scalars['String']['input']>;
   /** Greater than the specified value (case-insensitive). */
-  greaterThanInsensitive?: InputMaybe<Scalars['String']>;
+  greaterThanInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['String']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Greater than or equal to the specified value (case-insensitive). */
-  greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  greaterThanOrEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['String']>>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Contains the specified string (case-sensitive). */
-  includes?: InputMaybe<Scalars['String']>;
+  includes?: InputMaybe<Scalars['String']['input']>;
   /** Contains the specified string (case-insensitive). */
-  includesInsensitive?: InputMaybe<Scalars['String']>;
+  includesInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Included in the specified list (case-insensitive). */
-  inInsensitive?: InputMaybe<Array<Scalars['String']>>;
+  inInsensitive?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['String']>;
+  lessThan?: InputMaybe<Scalars['String']['input']>;
   /** Less than the specified value (case-insensitive). */
-  lessThanInsensitive?: InputMaybe<Scalars['String']>;
+  lessThanInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['String']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Less than or equal to the specified value (case-insensitive). */
-  lessThanOrEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  lessThanOrEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  like?: InputMaybe<Scalars['String']>;
+  like?: InputMaybe<Scalars['String']['input']>;
   /** Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  likeInsensitive?: InputMaybe<Scalars['String']>;
+  likeInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['String']>;
+  notDistinctFrom?: InputMaybe<Scalars['String']['input']>;
   /** Equal to the specified value, treating null like an ordinary value (case-insensitive). */
-  notDistinctFromInsensitive?: InputMaybe<Scalars['String']>;
+  notDistinctFromInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Does not end with the specified string (case-sensitive). */
-  notEndsWith?: InputMaybe<Scalars['String']>;
+  notEndsWith?: InputMaybe<Scalars['String']['input']>;
   /** Does not end with the specified string (case-insensitive). */
-  notEndsWithInsensitive?: InputMaybe<Scalars['String']>;
+  notEndsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['String']>;
+  notEqualTo?: InputMaybe<Scalars['String']['input']>;
   /** Not equal to the specified value (case-insensitive). */
-  notEqualToInsensitive?: InputMaybe<Scalars['String']>;
+  notEqualToInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['String']>>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Does not contain the specified string (case-sensitive). */
-  notIncludes?: InputMaybe<Scalars['String']>;
+  notIncludes?: InputMaybe<Scalars['String']['input']>;
   /** Does not contain the specified string (case-insensitive). */
-  notIncludesInsensitive?: InputMaybe<Scalars['String']>;
+  notIncludesInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Not included in the specified list (case-insensitive). */
-  notInInsensitive?: InputMaybe<Array<Scalars['String']>>;
+  notInInsensitive?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  notLike?: InputMaybe<Scalars['String']>;
+  notLike?: InputMaybe<Scalars['String']['input']>;
   /** Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters. */
-  notLikeInsensitive?: InputMaybe<Scalars['String']>;
+  notLikeInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Does not start with the specified string (case-sensitive). */
-  notStartsWith?: InputMaybe<Scalars['String']>;
+  notStartsWith?: InputMaybe<Scalars['String']['input']>;
   /** Does not start with the specified string (case-insensitive). */
-  notStartsWithInsensitive?: InputMaybe<Scalars['String']>;
+  notStartsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-sensitive). */
-  startsWith?: InputMaybe<Scalars['String']>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-insensitive). */
-  startsWithInsensitive?: InputMaybe<Scalars['String']>;
+  startsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against String List fields. All fields are combined with a logical ‘and.’ */
+export type StringListFilter = {
+  /** Any array item is equal to the specified value. */
+  anyEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is greater than the specified value. */
+  anyGreaterThan?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is greater than or equal to the specified value. */
+  anyGreaterThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is less than the specified value. */
+  anyLessThan?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is less than or equal to the specified value. */
+  anyLessThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is not equal to the specified value. */
+  anyNotEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Contained by the specified list of values. */
+  containedBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Contains the specified list of values. */
+  contains?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Overlaps the specified list of values. */
+  overlaps?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 /** The root subscription type: contains realtime events you can subscribe to with the `subscription` operation. */
@@ -13527,23 +15090,36 @@ export type Subscription = {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type Tvshow = {
   __typename?: 'Tvshow';
+  ageRating?: Maybe<Scalars['String']['output']>;
+  assetSubtype: AssetSubtype;
+  audioLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  businessType: BusinessType;
+  captionLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  externalId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  originalTitle?: Maybe<Scalars['String']>;
-  publishedDate?: Maybe<Scalars['Datetime']>;
-  publishedUser?: Maybe<Scalars['String']>;
+  contentOwner?: Maybe<Scalars['String']['output']>;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  creditsStartTime?: Maybe<Scalars['String']['output']>;
+  customRating?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  dynamicField?: Maybe<Scalars['String']['output']>;
+  extendedField?: Maybe<Scalars['String']['output']>;
+  externalId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  lengthInSeconds?: Maybe<Scalars['BigFloat']['output']>;
+  originalTitle?: Maybe<Scalars['String']['output']>;
+  publishedDate?: Maybe<Scalars['Datetime']['output']>;
+  publishedUser?: Maybe<Scalars['String']['output']>;
   publishStatus: PublishStatus;
-  released?: Maybe<Scalars['Date']>;
+  rating?: Maybe<Scalars['BigFloat']['output']>;
+  released?: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `Season`. */
   seasons: SeasonsConnection;
-  studio?: Maybe<Scalars['String']>;
-  synopsis?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
+  studio?: Maybe<Scalars['String']['output']>;
+  subtitleLanguages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  synopsis?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `TvshowsCast`. */
   tvshowsCasts: TvshowsCastsConnection;
   /** Reads and enables pagination through a set of `TvshowsImage`. */
@@ -13560,196 +15136,244 @@ export type Tvshow = {
   tvshowsTrailers: TvshowsTrailersConnection;
   /** Reads and enables pagination through a set of `TvshowsTvshowGenre`. */
   tvshowsTvshowGenres: TvshowsTvshowGenresConnection;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowCollectionRelationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionRelationCondition>;
   filter?: InputMaybe<CollectionRelationFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CollectionRelationsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowSeasonsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonCondition>;
   filter?: InputMaybe<SeasonFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowTvshowsCastsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsCastCondition>;
   filter?: InputMaybe<TvshowsCastFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsCastsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowTvshowsImagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsImageCondition>;
   filter?: InputMaybe<TvshowsImageFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsImagesOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowTvshowsLicensesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsLicenseCondition>;
   filter?: InputMaybe<TvshowsLicenseFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsLicensesOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowTvshowsProductionCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsProductionCountryCondition>;
   filter?: InputMaybe<TvshowsProductionCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsProductionCountriesOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowTvshowsSnapshotsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsSnapshotCondition>;
   filter?: InputMaybe<TvshowsSnapshotFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsSnapshotsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowTvshowsTagsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsTagCondition>;
   filter?: InputMaybe<TvshowsTagFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsTagsOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowTvshowsTrailersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsTrailerCondition>;
   filter?: InputMaybe<TvshowsTrailerFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsTrailersOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowTvshowsTvshowGenresArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsTvshowGenreCondition>;
   filter?: InputMaybe<TvshowsTvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsTvshowGenresOrderBy>>;
 };
 
 /** A condition to be used against `Tvshow` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type TvshowCondition = {
+  /** Checks for equality with the object’s `ageRating` field. */
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  /** Checks for equality with the object’s `audioLanguages` field. */
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Checks for equality with the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessType>;
+  /** Checks for equality with the object’s `captionLanguages` field. */
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Checks for equality with the object’s `contentOwner` field. */
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `customRating` field. */
+  customRating?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
-  description?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `extendedField` field. */
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
-  externalId?: InputMaybe<Scalars['String']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `originalTitle` field. */
-  originalTitle?: InputMaybe<Scalars['String']>;
+  originalTitle?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishedDate` field. */
-  publishedDate?: InputMaybe<Scalars['Datetime']>;
+  publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `publishedUser` field. */
-  publishedUser?: InputMaybe<Scalars['String']>;
+  publishedUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatus>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `released` field. */
-  released?: InputMaybe<Scalars['Date']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `studio` field. */
-  studio?: InputMaybe<Scalars['String']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `subtitleLanguages` field. */
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `synopsis` field. */
-  synopsis?: InputMaybe<Scalars['String']>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * Checks for equality with the object’s `title` field.
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `Tvshow` object types. All fields are combined with a logical ‘and.’ */
 export type TvshowFilter = {
+  /** Filter by the object’s `ageRating` field. */
+  ageRating?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<TvshowFilter>>;
+  /** Filter by the object’s `assetSubtype` field. */
+  assetSubtype?: InputMaybe<AssetSubtypeFilter>;
+  /** Filter by the object’s `audioLanguages` field. */
+  audioLanguages?: InputMaybe<StringListFilter>;
+  /** Filter by the object’s `businessType` field. */
+  businessType?: InputMaybe<BusinessTypeFilter>;
+  /** Filter by the object’s `captionLanguages` field. */
+  captionLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<TvshowToManyCollectionRelationFilter>;
   /** Some related `collectionRelations` exist. */
-  collectionRelationsExist?: InputMaybe<Scalars['Boolean']>;
+  collectionRelationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `contentOwner` field. */
+  contentOwner?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `creditsStartTime` field. */
+  creditsStartTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `customRating` field. */
+  customRating?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dynamicField` field. */
+  dynamicField?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `extendedField` field. */
+  extendedField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `externalId` field. */
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `lengthInSeconds` field. */
+  lengthInSeconds?: InputMaybe<BigFloatFilter>;
   /** Negates the expression. */
   not?: InputMaybe<TvshowFilter>;
   /** Checks for any expressions in this list. */
@@ -13762,14 +15386,18 @@ export type TvshowFilter = {
   publishedUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `publishStatus` field. */
   publishStatus?: InputMaybe<PublishStatusFilter>;
+  /** Filter by the object’s `rating` field. */
+  rating?: InputMaybe<BigFloatFilter>;
   /** Filter by the object’s `released` field. */
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `seasons` relation. */
   seasons?: InputMaybe<TvshowToManySeasonFilter>;
   /** Some related `seasons` exist. */
-  seasonsExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `studio` field. */
   studio?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `subtitleLanguages` field. */
+  subtitleLanguages?: InputMaybe<StringListFilter>;
   /** Filter by the object’s `synopsis` field. */
   synopsis?: InputMaybe<StringFilter>;
   /** Filter by the object’s `title` field. */
@@ -13777,35 +15405,39 @@ export type TvshowFilter = {
   /** Filter by the object’s `tvshowsCasts` relation. */
   tvshowsCasts?: InputMaybe<TvshowToManyTvshowsCastFilter>;
   /** Some related `tvshowsCasts` exist. */
-  tvshowsCastsExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsCastsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `tvshowsDirectors` relation. */
+  tvshowsDirectors?: InputMaybe<TvshowToManyTvshowsDirectorFilter>;
+  /** Some related `tvshowsDirectors` exist. */
+  tvshowsDirectorsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowsImages` relation. */
   tvshowsImages?: InputMaybe<TvshowToManyTvshowsImageFilter>;
   /** Some related `tvshowsImages` exist. */
-  tvshowsImagesExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsImagesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowsLicenses` relation. */
   tvshowsLicenses?: InputMaybe<TvshowToManyTvshowsLicenseFilter>;
   /** Some related `tvshowsLicenses` exist. */
-  tvshowsLicensesExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsLicensesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowsProductionCountries` relation. */
   tvshowsProductionCountries?: InputMaybe<TvshowToManyTvshowsProductionCountryFilter>;
   /** Some related `tvshowsProductionCountries` exist. */
-  tvshowsProductionCountriesExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsProductionCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowsSnapshots` relation. */
   tvshowsSnapshots?: InputMaybe<TvshowToManyTvshowsSnapshotFilter>;
   /** Some related `tvshowsSnapshots` exist. */
-  tvshowsSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsSnapshotsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowsTags` relation. */
   tvshowsTags?: InputMaybe<TvshowToManyTvshowsTagFilter>;
   /** Some related `tvshowsTags` exist. */
-  tvshowsTagsExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsTagsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowsTrailers` relation. */
   tvshowsTrailers?: InputMaybe<TvshowToManyTvshowsTrailerFilter>;
   /** Some related `tvshowsTrailers` exist. */
-  tvshowsTrailersExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsTrailersExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `tvshowsTvshowGenres` relation. */
   tvshowsTvshowGenres?: InputMaybe<TvshowToManyTvshowsTvshowGenreFilter>;
   /** Some related `tvshowsTvshowGenres` exist. */
-  tvshowsTvshowGenresExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsTvshowGenresExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `updatedUser` field. */
@@ -13815,57 +15447,57 @@ export type TvshowFilter = {
 /** @permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type TvshowGenre = {
   __typename?: 'TvshowGenre';
-  createdDate: Scalars['Datetime'];
-  createdUser: Scalars['String'];
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `EpisodesTvshowGenre`. */
   episodesTvshowGenresByTvshowGenresId: EpisodesTvshowGenresConnection;
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `SeasonsTvshowGenre`. */
   seasonsTvshowGenresByTvshowGenresId: SeasonsTvshowGenresConnection;
-  sortOrder: Scalars['Int'];
-  title: Scalars['String'];
+  sortOrder: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `TvshowsTvshowGenre`. */
   tvshowsTvshowGenresByTvshowGenresId: TvshowsTvshowGenresConnection;
-  updatedDate: Scalars['Datetime'];
-  updatedUser: Scalars['String'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
 };
 
 
 /** @permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type TvshowGenreEpisodesTvshowGenresByTvshowGenresIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EpisodesTvshowGenreCondition>;
   filter?: InputMaybe<EpisodesTvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesTvshowGenresOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type TvshowGenreSeasonsTvshowGenresByTvshowGenresIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SeasonsTvshowGenreCondition>;
   filter?: InputMaybe<SeasonsTvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsTvshowGenresOrderBy>>;
 };
 
 
 /** @permissions: TVSHOWS_VIEW,SETTINGS_VIEW,SETTINGS_EDIT,ADMIN */
 export type TvshowGenreTvshowsTvshowGenresByTvshowGenresIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsTvshowGenreCondition>;
   filter?: InputMaybe<TvshowsTvshowGenreFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsTvshowGenresOrderBy>>;
 };
 
@@ -13875,24 +15507,24 @@ export type TvshowGenreTvshowsTvshowGenresByTvshowGenresIdArgs = {
  */
 export type TvshowGenreCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdUser` field. */
-  createdUser?: InputMaybe<Scalars['String']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `sortOrder` field. */
-  sortOrder?: InputMaybe<Scalars['Int']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Checks for equality with the object’s `title` field.
    * @isTrimmed()
    * @maxLength(50)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
-  updatedUser?: InputMaybe<Scalars['String']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against `TvshowGenre` object types. All fields are combined with a logical ‘and.’ */
@@ -13906,7 +15538,7 @@ export type TvshowGenreFilter = {
   /** Filter by the object’s `episodesTvshowGenresByTvshowGenresId` relation. */
   episodesTvshowGenresByTvshowGenresId?: InputMaybe<TvshowGenreToManyEpisodesTvshowGenreFilter>;
   /** Some related `episodesTvshowGenresByTvshowGenresId` exist. */
-  episodesTvshowGenresByTvshowGenresIdExist?: InputMaybe<Scalars['Boolean']>;
+  episodesTvshowGenresByTvshowGenresIdExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Negates the expression. */
@@ -13916,7 +15548,7 @@ export type TvshowGenreFilter = {
   /** Filter by the object’s `seasonsTvshowGenresByTvshowGenresId` relation. */
   seasonsTvshowGenresByTvshowGenresId?: InputMaybe<TvshowGenreToManySeasonsTvshowGenreFilter>;
   /** Some related `seasonsTvshowGenresByTvshowGenresId` exist. */
-  seasonsTvshowGenresByTvshowGenresIdExist?: InputMaybe<Scalars['Boolean']>;
+  seasonsTvshowGenresByTvshowGenresIdExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `sortOrder` field. */
   sortOrder?: InputMaybe<IntFilter>;
   /** Filter by the object’s `title` field. */
@@ -13924,7 +15556,7 @@ export type TvshowGenreFilter = {
   /** Filter by the object’s `tvshowsTvshowGenresByTvshowGenresId` relation. */
   tvshowsTvshowGenresByTvshowGenresId?: InputMaybe<TvshowGenreToManyTvshowsTvshowGenreFilter>;
   /** Some related `tvshowsTvshowGenresByTvshowGenresId` exist. */
-  tvshowsTvshowGenresByTvshowGenresIdExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsTvshowGenresByTvshowGenresIdExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `updatedUser` field. */
@@ -13933,24 +15565,24 @@ export type TvshowGenreFilter = {
 
 /** An input for mutations affecting `TvshowGenre` */
 export type TvshowGenreInput = {
-  sortOrder: Scalars['Int'];
+  sortOrder: Scalars['Int']['input'];
   /**
    * @isTrimmed()
    * @maxLength(50)
    * @notEmpty()
    */
-  title: Scalars['String'];
+  title: Scalars['String']['input'];
 };
 
 /** Represents an update to a `TvshowGenre`. Fields that are set will be updated. */
 export type TvshowGenrePatch = {
-  sortOrder?: InputMaybe<Scalars['Int']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
   /**
    * @isTrimmed()
    * @maxLength(50)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -13966,14 +15598,14 @@ export type TvshowGenresConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowGenre` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowGenre` edge in the connection. */
 export type TvshowGenresEdge = {
   __typename?: 'TvshowGenresEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowGenre` at the end of the edge. */
   node: TvshowGenre;
 };
@@ -14008,9 +15640,9 @@ export enum TvshowGenreSubscriptionEventKey {
 export type TvshowGenreSubscriptionPayload = {
   __typename?: 'TvshowGenreSubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<TvshowGenreSubscriptionEventKey>;
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
   tvshowGenre?: Maybe<TvshowGenre>;
 };
 
@@ -14064,7 +15696,7 @@ export type TvshowImageTypeFilter = {
   /** Included in the specified list. */
   in?: InputMaybe<Array<TvshowImageType>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
   lessThan?: InputMaybe<TvshowImageType>;
   /** Less than or equal to the specified value. */
@@ -14079,41 +15711,67 @@ export type TvshowImageTypeFilter = {
 
 /** An input for mutations affecting `Tvshow` */
 export type TvshowInput = {
-  description?: InputMaybe<Scalars['String']>;
-  externalId?: InputMaybe<Scalars['String']>;
-  originalTitle?: InputMaybe<Scalars['String']>;
-  released?: InputMaybe<Scalars['Date']>;
-  studio?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  businessType?: InputMaybe<BusinessType>;
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
+  originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
    * @notEmpty()
    */
-  title: Scalars['String'];
+  title: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Tvshow`. Fields that are set will be updated. */
 export type TvshowPatch = {
-  description?: InputMaybe<Scalars['String']>;
-  externalId?: InputMaybe<Scalars['String']>;
-  originalTitle?: InputMaybe<Scalars['String']>;
-  released?: InputMaybe<Scalars['Date']>;
-  studio?: InputMaybe<Scalars['String']>;
-  synopsis?: InputMaybe<Scalars['String']>;
+  ageRating?: InputMaybe<Scalars['String']['input']>;
+  assetSubtype?: InputMaybe<AssetSubtype>;
+  audioLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  businessType?: InputMaybe<BusinessType>;
+  captionLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  contentOwner?: InputMaybe<Scalars['String']['input']>;
+  creditsStartTime?: InputMaybe<Scalars['String']['input']>;
+  customRating?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  dynamicField?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  lengthInSeconds?: InputMaybe<Scalars['BigFloat']['input']>;
+  originalTitle?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['BigFloat']['input']>;
+  released?: InputMaybe<Scalars['Date']['input']>;
+  studio?: InputMaybe<Scalars['String']['input']>;
+  subtitleLanguages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  synopsis?: InputMaybe<Scalars['String']['input']>;
   /**
    * @maxLength(100)
    * @notEmpty()
    */
-  title?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowsCast = {
   __typename?: 'TvshowsCast';
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** Reads a single `Tvshow` that is related to this `TvshowsCast`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['output'];
 };
 
 /**
@@ -14125,9 +15783,9 @@ export type TvshowsCastCondition = {
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `TvshowsCast` object types. All fields are combined with a logical ‘and.’ */
@@ -14149,14 +15807,14 @@ export type TvshowsCastFilter = {
 /** An input for mutations affecting `TvshowsCast` */
 export type TvshowsCastInput = {
   /** @notEmpty() */
-  name: Scalars['String'];
-  tvshowId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `TvshowsCast`. Fields that are set will be updated. */
 export type TvshowsCastPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -14172,14 +15830,14 @@ export type TvshowsCastsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowsCast` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowsCast` edge in the connection. */
 export type TvshowsCastsEdge = {
   __typename?: 'TvshowsCastsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowsCast` at the end of the edge. */
   node: TvshowsCast;
 };
@@ -14208,14 +15866,30 @@ export type TvshowsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Tvshow` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A filter to be used against `TvshowsDirector` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowsDirectorFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<TvshowsDirectorFilter>>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<TvshowsDirectorFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<TvshowsDirectorFilter>>;
+  /** Filter by the object’s `tvshow` relation. */
+  tvshow?: InputMaybe<TvshowFilter>;
+  /** Filter by the object’s `tvshowId` field. */
+  tvshowId?: InputMaybe<IntFilter>;
 };
 
 /** A `Tvshow` edge in the connection. */
 export type TvshowsEdge = {
   __typename?: 'TvshowsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `Tvshow` at the end of the edge. */
   node: Tvshow;
 };
@@ -14223,11 +15897,11 @@ export type TvshowsEdge = {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowsImage = {
   __typename?: 'TvshowsImage';
-  imageId: Scalars['UUID'];
+  imageId: Scalars['UUID']['output'];
   imageType: TvshowImageType;
   /** Reads a single `Tvshow` that is related to this `TvshowsImage`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['output'];
 };
 
 /**
@@ -14236,11 +15910,11 @@ export type TvshowsImage = {
  */
 export type TvshowsImageCondition = {
   /** Checks for equality with the object’s `imageId` field. */
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `imageType` field. */
   imageType?: InputMaybe<TvshowImageType>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `TvshowsImage` object types. All fields are combined with a logical ‘and.’ */
@@ -14263,16 +15937,16 @@ export type TvshowsImageFilter = {
 
 /** An input for mutations affecting `TvshowsImage` */
 export type TvshowsImageInput = {
-  imageId: Scalars['UUID'];
+  imageId: Scalars['UUID']['input'];
   imageType: TvshowImageType;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `TvshowsImage`. Fields that are set will be updated. */
 export type TvshowsImagePatch = {
-  imageId?: InputMaybe<Scalars['UUID']>;
+  imageId?: InputMaybe<Scalars['UUID']['input']>;
   imageType?: InputMaybe<TvshowImageType>;
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -14288,14 +15962,14 @@ export type TvshowsImagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowsImage` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowsImage` edge in the connection. */
 export type TvshowsImagesEdge = {
   __typename?: 'TvshowsImagesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowsImage` at the end of the edge. */
   node: TvshowsImage;
 };
@@ -14316,28 +15990,28 @@ export enum TvshowsImagesOrderBy {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowsLicense = {
   __typename?: 'TvshowsLicense';
-  createdDate: Scalars['Datetime'];
-  id: Scalars['Int'];
-  licenseEnd?: Maybe<Scalars['Datetime']>;
-  licenseStart?: Maybe<Scalars['Datetime']>;
+  createdDate: Scalars['Datetime']['output'];
+  id: Scalars['Int']['output'];
+  licenseEnd?: Maybe<Scalars['Datetime']['output']>;
+  licenseStart?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Tvshow` that is related to this `TvshowsLicense`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `TvshowsLicensesCountry`. */
   tvshowsLicensesCountries: TvshowsLicensesCountriesConnection;
-  updatedDate: Scalars['Datetime'];
+  updatedDate: Scalars['Datetime']['output'];
 };
 
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowsLicenseTvshowsLicensesCountriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TvshowsLicensesCountryCondition>;
   filter?: InputMaybe<TvshowsLicensesCountryFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsLicensesCountriesOrderBy>>;
 };
 
@@ -14347,17 +16021,17 @@ export type TvshowsLicenseTvshowsLicensesCountriesArgs = {
  */
 export type TvshowsLicenseCondition = {
   /** Checks for equality with the object’s `createdDate` field. */
-  createdDate?: InputMaybe<Scalars['Datetime']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `licenseEnd` field. */
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `licenseStart` field. */
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
-  updatedDate?: InputMaybe<Scalars['Datetime']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A filter to be used against `TvshowsLicense` object types. All fields are combined with a logical ‘and.’ */
@@ -14383,23 +16057,23 @@ export type TvshowsLicenseFilter = {
   /** Filter by the object’s `tvshowsLicensesCountries` relation. */
   tvshowsLicensesCountries?: InputMaybe<TvshowsLicenseToManyTvshowsLicensesCountryFilter>;
   /** Some related `tvshowsLicensesCountries` exist. */
-  tvshowsLicensesCountriesExist?: InputMaybe<Scalars['Boolean']>;
+  tvshowsLicensesCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<DatetimeFilter>;
 };
 
 /** An input for mutations affecting `TvshowsLicense` */
 export type TvshowsLicenseInput = {
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
-  tvshowId: Scalars['Int'];
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `TvshowsLicense`. Fields that are set will be updated. */
 export type TvshowsLicensePatch = {
-  licenseEnd?: InputMaybe<Scalars['Datetime']>;
-  licenseStart?: InputMaybe<Scalars['Datetime']>;
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  licenseEnd?: InputMaybe<Scalars['Datetime']['input']>;
+  licenseStart?: InputMaybe<Scalars['Datetime']['input']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -14415,7 +16089,7 @@ export type TvshowsLicensesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowsLicense` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /**
@@ -14431,14 +16105,14 @@ export type TvshowsLicensesCountriesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowsLicensesCountry` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowsLicensesCountry` edge in the connection. */
 export type TvshowsLicensesCountriesEdge = {
   __typename?: 'TvshowsLicensesCountriesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowsLicensesCountry` at the end of the edge. */
   node: TvshowsLicensesCountry;
 };
@@ -14460,7 +16134,7 @@ export type TvshowsLicensesCountry = {
   code: IsoAlphaTwoCountryCodes;
   /** Reads a single `TvshowsLicense` that is related to this `TvshowsLicensesCountry`. */
   tvshowsLicense?: Maybe<TvshowsLicense>;
-  tvshowsLicenseId: Scalars['Int'];
+  tvshowsLicenseId: Scalars['Int']['output'];
 };
 
 /**
@@ -14471,7 +16145,7 @@ export type TvshowsLicensesCountryCondition = {
   /** Checks for equality with the object’s `code` field. */
   code?: InputMaybe<IsoAlphaTwoCountryCodes>;
   /** Checks for equality with the object’s `tvshowsLicenseId` field. */
-  tvshowsLicenseId?: InputMaybe<Scalars['Int']>;
+  tvshowsLicenseId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `TvshowsLicensesCountry` object types. All fields are combined with a logical ‘and.’ */
@@ -14493,7 +16167,7 @@ export type TvshowsLicensesCountryFilter = {
 /** An input for mutations affecting `TvshowsLicensesCountry` */
 export type TvshowsLicensesCountryInput = {
   code: IsoAlphaTwoCountryCodes;
-  tvshowsLicenseId: Scalars['Int'];
+  tvshowsLicenseId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `TvshowsLicensesCountry`. Fields that are set will be updated. */
@@ -14505,7 +16179,7 @@ export type TvshowsLicensesCountryPatch = {
 export type TvshowsLicensesEdge = {
   __typename?: 'TvshowsLicensesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowsLicense` at the end of the edge. */
   node: TvshowsLicense;
 };
@@ -14541,16 +16215,38 @@ export type TvshowsLicenseToManyTvshowsLicensesCountryFilter = {
 
 /** Methods to use when ordering `Tvshow`. */
 export enum TvshowsOrderBy {
+  AgeRatingAsc = 'AGE_RATING_ASC',
+  AgeRatingDesc = 'AGE_RATING_DESC',
+  AssetSubtypeAsc = 'ASSET_SUBTYPE_ASC',
+  AssetSubtypeDesc = 'ASSET_SUBTYPE_DESC',
+  AudioLanguagesAsc = 'AUDIO_LANGUAGES_ASC',
+  AudioLanguagesDesc = 'AUDIO_LANGUAGES_DESC',
+  BusinessTypeAsc = 'BUSINESS_TYPE_ASC',
+  BusinessTypeDesc = 'BUSINESS_TYPE_DESC',
+  CaptionLanguagesAsc = 'CAPTION_LANGUAGES_ASC',
+  CaptionLanguagesDesc = 'CAPTION_LANGUAGES_DESC',
+  ContentOwnerAsc = 'CONTENT_OWNER_ASC',
+  ContentOwnerDesc = 'CONTENT_OWNER_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
   CreatedUserDesc = 'CREATED_USER_DESC',
+  CreditsStartTimeAsc = 'CREDITS_START_TIME_ASC',
+  CreditsStartTimeDesc = 'CREDITS_START_TIME_DESC',
+  CustomRatingAsc = 'CUSTOM_RATING_ASC',
+  CustomRatingDesc = 'CUSTOM_RATING_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  DynamicFieldAsc = 'DYNAMIC_FIELD_ASC',
+  DynamicFieldDesc = 'DYNAMIC_FIELD_DESC',
+  ExtendedFieldAsc = 'EXTENDED_FIELD_ASC',
+  ExtendedFieldDesc = 'EXTENDED_FIELD_DESC',
   ExternalIdAsc = 'EXTERNAL_ID_ASC',
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  LengthInSecondsAsc = 'LENGTH_IN_SECONDS_ASC',
+  LengthInSecondsDesc = 'LENGTH_IN_SECONDS_DESC',
   Natural = 'NATURAL',
   OriginalTitleAsc = 'ORIGINAL_TITLE_ASC',
   OriginalTitleDesc = 'ORIGINAL_TITLE_DESC',
@@ -14562,10 +16258,14 @@ export enum TvshowsOrderBy {
   PublishedDateDesc = 'PUBLISHED_DATE_DESC',
   PublishedUserAsc = 'PUBLISHED_USER_ASC',
   PublishedUserDesc = 'PUBLISHED_USER_DESC',
+  RatingAsc = 'RATING_ASC',
+  RatingDesc = 'RATING_DESC',
   ReleasedAsc = 'RELEASED_ASC',
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
   StudioDesc = 'STUDIO_DESC',
+  SubtitleLanguagesAsc = 'SUBTITLE_LANGUAGES_ASC',
+  SubtitleLanguagesDesc = 'SUBTITLE_LANGUAGES_DESC',
   SynopsisAsc = 'SYNOPSIS_ASC',
   SynopsisDesc = 'SYNOPSIS_DESC',
   TitleAsc = 'TITLE_ASC',
@@ -14589,14 +16289,14 @@ export type TvshowsProductionCountriesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowsProductionCountry` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowsProductionCountry` edge in the connection. */
 export type TvshowsProductionCountriesEdge = {
   __typename?: 'TvshowsProductionCountriesEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowsProductionCountry` at the end of the edge. */
   node: TvshowsProductionCountry;
 };
@@ -14615,10 +16315,10 @@ export enum TvshowsProductionCountriesOrderBy {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowsProductionCountry = {
   __typename?: 'TvshowsProductionCountry';
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** Reads a single `Tvshow` that is related to this `TvshowsProductionCountry`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['output'];
 };
 
 /**
@@ -14630,9 +16330,9 @@ export type TvshowsProductionCountryCondition = {
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `TvshowsProductionCountry` object types. All fields are combined with a logical ‘and.’ */
@@ -14654,14 +16354,14 @@ export type TvshowsProductionCountryFilter = {
 /** An input for mutations affecting `TvshowsProductionCountry` */
 export type TvshowsProductionCountryInput = {
   /** @notEmpty() */
-  name: Scalars['String'];
-  tvshowId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `TvshowsProductionCountry`. Fields that are set will be updated. */
 export type TvshowsProductionCountryPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
@@ -14669,10 +16369,10 @@ export type TvshowsSnapshot = {
   __typename?: 'TvshowsSnapshot';
   /** Reads a single `Snapshot` that is related to this `TvshowsSnapshot`. */
   snapshot?: Maybe<Snapshot>;
-  snapshotId: Scalars['Int'];
+  snapshotId: Scalars['Int']['output'];
   /** Reads a single `Tvshow` that is related to this `TvshowsSnapshot`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['output'];
 };
 
 /**
@@ -14681,9 +16381,9 @@ export type TvshowsSnapshot = {
  */
 export type TvshowsSnapshotCondition = {
   /** Checks for equality with the object’s `snapshotId` field. */
-  snapshotId?: InputMaybe<Scalars['Int']>;
+  snapshotId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `TvshowsSnapshot` object types. All fields are combined with a logical ‘and.’ */
@@ -14717,14 +16417,14 @@ export type TvshowsSnapshotsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowsSnapshot` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowsSnapshot` edge in the connection. */
 export type TvshowsSnapshotsEdge = {
   __typename?: 'TvshowsSnapshotsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowsSnapshot` at the end of the edge. */
   node: TvshowsSnapshot;
 };
@@ -14743,10 +16443,10 @@ export enum TvshowsSnapshotsOrderBy {
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type TvshowsTag = {
   __typename?: 'TvshowsTag';
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** Reads a single `Tvshow` that is related to this `TvshowsTag`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['output'];
 };
 
 /**
@@ -14758,9 +16458,9 @@ export type TvshowsTagCondition = {
    * Checks for equality with the object’s `name` field.
    * @notEmpty()
    */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `TvshowsTag` object types. All fields are combined with a logical ‘and.’ */
@@ -14782,14 +16482,14 @@ export type TvshowsTagFilter = {
 /** An input for mutations affecting `TvshowsTag` */
 export type TvshowsTagInput = {
   /** @notEmpty() */
-  name: Scalars['String'];
-  tvshowId: Scalars['Int'];
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `TvshowsTag`. Fields that are set will be updated. */
 export type TvshowsTagPatch = {
   /** @notEmpty() */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -14805,14 +16505,14 @@ export type TvshowsTagsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowsTag` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowsTag` edge in the connection. */
 export type TvshowsTagsEdge = {
   __typename?: 'TvshowsTagsEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowsTag` at the end of the edge. */
   node: TvshowsTag;
 };
@@ -14833,8 +16533,8 @@ export type TvshowsTrailer = {
   __typename?: 'TvshowsTrailer';
   /** Reads a single `Tvshow` that is related to this `TvshowsTrailer`. */
   tvshow?: Maybe<Tvshow>;
-  tvshowId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  tvshowId: Scalars['Int']['output'];
+  videoId: Scalars['UUID']['output'];
 };
 
 /**
@@ -14843,9 +16543,9 @@ export type TvshowsTrailer = {
  */
 export type TvshowsTrailerCondition = {
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `videoId` field. */
-  videoId?: InputMaybe<Scalars['UUID']>;
+  videoId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A filter to be used against `TvshowsTrailer` object types. All fields are combined with a logical ‘and.’ */
@@ -14866,8 +16566,8 @@ export type TvshowsTrailerFilter = {
 
 /** An input for mutations affecting `TvshowsTrailer` */
 export type TvshowsTrailerInput = {
-  tvshowId: Scalars['Int'];
-  videoId: Scalars['UUID'];
+  tvshowId: Scalars['Int']['input'];
+  videoId: Scalars['UUID']['input'];
 };
 
 /**
@@ -14883,14 +16583,14 @@ export type TvshowsTrailersConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowsTrailer` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowsTrailer` edge in the connection. */
 export type TvshowsTrailersEdge = {
   __typename?: 'TvshowsTrailersEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowsTrailer` at the end of the edge. */
   node: TvshowsTrailer;
 };
@@ -14913,8 +16613,8 @@ export type TvshowsTvshowGenre = {
   tvshow?: Maybe<Tvshow>;
   /** Reads a single `TvshowGenre` that is related to this `TvshowsTvshowGenre`. */
   tvshowGenres?: Maybe<TvshowGenre>;
-  tvshowGenresId: Scalars['Int'];
-  tvshowId: Scalars['Int'];
+  tvshowGenresId: Scalars['Int']['output'];
+  tvshowId: Scalars['Int']['output'];
 };
 
 /**
@@ -14923,9 +16623,9 @@ export type TvshowsTvshowGenre = {
  */
 export type TvshowsTvshowGenreCondition = {
   /** Checks for equality with the object’s `tvshowGenresId` field. */
-  tvshowGenresId?: InputMaybe<Scalars['Int']>;
+  tvshowGenresId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
-  tvshowId?: InputMaybe<Scalars['Int']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A filter to be used against `TvshowsTvshowGenre` object types. All fields are combined with a logical ‘and.’ */
@@ -14948,8 +16648,8 @@ export type TvshowsTvshowGenreFilter = {
 
 /** An input for mutations affecting `TvshowsTvshowGenre` */
 export type TvshowsTvshowGenreInput = {
-  tvshowGenresId: Scalars['Int'];
-  tvshowId: Scalars['Int'];
+  tvshowGenresId: Scalars['Int']['input'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /**
@@ -14965,14 +16665,14 @@ export type TvshowsTvshowGenresConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TvshowsTvshowGenre` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TvshowsTvshowGenre` edge in the connection. */
 export type TvshowsTvshowGenresEdge = {
   __typename?: 'TvshowsTvshowGenresEdge';
   /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
+  cursor?: Maybe<Scalars['Cursor']['output']>;
   /** The `TvshowsTvshowGenre` at the end of the edge. */
   node: TvshowsTvshowGenre;
 };
@@ -15018,9 +16718,9 @@ export enum TvshowSubscriptionEventKey {
 export type TvshowSubscriptionPayload = {
   __typename?: 'TvshowSubscriptionPayload';
   /** @deprecated Use 'eventKey' instead. */
-  event?: Maybe<Scalars['String']>;
+  event?: Maybe<Scalars['String']['output']>;
   eventKey?: Maybe<TvshowSubscriptionEventKey>;
-  id: Scalars['Int'];
+  id: Scalars['Int']['output'];
   tvshow?: Maybe<Tvshow>;
 };
 
@@ -15052,6 +16752,16 @@ export type TvshowToManyTvshowsCastFilter = {
   none?: InputMaybe<TvshowsCastFilter>;
   /** Some related `TvshowsCast` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<TvshowsCastFilter>;
+};
+
+/** A filter to be used against many `TvshowsDirector` object types. All fields are combined with a logical ‘and.’ */
+export type TvshowToManyTvshowsDirectorFilter = {
+  /** Every related `TvshowsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowsDirectorFilter>;
+  /** No related `TvshowsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowsDirectorFilter>;
+  /** Some related `TvshowsDirector` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowsDirectorFilter>;
 };
 
 /** A filter to be used against many `TvshowsImage` object types. All fields are combined with a logical ‘and.’ */
@@ -15124,6 +16834,40 @@ export type TvshowToManyTvshowsTvshowGenreFilter = {
   some?: InputMaybe<TvshowsTvshowGenreFilter>;
 };
 
+/** All input for the `updateAgeRating` mutation. */
+export type UpdateAgeRatingInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `AgeRating` being updated. */
+  patch: AgeRatingPatch;
+};
+
+/** The output of our update `AgeRating` mutation. */
+export type UpdateAgeRatingPayload = {
+  __typename?: 'UpdateAgeRatingPayload';
+  /** The `AgeRating` that was updated by this mutation. */
+  ageRating?: Maybe<AgeRating>;
+  /** An edge for our `AgeRating`. May be used by Relay 1. */
+  ageRatingEdge?: Maybe<AgeRatingsEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `AgeRating` mutation. */
+export type UpdateAgeRatingPayloadAgeRatingEdgeArgs = {
+  orderBy?: InputMaybe<Array<AgeRatingsOrderBy>>;
+};
+
 /**
  * All input for the `updateCollectionByExternalId` mutation.
  * @permissions: COLLECTIONS_EDIT,ADMIN
@@ -15133,8 +16877,8 @@ export type UpdateCollectionByExternalIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  externalId: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `Collection` being updated. */
   patch: CollectionPatch;
 };
@@ -15148,8 +16892,8 @@ export type UpdateCollectionInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `Collection` being updated. */
   patch: CollectionPatch;
 };
@@ -15161,7 +16905,7 @@ export type UpdateCollectionPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Collection` that was updated by this mutation. */
   collection?: Maybe<Collection>;
   /** An edge for our `Collection`. May be used by Relay 1. */
@@ -15185,8 +16929,8 @@ export type UpdateCollectionRelationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `CollectionRelation` being updated. */
   patch: CollectionRelationPatch;
 };
@@ -15198,7 +16942,7 @@ export type UpdateCollectionRelationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionRelation`. */
   collection?: Maybe<Collection>;
   /** The `CollectionRelation` that was updated by this mutation. */
@@ -15232,8 +16976,8 @@ export type UpdateCollectionsImageByCollectionIdAndImageTypeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  collectionId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  collectionId: Scalars['Int']['input'];
   imageType: CollectionImageType;
   /** An object where the defined keys will be set on the `CollectionsImage` being updated. */
   patch: CollectionsImagePatch;
@@ -15246,7 +16990,7 @@ export type UpdateCollectionsImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionsImage`. */
   collection?: Maybe<Collection>;
   /** The `CollectionsImage` that was updated by this mutation. */
@@ -15272,10 +17016,10 @@ export type UpdateCollectionsTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  collectionId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  collectionId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `CollectionsTag` being updated. */
   patch: CollectionsTagPatch;
 };
@@ -15287,7 +17031,7 @@ export type UpdateCollectionsTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionsTag`. */
   collection?: Maybe<Collection>;
   /** The `CollectionsTag` that was updated by this mutation. */
@@ -15304,6 +17048,40 @@ export type UpdateCollectionsTagPayloadCollectionsTagEdgeArgs = {
   orderBy?: InputMaybe<Array<CollectionsTagsOrderBy>>;
 };
 
+/** All input for the `updateContentOwner` mutation. */
+export type UpdateContentOwnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `ContentOwner` being updated. */
+  patch: ContentOwnerPatch;
+};
+
+/** The output of our update `ContentOwner` mutation. */
+export type UpdateContentOwnerPayload = {
+  __typename?: 'UpdateContentOwnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `ContentOwner` that was updated by this mutation. */
+  contentOwner?: Maybe<ContentOwner>;
+  /** An edge for our `ContentOwner`. May be used by Relay 1. */
+  contentOwnerEdge?: Maybe<ContentOwnersEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `ContentOwner` mutation. */
+export type UpdateContentOwnerPayloadContentOwnerEdgeArgs = {
+  orderBy?: InputMaybe<Array<ContentOwnersOrderBy>>;
+};
+
 /**
  * All input for the `updateEpisodeByExternalId` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
@@ -15313,8 +17091,8 @@ export type UpdateEpisodeByExternalIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  externalId: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `Episode` being updated. */
   patch: EpisodePatch;
 };
@@ -15328,8 +17106,8 @@ export type UpdateEpisodeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `Episode` being updated. */
   patch: EpisodePatch;
 };
@@ -15341,7 +17119,7 @@ export type UpdateEpisodePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Episode` that was updated by this mutation. */
   episode?: Maybe<Episode>;
   /** An edge for our `Episode`. May be used by Relay 1. */
@@ -15367,10 +17145,10 @@ export type UpdateEpisodesCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  episodeId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `EpisodesCast` being updated. */
   patch: EpisodesCastPatch;
 };
@@ -15382,7 +17160,7 @@ export type UpdateEpisodesCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesCast`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesCast` that was updated by this mutation. */
@@ -15408,8 +17186,8 @@ export type UpdateEpisodesImageByEpisodeIdAndImageTypeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  episodeId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
   imageType: EpisodeImageType;
   /** An object where the defined keys will be set on the `EpisodesImage` being updated. */
   patch: EpisodesImagePatch;
@@ -15422,7 +17200,7 @@ export type UpdateEpisodesImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesImage`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesImage` that was updated by this mutation. */
@@ -15448,8 +17226,8 @@ export type UpdateEpisodesLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `EpisodesLicense` being updated. */
   patch: EpisodesLicensePatch;
 };
@@ -15461,7 +17239,7 @@ export type UpdateEpisodesLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesLicense`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesLicense` that was updated by this mutation. */
@@ -15487,9 +17265,9 @@ export type UpdateEpisodesLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code: IsoAlphaTwoCountryCodes;
-  episodesLicenseId: Scalars['Int'];
+  episodesLicenseId: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `EpisodesLicensesCountry` being updated. */
   patch: EpisodesLicensesCountryPatch;
 };
@@ -15501,7 +17279,7 @@ export type UpdateEpisodesLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `EpisodesLicense` that is related to this `EpisodesLicensesCountry`. */
   episodesLicense?: Maybe<EpisodesLicense>;
   /** The `EpisodesLicensesCountry` that was updated by this mutation. */
@@ -15527,10 +17305,10 @@ export type UpdateEpisodesProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  episodeId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `EpisodesProductionCountry` being updated. */
   patch: EpisodesProductionCountryPatch;
 };
@@ -15542,7 +17320,7 @@ export type UpdateEpisodesProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesProductionCountry`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesProductionCountry` that was updated by this mutation. */
@@ -15568,10 +17346,10 @@ export type UpdateEpisodesTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  episodeId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `EpisodesTag` being updated. */
   patch: EpisodesTagPatch;
 };
@@ -15583,7 +17361,7 @@ export type UpdateEpisodesTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Episode` that is related to this `EpisodesTag`. */
   episode?: Maybe<Episode>;
   /** The `EpisodesTag` that was updated by this mutation. */
@@ -15609,8 +17387,8 @@ export type UpdateIngestDocumentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `IngestDocument` being updated. */
   patch: IngestDocumentPatch;
 };
@@ -15622,7 +17400,7 @@ export type UpdateIngestDocumentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `IngestDocument` that was updated by this mutation. */
   ingestDocument?: Maybe<IngestDocument>;
   /** An edge for our `IngestDocument`. May be used by Relay 1. */
@@ -15638,6 +17416,43 @@ export type UpdateIngestDocumentPayloadIngestDocumentEdgeArgs = {
 };
 
 /**
+ * All input for the `updateLanguage` mutation.
+ * @permissions: LANGUAGES_EDIT,ADMIN
+ */
+export type UpdateLanguageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `Language` being updated. */
+  patch: LanguagePatch;
+};
+
+/** The output of our update `Language` mutation. */
+export type UpdateLanguagePayload = {
+  __typename?: 'UpdateLanguagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `Language` that was updated by this mutation. */
+  language?: Maybe<Language>;
+  /** An edge for our `Language`. May be used by Relay 1. */
+  languageEdge?: Maybe<LanguagesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `Language` mutation. */
+export type UpdateLanguagePayloadLanguageEdgeArgs = {
+  orderBy?: InputMaybe<Array<LanguagesOrderBy>>;
+};
+
+/**
  * All input for the `updateMovieByExternalId` mutation.
  * @permissions: MOVIES_EDIT,ADMIN
  */
@@ -15646,8 +17461,8 @@ export type UpdateMovieByExternalIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  externalId: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `Movie` being updated. */
   patch: MoviePatch;
 };
@@ -15661,8 +17476,8 @@ export type UpdateMovieGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `MovieGenre` being updated. */
   patch: MovieGenrePatch;
 };
@@ -15674,7 +17489,7 @@ export type UpdateMovieGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `MovieGenre` that was updated by this mutation. */
   movieGenre?: Maybe<MovieGenre>;
   /** An edge for our `MovieGenre`. May be used by Relay 1. */
@@ -15698,8 +17513,8 @@ export type UpdateMovieInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `Movie` being updated. */
   patch: MoviePatch;
 };
@@ -15711,7 +17526,7 @@ export type UpdateMoviePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** The `Movie` that was updated by this mutation. */
   movie?: Maybe<Movie>;
   /** An edge for our `Movie`. May be used by Relay 1. */
@@ -15735,10 +17550,10 @@ export type UpdateMoviesCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  movieId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `MoviesCast` being updated. */
   patch: MoviesCastPatch;
 };
@@ -15750,7 +17565,7 @@ export type UpdateMoviesCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesCast`. */
   movie?: Maybe<Movie>;
   /** The `MoviesCast` that was updated by this mutation. */
@@ -15768,6 +17583,47 @@ export type UpdateMoviesCastPayloadMoviesCastEdgeArgs = {
 };
 
 /**
+ * All input for the `updateMoviesDirector` mutation.
+ * @permissions: MOVIE_EDITOR,ADMIN
+ */
+export type UpdateMoviesDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `MoviesDirector` being updated. */
+  patch: MoviesDirectorPatch;
+};
+
+/** The output of our update `MoviesDirector` mutation. */
+export type UpdateMoviesDirectorPayload = {
+  __typename?: 'UpdateMoviesDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Movie` that is related to this `MoviesDirector`. */
+  movie?: Maybe<Movie>;
+  /** The `MoviesDirector` that was updated by this mutation. */
+  moviesDirector?: Maybe<MoviesDirector>;
+  /** An edge for our `MoviesDirector`. May be used by Relay 1. */
+  moviesDirectorEdge?: Maybe<MoviesDirectorsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `MoviesDirector` mutation. */
+export type UpdateMoviesDirectorPayloadMoviesDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<MoviesDirectorsOrderBy>>;
+};
+
+/**
  * All input for the `updateMoviesImageByMovieIdAndImageType` mutation.
  * @permissions: MOVIES_EDIT,ADMIN
  */
@@ -15776,9 +17632,9 @@ export type UpdateMoviesImageByMovieIdAndImageTypeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   imageType: MovieImageType;
-  movieId: Scalars['Int'];
+  movieId: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `MoviesImage` being updated. */
   patch: MoviesImagePatch;
 };
@@ -15790,7 +17646,7 @@ export type UpdateMoviesImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesImage`. */
   movie?: Maybe<Movie>;
   /** The `MoviesImage` that was updated by this mutation. */
@@ -15816,8 +17672,8 @@ export type UpdateMoviesLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `MoviesLicense` being updated. */
   patch: MoviesLicensePatch;
 };
@@ -15829,7 +17685,7 @@ export type UpdateMoviesLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesLicense`. */
   movie?: Maybe<Movie>;
   /** The `MoviesLicense` that was updated by this mutation. */
@@ -15855,9 +17711,9 @@ export type UpdateMoviesLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code: IsoAlphaTwoCountryCodes;
-  moviesLicenseId: Scalars['Int'];
+  moviesLicenseId: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `MoviesLicensesCountry` being updated. */
   patch: MoviesLicensesCountryPatch;
 };
@@ -15869,7 +17725,7 @@ export type UpdateMoviesLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `MoviesLicense` that is related to this `MoviesLicensesCountry`. */
   moviesLicense?: Maybe<MoviesLicense>;
   /** The `MoviesLicensesCountry` that was updated by this mutation. */
@@ -15895,10 +17751,10 @@ export type UpdateMoviesProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  movieId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `MoviesProductionCountry` being updated. */
   patch: MoviesProductionCountryPatch;
 };
@@ -15910,7 +17766,7 @@ export type UpdateMoviesProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesProductionCountry`. */
   movie?: Maybe<Movie>;
   /** The `MoviesProductionCountry` that was updated by this mutation. */
@@ -15936,10 +17792,10 @@ export type UpdateMoviesTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  movieId: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  movieId: Scalars['Int']['input'];
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `MoviesTag` being updated. */
   patch: MoviesTagPatch;
 };
@@ -15951,7 +17807,7 @@ export type UpdateMoviesTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Reads a single `Movie` that is related to this `MoviesTag`. */
   movie?: Maybe<Movie>;
   /** The `MoviesTag` that was updated by this mutation. */
@@ -15977,8 +17833,8 @@ export type UpdateSeasonByExternalIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  externalId: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `Season` being updated. */
   patch: SeasonPatch;
 };
@@ -15992,8 +17848,8 @@ export type UpdateSeasonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `Season` being updated. */
   patch: SeasonPatch;
 };
@@ -16005,7 +17861,7 @@ export type UpdateSeasonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Season` that was updated by this mutation. */
@@ -16031,12 +17887,12 @@ export type UpdateSeasonsCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `SeasonsCast` being updated. */
   patch: SeasonsCastPatch;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** The output of our update `SeasonsCast` mutation. */
@@ -16046,7 +17902,7 @@ export type UpdateSeasonsCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsCast`. */
@@ -16072,11 +17928,11 @@ export type UpdateSeasonsImageBySeasonIdAndImageTypeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   imageType: SeasonImageType;
   /** An object where the defined keys will be set on the `SeasonsImage` being updated. */
   patch: SeasonsImagePatch;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** The output of our update `SeasonsImage` mutation. */
@@ -16086,7 +17942,7 @@ export type UpdateSeasonsImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsImage`. */
@@ -16112,8 +17968,8 @@ export type UpdateSeasonsLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `SeasonsLicense` being updated. */
   patch: SeasonsLicensePatch;
 };
@@ -16125,7 +17981,7 @@ export type UpdateSeasonsLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsLicense`. */
@@ -16151,11 +18007,11 @@ export type UpdateSeasonsLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code: IsoAlphaTwoCountryCodes;
   /** An object where the defined keys will be set on the `SeasonsLicensesCountry` being updated. */
   patch: SeasonsLicensesCountryPatch;
-  seasonsLicenseId: Scalars['Int'];
+  seasonsLicenseId: Scalars['Int']['input'];
 };
 
 /** The output of our update `SeasonsLicensesCountry` mutation. */
@@ -16165,7 +18021,7 @@ export type UpdateSeasonsLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `SeasonsLicense` that is related to this `SeasonsLicensesCountry`. */
@@ -16191,12 +18047,12 @@ export type UpdateSeasonsProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `SeasonsProductionCountry` being updated. */
   patch: SeasonsProductionCountryPatch;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** The output of our update `SeasonsProductionCountry` mutation. */
@@ -16206,7 +18062,7 @@ export type UpdateSeasonsProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsProductionCountry`. */
@@ -16232,12 +18088,12 @@ export type UpdateSeasonsTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `SeasonsTag` being updated. */
   patch: SeasonsTagPatch;
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
 };
 
 /** The output of our update `SeasonsTag` mutation. */
@@ -16247,7 +18103,7 @@ export type UpdateSeasonsTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Season` that is related to this `SeasonsTag`. */
@@ -16273,8 +18129,8 @@ export type UpdateTvshowByExternalIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  externalId: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  externalId: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `Tvshow` being updated. */
   patch: TvshowPatch;
 };
@@ -16288,8 +18144,8 @@ export type UpdateTvshowGenreInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `TvshowGenre` being updated. */
   patch: TvshowGenrePatch;
 };
@@ -16301,7 +18157,7 @@ export type UpdateTvshowGenrePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `TvshowGenre` that was updated by this mutation. */
@@ -16325,8 +18181,8 @@ export type UpdateTvshowInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `Tvshow` being updated. */
   patch: TvshowPatch;
 };
@@ -16338,7 +18194,7 @@ export type UpdateTvshowPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Tvshow` that was updated by this mutation. */
@@ -16362,12 +18218,12 @@ export type UpdateTvshowsCastInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `TvshowsCast` being updated. */
   patch: TvshowsCastPatch;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** The output of our update `TvshowsCast` mutation. */
@@ -16377,7 +18233,7 @@ export type UpdateTvshowsCastPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsCast`. */
@@ -16403,11 +18259,11 @@ export type UpdateTvshowsImageByTvshowIdAndImageTypeInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   imageType: TvshowImageType;
   /** An object where the defined keys will be set on the `TvshowsImage` being updated. */
   patch: TvshowsImagePatch;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** The output of our update `TvshowsImage` mutation. */
@@ -16417,7 +18273,7 @@ export type UpdateTvshowsImagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsImage`. */
@@ -16443,8 +18299,8 @@ export type UpdateTvshowsLicenseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `TvshowsLicense` being updated. */
   patch: TvshowsLicensePatch;
 };
@@ -16456,7 +18312,7 @@ export type UpdateTvshowsLicensePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsLicense`. */
@@ -16482,11 +18338,11 @@ export type UpdateTvshowsLicensesCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code: IsoAlphaTwoCountryCodes;
   /** An object where the defined keys will be set on the `TvshowsLicensesCountry` being updated. */
   patch: TvshowsLicensesCountryPatch;
-  tvshowsLicenseId: Scalars['Int'];
+  tvshowsLicenseId: Scalars['Int']['input'];
 };
 
 /** The output of our update `TvshowsLicensesCountry` mutation. */
@@ -16496,7 +18352,7 @@ export type UpdateTvshowsLicensesCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `TvshowsLicense` that is related to this `TvshowsLicensesCountry`. */
@@ -16522,12 +18378,12 @@ export type UpdateTvshowsProductionCountryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `TvshowsProductionCountry` being updated. */
   patch: TvshowsProductionCountryPatch;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** The output of our update `TvshowsProductionCountry` mutation. */
@@ -16537,7 +18393,7 @@ export type UpdateTvshowsProductionCountryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsProductionCountry`. */
@@ -16563,12 +18419,12 @@ export type UpdateTvshowsTagInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** @notEmpty() */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `TvshowsTag` being updated. */
   patch: TvshowsTagPatch;
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['input'];
 };
 
 /** The output of our update `TvshowsTag` mutation. */
@@ -16578,7 +18434,7 @@ export type UpdateTvshowsTagPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId?: Maybe<Scalars['String']>;
+  clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Tvshow` that is related to this `TvshowsTag`. */
@@ -16598,67 +18454,67 @@ export type UpdateTvshowsTagPayloadTvshowsTagEdgeArgs = {
 /** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
 export type UuidFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Scalars['UUID']>;
+  distinctFrom?: InputMaybe<Scalars['UUID']['input']>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Scalars['UUID']>;
+  equalTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Scalars['UUID']>;
+  greaterThan?: InputMaybe<Scalars['UUID']['input']>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Included in the specified list. */
-  in?: InputMaybe<Array<Scalars['UUID']>>;
+  in?: InputMaybe<Array<Scalars['UUID']['input']>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Scalars['UUID']>;
+  lessThan?: InputMaybe<Scalars['UUID']['input']>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Scalars['UUID']>;
+  notDistinctFrom?: InputMaybe<Scalars['UUID']['input']>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Scalars['UUID']>;
+  notEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Scalars['UUID']>>;
+  notIn?: InputMaybe<Array<Scalars['UUID']['input']>>;
 };
 
 /** A filter to be used against UUID List fields. All fields are combined with a logical ‘and.’ */
 export type UuidListFilter = {
   /** Any array item is equal to the specified value. */
-  anyEqualTo?: InputMaybe<Scalars['UUID']>;
+  anyEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Any array item is greater than the specified value. */
-  anyGreaterThan?: InputMaybe<Scalars['UUID']>;
+  anyGreaterThan?: InputMaybe<Scalars['UUID']['input']>;
   /** Any array item is greater than or equal to the specified value. */
-  anyGreaterThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  anyGreaterThanOrEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Any array item is less than the specified value. */
-  anyLessThan?: InputMaybe<Scalars['UUID']>;
+  anyLessThan?: InputMaybe<Scalars['UUID']['input']>;
   /** Any array item is less than or equal to the specified value. */
-  anyLessThanOrEqualTo?: InputMaybe<Scalars['UUID']>;
+  anyLessThanOrEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Any array item is not equal to the specified value. */
-  anyNotEqualTo?: InputMaybe<Scalars['UUID']>;
+  anyNotEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Contained by the specified list of values. */
-  containedBy?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  containedBy?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Contains the specified list of values. */
-  contains?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  contains?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  distinctFrom?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Equal to the specified value. */
-  equalTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  equalTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  greaterThan?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  greaterThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']>;
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
   /** Less than the specified value. */
-  lessThan?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  lessThan?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  lessThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  notDistinctFrom?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  notEqualTo?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
   /** Overlaps the specified list of values. */
-  overlaps?: InputMaybe<Array<InputMaybe<Scalars['UUID']>>>;
+  overlaps?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
 };
 
 export type CreateCollectionMutationVariables = Exact<{
@@ -16669,7 +18525,7 @@ export type CreateCollectionMutationVariables = Exact<{
 export type CreateCollectionMutation = { __typename?: 'Mutation', createCollection?: { __typename?: 'CreateCollectionPayload', collection?: { __typename?: 'Collection', id: number, title: string } | null } | null };
 
 export type CollectionQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -16683,70 +18539,70 @@ export type DeleteCollectionMutationVariables = Exact<{
 export type DeleteCollectionMutation = { __typename?: 'Mutation', deleteCollection?: { __typename?: 'DeleteCollectionPayload', clientMutationId?: string | null } | null };
 
 export type PublishCollectionMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type PublishCollectionMutation = { __typename?: 'Mutation', publishCollection?: { __typename?: 'Snapshot', id: number } | null };
 
 export type UnpublishCollectionMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type UnpublishCollectionMutation = { __typename?: 'Mutation', unpublishCollection?: { __typename?: 'Snapshot', id: number } | null };
 
 export type CollectionTitleQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type CollectionTitleQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: number, title: string } | null };
 
 export type SearchCollectionTagsQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
 }>;
 
 
 export type SearchCollectionTagsQuery = { __typename?: 'Query', getCollectionsTagsValues?: { __typename?: 'GetCollectionsTagsValuesConnection', nodes: Array<string | null> } | null };
 
 export type CollectionRelatedEntitiesQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type CollectionRelatedEntitiesQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, movie?: { __typename?: 'Movie', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> } } | null, tvshow?: { __typename?: 'Tvshow', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null, season?: { __typename?: 'Season', index: number, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> } } | null, episode?: { __typename?: 'Episode', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> } } | null }> } } | null };
 
 export type CollectionImagesQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type CollectionImagesQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any, imageType: CollectionImageType }> } } | null };
 
 export type CreateCollectionSnapshotMutationVariables = Exact<{
-  collectionId: Scalars['Int'];
+  collectionId: Scalars['Int']['input'];
 }>;
 
 
 export type CreateCollectionSnapshotMutation = { __typename?: 'Mutation', createCollectionSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
-export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } };
+export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
 
 export type CollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
   orderBy?: InputMaybe<Array<CollectionsOrderBy> | CollectionsOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
 
-export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
+export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
 
 export type CollectionsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null } | null };
+export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
 
 export type BulkDeleteCollectionsMutationVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -16784,7 +18640,7 @@ export type CreateEpisodeMutationVariables = Exact<{
 export type CreateEpisodeMutation = { __typename?: 'Mutation', createEpisode?: { __typename?: 'CreateEpisodePayload', episode?: { __typename?: 'Episode', id: number, title: string } | null } | null };
 
 export type EpisodeQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -16805,45 +18661,45 @@ export type DeleteEpisodeMutationVariables = Exact<{
 export type DeleteEpisodeMutation = { __typename?: 'Mutation', deleteEpisode?: { __typename?: 'DeleteEpisodePayload', clientMutationId?: string | null } | null };
 
 export type PublishEpisodeMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type PublishEpisodeMutation = { __typename?: 'Mutation', publishEpisode?: { __typename?: 'Snapshot', id: number } | null };
 
 export type UnpublishEpisodeMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type UnpublishEpisodeMutation = { __typename?: 'Mutation', unpublishEpisode?: { __typename?: 'Snapshot', id: number } | null };
 
 export type EpisodeTitleQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type EpisodeTitleQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', id: number, title: string } | null };
 
 export type SearchEpisodeTagsQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
 }>;
 
 
 export type SearchEpisodeTagsQuery = { __typename?: 'Query', getEpisodesTagsValues?: { __typename?: 'GetEpisodesTagsValuesConnection', nodes: Array<string | null> } | null };
 
 export type SearchEpisodeCastQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
 }>;
 
 
 export type SearchEpisodeCastQuery = { __typename?: 'Query', getEpisodesCastsValues?: { __typename?: 'GetEpisodesCastsValuesConnection', nodes: Array<string | null> } | null };
 
 export type SearchEpisodeProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
 }>;
 
 
@@ -16854,7 +18710,7 @@ export type EpisodeExplorerPropertiesFragment = { __typename?: 'Episode', publis
 export type EpisodesQueryVariables = Exact<{
   filter?: InputMaybe<EpisodeFilter>;
   orderBy?: InputMaybe<Array<EpisodesOrderBy> | EpisodesOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
 
@@ -16866,7 +18722,7 @@ export type EpisodesMutatedSubscriptionVariables = Exact<{ [key: string]: never;
 export type EpisodesMutatedSubscription = { __typename?: 'Subscription', episodeMutated?: { __typename?: 'EpisodeSubscriptionPayload', id: number, eventKey?: EpisodeSubscriptionEventKey | null, episode?: { __typename?: 'Episode', publishStatus: PublishStatus, title: string, index: number, externalId?: string | null, mainVideoId?: any | null, createdDate: any, updatedDate: any, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, id: number, season?: { __typename?: 'Season', id: number, index: number, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> } } | null } | null };
 
 export type EpisodeImagesQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -16875,7 +18731,7 @@ export type EpisodeImagesQuery = { __typename?: 'Query', episode?: { __typename?
 export type EpisodesLicensesQueryVariables = Exact<{
   filter?: InputMaybe<EpisodesLicenseFilter>;
   orderBy?: InputMaybe<Array<EpisodesLicensesOrderBy> | EpisodesLicensesOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
 
@@ -16889,7 +18745,7 @@ export type CreateEpisodesLicenseMutationVariables = Exact<{
 export type CreateEpisodesLicenseMutation = { __typename?: 'Mutation', createEpisodesLicense?: { __typename?: 'CreateEpisodesLicensePayload', episodesLicense?: { __typename?: 'EpisodesLicense', id: number } | null } | null };
 
 export type EpisodesLicenseQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -16910,14 +18766,14 @@ export type DeleteEpisodesLicenseMutationVariables = Exact<{
 export type DeleteEpisodesLicenseMutation = { __typename?: 'Mutation', deleteEpisodesLicense?: { __typename?: 'DeleteEpisodesLicensePayload', clientMutationId?: string | null } | null };
 
 export type CreateEpisodeSnapshotMutationVariables = Exact<{
-  episodeId: Scalars['Int'];
+  episodeId: Scalars['Int']['input'];
 }>;
 
 
 export type CreateEpisodeSnapshotMutation = { __typename?: 'Mutation', createEpisodeSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
 export type EpisodeVideosQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -16952,7 +18808,7 @@ export type BulkCreateEpisodeSnapshotsMutationVariables = Exact<{
 export type BulkCreateEpisodeSnapshotsMutation = { __typename?: 'Mutation', createEpisodeSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
 
 export type IngestDocumentQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -16966,14 +18822,14 @@ export type UpdateIngestDocumentMutationVariables = Exact<{
 export type UpdateIngestDocumentMutation = { __typename?: 'Mutation', updateIngestDocument?: { __typename?: 'UpdateIngestDocumentPayload', clientMutationId?: string | null } | null };
 
 export type IngestDocumentTitleQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type IngestDocumentTitleQuery = { __typename?: 'Query', ingestDocument?: { __typename?: 'IngestDocument', title: string } | null };
 
 export type IngestDocumentUploadMutationVariables = Exact<{
-  file: Scalars['Upload'];
+  file: Scalars['Upload']['input'];
 }>;
 
 
@@ -16983,7 +18839,7 @@ export type IngestDocumentExplorerPropertiesFragment = { __typename?: 'IngestDoc
 
 export type IngestDocumentsQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<IngestDocumentsOrderBy> | IngestDocumentsOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
 
@@ -16994,165 +18850,92 @@ export type IngestDocumentsMutatedSubscriptionVariables = Exact<{ [key: string]:
 
 export type IngestDocumentsMutatedSubscription = { __typename?: 'Subscription', ingestDocumentMutated?: { __typename?: 'IngestDocumentSubscriptionPayload', id: number, eventKey?: IngestDocumentSubscriptionEventKey | null, ingestDocument?: { __typename?: 'IngestDocument', id: number, title: string, status: IngestStatus, itemsCount: number, errorCount: number, successCount: number, inProgressCount: number, createdDate: any, updatedDate: any } | null } | null };
 
-export type CreateMovieMutationVariables = Exact<{
-  input: CreateMovieInput;
+export type AgeRatingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AgeRatingsQuery = { __typename?: 'Query', ageRatings?: { __typename?: 'AgeRatingsConnection', totalCount: number, nodes: Array<{ __typename?: 'AgeRating', id: any, name: string, createdDate: any, createdUser: string, sortOrder: number, updatedDate: any, updatedUser: string }> } | null };
+
+export type CreateAgeRatingMutationVariables = Exact<{
+  input: CreateAgeRatingInput;
 }>;
 
 
-export type CreateMovieMutation = { __typename?: 'Mutation', createMovie?: { __typename?: 'CreateMoviePayload', movie?: { __typename?: 'Movie', id: number, title: string } | null } | null };
+export type CreateAgeRatingMutation = { __typename?: 'Mutation', createAgeRating?: { __typename?: 'CreateAgeRatingPayload', ageRating?: { __typename?: 'AgeRating', id: any, name: string } | null } | null };
 
-export type MovieQueryVariables = Exact<{
-  id: Scalars['Int'];
+export type UpdateAgeRatingMutationVariables = Exact<{
+  input: UpdateAgeRatingInput;
 }>;
 
 
-export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null };
+export type UpdateAgeRatingMutation = { __typename?: 'Mutation', updateAgeRating?: { __typename?: 'UpdateAgeRatingPayload', ageRating?: { __typename?: 'AgeRating', id: any, name: string } | null } | null };
 
-export type DeleteMovieMutationVariables = Exact<{
-  input: DeleteMovieInput;
+export type DeleteAgeRatingMutationVariables = Exact<{
+  input: DeleteAgeRatingInput;
 }>;
 
 
-export type DeleteMovieMutation = { __typename?: 'Mutation', deleteMovie?: { __typename?: 'DeleteMoviePayload', clientMutationId?: string | null } | null };
+export type DeleteAgeRatingMutation = { __typename?: 'Mutation', deleteAgeRating?: { __typename?: 'DeleteAgeRatingPayload', ageRating?: { __typename?: 'AgeRating', id: any, name: string } | null } | null };
 
-export type PublishMovieMutationVariables = Exact<{
-  id: Scalars['Int'];
+export type ContentOwnersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ContentOwnersQuery = { __typename?: 'Query', contentOwners?: { __typename?: 'ContentOwnersConnection', totalCount: number, nodes: Array<{ __typename?: 'ContentOwner', createdDate: any, createdUser: string, id: any, name: string, sortOrder: number, updatedDate: any, updatedUser: string }> } | null };
+
+export type CreateContentOwnerMutationVariables = Exact<{
+  input: CreateContentOwnerInput;
 }>;
 
 
-export type PublishMovieMutation = { __typename?: 'Mutation', publishMovie?: { __typename?: 'Snapshot', id: number } | null };
+export type CreateContentOwnerMutation = { __typename?: 'Mutation', createContentOwner?: { __typename?: 'CreateContentOwnerPayload', contentOwner?: { __typename?: 'ContentOwner', id: any, name: string } | null } | null };
 
-export type UnpublishMovieMutationVariables = Exact<{
-  id: Scalars['Int'];
+export type UpdateContentOwnerMutationVariables = Exact<{
+  input: UpdateContentOwnerInput;
 }>;
 
 
-export type UnpublishMovieMutation = { __typename?: 'Mutation', unpublishMovie?: { __typename?: 'Snapshot', id: number } | null };
+export type UpdateContentOwnerMutation = { __typename?: 'Mutation', updateContentOwner?: { __typename?: 'UpdateContentOwnerPayload', contentOwner?: { __typename?: 'ContentOwner', id: any, name: string } | null } | null };
 
-export type MovieTitleQueryVariables = Exact<{
-  id: Scalars['Int'];
+export type DeleteContentOwnerMutationVariables = Exact<{
+  input: DeleteContentOwnerInput;
 }>;
 
 
-export type MovieTitleQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', id: number, title: string } | null };
+export type DeleteContentOwnerMutation = { __typename?: 'Mutation', deleteContentOwner?: { __typename?: 'DeleteContentOwnerPayload', contentOwner?: { __typename?: 'ContentOwner', id: any, name: string } | null } | null };
 
-export type SearchMovieTagsQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+export type CreateLanguageMutationVariables = Exact<{
+  input: CreateLanguageInput;
 }>;
 
 
-export type SearchMovieTagsQuery = { __typename?: 'Query', getMoviesTagsValues?: { __typename?: 'GetMoviesTagsValuesConnection', nodes: Array<string | null> } | null };
+export type CreateLanguageMutation = { __typename?: 'Mutation', createLanguage?: { __typename?: 'CreateLanguagePayload', language?: { __typename?: 'Language', code: string, id: number, title: string } | null } | null };
 
-export type SearchMovieCastQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+export type LanguageQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
 }>;
 
 
-export type SearchMovieCastQuery = { __typename?: 'Query', getMoviesCastsValues?: { __typename?: 'GetMoviesCastsValuesConnection', nodes: Array<string | null> } | null };
+export type LanguageQuery = { __typename?: 'Query', language?: { __typename?: 'Language', code: string, createdDate: any, createdUser: string, id: number, native?: string | null, title: string, updatedDate: any, updatedUser: string } | null };
 
-export type SearchMovieProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+export type LanguageTitleQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
 }>;
 
 
-export type SearchMovieProductionCountriesQuery = { __typename?: 'Query', getMoviesProductionCountriesValues?: { __typename?: 'GetMoviesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
+export type LanguageTitleQuery = { __typename?: 'Query', language?: { __typename?: 'Language', id: number, title: string } | null };
 
-export type MovieExplorerPropertiesFragment = { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> } };
-
-export type MoviesQueryVariables = Exact<{
-  filter?: InputMaybe<MovieFilter>;
-  orderBy?: InputMaybe<Array<MoviesOrderBy> | MoviesOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+export type DeleteLanguageMutationVariables = Exact<{
+  input: DeleteLanguageInput;
 }>;
 
 
-export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
+export type DeleteLanguageMutation = { __typename?: 'Mutation', deleteLanguage?: { __typename?: 'DeleteLanguagePayload', clientMutationId?: string | null } | null };
 
-export type MoviesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> } } | null } | null };
-
-export type MovieGenresQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MovieGenresQuery = { __typename?: 'Query', movieGenres?: { __typename?: 'MovieGenresConnection', totalCount: number, nodes: Array<{ __typename?: 'MovieGenre', sortOrder: number, title: string, id: number, updatedDate: any, updatedUser: string }> } | null, snapshots?: { __typename?: 'SnapshotsConnection', nodes: Array<{ __typename?: 'Snapshot', updatedUser: string, publishedDate?: any | null, snapshotState: SnapshotState }> } | null };
-
-export type PublishMovieGenresMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PublishMovieGenresMutation = { __typename?: 'Mutation', publishMovieGenres?: { __typename?: 'Snapshot', id: number } | null };
-
-export type UnpublishMovieGenresMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UnpublishMovieGenresMutation = { __typename?: 'Mutation', unpublishMovieGenres?: { __typename?: 'Snapshot', id: number } | null };
-
-export type CreateMovieGenresSnapshotMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type CreateMovieGenresSnapshotMutation = { __typename?: 'Mutation', createMovieGenresSnapshot?: { __typename?: 'Snapshot', id: number } | null };
-
-export type MovieImagesQueryVariables = Exact<{
-  id: Scalars['Int'];
+export type UpdateLanguageMutationVariables = Exact<{
+  input: UpdateLanguageInput;
 }>;
 
 
-export type MovieImagesQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any, imageType: MovieImageType }> } } | null };
-
-export type MoviesLicensesQueryVariables = Exact<{
-  filter?: InputMaybe<MoviesLicenseFilter>;
-  orderBy?: InputMaybe<Array<MoviesLicensesOrderBy> | MoviesLicensesOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
-}>;
-
-
-export type MoviesLicensesQuery = { __typename?: 'Query', moviesLicenses?: { __typename?: 'MoviesLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'MoviesLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } | null };
-
-export type CreateMoviesLicenseMutationVariables = Exact<{
-  input: CreateMoviesLicenseInput;
-}>;
-
-
-export type CreateMoviesLicenseMutation = { __typename?: 'Mutation', createMoviesLicense?: { __typename?: 'CreateMoviesLicensePayload', moviesLicense?: { __typename?: 'MoviesLicense', id: number } | null } | null };
-
-export type MoviesLicenseQueryVariables = Exact<{
-  id: Scalars['Int'];
-}>;
-
-
-export type MoviesLicenseQuery = { __typename?: 'Query', moviesLicense?: { __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, movieId: number, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
-
-export type UpdateMoviesLicenseMutationVariables = Exact<{
-  input: UpdateMoviesLicenseInput;
-}>;
-
-
-export type UpdateMoviesLicenseMutation = { __typename?: 'Mutation', updateMoviesLicense?: { __typename?: 'UpdateMoviesLicensePayload', clientMutationId?: string | null } | null };
-
-export type DeleteMoviesLicenseMutationVariables = Exact<{
-  input: DeleteMoviesLicenseInput;
-}>;
-
-
-export type DeleteMoviesLicenseMutation = { __typename?: 'Mutation', deleteMoviesLicense?: { __typename?: 'DeleteMoviesLicensePayload', clientMutationId?: string | null } | null };
-
-export type CreateMovieSnapshotMutationVariables = Exact<{
-  movieId: Scalars['Int'];
-}>;
-
-
-export type CreateMovieSnapshotMutation = { __typename?: 'Mutation', createMovieSnapshot?: { __typename?: 'Snapshot', id: number } | null };
-
-export type MovieVideosQueryVariables = Exact<{
-  id: Scalars['Int'];
-}>;
-
-
-export type MovieVideosQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', mainVideoId?: any | null, moviesTrailers: { __typename?: 'MoviesTrailersConnection', nodes: Array<{ __typename?: 'MoviesTrailer', videoId: any }> } } | null };
+export type UpdateLanguageMutation = { __typename?: 'Mutation', updateLanguage?: { __typename?: 'UpdateLanguagePayload', clientMutationId?: string | null } | null };
 
 export type BulkDeleteMoviesMutationVariables = Exact<{
   filter?: InputMaybe<MovieFilter>;
@@ -17182,29 +18965,215 @@ export type BulkCreateMovieSnapshotsMutationVariables = Exact<{
 
 export type BulkCreateMovieSnapshotsMutation = { __typename?: 'Mutation', createMovieSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
 
+export type LanguageExplorerPropertiesFragment = { __typename?: 'Language', code: string, title: string, createdDate: any, createdUser: string, id: number, native?: string | null, updatedDate: any, updatedUser: string };
+
+export type LanguagesQueryVariables = Exact<{
+  filter?: InputMaybe<LanguageFilter>;
+  orderBy?: InputMaybe<Array<LanguagesOrderBy> | LanguagesOrderBy>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+}>;
+
+
+export type LanguagesQuery = { __typename?: 'Query', filtered?: { __typename?: 'LanguagesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Language', code: string, title: string, createdDate: any, createdUser: string, id: number, native?: string | null, updatedDate: any, updatedUser: string }> } | null, nonFiltered?: { __typename?: 'LanguagesConnection', totalCount: number } | null };
+
+export type MovieRelatedCollectionsQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type MovieRelatedCollectionsQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, collection?: { __typename?: 'Collection', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null }> } } | null };
+
+export type CreateMovieMutationVariables = Exact<{
+  input: CreateMovieInput;
+}>;
+
+
+export type CreateMovieMutation = { __typename?: 'Mutation', createMovie?: { __typename?: 'CreateMoviePayload', movie?: { __typename?: 'Movie', id: number, title: string } | null } | null };
+
+export type MovieQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, customRating?: string | null, creditsStartTime?: string | null, lengthInSeconds?: any | null, dynamicField?: string | null, extendedField?: string | null, captionLanguages?: Array<string | null> | null, audioLanguages?: Array<string | null> | null, subtitleLanguages?: Array<string | null> | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
+
+export type DeleteMovieMutationVariables = Exact<{
+  input: DeleteMovieInput;
+}>;
+
+
+export type DeleteMovieMutation = { __typename?: 'Mutation', deleteMovie?: { __typename?: 'DeleteMoviePayload', clientMutationId?: string | null } | null };
+
+export type PublishMovieMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type PublishMovieMutation = { __typename?: 'Mutation', publishMovie?: { __typename?: 'Snapshot', id: number } | null };
+
+export type UnpublishMovieMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type UnpublishMovieMutation = { __typename?: 'Mutation', unpublishMovie?: { __typename?: 'Snapshot', id: number } | null };
+
+export type MovieTitleQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type MovieTitleQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', id: number, title: string } | null };
+
+export type SearchMovieTagsQueryVariables = Exact<{
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+}>;
+
+
+export type SearchMovieTagsQuery = { __typename?: 'Query', getMoviesTagsValues?: { __typename?: 'GetMoviesTagsValuesConnection', nodes: Array<string | null> } | null };
+
+export type SearchMovieCastQueryVariables = Exact<{
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+}>;
+
+
+export type SearchMovieCastQuery = { __typename?: 'Query', getMoviesCastsValues?: { __typename?: 'GetMoviesCastsValuesConnection', nodes: Array<string | null> } | null };
+
+export type SearchMovieDirectorQueryVariables = Exact<{
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+}>;
+
+
+export type SearchMovieDirectorQuery = { __typename?: 'Query', getMoviesDirectorsValues?: { __typename?: 'GetMoviesDirectorsValuesConnection', nodes: Array<string | null> } | null };
+
+export type SearchMovieProductionCountriesQueryVariables = Exact<{
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+}>;
+
+
+export type SearchMovieProductionCountriesQuery = { __typename?: 'Query', getMoviesProductionCountriesValues?: { __typename?: 'GetMoviesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
+
+export type MovieExplorerPropertiesFragment = { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, audioLanguages?: Array<string | null> | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
+
+export type MoviesQueryVariables = Exact<{
+  filter?: InputMaybe<MovieFilter>;
+  orderBy?: InputMaybe<Array<MoviesOrderBy> | MoviesOrderBy>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+}>;
+
+
+export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, audioLanguages?: Array<string | null> | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
+
+export type MoviesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, audioLanguages?: Array<string | null> | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
+
+export type MovieGenresQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MovieGenresQuery = { __typename?: 'Query', movieGenres?: { __typename?: 'MovieGenresConnection', totalCount: number, nodes: Array<{ __typename?: 'MovieGenre', sortOrder: number, title: string, id: number, updatedDate: any, updatedUser: string }> } | null, snapshots?: { __typename?: 'SnapshotsConnection', nodes: Array<{ __typename?: 'Snapshot', updatedUser: string, publishedDate?: any | null, snapshotState: SnapshotState }> } | null };
+
+export type PublishMovieGenresMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PublishMovieGenresMutation = { __typename?: 'Mutation', publishMovieGenres?: { __typename?: 'Snapshot', id: number } | null };
+
+export type UnpublishMovieGenresMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UnpublishMovieGenresMutation = { __typename?: 'Mutation', unpublishMovieGenres?: { __typename?: 'Snapshot', id: number } | null };
+
+export type CreateMovieGenresSnapshotMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateMovieGenresSnapshotMutation = { __typename?: 'Mutation', createMovieGenresSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+
+export type MovieImagesQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type MovieImagesQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any, imageType: MovieImageType }> } } | null };
+
+export type MoviesLicensesQueryVariables = Exact<{
+  filter?: InputMaybe<MoviesLicenseFilter>;
+  orderBy?: InputMaybe<Array<MoviesLicensesOrderBy> | MoviesLicensesOrderBy>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+}>;
+
+
+export type MoviesLicensesQuery = { __typename?: 'Query', moviesLicenses?: { __typename?: 'MoviesLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'MoviesLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } | null };
+
+export type CreateMoviesLicenseMutationVariables = Exact<{
+  input: CreateMoviesLicenseInput;
+}>;
+
+
+export type CreateMoviesLicenseMutation = { __typename?: 'Mutation', createMoviesLicense?: { __typename?: 'CreateMoviesLicensePayload', moviesLicense?: { __typename?: 'MoviesLicense', id: number } | null } | null };
+
+export type MoviesLicenseQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type MoviesLicenseQuery = { __typename?: 'Query', moviesLicense?: { __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, movieId: number, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
+
+export type UpdateMoviesLicenseMutationVariables = Exact<{
+  input: UpdateMoviesLicenseInput;
+}>;
+
+
+export type UpdateMoviesLicenseMutation = { __typename?: 'Mutation', updateMoviesLicense?: { __typename?: 'UpdateMoviesLicensePayload', clientMutationId?: string | null } | null };
+
+export type DeleteMoviesLicenseMutationVariables = Exact<{
+  input: DeleteMoviesLicenseInput;
+}>;
+
+
+export type DeleteMoviesLicenseMutation = { __typename?: 'Mutation', deleteMoviesLicense?: { __typename?: 'DeleteMoviesLicensePayload', clientMutationId?: string | null } | null };
+
+export type CreateMovieSnapshotMutationVariables = Exact<{
+  movieId: Scalars['Int']['input'];
+}>;
+
+
+export type CreateMovieSnapshotMutation = { __typename?: 'Mutation', createMovieSnapshot?: { __typename?: 'Snapshot', id: number } | null };
+
+export type MovieVideosQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type MovieVideosQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', mainVideoId?: any | null, moviesTrailers: { __typename?: 'MoviesTrailersConnection', nodes: Array<{ __typename?: 'MoviesTrailer', videoId: any }> } } | null };
+
 export type PublishingSnapshotQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type PublishingSnapshotQuery = { __typename?: 'Query', snapshot?: { __typename?: 'Snapshot', id: number, entityType: EntityType, createdDate: any, createdUser: string, snapshotState: SnapshotState, updatedDate: any, updatedUser: string, snapshotJson?: any | null, snapshotValidationResults: { __typename?: 'SnapshotValidationResultsConnection', nodes: Array<{ __typename?: 'SnapshotValidationResult', id: number, context: SnapshotValidationIssueContext, severity: SnapshotValidationIssueSeverity, message: string }> } } | null };
 
 export type PublishingSnapshotTitleQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type PublishingSnapshotTitleQuery = { __typename?: 'Query', snapshot?: { __typename?: 'Snapshot', entityType: EntityType, snapshotNo: number } | null };
 
 export type PublishSnapshotMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type PublishSnapshotMutation = { __typename?: 'Mutation', publishSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
 export type UnpublishSnapshotMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -17221,10 +19190,10 @@ export type PublishingSnapshotExplorerPropertiesFragment = { __typename?: 'Snaps
 
 export type PublishingSnapshotsQueryVariables = Exact<{
   entityType: EntityType;
-  entityId?: InputMaybe<Scalars['Int']>;
+  entityId?: InputMaybe<Scalars['Int']['input']>;
   filter?: InputMaybe<SnapshotFilter>;
   orderBy?: InputMaybe<Array<SnapshotsOrderBy> | SnapshotsOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
 
@@ -17240,7 +19209,7 @@ export type SnapshotExplorerPropertiesFragment = { __typename?: 'Snapshot', id: 
 export type SnapshotsQueryVariables = Exact<{
   filter?: InputMaybe<SnapshotFilter>;
   orderBy?: InputMaybe<Array<SnapshotsOrderBy> | SnapshotsOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
 
@@ -17287,7 +19256,7 @@ export type CreateSeasonMutationVariables = Exact<{
 export type CreateSeasonMutation = { __typename?: 'Mutation', createSeason?: { __typename?: 'CreateSeasonPayload', season?: { __typename?: 'Season', id: number, index: number } | null } | null };
 
 export type SeasonQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -17301,52 +19270,52 @@ export type DeleteSeasonMutationVariables = Exact<{
 export type DeleteSeasonMutation = { __typename?: 'Mutation', deleteSeason?: { __typename?: 'DeleteSeasonPayload', clientMutationId?: string | null } | null };
 
 export type PublishSeasonMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type PublishSeasonMutation = { __typename?: 'Mutation', publishSeason?: { __typename?: 'Snapshot', id: number } | null };
 
 export type UnpublishSeasonMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type UnpublishSeasonMutation = { __typename?: 'Mutation', unpublishSeason?: { __typename?: 'Snapshot', id: number } | null };
 
 export type SeasonTitleQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type SeasonTitleQuery = { __typename?: 'Query', season?: { __typename?: 'Season', id: number, index: number } | null };
 
 export type SearchSeasonTagsQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
 }>;
 
 
 export type SearchSeasonTagsQuery = { __typename?: 'Query', getSeasonsTagsValues?: { __typename?: 'GetSeasonsTagsValuesConnection', nodes: Array<string | null> } | null };
 
 export type SearchSeasonCastQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
 }>;
 
 
 export type SearchSeasonCastQuery = { __typename?: 'Query', getSeasonsCastsValues?: { __typename?: 'GetSeasonsCastsValuesConnection', nodes: Array<string | null> } | null };
 
 export type SearchSeasonProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
 }>;
 
 
 export type SearchSeasonProductionCountriesQuery = { __typename?: 'Query', getSeasonsProductionCountriesValues?: { __typename?: 'GetSeasonsProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
 
 export type SeasonEpisodesQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -17357,7 +19326,7 @@ export type SeasonExplorerPropertiesFragment = { __typename?: 'Season', id: numb
 export type SeasonsQueryVariables = Exact<{
   filter?: InputMaybe<SeasonFilter>;
   orderBy?: InputMaybe<Array<SeasonsOrderBy> | SeasonsOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
 
@@ -17369,7 +19338,7 @@ export type SeasonsMutatedSubscriptionVariables = Exact<{ [key: string]: never; 
 export type SeasonsMutatedSubscription = { __typename?: 'Subscription', seasonMutated?: { __typename?: 'SeasonSubscriptionPayload', id: number, eventKey?: SeasonSubscriptionEventKey | null, season?: { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, createdDate: any, updatedDate: any, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } } | null } | null };
 
 export type SeasonImagesQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -17378,7 +19347,7 @@ export type SeasonImagesQuery = { __typename?: 'Query', season?: { __typename?: 
 export type SeasonsLicensesQueryVariables = Exact<{
   filter?: InputMaybe<SeasonsLicenseFilter>;
   orderBy?: InputMaybe<Array<SeasonsLicensesOrderBy> | SeasonsLicensesOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
 
@@ -17392,7 +19361,7 @@ export type CreateSeasonsLicenseMutationVariables = Exact<{
 export type CreateSeasonsLicenseMutation = { __typename?: 'Mutation', createSeasonsLicense?: { __typename?: 'CreateSeasonsLicensePayload', seasonsLicense?: { __typename?: 'SeasonsLicense', id: number } | null } | null };
 
 export type SeasonsLicenseQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -17413,14 +19382,14 @@ export type DeleteSeasonsLicenseMutationVariables = Exact<{
 export type DeleteSeasonsLicenseMutation = { __typename?: 'Mutation', deleteSeasonsLicense?: { __typename?: 'DeleteSeasonsLicensePayload', clientMutationId?: string | null } | null };
 
 export type CreateSeasonSnapshotMutationVariables = Exact<{
-  seasonId: Scalars['Int'];
+  seasonId: Scalars['Int']['input'];
 }>;
 
 
 export type CreateSeasonSnapshotMutation = { __typename?: 'Mutation', createSeasonSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
 export type SeasonVideosQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -17462,7 +19431,7 @@ export type CreateTvShowMutationVariables = Exact<{
 export type CreateTvShowMutation = { __typename?: 'Mutation', createTvshow?: { __typename?: 'CreateTvshowPayload', tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null } | null };
 
 export type TvShowQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -17476,45 +19445,45 @@ export type DeleteTvShowMutationVariables = Exact<{
 export type DeleteTvShowMutation = { __typename?: 'Mutation', deleteTvshow?: { __typename?: 'DeleteTvshowPayload', clientMutationId?: string | null } | null };
 
 export type PublishTvShowMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type PublishTvShowMutation = { __typename?: 'Mutation', publishTvshow?: { __typename?: 'Snapshot', id: number } | null };
 
 export type UnpublishTvShowMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type UnpublishTvShowMutation = { __typename?: 'Mutation', unpublishTvshow?: { __typename?: 'Snapshot', id: number } | null };
 
 export type TvShowTitleQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type TvShowTitleQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null };
 
 export type SearchTvShowTagsQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
 }>;
 
 
 export type SearchTvShowTagsQuery = { __typename?: 'Query', getTvshowsTagsValues?: { __typename?: 'GetTvshowsTagsValuesConnection', nodes: Array<string | null> } | null };
 
 export type SearchTvShowCastQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
 }>;
 
 
 export type SearchTvShowCastQuery = { __typename?: 'Query', getTvshowsCastsValues?: { __typename?: 'GetTvshowsCastsValuesConnection', nodes: Array<string | null> } | null };
 
 export type SearchTvShowProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String'];
-  limit: Scalars['Int'];
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
 }>;
 
 
@@ -17525,7 +19494,7 @@ export type TvShowExplorerPropertiesFragment = { __typename?: 'Tvshow', id: numb
 export type TvShowsQueryVariables = Exact<{
   filter?: InputMaybe<TvshowFilter>;
   orderBy?: InputMaybe<Array<TvshowsOrderBy> | TvshowsOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
 
@@ -17557,7 +19526,7 @@ export type CreateTvShowGenresMutationVariables = Exact<{ [key: string]: never; 
 export type CreateTvShowGenresMutation = { __typename?: 'Mutation', createTvshowGenresSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
 export type TvshowImagesQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -17566,7 +19535,7 @@ export type TvshowImagesQuery = { __typename?: 'Query', tvshow?: { __typename?: 
 export type TvshowsLicensesQueryVariables = Exact<{
   filter?: InputMaybe<TvshowsLicenseFilter>;
   orderBy?: InputMaybe<Array<TvshowsLicensesOrderBy> | TvshowsLicensesOrderBy>;
-  after?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
 
@@ -17580,7 +19549,7 @@ export type CreateTvshowsLicenseMutationVariables = Exact<{
 export type CreateTvshowsLicenseMutation = { __typename?: 'Mutation', createTvshowsLicense?: { __typename?: 'CreateTvshowsLicensePayload', tvshowsLicense?: { __typename?: 'TvshowsLicense', id: number } | null } | null };
 
 export type TvshowsLicenseQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -17601,21 +19570,21 @@ export type DeleteTvshowsLicenseMutationVariables = Exact<{
 export type DeleteTvshowsLicenseMutation = { __typename?: 'Mutation', deleteTvshowsLicense?: { __typename?: 'DeleteTvshowsLicensePayload', clientMutationId?: string | null } | null };
 
 export type TvShowSeasonsQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
 export type TvShowSeasonsQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', seasons: { __typename?: 'SeasonsConnection', nodes: Array<{ __typename?: 'Season', id: number, index: number, externalId?: string | null }> } } | null };
 
 export type CreateTvShowSnapshotMutationVariables = Exact<{
-  tvshowId: Scalars['Int'];
+  tvshowId: Scalars['Int']['input'];
 }>;
 
 
 export type CreateTvShowSnapshotMutation = { __typename?: 'Mutation', createTvshowSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
 export type TvShowVideosQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 }>;
 
 
@@ -17666,6 +19635,11 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
   collectionsImages {
     nodes {
       imageId
+    }
+  }
+  collectionRelations(orderBy: SORT_ORDER_DESC) {
+    nodes {
+      sortOrder
     }
   }
 }
@@ -17733,6 +19707,18 @@ export const IngestDocumentExplorerPropertiesFragmentDoc = gql`
   updatedDate
 }
     `;
+export const LanguageExplorerPropertiesFragmentDoc = gql`
+    fragment LanguageExplorerProperties on Language {
+  code
+  title
+  createdDate
+  createdUser
+  id
+  native
+  updatedDate
+  updatedUser
+}
+    `;
 export const MovieExplorerPropertiesFragmentDoc = gql`
     fragment MovieExplorerProperties on Movie {
   id
@@ -17740,7 +19726,18 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
   originalTitle
   externalId
   mainVideoId
-  moviesImages(condition: {imageType: COVER}) {
+  ageRating
+  contentOwner
+  businessType
+  audioLanguages
+  assetSubtype
+  moviesLicenses {
+    nodes {
+      licenseEnd
+      licenseStart
+    }
+  }
+  moviesImages(condition: {imageType: COVER_1X1}) {
     nodes {
       imageId
     }
@@ -17768,11 +19765,20 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
       name
     }
   }
+  collectionRelations {
+    nodes {
+      collection {
+        title
+      }
+    }
+  }
   studio
   publishedDate
   createdDate
   updatedDate
+  updatedUser
   publishStatus
+  __typename
 }
     `;
 export const PublishingSnapshotExplorerPropertiesFragmentDoc = gql`
@@ -19742,6 +21748,723 @@ export function useIngestDocumentsMutatedSubscription(baseOptions?: Apollo.Subsc
       }
 export type IngestDocumentsMutatedSubscriptionHookResult = ReturnType<typeof useIngestDocumentsMutatedSubscription>;
 export type IngestDocumentsMutatedSubscriptionResult = Apollo.SubscriptionResult<IngestDocumentsMutatedSubscription>;
+export const AgeRatingsDocument = gql`
+    query AgeRatings {
+  ageRatings(orderBy: SORT_ORDER_ASC) {
+    nodes {
+      id
+      name
+      createdDate
+      createdUser
+      sortOrder
+      updatedDate
+      updatedUser
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useAgeRatingsQuery__
+ *
+ * To run a query within a React component, call `useAgeRatingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAgeRatingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAgeRatingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAgeRatingsQuery(baseOptions?: Apollo.QueryHookOptions<AgeRatingsQuery, AgeRatingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AgeRatingsQuery, AgeRatingsQueryVariables>(AgeRatingsDocument, options);
+      }
+export function useAgeRatingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AgeRatingsQuery, AgeRatingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AgeRatingsQuery, AgeRatingsQueryVariables>(AgeRatingsDocument, options);
+        }
+export type AgeRatingsQueryHookResult = ReturnType<typeof useAgeRatingsQuery>;
+export type AgeRatingsLazyQueryHookResult = ReturnType<typeof useAgeRatingsLazyQuery>;
+export type AgeRatingsQueryResult = Apollo.QueryResult<AgeRatingsQuery, AgeRatingsQueryVariables>;
+export const CreateAgeRatingDocument = gql`
+    mutation CreateAgeRating($input: CreateAgeRatingInput!) {
+  createAgeRating(input: $input) {
+    ageRating {
+      id
+      name
+    }
+  }
+}
+    `;
+export type CreateAgeRatingMutationFn = Apollo.MutationFunction<CreateAgeRatingMutation, CreateAgeRatingMutationVariables>;
+
+/**
+ * __useCreateAgeRatingMutation__
+ *
+ * To run a mutation, you first call `useCreateAgeRatingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAgeRatingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAgeRatingMutation, { data, loading, error }] = useCreateAgeRatingMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateAgeRatingMutation(baseOptions?: Apollo.MutationHookOptions<CreateAgeRatingMutation, CreateAgeRatingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAgeRatingMutation, CreateAgeRatingMutationVariables>(CreateAgeRatingDocument, options);
+      }
+export type CreateAgeRatingMutationHookResult = ReturnType<typeof useCreateAgeRatingMutation>;
+export type CreateAgeRatingMutationResult = Apollo.MutationResult<CreateAgeRatingMutation>;
+export type CreateAgeRatingMutationOptions = Apollo.BaseMutationOptions<CreateAgeRatingMutation, CreateAgeRatingMutationVariables>;
+export const UpdateAgeRatingDocument = gql`
+    mutation UpdateAgeRating($input: UpdateAgeRatingInput!) {
+  updateAgeRating(input: $input) {
+    ageRating {
+      id
+      name
+    }
+  }
+}
+    `;
+export type UpdateAgeRatingMutationFn = Apollo.MutationFunction<UpdateAgeRatingMutation, UpdateAgeRatingMutationVariables>;
+
+/**
+ * __useUpdateAgeRatingMutation__
+ *
+ * To run a mutation, you first call `useUpdateAgeRatingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAgeRatingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAgeRatingMutation, { data, loading, error }] = useUpdateAgeRatingMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateAgeRatingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAgeRatingMutation, UpdateAgeRatingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAgeRatingMutation, UpdateAgeRatingMutationVariables>(UpdateAgeRatingDocument, options);
+      }
+export type UpdateAgeRatingMutationHookResult = ReturnType<typeof useUpdateAgeRatingMutation>;
+export type UpdateAgeRatingMutationResult = Apollo.MutationResult<UpdateAgeRatingMutation>;
+export type UpdateAgeRatingMutationOptions = Apollo.BaseMutationOptions<UpdateAgeRatingMutation, UpdateAgeRatingMutationVariables>;
+export const DeleteAgeRatingDocument = gql`
+    mutation DeleteAgeRating($input: DeleteAgeRatingInput!) {
+  deleteAgeRating(input: $input) {
+    ageRating {
+      id
+      name
+    }
+  }
+}
+    `;
+export type DeleteAgeRatingMutationFn = Apollo.MutationFunction<DeleteAgeRatingMutation, DeleteAgeRatingMutationVariables>;
+
+/**
+ * __useDeleteAgeRatingMutation__
+ *
+ * To run a mutation, you first call `useDeleteAgeRatingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAgeRatingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAgeRatingMutation, { data, loading, error }] = useDeleteAgeRatingMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteAgeRatingMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAgeRatingMutation, DeleteAgeRatingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAgeRatingMutation, DeleteAgeRatingMutationVariables>(DeleteAgeRatingDocument, options);
+      }
+export type DeleteAgeRatingMutationHookResult = ReturnType<typeof useDeleteAgeRatingMutation>;
+export type DeleteAgeRatingMutationResult = Apollo.MutationResult<DeleteAgeRatingMutation>;
+export type DeleteAgeRatingMutationOptions = Apollo.BaseMutationOptions<DeleteAgeRatingMutation, DeleteAgeRatingMutationVariables>;
+export const ContentOwnersDocument = gql`
+    query ContentOwners {
+  contentOwners(orderBy: SORT_ORDER_ASC) {
+    nodes {
+      createdDate
+      createdUser
+      id
+      name
+      sortOrder
+      updatedDate
+      updatedUser
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useContentOwnersQuery__
+ *
+ * To run a query within a React component, call `useContentOwnersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useContentOwnersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useContentOwnersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useContentOwnersQuery(baseOptions?: Apollo.QueryHookOptions<ContentOwnersQuery, ContentOwnersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ContentOwnersQuery, ContentOwnersQueryVariables>(ContentOwnersDocument, options);
+      }
+export function useContentOwnersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ContentOwnersQuery, ContentOwnersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ContentOwnersQuery, ContentOwnersQueryVariables>(ContentOwnersDocument, options);
+        }
+export type ContentOwnersQueryHookResult = ReturnType<typeof useContentOwnersQuery>;
+export type ContentOwnersLazyQueryHookResult = ReturnType<typeof useContentOwnersLazyQuery>;
+export type ContentOwnersQueryResult = Apollo.QueryResult<ContentOwnersQuery, ContentOwnersQueryVariables>;
+export const CreateContentOwnerDocument = gql`
+    mutation CreateContentOwner($input: CreateContentOwnerInput!) {
+  createContentOwner(input: $input) {
+    contentOwner {
+      id
+      name
+    }
+  }
+}
+    `;
+export type CreateContentOwnerMutationFn = Apollo.MutationFunction<CreateContentOwnerMutation, CreateContentOwnerMutationVariables>;
+
+/**
+ * __useCreateContentOwnerMutation__
+ *
+ * To run a mutation, you first call `useCreateContentOwnerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateContentOwnerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createContentOwnerMutation, { data, loading, error }] = useCreateContentOwnerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateContentOwnerMutation(baseOptions?: Apollo.MutationHookOptions<CreateContentOwnerMutation, CreateContentOwnerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateContentOwnerMutation, CreateContentOwnerMutationVariables>(CreateContentOwnerDocument, options);
+      }
+export type CreateContentOwnerMutationHookResult = ReturnType<typeof useCreateContentOwnerMutation>;
+export type CreateContentOwnerMutationResult = Apollo.MutationResult<CreateContentOwnerMutation>;
+export type CreateContentOwnerMutationOptions = Apollo.BaseMutationOptions<CreateContentOwnerMutation, CreateContentOwnerMutationVariables>;
+export const UpdateContentOwnerDocument = gql`
+    mutation UpdateContentOwner($input: UpdateContentOwnerInput!) {
+  updateContentOwner(input: $input) {
+    contentOwner {
+      id
+      name
+    }
+  }
+}
+    `;
+export type UpdateContentOwnerMutationFn = Apollo.MutationFunction<UpdateContentOwnerMutation, UpdateContentOwnerMutationVariables>;
+
+/**
+ * __useUpdateContentOwnerMutation__
+ *
+ * To run a mutation, you first call `useUpdateContentOwnerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateContentOwnerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateContentOwnerMutation, { data, loading, error }] = useUpdateContentOwnerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateContentOwnerMutation(baseOptions?: Apollo.MutationHookOptions<UpdateContentOwnerMutation, UpdateContentOwnerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateContentOwnerMutation, UpdateContentOwnerMutationVariables>(UpdateContentOwnerDocument, options);
+      }
+export type UpdateContentOwnerMutationHookResult = ReturnType<typeof useUpdateContentOwnerMutation>;
+export type UpdateContentOwnerMutationResult = Apollo.MutationResult<UpdateContentOwnerMutation>;
+export type UpdateContentOwnerMutationOptions = Apollo.BaseMutationOptions<UpdateContentOwnerMutation, UpdateContentOwnerMutationVariables>;
+export const DeleteContentOwnerDocument = gql`
+    mutation DeleteContentOwner($input: DeleteContentOwnerInput!) {
+  deleteContentOwner(input: $input) {
+    contentOwner {
+      id
+      name
+    }
+  }
+}
+    `;
+export type DeleteContentOwnerMutationFn = Apollo.MutationFunction<DeleteContentOwnerMutation, DeleteContentOwnerMutationVariables>;
+
+/**
+ * __useDeleteContentOwnerMutation__
+ *
+ * To run a mutation, you first call `useDeleteContentOwnerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteContentOwnerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteContentOwnerMutation, { data, loading, error }] = useDeleteContentOwnerMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteContentOwnerMutation(baseOptions?: Apollo.MutationHookOptions<DeleteContentOwnerMutation, DeleteContentOwnerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteContentOwnerMutation, DeleteContentOwnerMutationVariables>(DeleteContentOwnerDocument, options);
+      }
+export type DeleteContentOwnerMutationHookResult = ReturnType<typeof useDeleteContentOwnerMutation>;
+export type DeleteContentOwnerMutationResult = Apollo.MutationResult<DeleteContentOwnerMutation>;
+export type DeleteContentOwnerMutationOptions = Apollo.BaseMutationOptions<DeleteContentOwnerMutation, DeleteContentOwnerMutationVariables>;
+export const CreateLanguageDocument = gql`
+    mutation CreateLanguage($input: CreateLanguageInput!) {
+  createLanguage(input: $input) {
+    language {
+      code
+      id
+      title
+    }
+  }
+}
+    `;
+export type CreateLanguageMutationFn = Apollo.MutationFunction<CreateLanguageMutation, CreateLanguageMutationVariables>;
+
+/**
+ * __useCreateLanguageMutation__
+ *
+ * To run a mutation, you first call `useCreateLanguageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLanguageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLanguageMutation, { data, loading, error }] = useCreateLanguageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateLanguageMutation(baseOptions?: Apollo.MutationHookOptions<CreateLanguageMutation, CreateLanguageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateLanguageMutation, CreateLanguageMutationVariables>(CreateLanguageDocument, options);
+      }
+export type CreateLanguageMutationHookResult = ReturnType<typeof useCreateLanguageMutation>;
+export type CreateLanguageMutationResult = Apollo.MutationResult<CreateLanguageMutation>;
+export type CreateLanguageMutationOptions = Apollo.BaseMutationOptions<CreateLanguageMutation, CreateLanguageMutationVariables>;
+export const LanguageDocument = gql`
+    query Language($id: Int!) {
+  language(id: $id) {
+    code
+    createdDate
+    createdUser
+    id
+    native
+    title
+    updatedDate
+    updatedUser
+  }
+}
+    `;
+
+/**
+ * __useLanguageQuery__
+ *
+ * To run a query within a React component, call `useLanguageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLanguageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLanguageQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useLanguageQuery(baseOptions: Apollo.QueryHookOptions<LanguageQuery, LanguageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LanguageQuery, LanguageQueryVariables>(LanguageDocument, options);
+      }
+export function useLanguageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LanguageQuery, LanguageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LanguageQuery, LanguageQueryVariables>(LanguageDocument, options);
+        }
+export type LanguageQueryHookResult = ReturnType<typeof useLanguageQuery>;
+export type LanguageLazyQueryHookResult = ReturnType<typeof useLanguageLazyQuery>;
+export type LanguageQueryResult = Apollo.QueryResult<LanguageQuery, LanguageQueryVariables>;
+export const LanguageTitleDocument = gql`
+    query LanguageTitle($id: Int!) {
+  language(id: $id) {
+    id
+    title
+  }
+}
+    `;
+
+/**
+ * __useLanguageTitleQuery__
+ *
+ * To run a query within a React component, call `useLanguageTitleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLanguageTitleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLanguageTitleQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useLanguageTitleQuery(baseOptions: Apollo.QueryHookOptions<LanguageTitleQuery, LanguageTitleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LanguageTitleQuery, LanguageTitleQueryVariables>(LanguageTitleDocument, options);
+      }
+export function useLanguageTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LanguageTitleQuery, LanguageTitleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LanguageTitleQuery, LanguageTitleQueryVariables>(LanguageTitleDocument, options);
+        }
+export type LanguageTitleQueryHookResult = ReturnType<typeof useLanguageTitleQuery>;
+export type LanguageTitleLazyQueryHookResult = ReturnType<typeof useLanguageTitleLazyQuery>;
+export type LanguageTitleQueryResult = Apollo.QueryResult<LanguageTitleQuery, LanguageTitleQueryVariables>;
+export const DeleteLanguageDocument = gql`
+    mutation DeleteLanguage($input: DeleteLanguageInput!) {
+  deleteLanguage(input: $input) {
+    clientMutationId
+  }
+}
+    `;
+export type DeleteLanguageMutationFn = Apollo.MutationFunction<DeleteLanguageMutation, DeleteLanguageMutationVariables>;
+
+/**
+ * __useDeleteLanguageMutation__
+ *
+ * To run a mutation, you first call `useDeleteLanguageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLanguageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLanguageMutation, { data, loading, error }] = useDeleteLanguageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteLanguageMutation(baseOptions?: Apollo.MutationHookOptions<DeleteLanguageMutation, DeleteLanguageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteLanguageMutation, DeleteLanguageMutationVariables>(DeleteLanguageDocument, options);
+      }
+export type DeleteLanguageMutationHookResult = ReturnType<typeof useDeleteLanguageMutation>;
+export type DeleteLanguageMutationResult = Apollo.MutationResult<DeleteLanguageMutation>;
+export type DeleteLanguageMutationOptions = Apollo.BaseMutationOptions<DeleteLanguageMutation, DeleteLanguageMutationVariables>;
+export const UpdateLanguageDocument = gql`
+    mutation UpdateLanguage($input: UpdateLanguageInput!) {
+  updateLanguage(input: $input) {
+    clientMutationId
+  }
+}
+    `;
+export type UpdateLanguageMutationFn = Apollo.MutationFunction<UpdateLanguageMutation, UpdateLanguageMutationVariables>;
+
+/**
+ * __useUpdateLanguageMutation__
+ *
+ * To run a mutation, you first call `useUpdateLanguageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLanguageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLanguageMutation, { data, loading, error }] = useUpdateLanguageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateLanguageMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLanguageMutation, UpdateLanguageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLanguageMutation, UpdateLanguageMutationVariables>(UpdateLanguageDocument, options);
+      }
+export type UpdateLanguageMutationHookResult = ReturnType<typeof useUpdateLanguageMutation>;
+export type UpdateLanguageMutationResult = Apollo.MutationResult<UpdateLanguageMutation>;
+export type UpdateLanguageMutationOptions = Apollo.BaseMutationOptions<UpdateLanguageMutation, UpdateLanguageMutationVariables>;
+export const BulkDeleteMoviesDocument = gql`
+    mutation BulkDeleteMovies($filter: MovieFilter) {
+  deleteMovies(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkDeleteMoviesMutationFn = Apollo.MutationFunction<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
+
+/**
+ * __useBulkDeleteMoviesMutation__
+ *
+ * To run a mutation, you first call `useBulkDeleteMoviesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkDeleteMoviesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkDeleteMoviesMutation, { data, loading, error }] = useBulkDeleteMoviesMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkDeleteMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>(BulkDeleteMoviesDocument, options);
+      }
+export type BulkDeleteMoviesMutationHookResult = ReturnType<typeof useBulkDeleteMoviesMutation>;
+export type BulkDeleteMoviesMutationResult = Apollo.MutationResult<BulkDeleteMoviesMutation>;
+export type BulkDeleteMoviesMutationOptions = Apollo.BaseMutationOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
+export const BulkPublishMoviesDocument = gql`
+    mutation BulkPublishMovies($filter: MovieFilter) {
+  publishMovies(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkPublishMoviesMutationFn = Apollo.MutationFunction<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
+
+/**
+ * __useBulkPublishMoviesMutation__
+ *
+ * To run a mutation, you first call `useBulkPublishMoviesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkPublishMoviesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkPublishMoviesMutation, { data, loading, error }] = useBulkPublishMoviesMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkPublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>(BulkPublishMoviesDocument, options);
+      }
+export type BulkPublishMoviesMutationHookResult = ReturnType<typeof useBulkPublishMoviesMutation>;
+export type BulkPublishMoviesMutationResult = Apollo.MutationResult<BulkPublishMoviesMutation>;
+export type BulkPublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
+export const BulkUnpublishMoviesDocument = gql`
+    mutation BulkUnpublishMovies($filter: MovieFilter) {
+  unpublishMovies(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkUnpublishMoviesMutationFn = Apollo.MutationFunction<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
+
+/**
+ * __useBulkUnpublishMoviesMutation__
+ *
+ * To run a mutation, you first call `useBulkUnpublishMoviesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkUnpublishMoviesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkUnpublishMoviesMutation, { data, loading, error }] = useBulkUnpublishMoviesMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkUnpublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>(BulkUnpublishMoviesDocument, options);
+      }
+export type BulkUnpublishMoviesMutationHookResult = ReturnType<typeof useBulkUnpublishMoviesMutation>;
+export type BulkUnpublishMoviesMutationResult = Apollo.MutationResult<BulkUnpublishMoviesMutation>;
+export type BulkUnpublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
+export const BulkCreateMovieSnapshotsDocument = gql`
+    mutation BulkCreateMovieSnapshots($filter: MovieFilter) {
+  createMovieSnapshots(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkCreateMovieSnapshotsMutationFn = Apollo.MutationFunction<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
+
+/**
+ * __useBulkCreateMovieSnapshotsMutation__
+ *
+ * To run a mutation, you first call `useBulkCreateMovieSnapshotsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkCreateMovieSnapshotsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkCreateMovieSnapshotsMutation, { data, loading, error }] = useBulkCreateMovieSnapshotsMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkCreateMovieSnapshotsMutation(baseOptions?: Apollo.MutationHookOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>(BulkCreateMovieSnapshotsDocument, options);
+      }
+export type BulkCreateMovieSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateMovieSnapshotsMutation>;
+export type BulkCreateMovieSnapshotsMutationResult = Apollo.MutationResult<BulkCreateMovieSnapshotsMutation>;
+export type BulkCreateMovieSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
+export const LanguagesDocument = gql`
+    query Languages($filter: LanguageFilter, $orderBy: [LanguagesOrderBy!], $after: Cursor) {
+  filtered: languages(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...LanguageExplorerProperties
+    }
+  }
+  nonFiltered: languages {
+    totalCount
+  }
+}
+    ${LanguageExplorerPropertiesFragmentDoc}`;
+
+/**
+ * __useLanguagesQuery__
+ *
+ * To run a query within a React component, call `useLanguagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLanguagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLanguagesQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      orderBy: // value for 'orderBy'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useLanguagesQuery(baseOptions?: Apollo.QueryHookOptions<LanguagesQuery, LanguagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LanguagesQuery, LanguagesQueryVariables>(LanguagesDocument, options);
+      }
+export function useLanguagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LanguagesQuery, LanguagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LanguagesQuery, LanguagesQueryVariables>(LanguagesDocument, options);
+        }
+export type LanguagesQueryHookResult = ReturnType<typeof useLanguagesQuery>;
+export type LanguagesLazyQueryHookResult = ReturnType<typeof useLanguagesLazyQuery>;
+export type LanguagesQueryResult = Apollo.QueryResult<LanguagesQuery, LanguagesQueryVariables>;
+export const MovieRelatedCollectionsDocument = gql`
+    query MovieRelatedCollections($id: Int!) {
+  movie(id: $id) {
+    collectionRelations(orderBy: SORT_ORDER_ASC) {
+      nodes {
+        collection {
+          entityId: id
+          title
+          publishStatus
+          entityImages: collectionsImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+        id
+        sortOrder
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useMovieRelatedCollectionsQuery__
+ *
+ * To run a query within a React component, call `useMovieRelatedCollectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMovieRelatedCollectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMovieRelatedCollectionsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMovieRelatedCollectionsQuery(baseOptions: Apollo.QueryHookOptions<MovieRelatedCollectionsQuery, MovieRelatedCollectionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MovieRelatedCollectionsQuery, MovieRelatedCollectionsQueryVariables>(MovieRelatedCollectionsDocument, options);
+      }
+export function useMovieRelatedCollectionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MovieRelatedCollectionsQuery, MovieRelatedCollectionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MovieRelatedCollectionsQuery, MovieRelatedCollectionsQueryVariables>(MovieRelatedCollectionsDocument, options);
+        }
+export type MovieRelatedCollectionsQueryHookResult = ReturnType<typeof useMovieRelatedCollectionsQuery>;
+export type MovieRelatedCollectionsLazyQueryHookResult = ReturnType<typeof useMovieRelatedCollectionsLazyQuery>;
+export type MovieRelatedCollectionsQueryResult = Apollo.QueryResult<MovieRelatedCollectionsQuery, MovieRelatedCollectionsQueryVariables>;
 export const CreateMovieDocument = gql`
     mutation CreateMovie($input: CreateMovieInput!) {
   createMovie(input: $input) {
@@ -19786,6 +22509,19 @@ export const MovieDocument = gql`
     synopsis
     description
     externalId
+    ageRating
+    businessType
+    contentOwner
+    rating
+    customRating
+    creditsStartTime
+    lengthInSeconds
+    dynamicField
+    extendedField
+    captionLanguages
+    audioLanguages
+    subtitleLanguages
+    assetSubtype
     moviesTags {
       nodes {
         name
@@ -19799,6 +22535,11 @@ export const MovieDocument = gql`
       }
     }
     moviesCasts {
+      nodes {
+        name
+      }
+    }
+    moviesDirectors {
       nodes {
         name
       }
@@ -19833,6 +22574,24 @@ export const MovieDocument = gql`
     nodes {
       title
       id
+    }
+  }
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
+  contentOwners {
+    nodes {
+      name
+      sortOrder
+    }
+  }
+  languages {
+    nodes {
+      code
+      title
     }
   }
 }
@@ -20072,6 +22831,45 @@ export function useSearchMovieCastLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type SearchMovieCastQueryHookResult = ReturnType<typeof useSearchMovieCastQuery>;
 export type SearchMovieCastLazyQueryHookResult = ReturnType<typeof useSearchMovieCastLazyQuery>;
 export type SearchMovieCastQueryResult = Apollo.QueryResult<SearchMovieCastQuery, SearchMovieCastQueryVariables>;
+export const SearchMovieDirectorDocument = gql`
+    query SearchMovieDirector($searchKey: String!, $limit: Int!) {
+  getMoviesDirectorsValues(
+    filter: {startsWithInsensitive: $searchKey}
+    first: $limit
+  ) {
+    nodes
+  }
+}
+    `;
+
+/**
+ * __useSearchMovieDirectorQuery__
+ *
+ * To run a query within a React component, call `useSearchMovieDirectorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchMovieDirectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchMovieDirectorQuery({
+ *   variables: {
+ *      searchKey: // value for 'searchKey'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useSearchMovieDirectorQuery(baseOptions: Apollo.QueryHookOptions<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>(SearchMovieDirectorDocument, options);
+      }
+export function useSearchMovieDirectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>(SearchMovieDirectorDocument, options);
+        }
+export type SearchMovieDirectorQueryHookResult = ReturnType<typeof useSearchMovieDirectorQuery>;
+export type SearchMovieDirectorLazyQueryHookResult = ReturnType<typeof useSearchMovieDirectorLazyQuery>;
+export type SearchMovieDirectorQueryResult = Apollo.QueryResult<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>;
 export const SearchMovieProductionCountriesDocument = gql`
     query SearchMovieProductionCountries($searchKey: String!, $limit: Int!) {
   getMoviesProductionCountriesValues(
@@ -20644,138 +23442,6 @@ export function useMovieVideosLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type MovieVideosQueryHookResult = ReturnType<typeof useMovieVideosQuery>;
 export type MovieVideosLazyQueryHookResult = ReturnType<typeof useMovieVideosLazyQuery>;
 export type MovieVideosQueryResult = Apollo.QueryResult<MovieVideosQuery, MovieVideosQueryVariables>;
-export const BulkDeleteMoviesDocument = gql`
-    mutation BulkDeleteMovies($filter: MovieFilter) {
-  deleteMovies(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkDeleteMoviesMutationFn = Apollo.MutationFunction<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
-
-/**
- * __useBulkDeleteMoviesMutation__
- *
- * To run a mutation, you first call `useBulkDeleteMoviesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkDeleteMoviesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkDeleteMoviesMutation, { data, loading, error }] = useBulkDeleteMoviesMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkDeleteMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>(BulkDeleteMoviesDocument, options);
-      }
-export type BulkDeleteMoviesMutationHookResult = ReturnType<typeof useBulkDeleteMoviesMutation>;
-export type BulkDeleteMoviesMutationResult = Apollo.MutationResult<BulkDeleteMoviesMutation>;
-export type BulkDeleteMoviesMutationOptions = Apollo.BaseMutationOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
-export const BulkPublishMoviesDocument = gql`
-    mutation BulkPublishMovies($filter: MovieFilter) {
-  publishMovies(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkPublishMoviesMutationFn = Apollo.MutationFunction<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
-
-/**
- * __useBulkPublishMoviesMutation__
- *
- * To run a mutation, you first call `useBulkPublishMoviesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkPublishMoviesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkPublishMoviesMutation, { data, loading, error }] = useBulkPublishMoviesMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkPublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>(BulkPublishMoviesDocument, options);
-      }
-export type BulkPublishMoviesMutationHookResult = ReturnType<typeof useBulkPublishMoviesMutation>;
-export type BulkPublishMoviesMutationResult = Apollo.MutationResult<BulkPublishMoviesMutation>;
-export type BulkPublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
-export const BulkUnpublishMoviesDocument = gql`
-    mutation BulkUnpublishMovies($filter: MovieFilter) {
-  unpublishMovies(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkUnpublishMoviesMutationFn = Apollo.MutationFunction<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
-
-/**
- * __useBulkUnpublishMoviesMutation__
- *
- * To run a mutation, you first call `useBulkUnpublishMoviesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkUnpublishMoviesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkUnpublishMoviesMutation, { data, loading, error }] = useBulkUnpublishMoviesMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkUnpublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>(BulkUnpublishMoviesDocument, options);
-      }
-export type BulkUnpublishMoviesMutationHookResult = ReturnType<typeof useBulkUnpublishMoviesMutation>;
-export type BulkUnpublishMoviesMutationResult = Apollo.MutationResult<BulkUnpublishMoviesMutation>;
-export type BulkUnpublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
-export const BulkCreateMovieSnapshotsDocument = gql`
-    mutation BulkCreateMovieSnapshots($filter: MovieFilter) {
-  createMovieSnapshots(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkCreateMovieSnapshotsMutationFn = Apollo.MutationFunction<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
-
-/**
- * __useBulkCreateMovieSnapshotsMutation__
- *
- * To run a mutation, you first call `useBulkCreateMovieSnapshotsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkCreateMovieSnapshotsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkCreateMovieSnapshotsMutation, { data, loading, error }] = useBulkCreateMovieSnapshotsMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkCreateMovieSnapshotsMutation(baseOptions?: Apollo.MutationHookOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>(BulkCreateMovieSnapshotsDocument, options);
-      }
-export type BulkCreateMovieSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateMovieSnapshotsMutation>;
-export type BulkCreateMovieSnapshotsMutationResult = Apollo.MutationResult<BulkCreateMovieSnapshotsMutation>;
-export type BulkCreateMovieSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
 export const PublishingSnapshotDocument = gql`
     query PublishingSnapshot($id: Int!) {
   snapshot(id: $id) {

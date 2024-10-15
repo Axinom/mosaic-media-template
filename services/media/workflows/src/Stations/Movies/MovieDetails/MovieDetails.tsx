@@ -9,13 +9,16 @@ import {
   generateArrayMutations,
   getFormDiff,
   InfoPanel,
+  MaskedSingleLineText,
   Paragraph,
+  ReadOnlyTextField,
   Section,
+  SelectField,
   SingleLineTextField,
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
-import { Field, useFormikContext } from 'formik';
+import { Field, useField, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useContext, useMemo } from 'react';
@@ -24,22 +27,29 @@ import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext } from '../../../externals';
 import {
+  AssetSubtype,
+  BusinessType,
   Movie,
   MovieDocument,
   MovieGenre,
   MovieImageType,
   Mutation,
   MutationCreateMoviesCastArgs,
+  MutationCreateMoviesDirectorArgs,
   MutationCreateMoviesMovieGenreArgs,
   MutationCreateMoviesProductionCountryArgs,
   MutationCreateMoviesTagArgs,
   MutationDeleteMoviesCastArgs,
+  MutationDeleteMoviesDirectorArgs,
   MutationDeleteMoviesMovieGenreArgs,
   MutationDeleteMoviesProductionCountryArgs,
   MutationDeleteMoviesTagArgs,
   SearchMovieCastDocument,
   SearchMovieCastQuery,
   SearchMovieCastQueryVariables,
+  SearchMovieDirectorDocument,
+  SearchMovieDirectorQuery,
+  SearchMovieDirectorQueryVariables,
   SearchMovieProductionCountriesDocument,
   SearchMovieProductionCountriesQuery,
   SearchMovieProductionCountriesQueryVariables,
@@ -60,6 +70,11 @@ const movieDetailSchema = Yup.object<
   title: Yup.string().required('Title is a required field').max(100),
 });
 
+interface selectOption {
+  value: string;
+  label: string;
+}
+
 export const MovieDetails: React.FC = () => {
   const movieId = Number(
     useParams<{
@@ -73,7 +88,21 @@ export const MovieDetails: React.FC = () => {
     fetchPolicy: 'network-only',
   });
 
-  const { allGenres, cast, genres, productionCountries, tags } = useMemo(
+  const {
+    allGenres,
+    cast,
+    genres,
+    productionCountries,
+    tags,
+    allAgeRatings,
+    allContentOwners,
+    director,
+    allLanguages,
+    audioLanguages,
+    subtitleLanguages,
+    captionLanguages,
+    creditsStartTime,
+  } = useMemo(
     () => ({
       allGenres:
         data?.movieGenres?.nodes.reduce<{
@@ -86,14 +115,40 @@ export const MovieDetails: React.FC = () => {
       genres: data?.movie?.moviesMovieGenres.nodes.map(
         (node) => node.movieGenres?.title ?? '',
       ),
+      audioLanguages: data?.movie?.audioLanguages?.map((lang) => lang ?? ''),
+      subtitleLanguages: data?.movie?.subtitleLanguages?.map(
+        (lang) => lang ?? '',
+      ),
+      captionLanguages: data?.movie?.captionLanguages?.map(
+        (lang) => lang ?? '',
+      ),
+      creditsStartTime: '',
       cast: data?.movie?.moviesCasts.nodes.map((node) => node.name),
+      director: data?.movie?.moviesDirectors.nodes.map((node) => node.name),
       productionCountries: data?.movie?.moviesProductionCountries.nodes.map(
         (node) => node.name,
       ),
+      allAgeRatings:
+        data?.ageRatings?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
+      allContentOwners:
+        data?.contentOwners?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
+
+      allLanguages: data?.languages?.nodes.map((node) => node.title) ?? [],
     }),
     [data],
   );
-
   const { actions } = useMovieDetailsActions(movieId);
 
   const onSubmit = useCallback(
@@ -174,6 +229,22 @@ export const MovieDetails: React.FC = () => {
         prefix: 'cast',
       });
 
+      const directorAssignmentMutations = generateArrayMutations({
+        current: formData.director,
+        original: initialData.data?.director,
+        generateCreateMutation: (name) =>
+          generateUpdateGQLFragment<MutationCreateMoviesDirectorArgs>(
+            'createMoviesDirector',
+            { input: { moviesDirector: { name, movieId } } },
+          ),
+        generateDeleteMutation: (name) =>
+          generateUpdateGQLFragment<MutationDeleteMoviesDirectorArgs>(
+            'deleteMoviesDirector',
+            { input: { movieId, name } },
+          ),
+        prefix: 'director',
+      });
+
       const productionCountriesAssignmentMutations = generateArrayMutations({
         current: formData.productionCountries,
         original: initialData.data?.productionCountries,
@@ -205,6 +276,7 @@ export const MovieDetails: React.FC = () => {
         ${tagAssignmentMutations}
         ${genreAssignmentMutations}
         ${castAssignmentMutations}
+        ${directorAssignmentMutations}
         ${productionCountriesAssignmentMutations}
       }`;
 
@@ -232,7 +304,12 @@ export const MovieDetails: React.FC = () => {
           tags,
           genres,
           cast,
+          director,
           productionCountries,
+          audioLanguages,
+          subtitleLanguages,
+          captionLanguages,
+          creditsStartTime,
         },
         loading,
         entityNotFound: data?.movie === null,
@@ -241,7 +318,12 @@ export const MovieDetails: React.FC = () => {
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form genreOptions={Object.keys(allGenres)} />
+      <Form
+        genreOptions={Object.keys(allGenres)}
+        ageRatingOptions={allAgeRatings}
+        contentOwnerOptions={allContentOwners}
+        languageOptions={allLanguages}
+      />
     </Details>
   );
 };
@@ -253,16 +335,12 @@ const Panel: React.FC = () => {
   return useMemo(() => {
     let coverImageId: ID;
     let coverImageCount = 0;
-    let teaserImageCount = 0;
 
     values.moviesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case MovieImageType.Cover:
+        case MovieImageType.Cover_1X1:
           coverImageCount++;
           coverImageId = imageId;
-          break;
-        case MovieImageType.Teaser:
-          teaserImageCount++;
           break;
         default:
           break;
@@ -275,7 +353,6 @@ const Panel: React.FC = () => {
           <ImageCover id={coverImageId} />
         </Section>
         <Section title="Additional Information">
-          <Paragraph title="ID">{values.id}</Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -310,10 +387,6 @@ const Panel: React.FC = () => {
               <div className={classes.rightAlignment}>
                 {coverImageCount} / 1
               </div>
-              <div>Teaser</div>
-              <div className={classes.rightAlignment}>
-                {teaserImageCount} / 1
-              </div>
             </div>
           </Paragraph>
         </Section>
@@ -323,7 +396,6 @@ const Panel: React.FC = () => {
     ImageCover,
     values.createdDate,
     values.createdUser,
-    values.id,
     values.mainVideoId,
     values.moviesImages?.nodes,
     values.moviesTrailers?.totalCount,
@@ -335,7 +407,17 @@ const Panel: React.FC = () => {
   ]);
 };
 
-const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
+const Form: React.FC<{
+  genreOptions?: string[];
+  ageRatingOptions?: selectOption[];
+  contentOwnerOptions?: selectOption[];
+  languageOptions?: string[];
+}> = ({
+  genreOptions,
+  ageRatingOptions,
+  contentOwnerOptions,
+  languageOptions,
+}) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchMovieTagsQuery,
@@ -360,6 +442,19 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
     return data.getMoviesCastsValues?.nodes ?? [];
   };
 
+  const directorSuggestionResolver = async (
+    value: string,
+  ): Promise<(string | null)[]> => {
+    const { data } = await client.query<
+      SearchMovieDirectorQuery,
+      SearchMovieDirectorQueryVariables
+    >({
+      query: SearchMovieDirectorDocument,
+      variables: { searchKey: value, limit: 10 },
+    });
+    return data.getMoviesDirectorsValues?.nodes ?? [];
+  };
+
   const productionCountriesResolver = async (
     value: string,
   ): Promise<(string | null)[]> => {
@@ -373,27 +468,43 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
     return data.getMoviesProductionCountriesValues?.nodes ?? [];
   };
 
+  const [, , helpers] = useField('creditsStartTime');
+
+  const ValidateRating = (value: string): boolean => {
+    return value === null || value.trim() === ''
+      ? false
+      : isNaN(parseFloat(value)) ||
+          parseFloat(value) < 0 ||
+          parseFloat(value) > 100 ||
+          !/^(\d{1,2}(\.\d{1,2})?|100(\.0{1,2})?)$/.test(value);
+  };
+
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
-      <Field
-        name="originalTitle"
-        label="Original Title"
-        as={SingleLineTextField}
-      />
-      <Field name="synopsis" label="Synopsis" as={TextAreaField} />
+      <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
       <Field
-        name="externalId"
-        label="External ID"
-        className={classes.externalId}
-        as={SingleLineTextField}
+        name="businessType"
+        label="Business Type"
+        addEmptyOption={true}
+        options={Object.keys(BusinessType).map((key) => ({
+          value: BusinessType[key],
+          label: getEnumLabel(BusinessType[key]),
+        }))}
+        as={SelectField}
       />
       <Field
-        name="tags"
-        label="Tags"
-        liveSuggestionsResolver={tagsResolver}
-        as={CustomTagsField}
+        name="assetSubtype"
+        label="Subtype"
+        addEmptyOption={true}
+        options={Object.keys(AssetSubtype)
+          .filter((type) => type === 'Movie')
+          .map((key) => ({
+            value: AssetSubtype[key],
+            label: getEnumLabel(AssetSubtype[key]),
+          }))}
+        as={SelectField}
       />
       <Field
         name="genres"
@@ -408,18 +519,88 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         as={CustomTagsField}
       />
       <Field
+        name="director"
+        label="Directors"
+        liveSuggestionsResolver={directorSuggestionResolver}
+        as={CustomTagsField}
+      />
+      <Field
+        name="tags"
+        label="Tags"
+        liveSuggestionsResolver={tagsResolver}
+        as={CustomTagsField}
+      />
+      <Field
         name="released"
-        label="Released Date"
+        label="Released"
         as={DateTimeTextField}
         modifyTime={false}
       />
       <Field
         name="productionCountries"
-        label="Production Countries"
+        label="Country"
         liveSuggestionsResolver={productionCountriesResolver}
         as={CustomTagsField}
       />
-      <Field name="studio" label="Studio" as={SingleLineTextField} />
+      <Field name="duration" label="Duration" as={SingleLineTextField} />
+      <Field
+        name="ageRating"
+        label="Age Rating"
+        addEmptyOption={true}
+        options={ageRatingOptions}
+        as={SelectField}
+      />
+      <Field
+        name="audioLanguages"
+        label="Audio Languages"
+        tagsOptions={languageOptions}
+        as={TagsField}
+      />
+      <Field
+        name="subtitleLanguages"
+        label="Subtitle Languages"
+        tagsOptions={languageOptions}
+        as={TagsField}
+      />
+      <Field
+        name="captionLanguages"
+        label="Closed Caption Languages"
+        tagsOptions={languageOptions}
+        as={TagsField}
+      />
+      <Field
+        name="rating"
+        label="Rating"
+        validate={ValidateRating}
+        as={SingleLineTextField}
+      />
+      <Field
+        name="contentOwner"
+        label="Content Owner"
+        addEmptyOption={true}
+        options={contentOwnerOptions}
+        as={SelectField}
+      />
+      <Field
+        name="creditsStartTime"
+        label="Credit Start Time"
+        mask={'00:00:00'}
+        onChange={(value: string) => {
+          helpers.setValue(value);
+        }}
+        lazy={false}
+        overwrite={true}
+        placeholderChar={0}
+        as={MaskedSingleLineText}
+      />
+      <Field
+        name="customRating"
+        label="Custom Rating"
+        as={SingleLineTextField}
+      />
+
+      <Field name="extendedField" label="Custom" as={TextAreaField} />
+      <Field name="externalId" label="External Id" as={ReadOnlyTextField} />
     </>
   );
 };
@@ -428,10 +609,8 @@ function createUpdateDto(
   currentValues: MovieDetailsFormData,
   initialValues?: MovieDetailsFormData | null,
 ): Partial<MovieDetailsFormData> {
-  const { tags, cast, productionCountries, genres, ...rest } = getFormDiff(
-    currentValues,
-    initialValues,
-  );
+  const { tags, cast, director, productionCountries, genres, ...rest } =
+    getFormDiff(currentValues, initialValues);
 
   return rest;
 }

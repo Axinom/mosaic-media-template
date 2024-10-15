@@ -7,6 +7,13 @@ import {
   settingsGroupName,
 } from '../../index';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
+import { AgeRatings } from './AgeRatings/AgeRatings';
+import { ContentOwners } from './ContentOwners/ContentOwners';
+import { LanguageCreate } from './Languages/LanguageCreate/LanguageCreate';
+import { LanguageDetails } from './Languages/LanguageDetails/LanguageDetails';
+import { LanguageDetailsCrumb } from './Languages/LanguageDetails/LanguageDetailsCrumb';
+import { Language } from './Languages/LanguageExplorer/Language';
+import { MovieCollectionAssignment } from './MovieCollectionAssignment/MovieCollectionAssignment';
 import { MovieCreate } from './MovieCreate/MovieCreate';
 import { MovieDetails } from './MovieDetails/MovieDetails';
 import { MovieDetailsCrumb } from './MovieDetails/MovieDetailsCrumb';
@@ -148,6 +155,21 @@ export function register(app: PiletApi, extensions: Extensions): void {
     },
   );
 
+  app.registerPage(
+    '/movies/:movieId/CollectionsToMovie',
+    () => (
+      <ExtensionsContext.Provider value={extensions}>
+        <MovieCollectionAssignment />
+      </ExtensionsContext.Provider>
+    ),
+    {
+      breadcrumb: () => 'Collection Assignment',
+      permissions: {
+        'media-service': ['ADMIN', 'COLLECTIONS_EDIT', 'COLLECTIONS_VIEW'],
+      },
+    },
+  );
+
   app.registerPage('/movies/:movieId/snapshots', MovieSnapshots, {
     breadcrumb: () => 'Publishing Snapshots',
     permissions: { 'media-service': ['ADMIN', 'MOVIES_EDIT', 'MOVIES_VIEW'] },
@@ -209,6 +231,115 @@ export function register(app: PiletApi, extensions: Extensions): void {
       breadcrumb: MovieGenreSnapshotDetailsCrumb,
       permissions: {
         'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
+      },
+    },
+  );
+
+  const ageRatingSettingsNav = {
+    name: 'age-ratings',
+    path: '/settings/media/ageratings',
+    label: 'Age Ratings',
+    icon: <MediaIcons icon={MediaIconName.MovieGenres} />,
+  };
+
+  app.registerTile(
+    {
+      ...ageRatingSettingsNav,
+      kind: 'settings',
+      groupName: settingsGroupName,
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...ageRatingSettingsNav,
+    parentName: parentName,
+    categoryName: 'Settings',
+  });
+
+  app.registerPage('/settings/media/ageratings', AgeRatings, {
+    breadcrumb: () => 'Age Ratings',
+    permissions: {
+      'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
+    },
+  });
+
+  const contentOwnersSettingsNav = {
+    name: 'content-owners',
+    path: '/settings/media/contentowners',
+    label: 'Content Owners',
+    icon: <MediaIcons icon={MediaIconName.MovieGenres} />,
+  };
+
+  app.registerTile(
+    {
+      ...contentOwnersSettingsNav,
+      kind: 'settings',
+      groupName: settingsGroupName,
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...contentOwnersSettingsNav,
+    parentName: parentName,
+    categoryName: 'Settings',
+  });
+
+  app.registerPage('/settings/media/contentowners', ContentOwners, {
+    breadcrumb: () => 'Content Owners',
+    permissions: {
+      'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
+    },
+  });
+
+  const languagesSettingsNav = {
+    name: 'languages',
+    path: '/settings/media/languages',
+    label: 'Languages',
+    icon: <MediaIcons icon={MediaIconName.MovieGenres} />,
+  };
+
+  app.registerTile(
+    {
+      ...languagesSettingsNav,
+      kind: 'settings',
+      groupName: settingsGroupName,
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...languagesSettingsNav,
+    parentName: parentName,
+    categoryName: 'Settings',
+  });
+
+  app.registerPage('/settings/media/languages', Language, {
+    breadcrumb: () => 'Languages',
+    permissions: {
+      'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
+    },
+  });
+
+  app.registerPage('/languages/create', LanguageCreate, {
+    breadcrumb: () => 'New Language',
+    permissions: {
+      'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
+    },
+  });
+
+  app.registerPage(
+    '/languages/:languageId',
+    () => (
+      <ExtensionsContext.Provider value={extensions}>
+        <LanguageDetails />
+      </ExtensionsContext.Provider>
+    ),
+    {
+      breadcrumb: LanguageDetailsCrumb,
+      permissions: {
+        'media-service': ['ADMIN', 'SETTINGS_VIEW', 'SETTINGS_EDIT'],
       },
     },
   );

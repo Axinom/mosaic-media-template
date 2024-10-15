@@ -4,7 +4,18 @@ fragment MovieExplorerProperties on Movie {
   originalTitle
   externalId
   mainVideoId
-  moviesImages(condition: { imageType: COVER }) {
+  ageRating
+  contentOwner
+  businessType
+  audioLanguages
+  assetSubtype
+  moviesLicenses {
+    nodes {
+      licenseEnd
+      licenseStart
+    }
+  }
+  moviesImages(condition: { imageType: COVER_1X1 }) {
     nodes {
       imageId
     }
@@ -32,11 +43,20 @@ fragment MovieExplorerProperties on Movie {
       name
     }
   }
+  collectionRelations {
+    nodes {
+      collection {
+        title
+      }
+    }
+  }
   studio
   publishedDate
   createdDate
   updatedDate
+  updatedUser
   publishStatus
+  __typename
 }
 
 query Movies($filter: MovieFilter, $orderBy: [MoviesOrderBy!], $after: Cursor) {

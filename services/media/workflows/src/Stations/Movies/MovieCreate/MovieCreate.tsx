@@ -17,9 +17,7 @@ type FormData = CreateMovieMutationVariables['input']['movie'];
 type SubmitResponse = CreateMovieMutation['createMovie'];
 
 const movieCreateSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
-  title: Yup.string()
-    .required('Title is a required field')
-    .max(100),
+  title: Yup.string().required('Title is a required field').max(100),
 });
 
 export const MovieCreate: React.FC = () => {
@@ -30,12 +28,15 @@ export const MovieCreate: React.FC = () => {
 
   const saveData = useCallback(
     async (formData: FormData): Promise<SubmitResponse> => {
+      const ContentProviderKey = 0;
+      const AssetType = 0;
       return (
         await movieCreate({
           variables: {
             input: {
               movie: {
                 title: formData.title,
+                externalId: `${ContentProviderKey}-${AssetType}-movie-${new Date().getTime()}`,
               },
             },
           },
