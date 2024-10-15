@@ -38,7 +38,8 @@ variables:
   packageBuildCommand: 'build:media-service:prod'
   imageRepository: 'beyonddutch-mosaic/mosaic-media-service'
   tag: '$(Build.BuildNumber)'
-
+  ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+  HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 
 stages:
@@ -129,8 +130,6 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
           # - task: Bash@3
           #   displayName:
           #     'Deploy Mosaic service'
@@ -144,8 +143,6 @@ stages:
           #   env:
           #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
           #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
-          #     ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-          #     HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
       - job: Upload_NFN_Acceptance
         dependsOn: Build
@@ -180,8 +177,6 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnAcc)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
       - job: Upload_NFN_Production
         dependsOn: Build
@@ -216,8 +211,6 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnProd)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
       - job: Upload_LOV_Acceptance
         dependsOn: Build
@@ -252,8 +245,6 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
 
       - job: Upload_LOV_Production
         dependsOn: Build
@@ -288,5 +279,3 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
