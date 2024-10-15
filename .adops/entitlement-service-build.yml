@@ -9,20 +9,24 @@ parameters:
     displayName: Build
     type: boolean
     default: true
+  - name: int
+    displayName: Release to INT
+    type: boolean
+    default: true
   - name: nfn_acceptance
-    displayName: Release manifest to NFN acceptance
+    displayName: Release to NFN acceptance
     type: boolean
     default: false
   - name: nfn_production
-    displayName: Release manifest to NFN production
+    displayName: Release to NFN production
     type: boolean
     default: false
   - name: lov_acceptance
-    displayName: Release manifest to LOV acceptance
+    displayName: Release to LOV acceptance
     type: boolean
     default: false
   - name: lov_production
-    displayName: Release manifest to LOV production
+    displayName: Release to LOV production
     type: boolean
     default: false
 
@@ -34,7 +38,8 @@ variables:
   packageBuildCommand: 'build:entitlement-service:prod'
   imageRepository: 'beyonddutch-mosaic/mosaic-entitlement-service'
   tag: '$(Build.BuildNumber)'
-
+  ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+  HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/s/.yarn
 
 stages:
@@ -92,9 +97,53 @@ stages:
               command: 'push'
               tags: '$(tag)'
 
-      - job: Upload_NFN_Acceptance
+      - job: Release_INT
         dependsOn: Build
-        displayName: 'Upload Manifest to NFN Acceptance'
+        displayName: 'Release to INT'
+        condition: ${{ eq(parameters.int, true) }}
+        variables:
+          - group: vault-int
+        steps:
+          - bash: |
+              apt install -y jq
+              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
+              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
+              mv package.updated.json package.json
+              yarn install
+            displayName: 'Install Dev Dependencies'
+          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
+            displayName: 'Replace tokens'
+            inputs:
+              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
+              caseInsensitivePaths: false
+              includeDotPaths: false
+              missingVarAction: keep
+              missingVarLog: error
+              ifNoFilesFound: error
+          - task: Bash@3
+            displayName:
+              'Upload manifest'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "mosaic-entitlement-int-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
+          - task: Bash@3
+            displayName:
+              'Deploy Mosaic service'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m mosaic-entitlement-int-$(tag) -n "entitlement-service-$(tag)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
+
+      - job: Release_NFN_Acceptance
+        dependsOn: Build
+        displayName: 'Release to NFN Acceptance'
         condition: ${{ eq(parameters.nfn_acceptance, true) }}
         variables:
           - group: vault-nfn-acceptance
@@ -116,7 +165,7 @@ stages:
               missingVarLog: error
               ifNoFilesFound: error
           - task: Bash@3
-            displayName: 'Upload deployment configuration to NFN Acceptance environment'
+            displayName: 'Upload manifest'
             inputs:
               targetType: 'inline'
               script: |
@@ -124,12 +173,20 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+          - task: Bash@3
+            displayName:
+              'Deploy Mosaic service'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m nfn-mosaic-entitlement-acceptance-$(tag) -n "entitlement-service-$(tag)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
 
-      - job: Upload_NFN_Production
+      - job: Release_NFN_Production
         dependsOn: Build
-        displayName: 'Upload Manifest to NFN Production'
+        displayName: 'Release to NFN Production'
         condition: ${{ eq(parameters.nfn_production, true) }}
         variables:
           - group: vault-nfn-production
@@ -151,7 +208,7 @@ stages:
               missingVarLog: error
               ifNoFilesFound: error
           - task: Bash@3
-            displayName: 'Upload deployment configuration to NFN Production environment'
+            displayName: 'Upload manifest'
             inputs:
               targetType: 'inline'
               script: |
@@ -159,12 +216,20 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+          - task: Bash@3
+            displayName:
+              'Deploy Mosaic service'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m nfn-mosaic-entitlement-production-$(tag) -n "entitlement-service-$(tag)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
 
-      - job: Upload_LOV_Acceptance
+      - job: Release_LOV_Acceptance
         dependsOn: Build
-        displayName: 'Upload Manifest to LOV Acceptance'
+        displayName: 'Release to LOV Acceptance'
         condition: ${{ eq(parameters.lov_acceptance, true) }}
         variables:
           - group: vault-lov-acceptance
@@ -186,7 +251,7 @@ stages:
               missingVarLog: error
               ifNoFilesFound: error
           - task: Bash@3
-            displayName: 'Upload deployment configuration to LOV Acceptance environment'
+            displayName: 'Upload manifest'
             inputs:
               targetType: 'inline'
               script: |
@@ -194,12 +259,20 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+          - task: Bash@3
+            displayName:
+              'Deploy Mosaic service'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m lov-mosaic-entitlement-acceptance-$(tag) -n "entitlement-service-$(tag)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
 
-      - job: Upload_LOV_Production
+      - job: Release_LOV_Production
         dependsOn: Build
-        displayName: 'Upload Manifest to LOV Production'
+        displayName: 'Release to LOV Production'
         condition: ${{ eq(parameters.lov_production, true) }}
         variables:
           - group: vault-lov-production
@@ -221,7 +294,7 @@ stages:
               missingVarLog: error
               ifNoFilesFound: error
           - task: Bash@3
-            displayName: 'Upload deployment configuration to LOV Production environment'
+            displayName: 'Upload manifest'
             inputs:
               targetType: 'inline'
               script: |
@@ -229,5 +302,13 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
-              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
+          - task: Bash@3
+            displayName:
+              'Deploy Mosaic service'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m lov-mosaic-entitlement-production-$(tag) -n "entitlement-service-$(tag)"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
