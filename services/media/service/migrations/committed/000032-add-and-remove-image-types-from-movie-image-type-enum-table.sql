@@ -1,5 +1,5 @@
 --! Previous: sha1:97414ab5b38903fb0a0d6698a39f4a8b20d552f7
---! Hash: sha1:920ca14fd23150ab05c35a1cbd26042a213df06d
+--! Hash: sha1:33dd6526e51e4c02a562908f22a359a30cb65668
 --! Message: add-and-remove-image-types-from-movie-image-type-enum-table
 
 -- movie_image_type enum
@@ -13,8 +13,8 @@ VALUES
     ('LIST_9x13', 'List 9x13')
 ON CONFLICT (value) DO NOTHING;
 
--- UPDATE app_public.movies_images SET image_type = 'COVER_1X1' WHERE image_type = 'COVER';
+UPDATE app_public.movies_images SET image_type = 'COVER_1x1' WHERE image_type = 'COVER';
 DELETE FROM app_public.movie_image_type WHERE value = 'COVER';
 
--- UPDATE app_public.movies_images SET image_type = 'COVER_1X1' WHERE image_type = 'TEASER';
+UPDATE app_public.movies_images SET image_type = 'COVER_1x1' WHERE image_type = 'TEASER';
 DELETE FROM app_public.movie_image_type WHERE value = 'TEASER';
