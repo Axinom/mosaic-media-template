@@ -50,3 +50,6 @@ ingest-gen
 .mmdb
 # Mac specific
 .DS_Store
+
+# Temporary Data Dumps
+data-dump/
