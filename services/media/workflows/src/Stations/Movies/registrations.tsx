@@ -40,21 +40,18 @@ export function register(app: PiletApi, extensions: Extensions): void {
   };
 
   // Generate entry points to embedded localization stations
-  registerLocalizationEntryPoints(
-    [
-      {
-        root: '/movies/:movieId',
-        entityIdParam: 'movieId',
-        entityType: 'movie',
-      },
-      {
-        root: '/settings/media/moviegenres/:genreId',
-        entityIdParam: 'genreId',
-        entityType: 'movie_genre',
-      },
-    ],
-    app,
-  );
+  registerLocalizationEntryPoints([
+    {
+      root: '/movies/:movieId',
+      entityIdParam: 'movieId',
+      entityType: 'movie',
+    },
+    {
+      root: '/settings/media/moviegenres/:genreId',
+      entityIdParam: 'genreId',
+      entityType: 'movie_genre',
+    },
+  ]);
 
   app.setRouteResolver(
     'movie-details',

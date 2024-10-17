@@ -34,21 +34,18 @@ export function register(app: PiletApi, extensions: Extensions): void {
   };
 
   // Generate entry points to embedded localization stations
-  registerLocalizationEntryPoints(
-    [
-      {
-        root: '/tvshows/:tvshowId',
-        entityIdParam: 'tvshowId',
-        entityType: 'tv_show',
-      },
-      {
-        root: '/settings/media/tvshowgenres/:genreId',
-        entityIdParam: 'genreId',
-        entityType: 'tv_show_genre',
-      },
-    ],
-    app,
-  );
+  registerLocalizationEntryPoints([
+    {
+      root: '/tvshows/:tvshowId',
+      entityIdParam: 'tvshowId',
+      entityType: 'tv_show',
+    },
+    {
+      root: '/settings/media/tvshowgenres/:genreId',
+      entityIdParam: 'genreId',
+      entityType: 'tv_show_genre',
+    },
+  ]);
 
   app.setRouteResolver(
     'tv_show-details',

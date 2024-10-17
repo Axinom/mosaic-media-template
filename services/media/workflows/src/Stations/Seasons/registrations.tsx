@@ -26,16 +26,13 @@ export function register(app: PiletApi, extensions: Extensions): void {
   };
 
   // Generate entry points to embedded localization stations
-  registerLocalizationEntryPoints(
-    [
-      {
-        root: '/seasons/:seasonId',
-        entityIdParam: 'seasonId',
-        entityType: 'season',
-      },
-    ],
-    app,
-  );
+  registerLocalizationEntryPoints([
+    {
+      root: '/seasons/:seasonId',
+      entityIdParam: 'seasonId',
+      entityType: 'season',
+    },
+  ]);
 
   app.setRouteResolver(
     'season-details',
