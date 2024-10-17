@@ -2,10 +2,6 @@ import { envelopeLoggingMiddleware } from '@axinom/mosaic-message-bus';
 import { Express } from 'express';
 import { Config } from '../common';
 import {
-  registerChannelsHandlers,
-  registerChannelsMessaging,
-} from './channels/register-channels-messaging';
-import {
   registerCollectionsHandlers,
   registerCollectionsMessaging,
 } from './collections/register-collections-messaging';
@@ -71,7 +67,6 @@ export const registerMessaging = async (
       ...registerMoviesMessaging(inboxWriter, config),
       ...registerTvshowsMessaging(inboxWriter, config),
       ...registerCollectionsMessaging(inboxWriter, config),
-      ...registerChannelsMessaging(inboxWriter, config),
     ],
     logger: inboxLogger,
     shutdownActions,
@@ -86,7 +81,6 @@ export const registerMessaging = async (
       ...registerMoviesHandlers(config),
       ...registerTvshowsHandlers(config),
       ...registerCollectionsHandlers(config),
-      ...registerChannelsHandlers(config),
     ],
     logMapper,
   );

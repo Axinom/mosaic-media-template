@@ -20,19 +20,21 @@
         }
       },
       "queues": {
-        "delay:10sec": {
+        "delay:10s": {
           "options": {
             "arguments": {
               "x-message-ttl": 10000,
-              "x-dead-letter-exchange": "retry"
+              "x-dead-letter-exchange": "retry",
+              "x-queue-type": "quorum"
             }
           }
         },
-        "delay:30sec": {
+        "delay:30s": {
           "options": {
             "arguments": {
               "x-message-ttl": 30000,
-              "x-dead-letter-exchange": "retry"
+              "x-dead-letter-exchange": "retry",
+              "x-queue-type": "quorum"
             }
           }
         },
@@ -70,43 +72,7 @@
             }
           }
         },
-        "ax-localization-service:entity:localize": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-localization-service:entity_definition:declare": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-localization-service:entity_definition:delete": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-localization-service:localization_source_entity:upsert": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-localization-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "ax-localization-service:localization_source_entity:delete": {
+        "ax-localization-service:inbox": {
           "options": {
             "arguments": {
               "x-dead-letter-exchange": "dead_letter",
@@ -122,15 +88,15 @@
           "bindingKey": "media-service.dead_letter",
           "destination": "media-service:dead_letter"
         },
-        "delay:10sec": {
+        "delay:10s": {
           "source": "delay",
-          "bindingKey": "delay.10sec",
-          "destination": "delay:10sec"
+          "bindingKey": "delay.10s",
+          "destination": "delay:10s"
         },
-        "delay:30sec": {
+        "delay:30s": {
           "source": "delay",
-          "bindingKey": "delay.30sec",
-          "destination": "delay:30sec"
+          "bindingKey": "delay.30s",
+          "destination": "delay:30s"
         },
         "retry:media-service:inbox": {
           "source": "retry",
@@ -212,10 +178,10 @@
           "bindingKey": "ax-localization-service.*.*.localization_source_entity.upsert_failed",
           "destination": "media-service:inbox"
         },
-        "retry:ax-localization-service:entity:localize": {
+        "retry:ax-localization-service:inbox": {
           "source": "retry",
-          "bindingKey": "ax-localization-service:entity:localize.#",
-          "destination": "ax-localization-service:entity:localize"
+          "bindingKey": "ax-localization-service:inbox.#",
+          "destination": "ax-localization-service:inbox"
         },
         "ax-localization-service.*.*.entity.localize_finished": {
           "source": "event",
@@ -262,11 +228,6 @@
           "bindingKey": "ax-video-service.*.*.cue_point_types.declare_failed",
           "destination": "media-service:inbox"
         },
-        "retry:ax-localization-service:entity_definition:declare": {
-          "source": "retry",
-          "bindingKey": "ax-localization-service:entity_definition:declare.#",
-          "destination": "ax-localization-service:entity_definition:declare"
-        },
         "ax-localization-service.*.*.entity_definition.declare_failed": {
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.declare_failed",
@@ -277,11 +238,6 @@
           "bindingKey": "ax-localization-service.*.*.entity_definition.declare_finished",
           "destination": "media-service:inbox"
         },
-        "retry:ax-localization-service:entity_definition:delete": {
-          "source": "retry",
-          "bindingKey": "ax-localization-service:entity_definition:delete.#",
-          "destination": "ax-localization-service:entity_definition:delete"
-        },
         "ax-localization-service.*.*.entity_definition.delete_failed": {
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.delete_failed",
@@ -291,16 +247,6 @@
           "source": "event",
           "bindingKey": "ax-localization-service.*.*.entity_definition.delete_finished",
           "destination": "media-service:inbox"
-        },
-        "retry:ax-localization-service:localization_source_entity:upsert": {
-          "source": "retry",
-          "bindingKey": "ax-localization-service:localization_source_entity:upsert.#",
-          "destination": "ax-localization-service:localization_source_entity:upsert"
-        },
-        "retry:ax-localization-service:localization_source_entity:delete": {
-          "source": "retry",
-          "bindingKey": "ax-localization-service:localization_source_entity:delete.#",
-          "destination": "ax-localization-service:localization_source_entity:delete"
         }
       },
       "publications": {
@@ -308,7 +254,7 @@
           "exchange": "delay",
           "options": {
             "CC": [
-              "delay.10sec"
+              "delay.10s"
             ]
           }
         },
@@ -316,7 +262,7 @@
           "exchange": "delay",
           "options": {
             "CC": [
-              "delay.30sec"
+              "delay.30s"
             ]
           }
         },

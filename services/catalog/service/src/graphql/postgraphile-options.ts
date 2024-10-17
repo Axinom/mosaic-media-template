@@ -21,7 +21,6 @@ import {
   MOSAIC_LOCALE_HEADER_KEY,
   MOSAIC_LOCALE_PG_KEY,
 } from '../common';
-import { AllChannelPlugins } from '../domains/channels/plugins/all-channel-plugins';
 import { AllCollectionPlugins } from '../domains/collections/plugins/all-collection-plugins';
 import { AllMoviePlugins } from '../domains/movies/plugins/all-movie-plugins';
 import { AllTvshowPlugins } from '../domains/tvshows/plugins/all-tvshow-plugins';
@@ -52,7 +51,6 @@ export function buildPostgraphileOptions(
       OmitFromQueryRootPlugin,
       AllMoviePlugins,
       AllTvshowPlugins,
-      AllChannelPlugins,
       AllCollectionPlugins,
       AddErrorCodesEnumPluginFactory([MosaicErrors, CommonErrors]),
     )

@@ -1,4 +1,4 @@
-import { getThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
+import { createThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
   DynamicDataList,
@@ -36,7 +36,7 @@ export const EntityDataList: React.FC<EntityDataListProps> = ({
       {
         propertyName: 'publishStatus',
         label: 'State',
-        render: getThumbnailAndStateRenderer()(
+        render: createThumbnailAndStateRenderer(
           'entityImages',
           PublishStatusStateMap,
         ),

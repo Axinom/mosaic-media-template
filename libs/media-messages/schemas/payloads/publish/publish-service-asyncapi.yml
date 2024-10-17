@@ -127,84 +127,98 @@ components:
     collection-published-event:
       tags:
         - name: aggregate-type:collection
+        - name: aggregate-id-field:collection ID
       contentType: application/json
       payload:
         $ref: 'collection-published-event.json'
     collection-unpublished-event:
       tags:
         - name: aggregate-type:collection
+        - name: aggregate-id-field:collection ID
       contentType: application/json
       payload:
         $ref: 'collection-unpublished-event.json'
     episode-published-event:
       tags:
         - name: aggregate-type:episode
+        - name: aggregate-id-field:episode ID
       contentType: application/json
       payload:
         $ref: 'episode-published-event.json'
     episode-unpublished-event:
       tags:
         - name: aggregate-type:episode
+        - name: aggregate-id-field:episode ID
       contentType: application/json
       payload:
         $ref: 'episode-unpublished-event.json'
     movie-genres-published-event:
       tags:
         - name: aggregate-type:movie-genres
+        - name: aggregate-id-field:UNDEFINED_ID
       contentType: application/json
       payload:
         $ref: 'movie-genres-published-event.json'
     movie-genres-unpublished-event:
       tags:
         - name: aggregate-type:movie-genres
+        - name: aggregate-id-field:UNDEFINED_ID
       contentType: application/json
       payload:
         $ref: 'movie-genres-unpublished-event.json'
     movie-published-event:
       tags:
         - name: aggregate-type:movie
+        - name: aggregate-id-field:movie ID
       contentType: application/json
       payload:
         $ref: 'movie-published-event.json'
     movie-unpublished-event:
       tags:
         - name: aggregate-type:movie
+        - name: aggregate-id-field:movie ID
       contentType: application/json
       payload:
         $ref: 'movie-unpublished-event.json'
     season-published-event:
       tags:
         - name: aggregate-type:season
+        - name: aggregate-id-field:season ID
       contentType: application/json
       payload:
         $ref: 'season-published-event.json'
     season-unpublished-event:
       tags:
         - name: aggregate-type:season
+        - name: aggregate-id-field:season ID
       contentType: application/json
       payload:
         $ref: 'season-unpublished-event.json'
     tvshow-genres-published-event:
       tags:
         - name: aggregate-type:tvshow-genres
+        - name: aggregate-id-field:UNDEFINED_ID
       contentType: application/json
       payload:
         $ref: 'tvshow-genres-published-event.json'
     tvshow-genres-unpublished-event:
       tags:
         - name: aggregate-type:tvshow-genres
+        - name: aggregate-id-field:UNDEFINED_ID
       contentType: application/json
       payload:
         $ref: 'tvshow-genres-unpublished-event.json'
     tvshow-published-event:
       tags:
         - name: aggregate-type:tvshow
+        - name: aggregate-id-field:tvshow ID
       contentType: application/json
       payload:
         $ref: 'tvshow-published-event.json'
     tvshow-unpublished-event:
       tags:
         - name: aggregate-type:tvshow
+        - name: aggregate-id-field:tvshow ID
       contentType: application/json
       payload:
         $ref: 'tvshow-unpublished-event.json'
