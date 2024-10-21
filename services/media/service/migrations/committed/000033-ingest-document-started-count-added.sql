@@ -1,5 +1,5 @@
---! Previous: sha1:d7c481931580f6acf907cf543994742775ae710c
---! Hash: sha1:9e58d9212f8204cc42f4e3b3afd0abe7d343bd12
+--! Previous: sha1:33dd6526e51e4c02a562908f22a359a30cb65668
+--! Hash: sha1:97dac4963ec39dceea82c16f86d9d2d7ef9d3497
 --! Message: ingest-document-started-count-added
 
 ALTER TABLE app_public.ingest_documents ADD COLUMN IF NOT EXISTS started_count INT NOT NULL DEFAULT 0;
