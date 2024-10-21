@@ -21,6 +21,9 @@ export class TvshowGenresSeedDataHandler {
     { title: 'Horror', sort_order: 8 },
     { title: 'Action', sort_order: 9 },
     { title: 'Romance', sort_order: 10 },
+    { title: 'Animation', sort_order: 11 },
+    { title: 'Family', sort_order: 12 },
+    { title: 'History', sort_order: 13 },
   ];
 
   constructor(
