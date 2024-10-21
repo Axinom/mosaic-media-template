@@ -275,6 +275,30 @@ const generateGenericPayloads = async (
           },
           { columns: ['image_id'] },
         ),
+        clean_cover_16x9: selectOne(
+          imagesTableName,
+          {
+            [`${singularize(tableName)}_id`]: parent('id'),
+            image_type: 'CLEAN_COVER_16x9',
+          },
+          { columns: ['image_id'] },
+        ),
+        clean_cover_1x1: selectOne(
+          imagesTableName,
+          {
+            [`${singularize(tableName)}_id`]: parent('id'),
+            image_type: 'COVER_1x1',
+          },
+          { columns: ['image_id'] },
+        ),
+        list_9x13: selectOne(
+          imagesTableName,
+          {
+            [`${singularize(tableName)}_id`]: parent('id'),
+            image_type: 'LIST_9x13',
+          },
+          { columns: ['image_id'] },
+        ),
       },
     },
   ).run(ownerPool);
@@ -292,6 +316,9 @@ const generateGenericPayloads = async (
         synopsis: entity.synopsis,
         image_id_cover_1x1: entity.cover_1x1?.image_id,
         image_id_cover_16x9: entity.cover_16x9?.image_id,
+        image_id_clean_cover_16x9: entity.clean_cover_16x9?.image_id,
+        image_id_clean_cover_1x1: entity.clean_cover_1x1?.image_id,
+        image_id_list_9x13: entity.list_9x13?.image_id,
       },
     }),
   );
