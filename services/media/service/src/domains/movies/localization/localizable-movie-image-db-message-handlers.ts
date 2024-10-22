@@ -47,6 +47,9 @@ export class LocalizableMovieImageCreatedDbMessageHandler extends LocalizableMed
       case 'CLEAN_COVER_16x9':
         fields = { image_id_clean_cover_16x9: image_id };
         break;
+      case 'LIST_1x1':
+        fields = { image_id_list_1x1: image_id };
+        break;
       case 'LIST_9x13':
         fields = { image_id_list_9x13: image_id };
         break;
