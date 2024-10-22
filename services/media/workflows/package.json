@@ -81,11 +81,5 @@
     "react-router-dom": "*",
     "tslib": "*"
   },
-  "peerModules": [],
-  "importmap": {
-    "imports": {},
-    "inherit": [
-      "@axinom/mosaic-portal"
-    ]
-  }
+  "peerModules": []
 }
