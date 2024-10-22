@@ -19,4 +19,8 @@ export interface Image {
    * Height of the image in pixels.
    */
   height?: number | null;
+  /**
+   * Alternative text for the image.
+   */
+  alt_text?: string | null;
 }

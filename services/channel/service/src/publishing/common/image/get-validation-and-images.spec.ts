@@ -91,6 +91,7 @@ describe('getValidationAndImages', () => {
       height: 222,
       imageTypeKey: 'LOGO',
       transformationPath: '/some/path.png',
+      altText: 'some alt text',
     };
     result = () => {
       return createApiObject([image1]);
@@ -112,6 +113,7 @@ describe('getValidationAndImages', () => {
         height: image1.height,
         type: 'LOGO',
         path: image1.transformationPath,
+        alt_text: image1.altText,
       },
     ]);
     expect(validations).toHaveLength(0);
@@ -154,6 +156,7 @@ describe('getValidationAndImages', () => {
       height: 222,
       imageTypeKey: 'movie_cover',
       transformationPath: '/some/path.png',
+      altText: 'some alt text',
     };
     result = () => {
       return createApiObject([image1]);
@@ -176,6 +179,7 @@ describe('getValidationAndImages', () => {
         height: image1.height,
         type: 'movie_cover',
         path: image1.transformationPath,
+        alt_text: image1.altText,
       },
     ]);
     expect(validations).toHaveLength(1);
@@ -196,6 +200,7 @@ describe('getValidationAndImages', () => {
       height: 222,
       imageTypeKey: 'episode_cover',
       transformationPath: '/some/path.png',
+      altText: 'some alt text',
     };
     const image2: GqlImage = {
       id: imageId2,
@@ -203,6 +208,7 @@ describe('getValidationAndImages', () => {
       height: 444,
       imageTypeKey: 'movie_cover',
       transformationPath: '/some/path.png',
+      altText: 'some other alt text',
     };
     result = () => {
       return createApiObject([image1, image2]);
@@ -224,6 +230,7 @@ describe('getValidationAndImages', () => {
         height: image1.height,
         type: image1.imageTypeKey,
         path: image1.transformationPath,
+        alt_text: image1.altText,
       },
       {
         id: image2.id,
@@ -231,6 +238,7 @@ describe('getValidationAndImages', () => {
         height: image2.height,
         type: image2.imageTypeKey,
         path: image2.transformationPath,
+        alt_text: image2.altText,
       },
     ]);
     expect(validations).toHaveLength(0);

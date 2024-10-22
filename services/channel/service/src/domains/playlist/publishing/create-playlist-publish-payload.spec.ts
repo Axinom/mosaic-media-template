@@ -42,6 +42,7 @@ describe('createPlaylistPublishPayload', () => {
         width: 100,
         height: 100,
         type: 'test_cover',
+        alt_text: `Alt text ${element}`,
       };
     });
   };
@@ -355,6 +356,7 @@ describe('createPlaylistPublishPayload', () => {
         path: `test/${imageId1}/image.png`,
         type: 'test_cover',
         width: 100,
+        alt_text: `Alt text ${imageId1}`,
       },
       {
         height: 100,
@@ -362,6 +364,7 @@ describe('createPlaylistPublishPayload', () => {
         path: `test/${imageId2}/image.png`,
         type: 'test_cover',
         width: 100,
+        alt_text: `Alt text ${imageId2}`,
       },
       {
         height: 100,
@@ -369,6 +372,7 @@ describe('createPlaylistPublishPayload', () => {
         path: `test/${imageId3}/image.png`,
         type: 'test_cover',
         width: 100,
+        alt_text: `Alt text ${imageId3}`,
       },
     ];
     // Act
@@ -406,6 +410,7 @@ describe('createPlaylistPublishPayload', () => {
         path: `test/${imageId1}/image.png`,
         type: 'test_cover',
         width: 100,
+        alt_text: `Alt text ${imageId1}`,
       },
       {
         height: 100,
@@ -413,6 +418,7 @@ describe('createPlaylistPublishPayload', () => {
         path: `test/${imageId2}/image.png`,
         type: 'test_cover',
         width: 100,
+        alt_text: `Alt text ${imageId2}`,
       },
       undefined,
     ];
@@ -499,6 +505,7 @@ describe('createPlaylistPublishPayload', () => {
         path: `test/${imageId1}/image.png`,
         type: 'test_cover',
         width: 100,
+        alt_text: `Alt text ${imageId1}`,
       },
       localizations: program.localizations,
     });

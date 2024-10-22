@@ -53,7 +53,7 @@ describe('ChannelPublishEventHandler', () => {
         {
           channel_id: payload.content_id,
         },
-        { columns: ['height', 'width', 'path', 'type'] },
+        { columns: ['height', 'width', 'path', 'type', 'alt_text'] },
       ).run(ctx.ownerPool);
       const { id: imageId, ...messageImage } = payload.images![0];
       expect(image).toMatchObject(messageImage);

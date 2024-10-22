@@ -104,6 +104,13 @@
                   "integer",
                   "null"
                 ]
+              },
+              "alt_text": {
+                "description": "Alternative text for the image.",
+                "type": [
+                  "string",
+                  "null"
+                ]
               }
             }
           },

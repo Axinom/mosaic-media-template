@@ -813,6 +813,8 @@ export enum ErrorCodesEnum {
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
+  /** Attempt to create or update an element failed, as it would have resulted in a duplicate element. */
+  UniqueConstraintError = 'UNIQUE_CONSTRAINT_ERROR',
   /** User is not authorized to access the operation. */
   UserNotAuthorized = 'USER_NOT_AUTHORIZED',
   /** The User service is not accessible. Please contact Axinom support. */
@@ -883,6 +885,26 @@ export type FieldValidationRuleFilter = {
   notEqualTo?: InputMaybe<FieldValidationRule>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<FieldValidationRule>>;
+};
+
+export type InboxOutboxReportInput = {
+  testId: Scalars['String'];
+};
+
+export type InboxOutboxReportPayload = {
+  __typename?: 'InboxOutboxReportPayload';
+  inboxReport: Scalars['String'];
+  outboxReport: Scalars['String'];
+};
+
+export type InboxOutboxStateInput = {
+  testId: Scalars['String'];
+};
+
+export type InboxOutboxStatePayload = {
+  __typename?: 'InboxOutboxStatePayload';
+  inboxActiveCount: Scalars['Int'];
+  outboxActiveCount: Scalars['Int'];
 };
 
 /** @permissions: SETTINGS_VIEW,SETTINGS_EDIT,SOURCE_ENTITIES_EDIT,LOCALIZED_ENTITIES_REVIEW,LOCALIZED_ENTITIES_EDIT,LOCALIZED_ENTITIES_VIEW,ADMIN */
@@ -1692,6 +1714,8 @@ export type Query = {
   entityDefinition?: Maybe<EntityDefinition>;
   /** Reads and enables pagination through a set of `EntityDefinition`. */
   entityDefinitions?: Maybe<EntityDefinitionsConnection>;
+  inboxOutboxReport?: Maybe<InboxOutboxReportPayload>;
+  inboxOutboxState?: Maybe<InboxOutboxStatePayload>;
   locale?: Maybe<Locale>;
   /** Reads and enables pagination through a set of `Locale`. */
   locales?: Maybe<LocalesConnection>;
@@ -1731,6 +1755,18 @@ export type QueryEntityDefinitionsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<EntityDefinitionsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInboxOutboxReportArgs = {
+  input: InboxOutboxReportInput;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryInboxOutboxStateArgs = {
+  input: InboxOutboxStateInput;
 };
 
 
