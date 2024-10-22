@@ -88,7 +88,7 @@ const runGqlQuery = async function (
           result.errors,
           req.body?.operationName,
           customizeGraphQlErrorFields(defaultPgErrorMapper),
-          logGraphQlError(catalogLogMapper, this.logger),
+          logGraphQlError(catalogLogMapper, undefined, this.logger),
         );
       }
       return result;
