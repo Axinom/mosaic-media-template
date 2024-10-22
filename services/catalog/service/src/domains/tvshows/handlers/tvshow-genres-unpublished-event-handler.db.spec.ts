@@ -25,7 +25,7 @@ describe('TvshowGenrePublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('Received a tvshow-genres unpublish message -> the single existing tvshow-genre is removed', async () => {
       // Arrange
       await insert('tvshow_genre', {

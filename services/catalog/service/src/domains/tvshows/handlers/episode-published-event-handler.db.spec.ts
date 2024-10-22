@@ -27,7 +27,7 @@ describe('EpisodePublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('A new episode is published', async () => {
       // Arrange
       const message = createEpisodePublishedMessage('episode-1');

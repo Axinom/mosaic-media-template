@@ -1,7 +1,7 @@
 import { DEFAULT_SYSTEM_USERNAME } from '@axinom/mosaic-db-common';
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -50,7 +50,7 @@ describe('Start Ingest Handler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as StartIngestItemCommand);
       },
@@ -58,7 +58,8 @@ describe('Start Ingest Handler', () => {
     user = createTestUser(ctx.config.serviceId);
     handler = new StartIngestHandler(
       [processor],
-      storeOutboxMessage,
+      storeInboxMessage,
+      ctx.ownerPool,
       ctx.config,
     );
   });
@@ -73,7 +74,7 @@ describe('Start Ingest Handler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message with 1 new movie -> ingest item created and message sent', async () => {
       // Arrange
       jest.spyOn(processor, 'initializeMedia').mockImplementation(async () => ({
@@ -103,8 +104,8 @@ describe('Start Ingest Handler', () => {
       const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
-        handler.handleMessage(createMessage(payload), dbCtx),
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx, { subject: user }),
       );
 
       // Assert
@@ -198,8 +199,8 @@ describe('Start Ingest Handler', () => {
       const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
-        handler.handleMessage(createMessage(payload), dbCtx),
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
+        handler.handleMessage(createMessage(payload), dbCtx, { subject: user }),
       );
 
       // Assert
@@ -268,7 +269,7 @@ describe('Start Ingest Handler', () => {
     });
   });
 
-  describe('onMessageFailure', () => {
+  describe('handleErrorMessage', () => {
     it('message failed on all retries -> document state updated to ERROR', async () => {
       // Arrange
       const docItems: IngestItem[] = [
@@ -282,7 +283,7 @@ describe('Start Ingest Handler', () => {
       const payload: StartIngestCommand = { doc_id: doc.id };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleErrorMessage(
           new Error('test error'),
           createMessage(payload),

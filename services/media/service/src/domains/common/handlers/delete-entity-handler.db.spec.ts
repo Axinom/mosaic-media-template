@@ -15,7 +15,7 @@ import {
 } from '../../../tests/test-utils';
 import { DeleteEntityHandler } from './delete-entity-handler';
 
-describe('Start Ingest Item Handler', () => {
+describe('Delete Entity Handler', () => {
   let ctx: ITestContext;
   let user: AuthenticatedManagementSubject;
   let handler: DeleteEntityHandler;
@@ -78,7 +78,7 @@ describe('Start Ingest Item Handler', () => {
     };
 
     // Act
-    await ctx.executeGqlSql(user, async (dbCtx) =>
+    await ctx.executeOwnerSql(user, async (dbCtx) =>
       handler.handleMessage(createMessage(payload), dbCtx),
     );
 

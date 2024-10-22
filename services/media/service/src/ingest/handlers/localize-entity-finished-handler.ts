@@ -3,28 +3,18 @@ import {
   LocalizeEntityFinishedEvent,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
-import {
-  StoreOutboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
-import {
-  CheckFinishIngestItemCommand,
-  IngestMessageContext,
-  MediaServiceMessagingSettings,
-} from 'media-messages';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
+import { update } from 'zapatos/db';
 import { Config } from '../../common';
-import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
+import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
-export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInboxMessageHandler<LocalizeEntityFinishedEvent> {
-  constructor(
-    private readonly storeOutboxMessage: StoreOutboxMessage,
-    config: Config,
-  ) {
+export class LocalizeEntityFinishedHandler extends MediaTransactionalInboxMessageHandler<LocalizeEntityFinishedEvent> {
+  constructor(config: Config) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFinished,
-      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: LocalizeEntityFinishedHandler.name,
@@ -39,7 +29,7 @@ export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInbo
       id,
       aggregateId,
     }: TypedTransactionalMessage<LocalizeEntityFinishedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     if (
       !checkIsIngestEvent(metadata, this.logger, id, aggregateId) ||
@@ -51,15 +41,10 @@ export class LocalizeEntityFinishedHandler extends MediaGuardedTransactionalInbo
 
     const messageContext = metadata.messageContext as IngestMessageContext;
 
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
-      {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-      },
-      loginClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
-    );
+    await update(
+      'ingest_item_steps',
+      { status: 'SUCCESS' },
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
   }
 }

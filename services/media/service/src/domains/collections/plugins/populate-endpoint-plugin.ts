@@ -1,5 +1,5 @@
 import {
-  assertError,
+  ensureError,
   Logger,
   randomArray,
 } from '@axinom/mosaic-service-common';
@@ -148,8 +148,8 @@ export const PopulateEndpointPlugin = makeExtendSchemaPlugin((build) => {
                 },
               );
               count += elements.length;
-            } catch (error) {
-              assertError(error);
+            } catch (e) {
+              const error = ensureError(e);
               logger.warn(
                 error,
                 `An error occurred trying to insert a batch of ${batch} sample collections.`,

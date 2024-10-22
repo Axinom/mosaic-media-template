@@ -3,26 +3,16 @@ import {
   ImageServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
-import {
-  StoreOutboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
-import {
-  CheckFinishIngestItemCommand,
-  ImageMessageContext,
-  MediaServiceMessagingSettings,
-} from 'media-messages';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { ImageMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
+import { update } from 'zapatos/db';
 import { Config } from '../../common';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
-import { getFutureIsoDateInMilliseconds } from '../utils';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
 export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHandler<EnsureImageExistsFailedEvent> {
-  constructor(
-    private readonly storeOutboxMessage: StoreOutboxMessage,
-    config: Config,
-  ) {
+  constructor(config: Config) {
     super(
       ImageServiceMultiTenantMessagingSettings.EnsureImageExistsFailed,
       ['INGESTS_EDIT', 'ADMIN'],
@@ -41,26 +31,19 @@ export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHan
       payload,
       metadata,
     }: TypedTransactionalMessage<EnsureImageExistsFailedEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     if (!checkIsIngestEvent(metadata, this.logger, id, aggregateId)) {
       return;
     }
     const messageContext = metadata.messageContext as ImageMessageContext;
-
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
+    await update(
+      'ingest_item_steps',
       {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-        error_message: payload.message,
+        status: 'ERROR',
+        response_message: payload.message,
       },
-      loginClient,
-      {
-        envelopeOverrides: { auth_token: metadata.authToken },
-        lockedUntil: getFutureIsoDateInMilliseconds(1_000),
-      },
-    );
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
   }
 }

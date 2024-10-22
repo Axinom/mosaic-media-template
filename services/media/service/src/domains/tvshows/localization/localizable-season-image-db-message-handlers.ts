@@ -92,11 +92,11 @@ export class LocalizableSeasonImageDeletedDbMessageHandler extends LocalizableMe
     {
       payload: { image_type, season_id },
     }: TypedTransactionalMessage<LocalizableSeasonImageDbEvent>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
     if (
       image_type !== 'COVER' ||
-      (await this.seasonIsDeleted(season_id, loginClient))
+      (await this.seasonIsDeleted(season_id, ownerClient))
     ) {
       // Ignore any changes to non-cover image relations
       // If image relation is deleted as part of a cascade delete of season - no need to upsert
@@ -115,13 +115,13 @@ export class LocalizableSeasonImageDeletedDbMessageHandler extends LocalizableMe
 
   async seasonIsDeleted(
     seasonId: number,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<boolean> {
     const data = await selectOne(
       'seasons',
       { id: seasonId },
       { columns: ['id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
     return !data;
   }
 }

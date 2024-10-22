@@ -25,7 +25,7 @@ describe('EpisodePublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('An existing episode is unpublished', async () => {
       // Arrange
       const episodeId = 'episode-1';

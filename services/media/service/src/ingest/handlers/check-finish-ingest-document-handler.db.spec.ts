@@ -1,7 +1,7 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { assertNotFalsy } from '@axinom/mosaic-service-common';
 import {
-  StoreOutboxMessage,
+  StoreInboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
 import { stub } from 'jest-auto-stub';
@@ -40,14 +40,14 @@ describe('Check Finish Ingest Document Handler', () => {
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    const storeOutboxMessage: StoreOutboxMessage = jest.fn(
+    const storeInboxMessage: StoreInboxMessage = jest.fn(
       async (_aggregateId, _messagingSettings, message) => {
         messages.push(message as CheckFinishIngestDocumentCommand);
       },
     );
     user = createTestUser(ctx.config.serviceId);
     handler = new CheckFinishIngestDocumentHandler(
-      storeOutboxMessage,
+      storeInboxMessage,
       ctx.config,
     );
   });
@@ -107,7 +107,7 @@ describe('Check Finish Ingest Document Handler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     it('message with all 0 counts for 2 in progress items, initial call -> seconds_without_progress remains the same, waiting 5 sec', async () => {
       // Arrange
       const payload: CheckFinishIngestDocumentCommand = {
@@ -119,7 +119,7 @@ describe('Check Finish Ingest Document Handler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(createMessage(payload), dbCtx),
       );
 
@@ -158,7 +158,7 @@ describe('Check Finish Ingest Document Handler', () => {
         };
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) =>
+        await ctx.executeOwnerSql(user, async (dbCtx) =>
           handler.handleMessage(createMessage(payload), dbCtx),
         );
 
@@ -197,7 +197,7 @@ describe('Check Finish Ingest Document Handler', () => {
       };
 
       // Act
-      await ctx.executeGqlSql(user, async (dbCtx) =>
+      await ctx.executeOwnerSql(user, async (dbCtx) =>
         handler.handleMessage(createMessage(payload), dbCtx),
       );
 
@@ -243,7 +243,7 @@ describe('Check Finish Ingest Document Handler', () => {
         };
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) =>
+        await ctx.executeOwnerSql(user, async (dbCtx) =>
           handler.handleMessage(createMessage(payload), dbCtx),
         );
 
@@ -304,7 +304,7 @@ describe('Check Finish Ingest Document Handler', () => {
         };
 
         // Act
-        await ctx.executeGqlSql(user, async (dbCtx) =>
+        await ctx.executeOwnerSql(user, async (dbCtx) =>
           handler.handleMessage(createMessage(payload), dbCtx),
         );
 

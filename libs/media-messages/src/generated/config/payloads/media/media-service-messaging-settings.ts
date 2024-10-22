@@ -75,20 +75,8 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     );
   /**
    * Defines the messaging settings for the command with message type 
-   * "CheckFinishIngestItem" and aggregate type "ingest-item".
-   * The aggregate ID field must contain the value of the "ingest item ID" field.
-   */
-  public static CheckFinishIngestItem = new MediaServiceMessagingSettings(
-    'CheckFinishIngestItem', 
-    'inbox', 
-    'ingest.check_finish_item',
-    'command',
-    'ingest-item'
-    );
-  /**
-   * Defines the messaging settings for the command with message type 
    * "CheckFinishIngestDocument" and aggregate type "ingest-document".
-   * The aggregate ID field must contain the value of the "ingest Document ID" field.
+   * The aggregate ID field must contain the value of the "ingest document ID" field.
    */
   public static CheckFinishIngestDocument = new MediaServiceMessagingSettings(
     'CheckFinishIngestDocument', 

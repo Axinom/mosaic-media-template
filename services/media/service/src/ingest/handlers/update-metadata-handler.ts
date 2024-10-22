@@ -1,28 +1,22 @@
 import { MosaicError } from '@axinom/mosaic-service-common';
 import {
-  CheckFinishIngestItemCommand,
   IngestMessageContext,
   MediaServiceMessagingSettings,
   UpdateMetadataCommand,
 } from 'media-messages';
-import { selectOne } from 'zapatos/db';
+import { selectOne, update } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
 import { IngestEntityProcessor } from '../models';
 import { getIngestErrorMessage } from '../utils/ingest-validation';
 
 import { Logger } from '@axinom/mosaic-service-common';
-import {
-  StoreOutboxMessage,
-  TypedTransactionalMessage,
-} from '@axinom/mosaic-transactional-inbox-outbox';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import { ClientBase } from 'pg';
 import { MediaGuardedTransactionalInboxMessageHandler } from '../../messaging';
-import { getFutureIsoDateInMilliseconds } from '../utils';
 
 export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessageHandler<UpdateMetadataCommand> {
   constructor(
     private entityProcessors: IngestEntityProcessor[],
-    private readonly storeOutboxMessage: StoreOutboxMessage,
     config: Config,
   ) {
     super(
@@ -38,7 +32,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
 
   override async handleMessage(
     { payload, metadata }: TypedTransactionalMessage<UpdateMetadataCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const messageContext = metadata.messageContext as IngestMessageContext;
     const processor = this.entityProcessors.find(
@@ -58,53 +52,40 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
         type: 'LOCALIZATIONS',
       },
       { columns: ['id'] },
-    ).run(loginClient);
+    ).run(ownerClient);
 
     await processor.updateMetadata(
       payload,
-      loginClient,
+      ownerClient,
       localizationStep ? messageContext.ingestItemId : undefined,
     );
-
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
-      {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-      },
-      loginClient,
-      {
-        envelopeOverrides: { auth_token: metadata.authToken },
-        lockedUntil: getFutureIsoDateInMilliseconds(1_000),
-      },
-    );
+    await update(
+      'ingest_item_steps',
+      { status: 'SUCCESS' },
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
   }
 
   override async handleErrorMessage(
     error: Error,
     { metadata }: TypedTransactionalMessage<UpdateMetadataCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
     retry: boolean,
   ): Promise<void> {
     if (retry) {
       return;
     }
     const messageContext = metadata.messageContext as IngestMessageContext;
-
-    await this.storeOutboxMessage<CheckFinishIngestItemCommand>(
-      messageContext.ingestItemId.toString(),
-      MediaServiceMessagingSettings.CheckFinishIngestItem,
+    await update(
+      'ingest_item_steps',
       {
-        ingest_item_step_id: messageContext.ingestItemStepId,
-        ingest_item_id: messageContext.ingestItemId,
-        error_message: getIngestErrorMessage(
+        status: 'ERROR',
+        response_message: getIngestErrorMessage(
           error,
           'Unexpected error occurred while updating metadata.',
         ),
       },
-      loginClient,
-      { envelopeOverrides: { auth_token: metadata.authToken } },
-    );
+      { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
   }
 }

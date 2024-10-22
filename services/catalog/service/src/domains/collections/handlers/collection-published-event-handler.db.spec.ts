@@ -27,7 +27,7 @@ describe('CollectionPublishEventHandler', () => {
     jest.restoreAllMocks();
   });
 
-  describe('onMessage', () => {
+  describe('handleMessage', () => {
     test('A new collection is published', async () => {
       // Arrange
       const message = createCollectionPublishedMessage('collection-1');
@@ -45,6 +45,12 @@ describe('CollectionPublishEventHandler', () => {
       expect(collection).toEqual<collection.JSONSelectable>({
         id: payload.content_id,
         tags: payload.tags ?? null,
+        asset_type: payload.asset_type ?? null,
+        countries: payload.countries ?? null,
+        languages: payload.languages ?? null,
+        dynamic_field: payload.dynamic_field ?? null,
+        extended_field: payload.extended_field ?? null,
+        original_title: payload.original_title ?? null,
       });
 
       const images = await select('collection_images', {

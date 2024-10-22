@@ -39,19 +39,19 @@ export class UnpublishEntityHandler extends MediaGuardedTransactionalInboxMessag
 
   async handleMessage(
     { payload, metadata }: TypedTransactionalMessage<UnpublishEntityCommand>,
-    loginClient: ClientBase,
+    ownerClient: ClientBase,
   ): Promise<void> {
     const payloadTable = payload.table_name as Table;
     let snapshot: snapshots.Selectable | snapshots.JSONSelectable | undefined;
     if (payloadTable === 'snapshots') {
       snapshot = await selectOne('snapshots', {
         id: payload.entity_id,
-      }).run(loginClient);
+      }).run(ownerClient);
     } else {
       snapshot = await getPublishedSnapshot(
         payloadTable,
         payload.entity_id,
-        loginClient,
+        ownerClient,
       );
     }
 
@@ -65,7 +65,7 @@ export class UnpublishEntityHandler extends MediaGuardedTransactionalInboxMessag
 
     const wrapper = new SnapshotWrapper(
       snapshot.id,
-      loginClient,
+      ownerClient,
       this.storeOutboxMessage,
       this.config,
     );
