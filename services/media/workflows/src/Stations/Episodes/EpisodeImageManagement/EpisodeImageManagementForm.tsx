@@ -21,7 +21,6 @@ import {
 interface EpisodeImageManagementFormProps {
   episodeId: number;
 }
-
 type ImageNodes = Pick<EpisodesImage, 'imageId' | 'imageType'> & {
   __typename: 'EpisodesImage';
 };

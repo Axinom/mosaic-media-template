@@ -26,6 +26,9 @@ import {
   useUnpublishCollectionMutation,
 } from '../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
+import { CollectionDetailsQuickEdit } from '../CollectionDetails/CollectionDetailsQuickEdit';
+import { CollectionEntityManagementQuickEdit } from '../CollectionEntityManagement/CollectionEntityManagementQuickEdit';
+import { CollectionImageManagementQuickEdit } from '../CollectionImageManagement/CollectionImageManagementQuickEdit';
 import { useCollectionsActions } from './Collections.actions';
 import { useCollectionsFilters } from './Collections.filters';
 import { CollectionData, CollectionExplorerProps } from './Collections.types';
@@ -202,6 +205,22 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
           filterOptions={filterOptions}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
           inlineMenuActions={generateInlineMenuActions}
+          quickEditRegistrations={[
+            {
+              component: <CollectionDetailsQuickEdit />,
+              label: 'Collection Details',
+            },
+            {
+              component: <CollectionEntityManagementQuickEdit />,
+              label: 'Manage Entities',
+              generateDetailsLink: (item) => `/collections/${item.id}/entities`,
+            },
+            {
+              component: <CollectionImageManagementQuickEdit />,
+              label: 'Manage Images',
+              generateDetailsLink: (item) => `/collections/${item.id}/images`,
+            },
+          ]}
         />
       );
     case 'SelectionExplorer':
