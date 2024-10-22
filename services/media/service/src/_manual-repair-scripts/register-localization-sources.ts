@@ -445,7 +445,7 @@ const generateEpisodePayloads = async (
         title: entity.title,
         description: entity.description,
         synopsis: entity.synopsis,
-        image_id_cover_1x1: 'entity.cover?.image_id',
+        image_id_cover_1x1: entity.cover?.image_id,
       },
     }),
   );
