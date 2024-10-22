@@ -8,12 +8,12 @@ import { IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { param, selectOne, self as value, SQL, sql, update } from 'zapatos/db';
 import { CommonErrors, Config, getMediaMappedError } from '../../common';
+import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 
 export class UpsertLocalizationSourceEntityFailedHandler extends MediaTransactionalInboxMessageHandler<UpsertLocalizationSourceEntityFailedEvent> {
   constructor(config: Config) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntityFailed,
-      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: UpsertLocalizationSourceEntityFailedHandler.name,

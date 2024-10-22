@@ -8,13 +8,13 @@ import { IngestMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { update } from 'zapatos/db';
 import { Config } from '../../common';
+import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
 
 export class LocalizeEntityFailedHandler extends MediaTransactionalInboxMessageHandler<LocalizeEntityFailedEvent> {
   constructor(config: Config) {
     super(
       LocalizationServiceMultiTenantMessagingSettings.LocalizeEntityFailed,
-      ['INGESTS_EDIT', 'ADMIN'],
       new Logger({
         config,
         context: LocalizeEntityFailedHandler.name,
