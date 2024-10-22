@@ -1027,7 +1027,7 @@ CREATE FUNCTION app_hidden.localizable_movie_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1055,7 +1055,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;

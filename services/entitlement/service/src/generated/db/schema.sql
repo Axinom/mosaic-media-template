@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.12
--- Dumped by pg_dump version 11.12
+-- Dumped from database version 16.2
+-- Dumped by pg_dump version 16.2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -843,7 +843,7 @@ $$;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: subscription_devices; Type: TABLE; Schema: app_hidden; Owner: -
@@ -894,6 +894,13 @@ GRANT USAGE ON SCHEMA ax_define TO entitlement_service_gql_role;
 --
 
 GRANT USAGE ON SCHEMA ax_utils TO entitlement_service_gql_role;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
+--
+
+GRANT USAGE ON SCHEMA public TO entitlement_service_gql_role;
 
 
 --
@@ -1204,92 +1211,77 @@ GRANT ALL ON FUNCTION ax_utils.validation_valid_url_array(input_value text[]) TO
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden REVOKE ALL ON SEQUENCES  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden GRANT SELECT,USAGE ON SEQUENCES  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden GRANT SELECT,USAGE ON SEQUENCES TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public REVOKE ALL ON SEQUENCES  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public GRANT ALL ON FUNCTIONS  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA app_public GRANT ALL ON FUNCTIONS TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: ax_define; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define REVOKE ALL ON SEQUENCES  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define GRANT SELECT,USAGE ON SEQUENCES  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define GRANT SELECT,USAGE ON SEQUENCES TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: ax_define; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define REVOKE ALL ON FUNCTIONS  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define GRANT ALL ON FUNCTIONS  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_define GRANT ALL ON FUNCTIONS TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: ax_utils; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils REVOKE ALL ON SEQUENCES  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils GRANT SELECT,USAGE ON SEQUENCES  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils GRANT SELECT,USAGE ON SEQUENCES TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: ax_utils; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils REVOKE ALL ON FUNCTIONS  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils GRANT ALL ON FUNCTIONS  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA ax_utils GRANT ALL ON FUNCTIONS TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM entitlement_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public GRANT ALL ON FUNCTIONS  TO entitlement_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner IN SCHEMA public GRANT ALL ON FUNCTIONS TO entitlement_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: -; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE entitlement_service_owner REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 
 
 --

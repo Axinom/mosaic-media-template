@@ -6535,6 +6535,8 @@ export enum ErrorCodesEnum {
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
+  /** Attempt to create or update an element failed, as it would have resulted in a duplicate element. */
+  UniqueConstraintError = 'UNIQUE_CONSTRAINT_ERROR',
   /** Attempt to unpublish media has failed. */
   UnpublishError = 'UNPUBLISH_ERROR',
   /** Unable to generate display title for ingest item. Ingest media type '%s' is not supported. */
@@ -8692,6 +8694,8 @@ export enum MovieImageType {
   Cover_16X9 = 'COVER_16X9',
   /** Cover 1x1 */
   Cover_1X1 = 'COVER_1X1',
+  /** List 1x1 */
+  List_1X1 = 'LIST_1X1',
   /** List 9x13 */
   List_9X13 = 'LIST_9X13'
 }

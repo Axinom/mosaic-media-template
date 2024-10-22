@@ -3444,6 +3444,8 @@ export enum ErrorCodesEnum {
   UnhandledDatabaseError = 'UNHANDLED_DATABASE_ERROR',
   /** An unhandled error has occurred. Please contact the service support. */
   UnhandledError = 'UNHANDLED_ERROR',
+  /** Attempt to create or update an element failed, as it would have resulted in a duplicate element. */
+  UniqueConstraintError = 'UNIQUE_CONSTRAINT_ERROR',
   /** Unrecognized CMAF encoding [%s] found. */
   UnrecognizedCmafEncoding = 'UNRECOGNIZED_CMAF_ENCODING',
   /** Unsupported storage provider */

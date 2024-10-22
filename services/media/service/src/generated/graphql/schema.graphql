@@ -4914,6 +4914,9 @@ enum MovieImageType {
 
   """List 9x13"""
   LIST_9X13
+
+  """List 1x1"""
+  LIST_1X1
 }
 
 """
