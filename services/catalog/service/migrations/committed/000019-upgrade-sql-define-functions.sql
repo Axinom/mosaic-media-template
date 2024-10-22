@@ -1,5 +1,5 @@
---! Previous: sha1:a6c702858a035cb36f13575f70a7bc19528e7500
---! Hash: sha1:ed200bb5de90a7d4d7ab04cc493b5e8c3da35189
+--! Previous: sha1:45816381484a6ffcccb3e0c15b6fe36ed12355ff
+--! Hash: sha1:a4c17f2607e4d523ffd7e2907db2d9c88cf29993
 --! Message: upgrade SQL define functions
 
 -- first, clean up and delete all now obsolete define functions

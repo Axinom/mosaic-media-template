@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.12
--- Dumped by pg_dump version 11.12
+-- Dumped from database version 16.2
+-- Dumped by pg_dump version 16.2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -109,7 +109,7 @@ CREATE DOMAIN app_public.video_stream_type_enum AS text;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: inbox; Type: TABLE; Schema: app_hidden; Owner: -
@@ -2096,7 +2096,7 @@ $$;
 CREATE TABLE app_private.messaging_counter (
     key text NOT NULL,
     counter integer DEFAULT 1,
-    expiration_date timestamp with time zone DEFAULT timezone('utc'::text, (now() + '1 day'::interval)) NOT NULL
+    expiration_date timestamp with time zone DEFAULT ((now() + '1 day'::interval) AT TIME ZONE 'utc'::text) NOT NULL
 );
 
 
@@ -2274,17 +2274,12 @@ CREATE VIEW app_public.collection_view AS
     p.dynamic_field,
     p.extended_field,
     p.original_title,
-    c.title,
-    c.description,
-    c.synopsis
-   FROM (app_public.collection p
-     LEFT JOIN LATERAL ( SELECT l.title,
-            l.description,
-            l.synopsis
-           FROM app_public.collection_localizations l
-          WHERE ((l.collection_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title,
+    l.description,
+    l.synopsis
+   FROM (app_public.collection_localizations l
+     JOIN app_public.collection p ON ((l.collection_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -2587,17 +2582,12 @@ CREATE VIEW app_public.episode_view AS
     p.tvshow_id,
     p.intro_start_time,
     p.intro_end_time,
-    c.title,
-    c.description,
-    c.synopsis
-   FROM (app_public.episode p
-     LEFT JOIN LATERAL ( SELECT l.title,
-            l.description,
-            l.synopsis
-           FROM app_public.episode_localizations l
-          WHERE ((l.episode_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title,
+    l.description,
+    l.synopsis
+   FROM (app_public.episode_localizations l
+     JOIN app_public.episode p ON ((l.episode_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -2981,17 +2971,12 @@ CREATE VIEW app_public.movie_view AS
     p.age_rating,
     p.asset_type,
     p.asset_subtype,
-    c.title,
-    c.description,
-    c.synopsis
-   FROM (app_public.movie p
-     LEFT JOIN LATERAL ( SELECT l.title,
-            l.description,
-            l.synopsis
-           FROM app_public.movie_localizations l
-          WHERE ((l.movie_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title,
+    l.description,
+    l.synopsis
+   FROM (app_public.movie_localizations l
+     JOIN app_public.movie p ON ((l.movie_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -3285,15 +3270,11 @@ CREATE VIEW app_public.season_view AS
     p.asset_subtype,
     p.original_title,
     p.title,
-    c.description,
-    c.synopsis
-   FROM (app_public.season p
-     LEFT JOIN LATERAL ( SELECT l.description,
-            l.synopsis
-           FROM app_public.season_localizations l
-          WHERE ((l.season_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.description,
+    l.synopsis
+   FROM (app_public.season_localizations l
+     JOIN app_public.season p ON ((l.season_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -3663,17 +3644,12 @@ CREATE VIEW app_public.tvshow_view AS
     p.age_rating,
     p.asset_type,
     p.asset_subtype,
-    c.title,
-    c.description,
-    c.synopsis
-   FROM (app_public.tvshow p
-     LEFT JOIN LATERAL ( SELECT l.title,
-            l.description,
-            l.synopsis
-           FROM app_public.tvshow_localizations l
-          WHERE ((l.tvshow_id = p.id) AND ((l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)) OR (l.is_default_locale IS TRUE)))
-          ORDER BY l.is_default_locale
-         LIMIT 1) c ON (true));
+    l.title,
+    l.description,
+    l.synopsis
+   FROM (app_public.tvshow_localizations l
+     JOIN app_public.tvshow p ON ((l.tvshow_id = p.id)))
+  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
 
 
 --
@@ -4062,14 +4038,6 @@ ALTER TABLE ONLY app_public.tvshow_videos
 
 
 --
--- Name: channel_localizations unique_by_channel_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
---
-
-ALTER TABLE ONLY app_public.channel_localizations
-    ADD CONSTRAINT unique_by_channel_id_and_locale UNIQUE (channel_id, locale);
-
-
---
 -- Name: collection_localizations unique_by_collection_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -4099,14 +4067,6 @@ ALTER TABLE ONLY app_public.movie_genre_localizations
 
 ALTER TABLE ONLY app_public.movie_localizations
     ADD CONSTRAINT unique_by_movie_id_and_locale UNIQUE (movie_id, locale);
-
-
---
--- Name: program_localizations unique_by_program_id_and_locale; Type: CONSTRAINT; Schema: app_public; Owner: -
---
-
-ALTER TABLE ONLY app_public.program_localizations
-    ADD CONSTRAINT unique_by_program_id_and_locale UNIQUE (program_id, locale);
 
 
 --
@@ -4506,6 +4466,20 @@ CREATE INDEX idx_movie_localizations_movie_id ON app_public.movie_localizations 
 
 
 --
+-- Name: idx_movie_localizations_title_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_localizations_title_asc_with_id ON app_public.movie_localizations USING btree (title, movie_id);
+
+
+--
+-- Name: idx_movie_localizations_title_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_localizations_title_desc_with_id ON app_public.movie_localizations USING btree (title DESC, movie_id);
+
+
+--
 -- Name: idx_movie_movie_cast; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -4660,6 +4634,20 @@ CREATE INDEX idx_season_videos_season_id ON app_public.season_videos USING btree
 
 
 --
+-- Name: idx_trgm_collection_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_collection_localizations_title ON app_public.collection_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_episode_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_episode_localizations_title ON app_public.episode_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
 -- Name: idx_trgm_movie_extended_field; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -4667,10 +4655,38 @@ CREATE INDEX idx_trgm_movie_extended_field ON app_public.movie USING gin (extend
 
 
 --
+-- Name: idx_trgm_movie_genre_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_movie_genre_localizations_title ON app_public.movie_genre_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_movie_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_movie_localizations_title ON app_public.movie_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
 -- Name: idx_trgm_tvshow_extended_field; Type: INDEX; Schema: app_public; Owner: -
 --
 
 CREATE INDEX idx_trgm_tvshow_extended_field ON app_public.tvshow USING gin (extended_field public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_tvshow_genre_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_tvshow_genre_localizations_title ON app_public.tvshow_genre_localizations USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: idx_trgm_tvshow_localizations_title; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_trgm_tvshow_localizations_title ON app_public.tvshow_localizations USING gin (title public.gin_trgm_ops);
 
 
 --
@@ -5214,6 +5230,15 @@ GRANT USAGE ON SCHEMA ax_define TO catalog_service_gql_role;
 --
 
 GRANT USAGE ON SCHEMA ax_utils TO catalog_service_gql_role;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO catalog_service_owner;
+GRANT USAGE ON SCHEMA public TO catalog_service_gql_role;
 
 
 --
@@ -6532,92 +6557,77 @@ GRANT SELECT ON TABLE app_public.video_stream_type TO catalog_service_login;
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden REVOKE ALL ON SEQUENCES  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden GRANT SELECT,USAGE ON SEQUENCES  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden GRANT SELECT,USAGE ON SEQUENCES TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public REVOKE ALL ON SEQUENCES  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public GRANT ALL ON FUNCTIONS  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA app_public GRANT ALL ON FUNCTIONS TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: ax_define; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define REVOKE ALL ON SEQUENCES  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define GRANT SELECT,USAGE ON SEQUENCES  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define GRANT SELECT,USAGE ON SEQUENCES TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: ax_define; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define REVOKE ALL ON FUNCTIONS  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define GRANT ALL ON FUNCTIONS  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_define GRANT ALL ON FUNCTIONS TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: ax_utils; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils REVOKE ALL ON SEQUENCES  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils GRANT SELECT,USAGE ON SEQUENCES  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils GRANT SELECT,USAGE ON SEQUENCES TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: ax_utils; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils REVOKE ALL ON FUNCTIONS  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils GRANT ALL ON FUNCTIONS  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA ax_utils GRANT ALL ON FUNCTIONS TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM catalog_service_owner;
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public GRANT ALL ON FUNCTIONS  TO catalog_service_gql_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner IN SCHEMA public GRANT ALL ON FUNCTIONS TO catalog_service_gql_role;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: -; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 
 
 --
@@ -6626,7 +6636,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE catalog_service_owner REVOKE ALL ON FUNCTIONS 
 
 CREATE EVENT TRIGGER postgraphile_watch_ddl ON ddl_command_end
          WHEN TAG IN ('ALTER AGGREGATE', 'ALTER DOMAIN', 'ALTER EXTENSION', 'ALTER FOREIGN TABLE', 'ALTER FUNCTION', 'ALTER POLICY', 'ALTER SCHEMA', 'ALTER TABLE', 'ALTER TYPE', 'ALTER VIEW', 'COMMENT', 'CREATE AGGREGATE', 'CREATE DOMAIN', 'CREATE EXTENSION', 'CREATE FOREIGN TABLE', 'CREATE FUNCTION', 'CREATE INDEX', 'CREATE POLICY', 'CREATE RULE', 'CREATE SCHEMA', 'CREATE TABLE', 'CREATE TABLE AS', 'CREATE VIEW', 'DROP AGGREGATE', 'DROP DOMAIN', 'DROP EXTENSION', 'DROP FOREIGN TABLE', 'DROP FUNCTION', 'DROP INDEX', 'DROP OWNED', 'DROP POLICY', 'DROP RULE', 'DROP SCHEMA', 'DROP TABLE', 'DROP TYPE', 'DROP VIEW', 'GRANT', 'REVOKE', 'SELECT INTO')
-   EXECUTE PROCEDURE postgraphile_watch.notify_watchers_ddl();
+   EXECUTE FUNCTION postgraphile_watch.notify_watchers_ddl();
 
 
 --
@@ -6634,7 +6644,7 @@ CREATE EVENT TRIGGER postgraphile_watch_ddl ON ddl_command_end
 --
 
 CREATE EVENT TRIGGER postgraphile_watch_drop ON sql_drop
-   EXECUTE PROCEDURE postgraphile_watch.notify_watchers_drop();
+   EXECUTE FUNCTION postgraphile_watch.notify_watchers_drop();
 
 
 --

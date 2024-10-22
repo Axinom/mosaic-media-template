@@ -1,5 +1,5 @@
---! Previous: sha1:ed200bb5de90a7d4d7ab04cc493b5e8c3da35189
---! Hash: sha1:fc9415fd1858d514f88cce07b2bd0be73c05d3e8
+--! Previous: sha1:a4c17f2607e4d523ffd7e2907db2d9c88cf29993
+--! Hash: sha1:55199ee79f615a416f99e828f400242248d78eff
 --! Message: localizations-view-approach-adjusted
 
 -- Update the localization views
@@ -72,16 +72,6 @@ SELECT app_private.define_localization_view(
   'collection',
   'collection_localizations',
   'collection_id');
-
-SELECT app_private.define_localization_view(
-  'channel',
-  'channel_localizations',
-  'channel_id');
-
-SELECT app_private.define_localization_view(
-  'program',
-  'program_localizations',
-  'program_id');
 
 -- Add a table to store a list of available locales
 DROP TABLE IF EXISTS app_public.locales CASCADE;
@@ -180,19 +170,6 @@ SELECT ax_define.define_indexes_with_id(
   schemaName => 'app_public', 
   idFieldName => 'collection_id');
 
-SELECT ax_define.define_like_index('title', 'channel_localizations', 'app_public');
-SELECT ax_define.define_indexes_with_id(
-  fieldName => 'title', 
-  tableName => 'channel_localizations', 
-  schemaName => 'app_public', 
-  idFieldName => 'channel_id');
-
-SELECT ax_define.define_like_index('title', 'program_localizations', 'app_public');
-SELECT ax_define.define_indexes_with_id(
-  fieldName => 'title', 
-  tableName => 'program_localizations', 
-  schemaName => 'app_public', 
-  idFieldName => 'program_id');
 
 -- Make sure only one row can be added for each combination of locale and FK
 ALTER TABLE app_public.movie_localizations DROP CONSTRAINT IF EXISTS unique_by_movie_id_and_locale;
@@ -215,12 +192,6 @@ ALTER TABLE app_public.episode_localizations ADD CONSTRAINT unique_by_episode_id
 
 ALTER TABLE app_public.collection_localizations DROP CONSTRAINT IF EXISTS unique_by_collection_id_and_locale;
 ALTER TABLE app_public.collection_localizations ADD CONSTRAINT unique_by_collection_id_and_locale UNIQUE(collection_id, locale);
-
-ALTER TABLE app_public.channel_localizations DROP CONSTRAINT IF EXISTS unique_by_channel_id_and_locale;
-ALTER TABLE app_public.channel_localizations ADD CONSTRAINT unique_by_channel_id_and_locale UNIQUE(channel_id, locale);
-
-ALTER TABLE app_public.program_localizations DROP CONSTRAINT IF EXISTS unique_by_program_id_and_locale;
-ALTER TABLE app_public.program_localizations ADD CONSTRAINT unique_by_program_id_and_locale UNIQUE(program_id, locale);
 
 -- Add migration function to call whenever a new locale is added.
 
