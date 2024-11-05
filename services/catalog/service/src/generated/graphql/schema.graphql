@@ -1085,6 +1085,9 @@ input StringListFilter {
 
   """Any array item is greater than or equal to the specified value."""
   anyGreaterThanOrEqualTo: String
+
+  """Does the column contain the specified values? (case-insensitive)"""
+  iContains: [String]
 }
 
 """

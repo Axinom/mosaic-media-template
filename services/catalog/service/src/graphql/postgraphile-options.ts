@@ -24,7 +24,11 @@ import {
 import { AllCollectionPlugins } from '../domains/collections/plugins/all-collection-plugins';
 import { AllMoviePlugins } from '../domains/movies/plugins/all-movie-plugins';
 import { AllTvshowPlugins } from '../domains/tvshows/plugins/all-tvshow-plugins';
-import { PgSmallNumericToFloatPlugin, SmartTagsPlugin } from './plugins';
+import {
+  CustomFiltersPlugin,
+  PgSmallNumericToFloatPlugin,
+  SmartTagsPlugin,
+} from './plugins';
 
 export function buildPostgraphileOptions(
   config: Config,
@@ -52,6 +56,7 @@ export function buildPostgraphileOptions(
       AllMoviePlugins,
       AllTvshowPlugins,
       AllCollectionPlugins,
+      CustomFiltersPlugin,
       AddErrorCodesEnumPluginFactory([MosaicErrors, CommonErrors]),
     )
     .addGraphileBuildOptions({
