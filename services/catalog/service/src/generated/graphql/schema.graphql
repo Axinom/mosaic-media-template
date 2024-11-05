@@ -1085,6 +1085,9 @@ input StringListFilter {
 
   """Any array item is greater than or equal to the specified value."""
   anyGreaterThanOrEqualTo: String
+
+  """Does the column contain the specified values? (case-insensitive)"""
+  iContains: [String]
 }
 
 """
@@ -1614,9 +1617,6 @@ input MovieLicenseFilter {
 
   """Filter by the object’s `contentOwner` field."""
   contentOwner: StringFilter
-
-  """Filter by the object’s `flatCountries` field."""
-  flatCountries: StringFilter
 
   """Filter by the object’s `movie` relation."""
   movie: MovieFilter
@@ -3945,7 +3945,6 @@ type MovieLicense {
 
   """Reads a single `Movie` that is related to this `MovieLicense`."""
   movie: Movie
-  flatCountries: String
 }
 
 """A `MovieLicense` edge in the connection."""
