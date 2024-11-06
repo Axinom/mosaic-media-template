@@ -130,16 +130,16 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
-          - task: Bash@3
-            displayName:
-              'Deploy Mosaic service'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m mosaic-entitlement-int-$(tag) -n "entitlement-service-$(tag)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
+          # - task: Bash@3
+          #   displayName:
+          #     'Deploy Mosaic service'
+          #   inputs:
+          #     targetType: 'inline'
+          #     script: |
+          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m mosaic-entitlement-int-$(tag) -n "entitlement-service-$(tag)"
+          #   env:
+          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
+          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
 
       - job: Release_NFN_Acceptance
         dependsOn: Build
@@ -173,16 +173,16 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
-          - task: Bash@3
-            displayName:
-              'Deploy Mosaic service'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m nfn-mosaic-entitlement-acceptance-$(tag) -n "entitlement-service-$(tag)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
+          # - task: Bash@3
+          #   displayName:
+          #     'Deploy Mosaic service'
+          #   inputs:
+          #     targetType: 'inline'
+          #     script: |
+          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m nfn-mosaic-entitlement-acceptance-$(tag) -n "entitlement-service-$(tag)"
+          #   env:
+          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
+          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
 
       - job: Release_NFN_Production
         dependsOn: Build
@@ -216,16 +216,16 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
-          - task: Bash@3
-            displayName:
-              'Deploy Mosaic service'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m nfn-mosaic-entitlement-production-$(tag) -n "entitlement-service-$(tag)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
+          # - task: Bash@3
+          #   displayName:
+          #     'Deploy Mosaic service'
+          #   inputs:
+          #     targetType: 'inline'
+          #     script: |
+          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m nfn-mosaic-entitlement-production-$(tag) -n "entitlement-service-$(tag)"
+          #   env:
+          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
+          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
 
       - job: Release_LOV_Acceptance
         dependsOn: Build
@@ -259,16 +259,16 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
-          - task: Bash@3
-            displayName:
-              'Deploy Mosaic service'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m lov-mosaic-entitlement-acceptance-$(tag) -n "entitlement-service-$(tag)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
+          # - task: Bash@3
+          #   displayName:
+          #     'Deploy Mosaic service'
+          #   inputs:
+          #     targetType: 'inline'
+          #     script: |
+          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m lov-mosaic-entitlement-acceptance-$(tag) -n "entitlement-service-$(tag)"
+          #   env:
+          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
+          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
 
       - job: Release_LOV_Production
         dependsOn: Build
@@ -302,13 +302,13 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
-          - task: Bash@3
-            displayName:
-              'Deploy Mosaic service'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m lov-mosaic-entitlement-production-$(tag) -n "entitlement-service-$(tag)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
+          # - task: Bash@3
+          #   displayName:
+          #     'Deploy Mosaic service'
+          #   inputs:
+          #     targetType: 'inline'
+          #     script: |
+          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m lov-mosaic-entitlement-production-$(tag) -n "entitlement-service-$(tag)"
+          #   env:
+          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
+          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
