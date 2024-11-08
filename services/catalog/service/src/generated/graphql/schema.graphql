@@ -1088,6 +1088,11 @@ input StringListFilter {
 
   """Does the column contain the specified values? (case-insensitive)"""
   iContains: [String]
+
+  """
+  Does the array column contain common values with the specified array value? (case-insensitive)
+  """
+  iOverlaps: [String]
 }
 
 """
