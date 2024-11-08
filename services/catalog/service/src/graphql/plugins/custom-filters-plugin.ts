@@ -16,6 +16,13 @@ export const CustomFiltersPlugin: Plugin = (builder) => {
         sql.fragment`ARRAY(SELECT LOWER(unnest(${identifier}::text[]))) @> ARRAY(SELECT LOWER(unnest(${value}::text[])))`,
     };
 
+    connectionFilterArrayOperators.iOverlaps = {
+      description: 
+        'Does the array column contain common values with the specified array value? (case-insensitive)',
+        resolve: (identifier: SQL, value: SQL): SQL => 
+          sql.fragment`ARRAY(SELECT LOWER(unnest(${identifier}::text[]))) && ARRAY(SELECT LOWER(unnest(${value}::text[])))`,
+    }
+
     return build;
   });
 };
