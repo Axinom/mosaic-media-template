@@ -56,6 +56,9 @@ export const getConfigDefinitions = (
       env.get('RECURLY_ENTITLEMENT_API_KEY').asString() ||
       'MISSING_RECURLY_ENTITLEMENT_API_KEY',
 
+    recurlyEntitlementMockRequest: () =>
+      env.get('RECURLY_ENTITLEMENT_MOCK_REQUESTS').asBool() || false,
+
     clientIPHeaderName: () => env.get('CLIENT_IP_HEADER_NAME').asString(),
 
     geoIP2SASToken: () =>
