@@ -55,6 +55,8 @@ regularVariables:
 
   GEO_BLOCKING_FEATURE_SWITCH: true
 
+  RECURLY_ENTITLEMENT_MOCK_REQUESTS: false
+
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
 
