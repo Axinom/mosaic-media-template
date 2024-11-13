@@ -55,7 +55,6 @@ regularVariables:
 
   GEO_BLOCKING_FEATURE_SWITCH: true
 
-  RECURLY_ENTITLEMENT_MOCK_REQUESTS: false
 
 secureVariables:
   # Use this section to store any custom environment variables which contain sensitive data.
@@ -72,6 +71,7 @@ secureVariables:
   USER_SESSION_PUBLIC_KEY: '#{session-public-key}#'
 
   # Recurly entitlement service configuration
+  RECURLY_ENTITLEMENT_MOCK_REQUESTS: '#{RECURLY-ENTITLEMENT-MOCK-REQUESTS}#'
   RECURLY_ENTITLEMENT_API_URL: 'https://v3.eu.recurly.com'
   RECURLY_ENTITLEMENT_PLAYBACK_PERMISSION: '#{RECURLY-PLAYBACK-PERMISSION}#'
   RECURLY_ENTITLEMENT_API_KEY: '#{RECURLY-API-KEY}#'
