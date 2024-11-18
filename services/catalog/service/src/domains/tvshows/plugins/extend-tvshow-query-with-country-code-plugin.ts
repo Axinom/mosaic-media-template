@@ -6,21 +6,23 @@ import {
 import { select } from 'zapatos/db';
 import { CommonErrors, isLicenseValid } from '../../../common';
 import { CountryCodeQueryArgPluginFactory } from '../../../graphql/plugins';
+import { ErrorCodesEnum } from '@axinom/mosaic-message-bus/dist/generated/key-service';
 
 const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
   Query: {
-    async movie(resolve, source, args, context, resolveInfo) {
+    async tvshow(resolve, source, args, context, resolveInfo) {
+
       const result = await resolve(source, args, context, resolveInfo);
       if (!result) {
         return result;
       }
 
       const licenses = await select(
-        'movie_licenses',
-        { movie_id: args.id },
+        'tvshow_licenses',
+        { tvshow_id: args.id },
         { columns: ['countries', 'start_time', 'end_time'] },
       ).run(context.pgClient);
-      const validity = isLicenseValid(args.countryCode, 'movie', licenses);
+      const validity = isLicenseValid(args.countryCode, 'TV show', licenses);
       
       // No licenses is also fine
       if (validity === true || validity.code === CommonErrors.LicenseNotFound.code) {
@@ -33,13 +35,13 @@ const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
 });
 
 /**
- * Combines 2 plugins to support new optional `countryCode` argument for `movie` endpoint.
- * If this argument is provided - movie licenses are checked for validity.
- * If at least one license is valid - movie is returned as requested.
- * If movie has no licenses or all licenses are invalid - an error is thrown and movie is not returned.
+ * Combines 2 plugins to support new optional `countryCode` argument for `tvshow` endpoint.
+ * If this argument is provided - TV show licenses are checked for validity.
+ * If at least one license is valid - TV show is returned as requested.
+ * If TV show has no licenses or all licenses are invalid - an error is thrown and TV show is not returned.
  */
-export const ExtendMovieQueryWithCountryCodePlugin =
+export const ExtendTvShowQueryWithCountryCodePlugin =
   makePluginByCombiningPlugins(
-    CountryCodeQueryArgPluginFactory('movie'),
+    CountryCodeQueryArgPluginFactory('tvshow'),
     CheckOptionalCountryCodePlugin,
   );

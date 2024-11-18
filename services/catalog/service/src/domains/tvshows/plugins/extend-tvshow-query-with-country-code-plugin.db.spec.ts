@@ -8,25 +8,25 @@ import { insert } from 'zapatos/db';
 import { CommonErrors, DEFAULT_LOCALE_TAG } from '../../../common';
 import { createTestContext, ITestContext } from '../../../tests/test-utils';
 
-const MOVIE_REQUEST = gql`
-  query TestMovieWithCode($id: String!, $countryCode: String) {
-    movie(id: $id, countryCode: $countryCode) {
+const TV_SHOW_REQUEST = gql`
+  query TestTvShowWithCode($id: String!, $countryCode: String) {
+    tvshow(id: $id, countryCode: $countryCode) {
       id
     }
   }
 `;
 
-describe('ExtendMovieQueryWithCountryCodePlugin', () => {
+describe('ExtendTvShowQueryWithCountryCodePlugin', () => {
   let ctx: ITestContext;
   let errorOverride: jest.SpyInstance;
   let debugOverride: jest.SpyInstance;
-  const movieId = 'movie-1';
+  const tvshowId = 'tvshow-1';
 
   beforeAll(async () => {
     ctx = await createTestContext();
-    await insert('movie', { id: movieId }).run(ctx.ownerPool);
-    await insert('movie_localizations', {
-      movie_id: movieId,
+    await insert('tvshow', { id: tvshowId }).run(ctx.ownerPool);
+    await insert('tvshow_localizations', {
+      tvshow_id: tvshowId,
       locale: DEFAULT_LOCALE_TAG,
       is_default_locale: true,
       title: 'test',
@@ -43,56 +43,71 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
   });
 
   afterEach(async () => {
-    await ctx?.truncate('movie_licenses');
+    await ctx?.truncate('tvshow_licenses');
     jest.restoreAllMocks();
   });
 
   afterAll(async () => {
-    await ctx?.truncate('movie');
+    await ctx?.truncate('tvshow');
     await ctx.dispose();
   });
 
   describe('Error cases', () => {
-    it('movie that does not exist -> license not checked, empty response returned', async () => {
+    it('tvshow that does not exist -> license not checked, empty response returned', async () => {
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: `${movieId}10`,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: `${tvshowId}10`,
         countryCode: 'DE',
       });
 
       // Assert
-      expect(resp?.data?.movie).toBeFalsy();
+      expect(resp?.data?.tvshow).toBeFalsy();
       expect(resp.errors).toBeFalsy();
+    });
+
+    it('no license -> tv show returned', async () => {
+      // Act
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
+        countryCode: 'DE',
+      });
+
+      // Assert
+      expect(resp.errors).toBeFalsy();
+
+      expect(resp?.data?.tvshow.id).toEqual(tvshowId);
+      expect(errorOverride).toHaveBeenCalledTimes(0);
+      expect(debugOverride).toHaveBeenCalledTimes(0);
     });
 
     it('license with no values set -> error for not valid license', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
-      expect(resp?.data?.movie).toBeFalsy();
+      expect(resp?.data?.tvshow).toBeFalsy();
       expect(resp.errors).toMatchObject([
         {
           code: CommonErrors.LicenseIsNotValid.code,
           details: undefined,
           message:
-            'The movie does not have a valid license in your current country (DE)',
-          path: ['movie'],
+            'The TV show does not have a valid license in your current country (DE)',
+          path: ['tvshow'],
         },
       ]);
 
       const loggedObject = getFirstMockResult<any>(debugOverride);
       expect(loggedObject).toMatchObject({
         message:
-          'The movie does not have a valid license in your current country (DE)',
+          'The TV show does not have a valid license in your current country (DE)',
         loglevel: 'DEBUG',
         details: { code: CommonErrors.LicenseIsNotValid.code },
       });
@@ -100,33 +115,33 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
 
     it('license with only start date after current date -> error for not valid license', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         start_time: createOffsetDate(60 * 60),
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
-      expect(resp?.data?.movie).toBeFalsy();
+      expect(resp?.data?.tvshow).toBeFalsy();
       expect(resp.errors).toMatchObject([
         {
           code: CommonErrors.LicenseIsNotValid.code,
           details: undefined,
           message:
-            'The movie does not have a valid license in your current country (DE)',
-          path: ['movie'],
+            'The TV show does not have a valid license in your current country (DE)',
+          path: ['tvshow'],
         },
       ]);
 
       const loggedObject = getFirstMockResult<any>(debugOverride);
       expect(loggedObject).toMatchObject({
         message:
-          'The movie does not have a valid license in your current country (DE)',
+          'The TV show does not have a valid license in your current country (DE)',
         loglevel: 'DEBUG',
         details: { code: CommonErrors.LicenseIsNotValid.code },
       });
@@ -134,33 +149,33 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
 
     it('license with only end date before current date -> error for not valid license', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         end_time: createOffsetDate(-(60 * 60)),
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
-      expect(resp?.data?.movie).toBeFalsy();
+      expect(resp?.data?.tvshow).toBeFalsy();
       expect(resp.errors).toMatchObject([
         {
           code: CommonErrors.LicenseIsNotValid.code,
           details: undefined,
           message:
-            'The movie does not have a valid license in your current country (DE)',
-          path: ['movie'],
+            'The TV show does not have a valid license in your current country (DE)',
+          path: ['tvshow'],
         },
       ]);
 
       const loggedObject = getFirstMockResult<any>(debugOverride);
       expect(loggedObject).toMatchObject({
         message:
-          'The movie does not have a valid license in your current country (DE)',
+          'The TV show does not have a valid license in your current country (DE)',
         loglevel: 'DEBUG',
         details: { code: CommonErrors.LicenseIsNotValid.code },
       });
@@ -168,34 +183,34 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
 
     it('license with start and end dates with current date before start -> error for not valid license', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         start_time: createOffsetDate(60 * 60),
         end_time: createOffsetDate(60 * 60 * 60),
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
-      expect(resp?.data?.movie).toBeFalsy();
+      expect(resp?.data?.tvshow).toBeFalsy();
       expect(resp.errors).toMatchObject([
         {
           code: CommonErrors.LicenseIsNotValid.code,
           details: undefined,
           message:
-            'The movie does not have a valid license in your current country (DE)',
-          path: ['movie'],
+            'The TV show does not have a valid license in your current country (DE)',
+          path: ['tvshow'],
         },
       ]);
 
       const loggedObject = getFirstMockResult<any>(debugOverride);
       expect(loggedObject).toMatchObject({
         message:
-          'The movie does not have a valid license in your current country (DE)',
+          'The TV show does not have a valid license in your current country (DE)',
         loglevel: 'DEBUG',
         details: { code: CommonErrors.LicenseIsNotValid.code },
       });
@@ -203,34 +218,34 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
 
     it('license with start and end dates with current date after end -> error for not valid license', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         start_time: createOffsetDate(-(60 * 60 * 60)),
         end_time: createOffsetDate(-(60 * 60)),
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
-      expect(resp?.data?.movie).toBeFalsy();
+      expect(resp?.data?.tvshow).toBeFalsy();
       expect(resp.errors).toMatchObject([
         {
           code: CommonErrors.LicenseIsNotValid.code,
           details: undefined,
           message:
-            'The movie does not have a valid license in your current country (DE)',
-          path: ['movie'],
+            'The TV show does not have a valid license in your current country (DE)',
+          path: ['tvshow'],
         },
       ]);
 
       const loggedObject = getFirstMockResult<any>(debugOverride);
       expect(loggedObject).toMatchObject({
         message:
-          'The movie does not have a valid license in your current country (DE)',
+          'The TV show does not have a valid license in your current country (DE)',
         loglevel: 'DEBUG',
         details: { code: CommonErrors.LicenseIsNotValid.code },
       });
@@ -238,35 +253,35 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
 
     it('license with valid period, but no fitting country -> error for not valid license', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         start_time: createOffsetDate(-(60 * 60)),
         end_time: createOffsetDate(60 * 60),
         countries: ['EE', 'ER', 'BE'],
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
-      expect(resp?.data?.movie).toBeFalsy();
+      expect(resp?.data?.tvshow).toBeFalsy();
       expect(resp.errors).toMatchObject([
         {
           code: CommonErrors.LicenseIsNotValid.code,
           details: undefined,
           message:
-            'The movie does not have a valid license in your current country (DE)',
-          path: ['movie'],
+            'The TV show does not have a valid license in your current country (DE)',
+          path: ['tvshow'],
         },
       ]);
 
       const loggedObject = getFirstMockResult<any>(debugOverride);
       expect(loggedObject).toMatchObject({
         message:
-          'The movie does not have a valid license in your current country (DE)',
+          'The TV show does not have a valid license in your current country (DE)',
         loglevel: 'DEBUG',
         details: { code: CommonErrors.LicenseIsNotValid.code },
       });
@@ -274,33 +289,33 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
 
     it('license with not matching country codes without start and end dates -> error for not valid license', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         countries: ['EE', 'ER', 'BE'],
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
-      expect(resp?.data?.movie).toBeFalsy();
+      expect(resp?.data?.tvshow).toBeFalsy();
       expect(resp.errors).toMatchObject([
         {
           code: CommonErrors.LicenseIsNotValid.code,
           details: undefined,
           message:
-            'The movie does not have a valid license in your current country (DE)',
-          path: ['movie'],
+            'The TV show does not have a valid license in your current country (DE)',
+          path: ['tvshow'],
         },
       ]);
 
       const loggedObject = getFirstMockResult<any>(debugOverride);
       expect(loggedObject).toMatchObject({
         message:
-          'The movie does not have a valid license in your current country (DE)',
+          'The TV show does not have a valid license in your current country (DE)',
         loglevel: 'DEBUG',
         details: { code: CommonErrors.LicenseIsNotValid.code },
       });
@@ -308,176 +323,161 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
   });
 
   describe('Success cases', () => {
-    // Control case to make sure that not passing country code also triggers validation logic
-    it('movie without license, no code passed -> movie returned', async () => {
+    // Control case to make sure that passing country code triggers validation logic
+    it('tvshow without license, no code passed -> tvshow returned', async () => {
       // Act
       const resp = await ctx.runGqlQuery(
         gql`
-          query TestMovieWithoutCode($id: String!) {
-            movie(id: $id) {
+          query TestTvShowWithoutCode($id: String!) {
+            tvshow(id: $id) {
               id
             }
           }
         `,
-        { id: movieId },
+        { id: tvshowId },
       );
 
       // Assert
       expect(resp.errors).toBeFalsy();
 
-      expect(resp?.data?.movie.id).toEqual(movieId);
+      expect(resp?.data?.tvshow.id).toEqual(tvshowId);
       expect(errorOverride).toHaveBeenCalledTimes(0);
       expect(debugOverride).toHaveBeenCalledTimes(0);
     });
 
-    it('no license -> -> movie returned', async () => {
-      // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
-        countryCode: 'DE',
-      });
-
-      // Assert
-      expect(resp.errors).toBeFalsy();
-
-      expect(resp?.data?.movie.id).toEqual(movieId);
-      expect(errorOverride).toHaveBeenCalledTimes(0);
-      expect(debugOverride).toHaveBeenCalledTimes(0);
-    });
-
-    it('license with only start date before current date -> movie returned', async () => {
+    it('license with only start date before current date -> tvshow returned', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         start_time: createOffsetDate(-(60 * 60)),
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
       expect(resp.errors).toBeFalsy();
 
-      expect(resp?.data?.movie.id).toEqual(movieId);
+      expect(resp?.data?.tvshow.id).toEqual(tvshowId);
       expect(errorOverride).toHaveBeenCalledTimes(0);
       expect(debugOverride).toHaveBeenCalledTimes(0);
     });
 
-    it('license with only end date after current date -> movie returned', async () => {
+    it('license with only end date after current date -> tvshow returned', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         end_time: createOffsetDate(60 * 60),
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
       expect(resp.errors).toBeFalsy();
 
-      expect(resp?.data?.movie.id).toEqual(movieId);
+      expect(resp?.data?.tvshow.id).toEqual(tvshowId);
       expect(errorOverride).toHaveBeenCalledTimes(0);
       expect(debugOverride).toHaveBeenCalledTimes(0);
     });
 
-    it('license with valid period and no specified countries -> movie returned', async () => {
+    it('license with valid period and no specified countries -> tvshow returned', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         start_time: createOffsetDate(-(60 * 60)),
         end_time: createOffsetDate(60 * 60),
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
       expect(resp.errors).toBeFalsy();
 
-      expect(resp?.data?.movie.id).toEqual(movieId);
+      expect(resp?.data?.tvshow.id).toEqual(tvshowId);
       expect(errorOverride).toHaveBeenCalledTimes(0);
       expect(debugOverride).toHaveBeenCalledTimes(0);
     });
 
-    it('license with valid period and matching country code -> movie returned', async () => {
+    it('license with valid period and matching country code -> tvshow returned', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         start_time: createOffsetDate(-(60 * 60)),
         end_time: createOffsetDate(60 * 60),
         countries: ['EE', 'ER', 'BE', 'DE'],
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
       expect(resp.errors).toBeFalsy();
 
-      expect(resp?.data?.movie.id).toEqual(movieId);
+      expect(resp?.data?.tvshow.id).toEqual(tvshowId);
       expect(errorOverride).toHaveBeenCalledTimes(0);
       expect(debugOverride).toHaveBeenCalledTimes(0);
     });
 
-    it('license with matching country code and without start and end dates -> movie returned', async () => {
+    it('license with matching country code and without start and end dates -> tvshow returned', async () => {
       // Arrange
-      await insert('movie_licenses', {
-        movie_id: movieId,
+      await insert('tvshow_licenses', {
+        tvshow_id: tvshowId,
         countries: ['DE'],
       }).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
       expect(resp.errors).toBeFalsy();
 
-      expect(resp?.data?.movie.id).toEqual(movieId);
+      expect(resp?.data?.tvshow.id).toEqual(tvshowId);
       expect(errorOverride).toHaveBeenCalledTimes(0);
       expect(debugOverride).toHaveBeenCalledTimes(0);
     });
 
-    it('two licenses, one valid and one invalid -> movie returned', async () => {
+    it('two licenses, one valid and one invalid -> tvshow returned', async () => {
       // Arrange
-      await insert('movie_licenses', [
+      await insert('tvshow_licenses', [
         {
-          movie_id: movieId,
+          tvshow_id: tvshowId,
           start_time: createOffsetDate(-(60 * 60)),
           end_time: createOffsetDate(60 * 60),
           countries: ['EE', 'ER', 'BE'],
         },
         {
-          movie_id: movieId,
+          tvshow_id: tvshowId,
           countries: ['DE'],
         },
       ]).run(ctx.ownerPool);
 
       // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
+      const resp = await ctx.runGqlQuery(TV_SHOW_REQUEST, {
+        id: tvshowId,
         countryCode: 'DE',
       });
 
       // Assert
       expect(resp.errors).toBeFalsy();
 
-      expect(resp?.data?.movie.id).toEqual(movieId);
+      expect(resp?.data?.tvshow.id).toEqual(tvshowId);
       expect(errorOverride).toHaveBeenCalledTimes(0);
       expect(debugOverride).toHaveBeenCalledTimes(0);
     });

@@ -1,4 +1,4 @@
-import { MosaicErrorInfo } from '@axinom/mosaic-service-common';
+import { isNullOrWhitespace, MosaicErrorInfo } from '@axinom/mosaic-service-common';
 import { JSONOnlyColsForTable } from 'zapatos/db';
 import { CommonErrors } from '../errors';
 
@@ -28,13 +28,14 @@ export const isLicenseValid = (
       messageParams: [identifier],
     };
   }
-
+  
   const date = new Date();
   const validLicenseExists = licenses.some(
     (license: License) =>
       (license.countries || license.start_time || license.end_time) && // Must have at least one property defined
       (!license.countries || // Must have empty countries (valid for all countries), or must include user countryCode
         license.countries.length === 0 ||
+        isNullOrWhitespace(countryCode) ||
         license.countries.includes(countryCode)) &&
       date >= (license.start_time ? new Date(license.start_time) : minDate) && //Current date must be after license start date
       date < (license.end_time ? new Date(license.end_time) : maxDate), // Current date must be before license end date

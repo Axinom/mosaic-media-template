@@ -319,7 +319,7 @@ type Query {
   movie(id: String!, countryCode: String): Movie
   season(id: String!): Season
   tvshowGenre(id: String!): TvshowGenre
-  tvshow(id: String!): Tvshow
+  tvshow(id: String!, countryCode: String): Tvshow
 }
 
 """A connection to a list of `Channel` values."""
