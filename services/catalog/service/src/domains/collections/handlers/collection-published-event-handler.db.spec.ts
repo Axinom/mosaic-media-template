@@ -65,25 +65,25 @@ describe('CollectionPublishEventHandler', () => {
       ).run(ctx.ownerPool);
       expect(itemRelations).toMatchObject([
         {
-          collection_id: payload.content_id,
+          collection_fk_id: payload.content_id,
           movie_id: 'movie-1',
           order_no: 1,
           relation_type: 'MOVIE',
         },
         {
-          collection_id: payload.content_id,
+          collection_fk_id: payload.content_id,
           order_no: 2,
           relation_type: 'TVSHOW',
           tvshow_id: 'tvshow-1',
         },
         {
-          collection_id: payload.content_id,
+          collection_fk_id: payload.content_id,
           order_no: 3,
           relation_type: 'SEASON',
           season_id: 'season-1',
         },
         {
-          collection_id: payload.content_id,
+          collection_fk_id: payload.content_id,
           episode_id: 'episode-1',
           order_no: 4,
           relation_type: 'EPISODE',
