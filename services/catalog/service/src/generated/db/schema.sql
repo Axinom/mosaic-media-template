@@ -2234,7 +2234,7 @@ CREATE TABLE app_public.collection_localizations (
     collection_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL,
+    title text NOT NULL COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
@@ -2423,7 +2423,7 @@ CREATE TABLE app_public.episode_localizations (
     episode_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL,
+    title text NOT NULL COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
@@ -2672,7 +2672,7 @@ CREATE TABLE app_public.movie_genre_localizations (
     movie_genre_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL
+    title text NOT NULL COLLATE pg_catalog."und-x-icu"
 );
 
 
@@ -2813,7 +2813,7 @@ CREATE TABLE app_public.movie_localizations (
     movie_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL,
+    title text NOT NULL COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
@@ -3347,7 +3347,7 @@ CREATE TABLE app_public.tvshow_genre_localizations (
     tvshow_genre_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL
+    title text NOT NULL COLLATE pg_catalog."und-x-icu"
 );
 
 
@@ -3488,7 +3488,7 @@ CREATE TABLE app_public.tvshow_localizations (
     tvshow_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL,
+    title text NOT NULL COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
