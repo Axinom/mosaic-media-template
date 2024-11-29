@@ -498,7 +498,8 @@
         "title": "season_localization",
         "required": [
           "is_default_locale",
-          "language_tag"
+          "language_tag",
+          "title"
         ],
         "properties": {
           "is_default_locale": {
@@ -508,6 +509,10 @@
           "language_tag": {
             "type": "string",
             "description": "The locale for which the values are localized."
+          },
+          "title": {
+            "type": "string",
+            "description": "The localized title of this season."
           },
           "description": {
             "type": [

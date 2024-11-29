@@ -8,6 +8,10 @@ export interface SeasonLocalization {
    */
   language_tag: string;
   /**
+   * The localized title of this season.
+   */
+  title: string;
+  /**
    * The localized description of this season.
    */
   description?: string | null;
