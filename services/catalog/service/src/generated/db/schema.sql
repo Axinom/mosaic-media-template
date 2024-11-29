@@ -3011,8 +3011,7 @@ CREATE TABLE app_public.season (
     age_rating text,
     asset_type integer,
     asset_subtype text,
-    original_title text,
-    title text
+    original_title text
 );
 
 
@@ -3120,7 +3119,8 @@ CREATE TABLE app_public.season_localizations (
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
     description text,
-    synopsis text
+    synopsis text,
+    title text NOT NULL
 );
 
 
@@ -3272,9 +3272,9 @@ CREATE VIEW app_public.season_view AS
     p.asset_type,
     p.asset_subtype,
     p.original_title,
-    p.title,
     COALESCE(pl.description, dl.description) AS description,
-    COALESCE(pl.synopsis, dl.synopsis) AS synopsis
+    COALESCE(pl.synopsis, dl.synopsis) AS synopsis,
+    COALESCE(pl.title, dl.title) AS title
    FROM ((app_public.season p
      LEFT JOIN app_public.season_localizations pl ON (((pl.season_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
      LEFT JOIN app_public.season_localizations dl ON (((dl.season_id = p.id) AND (dl.locale = 'default'::text))));
