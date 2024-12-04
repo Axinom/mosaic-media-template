@@ -553,6 +553,7 @@ export type GetImagesTagsValuesConnection = {
 /** @permissions: IMAGES_VIEW,IMAGES_EDIT,ADMIN */
 export type Image = {
   __typename?: 'Image';
+  altText?: Maybe<Scalars['String']>;
   createdDate: Scalars['Datetime'];
   createdUser: Scalars['String'];
   filename: Scalars['String'];
@@ -916,6 +917,11 @@ export enum ImageAcquisitionProfilesOrderBy {
 
 /** A condition to be used against `Image` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type ImageCondition = {
+  /**
+   * Checks for equality with the object’s `altText` field.
+   * @maxLength(1000)
+   */
+  altText?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `createdDate` field. */
   createdDate?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `createdUser` field. */
@@ -958,6 +964,8 @@ export type ImageCondition = {
 
 /** A filter to be used against `Image` object types. All fields are combined with a logical ‘and.’ */
 export type ImageFilter = {
+  /** Filter by the object’s `altText` field. */
+  altText?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<ImageFilter>>;
   /** Filter by the object’s `createdDate` field. */
@@ -1008,6 +1016,8 @@ export type ImageFilter = {
 
 /** Represents an update to a `Image`. Fields that are set will be updated. */
 export type ImagePatch = {
+  /** @maxLength(1000) */
+  altText?: InputMaybe<Scalars['String']>;
   focalX?: InputMaybe<Scalars['BigFloat']>;
   focalY?: InputMaybe<Scalars['BigFloat']>;
   isArchived?: InputMaybe<Scalars['Boolean']>;
@@ -1045,6 +1055,8 @@ export type ImagesEdge = {
 
 /** Methods to use when ordering `Image`. */
 export enum ImagesOrderBy {
+  AltTextAsc = 'ALT_TEXT_ASC',
+  AltTextDesc = 'ALT_TEXT_DESC',
   CreatedDateAsc = 'CREATED_DATE_ASC',
   CreatedDateDesc = 'CREATED_DATE_DESC',
   CreatedUserAsc = 'CREATED_USER_ASC',
@@ -1181,6 +1193,8 @@ export type ImagesTagsEdge = {
 
 /** Methods to use when ordering `ImagesTag`. */
 export enum ImagesTagsOrderBy {
+  ImageByImageIdAltTextAsc = 'IMAGE_BY_IMAGE_ID__ALT_TEXT_ASC',
+  ImageByImageIdAltTextDesc = 'IMAGE_BY_IMAGE_ID__ALT_TEXT_DESC',
   ImageByImageIdCreatedDateAsc = 'IMAGE_BY_IMAGE_ID__CREATED_DATE_ASC',
   ImageByImageIdCreatedDateDesc = 'IMAGE_BY_IMAGE_ID__CREATED_DATE_DESC',
   ImageByImageIdCreatedUserAsc = 'IMAGE_BY_IMAGE_ID__CREATED_USER_ASC',

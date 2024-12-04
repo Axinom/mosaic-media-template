@@ -69,14 +69,14 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
       size: '80px',
     },
     { label: 'Title', propertyName: 'title', size: '2fr' },
-    { label: 'Description', propertyName: 'title', size: '2fr' },
-    { label: 'Type', propertyName: 'title', size: '2fr' },
+    { label: 'Description', propertyName: 'description', size: '2fr' },
+    { label: 'Type', propertyName: '__typename' },
     {
       label: 'Last Modified',
       propertyName: 'updatedDate',
       render: DateRenderer,
     },
-    { label: 'Modified By', propertyName: 'title', size: '2fr' },
+    { label: 'Modified By', propertyName: 'updatedUser', size: '2fr' },
     { label: 'External ID', propertyName: 'externalId' },
   ];
 

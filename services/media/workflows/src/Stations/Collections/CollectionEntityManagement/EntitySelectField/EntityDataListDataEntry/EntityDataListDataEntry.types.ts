@@ -16,9 +16,7 @@ export interface Option extends UseModalResult {
 }
 
 export type UseAddOptionsResult = (
-  onActionClicked: DynamicListDataEntryProps<
-    CollectionRelatedEntity
-  >['onActionClicked'],
+  onActionClicked: DynamicListDataEntryProps<CollectionRelatedEntity>['onActionClicked'],
   excludes: Record<string, number[]>,
   sortOrder: number,
 ) => Option[];

@@ -10,6 +10,10 @@ import {
   SnapshotsReadOperations,
 } from '../publishing';
 import {
+  AdministrationMutateOperations,
+  AdministrationReadOperations,
+} from './administration';
+import {
   AgeRatingsReadOperations,
   AgeRatingsWriteOperations,
 } from './ageratings';
@@ -24,6 +28,7 @@ import {
   ContentOwnersReadOperations,
   ContentOwnersWriteOperations,
 } from './contentowners';
+import { CountriesReadOperations, CountriesWriteOperations } from './countries';
 import {
   MovieGenresMutateOperations,
   MovieGenresReadOperations,
@@ -44,7 +49,6 @@ import {
   TvShowsMutateOperations,
   TvShowsReadOperations,
 } from './tvshows';
-import { AdministrationMutateOperations, AdministrationReadOperations } from './administration';
 
 /**
  * **IMPORTANT**
@@ -86,7 +90,7 @@ const permissions = [
       ...TvshowsDevOperations,
       ...CollectionDevOperations,
       ...AdministrationReadOperations,
-      ...AdministrationMutateOperations
+      ...AdministrationMutateOperations,
     ],
   },
   {
@@ -95,7 +99,7 @@ const permissions = [
     gqlOperations: [
       ...MovieGenresReadOperations,
       ...TvShowGenresReadOperations,
-      ...AdministrationReadOperations
+      ...AdministrationReadOperations,
     ],
   },
   {
@@ -106,7 +110,7 @@ const permissions = [
       ...MovieGenresMutateOperations,
       ...TvShowGenresReadOperations,
       ...TvShowGenresMutateOperations,
-      ...AdministrationMutateOperations
+      ...AdministrationMutateOperations,
     ],
   },
   {
@@ -188,6 +192,16 @@ const permissions = [
     key: 'CONTENT_OWNERS_EDIT',
     title: 'ContentOwners: Edit',
     gqlOperations: [...ContentOwnersWriteOperations],
+  },
+  {
+    key: 'COUNTRIES_VIEW',
+    title: 'Countries: View',
+    gqlOperations: [...CountriesReadOperations],
+  },
+  {
+    key: 'COUNTRIES_EDIT',
+    title: 'Countries: Edit',
+    gqlOperations: [...CountriesWriteOperations],
   },
 ] as const;
 

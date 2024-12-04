@@ -40,6 +40,74 @@ type Query {
     filter: AgeRatingFilter
   ): AgeRatingsConnection
 
+  """Reads and enables pagination through a set of `AllCountryType`."""
+  allCountryTypes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `AllCountryType`."""
+    orderBy: [AllCountryTypesOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AllCountryTypeCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AllCountryTypeFilter
+  ): AllCountryTypesConnection
+
+  """Reads and enables pagination through a set of `CollectionCountry`."""
+  collectionCountries(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CollectionCountry`."""
+    orderBy: [CollectionCountriesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CollectionCountryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CollectionCountryFilter
+  ): CollectionCountriesConnection
+
   """Reads and enables pagination through a set of `CollectionRelation`."""
   collectionRelations(
     """Only read the first `n` values of the set."""
@@ -209,6 +277,74 @@ type Query {
     """
     filter: ContentOwnerFilter
   ): ContentOwnersConnection
+
+  """Reads and enables pagination through a set of `CountryGroup`."""
+  countryGroups(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CountryGroup`."""
+    orderBy: [CountryGroupsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CountryGroupCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CountryGroupFilter
+  ): CountryGroupsConnection
+
+  """Reads and enables pagination through a set of `CountryGroupsCountry`."""
+  countryGroupsCountries(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CountryGroupsCountry`."""
+    orderBy: [CountryGroupsCountriesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CountryGroupsCountryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CountryGroupsCountryFilter
+  ): CountryGroupsCountriesConnection
 
   """Reads and enables pagination through a set of `Episode`."""
   episodes(
@@ -1720,11 +1856,13 @@ type Query {
     filter: TvshowsTvshowGenreFilter
   ): TvshowsTvshowGenresConnection
   ageRating(id: UUID!): AgeRating
+  collectionCountry(id: UUID!): CollectionCountry
   collectionRelation(id: Int!): CollectionRelation
   collection(id: Int!): Collection
   collectionByExternalId(externalId: String!): Collection
   collectionsTag(collectionId: Int!, name: String!): CollectionsTag
   contentOwner(id: UUID!): ContentOwner
+  countryGroup(id: UUID!): CountryGroup
   episode(id: Int!): Episode
   episodeByExternalId(externalId: String!): Episode
   episodesCast(episodeId: Int!, name: String!): EpisodesCast
@@ -2519,54 +2657,366 @@ input DatetimeFilter {
   greaterThanOrEqualTo: Datetime
 }
 
-"""
-A connection to a list of `CollectionRelation` values.
-@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
-"""
-type CollectionRelationsConnection {
-  """A list of `CollectionRelation` objects."""
-  nodes: [CollectionRelation!]!
+"""A connection to a list of `AllCountryType` values."""
+type AllCountryTypesConnection {
+  """A list of `AllCountryType` objects."""
+  nodes: [AllCountryType!]!
 
   """
-  A list of edges which contains the `CollectionRelation` and cursor to aid in pagination.
+  A list of edges which contains the `AllCountryType` and cursor to aid in pagination.
   """
-  edges: [CollectionRelationsEdge!]!
+  edges: [AllCountryTypesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AllCountryType` you could get from the connection."""
+  totalCount: Int!
+}
+
+""""""
+type AllCountryType {
+  id: String
+  name: String
+}
+
+"""A `AllCountryType` edge in the connection."""
+type AllCountryTypesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AllCountryType` at the end of the edge."""
+  node: AllCountryType!
+}
+
+"""Methods to use when ordering `AllCountryType`."""
+enum AllCountryTypesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+}
+
+"""
+A condition to be used against `AllCountryType` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AllCountryTypeCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: String
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""
+A filter to be used against `AllCountryType` object types. All fields are combined with a logical ‘and.’
+"""
+input AllCountryTypeFilter {
+  """Filter by the object’s `id` field."""
+  id: StringFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [AllCountryTypeFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AllCountryTypeFilter!]
+
+  """Negates the expression."""
+  not: AllCountryTypeFilter
+}
+
+"""A connection to a list of `CollectionCountry` values."""
+type CollectionCountriesConnection {
+  """A list of `CollectionCountry` objects."""
+  nodes: [CollectionCountry!]!
+
+  """
+  A list of edges which contains the `CollectionCountry` and cursor to aid in pagination.
+  """
+  edges: [CollectionCountriesEdge!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """
-  The count of *all* `CollectionRelation` you could get from the connection.
+  The count of *all* `CollectionCountry` you could get from the connection.
   """
   totalCount: Int!
 }
 
-"""@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN"""
-type CollectionRelation {
-  id: Int!
+""""""
+type CollectionCountry {
+  id: UUID!
   collectionId: Int!
-  sortOrder: Int!
-  movieId: Int
-  tvshowId: Int
-  seasonId: Int
-  episodeId: Int
+  countryGroupId: UUID
+  countryId: IsoAlphaTwoCountryCodes
 
   """
-  Reads a single `Collection` that is related to this `CollectionRelation`.
+  Reads a single `Collection` that is related to this `CollectionCountry`.
   """
   collection: Collection
 
-  """Reads a single `Movie` that is related to this `CollectionRelation`."""
-  movie: Movie
+  """
+  Reads a single `CountryGroup` that is related to this `CollectionCountry`.
+  """
+  countryGroup: CountryGroup
+}
 
-  """Reads a single `Tvshow` that is related to this `CollectionRelation`."""
-  tvshow: Tvshow
-
-  """Reads a single `Season` that is related to this `CollectionRelation`."""
-  season: Season
-
-  """Reads a single `Episode` that is related to this `CollectionRelation`."""
-  episode: Episode
+enum IsoAlphaTwoCountryCodes {
+  AW
+  AF
+  AO
+  AI
+  AX
+  AL
+  AD
+  AE
+  AR
+  AM
+  AS
+  AQ
+  TF
+  AG
+  AU
+  AT
+  AZ
+  BI
+  BE
+  BJ
+  BQ
+  BF
+  BD
+  BG
+  BH
+  BS
+  BA
+  BL
+  BY
+  BZ
+  BM
+  BO
+  BR
+  BB
+  BN
+  BT
+  BV
+  BW
+  CF
+  CA
+  CC
+  CH
+  CL
+  CN
+  CI
+  CM
+  CD
+  CG
+  CK
+  CO
+  KM
+  CV
+  CR
+  CU
+  CW
+  CX
+  KY
+  CY
+  CZ
+  DE
+  DJ
+  DM
+  DK
+  DO
+  DZ
+  EC
+  EG
+  ER
+  EH
+  ES
+  EE
+  ET
+  FI
+  FJ
+  FK
+  FR
+  FO
+  FM
+  GA
+  GB
+  GE
+  GG
+  GH
+  GI
+  GN
+  GP
+  GM
+  GW
+  GQ
+  GR
+  GD
+  GL
+  GT
+  GF
+  GU
+  GY
+  HK
+  HM
+  HN
+  HR
+  HT
+  HU
+  ID
+  IM
+  IN
+  IO
+  IE
+  IR
+  IQ
+  IS
+  IL
+  IT
+  JM
+  JE
+  JO
+  JP
+  KZ
+  KE
+  KG
+  KH
+  KI
+  KN
+  KR
+  KW
+  LA
+  LB
+  LR
+  LY
+  LC
+  LI
+  LK
+  LS
+  LT
+  LU
+  LV
+  MO
+  MF
+  MA
+  MC
+  MD
+  MG
+  MV
+  MX
+  MH
+  MK
+  ML
+  MT
+  MM
+  ME
+  MN
+  MP
+  MZ
+  MR
+  MS
+  MQ
+  MU
+  MW
+  MY
+  YT
+  NA
+  NC
+  NE
+  NF
+  NG
+  NI
+  NU
+  NL
+  NO
+  NP
+  NR
+  NZ
+  OM
+  PK
+  PA
+  PN
+  PE
+  PH
+  PW
+  PG
+  PL
+  PR
+  KP
+  PT
+  PY
+  PS
+  PF
+  QA
+  RE
+  RO
+  RU
+  RW
+  SA
+  SD
+  SN
+  SG
+  GS
+  SH
+  SJ
+  SB
+  SL
+  SV
+  SM
+  SO
+  PM
+  RS
+  SS
+  ST
+  SR
+  SK
+  SI
+  SE
+  SZ
+  SX
+  SC
+  SY
+  TC
+  TD
+  TG
+  TH
+  TJ
+  TK
+  TM
+  TL
+  TO
+  TT
+  TN
+  TR
+  TV
+  TW
+  TZ
+  UG
+  UA
+  UM
+  UY
+  US
+  UZ
+  VA
+  VC
+  VE
+  VG
+  VI
+  VN
+  VU
+  WF
+  WS
+  YE
+  ZA
+  ZM
+  ZW
 }
 
 """@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN"""
@@ -2585,6 +3035,7 @@ type Collection {
   publishStatus: PublishStatus!
   languages: [String]
   assetSubtype: AssetSubtype!
+  extendedField: String
 
   """Reads and enables pagination through a set of `CollectionRelation`."""
   collectionRelations(
@@ -2721,6 +3172,40 @@ type Collection {
     """
     filter: CollectionsSnapshotFilter
   ): CollectionsSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `CollectionCountry`."""
+  collectionCountries(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CollectionCountry`."""
+    orderBy: [CollectionCountriesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CollectionCountryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CollectionCountryFilter
+  ): CollectionCountriesConnection!
 }
 
 enum PublishStatus {
@@ -2775,120 +3260,562 @@ enum AssetSubtype {
   UNKNOWN
 }
 
-"""Methods to use when ordering `CollectionRelation`."""
-enum CollectionRelationsOrderBy {
+"""
+A connection to a list of `CollectionRelation` values.
+@permissions: COLLECTION_READER,COLLECTION_EDITOR,ADMIN
+"""
+type CollectionRelationsConnection {
+  """A list of `CollectionRelation` objects."""
+  nodes: [CollectionRelation!]!
+
+  """
+  A list of edges which contains the `CollectionRelation` and cursor to aid in pagination.
+  """
+  edges: [CollectionRelationsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CollectionRelation` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""@permissions: COLLECTION_READER,COLLECTION_EDITOR,ADMIN"""
+type CollectionRelation {
+  id: Int!
+  collectionId: Int!
+  sortOrder: Int!
+  movieId: Int
+  tvshowId: Int
+  seasonId: Int
+  episodeId: Int
+  childCollectionId: Int
+
+  """
+  Reads a single `Collection` that is related to this `CollectionRelation`.
+  """
+  collection: Collection
+
+  """Reads a single `Movie` that is related to this `CollectionRelation`."""
+  movie: Movie
+
+  """Reads a single `Tvshow` that is related to this `CollectionRelation`."""
+  tvshow: Tvshow
+
+  """Reads a single `Season` that is related to this `CollectionRelation`."""
+  season: Season
+
+  """Reads a single `Episode` that is related to this `CollectionRelation`."""
+  episode: Episode
+
+  """
+  Reads a single `Collection` that is related to this `CollectionRelation`.
+  """
+  childCollection: Collection
+}
+
+"""@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN"""
+type Movie {
+  id: Int!
+  title: String!
+  externalId: String
+  originalTitle: String
+  synopsis: String
+  description: String
+  studio: String
+  released: Date
+  mainVideoId: UUID
+  publishedDate: Datetime
+  publishedUser: String
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  publishStatus: PublishStatus!
+  ageRating: String
+  rating: BigFloat
+  customRating: String
+  creditsStartTime: String
+  lengthInSeconds: BigFloat
+  dynamicField: String
+  extendedField: String
+  contentOwner: String
+  businessType: BusinessType!
+  audioLanguages: [String]
+  subtitleLanguages: [String]
+  captionLanguages: [String]
+  assetSubtype: AssetSubtype!
+
+  """Reads and enables pagination through a set of `MoviesTag`."""
+  moviesTags(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesTag`."""
+    orderBy: [MoviesTagsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesTagCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesTagFilter
+  ): MoviesTagsConnection!
+
+  """Reads and enables pagination through a set of `MoviesCast`."""
+  moviesCasts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesCast`."""
+    orderBy: [MoviesCastsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesCastCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesCastFilter
+  ): MoviesCastsConnection!
+
+  """Reads and enables pagination through a set of `MoviesLicense`."""
+  moviesLicenses(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesLicense`."""
+    orderBy: [MoviesLicensesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesLicenseCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesLicenseFilter
+  ): MoviesLicensesConnection!
+
+  """
+  Reads and enables pagination through a set of `MoviesProductionCountry`.
+  """
+  moviesProductionCountries(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesProductionCountry`."""
+    orderBy: [MoviesProductionCountriesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesProductionCountryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesProductionCountryFilter
+  ): MoviesProductionCountriesConnection!
+
+  """Reads and enables pagination through a set of `MoviesMovieGenre`."""
+  moviesMovieGenres(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesMovieGenre`."""
+    orderBy: [MoviesMovieGenresOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesMovieGenreCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesMovieGenreFilter
+  ): MoviesMovieGenresConnection!
+
+  """Reads and enables pagination through a set of `MoviesImage`."""
+  moviesImages(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesImage`."""
+    orderBy: [MoviesImagesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesImageCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesImageFilter
+  ): MoviesImagesConnection!
+
+  """Reads and enables pagination through a set of `MoviesTrailer`."""
+  moviesTrailers(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesTrailer`."""
+    orderBy: [MoviesTrailersOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesTrailerCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesTrailerFilter
+  ): MoviesTrailersConnection!
+
+  """Reads and enables pagination through a set of `CollectionRelation`."""
+  collectionRelations(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CollectionRelation`."""
+    orderBy: [CollectionRelationsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CollectionRelationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CollectionRelationFilter
+  ): CollectionRelationsConnection!
+
+  """Reads and enables pagination through a set of `MoviesSnapshot`."""
+  moviesSnapshots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesSnapshot`."""
+    orderBy: [MoviesSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesSnapshotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesSnapshotFilter
+  ): MoviesSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `MoviesDirector`."""
+  moviesDirectors(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesDirector`."""
+    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesDirectorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesDirectorFilter
+  ): MoviesDirectorsConnection!
+}
+
+"""The day, does not include a time."""
+scalar Date
+
+"""
+A floating point number that requires more precision than IEEE 754 binary 64
+"""
+scalar BigFloat
+
+enum BusinessType {
+  """Free"""
+  FREE
+
+  """Advertisement"""
+  ADVERTISEMENT
+
+  """Premium"""
+  PREMIUM
+
+  """Free downloadable"""
+  FREE_DOWNLOADABLE
+
+  """Advertisement downloadable"""
+  ADVERTISEMENT_DOWNLOADABLE
+
+  """Premium downloadable"""
+  PREMIUM_DOWNLOADABLE
+
+  """Free authenticated"""
+  FREE_AUTHENTICATED
+
+  """Advertisement authenticated"""
+  ADVERTISEMENT_AUTHENTICATED
+}
+
+"""
+A connection to a list of `MoviesTag` values.
+@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN
+"""
+type MoviesTagsConnection {
+  """A list of `MoviesTag` objects."""
+  nodes: [MoviesTag!]!
+
+  """
+  A list of edges which contains the `MoviesTag` and cursor to aid in pagination.
+  """
+  edges: [MoviesTagsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `MoviesTag` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN"""
+type MoviesTag {
+  movieId: Int!
+  name: String!
+
+  """Reads a single `Movie` that is related to this `MoviesTag`."""
+  movie: Movie
+}
+
+"""A `MoviesTag` edge in the connection."""
+type MoviesTagsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `MoviesTag` at the end of the edge."""
+  node: MoviesTag!
+}
+
+"""Methods to use when ordering `MoviesTag`."""
+enum MoviesTagsOrderBy {
   NATURAL
-  ID_ASC
-  ID_DESC
-  COLLECTION_ID_ASC
-  COLLECTION_ID_DESC
-  SORT_ORDER_ASC
-  SORT_ORDER_DESC
   MOVIE_ID_ASC
   MOVIE_ID_DESC
-  TVSHOW_ID_ASC
-  TVSHOW_ID_DESC
-  SEASON_ID_ASC
-  SEASON_ID_DESC
-  EPISODE_ID_ASC
-  EPISODE_ID_DESC
+  NAME_ASC
+  NAME_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
 
 """
-A condition to be used against `CollectionRelation` object types. All fields are
-tested for equality and combined with a logical ‘and.’
+A condition to be used against `MoviesTag` object types. All fields are tested
+for equality and combined with a logical ‘and.’
 """
-input CollectionRelationCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `collectionId` field."""
-  collectionId: Int
-
-  """Checks for equality with the object’s `sortOrder` field."""
-  sortOrder: Int
-
+input MoviesTagCondition {
   """Checks for equality with the object’s `movieId` field."""
   movieId: Int
 
-  """Checks for equality with the object’s `tvshowId` field."""
-  tvshowId: Int
-
-  """Checks for equality with the object’s `seasonId` field."""
-  seasonId: Int
-
-  """Checks for equality with the object’s `episodeId` field."""
-  episodeId: Int
+  """
+  Checks for equality with the object’s `name` field.
+  @notEmpty()
+  """
+  name: String
 }
 
 """
-A filter to be used against `CollectionRelation` object types. All fields are combined with a logical ‘and.’
+A filter to be used against `MoviesTag` object types. All fields are combined with a logical ‘and.’
 """
-input CollectionRelationFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `collectionId` field."""
-  collectionId: IntFilter
-
-  """Filter by the object’s `sortOrder` field."""
-  sortOrder: IntFilter
-
+input MoviesTagFilter {
   """Filter by the object’s `movieId` field."""
   movieId: IntFilter
 
-  """Filter by the object’s `tvshowId` field."""
-  tvshowId: IntFilter
-
-  """Filter by the object’s `seasonId` field."""
-  seasonId: IntFilter
-
-  """Filter by the object’s `episodeId` field."""
-  episodeId: IntFilter
-
-  """Filter by the object’s `collection` relation."""
-  collection: CollectionFilter
+  """Filter by the object’s `name` field."""
+  name: StringFilter
 
   """Filter by the object’s `movie` relation."""
   movie: MovieFilter
 
-  """A related `movie` exists."""
-  movieExists: Boolean
-
-  """Filter by the object’s `tvshow` relation."""
-  tvshow: TvshowFilter
-
-  """A related `tvshow` exists."""
-  tvshowExists: Boolean
-
-  """Filter by the object’s `season` relation."""
-  season: SeasonFilter
-
-  """A related `season` exists."""
-  seasonExists: Boolean
-
-  """Filter by the object’s `episode` relation."""
-  episode: EpisodeFilter
-
-  """A related `episode` exists."""
-  episodeExists: Boolean
-
   """Checks for all expressions in this list."""
-  and: [CollectionRelationFilter!]
+  and: [MoviesTagFilter!]
 
   """Checks for any expressions in this list."""
-  or: [CollectionRelationFilter!]
+  or: [MoviesTagFilter!]
 
   """Negates the expression."""
-  not: CollectionRelationFilter
+  not: MoviesTagFilter
 }
 
 """
-A filter to be used against `Collection` object types. All fields are combined with a logical ‘and.’
+A filter to be used against `Movie` object types. All fields are combined with a logical ‘and.’
 """
-input CollectionFilter {
+input MovieFilter {
   """Filter by the object’s `id` field."""
   id: IntFilter
 
@@ -2898,11 +3825,23 @@ input CollectionFilter {
   """Filter by the object’s `externalId` field."""
   externalId: StringFilter
 
+  """Filter by the object’s `originalTitle` field."""
+  originalTitle: StringFilter
+
   """Filter by the object’s `synopsis` field."""
   synopsis: StringFilter
 
   """Filter by the object’s `description` field."""
   description: StringFilter
+
+  """Filter by the object’s `studio` field."""
+  studio: StringFilter
+
+  """Filter by the object’s `released` field."""
+  released: DateFilter
+
+  """Filter by the object’s `mainVideoId` field."""
+  mainVideoId: UUIDFilter
 
   """Filter by the object’s `publishedDate` field."""
   publishedDate: DatetimeFilter
@@ -2925,44 +3864,155 @@ input CollectionFilter {
   """Filter by the object’s `publishStatus` field."""
   publishStatus: PublishStatusFilter
 
-  """Filter by the object’s `languages` field."""
-  languages: StringListFilter
+  """Filter by the object’s `ageRating` field."""
+  ageRating: StringFilter
+
+  """Filter by the object’s `rating` field."""
+  rating: BigFloatFilter
+
+  """Filter by the object’s `customRating` field."""
+  customRating: StringFilter
+
+  """Filter by the object’s `creditsStartTime` field."""
+  creditsStartTime: StringFilter
+
+  """Filter by the object’s `lengthInSeconds` field."""
+  lengthInSeconds: BigFloatFilter
+
+  """Filter by the object’s `dynamicField` field."""
+  dynamicField: StringFilter
+
+  """Filter by the object’s `extendedField` field."""
+  extendedField: StringFilter
+
+  """Filter by the object’s `contentOwner` field."""
+  contentOwner: StringFilter
+
+  """Filter by the object’s `businessType` field."""
+  businessType: BusinessTypeFilter
+
+  """Filter by the object’s `audioLanguages` field."""
+  audioLanguages: StringListFilter
+
+  """Filter by the object’s `subtitleLanguages` field."""
+  subtitleLanguages: StringListFilter
+
+  """Filter by the object’s `captionLanguages` field."""
+  captionLanguages: StringListFilter
 
   """Filter by the object’s `assetSubtype` field."""
   assetSubtype: AssetSubtypeFilter
 
+  """Filter by the object’s `moviesTags` relation."""
+  moviesTags: MovieToManyMoviesTagFilter
+
+  """Some related `moviesTags` exist."""
+  moviesTagsExist: Boolean
+
+  """Filter by the object’s `moviesCasts` relation."""
+  moviesCasts: MovieToManyMoviesCastFilter
+
+  """Some related `moviesCasts` exist."""
+  moviesCastsExist: Boolean
+
+  """Filter by the object’s `moviesLicenses` relation."""
+  moviesLicenses: MovieToManyMoviesLicenseFilter
+
+  """Some related `moviesLicenses` exist."""
+  moviesLicensesExist: Boolean
+
+  """Filter by the object’s `moviesProductionCountries` relation."""
+  moviesProductionCountries: MovieToManyMoviesProductionCountryFilter
+
+  """Some related `moviesProductionCountries` exist."""
+  moviesProductionCountriesExist: Boolean
+
+  """Filter by the object’s `moviesMovieGenres` relation."""
+  moviesMovieGenres: MovieToManyMoviesMovieGenreFilter
+
+  """Some related `moviesMovieGenres` exist."""
+  moviesMovieGenresExist: Boolean
+
+  """Filter by the object’s `moviesImages` relation."""
+  moviesImages: MovieToManyMoviesImageFilter
+
+  """Some related `moviesImages` exist."""
+  moviesImagesExist: Boolean
+
+  """Filter by the object’s `moviesTrailers` relation."""
+  moviesTrailers: MovieToManyMoviesTrailerFilter
+
+  """Some related `moviesTrailers` exist."""
+  moviesTrailersExist: Boolean
+
   """Filter by the object’s `collectionRelations` relation."""
-  collectionRelations: CollectionToManyCollectionRelationFilter
+  collectionRelations: MovieToManyCollectionRelationFilter
 
   """Some related `collectionRelations` exist."""
   collectionRelationsExist: Boolean
 
-  """Filter by the object’s `collectionsTags` relation."""
-  collectionsTags: CollectionToManyCollectionsTagFilter
+  """Filter by the object’s `moviesSnapshots` relation."""
+  moviesSnapshots: MovieToManyMoviesSnapshotFilter
 
-  """Some related `collectionsTags` exist."""
-  collectionsTagsExist: Boolean
+  """Some related `moviesSnapshots` exist."""
+  moviesSnapshotsExist: Boolean
 
-  """Filter by the object’s `collectionsImages` relation."""
-  collectionsImages: CollectionToManyCollectionsImageFilter
+  """Filter by the object’s `moviesDirectors` relation."""
+  moviesDirectors: MovieToManyMoviesDirectorFilter
 
-  """Some related `collectionsImages` exist."""
-  collectionsImagesExist: Boolean
-
-  """Filter by the object’s `collectionsSnapshots` relation."""
-  collectionsSnapshots: CollectionToManyCollectionsSnapshotFilter
-
-  """Some related `collectionsSnapshots` exist."""
-  collectionsSnapshotsExist: Boolean
+  """Some related `moviesDirectors` exist."""
+  moviesDirectorsExist: Boolean
 
   """Checks for all expressions in this list."""
-  and: [CollectionFilter!]
+  and: [MovieFilter!]
 
   """Checks for any expressions in this list."""
-  or: [CollectionFilter!]
+  or: [MovieFilter!]
 
   """Negates the expression."""
-  not: CollectionFilter
+  not: MovieFilter
+}
+
+"""
+A filter to be used against Date fields. All fields are combined with a logical ‘and.’
+"""
+input DateFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Date
+
+  """Not equal to the specified value."""
+  notEqualTo: Date
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Date
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Date
+
+  """Included in the specified list."""
+  in: [Date!]
+
+  """Not included in the specified list."""
+  notIn: [Date!]
+
+  """Less than the specified value."""
+  lessThan: Date
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Date
+
+  """Greater than the specified value."""
+  greaterThan: Date
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Date
 }
 
 """
@@ -3005,6 +4055,90 @@ input PublishStatusFilter {
 
   """Greater than or equal to the specified value."""
   greaterThanOrEqualTo: PublishStatus
+}
+
+"""
+A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’
+"""
+input BigFloatFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BigFloat
+
+  """Not equal to the specified value."""
+  notEqualTo: BigFloat
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BigFloat
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BigFloat
+
+  """Included in the specified list."""
+  in: [BigFloat!]
+
+  """Not included in the specified list."""
+  notIn: [BigFloat!]
+
+  """Less than the specified value."""
+  lessThan: BigFloat
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BigFloat
+
+  """Greater than the specified value."""
+  greaterThan: BigFloat
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BigFloat
+}
+
+"""
+A filter to be used against BusinessType fields. All fields are combined with a logical ‘and.’
+"""
+input BusinessTypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: BusinessType
+
+  """Not equal to the specified value."""
+  notEqualTo: BusinessType
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: BusinessType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: BusinessType
+
+  """Included in the specified list."""
+  in: [BusinessType!]
+
+  """Not included in the specified list."""
+  notIn: [BusinessType!]
+
+  """Less than the specified value."""
+  lessThan: BusinessType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: BusinessType
+
+  """Greater than the specified value."""
+  greaterThan: BusinessType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: BusinessType
 }
 
 """
@@ -3110,6 +4244,704 @@ input AssetSubtypeFilter {
 
   """Greater than or equal to the specified value."""
   greaterThanOrEqualTo: AssetSubtype
+}
+
+"""
+A filter to be used against many `MoviesTag` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieToManyMoviesTagFilter {
+  """
+  Every related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesTagFilter
+
+  """
+  Some related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesTagFilter
+
+  """
+  No related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesTagFilter
+}
+
+"""
+A filter to be used against many `MoviesCast` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieToManyMoviesCastFilter {
+  """
+  Every related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesCastFilter
+
+  """
+  Some related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesCastFilter
+
+  """
+  No related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesCastFilter
+}
+
+"""
+A filter to be used against `MoviesCast` object types. All fields are combined with a logical ‘and.’
+"""
+input MoviesCastFilter {
+  """Filter by the object’s `movieId` field."""
+  movieId: IntFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `movie` relation."""
+  movie: MovieFilter
+
+  """Checks for all expressions in this list."""
+  and: [MoviesCastFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MoviesCastFilter!]
+
+  """Negates the expression."""
+  not: MoviesCastFilter
+}
+
+"""
+A filter to be used against many `MoviesLicense` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieToManyMoviesLicenseFilter {
+  """
+  Every related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesLicenseFilter
+
+  """
+  Some related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesLicenseFilter
+
+  """
+  No related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesLicenseFilter
+}
+
+"""
+A filter to be used against `MoviesLicense` object types. All fields are combined with a logical ‘and.’
+"""
+input MoviesLicenseFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `movieId` field."""
+  movieId: IntFilter
+
+  """Filter by the object’s `licenseStart` field."""
+  licenseStart: DatetimeFilter
+
+  """Filter by the object’s `licenseEnd` field."""
+  licenseEnd: DatetimeFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `moviesLicensesCountries` relation."""
+  moviesLicensesCountries: MoviesLicenseToManyMoviesLicensesCountryFilter
+
+  """Some related `moviesLicensesCountries` exist."""
+  moviesLicensesCountriesExist: Boolean
+
+  """Filter by the object’s `movie` relation."""
+  movie: MovieFilter
+
+  """Checks for all expressions in this list."""
+  and: [MoviesLicenseFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MoviesLicenseFilter!]
+
+  """Negates the expression."""
+  not: MoviesLicenseFilter
+}
+
+"""
+A filter to be used against many `MoviesLicensesCountry` object types. All fields are combined with a logical ‘and.’
+"""
+input MoviesLicenseToManyMoviesLicensesCountryFilter {
+  """
+  Every related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesLicensesCountryFilter
+
+  """
+  Some related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesLicensesCountryFilter
+
+  """
+  No related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesLicensesCountryFilter
+}
+
+"""
+A filter to be used against `MoviesLicensesCountry` object types. All fields are combined with a logical ‘and.’
+"""
+input MoviesLicensesCountryFilter {
+  """Filter by the object’s `moviesLicenseId` field."""
+  moviesLicenseId: IntFilter
+
+  """Filter by the object’s `code` field."""
+  code: IsoAlphaTwoCountryCodesFilter
+
+  """Filter by the object’s `moviesLicense` relation."""
+  moviesLicense: MoviesLicenseFilter
+
+  """Checks for all expressions in this list."""
+  and: [MoviesLicensesCountryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MoviesLicensesCountryFilter!]
+
+  """Negates the expression."""
+  not: MoviesLicensesCountryFilter
+}
+
+"""
+A filter to be used against IsoAlphaTwoCountryCodes fields. All fields are combined with a logical ‘and.’
+"""
+input IsoAlphaTwoCountryCodesFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: IsoAlphaTwoCountryCodes
+
+  """Not equal to the specified value."""
+  notEqualTo: IsoAlphaTwoCountryCodes
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: IsoAlphaTwoCountryCodes
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: IsoAlphaTwoCountryCodes
+
+  """Included in the specified list."""
+  in: [IsoAlphaTwoCountryCodes!]
+
+  """Not included in the specified list."""
+  notIn: [IsoAlphaTwoCountryCodes!]
+
+  """Less than the specified value."""
+  lessThan: IsoAlphaTwoCountryCodes
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: IsoAlphaTwoCountryCodes
+
+  """Greater than the specified value."""
+  greaterThan: IsoAlphaTwoCountryCodes
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: IsoAlphaTwoCountryCodes
+}
+
+"""
+A filter to be used against many `MoviesProductionCountry` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieToManyMoviesProductionCountryFilter {
+  """
+  Every related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesProductionCountryFilter
+
+  """
+  Some related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesProductionCountryFilter
+
+  """
+  No related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesProductionCountryFilter
+}
+
+"""
+A filter to be used against `MoviesProductionCountry` object types. All fields are combined with a logical ‘and.’
+"""
+input MoviesProductionCountryFilter {
+  """Filter by the object’s `movieId` field."""
+  movieId: IntFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Filter by the object’s `movie` relation."""
+  movie: MovieFilter
+
+  """Checks for all expressions in this list."""
+  and: [MoviesProductionCountryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MoviesProductionCountryFilter!]
+
+  """Negates the expression."""
+  not: MoviesProductionCountryFilter
+}
+
+"""
+A filter to be used against many `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieToManyMoviesMovieGenreFilter {
+  """
+  Every related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesMovieGenreFilter
+
+  """
+  Some related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesMovieGenreFilter
+
+  """
+  No related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesMovieGenreFilter
+}
+
+"""
+A filter to be used against `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’
+"""
+input MoviesMovieGenreFilter {
+  """Filter by the object’s `movieId` field."""
+  movieId: IntFilter
+
+  """Filter by the object’s `movieGenresId` field."""
+  movieGenresId: IntFilter
+
+  """Filter by the object’s `movie` relation."""
+  movie: MovieFilter
+
+  """Filter by the object’s `movieGenres` relation."""
+  movieGenres: MovieGenreFilter
+
+  """Checks for all expressions in this list."""
+  and: [MoviesMovieGenreFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MoviesMovieGenreFilter!]
+
+  """Negates the expression."""
+  not: MoviesMovieGenreFilter
+}
+
+"""
+A filter to be used against `MovieGenre` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieGenreFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `sortOrder` field."""
+  sortOrder: IntFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `moviesMovieGenresByMovieGenresId` relation."""
+  moviesMovieGenresByMovieGenresId: MovieGenreToManyMoviesMovieGenreFilter
+
+  """Some related `moviesMovieGenresByMovieGenresId` exist."""
+  moviesMovieGenresByMovieGenresIdExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [MovieGenreFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MovieGenreFilter!]
+
+  """Negates the expression."""
+  not: MovieGenreFilter
+}
+
+"""
+A filter to be used against many `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieGenreToManyMoviesMovieGenreFilter {
+  """
+  Every related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesMovieGenreFilter
+
+  """
+  Some related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesMovieGenreFilter
+
+  """
+  No related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesMovieGenreFilter
+}
+
+"""
+A filter to be used against many `MoviesImage` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieToManyMoviesImageFilter {
+  """
+  Every related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesImageFilter
+
+  """
+  Some related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesImageFilter
+
+  """
+  No related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesImageFilter
+}
+
+"""
+A filter to be used against `MoviesImage` object types. All fields are combined with a logical ‘and.’
+"""
+input MoviesImageFilter {
+  """Filter by the object’s `movieId` field."""
+  movieId: IntFilter
+
+  """Filter by the object’s `imageId` field."""
+  imageId: UUIDFilter
+
+  """Filter by the object’s `imageType` field."""
+  imageType: MovieImageTypeFilter
+
+  """Filter by the object’s `movie` relation."""
+  movie: MovieFilter
+
+  """Checks for all expressions in this list."""
+  and: [MoviesImageFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MoviesImageFilter!]
+
+  """Negates the expression."""
+  not: MoviesImageFilter
+}
+
+"""
+A filter to be used against MovieImageType fields. All fields are combined with a logical ‘and.’
+"""
+input MovieImageTypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: MovieImageType
+
+  """Not equal to the specified value."""
+  notEqualTo: MovieImageType
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: MovieImageType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: MovieImageType
+
+  """Included in the specified list."""
+  in: [MovieImageType!]
+
+  """Not included in the specified list."""
+  notIn: [MovieImageType!]
+
+  """Less than the specified value."""
+  lessThan: MovieImageType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: MovieImageType
+
+  """Greater than the specified value."""
+  greaterThan: MovieImageType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: MovieImageType
+}
+
+enum MovieImageType {
+  """Cover 1x1"""
+  COVER_1X1
+
+  """Cover 16x9"""
+  COVER_16X9
+
+  """Clean Cover 1x1"""
+  CLEAN_COVER_1X1
+
+  """Clean Cover 16x9"""
+  CLEAN_COVER_16X9
+
+  """List 9x13"""
+  LIST_9X13
+
+  """List 1x1"""
+  LIST_1X1
+}
+
+"""
+A filter to be used against many `MoviesTrailer` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieToManyMoviesTrailerFilter {
+  """
+  Every related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesTrailerFilter
+
+  """
+  Some related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MoviesTrailerFilter
+
+  """
+  No related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesTrailerFilter
+}
+
+"""
+A filter to be used against `MoviesTrailer` object types. All fields are combined with a logical ‘and.’
+"""
+input MoviesTrailerFilter {
+  """Filter by the object’s `movieId` field."""
+  movieId: IntFilter
+
+  """Filter by the object’s `videoId` field."""
+  videoId: UUIDFilter
+
+  """Filter by the object’s `movie` relation."""
+  movie: MovieFilter
+
+  """Checks for all expressions in this list."""
+  and: [MoviesTrailerFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MoviesTrailerFilter!]
+
+  """Negates the expression."""
+  not: MoviesTrailerFilter
+}
+
+"""
+A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’
+"""
+input MovieToManyCollectionRelationFilter {
+  """
+  Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CollectionRelationFilter
+
+  """
+  Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CollectionRelationFilter
+
+  """
+  No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CollectionRelationFilter
+}
+
+"""
+A filter to be used against `CollectionRelation` object types. All fields are combined with a logical ‘and.’
+"""
+input CollectionRelationFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `collectionId` field."""
+  collectionId: IntFilter
+
+  """Filter by the object’s `sortOrder` field."""
+  sortOrder: IntFilter
+
+  """Filter by the object’s `movieId` field."""
+  movieId: IntFilter
+
+  """Filter by the object’s `tvshowId` field."""
+  tvshowId: IntFilter
+
+  """Filter by the object’s `seasonId` field."""
+  seasonId: IntFilter
+
+  """Filter by the object’s `episodeId` field."""
+  episodeId: IntFilter
+
+  """Filter by the object’s `childCollectionId` field."""
+  childCollectionId: IntFilter
+
+  """Filter by the object’s `collection` relation."""
+  collection: CollectionFilter
+
+  """Filter by the object’s `movie` relation."""
+  movie: MovieFilter
+
+  """A related `movie` exists."""
+  movieExists: Boolean
+
+  """Filter by the object’s `tvshow` relation."""
+  tvshow: TvshowFilter
+
+  """A related `tvshow` exists."""
+  tvshowExists: Boolean
+
+  """Filter by the object’s `season` relation."""
+  season: SeasonFilter
+
+  """A related `season` exists."""
+  seasonExists: Boolean
+
+  """Filter by the object’s `episode` relation."""
+  episode: EpisodeFilter
+
+  """A related `episode` exists."""
+  episodeExists: Boolean
+
+  """Filter by the object’s `childCollection` relation."""
+  childCollection: CollectionFilter
+
+  """A related `childCollection` exists."""
+  childCollectionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [CollectionRelationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CollectionRelationFilter!]
+
+  """Negates the expression."""
+  not: CollectionRelationFilter
+}
+
+"""
+A filter to be used against `Collection` object types. All fields are combined with a logical ‘and.’
+"""
+input CollectionFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `externalId` field."""
+  externalId: StringFilter
+
+  """Filter by the object’s `synopsis` field."""
+  synopsis: StringFilter
+
+  """Filter by the object’s `description` field."""
+  description: StringFilter
+
+  """Filter by the object’s `publishedDate` field."""
+  publishedDate: DatetimeFilter
+
+  """Filter by the object’s `publishedUser` field."""
+  publishedUser: StringFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `publishStatus` field."""
+  publishStatus: PublishStatusFilter
+
+  """Filter by the object’s `languages` field."""
+  languages: StringListFilter
+
+  """Filter by the object’s `assetSubtype` field."""
+  assetSubtype: AssetSubtypeFilter
+
+  """Filter by the object’s `extendedField` field."""
+  extendedField: StringFilter
+
+  """Filter by the object’s `collectionRelations` relation."""
+  collectionRelations: CollectionToManyCollectionRelationFilter
+
+  """Some related `collectionRelations` exist."""
+  collectionRelationsExist: Boolean
+
+  """
+  Filter by the object’s `collectionRelationsByChildCollectionId` relation.
+  """
+  collectionRelationsByChildCollectionId: CollectionToManyCollectionRelationFilter
+
+  """Some related `collectionRelationsByChildCollectionId` exist."""
+  collectionRelationsByChildCollectionIdExist: Boolean
+
+  """Filter by the object’s `collectionsTags` relation."""
+  collectionsTags: CollectionToManyCollectionsTagFilter
+
+  """Some related `collectionsTags` exist."""
+  collectionsTagsExist: Boolean
+
+  """Filter by the object’s `collectionsImages` relation."""
+  collectionsImages: CollectionToManyCollectionsImageFilter
+
+  """Some related `collectionsImages` exist."""
+  collectionsImagesExist: Boolean
+
+  """Filter by the object’s `collectionsSnapshots` relation."""
+  collectionsSnapshots: CollectionToManyCollectionsSnapshotFilter
+
+  """Some related `collectionsSnapshots` exist."""
+  collectionsSnapshotsExist: Boolean
+
+  """Filter by the object’s `collectionCountries` relation."""
+  collectionCountries: CollectionToManyCollectionCountryFilter
+
+  """Some related `collectionCountries` exist."""
+  collectionCountriesExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [CollectionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CollectionFilter!]
+
+  """Negates the expression."""
+  not: CollectionFilter
 }
 
 """
@@ -3264,8 +5096,23 @@ input CollectionImageTypeFilter {
 }
 
 enum CollectionImageType {
-  """Cover"""
-  COVER
+  """Cover 1x1"""
+  COVER_1X1
+
+  """Cover 4x1"""
+  COVER_4X1
+
+  """Clean Cover 1x1"""
+  CLEAN_COVER_1X1
+
+  """Clean Cover 4x1"""
+  CLEAN_COVER_4X1
+
+  """List 1x1"""
+  LIST_1X1
+
+  """List 15x16"""
+  LIST_15X16
 }
 
 """
@@ -3854,1195 +5701,6 @@ input MoviesSnapshotFilter {
 
   """Negates the expression."""
   not: MoviesSnapshotFilter
-}
-
-"""
-A filter to be used against `Movie` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `title` field."""
-  title: StringFilter
-
-  """Filter by the object’s `externalId` field."""
-  externalId: StringFilter
-
-  """Filter by the object’s `originalTitle` field."""
-  originalTitle: StringFilter
-
-  """Filter by the object’s `synopsis` field."""
-  synopsis: StringFilter
-
-  """Filter by the object’s `description` field."""
-  description: StringFilter
-
-  """Filter by the object’s `studio` field."""
-  studio: StringFilter
-
-  """Filter by the object’s `released` field."""
-  released: DateFilter
-
-  """Filter by the object’s `mainVideoId` field."""
-  mainVideoId: UUIDFilter
-
-  """Filter by the object’s `publishedDate` field."""
-  publishedDate: DatetimeFilter
-
-  """Filter by the object’s `publishedUser` field."""
-  publishedUser: StringFilter
-
-  """Filter by the object’s `createdDate` field."""
-  createdDate: DatetimeFilter
-
-  """Filter by the object’s `updatedDate` field."""
-  updatedDate: DatetimeFilter
-
-  """Filter by the object’s `createdUser` field."""
-  createdUser: StringFilter
-
-  """Filter by the object’s `updatedUser` field."""
-  updatedUser: StringFilter
-
-  """Filter by the object’s `publishStatus` field."""
-  publishStatus: PublishStatusFilter
-
-  """Filter by the object’s `ageRating` field."""
-  ageRating: StringFilter
-
-  """Filter by the object’s `rating` field."""
-  rating: BigFloatFilter
-
-  """Filter by the object’s `customRating` field."""
-  customRating: StringFilter
-
-  """Filter by the object’s `creditsStartTime` field."""
-  creditsStartTime: StringFilter
-
-  """Filter by the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloatFilter
-
-  """Filter by the object’s `dynamicField` field."""
-  dynamicField: StringFilter
-
-  """Filter by the object’s `extendedField` field."""
-  extendedField: StringFilter
-
-  """Filter by the object’s `contentOwner` field."""
-  contentOwner: StringFilter
-
-  """Filter by the object’s `businessType` field."""
-  businessType: BusinessTypeFilter
-
-  """Filter by the object’s `audioLanguages` field."""
-  audioLanguages: StringListFilter
-
-  """Filter by the object’s `subtitleLanguages` field."""
-  subtitleLanguages: StringListFilter
-
-  """Filter by the object’s `captionLanguages` field."""
-  captionLanguages: StringListFilter
-
-  """Filter by the object’s `assetSubtype` field."""
-  assetSubtype: AssetSubtypeFilter
-
-  """Filter by the object’s `moviesTags` relation."""
-  moviesTags: MovieToManyMoviesTagFilter
-
-  """Some related `moviesTags` exist."""
-  moviesTagsExist: Boolean
-
-  """Filter by the object’s `moviesCasts` relation."""
-  moviesCasts: MovieToManyMoviesCastFilter
-
-  """Some related `moviesCasts` exist."""
-  moviesCastsExist: Boolean
-
-  """Filter by the object’s `moviesLicenses` relation."""
-  moviesLicenses: MovieToManyMoviesLicenseFilter
-
-  """Some related `moviesLicenses` exist."""
-  moviesLicensesExist: Boolean
-
-  """Filter by the object’s `moviesProductionCountries` relation."""
-  moviesProductionCountries: MovieToManyMoviesProductionCountryFilter
-
-  """Some related `moviesProductionCountries` exist."""
-  moviesProductionCountriesExist: Boolean
-
-  """Filter by the object’s `moviesMovieGenres` relation."""
-  moviesMovieGenres: MovieToManyMoviesMovieGenreFilter
-
-  """Some related `moviesMovieGenres` exist."""
-  moviesMovieGenresExist: Boolean
-
-  """Filter by the object’s `moviesImages` relation."""
-  moviesImages: MovieToManyMoviesImageFilter
-
-  """Some related `moviesImages` exist."""
-  moviesImagesExist: Boolean
-
-  """Filter by the object’s `moviesTrailers` relation."""
-  moviesTrailers: MovieToManyMoviesTrailerFilter
-
-  """Some related `moviesTrailers` exist."""
-  moviesTrailersExist: Boolean
-
-  """Filter by the object’s `collectionRelations` relation."""
-  collectionRelations: MovieToManyCollectionRelationFilter
-
-  """Some related `collectionRelations` exist."""
-  collectionRelationsExist: Boolean
-
-  """Filter by the object’s `moviesSnapshots` relation."""
-  moviesSnapshots: MovieToManyMoviesSnapshotFilter
-
-  """Some related `moviesSnapshots` exist."""
-  moviesSnapshotsExist: Boolean
-
-  """Filter by the object’s `moviesDirectors` relation."""
-  moviesDirectors: MovieToManyMoviesDirectorFilter
-
-  """Some related `moviesDirectors` exist."""
-  moviesDirectorsExist: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [MovieFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MovieFilter!]
-
-  """Negates the expression."""
-  not: MovieFilter
-}
-
-"""
-A filter to be used against Date fields. All fields are combined with a logical ‘and.’
-"""
-input DateFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Date
-
-  """Not equal to the specified value."""
-  notEqualTo: Date
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Date
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Date
-
-  """Included in the specified list."""
-  in: [Date!]
-
-  """Not included in the specified list."""
-  notIn: [Date!]
-
-  """Less than the specified value."""
-  lessThan: Date
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Date
-
-  """Greater than the specified value."""
-  greaterThan: Date
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Date
-}
-
-"""The day, does not include a time."""
-scalar Date
-
-"""
-A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’
-"""
-input BigFloatFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: BigFloat
-
-  """Not equal to the specified value."""
-  notEqualTo: BigFloat
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: BigFloat
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: BigFloat
-
-  """Included in the specified list."""
-  in: [BigFloat!]
-
-  """Not included in the specified list."""
-  notIn: [BigFloat!]
-
-  """Less than the specified value."""
-  lessThan: BigFloat
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: BigFloat
-
-  """Greater than the specified value."""
-  greaterThan: BigFloat
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: BigFloat
-}
-
-"""
-A floating point number that requires more precision than IEEE 754 binary 64
-"""
-scalar BigFloat
-
-"""
-A filter to be used against BusinessType fields. All fields are combined with a logical ‘and.’
-"""
-input BusinessTypeFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: BusinessType
-
-  """Not equal to the specified value."""
-  notEqualTo: BusinessType
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: BusinessType
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: BusinessType
-
-  """Included in the specified list."""
-  in: [BusinessType!]
-
-  """Not included in the specified list."""
-  notIn: [BusinessType!]
-
-  """Less than the specified value."""
-  lessThan: BusinessType
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: BusinessType
-
-  """Greater than the specified value."""
-  greaterThan: BusinessType
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: BusinessType
-}
-
-enum BusinessType {
-  """Free"""
-  FREE
-
-  """Advertisement"""
-  ADVERTISEMENT
-
-  """Premium"""
-  PREMIUM
-
-  """Free downloadable"""
-  FREE_DOWNLOADABLE
-
-  """Advertisement downloadable"""
-  ADVERTISEMENT_DOWNLOADABLE
-
-  """Premium downloadable"""
-  PREMIUM_DOWNLOADABLE
-
-  """Free authenticated"""
-  FREE_AUTHENTICATED
-
-  """Advertisement authenticated"""
-  ADVERTISEMENT_AUTHENTICATED
-}
-
-"""
-A filter to be used against many `MoviesTag` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieToManyMoviesTagFilter {
-  """
-  Every related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesTagFilter
-
-  """
-  Some related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesTagFilter
-
-  """
-  No related `MoviesTag` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesTagFilter
-}
-
-"""
-A filter to be used against `MoviesTag` object types. All fields are combined with a logical ‘and.’
-"""
-input MoviesTagFilter {
-  """Filter by the object’s `movieId` field."""
-  movieId: IntFilter
-
-  """Filter by the object’s `name` field."""
-  name: StringFilter
-
-  """Filter by the object’s `movie` relation."""
-  movie: MovieFilter
-
-  """Checks for all expressions in this list."""
-  and: [MoviesTagFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MoviesTagFilter!]
-
-  """Negates the expression."""
-  not: MoviesTagFilter
-}
-
-"""
-A filter to be used against many `MoviesCast` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieToManyMoviesCastFilter {
-  """
-  Every related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesCastFilter
-
-  """
-  Some related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesCastFilter
-
-  """
-  No related `MoviesCast` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesCastFilter
-}
-
-"""
-A filter to be used against `MoviesCast` object types. All fields are combined with a logical ‘and.’
-"""
-input MoviesCastFilter {
-  """Filter by the object’s `movieId` field."""
-  movieId: IntFilter
-
-  """Filter by the object’s `name` field."""
-  name: StringFilter
-
-  """Filter by the object’s `movie` relation."""
-  movie: MovieFilter
-
-  """Checks for all expressions in this list."""
-  and: [MoviesCastFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MoviesCastFilter!]
-
-  """Negates the expression."""
-  not: MoviesCastFilter
-}
-
-"""
-A filter to be used against many `MoviesLicense` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieToManyMoviesLicenseFilter {
-  """
-  Every related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesLicenseFilter
-
-  """
-  Some related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesLicenseFilter
-
-  """
-  No related `MoviesLicense` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesLicenseFilter
-}
-
-"""
-A filter to be used against `MoviesLicense` object types. All fields are combined with a logical ‘and.’
-"""
-input MoviesLicenseFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `movieId` field."""
-  movieId: IntFilter
-
-  """Filter by the object’s `licenseStart` field."""
-  licenseStart: DatetimeFilter
-
-  """Filter by the object’s `licenseEnd` field."""
-  licenseEnd: DatetimeFilter
-
-  """Filter by the object’s `createdDate` field."""
-  createdDate: DatetimeFilter
-
-  """Filter by the object’s `updatedDate` field."""
-  updatedDate: DatetimeFilter
-
-  """Filter by the object’s `moviesLicensesCountries` relation."""
-  moviesLicensesCountries: MoviesLicenseToManyMoviesLicensesCountryFilter
-
-  """Some related `moviesLicensesCountries` exist."""
-  moviesLicensesCountriesExist: Boolean
-
-  """Filter by the object’s `movie` relation."""
-  movie: MovieFilter
-
-  """Checks for all expressions in this list."""
-  and: [MoviesLicenseFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MoviesLicenseFilter!]
-
-  """Negates the expression."""
-  not: MoviesLicenseFilter
-}
-
-"""
-A filter to be used against many `MoviesLicensesCountry` object types. All fields are combined with a logical ‘and.’
-"""
-input MoviesLicenseToManyMoviesLicensesCountryFilter {
-  """
-  Every related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesLicensesCountryFilter
-
-  """
-  Some related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesLicensesCountryFilter
-
-  """
-  No related `MoviesLicensesCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesLicensesCountryFilter
-}
-
-"""
-A filter to be used against `MoviesLicensesCountry` object types. All fields are combined with a logical ‘and.’
-"""
-input MoviesLicensesCountryFilter {
-  """Filter by the object’s `moviesLicenseId` field."""
-  moviesLicenseId: IntFilter
-
-  """Filter by the object’s `code` field."""
-  code: IsoAlphaTwoCountryCodesFilter
-
-  """Filter by the object’s `moviesLicense` relation."""
-  moviesLicense: MoviesLicenseFilter
-
-  """Checks for all expressions in this list."""
-  and: [MoviesLicensesCountryFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MoviesLicensesCountryFilter!]
-
-  """Negates the expression."""
-  not: MoviesLicensesCountryFilter
-}
-
-"""
-A filter to be used against IsoAlphaTwoCountryCodes fields. All fields are combined with a logical ‘and.’
-"""
-input IsoAlphaTwoCountryCodesFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: IsoAlphaTwoCountryCodes
-
-  """Not equal to the specified value."""
-  notEqualTo: IsoAlphaTwoCountryCodes
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: IsoAlphaTwoCountryCodes
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: IsoAlphaTwoCountryCodes
-
-  """Included in the specified list."""
-  in: [IsoAlphaTwoCountryCodes!]
-
-  """Not included in the specified list."""
-  notIn: [IsoAlphaTwoCountryCodes!]
-
-  """Less than the specified value."""
-  lessThan: IsoAlphaTwoCountryCodes
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: IsoAlphaTwoCountryCodes
-
-  """Greater than the specified value."""
-  greaterThan: IsoAlphaTwoCountryCodes
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: IsoAlphaTwoCountryCodes
-}
-
-enum IsoAlphaTwoCountryCodes {
-  AW
-  AF
-  AO
-  AI
-  AX
-  AL
-  AD
-  AE
-  AR
-  AM
-  AS
-  AQ
-  TF
-  AG
-  AU
-  AT
-  AZ
-  BI
-  BE
-  BJ
-  BQ
-  BF
-  BD
-  BG
-  BH
-  BS
-  BA
-  BL
-  BY
-  BZ
-  BM
-  BO
-  BR
-  BB
-  BN
-  BT
-  BV
-  BW
-  CF
-  CA
-  CC
-  CH
-  CL
-  CN
-  CI
-  CM
-  CD
-  CG
-  CK
-  CO
-  KM
-  CV
-  CR
-  CU
-  CW
-  CX
-  KY
-  CY
-  CZ
-  DE
-  DJ
-  DM
-  DK
-  DO
-  DZ
-  EC
-  EG
-  ER
-  EH
-  ES
-  EE
-  ET
-  FI
-  FJ
-  FK
-  FR
-  FO
-  FM
-  GA
-  GB
-  GE
-  GG
-  GH
-  GI
-  GN
-  GP
-  GM
-  GW
-  GQ
-  GR
-  GD
-  GL
-  GT
-  GF
-  GU
-  GY
-  HK
-  HM
-  HN
-  HR
-  HT
-  HU
-  ID
-  IM
-  IN
-  IO
-  IE
-  IR
-  IQ
-  IS
-  IL
-  IT
-  JM
-  JE
-  JO
-  JP
-  KZ
-  KE
-  KG
-  KH
-  KI
-  KN
-  KR
-  KW
-  LA
-  LB
-  LR
-  LY
-  LC
-  LI
-  LK
-  LS
-  LT
-  LU
-  LV
-  MO
-  MF
-  MA
-  MC
-  MD
-  MG
-  MV
-  MX
-  MH
-  MK
-  ML
-  MT
-  MM
-  ME
-  MN
-  MP
-  MZ
-  MR
-  MS
-  MQ
-  MU
-  MW
-  MY
-  YT
-  NA
-  NC
-  NE
-  NF
-  NG
-  NI
-  NU
-  NL
-  NO
-  NP
-  NR
-  NZ
-  OM
-  PK
-  PA
-  PN
-  PE
-  PH
-  PW
-  PG
-  PL
-  PR
-  KP
-  PT
-  PY
-  PS
-  PF
-  QA
-  RE
-  RO
-  RU
-  RW
-  SA
-  SD
-  SN
-  SG
-  GS
-  SH
-  SJ
-  SB
-  SL
-  SV
-  SM
-  SO
-  PM
-  RS
-  SS
-  ST
-  SR
-  SK
-  SI
-  SE
-  SZ
-  SX
-  SC
-  SY
-  TC
-  TD
-  TG
-  TH
-  TJ
-  TK
-  TM
-  TL
-  TO
-  TT
-  TN
-  TR
-  TV
-  TW
-  TZ
-  UG
-  UA
-  UM
-  UY
-  US
-  UZ
-  VA
-  VC
-  VE
-  VG
-  VI
-  VN
-  VU
-  WF
-  WS
-  YE
-  ZA
-  ZM
-  ZW
-}
-
-"""
-A filter to be used against many `MoviesProductionCountry` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieToManyMoviesProductionCountryFilter {
-  """
-  Every related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesProductionCountryFilter
-
-  """
-  Some related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesProductionCountryFilter
-
-  """
-  No related `MoviesProductionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesProductionCountryFilter
-}
-
-"""
-A filter to be used against `MoviesProductionCountry` object types. All fields are combined with a logical ‘and.’
-"""
-input MoviesProductionCountryFilter {
-  """Filter by the object’s `movieId` field."""
-  movieId: IntFilter
-
-  """Filter by the object’s `name` field."""
-  name: StringFilter
-
-  """Filter by the object’s `movie` relation."""
-  movie: MovieFilter
-
-  """Checks for all expressions in this list."""
-  and: [MoviesProductionCountryFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MoviesProductionCountryFilter!]
-
-  """Negates the expression."""
-  not: MoviesProductionCountryFilter
-}
-
-"""
-A filter to be used against many `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieToManyMoviesMovieGenreFilter {
-  """
-  Every related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesMovieGenreFilter
-
-  """
-  Some related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesMovieGenreFilter
-
-  """
-  No related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesMovieGenreFilter
-}
-
-"""
-A filter to be used against `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’
-"""
-input MoviesMovieGenreFilter {
-  """Filter by the object’s `movieId` field."""
-  movieId: IntFilter
-
-  """Filter by the object’s `movieGenresId` field."""
-  movieGenresId: IntFilter
-
-  """Filter by the object’s `movie` relation."""
-  movie: MovieFilter
-
-  """Filter by the object’s `movieGenres` relation."""
-  movieGenres: MovieGenreFilter
-
-  """Checks for all expressions in this list."""
-  and: [MoviesMovieGenreFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MoviesMovieGenreFilter!]
-
-  """Negates the expression."""
-  not: MoviesMovieGenreFilter
-}
-
-"""
-A filter to be used against `MovieGenre` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieGenreFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `title` field."""
-  title: StringFilter
-
-  """Filter by the object’s `sortOrder` field."""
-  sortOrder: IntFilter
-
-  """Filter by the object’s `createdDate` field."""
-  createdDate: DatetimeFilter
-
-  """Filter by the object’s `updatedDate` field."""
-  updatedDate: DatetimeFilter
-
-  """Filter by the object’s `createdUser` field."""
-  createdUser: StringFilter
-
-  """Filter by the object’s `updatedUser` field."""
-  updatedUser: StringFilter
-
-  """Filter by the object’s `moviesMovieGenresByMovieGenresId` relation."""
-  moviesMovieGenresByMovieGenresId: MovieGenreToManyMoviesMovieGenreFilter
-
-  """Some related `moviesMovieGenresByMovieGenresId` exist."""
-  moviesMovieGenresByMovieGenresIdExist: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [MovieGenreFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MovieGenreFilter!]
-
-  """Negates the expression."""
-  not: MovieGenreFilter
-}
-
-"""
-A filter to be used against many `MoviesMovieGenre` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieGenreToManyMoviesMovieGenreFilter {
-  """
-  Every related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesMovieGenreFilter
-
-  """
-  Some related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesMovieGenreFilter
-
-  """
-  No related `MoviesMovieGenre` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesMovieGenreFilter
-}
-
-"""
-A filter to be used against many `MoviesImage` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieToManyMoviesImageFilter {
-  """
-  Every related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesImageFilter
-
-  """
-  Some related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesImageFilter
-
-  """
-  No related `MoviesImage` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesImageFilter
-}
-
-"""
-A filter to be used against `MoviesImage` object types. All fields are combined with a logical ‘and.’
-"""
-input MoviesImageFilter {
-  """Filter by the object’s `movieId` field."""
-  movieId: IntFilter
-
-  """Filter by the object’s `imageId` field."""
-  imageId: UUIDFilter
-
-  """Filter by the object’s `imageType` field."""
-  imageType: MovieImageTypeFilter
-
-  """Filter by the object’s `movie` relation."""
-  movie: MovieFilter
-
-  """Checks for all expressions in this list."""
-  and: [MoviesImageFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MoviesImageFilter!]
-
-  """Negates the expression."""
-  not: MoviesImageFilter
-}
-
-"""
-A filter to be used against MovieImageType fields. All fields are combined with a logical ‘and.’
-"""
-input MovieImageTypeFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: MovieImageType
-
-  """Not equal to the specified value."""
-  notEqualTo: MovieImageType
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: MovieImageType
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: MovieImageType
-
-  """Included in the specified list."""
-  in: [MovieImageType!]
-
-  """Not included in the specified list."""
-  notIn: [MovieImageType!]
-
-  """Less than the specified value."""
-  lessThan: MovieImageType
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: MovieImageType
-
-  """Greater than the specified value."""
-  greaterThan: MovieImageType
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: MovieImageType
-}
-
-enum MovieImageType {
-  """Cover 1x1"""
-  COVER_1X1
-
-  """Cover 16x9"""
-  COVER_16X9
-
-  """Clean Cover 1x1"""
-  CLEAN_COVER_1X1
-
-  """Clean Cover 16x9"""
-  CLEAN_COVER_16X9
-
-  """List 1x1"""
-  LIST_1X1
-
-  """List 9x13"""
-  LIST_9X13
-}
-
-"""
-A filter to be used against many `MoviesTrailer` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieToManyMoviesTrailerFilter {
-  """
-  Every related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesTrailerFilter
-
-  """
-  Some related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesTrailerFilter
-
-  """
-  No related `MoviesTrailer` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesTrailerFilter
-}
-
-"""
-A filter to be used against `MoviesTrailer` object types. All fields are combined with a logical ‘and.’
-"""
-input MoviesTrailerFilter {
-  """Filter by the object’s `movieId` field."""
-  movieId: IntFilter
-
-  """Filter by the object’s `videoId` field."""
-  videoId: UUIDFilter
-
-  """Filter by the object’s `movie` relation."""
-  movie: MovieFilter
-
-  """Checks for all expressions in this list."""
-  and: [MoviesTrailerFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MoviesTrailerFilter!]
-
-  """Negates the expression."""
-  not: MoviesTrailerFilter
-}
-
-"""
-A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieToManyCollectionRelationFilter {
-  """
-  Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: CollectionRelationFilter
-
-  """
-  Some related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: CollectionRelationFilter
-
-  """
-  No related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: CollectionRelationFilter
-}
-
-"""
-A filter to be used against many `MoviesSnapshot` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieToManyMoviesSnapshotFilter {
-  """
-  Every related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesSnapshotFilter
-
-  """
-  Some related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesSnapshotFilter
-
-  """
-  No related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesSnapshotFilter
-}
-
-"""
-A filter to be used against many `MoviesDirector` object types. All fields are combined with a logical ‘and.’
-"""
-input MovieToManyMoviesDirectorFilter {
-  """
-  Every related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: MoviesDirectorFilter
-
-  """
-  Some related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: MoviesDirectorFilter
-
-  """
-  No related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: MoviesDirectorFilter
-}
-
-"""
-A filter to be used against `MoviesDirector` object types. All fields are combined with a logical ‘and.’
-"""
-input MoviesDirectorFilter {
-  """Filter by the object’s `movieId` field."""
-  movieId: IntFilter
-
-  """Filter by the object’s `name` field."""
-  name: StringFilter
-
-  """Filter by the object’s `movie` relation."""
-  movie: MovieFilter
-
-  """Checks for all expressions in this list."""
-  and: [MoviesDirectorFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [MoviesDirectorFilter!]
-
-  """Negates the expression."""
-  not: MoviesDirectorFilter
 }
 
 """
@@ -7351,974 +8009,240 @@ input SnapshotToManyCollectionsSnapshotFilter {
 }
 
 """
-A connection to a list of `CollectionsTag` values.
-@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+A filter to be used against many `CollectionCountry` object types. All fields are combined with a logical ‘and.’
 """
-type CollectionsTagsConnection {
-  """A list of `CollectionsTag` objects."""
-  nodes: [CollectionsTag!]!
+input CollectionToManyCollectionCountryFilter {
+  """
+  Every related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CollectionCountryFilter
 
   """
-  A list of edges which contains the `CollectionsTag` and cursor to aid in pagination.
+  Some related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  edges: [CollectionsTagsEdge!]!
+  some: CollectionCountryFilter
 
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `CollectionsTag` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN"""
-type CollectionsTag {
-  collectionId: Int!
-  name: String!
-
-  """Reads a single `Collection` that is related to this `CollectionsTag`."""
-  collection: Collection
-}
-
-"""A `CollectionsTag` edge in the connection."""
-type CollectionsTagsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `CollectionsTag` at the end of the edge."""
-  node: CollectionsTag!
-}
-
-"""Methods to use when ordering `CollectionsTag`."""
-enum CollectionsTagsOrderBy {
-  NATURAL
-  COLLECTION_ID_ASC
-  COLLECTION_ID_DESC
-  NAME_ASC
-  NAME_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
+  """
+  No related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CollectionCountryFilter
 }
 
 """
-A condition to be used against `CollectionsTag` object types. All fields are
-tested for equality and combined with a logical ‘and.’
+A filter to be used against `CollectionCountry` object types. All fields are combined with a logical ‘and.’
 """
-input CollectionsTagCondition {
-  """Checks for equality with the object’s `collectionId` field."""
-  collectionId: Int
+input CollectionCountryFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
 
-  """
-  Checks for equality with the object’s `name` field.
-  @notEmpty()
-  """
-  name: String
+  """Filter by the object’s `collectionId` field."""
+  collectionId: IntFilter
+
+  """Filter by the object’s `countryGroupId` field."""
+  countryGroupId: UUIDFilter
+
+  """Filter by the object’s `countryId` field."""
+  countryId: IsoAlphaTwoCountryCodesFilter
+
+  """Filter by the object’s `collection` relation."""
+  collection: CollectionFilter
+
+  """Filter by the object’s `countryGroup` relation."""
+  countryGroup: CountryGroupFilter
+
+  """A related `countryGroup` exists."""
+  countryGroupExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [CollectionCountryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CollectionCountryFilter!]
+
+  """Negates the expression."""
+  not: CollectionCountryFilter
 }
 
 """
-A connection to a list of `CollectionsImage` values.
-@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+A filter to be used against `CountryGroup` object types. All fields are combined with a logical ‘and.’
 """
-type CollectionsImagesConnection {
-  """A list of `CollectionsImage` objects."""
-  nodes: [CollectionsImage!]!
+input CountryGroupFilter {
+  """Filter by the object’s `id` field."""
+  id: UUIDFilter
 
-  """
-  A list of edges which contains the `CollectionsImage` and cursor to aid in pagination.
-  """
-  edges: [CollectionsImagesEdge!]!
+  """Filter by the object’s `name` field."""
+  name: StringFilter
 
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
 
-  """
-  The count of *all* `CollectionsImage` you could get from the connection.
-  """
-  totalCount: Int!
-}
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
 
-"""@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN"""
-type CollectionsImage {
-  collectionId: Int!
-  imageId: UUID!
-  imageType: CollectionImageType!
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
 
-  """
-  Reads a single `Collection` that is related to this `CollectionsImage`.
-  """
-  collection: Collection
-}
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
 
-"""A `CollectionsImage` edge in the connection."""
-type CollectionsImagesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
+  """Filter by the object’s `countryGroupsCountriesByGroupId` relation."""
+  countryGroupsCountriesByGroupId: CountryGroupToManyCountryGroupsCountryFilter
 
-  """The `CollectionsImage` at the end of the edge."""
-  node: CollectionsImage!
-}
+  """Some related `countryGroupsCountriesByGroupId` exist."""
+  countryGroupsCountriesByGroupIdExist: Boolean
 
-"""Methods to use when ordering `CollectionsImage`."""
-enum CollectionsImagesOrderBy {
-  NATURAL
-  COLLECTION_ID_ASC
-  COLLECTION_ID_DESC
-  IMAGE_ID_ASC
-  IMAGE_ID_DESC
-  IMAGE_TYPE_ASC
-  IMAGE_TYPE_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
+  """Filter by the object’s `collectionCountries` relation."""
+  collectionCountries: CountryGroupToManyCollectionCountryFilter
+
+  """Some related `collectionCountries` exist."""
+  collectionCountriesExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [CountryGroupFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CountryGroupFilter!]
+
+  """Negates the expression."""
+  not: CountryGroupFilter
 }
 
 """
-A condition to be used against `CollectionsImage` object types. All fields are
-tested for equality and combined with a logical ‘and.’
+A filter to be used against many `CountryGroupsCountry` object types. All fields are combined with a logical ‘and.’
 """
-input CollectionsImageCondition {
-  """Checks for equality with the object’s `collectionId` field."""
-  collectionId: Int
+input CountryGroupToManyCountryGroupsCountryFilter {
+  """
+  Every related `CountryGroupsCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CountryGroupsCountryFilter
 
-  """Checks for equality with the object’s `imageId` field."""
-  imageId: UUID
+  """
+  Some related `CountryGroupsCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CountryGroupsCountryFilter
 
-  """Checks for equality with the object’s `imageType` field."""
-  imageType: CollectionImageType
+  """
+  No related `CountryGroupsCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CountryGroupsCountryFilter
 }
 
 """
-A connection to a list of `CollectionsSnapshot` values.
-@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+A filter to be used against `CountryGroupsCountry` object types. All fields are combined with a logical ‘and.’
 """
-type CollectionsSnapshotsConnection {
-  """A list of `CollectionsSnapshot` objects."""
-  nodes: [CollectionsSnapshot!]!
+input CountryGroupsCountryFilter {
+  """Filter by the object’s `groupId` field."""
+  groupId: UUIDFilter
 
-  """
-  A list of edges which contains the `CollectionsSnapshot` and cursor to aid in pagination.
-  """
-  edges: [CollectionsSnapshotsEdge!]!
+  """Filter by the object’s `countryId` field."""
+  countryId: IsoAlphaTwoCountryCodesFilter
 
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
 
-  """
-  The count of *all* `CollectionsSnapshot` you could get from the connection.
-  """
-  totalCount: Int!
-}
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
 
-"""@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN"""
-type CollectionsSnapshot {
-  collectionId: Int!
-  snapshotId: Int!
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
 
-  """
-  Reads a single `Collection` that is related to this `CollectionsSnapshot`.
-  """
-  collection: Collection
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
 
-  """
-  Reads a single `Snapshot` that is related to this `CollectionsSnapshot`.
-  """
-  snapshot: Snapshot
+  """Filter by the object’s `group` relation."""
+  group: CountryGroupFilter
+
+  """Checks for all expressions in this list."""
+  and: [CountryGroupsCountryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CountryGroupsCountryFilter!]
+
+  """Negates the expression."""
+  not: CountryGroupsCountryFilter
 }
 
 """
-Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
-@permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+A filter to be used against many `CollectionCountry` object types. All fields are combined with a logical ‘and.’
 """
-type Snapshot {
-  id: Int!
-  entityId: Int!
-  publishId: String!
-  jobId: String!
-  snapshotNo: Int!
-  entityTitle: String
-  entityType: EntityType!
-  validationStatus: SnapshotValidationStatus
-  snapshotJson: JSON
-  snapshotState: SnapshotState!
-  scheduledDate: Datetime
-  publishedDate: Datetime
-  unpublishedDate: Datetime
-  createdDate: Datetime!
-  updatedDate: Datetime!
-  createdUser: String!
-  updatedUser: String!
-  isListSnapshot: Boolean!
+input CountryGroupToManyCollectionCountryFilter {
+  """
+  Every related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CollectionCountryFilter
 
   """
-  Reads and enables pagination through a set of `SnapshotValidationResult`.
+  Some related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  snapshotValidationResults(
-    """Only read the first `n` values of the set."""
-    first: Int
+  some: CollectionCountryFilter
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `SnapshotValidationResult`."""
-    orderBy: [SnapshotValidationResultsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: SnapshotValidationResultCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: SnapshotValidationResultFilter
-  ): SnapshotValidationResultsConnection!
-
-  """Reads and enables pagination through a set of `MoviesSnapshot`."""
-  moviesSnapshots(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MoviesSnapshot`."""
-    orderBy: [MoviesSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MoviesSnapshotCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MoviesSnapshotFilter
-  ): MoviesSnapshotsConnection!
-
-  """Reads and enables pagination through a set of `TvshowsSnapshot`."""
-  tvshowsSnapshots(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `TvshowsSnapshot`."""
-    orderBy: [TvshowsSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TvshowsSnapshotCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TvshowsSnapshotFilter
-  ): TvshowsSnapshotsConnection!
-
-  """Reads and enables pagination through a set of `SeasonsSnapshot`."""
-  seasonsSnapshots(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `SeasonsSnapshot`."""
-    orderBy: [SeasonsSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: SeasonsSnapshotCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: SeasonsSnapshotFilter
-  ): SeasonsSnapshotsConnection!
-
-  """Reads and enables pagination through a set of `EpisodesSnapshot`."""
-  episodesSnapshots(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `EpisodesSnapshot`."""
-    orderBy: [EpisodesSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EpisodesSnapshotCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: EpisodesSnapshotFilter
-  ): EpisodesSnapshotsConnection!
-
-  """Reads and enables pagination through a set of `CollectionsSnapshot`."""
-  collectionsSnapshots(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `CollectionsSnapshot`."""
-    orderBy: [CollectionsSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CollectionsSnapshotCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: CollectionsSnapshotFilter
-  ): CollectionsSnapshotsConnection!
+  """
+  No related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CollectionCountryFilter
 }
 
 """
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+A filter to be used against many `MoviesSnapshot` object types. All fields are combined with a logical ‘and.’
 """
-scalar JSON
-
-"""
-A connection to a list of `SnapshotValidationResult` values.
-@permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
-"""
-type SnapshotValidationResultsConnection {
-  """A list of `SnapshotValidationResult` objects."""
-  nodes: [SnapshotValidationResult!]!
+input MovieToManyMoviesSnapshotFilter {
+  """
+  Every related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesSnapshotFilter
 
   """
-  A list of edges which contains the `SnapshotValidationResult` and cursor to aid in pagination.
+  Some related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  edges: [SnapshotValidationResultsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
+  some: MoviesSnapshotFilter
 
   """
-  The count of *all* `SnapshotValidationResult` you could get from the connection.
+  No related `MoviesSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  totalCount: Int!
+  none: MoviesSnapshotFilter
 }
 
 """
-@permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+A filter to be used against many `MoviesDirector` object types. All fields are combined with a logical ‘and.’
 """
-type SnapshotValidationResult {
-  id: Int!
-  snapshotId: Int!
-  severity: SnapshotValidationIssueSeverity!
-  context: SnapshotValidationIssueContext!
-  message: String!
-  entityType: EntityType!
+input MovieToManyMoviesDirectorFilter {
+  """
+  Every related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MoviesDirectorFilter
 
   """
-  Reads a single `Snapshot` that is related to this `SnapshotValidationResult`.
+  Some related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
-  snapshot: Snapshot
-}
+  some: MoviesDirectorFilter
 
-"""A `SnapshotValidationResult` edge in the connection."""
-type SnapshotValidationResultsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `SnapshotValidationResult` at the end of the edge."""
-  node: SnapshotValidationResult!
-}
-
-"""Methods to use when ordering `SnapshotValidationResult`."""
-enum SnapshotValidationResultsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  SNAPSHOT_ID_ASC
-  SNAPSHOT_ID_DESC
-  SEVERITY_ASC
-  SEVERITY_DESC
-  CONTEXT_ASC
-  CONTEXT_DESC
-  MESSAGE_ASC
-  MESSAGE_DESC
-  ENTITY_TYPE_ASC
-  ENTITY_TYPE_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
+  """
+  No related `MoviesDirector` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MoviesDirectorFilter
 }
 
 """
-A condition to be used against `SnapshotValidationResult` object types. All
-fields are tested for equality and combined with a logical ‘and.’
+A filter to be used against `MoviesDirector` object types. All fields are combined with a logical ‘and.’
 """
-input SnapshotValidationResultCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
+input MoviesDirectorFilter {
+  """Filter by the object’s `movieId` field."""
+  movieId: IntFilter
 
-  """Checks for equality with the object’s `snapshotId` field."""
-  snapshotId: Int
+  """Filter by the object’s `name` field."""
+  name: StringFilter
 
-  """Checks for equality with the object’s `severity` field."""
-  severity: SnapshotValidationIssueSeverity
+  """Filter by the object’s `movie` relation."""
+  movie: MovieFilter
 
-  """Checks for equality with the object’s `context` field."""
-  context: SnapshotValidationIssueContext
+  """Checks for all expressions in this list."""
+  and: [MoviesDirectorFilter!]
 
-  """Checks for equality with the object’s `message` field."""
-  message: String
+  """Checks for any expressions in this list."""
+  or: [MoviesDirectorFilter!]
 
-  """Checks for equality with the object’s `entityType` field."""
-  entityType: EntityType
-}
-
-"""
-A connection to a list of `MoviesSnapshot` values.
-@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN
-"""
-type MoviesSnapshotsConnection {
-  """A list of `MoviesSnapshot` objects."""
-  nodes: [MoviesSnapshot!]!
-
-  """
-  A list of edges which contains the `MoviesSnapshot` and cursor to aid in pagination.
-  """
-  edges: [MoviesSnapshotsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `MoviesSnapshot` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN"""
-type MoviesSnapshot {
-  movieId: Int!
-  snapshotId: Int!
-
-  """Reads a single `Movie` that is related to this `MoviesSnapshot`."""
-  movie: Movie
-
-  """Reads a single `Snapshot` that is related to this `MoviesSnapshot`."""
-  snapshot: Snapshot
-}
-
-"""@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN"""
-type Movie {
-  id: Int!
-  title: String!
-  externalId: String
-  originalTitle: String
-  synopsis: String
-  description: String
-  studio: String
-  released: Date
-  mainVideoId: UUID
-  publishedDate: Datetime
-  publishedUser: String
-  createdDate: Datetime!
-  updatedDate: Datetime!
-  createdUser: String!
-  updatedUser: String!
-  publishStatus: PublishStatus!
-  ageRating: String
-  rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
-  extendedField: String
-  contentOwner: String
-  businessType: BusinessType!
-  audioLanguages: [String]
-  subtitleLanguages: [String]
-  captionLanguages: [String]
-  assetSubtype: AssetSubtype!
-
-  """Reads and enables pagination through a set of `MoviesTag`."""
-  moviesTags(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MoviesTag`."""
-    orderBy: [MoviesTagsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MoviesTagCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MoviesTagFilter
-  ): MoviesTagsConnection!
-
-  """Reads and enables pagination through a set of `MoviesCast`."""
-  moviesCasts(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MoviesCast`."""
-    orderBy: [MoviesCastsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MoviesCastCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MoviesCastFilter
-  ): MoviesCastsConnection!
-
-  """Reads and enables pagination through a set of `MoviesLicense`."""
-  moviesLicenses(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MoviesLicense`."""
-    orderBy: [MoviesLicensesOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MoviesLicenseCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MoviesLicenseFilter
-  ): MoviesLicensesConnection!
-
-  """
-  Reads and enables pagination through a set of `MoviesProductionCountry`.
-  """
-  moviesProductionCountries(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MoviesProductionCountry`."""
-    orderBy: [MoviesProductionCountriesOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MoviesProductionCountryCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MoviesProductionCountryFilter
-  ): MoviesProductionCountriesConnection!
-
-  """Reads and enables pagination through a set of `MoviesMovieGenre`."""
-  moviesMovieGenres(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MoviesMovieGenre`."""
-    orderBy: [MoviesMovieGenresOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MoviesMovieGenreCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MoviesMovieGenreFilter
-  ): MoviesMovieGenresConnection!
-
-  """Reads and enables pagination through a set of `MoviesImage`."""
-  moviesImages(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MoviesImage`."""
-    orderBy: [MoviesImagesOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MoviesImageCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MoviesImageFilter
-  ): MoviesImagesConnection!
-
-  """Reads and enables pagination through a set of `MoviesTrailer`."""
-  moviesTrailers(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MoviesTrailer`."""
-    orderBy: [MoviesTrailersOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MoviesTrailerCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MoviesTrailerFilter
-  ): MoviesTrailersConnection!
-
-  """Reads and enables pagination through a set of `CollectionRelation`."""
-  collectionRelations(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `CollectionRelation`."""
-    orderBy: [CollectionRelationsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CollectionRelationCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: CollectionRelationFilter
-  ): CollectionRelationsConnection!
-
-  """Reads and enables pagination through a set of `MoviesSnapshot`."""
-  moviesSnapshots(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MoviesSnapshot`."""
-    orderBy: [MoviesSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MoviesSnapshotCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MoviesSnapshotFilter
-  ): MoviesSnapshotsConnection!
-
-  """Reads and enables pagination through a set of `MoviesDirector`."""
-  moviesDirectors(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `MoviesDirector`."""
-    orderBy: [MoviesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MoviesDirectorCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: MoviesDirectorFilter
-  ): MoviesDirectorsConnection!
-}
-
-"""
-A connection to a list of `MoviesTag` values.
-@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN
-"""
-type MoviesTagsConnection {
-  """A list of `MoviesTag` objects."""
-  nodes: [MoviesTag!]!
-
-  """
-  A list of edges which contains the `MoviesTag` and cursor to aid in pagination.
-  """
-  edges: [MoviesTagsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `MoviesTag` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN"""
-type MoviesTag {
-  movieId: Int!
-  name: String!
-
-  """Reads a single `Movie` that is related to this `MoviesTag`."""
-  movie: Movie
-}
-
-"""A `MoviesTag` edge in the connection."""
-type MoviesTagsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `MoviesTag` at the end of the edge."""
-  node: MoviesTag!
-}
-
-"""Methods to use when ordering `MoviesTag`."""
-enum MoviesTagsOrderBy {
-  NATURAL
-  MOVIE_ID_ASC
-  MOVIE_ID_DESC
-  NAME_ASC
-  NAME_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `MoviesTag` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input MoviesTagCondition {
-  """Checks for equality with the object’s `movieId` field."""
-  movieId: Int
-
-  """
-  Checks for equality with the object’s `name` field.
-  @notEmpty()
-  """
-  name: String
+  """Negates the expression."""
+  not: MoviesDirectorFilter
 }
 
 """
@@ -8878,6 +8802,418 @@ input MoviesTrailerCondition {
   videoId: UUID
 }
 
+"""Methods to use when ordering `CollectionRelation`."""
+enum CollectionRelationsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  COLLECTION_ID_ASC
+  COLLECTION_ID_DESC
+  SORT_ORDER_ASC
+  SORT_ORDER_DESC
+  MOVIE_ID_ASC
+  MOVIE_ID_DESC
+  TVSHOW_ID_ASC
+  TVSHOW_ID_DESC
+  SEASON_ID_ASC
+  SEASON_ID_DESC
+  EPISODE_ID_ASC
+  EPISODE_ID_DESC
+  CHILD_COLLECTION_ID_ASC
+  CHILD_COLLECTION_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `CollectionRelation` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CollectionRelationCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `collectionId` field."""
+  collectionId: Int
+
+  """Checks for equality with the object’s `sortOrder` field."""
+  sortOrder: Int
+
+  """Checks for equality with the object’s `movieId` field."""
+  movieId: Int
+
+  """Checks for equality with the object’s `tvshowId` field."""
+  tvshowId: Int
+
+  """Checks for equality with the object’s `seasonId` field."""
+  seasonId: Int
+
+  """Checks for equality with the object’s `episodeId` field."""
+  episodeId: Int
+
+  """Checks for equality with the object’s `childCollectionId` field."""
+  childCollectionId: Int
+}
+
+"""
+A connection to a list of `MoviesSnapshot` values.
+@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN
+"""
+type MoviesSnapshotsConnection {
+  """A list of `MoviesSnapshot` objects."""
+  nodes: [MoviesSnapshot!]!
+
+  """
+  A list of edges which contains the `MoviesSnapshot` and cursor to aid in pagination.
+  """
+  edges: [MoviesSnapshotsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `MoviesSnapshot` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: MOVIES_VIEW,MOVIES_EDIT,ADMIN"""
+type MoviesSnapshot {
+  movieId: Int!
+  snapshotId: Int!
+
+  """Reads a single `Movie` that is related to this `MoviesSnapshot`."""
+  movie: Movie
+
+  """Reads a single `Snapshot` that is related to this `MoviesSnapshot`."""
+  snapshot: Snapshot
+}
+
+"""
+Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
+@permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+"""
+type Snapshot {
+  id: Int!
+  entityId: Int!
+  publishId: String!
+  jobId: String!
+  snapshotNo: Int!
+  entityTitle: String
+  entityType: EntityType!
+  validationStatus: SnapshotValidationStatus
+  snapshotJson: JSON
+  snapshotState: SnapshotState!
+  scheduledDate: Datetime
+  publishedDate: Datetime
+  unpublishedDate: Datetime
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  isListSnapshot: Boolean!
+
+  """
+  Reads and enables pagination through a set of `SnapshotValidationResult`.
+  """
+  snapshotValidationResults(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `SnapshotValidationResult`."""
+    orderBy: [SnapshotValidationResultsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SnapshotValidationResultCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SnapshotValidationResultFilter
+  ): SnapshotValidationResultsConnection!
+
+  """Reads and enables pagination through a set of `MoviesSnapshot`."""
+  moviesSnapshots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `MoviesSnapshot`."""
+    orderBy: [MoviesSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MoviesSnapshotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MoviesSnapshotFilter
+  ): MoviesSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `TvshowsSnapshot`."""
+  tvshowsSnapshots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `TvshowsSnapshot`."""
+    orderBy: [TvshowsSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TvshowsSnapshotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TvshowsSnapshotFilter
+  ): TvshowsSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `SeasonsSnapshot`."""
+  seasonsSnapshots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `SeasonsSnapshot`."""
+    orderBy: [SeasonsSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SeasonsSnapshotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SeasonsSnapshotFilter
+  ): SeasonsSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `EpisodesSnapshot`."""
+  episodesSnapshots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodesSnapshot`."""
+    orderBy: [EpisodesSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodesSnapshotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodesSnapshotFilter
+  ): EpisodesSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `CollectionsSnapshot`."""
+  collectionsSnapshots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CollectionsSnapshot`."""
+    orderBy: [CollectionsSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CollectionsSnapshotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CollectionsSnapshotFilter
+  ): CollectionsSnapshotsConnection!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+A connection to a list of `SnapshotValidationResult` values.
+@permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+"""
+type SnapshotValidationResultsConnection {
+  """A list of `SnapshotValidationResult` objects."""
+  nodes: [SnapshotValidationResult!]!
+
+  """
+  A list of edges which contains the `SnapshotValidationResult` and cursor to aid in pagination.
+  """
+  edges: [SnapshotValidationResultsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `SnapshotValidationResult` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""
+@permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+"""
+type SnapshotValidationResult {
+  id: Int!
+  snapshotId: Int!
+  severity: SnapshotValidationIssueSeverity!
+  context: SnapshotValidationIssueContext!
+  message: String!
+  entityType: EntityType!
+
+  """
+  Reads a single `Snapshot` that is related to this `SnapshotValidationResult`.
+  """
+  snapshot: Snapshot
+}
+
+"""A `SnapshotValidationResult` edge in the connection."""
+type SnapshotValidationResultsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `SnapshotValidationResult` at the end of the edge."""
+  node: SnapshotValidationResult!
+}
+
+"""Methods to use when ordering `SnapshotValidationResult`."""
+enum SnapshotValidationResultsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  SNAPSHOT_ID_ASC
+  SNAPSHOT_ID_DESC
+  SEVERITY_ASC
+  SEVERITY_DESC
+  CONTEXT_ASC
+  CONTEXT_DESC
+  MESSAGE_ASC
+  MESSAGE_DESC
+  ENTITY_TYPE_ASC
+  ENTITY_TYPE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `SnapshotValidationResult` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input SnapshotValidationResultCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `snapshotId` field."""
+  snapshotId: Int
+
+  """Checks for equality with the object’s `severity` field."""
+  severity: SnapshotValidationIssueSeverity
+
+  """Checks for equality with the object’s `context` field."""
+  context: SnapshotValidationIssueContext
+
+  """Checks for equality with the object’s `message` field."""
+  message: String
+
+  """Checks for equality with the object’s `entityType` field."""
+  entityType: EntityType
+}
+
 """Methods to use when ordering `MoviesSnapshot`."""
 enum MoviesSnapshotsOrderBy {
   NATURAL
@@ -8899,79 +9235,6 @@ input MoviesSnapshotCondition {
 
   """Checks for equality with the object’s `snapshotId` field."""
   snapshotId: Int
-}
-
-"""
-A connection to a list of `MoviesDirector` values.
-@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
-"""
-type MoviesDirectorsConnection {
-  """A list of `MoviesDirector` objects."""
-  nodes: [MoviesDirector!]!
-
-  """
-  A list of edges which contains the `MoviesDirector` and cursor to aid in pagination.
-  """
-  edges: [MoviesDirectorsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `MoviesDirector` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN"""
-type MoviesDirector {
-  movieId: Int!
-  name: String!
-
-  """Reads a single `Movie` that is related to this `MoviesDirector`."""
-  movie: Movie
-}
-
-"""A `MoviesDirector` edge in the connection."""
-type MoviesDirectorsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `MoviesDirector` at the end of the edge."""
-  node: MoviesDirector!
-}
-
-"""Methods to use when ordering `MoviesDirector`."""
-enum MoviesDirectorsOrderBy {
-  NATURAL
-  MOVIE_ID_ASC
-  MOVIE_ID_DESC
-  NAME_ASC
-  NAME_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `MoviesDirector` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input MoviesDirectorCondition {
-  """Checks for equality with the object’s `movieId` field."""
-  movieId: Int
-
-  """
-  Checks for equality with the object’s `name` field.
-  @notEmpty()
-  """
-  name: String
-}
-
-"""A `MoviesSnapshot` edge in the connection."""
-type MoviesSnapshotsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `MoviesSnapshot` at the end of the edge."""
-  node: MoviesSnapshot!
 }
 
 """
@@ -12467,6 +12730,53 @@ type TvshowsSnapshotsEdge {
   node: TvshowsSnapshot!
 }
 
+"""
+A connection to a list of `CollectionsSnapshot` values.
+@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+"""
+type CollectionsSnapshotsConnection {
+  """A list of `CollectionsSnapshot` objects."""
+  nodes: [CollectionsSnapshot!]!
+
+  """
+  A list of edges which contains the `CollectionsSnapshot` and cursor to aid in pagination.
+  """
+  edges: [CollectionsSnapshotsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CollectionsSnapshot` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN"""
+type CollectionsSnapshot {
+  collectionId: Int!
+  snapshotId: Int!
+
+  """
+  Reads a single `Collection` that is related to this `CollectionsSnapshot`.
+  """
+  collection: Collection
+
+  """
+  Reads a single `Snapshot` that is related to this `CollectionsSnapshot`.
+  """
+  snapshot: Snapshot
+}
+
+"""A `CollectionsSnapshot` edge in the connection."""
+type CollectionsSnapshotsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CollectionsSnapshot` at the end of the edge."""
+  node: CollectionsSnapshot!
+}
+
 """Methods to use when ordering `CollectionsSnapshot`."""
 enum CollectionsSnapshotsOrderBy {
   NATURAL
@@ -12490,13 +12800,77 @@ input CollectionsSnapshotCondition {
   snapshotId: Int
 }
 
-"""A `CollectionsSnapshot` edge in the connection."""
-type CollectionsSnapshotsEdge {
+"""A `MoviesSnapshot` edge in the connection."""
+type MoviesSnapshotsEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
-  """The `CollectionsSnapshot` at the end of the edge."""
-  node: CollectionsSnapshot!
+  """The `MoviesSnapshot` at the end of the edge."""
+  node: MoviesSnapshot!
+}
+
+"""
+A connection to a list of `MoviesDirector` values.
+@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN
+"""
+type MoviesDirectorsConnection {
+  """A list of `MoviesDirector` objects."""
+  nodes: [MoviesDirector!]!
+
+  """
+  A list of edges which contains the `MoviesDirector` and cursor to aid in pagination.
+  """
+  edges: [MoviesDirectorsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `MoviesDirector` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: MOVIE_READER,MOVIE_EDITOR,ADMIN"""
+type MoviesDirector {
+  movieId: Int!
+  name: String!
+
+  """Reads a single `Movie` that is related to this `MoviesDirector`."""
+  movie: Movie
+}
+
+"""A `MoviesDirector` edge in the connection."""
+type MoviesDirectorsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `MoviesDirector` at the end of the edge."""
+  node: MoviesDirector!
+}
+
+"""Methods to use when ordering `MoviesDirector`."""
+enum MoviesDirectorsOrderBy {
+  NATURAL
+  MOVIE_ID_ASC
+  MOVIE_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `MoviesDirector` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input MoviesDirectorCondition {
+  """Checks for equality with the object’s `movieId` field."""
+  movieId: Int
+
+  """
+  Checks for equality with the object’s `name` field.
+  @notEmpty()
+  """
+  name: String
 }
 
 """A `CollectionRelation` edge in the connection."""
@@ -12506,6 +12880,347 @@ type CollectionRelationsEdge {
 
   """The `CollectionRelation` at the end of the edge."""
   node: CollectionRelation!
+}
+
+"""
+A connection to a list of `CollectionsTag` values.
+@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+"""
+type CollectionsTagsConnection {
+  """A list of `CollectionsTag` objects."""
+  nodes: [CollectionsTag!]!
+
+  """
+  A list of edges which contains the `CollectionsTag` and cursor to aid in pagination.
+  """
+  edges: [CollectionsTagsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CollectionsTag` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN"""
+type CollectionsTag {
+  collectionId: Int!
+  name: String!
+
+  """Reads a single `Collection` that is related to this `CollectionsTag`."""
+  collection: Collection
+}
+
+"""A `CollectionsTag` edge in the connection."""
+type CollectionsTagsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CollectionsTag` at the end of the edge."""
+  node: CollectionsTag!
+}
+
+"""Methods to use when ordering `CollectionsTag`."""
+enum CollectionsTagsOrderBy {
+  NATURAL
+  COLLECTION_ID_ASC
+  COLLECTION_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `CollectionsTag` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CollectionsTagCondition {
+  """Checks for equality with the object’s `collectionId` field."""
+  collectionId: Int
+
+  """
+  Checks for equality with the object’s `name` field.
+  @notEmpty()
+  """
+  name: String
+}
+
+"""
+A connection to a list of `CollectionsImage` values.
+@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+"""
+type CollectionsImagesConnection {
+  """A list of `CollectionsImage` objects."""
+  nodes: [CollectionsImage!]!
+
+  """
+  A list of edges which contains the `CollectionsImage` and cursor to aid in pagination.
+  """
+  edges: [CollectionsImagesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CollectionsImage` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN"""
+type CollectionsImage {
+  collectionId: Int!
+  imageId: UUID!
+  imageType: CollectionImageType!
+
+  """
+  Reads a single `Collection` that is related to this `CollectionsImage`.
+  """
+  collection: Collection
+}
+
+"""A `CollectionsImage` edge in the connection."""
+type CollectionsImagesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CollectionsImage` at the end of the edge."""
+  node: CollectionsImage!
+}
+
+"""Methods to use when ordering `CollectionsImage`."""
+enum CollectionsImagesOrderBy {
+  NATURAL
+  COLLECTION_ID_ASC
+  COLLECTION_ID_DESC
+  IMAGE_ID_ASC
+  IMAGE_ID_DESC
+  IMAGE_TYPE_ASC
+  IMAGE_TYPE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `CollectionsImage` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CollectionsImageCondition {
+  """Checks for equality with the object’s `collectionId` field."""
+  collectionId: Int
+
+  """Checks for equality with the object’s `imageId` field."""
+  imageId: UUID
+
+  """Checks for equality with the object’s `imageType` field."""
+  imageType: CollectionImageType
+}
+
+"""Methods to use when ordering `CollectionCountry`."""
+enum CollectionCountriesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  COLLECTION_ID_ASC
+  COLLECTION_ID_DESC
+  COUNTRY_GROUP_ID_ASC
+  COUNTRY_GROUP_ID_DESC
+  COUNTRY_ID_ASC
+  COUNTRY_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `CollectionCountry` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CollectionCountryCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `collectionId` field."""
+  collectionId: Int
+
+  """Checks for equality with the object’s `countryGroupId` field."""
+  countryGroupId: UUID
+
+  """Checks for equality with the object’s `countryId` field."""
+  countryId: IsoAlphaTwoCountryCodes
+}
+
+""""""
+type CountryGroup {
+  id: UUID!
+  name: String!
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+
+  """Reads and enables pagination through a set of `CountryGroupsCountry`."""
+  countryGroupsCountriesByGroupId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CountryGroupsCountry`."""
+    orderBy: [CountryGroupsCountriesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CountryGroupsCountryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CountryGroupsCountryFilter
+  ): CountryGroupsCountriesConnection!
+
+  """Reads and enables pagination through a set of `CollectionCountry`."""
+  collectionCountries(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `CollectionCountry`."""
+    orderBy: [CollectionCountriesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CollectionCountryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CollectionCountryFilter
+  ): CollectionCountriesConnection!
+}
+
+"""A connection to a list of `CountryGroupsCountry` values."""
+type CountryGroupsCountriesConnection {
+  """A list of `CountryGroupsCountry` objects."""
+  nodes: [CountryGroupsCountry!]!
+
+  """
+  A list of edges which contains the `CountryGroupsCountry` and cursor to aid in pagination.
+  """
+  edges: [CountryGroupsCountriesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CountryGroupsCountry` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+""""""
+type CountryGroupsCountry {
+  groupId: UUID!
+  countryId: IsoAlphaTwoCountryCodes!
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+
+  """
+  Reads a single `CountryGroup` that is related to this `CountryGroupsCountry`.
+  """
+  group: CountryGroup
+}
+
+"""A `CountryGroupsCountry` edge in the connection."""
+type CountryGroupsCountriesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CountryGroupsCountry` at the end of the edge."""
+  node: CountryGroupsCountry!
+}
+
+"""Methods to use when ordering `CountryGroupsCountry`."""
+enum CountryGroupsCountriesOrderBy {
+  NATURAL
+  GROUP_ID_ASC
+  GROUP_ID_DESC
+  COUNTRY_ID_ASC
+  COUNTRY_ID_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `CountryGroupsCountry` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CountryGroupsCountryCondition {
+  """Checks for equality with the object’s `groupId` field."""
+  groupId: UUID
+
+  """Checks for equality with the object’s `countryId` field."""
+  countryId: IsoAlphaTwoCountryCodes
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+}
+
+"""A `CollectionCountry` edge in the connection."""
+type CollectionCountriesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CollectionCountry` at the end of the edge."""
+  node: CollectionCountry!
 }
 
 """
@@ -12568,6 +13283,8 @@ enum CollectionsOrderBy {
   LANGUAGES_DESC
   ASSET_SUBTYPE_ASC
   ASSET_SUBTYPE_DESC
+  EXTENDED_FIELD_ASC
+  EXTENDED_FIELD_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -12622,6 +13339,9 @@ input CollectionCondition {
 
   """Checks for equality with the object’s `assetSubtype` field."""
   assetSubtype: AssetSubtype
+
+  """Checks for equality with the object’s `extendedField` field."""
+  extendedField: String
 }
 
 """A connection to a list of `ContentOwner` values."""
@@ -12747,6 +13467,79 @@ input ContentOwnerFilter {
 
   """Negates the expression."""
   not: ContentOwnerFilter
+}
+
+"""A connection to a list of `CountryGroup` values."""
+type CountryGroupsConnection {
+  """A list of `CountryGroup` objects."""
+  nodes: [CountryGroup!]!
+
+  """
+  A list of edges which contains the `CountryGroup` and cursor to aid in pagination.
+  """
+  edges: [CountryGroupsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CountryGroup` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CountryGroup` edge in the connection."""
+type CountryGroupsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CountryGroup` at the end of the edge."""
+  node: CountryGroup!
+}
+
+"""Methods to use when ordering `CountryGroup`."""
+enum CountryGroupsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  CREATED_DATE_ASC
+  CREATED_DATE_DESC
+  UPDATED_DATE_ASC
+  UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `CountryGroup` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CountryGroupCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """
+  Checks for equality with the object’s `name` field.
+  @maxLength(200)
+  @notEmpty()
+  """
+  name: String
+
+  """Checks for equality with the object’s `createdDate` field."""
+  createdDate: Datetime
+
+  """Checks for equality with the object’s `updatedDate` field."""
+  updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
 }
 
 """
@@ -15357,6 +16150,14 @@ type Mutation {
     input: CreateAgeRatingInput!
   ): CreateAgeRatingPayload
 
+  """Creates a single `CollectionCountry`."""
+  createCollectionCountry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCollectionCountryInput!
+  ): CreateCollectionCountryPayload
+
   """Creates a single `CollectionRelation`."""
   createCollectionRelation(
     """
@@ -15396,6 +16197,14 @@ type Mutation {
     """
     input: CreateContentOwnerInput!
   ): CreateContentOwnerPayload
+
+  """Creates a single `CountryGroup`."""
+  createCountryGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCountryGroupInput!
+  ): CreateCountryGroupPayload
 
   """Creates a single `Episode`."""
   createEpisode(
@@ -15773,6 +16582,24 @@ type Mutation {
     input: UpdateContentOwnerInput!
   ): UpdateContentOwnerPayload
 
+  """Updates a single `CountryGroup` using a unique key and a patch."""
+  updateCountryGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCountryGroupInput!
+  ): UpdateCountryGroupPayload
+
+  """
+  Updates a single `CountryGroupsCountry` using a unique key and a patch.
+  """
+  updateCountryGroupsCountry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCountryGroupsCountryInput!
+  ): UpdateCountryGroupsCountryPayload
+
   """Updates a single `Episode` using a unique key and a patch."""
   updateEpisode(
     """
@@ -16093,6 +16920,14 @@ type Mutation {
     input: DeleteAgeRatingInput!
   ): DeleteAgeRatingPayload
 
+  """Deletes a single `CollectionCountry` using a unique key."""
+  deleteCollectionCountry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCollectionCountryInput!
+  ): DeleteCollectionCountryPayload
+
   """Deletes a single `CollectionRelation` using a unique key."""
   deleteCollectionRelation(
     """
@@ -16140,6 +16975,22 @@ type Mutation {
     """
     input: DeleteContentOwnerInput!
   ): DeleteContentOwnerPayload
+
+  """Deletes a single `CountryGroup` using a unique key."""
+  deleteCountryGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCountryGroupInput!
+  ): DeleteCountryGroupPayload
+
+  """Deletes a single `CountryGroupsCountry` using a unique key."""
+  deleteCountryGroupsCountry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCountryGroupsCountryInput!
+  ): DeleteCountryGroupsCountryPayload
 
   """Deletes a single `Episode` using a unique key."""
   deleteEpisode(
@@ -16553,8 +17404,8 @@ type Mutation {
     """ID of the collection to create a snapshot from."""
     collectionId: Int!
   ): Snapshot
-  deleteCollections(filter: CollectionFilter): BulkMutationIntPayload
   deleteCollectionRelations(filter: CollectionRelationFilter): BulkMutationIntPayload
+  deleteCollections(filter: CollectionFilter): BulkMutationIntPayload
   createMovieSnapshots(
     """Filter for bulk selecting items."""
     filter: MovieFilter
@@ -16707,6 +17558,14 @@ type Mutation {
 
   """Creates a new Tvshow genres snapshot."""
   createTvshowGenresSnapshot: Snapshot
+
+  """Adds a custom mutation to add countries for countries groups."""
+  createCountryGroupsCountry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCountryGroupsCountryInput!
+  ): CreateCountryGroupsCountryPayload
   populateCollections(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -16773,6 +17632,59 @@ input AgeRatingInput {
   sortOrder: Int!
 }
 
+"""The output of our create `CollectionCountry` mutation."""
+type CreateCollectionCountryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CollectionCountry` that was created by this mutation."""
+  collectionCountry: CollectionCountry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `Collection` that is related to this `CollectionCountry`.
+  """
+  collection: Collection
+
+  """
+  Reads a single `CountryGroup` that is related to this `CollectionCountry`.
+  """
+  countryGroup: CountryGroup
+
+  """An edge for our `CollectionCountry`. May be used by Relay 1."""
+  collectionCountryEdge(
+    """The method to use when ordering `CollectionCountry`."""
+    orderBy: [CollectionCountriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CollectionCountriesEdge
+}
+
+"""All input for the create `CollectionCountry` mutation."""
+input CreateCollectionCountryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `CollectionCountry` to be created by this mutation."""
+  collectionCountry: CollectionCountryInput!
+}
+
+"""An input for mutations affecting `CollectionCountry`"""
+input CollectionCountryInput {
+  id: UUID
+  collectionId: Int!
+  countryGroupId: UUID
+  countryId: IsoAlphaTwoCountryCodes
+}
+
 """The output of our create `CollectionRelation` mutation."""
 type CreateCollectionRelationPayload {
   """
@@ -16806,6 +17718,11 @@ type CreateCollectionRelationPayload {
   """Reads a single `Episode` that is related to this `CollectionRelation`."""
   episode: Episode
 
+  """
+  Reads a single `Collection` that is related to this `CollectionRelation`.
+  """
+  childCollection: Collection
+
   """An edge for our `CollectionRelation`. May be used by Relay 1."""
   collectionRelationEdge(
     """The method to use when ordering `CollectionRelation`."""
@@ -16815,7 +17732,7 @@ type CreateCollectionRelationPayload {
 
 """
 All input for the create `CollectionRelation` mutation.
-@permissions: COLLECTIONS_EDIT,ADMIN
+@permissions: COLLECTION_EDITOR,ADMIN
 """
 input CreateCollectionRelationInput {
   """
@@ -16837,6 +17754,7 @@ input CollectionRelationInput {
   tvshowId: Int
   seasonId: Int
   episodeId: Int
+  childCollectionId: Int
 }
 
 """The output of our create `Collection` mutation."""
@@ -16889,6 +17807,7 @@ input CollectionInput {
   description: String
   languages: [String]
   assetSubtype: AssetSubtype
+  extendedField: String
 }
 
 """The output of our create `CollectionsImage` mutation."""
@@ -17034,6 +17953,50 @@ input ContentOwnerInput {
   """
   name: String!
   sortOrder: Int!
+}
+
+"""The output of our create `CountryGroup` mutation."""
+type CreateCountryGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CountryGroup` that was created by this mutation."""
+  countryGroup: CountryGroup
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CountryGroup`. May be used by Relay 1."""
+  countryGroupEdge(
+    """The method to use when ordering `CountryGroup`."""
+    orderBy: [CountryGroupsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CountryGroupsEdge
+}
+
+"""All input for the create `CountryGroup` mutation."""
+input CreateCountryGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `CountryGroup` to be created by this mutation."""
+  countryGroup: CountryGroupInput!
+}
+
+"""An input for mutations affecting `CountryGroup`"""
+input CountryGroupInput {
+  """
+  @maxLength(200)
+  @notEmpty()
+  """
+  name: String!
 }
 
 """The output of our create `Episode` mutation."""
@@ -19158,6 +20121,11 @@ type UpdateCollectionRelationPayload {
   """Reads a single `Episode` that is related to this `CollectionRelation`."""
   episode: Episode
 
+  """
+  Reads a single `Collection` that is related to this `CollectionRelation`.
+  """
+  childCollection: Collection
+
   """An edge for our `CollectionRelation`. May be used by Relay 1."""
   collectionRelationEdge(
     """The method to use when ordering `CollectionRelation`."""
@@ -19167,7 +20135,7 @@ type UpdateCollectionRelationPayload {
 
 """
 All input for the `updateCollectionRelation` mutation.
-@permissions: COLLECTIONS_EDIT,ADMIN
+@permissions: COLLECTION_EDITOR,ADMIN
 """
 input UpdateCollectionRelationInput {
   """
@@ -19193,6 +20161,7 @@ input CollectionRelationPatch {
   tvshowId: Int
   seasonId: Int
   episodeId: Int
+  childCollectionId: Int
 }
 
 """The output of our update `Collection` mutation."""
@@ -19250,6 +20219,7 @@ input CollectionPatch {
   description: String
   languages: [String]
   assetSubtype: AssetSubtype
+  extendedField: String
 }
 
 """
@@ -19430,6 +20400,111 @@ input ContentOwnerPatch {
   """
   name: String
   sortOrder: Int
+}
+
+"""The output of our update `CountryGroup` mutation."""
+type UpdateCountryGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CountryGroup` that was updated by this mutation."""
+  countryGroup: CountryGroup
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CountryGroup`. May be used by Relay 1."""
+  countryGroupEdge(
+    """The method to use when ordering `CountryGroup`."""
+    orderBy: [CountryGroupsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CountryGroupsEdge
+}
+
+"""All input for the `updateCountryGroup` mutation."""
+input UpdateCountryGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `CountryGroup` being updated.
+  """
+  patch: CountryGroupPatch!
+  id: UUID!
+}
+
+"""
+Represents an update to a `CountryGroup`. Fields that are set will be updated.
+"""
+input CountryGroupPatch {
+  """
+  @maxLength(200)
+  @notEmpty()
+  """
+  name: String
+}
+
+"""The output of our update `CountryGroupsCountry` mutation."""
+type UpdateCountryGroupsCountryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CountryGroupsCountry` that was updated by this mutation."""
+  countryGroupsCountry: CountryGroupsCountry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `CountryGroup` that is related to this `CountryGroupsCountry`.
+  """
+  group: CountryGroup
+
+  """An edge for our `CountryGroupsCountry`. May be used by Relay 1."""
+  countryGroupsCountryEdge(
+    """The method to use when ordering `CountryGroupsCountry`."""
+    orderBy: [CountryGroupsCountriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CountryGroupsCountriesEdge
+}
+
+"""All input for the `updateCountryGroupsCountry` mutation."""
+input UpdateCountryGroupsCountryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `CountryGroupsCountry` being updated.
+  """
+  patch: CountryGroupsCountryPatch!
+  groupId: UUID!
+  countryId: IsoAlphaTwoCountryCodes!
+}
+
+"""
+Represents an update to a `CountryGroupsCountry`. Fields that are set will be updated.
+"""
+input CountryGroupsCountryPatch {
+  groupId: UUID
+  countryId: IsoAlphaTwoCountryCodes
+  createdDate: Datetime
+  updatedDate: Datetime
+  createdUser: String
+  updatedUser: String
 }
 
 """The output of our update `Episode` mutation."""
@@ -21409,6 +22484,50 @@ input DeleteAgeRatingInput {
   id: UUID!
 }
 
+"""The output of our delete `CollectionCountry` mutation."""
+type DeleteCollectionCountryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CollectionCountry` that was deleted by this mutation."""
+  collectionCountry: CollectionCountry
+  deletedCollectionCountryNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `Collection` that is related to this `CollectionCountry`.
+  """
+  collection: Collection
+
+  """
+  Reads a single `CountryGroup` that is related to this `CollectionCountry`.
+  """
+  countryGroup: CountryGroup
+
+  """An edge for our `CollectionCountry`. May be used by Relay 1."""
+  collectionCountryEdge(
+    """The method to use when ordering `CollectionCountry`."""
+    orderBy: [CollectionCountriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CollectionCountriesEdge
+}
+
+"""All input for the `deleteCollectionCountry` mutation."""
+input DeleteCollectionCountryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
 """The output of our delete `CollectionRelation` mutation."""
 type DeleteCollectionRelationPayload {
   """
@@ -21443,6 +22562,11 @@ type DeleteCollectionRelationPayload {
   """Reads a single `Episode` that is related to this `CollectionRelation`."""
   episode: Episode
 
+  """
+  Reads a single `Collection` that is related to this `CollectionRelation`.
+  """
+  childCollection: Collection
+
   """An edge for our `CollectionRelation`. May be used by Relay 1."""
   collectionRelationEdge(
     """The method to use when ordering `CollectionRelation`."""
@@ -21452,7 +22576,7 @@ type DeleteCollectionRelationPayload {
 
 """
 All input for the `deleteCollectionRelation` mutation.
-@permissions: COLLECTIONS_EDIT,ADMIN
+@permissions: COLLECTION_EDITOR,ADMIN
 """
 input DeleteCollectionRelationInput {
   """
@@ -21631,6 +22755,80 @@ input DeleteContentOwnerInput {
   """
   clientMutationId: String
   id: UUID!
+}
+
+"""The output of our delete `CountryGroup` mutation."""
+type DeleteCountryGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CountryGroup` that was deleted by this mutation."""
+  countryGroup: CountryGroup
+  deletedCountryGroupNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CountryGroup`. May be used by Relay 1."""
+  countryGroupEdge(
+    """The method to use when ordering `CountryGroup`."""
+    orderBy: [CountryGroupsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CountryGroupsEdge
+}
+
+"""All input for the `deleteCountryGroup` mutation."""
+input DeleteCountryGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
+"""The output of our delete `CountryGroupsCountry` mutation."""
+type DeleteCountryGroupsCountryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CountryGroupsCountry` that was deleted by this mutation."""
+  countryGroupsCountry: CountryGroupsCountry
+  deletedCountryGroupsCountryNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `CountryGroup` that is related to this `CountryGroupsCountry`.
+  """
+  group: CountryGroup
+
+  """An edge for our `CountryGroupsCountry`. May be used by Relay 1."""
+  countryGroupsCountryEdge(
+    """The method to use when ordering `CountryGroupsCountry`."""
+    orderBy: [CountryGroupsCountriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CountryGroupsCountriesEdge
+}
+
+"""All input for the `deleteCountryGroupsCountry` mutation."""
+input DeleteCountryGroupsCountryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  groupId: UUID!
+  countryId: IsoAlphaTwoCountryCodes!
 }
 
 """The output of our delete `Episode` mutation."""
@@ -23442,6 +24640,16 @@ type BulkMutationPayload {
 type BulkMutationIntPayload {
   affectedIds: [Int]
   totalCount: Int
+}
+
+type CreateCountryGroupsCountryPayload {
+  message: String
+  countryGroupsCountries: [CountryGroupsCountry]
+}
+
+input CreateCountryGroupsCountryInput {
+  groupId: String!
+  countryId: IsoAlphaTwoCountryCodes!
 }
 
 type PopulatePayload {

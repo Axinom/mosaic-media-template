@@ -7,8 +7,8 @@ export const Language: React.FC = () => {
       title="Languages"
       stationKey="LanguagesExplorer"
       kind="NavigationExplorer"
-      calculateNavigateUrl={(item) => `/languages/${item.id}`}
-      onCreateAction="/languages/create"
+      calculateNavigateUrl={(item) => `/settings/media/languages/${item.id}`}
+      onCreateAction="/settings/media/languages/create"
     />
   );
 };

@@ -103,7 +103,7 @@ export function useMoviesFilters(): {
 
   const transformFilters = (
     filters: FilterValues<MovieData>,
-    _excludeItems?: number[],
+    excludeItems?: number[],
   ): MovieFilter | undefined => {
     return filterToPostGraphileFilter<MovieFilter>(filters, {
       title: 'includesInsensitive',
@@ -148,6 +148,20 @@ export function useMoviesFilters(): {
       },
       assetSubtype: 'equalTo',
       businessType: 'in',
+      id: (value) => {
+        if (typeof value === 'number') {
+          // User filter
+          return {
+            equalTo: value,
+            notIn: excludeItems,
+          };
+        } else {
+          // Exclude items
+          return {
+            notIn: excludeItems,
+          };
+        }
+      },
     });
   };
 

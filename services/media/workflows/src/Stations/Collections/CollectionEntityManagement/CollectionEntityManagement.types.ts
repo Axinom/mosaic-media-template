@@ -8,6 +8,7 @@ export type CollectionRelatedEntity = (
   | CollectionRelatedTvShow
   | CollectionRelatedSeason
   | CollectionRelatedEpisode
+  | CollectionRelatedCollection
 ) & { sortOrder: number; id?: number };
 
 export type CollectionRelatedMovie = CollectionRelation['movie'] & {
@@ -27,6 +28,12 @@ export type CollectionRelatedEpisode = NonNullable<
 > & {
   entityType: EntityType.Episode;
 };
+
+export type CollectionRelatedCollection =
+  CollectionRelation['childCollection'] & {
+    entityType: EntityType.Collection;
+    title: string;
+  };
 
 type CollectionRelation = NonNullable<
   CollectionRelatedEntitiesQuery['collection']

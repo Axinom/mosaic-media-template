@@ -327,7 +327,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
     },
   });
 
-  app.registerPage('/languages/create', LanguageCreate, {
+  app.registerPage('/settings/media/languages/create', LanguageCreate, {
     breadcrumb: () => 'New Language',
     permissions: {
       'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
@@ -335,7 +335,7 @@ export function register(app: PiletApi, extensions: Extensions): void {
   });
 
   app.registerPage(
-    '/languages/:languageId',
+    '/settings/media/languages/:languageId',
     () => (
       <ExtensionsContext.Provider value={extensions}>
         <LanguageDetails />

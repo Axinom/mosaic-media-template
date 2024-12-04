@@ -9,14 +9,10 @@ fragment LanguageExplorerProperties on Language {
   updatedUser
 }
 
-query Languages(
-  $filter: LanguageFilter
-  $orderBy: [LanguagesOrderBy!]
-  $after: Cursor
-) {
+query Languages($filter: LanguageFilter, $after: Cursor) {
   filtered: languages(
     filter: $filter
-    orderBy: $orderBy
+    orderBy: TITLE_ASC
     first: 30
     after: $after
   ) {
@@ -29,7 +25,7 @@ query Languages(
       ...LanguageExplorerProperties
     }
   }
-  nonFiltered: languages {
+  nonFiltered: languages(orderBy: TITLE_ASC) {
     totalCount
   }
 }

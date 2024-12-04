@@ -112,6 +112,10 @@ const createEntityUrl = ({
       return `/seasons/${entityId}`;
     case EntityType.Episode:
       return `/episodes/${entityId}`;
+    case EntityType.Collection:
+      return `/collections/${entityId}`;
+    default:
+      return `/`;
   }
 };
 

@@ -23,9 +23,7 @@ type SubmitResponse = CreateCollectionMutation['createCollection'];
 const collectionCreateSchema = Yup.object().shape<
   ObjectSchemaDefinition<FormData>
 >({
-  title: Yup.string()
-    .required('Title is a required field')
-    .max(100),
+  title: Yup.string().required('Title is a required field').max(100),
 });
 
 export const CollectionCreate: React.FC = () => {
@@ -36,12 +34,15 @@ export const CollectionCreate: React.FC = () => {
 
   const saveData = useCallback(
     async (formData: FormData): Promise<SubmitResponse> => {
+      const ContentProviderKey = 0;
+      const AssetType = 8;
       return (
         await collectionCreate({
           variables: {
             input: {
               collection: {
                 title: formData.title ?? '',
+                externalId: `${ContentProviderKey}-${AssetType}-movie-${new Date().getTime()}`,
               },
             },
           },

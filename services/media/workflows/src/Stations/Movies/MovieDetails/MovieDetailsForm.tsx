@@ -362,7 +362,7 @@ const Panel: React.FC = () => {
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
           {values.publishedDate ? (
-            <Paragraph title="Last Published">
+            <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
           ) : null}

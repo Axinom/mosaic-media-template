@@ -602,7 +602,7 @@ CREATE FUNCTION app_hidden.localizable_collection_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_4x1,image_id_clean_cover_1x1,image_id_clean_cover_4x1,image_id_list_1x1,image_id_list_15x16', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -630,7 +630,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_4x1,image_id_clean_cover_1x1,image_id_clean_cover_4x1,image_id_list_1x1,image_id_list_15x16', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -4991,6 +4991,53 @@ CREATE TABLE app_public.age_ratings (
 
 
 --
+-- Name: country_groups; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.country_groups (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    name text NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    created_user text DEFAULT 'Unknown'::text NOT NULL,
+    updated_user text DEFAULT 'Unknown'::text NOT NULL,
+    CONSTRAINT name_max_length CHECK (ax_utils.constraint_max_length(name, 200, 'The name can only be %2$s characters long.'::text)),
+    CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
+);
+
+
+--
+-- Name: iso_alpha_two_country_codes; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.iso_alpha_two_country_codes (
+    value text NOT NULL,
+    description text
+);
+
+
+--
+-- Name: TABLE iso_alpha_two_country_codes; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.iso_alpha_two_country_codes IS '@enum';
+
+
+--
+-- Name: all_country_types; Type: VIEW; Schema: app_public; Owner: -
+--
+
+CREATE VIEW app_public.all_country_types AS
+ SELECT (country_groups.id)::text AS id,
+    country_groups.name
+   FROM app_public.country_groups
+UNION ALL
+ SELECT iso_alpha_two_country_codes.value AS id,
+    iso_alpha_two_country_codes.description AS name
+   FROM app_public.iso_alpha_two_country_codes;
+
+
+--
 -- Name: asset_subtype; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -5025,6 +5072,18 @@ COMMENT ON TABLE app_public.business_type IS '@enum';
 
 
 --
+-- Name: collection_countries; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.collection_countries (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    collection_id integer NOT NULL,
+    country_group_id uuid,
+    country_id text
+);
+
+
+--
 -- Name: collection_image_type; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -5053,7 +5112,8 @@ CREATE TABLE app_public.collection_relations (
     tvshow_id integer,
     season_id integer,
     episode_id integer,
-    CONSTRAINT exactly_one_relation CHECK ((num_nonnulls(movie_id, tvshow_id, season_id, episode_id) = 1))
+    child_collection_id integer,
+    CONSTRAINT exactly_one_relation CHECK ((num_nonnulls(movie_id, tvshow_id, season_id, episode_id, child_collection_id) = 1))
 );
 
 
@@ -5097,6 +5157,7 @@ CREATE TABLE app_public.collections (
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
     languages text[] DEFAULT '{}'::text[],
     asset_subtype app_public.asset_subtype_enum DEFAULT 'COLLECTION'::text NOT NULL,
+    extended_field text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5184,6 +5245,20 @@ CREATE TABLE app_public.content_owners (
     CONSTRAINT name_is_trimmed CHECK (ax_utils.constraint_is_trimmed(name, 'The name must not start or end with whitespace value.'::text)),
     CONSTRAINT name_max_length CHECK (ax_utils.constraint_max_length(name, 50, 'The name can only be %2$s characters long.'::text)),
     CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
+);
+
+
+--
+-- Name: country_groups_countries; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.country_groups_countries (
+    group_id uuid NOT NULL,
+    country_id text NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    created_user text DEFAULT 'Unknown'::text NOT NULL,
+    updated_user text DEFAULT 'Unknown'::text NOT NULL
 );
 
 
@@ -5677,23 +5752,6 @@ CREATE TABLE app_public.ingest_status (
 --
 
 COMMENT ON TABLE app_public.ingest_status IS '@enum';
-
-
---
--- Name: iso_alpha_two_country_codes; Type: TABLE; Schema: app_public; Owner: -
---
-
-CREATE TABLE app_public.iso_alpha_two_country_codes (
-    value text NOT NULL,
-    description text
-);
-
-
---
--- Name: TABLE iso_alpha_two_country_codes; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON TABLE app_public.iso_alpha_two_country_codes IS '@enum';
 
 
 --
@@ -6809,6 +6867,14 @@ ALTER TABLE ONLY app_public.business_type
 
 
 --
+-- Name: collection_countries collection_countries_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_countries
+    ADD CONSTRAINT collection_countries_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: collections_images collection_id_image_type_are_unique; Type: CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -6886,6 +6952,22 @@ ALTER TABLE ONLY app_public.collections_tags
 
 ALTER TABLE ONLY app_public.content_owners
     ADD CONSTRAINT content_owners_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: country_groups_countries country_groups_countries_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.country_groups_countries
+    ADD CONSTRAINT country_groups_countries_pkey PRIMARY KEY (group_id, country_id);
+
+
+--
+-- Name: country_groups country_groups_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.country_groups
+    ADD CONSTRAINT country_groups_pkey PRIMARY KEY (id);
 
 
 --
@@ -7521,6 +7603,14 @@ ALTER TABLE ONLY app_public.tvshows_tvshow_genres
 
 
 --
+-- Name: collection_relations unique_child_collection_per_collection; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_relations
+    ADD CONSTRAINT unique_child_collection_per_collection UNIQUE (collection_id, child_collection_id);
+
+
+--
 -- Name: collection_relations unique_episode_per_collection; Type: CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -7676,6 +7766,13 @@ CREATE INDEX idx_age_ratings_updated_date_asc_with_id ON app_public.age_ratings 
 --
 
 CREATE INDEX idx_age_ratings_updated_date_desc_with_id ON app_public.age_ratings USING btree (updated_date DESC, id);
+
+
+--
+-- Name: idx_collection_relations_child_collection_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_collection_relations_child_collection_id ON app_public.collection_relations USING btree (child_collection_id);
 
 
 --
@@ -7844,6 +7941,20 @@ CREATE INDEX idx_content_owners_updated_date_asc_with_id ON app_public.content_o
 --
 
 CREATE INDEX idx_content_owners_updated_date_desc_with_id ON app_public.content_owners USING btree (updated_date DESC, id);
+
+
+--
+-- Name: idx_country_groups_countries_country_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_country_groups_countries_country_id ON app_public.country_groups_countries USING btree (country_id);
+
+
+--
+-- Name: idx_country_groups_name; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_country_groups_name ON app_public.country_groups USING btree (name);
 
 
 --
@@ -9443,6 +9554,20 @@ CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.content_owners FOR EA
 
 
 --
+-- Name: country_groups _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.country_groups FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
+
+
+--
+-- Name: country_groups_countries _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.country_groups_countries FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
+
+
+--
 -- Name: episodes _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -9814,6 +9939,20 @@ CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.content_owners FOR EACH
 
 
 --
+-- Name: country_groups _200_username; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.country_groups FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: country_groups_countries _200_username; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.country_groups_countries FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
 -- Name: episodes _200_username; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -9902,6 +10041,20 @@ CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.age_ratin
 --
 
 CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.content_owners FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: country_groups _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.country_groups FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: country_groups_countries _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.country_groups_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
@@ -11235,6 +11388,38 @@ CREATE TRIGGER tg_cleanup_orphaned_tvshow_snapshots AFTER DELETE ON app_public.t
 
 
 --
+-- Name: collection_countries collection_countries_collection_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_countries
+    ADD CONSTRAINT collection_countries_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES app_public.collections(id) ON DELETE CASCADE;
+
+
+--
+-- Name: collection_countries collection_countries_country_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_countries
+    ADD CONSTRAINT collection_countries_country_group_id_fkey FOREIGN KEY (country_group_id) REFERENCES app_public.country_groups(id);
+
+
+--
+-- Name: collection_countries collection_countries_country_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_countries
+    ADD CONSTRAINT collection_countries_country_id_fkey FOREIGN KEY (country_id) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: collection_relations collection_relations_child_collection_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_relations
+    ADD CONSTRAINT collection_relations_child_collection_id_fkey FOREIGN KEY (child_collection_id) REFERENCES app_public.collections(id) ON DELETE CASCADE;
+
+
+--
 -- Name: collection_relations collection_relations_collection_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11328,6 +11513,22 @@ ALTER TABLE ONLY app_public.collections_snapshots
 
 ALTER TABLE ONLY app_public.collections_tags
     ADD CONSTRAINT collections_tags_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES app_public.collections(id) ON DELETE CASCADE;
+
+
+--
+-- Name: country_groups_countries country_groups_countries_country_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.country_groups_countries
+    ADD CONSTRAINT country_groups_countries_country_id_fkey FOREIGN KEY (country_id) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: country_groups_countries country_groups_countries_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.country_groups_countries
+    ADD CONSTRAINT country_groups_countries_group_id_fkey FOREIGN KEY (group_id) REFERENCES app_public.country_groups(id) ON DELETE CASCADE;
 
 
 --
@@ -12020,14 +12221,14 @@ ALTER TABLE app_public.collection_relations ENABLE ROW LEVEL SECURITY;
 -- Name: collection_relations collection_relations_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collection_relations_authorization ON app_public.collection_relations USING ((( SELECT ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY collection_relations_authorization ON app_public.collection_relations USING ((( SELECT ax_utils.user_has_permission('COLLECTION_READER,COLLECTION_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('COLLECTION_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: collection_relations collection_relations_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collection_relations_authorization_delete ON app_public.collection_relations AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission));
+CREATE POLICY collection_relations_authorization_delete ON app_public.collection_relations AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('COLLECTION_EDITOR,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -15108,6 +15309,34 @@ GRANT INSERT(sort_order),UPDATE(sort_order) ON TABLE app_public.age_ratings TO m
 
 
 --
+-- Name: TABLE country_groups; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,DELETE ON TABLE app_public.country_groups TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN country_groups.name; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(name),UPDATE(name) ON TABLE app_public.country_groups TO media_service_gql_role;
+
+
+--
+-- Name: TABLE iso_alpha_two_country_codes; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT ON TABLE app_public.iso_alpha_two_country_codes TO media_service_login;
+
+
+--
+-- Name: TABLE all_country_types; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT ON TABLE app_public.all_country_types TO media_service_gql_role;
+
+
+--
 -- Name: TABLE asset_subtype; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15119,6 +15348,13 @@ GRANT SELECT ON TABLE app_public.asset_subtype TO media_service_login;
 --
 
 GRANT SELECT ON TABLE app_public.business_type TO media_service_login;
+
+
+--
+-- Name: TABLE collection_countries; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE ON TABLE app_public.collection_countries TO media_service_gql_role;
 
 
 --
@@ -15178,6 +15414,13 @@ GRANT UPDATE(episode_id) ON TABLE app_public.collection_relations TO media_servi
 
 
 --
+-- Name: COLUMN collection_relations.child_collection_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(child_collection_id) ON TABLE app_public.collection_relations TO media_service_gql_role;
+
+
+--
 -- Name: SEQUENCE collection_relations_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15234,6 +15477,13 @@ GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.collection
 
 
 --
+-- Name: COLUMN collections.extended_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.collections TO media_service_gql_role;
+
+
+--
 -- Name: SEQUENCE collections_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15287,6 +15537,13 @@ GRANT INSERT(name),UPDATE(name) ON TABLE app_public.content_owners TO media_serv
 --
 
 GRANT INSERT(sort_order),UPDATE(sort_order) ON TABLE app_public.content_owners TO media_service_gql_role;
+
+
+--
+-- Name: TABLE country_groups_countries; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.country_groups_countries TO media_service_gql_role;
 
 
 --
@@ -15854,13 +16111,6 @@ GRANT SELECT,USAGE ON SEQUENCE app_public.ingest_items_id_seq TO media_service_g
 --
 
 GRANT SELECT ON TABLE app_public.ingest_status TO media_service_login;
-
-
---
--- Name: TABLE iso_alpha_two_country_codes; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT SELECT ON TABLE app_public.iso_alpha_two_country_codes TO media_service_login;
 
 
 --

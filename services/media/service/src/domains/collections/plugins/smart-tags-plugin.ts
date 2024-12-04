@@ -41,6 +41,18 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
               omit: true,
             },
           },
+          unique_child_collection_per_collection: {
+            tags: {
+              omit: true,
+            },
+          },
+        },
+        attribute: {
+          child_collection_id: {
+            tags: {
+              fieldName: 'childCollection',
+            },
+          },
         },
       },
       'app_public.collections_snapshots': {

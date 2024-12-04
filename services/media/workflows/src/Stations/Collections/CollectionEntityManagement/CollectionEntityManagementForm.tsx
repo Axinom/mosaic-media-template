@@ -63,6 +63,8 @@ export const CollectionEntityManagementForm: React.FC<
                   return 'seasonId';
                 case EntityType.Episode:
                   return 'episodeId';
+                case EntityType.Collection:
+                  return 'childCollectionId';
                 default: {
                   throw new Error(
                     `Unsupported entityType found when calling generateCreateMutation.`,

@@ -303,9 +303,13 @@
         "collectionsTag",
         "collectionsTags",
         "getCollectionsTagsValues",
+        "collectionCountry",
+        "collectionCountries",
         "collectionsSnapshots",
         "snapshotValidationResults",
         "collectionMutated",
+        "childCollection",
+        "collectionCountries",
         "createCollection",
         "createCollectionRelation",
         "createCollectionsImage",
@@ -328,6 +332,8 @@
         "unpublishCollections",
         "createCollectionSnapshot",
         "createCollectionSnapshots",
+        "createCollectionCountry",
+        "deleteCollectionCountry",
         "snapshot",
         "snapshots",
         "snapshotValidationResults",
@@ -809,9 +815,13 @@
         "collectionsTag",
         "collectionsTags",
         "getCollectionsTagsValues",
+        "collectionCountry",
+        "collectionCountries",
         "collectionsSnapshots",
         "snapshotValidationResults",
-        "collectionMutated"
+        "collectionMutated",
+        "childCollection",
+        "collectionCountries"
       ]
     },
     {
@@ -827,9 +837,13 @@
         "collectionsTag",
         "collectionsTags",
         "getCollectionsTagsValues",
+        "collectionCountry",
+        "collectionCountries",
         "collectionsSnapshots",
         "snapshotValidationResults",
         "collectionMutated",
+        "childCollection",
+        "collectionCountries",
         "createCollection",
         "createCollectionRelation",
         "createCollectionsImage",
@@ -852,6 +866,8 @@
         "unpublishCollections",
         "createCollectionSnapshot",
         "createCollectionSnapshots",
+        "createCollectionCountry",
+        "deleteCollectionCountry",
         "movies",
         "tvshows",
         "seasons",
@@ -921,6 +937,31 @@
         "createContentOwner",
         "updateContentOwner",
         "deleteContentOwner"
+      ]
+    },
+    {
+      "key": "COUNTRIES_VIEW",
+      "title": "Countries: View",
+      "gqlOperations": [
+        "countryGroupsCountries",
+        "countryGroup",
+        "countryGroups",
+        "countryGroupsCountriesByGroupId",
+        "countryGroup",
+        "group",
+        "allCountryTypes"
+      ]
+    },
+    {
+      "key": "COUNTRIES_EDIT",
+      "title": "Countries: Edit",
+      "gqlOperations": [
+        "createCountryGroupsCountry",
+        "createCountryGroup",
+        "deleteCountryGroup",
+        "updateCountryGroup",
+        "updateCountryGroupsCountry",
+        "deleteCountryGroupsCountry"
       ]
     }
   ]

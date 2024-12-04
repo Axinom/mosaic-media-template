@@ -152,6 +152,68 @@ export enum AgeRatingsOrderBy {
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
 
+export type AllCountryType = {
+  __typename?: 'AllCountryType';
+  id?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * A condition to be used against `AllCountryType` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type AllCountryTypeCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `AllCountryType` object types. All fields are combined with a logical ‘and.’ */
+export type AllCountryTypeFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<AllCountryTypeFilter>>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<AllCountryTypeFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<AllCountryTypeFilter>>;
+};
+
+/** A connection to a list of `AllCountryType` values. */
+export type AllCountryTypesConnection = {
+  __typename?: 'AllCountryTypesConnection';
+  /** A list of edges which contains the `AllCountryType` and cursor to aid in pagination. */
+  edges: Array<AllCountryTypesEdge>;
+  /** A list of `AllCountryType` objects. */
+  nodes: Array<AllCountryType>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AllCountryType` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AllCountryType` edge in the connection. */
+export type AllCountryTypesEdge = {
+  __typename?: 'AllCountryTypesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `AllCountryType` at the end of the edge. */
+  node: AllCountryType;
+};
+
+/** Methods to use when ordering `AllCountryType`. */
+export enum AllCountryTypesOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL'
+}
+
 export enum AssetSubtype {
   /** Album */
   Album = 'ALBUM',
@@ -335,6 +397,8 @@ export type BusinessTypeFilter = {
 export type Collection = {
   __typename?: 'Collection';
   assetSubtype: AssetSubtype;
+  /** Reads and enables pagination through a set of `CollectionCountry`. */
+  collectionCountries: CollectionCountriesConnection;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   /** Reads and enables pagination through a set of `CollectionsImage`. */
@@ -346,6 +410,7 @@ export type Collection = {
   createdDate: Scalars['Datetime']['output'];
   createdUser: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
+  extendedField?: Maybe<Scalars['String']['output']>;
   externalId?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   languages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -356,6 +421,19 @@ export type Collection = {
   title: Scalars['String']['output'];
   updatedDate: Scalars['Datetime']['output'];
   updatedUser: Scalars['String']['output'];
+};
+
+
+/** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
+export type CollectionCollectionCountriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CollectionCountryCondition>;
+  filter?: InputMaybe<CollectionCountryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CollectionCountriesOrderBy>>;
 };
 
 
@@ -423,6 +501,8 @@ export type CollectionCondition = {
   createdUser?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `extendedField` field. */
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
   externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -449,14 +529,118 @@ export type CollectionCondition = {
   updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** A connection to a list of `CollectionCountry` values. */
+export type CollectionCountriesConnection = {
+  __typename?: 'CollectionCountriesConnection';
+  /** A list of edges which contains the `CollectionCountry` and cursor to aid in pagination. */
+  edges: Array<CollectionCountriesEdge>;
+  /** A list of `CollectionCountry` objects. */
+  nodes: Array<CollectionCountry>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CollectionCountry` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CollectionCountry` edge in the connection. */
+export type CollectionCountriesEdge = {
+  __typename?: 'CollectionCountriesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CollectionCountry` at the end of the edge. */
+  node: CollectionCountry;
+};
+
+/** Methods to use when ordering `CollectionCountry`. */
+export enum CollectionCountriesOrderBy {
+  CollectionIdAsc = 'COLLECTION_ID_ASC',
+  CollectionIdDesc = 'COLLECTION_ID_DESC',
+  CountryGroupIdAsc = 'COUNTRY_GROUP_ID_ASC',
+  CountryGroupIdDesc = 'COUNTRY_GROUP_ID_DESC',
+  CountryIdAsc = 'COUNTRY_ID_ASC',
+  CountryIdDesc = 'COUNTRY_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+export type CollectionCountry = {
+  __typename?: 'CollectionCountry';
+  /** Reads a single `Collection` that is related to this `CollectionCountry`. */
+  collection?: Maybe<Collection>;
+  collectionId: Scalars['Int']['output'];
+  /** Reads a single `CountryGroup` that is related to this `CollectionCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
+  countryGroupId?: Maybe<Scalars['UUID']['output']>;
+  countryId?: Maybe<IsoAlphaTwoCountryCodes>;
+  id: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `CollectionCountry` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type CollectionCountryCondition = {
+  /** Checks for equality with the object’s `collectionId` field. */
+  collectionId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `countryGroupId` field. */
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `countryId` field. */
+  countryId?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A filter to be used against `CollectionCountry` object types. All fields are combined with a logical ‘and.’ */
+export type CollectionCountryFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<CollectionCountryFilter>>;
+  /** Filter by the object’s `collection` relation. */
+  collection?: InputMaybe<CollectionFilter>;
+  /** Filter by the object’s `collectionId` field. */
+  collectionId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `countryGroup` relation. */
+  countryGroup?: InputMaybe<CountryGroupFilter>;
+  /** A related `countryGroup` exists. */
+  countryGroupExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `countryGroupId` field. */
+  countryGroupId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `countryId` field. */
+  countryId?: InputMaybe<IsoAlphaTwoCountryCodesFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<CollectionCountryFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<CollectionCountryFilter>>;
+};
+
+/** An input for mutations affecting `CollectionCountry` */
+export type CollectionCountryInput = {
+  collectionId: Scalars['Int']['input'];
+  countryGroupId?: InputMaybe<Scalars['UUID']['input']>;
+  countryId?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
 /** A filter to be used against `Collection` object types. All fields are combined with a logical ‘and.’ */
 export type CollectionFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<CollectionFilter>>;
   /** Filter by the object’s `assetSubtype` field. */
   assetSubtype?: InputMaybe<AssetSubtypeFilter>;
+  /** Filter by the object’s `collectionCountries` relation. */
+  collectionCountries?: InputMaybe<CollectionToManyCollectionCountryFilter>;
+  /** Some related `collectionCountries` exist. */
+  collectionCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `collectionRelations` relation. */
   collectionRelations?: InputMaybe<CollectionToManyCollectionRelationFilter>;
+  /** Filter by the object’s `collectionRelationsByChildCollectionId` relation. */
+  collectionRelationsByChildCollectionId?: InputMaybe<CollectionToManyCollectionRelationFilter>;
+  /** Some related `collectionRelationsByChildCollectionId` exist. */
+  collectionRelationsByChildCollectionIdExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Some related `collectionRelations` exist. */
   collectionRelationsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `collectionsImages` relation. */
@@ -477,6 +661,8 @@ export type CollectionFilter = {
   createdUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `extendedField` field. */
+  extendedField?: InputMaybe<StringFilter>;
   /** Filter by the object’s `externalId` field. */
   externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
@@ -504,8 +690,18 @@ export type CollectionFilter = {
 };
 
 export enum CollectionImageType {
-  /** Cover */
-  Cover = 'COVER'
+  /** Clean Cover 1x1 */
+  CleanCover_1X1 = 'CLEAN_COVER_1X1',
+  /** Clean Cover 4x1 */
+  CleanCover_4X1 = 'CLEAN_COVER_4X1',
+  /** Cover 1x1 */
+  Cover_1X1 = 'COVER_1X1',
+  /** Cover 4x1 */
+  Cover_4X1 = 'COVER_4X1',
+  /** List 15x16 */
+  List_15X16 = 'LIST_15X16',
+  /** List 1x1 */
+  List_1X1 = 'LIST_1X1'
 }
 
 /** A filter to be used against CollectionImageType fields. All fields are combined with a logical ‘and.’ */
@@ -538,6 +734,7 @@ export type CollectionImageTypeFilter = {
 export type CollectionInput = {
   assetSubtype?: InputMaybe<AssetSubtype>;
   description?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
@@ -552,6 +749,7 @@ export type CollectionInput = {
 export type CollectionPatch = {
   assetSubtype?: InputMaybe<AssetSubtype>;
   description?: InputMaybe<Scalars['String']['input']>;
+  extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   languages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
@@ -562,9 +760,12 @@ export type CollectionPatch = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
+/** @permissions: COLLECTION_READER,COLLECTION_EDITOR,ADMIN */
 export type CollectionRelation = {
   __typename?: 'CollectionRelation';
+  /** Reads a single `Collection` that is related to this `CollectionRelation`. */
+  childCollection?: Maybe<Collection>;
+  childCollectionId?: Maybe<Scalars['Int']['output']>;
   /** Reads a single `Collection` that is related to this `CollectionRelation`. */
   collection?: Maybe<Collection>;
   collectionId: Scalars['Int']['output'];
@@ -589,6 +790,8 @@ export type CollectionRelation = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type CollectionRelationCondition = {
+  /** Checks for equality with the object’s `childCollectionId` field. */
+  childCollectionId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `collectionId` field. */
   collectionId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `episodeId` field. */
@@ -609,6 +812,12 @@ export type CollectionRelationCondition = {
 export type CollectionRelationFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<CollectionRelationFilter>>;
+  /** Filter by the object’s `childCollection` relation. */
+  childCollection?: InputMaybe<CollectionFilter>;
+  /** A related `childCollection` exists. */
+  childCollectionExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `childCollectionId` field. */
+  childCollectionId?: InputMaybe<IntFilter>;
   /** Filter by the object’s `collection` relation. */
   collection?: InputMaybe<CollectionFilter>;
   /** Filter by the object’s `collectionId` field. */
@@ -649,6 +858,7 @@ export type CollectionRelationFilter = {
 
 /** An input for mutations affecting `CollectionRelation` */
 export type CollectionRelationInput = {
+  childCollectionId?: InputMaybe<Scalars['Int']['input']>;
   collectionId: Scalars['Int']['input'];
   episodeId?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -660,6 +870,7 @@ export type CollectionRelationInput = {
 
 /** Represents an update to a `CollectionRelation`. Fields that are set will be updated. */
 export type CollectionRelationPatch = {
+  childCollectionId?: InputMaybe<Scalars['Int']['input']>;
   collectionId?: InputMaybe<Scalars['Int']['input']>;
   episodeId?: InputMaybe<Scalars['Int']['input']>;
   movieId?: InputMaybe<Scalars['Int']['input']>;
@@ -670,7 +881,7 @@ export type CollectionRelationPatch = {
 
 /**
  * A connection to a list of `CollectionRelation` values.
- * @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ * @permissions: COLLECTION_READER,COLLECTION_EDITOR,ADMIN
  */
 export type CollectionRelationsConnection = {
   __typename?: 'CollectionRelationsConnection';
@@ -695,6 +906,8 @@ export type CollectionRelationsEdge = {
 
 /** Methods to use when ordering `CollectionRelation`. */
 export enum CollectionRelationsOrderBy {
+  ChildCollectionIdAsc = 'CHILD_COLLECTION_ID_ASC',
+  ChildCollectionIdDesc = 'CHILD_COLLECTION_ID_DESC',
   CollectionIdAsc = 'COLLECTION_ID_ASC',
   CollectionIdDesc = 'COLLECTION_ID_DESC',
   EpisodeIdAsc = 'EPISODE_ID_ASC',
@@ -842,6 +1055,8 @@ export enum CollectionsOrderBy {
   CreatedUserDesc = 'CREATED_USER_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  ExtendedFieldAsc = 'EXTENDED_FIELD_ASC',
+  ExtendedFieldDesc = 'EXTENDED_FIELD_DESC',
   ExternalIdAsc = 'EXTERNAL_ID_ASC',
   ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
@@ -1055,6 +1270,16 @@ export type CollectionSubscriptionPayload = {
   id: Scalars['Int']['output'];
 };
 
+/** A filter to be used against many `CollectionCountry` object types. All fields are combined with a logical ‘and.’ */
+export type CollectionToManyCollectionCountryFilter = {
+  /** Every related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CollectionCountryFilter>;
+  /** No related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CollectionCountryFilter>;
+  /** Some related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CollectionCountryFilter>;
+};
+
 /** A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’ */
 export type CollectionToManyCollectionRelationFilter = {
   /** Every related `CollectionRelation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -1221,6 +1446,282 @@ export enum ContentOwnersOrderBy {
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
 
+export type CountryGroup = {
+  __typename?: 'CountryGroup';
+  /** Reads and enables pagination through a set of `CollectionCountry`. */
+  collectionCountries: CollectionCountriesConnection;
+  /** Reads and enables pagination through a set of `CountryGroupsCountry`. */
+  countryGroupsCountriesByGroupId: CountryGroupsCountriesConnection;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  id: Scalars['UUID']['output'];
+  name: Scalars['String']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+};
+
+
+export type CountryGroupCollectionCountriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CollectionCountryCondition>;
+  filter?: InputMaybe<CollectionCountryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CollectionCountriesOrderBy>>;
+};
+
+
+export type CountryGroupCountryGroupsCountriesByGroupIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CountryGroupsCountryCondition>;
+  filter?: InputMaybe<CountryGroupsCountryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CountryGroupsCountriesOrderBy>>;
+};
+
+/**
+ * A condition to be used against `CountryGroup` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type CountryGroupCondition = {
+  /** Checks for equality with the object’s `createdDate` field. */
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdUser` field. */
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /**
+   * Checks for equality with the object’s `name` field.
+   * @maxLength(200)
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `CountryGroup` object types. All fields are combined with a logical ‘and.’ */
+export type CountryGroupFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<CountryGroupFilter>>;
+  /** Filter by the object’s `collectionCountries` relation. */
+  collectionCountries?: InputMaybe<CountryGroupToManyCollectionCountryFilter>;
+  /** Some related `collectionCountries` exist. */
+  collectionCountriesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `countryGroupsCountriesByGroupId` relation. */
+  countryGroupsCountriesByGroupId?: InputMaybe<CountryGroupToManyCountryGroupsCountryFilter>;
+  /** Some related `countryGroupsCountriesByGroupId` exist. */
+  countryGroupsCountriesByGroupIdExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<CountryGroupFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<CountryGroupFilter>>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/** An input for mutations affecting `CountryGroup` */
+export type CountryGroupInput = {
+  /**
+   * @maxLength(200)
+   * @notEmpty()
+   */
+  name: Scalars['String']['input'];
+};
+
+/** Represents an update to a `CountryGroup`. Fields that are set will be updated. */
+export type CountryGroupPatch = {
+  /**
+   * @maxLength(200)
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `CountryGroup` values. */
+export type CountryGroupsConnection = {
+  __typename?: 'CountryGroupsConnection';
+  /** A list of edges which contains the `CountryGroup` and cursor to aid in pagination. */
+  edges: Array<CountryGroupsEdge>;
+  /** A list of `CountryGroup` objects. */
+  nodes: Array<CountryGroup>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CountryGroup` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A connection to a list of `CountryGroupsCountry` values. */
+export type CountryGroupsCountriesConnection = {
+  __typename?: 'CountryGroupsCountriesConnection';
+  /** A list of edges which contains the `CountryGroupsCountry` and cursor to aid in pagination. */
+  edges: Array<CountryGroupsCountriesEdge>;
+  /** A list of `CountryGroupsCountry` objects. */
+  nodes: Array<CountryGroupsCountry>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CountryGroupsCountry` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CountryGroupsCountry` edge in the connection. */
+export type CountryGroupsCountriesEdge = {
+  __typename?: 'CountryGroupsCountriesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CountryGroupsCountry` at the end of the edge. */
+  node: CountryGroupsCountry;
+};
+
+/** Methods to use when ordering `CountryGroupsCountry`. */
+export enum CountryGroupsCountriesOrderBy {
+  CountryIdAsc = 'COUNTRY_ID_ASC',
+  CountryIdDesc = 'COUNTRY_ID_DESC',
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  GroupIdAsc = 'GROUP_ID_ASC',
+  GroupIdDesc = 'GROUP_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
+
+export type CountryGroupsCountry = {
+  __typename?: 'CountryGroupsCountry';
+  countryId: IsoAlphaTwoCountryCodes;
+  createdDate: Scalars['Datetime']['output'];
+  createdUser: Scalars['String']['output'];
+  /** Reads a single `CountryGroup` that is related to this `CountryGroupsCountry`. */
+  group?: Maybe<CountryGroup>;
+  groupId: Scalars['UUID']['output'];
+  updatedDate: Scalars['Datetime']['output'];
+  updatedUser: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `CountryGroupsCountry` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type CountryGroupsCountryCondition = {
+  /** Checks for equality with the object’s `countryId` field. */
+  countryId?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  /** Checks for equality with the object’s `createdDate` field. */
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdUser` field. */
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `groupId` field. */
+  groupId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against `CountryGroupsCountry` object types. All fields are combined with a logical ‘and.’ */
+export type CountryGroupsCountryFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<CountryGroupsCountryFilter>>;
+  /** Filter by the object’s `countryId` field. */
+  countryId?: InputMaybe<IsoAlphaTwoCountryCodesFilter>;
+  /** Filter by the object’s `createdDate` field. */
+  createdDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdUser` field. */
+  createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `group` relation. */
+  group?: InputMaybe<CountryGroupFilter>;
+  /** Filter by the object’s `groupId` field. */
+  groupId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<CountryGroupsCountryFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<CountryGroupsCountryFilter>>;
+  /** Filter by the object’s `updatedDate` field. */
+  updatedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `updatedUser` field. */
+  updatedUser?: InputMaybe<StringFilter>;
+};
+
+/** Represents an update to a `CountryGroupsCountry`. Fields that are set will be updated. */
+export type CountryGroupsCountryPatch = {
+  countryId?: InputMaybe<IsoAlphaTwoCountryCodes>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
+  groupId?: InputMaybe<Scalars['UUID']['input']>;
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A `CountryGroup` edge in the connection. */
+export type CountryGroupsEdge = {
+  __typename?: 'CountryGroupsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CountryGroup` at the end of the edge. */
+  node: CountryGroup;
+};
+
+/** Methods to use when ordering `CountryGroup`. */
+export enum CountryGroupsOrderBy {
+  CreatedDateAsc = 'CREATED_DATE_ASC',
+  CreatedDateDesc = 'CREATED_DATE_DESC',
+  CreatedUserAsc = 'CREATED_USER_ASC',
+  CreatedUserDesc = 'CREATED_USER_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UpdatedDateAsc = 'UPDATED_DATE_ASC',
+  UpdatedDateDesc = 'UPDATED_DATE_DESC',
+  UpdatedUserAsc = 'UPDATED_USER_ASC',
+  UpdatedUserDesc = 'UPDATED_USER_DESC'
+}
+
+/** A filter to be used against many `CollectionCountry` object types. All fields are combined with a logical ‘and.’ */
+export type CountryGroupToManyCollectionCountryFilter = {
+  /** Every related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CollectionCountryFilter>;
+  /** No related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CollectionCountryFilter>;
+  /** Some related `CollectionCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CollectionCountryFilter>;
+};
+
+/** A filter to be used against many `CountryGroupsCountry` object types. All fields are combined with a logical ‘and.’ */
+export type CountryGroupToManyCountryGroupsCountryFilter = {
+  /** Every related `CountryGroupsCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<CountryGroupsCountryFilter>;
+  /** No related `CountryGroupsCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<CountryGroupsCountryFilter>;
+  /** Some related `CountryGroupsCountry` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<CountryGroupsCountryFilter>;
+};
+
 /** All input for the create `AgeRating` mutation. */
 export type CreateAgeRatingInput = {
   /** The `AgeRating` to be created by this mutation. */
@@ -1252,6 +1753,43 @@ export type CreateAgeRatingPayload = {
 /** The output of our create `AgeRating` mutation. */
 export type CreateAgeRatingPayloadAgeRatingEdgeArgs = {
   orderBy?: InputMaybe<Array<AgeRatingsOrderBy>>;
+};
+
+/** All input for the create `CollectionCountry` mutation. */
+export type CreateCollectionCountryInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `CollectionCountry` to be created by this mutation. */
+  collectionCountry: CollectionCountryInput;
+};
+
+/** The output of our create `CollectionCountry` mutation. */
+export type CreateCollectionCountryPayload = {
+  __typename?: 'CreateCollectionCountryPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Collection` that is related to this `CollectionCountry`. */
+  collection?: Maybe<Collection>;
+  /** The `CollectionCountry` that was created by this mutation. */
+  collectionCountry?: Maybe<CollectionCountry>;
+  /** An edge for our `CollectionCountry`. May be used by Relay 1. */
+  collectionCountryEdge?: Maybe<CollectionCountriesEdge>;
+  /** Reads a single `CountryGroup` that is related to this `CollectionCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `CollectionCountry` mutation. */
+export type CreateCollectionCountryPayloadCollectionCountryEdgeArgs = {
+  orderBy?: InputMaybe<Array<CollectionCountriesOrderBy>>;
 };
 
 /**
@@ -1292,7 +1830,7 @@ export type CreateCollectionPayloadCollectionEdgeArgs = {
 
 /**
  * All input for the create `CollectionRelation` mutation.
- * @permissions: COLLECTIONS_EDIT,ADMIN
+ * @permissions: COLLECTION_EDITOR,ADMIN
  */
 export type CreateCollectionRelationInput = {
   /**
@@ -1307,6 +1845,8 @@ export type CreateCollectionRelationInput = {
 /** The output of our create `CollectionRelation` mutation. */
 export type CreateCollectionRelationPayload = {
   __typename?: 'CreateCollectionRelationPayload';
+  /** Reads a single `Collection` that is related to this `CollectionRelation`. */
+  childCollection?: Maybe<Collection>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -1443,6 +1983,50 @@ export type CreateContentOwnerPayload = {
 /** The output of our create `ContentOwner` mutation. */
 export type CreateContentOwnerPayloadContentOwnerEdgeArgs = {
   orderBy?: InputMaybe<Array<ContentOwnersOrderBy>>;
+};
+
+/** All input for the create `CountryGroup` mutation. */
+export type CreateCountryGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `CountryGroup` to be created by this mutation. */
+  countryGroup: CountryGroupInput;
+};
+
+/** The output of our create `CountryGroup` mutation. */
+export type CreateCountryGroupPayload = {
+  __typename?: 'CreateCountryGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `CountryGroup` that was created by this mutation. */
+  countryGroup?: Maybe<CountryGroup>;
+  /** An edge for our `CountryGroup`. May be used by Relay 1. */
+  countryGroupEdge?: Maybe<CountryGroupsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `CountryGroup` mutation. */
+export type CreateCountryGroupPayloadCountryGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<CountryGroupsOrderBy>>;
+};
+
+export type CreateCountryGroupsCountryInput = {
+  countryId: IsoAlphaTwoCountryCodes;
+  groupId: Scalars['String']['input'];
+};
+
+export type CreateCountryGroupsCountryPayload = {
+  __typename?: 'CreateCountryGroupsCountryPayload';
+  countryGroupsCountries?: Maybe<Array<Maybe<CountryGroupsCountry>>>;
+  message?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -3061,6 +3645,43 @@ export type DeleteCollectionByExternalIdInput = {
   externalId: Scalars['String']['input'];
 };
 
+/** All input for the `deleteCollectionCountry` mutation. */
+export type DeleteCollectionCountryInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `CollectionCountry` mutation. */
+export type DeleteCollectionCountryPayload = {
+  __typename?: 'DeleteCollectionCountryPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Collection` that is related to this `CollectionCountry`. */
+  collection?: Maybe<Collection>;
+  /** The `CollectionCountry` that was deleted by this mutation. */
+  collectionCountry?: Maybe<CollectionCountry>;
+  /** An edge for our `CollectionCountry`. May be used by Relay 1. */
+  collectionCountryEdge?: Maybe<CollectionCountriesEdge>;
+  /** Reads a single `CountryGroup` that is related to this `CollectionCountry`. */
+  countryGroup?: Maybe<CountryGroup>;
+  deletedCollectionCountryNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `CollectionCountry` mutation. */
+export type DeleteCollectionCountryPayloadCollectionCountryEdgeArgs = {
+  orderBy?: InputMaybe<Array<CollectionCountriesOrderBy>>;
+};
+
 /**
  * All input for the `deleteCollection` mutation.
  * @permissions: COLLECTIONS_EDIT,ADMIN
@@ -3099,7 +3720,7 @@ export type DeleteCollectionPayloadCollectionEdgeArgs = {
 
 /**
  * All input for the `deleteCollectionRelation` mutation.
- * @permissions: COLLECTIONS_EDIT,ADMIN
+ * @permissions: COLLECTION_EDITOR,ADMIN
  */
 export type DeleteCollectionRelationInput = {
   /**
@@ -3113,6 +3734,8 @@ export type DeleteCollectionRelationInput = {
 /** The output of our delete `CollectionRelation` mutation. */
 export type DeleteCollectionRelationPayload = {
   __typename?: 'DeleteCollectionRelationPayload';
+  /** Reads a single `Collection` that is related to this `CollectionRelation`. */
+  childCollection?: Maybe<Collection>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -3253,6 +3876,75 @@ export type DeleteContentOwnerPayload = {
 /** The output of our delete `ContentOwner` mutation. */
 export type DeleteContentOwnerPayloadContentOwnerEdgeArgs = {
   orderBy?: InputMaybe<Array<ContentOwnersOrderBy>>;
+};
+
+/** All input for the `deleteCountryGroup` mutation. */
+export type DeleteCountryGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `CountryGroup` mutation. */
+export type DeleteCountryGroupPayload = {
+  __typename?: 'DeleteCountryGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `CountryGroup` that was deleted by this mutation. */
+  countryGroup?: Maybe<CountryGroup>;
+  /** An edge for our `CountryGroup`. May be used by Relay 1. */
+  countryGroupEdge?: Maybe<CountryGroupsEdge>;
+  deletedCountryGroupNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `CountryGroup` mutation. */
+export type DeleteCountryGroupPayloadCountryGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<CountryGroupsOrderBy>>;
+};
+
+/** All input for the `deleteCountryGroupsCountry` mutation. */
+export type DeleteCountryGroupsCountryInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  countryId: IsoAlphaTwoCountryCodes;
+  groupId: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `CountryGroupsCountry` mutation. */
+export type DeleteCountryGroupsCountryPayload = {
+  __typename?: 'DeleteCountryGroupsCountryPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `CountryGroupsCountry` that was deleted by this mutation. */
+  countryGroupsCountry?: Maybe<CountryGroupsCountry>;
+  /** An edge for our `CountryGroupsCountry`. May be used by Relay 1. */
+  countryGroupsCountryEdge?: Maybe<CountryGroupsCountriesEdge>;
+  deletedCountryGroupsCountryNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Reads a single `CountryGroup` that is related to this `CountryGroupsCountry`. */
+  group?: Maybe<CountryGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `CountryGroupsCountry` mutation. */
+export type DeleteCountryGroupsCountryPayloadCountryGroupsCountryEdgeArgs = {
+  orderBy?: InputMaybe<Array<CountryGroupsCountriesOrderBy>>;
 };
 
 /**
@@ -6846,6 +7538,7 @@ export type IngestDocument = {
   inProgressCount: Scalars['Int']['output'];
   itemsCount: Scalars['Int']['output'];
   name: Scalars['String']['output'];
+  startedCount: Scalars['Int']['output'];
   status: IngestStatus;
   successCount: Scalars['Int']['output'];
   title: Scalars['String']['output'];
@@ -6891,6 +7584,8 @@ export type IngestDocumentCondition = {
   itemsCount?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `startedCount` field. */
+  startedCount?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `status` field. */
   status?: InputMaybe<IngestStatus>;
   /** Checks for equality with the object’s `successCount` field. */
@@ -6939,6 +7634,8 @@ export type IngestDocumentFilter = {
   not?: InputMaybe<IngestDocumentFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<IngestDocumentFilter>>;
+  /** Filter by the object’s `startedCount` field. */
+  startedCount?: InputMaybe<IntFilter>;
   /** Filter by the object’s `status` field. */
   status?: InputMaybe<IngestStatusFilter>;
   /** Filter by the object’s `successCount` field. */
@@ -7046,6 +7743,8 @@ export enum IngestDocumentsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  StartedCountAsc = 'STARTED_COUNT_ASC',
+  StartedCountDesc = 'STARTED_COUNT_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   SuccessCountAsc = 'SUCCESS_COUNT_ASC',
@@ -9925,6 +10624,8 @@ export type Mutation = {
   createAgeRating?: Maybe<CreateAgeRatingPayload>;
   /** Creates a single `Collection`. */
   createCollection?: Maybe<CreateCollectionPayload>;
+  /** Creates a single `CollectionCountry`. */
+  createCollectionCountry?: Maybe<CreateCollectionCountryPayload>;
   /** Creates a single `CollectionRelation`. */
   createCollectionRelation?: Maybe<CreateCollectionRelationPayload>;
   /** Creates a single `CollectionsImage`. */
@@ -9936,6 +10637,10 @@ export type Mutation = {
   createCollectionsTag?: Maybe<CreateCollectionsTagPayload>;
   /** Creates a single `ContentOwner`. */
   createContentOwner?: Maybe<CreateContentOwnerPayload>;
+  /** Creates a single `CountryGroup`. */
+  createCountryGroup?: Maybe<CreateCountryGroupPayload>;
+  /** Adds a custom mutation to add countries for countries groups. */
+  createCountryGroupsCountry?: Maybe<CreateCountryGroupsCountryPayload>;
   /** Creates a single `Episode`. */
   createEpisode?: Maybe<CreateEpisodePayload>;
   /** Creates a single `EpisodesCast`. */
@@ -10038,6 +10743,8 @@ export type Mutation = {
   deleteCollection?: Maybe<DeleteCollectionPayload>;
   /** Deletes a single `Collection` using a unique key. */
   deleteCollectionByExternalId?: Maybe<DeleteCollectionPayload>;
+  /** Deletes a single `CollectionCountry` using a unique key. */
+  deleteCollectionCountry?: Maybe<DeleteCollectionCountryPayload>;
   /** Deletes a single `CollectionRelation` using a unique key. */
   deleteCollectionRelation?: Maybe<DeleteCollectionRelationPayload>;
   deleteCollectionRelations?: Maybe<BulkMutationIntPayload>;
@@ -10048,6 +10755,10 @@ export type Mutation = {
   deleteCollectionsTag?: Maybe<DeleteCollectionsTagPayload>;
   /** Deletes a single `ContentOwner` using a unique key. */
   deleteContentOwner?: Maybe<DeleteContentOwnerPayload>;
+  /** Deletes a single `CountryGroup` using a unique key. */
+  deleteCountryGroup?: Maybe<DeleteCountryGroupPayload>;
+  /** Deletes a single `CountryGroupsCountry` using a unique key. */
+  deleteCountryGroupsCountry?: Maybe<DeleteCountryGroupsCountryPayload>;
   /** Deletes a single `Episode` using a unique key. */
   deleteEpisode?: Maybe<DeleteEpisodePayload>;
   /** Deletes a single `Episode` using a unique key. */
@@ -10210,6 +10921,10 @@ export type Mutation = {
   updateCollectionsTag?: Maybe<UpdateCollectionsTagPayload>;
   /** Updates a single `ContentOwner` using a unique key and a patch. */
   updateContentOwner?: Maybe<UpdateContentOwnerPayload>;
+  /** Updates a single `CountryGroup` using a unique key and a patch. */
+  updateCountryGroup?: Maybe<UpdateCountryGroupPayload>;
+  /** Updates a single `CountryGroupsCountry` using a unique key and a patch. */
+  updateCountryGroupsCountry?: Maybe<UpdateCountryGroupsCountryPayload>;
   /** Updates a single `Episode` using a unique key and a patch. */
   updateEpisode?: Maybe<UpdateEpisodePayload>;
   /** Updates a single `Episode` using a unique key and a patch. */
@@ -10300,6 +11015,12 @@ export type MutationCreateCollectionArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCollectionCountryArgs = {
+  input: CreateCollectionCountryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCollectionRelationArgs = {
   input: CreateCollectionRelationInput;
 };
@@ -10332,6 +11053,18 @@ export type MutationCreateCollectionsTagArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateContentOwnerArgs = {
   input: CreateContentOwnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCountryGroupArgs = {
+  input: CreateCountryGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCountryGroupsCountryArgs = {
+  input: CreateCountryGroupsCountryInput;
 };
 
 
@@ -10642,6 +11375,12 @@ export type MutationDeleteCollectionByExternalIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCollectionCountryArgs = {
+  input: DeleteCollectionCountryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteCollectionRelationArgs = {
   input: DeleteCollectionRelationInput;
 };
@@ -10674,6 +11413,18 @@ export type MutationDeleteCollectionsTagArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteContentOwnerArgs = {
   input: DeleteContentOwnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCountryGroupArgs = {
+  input: DeleteCountryGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCountryGroupsCountryArgs = {
+  input: DeleteCountryGroupsCountryInput;
 };
 
 
@@ -11230,6 +11981,18 @@ export type MutationUpdateContentOwnerArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCountryGroupArgs = {
+  input: UpdateCountryGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCountryGroupsCountryArgs = {
+  input: UpdateCountryGroupsCountryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateEpisodeArgs = {
   input: UpdateEpisodeInput;
 };
@@ -11515,8 +12278,13 @@ export type Query = {
   ageRating?: Maybe<AgeRating>;
   /** Reads and enables pagination through a set of `AgeRating`. */
   ageRatings?: Maybe<AgeRatingsConnection>;
+  /** Reads and enables pagination through a set of `AllCountryType`. */
+  allCountryTypes?: Maybe<AllCountryTypesConnection>;
   collection?: Maybe<Collection>;
   collectionByExternalId?: Maybe<Collection>;
+  /** Reads and enables pagination through a set of `CollectionCountry`. */
+  collectionCountries?: Maybe<CollectionCountriesConnection>;
+  collectionCountry?: Maybe<CollectionCountry>;
   collectionRelation?: Maybe<CollectionRelation>;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations?: Maybe<CollectionRelationsConnection>;
@@ -11530,6 +12298,11 @@ export type Query = {
   contentOwner?: Maybe<ContentOwner>;
   /** Reads and enables pagination through a set of `ContentOwner`. */
   contentOwners?: Maybe<ContentOwnersConnection>;
+  countryGroup?: Maybe<CountryGroup>;
+  /** Reads and enables pagination through a set of `CountryGroup`. */
+  countryGroups?: Maybe<CountryGroupsConnection>;
+  /** Reads and enables pagination through a set of `CountryGroupsCountry`. */
+  countryGroupsCountries?: Maybe<CountryGroupsCountriesConnection>;
   episode?: Maybe<Episode>;
   episodeByExternalId?: Maybe<Episode>;
   /** Reads and enables pagination through a set of `Episode`. */
@@ -11704,6 +12477,19 @@ export type QueryAgeRatingsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAllCountryTypesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AllCountryTypeCondition>;
+  filter?: InputMaybe<AllCountryTypeFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AllCountryTypesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryCollectionArgs = {
   id: Scalars['Int']['input'];
 };
@@ -11712,6 +12498,25 @@ export type QueryCollectionArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryCollectionByExternalIdArgs = {
   externalId: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCollectionCountriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CollectionCountryCondition>;
+  filter?: InputMaybe<CollectionCountryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CollectionCountriesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCollectionCountryArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -11796,6 +12601,38 @@ export type QueryContentOwnersArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ContentOwnersOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCountryGroupArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCountryGroupsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CountryGroupCondition>;
+  filter?: InputMaybe<CountryGroupFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CountryGroupsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCountryGroupsCountriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CountryGroupsCountryCondition>;
+  filter?: InputMaybe<CountryGroupsCountryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CountryGroupsCountriesOrderBy>>;
 };
 
 
@@ -16926,7 +17763,7 @@ export type UpdateCollectionPayloadCollectionEdgeArgs = {
 
 /**
  * All input for the `updateCollectionRelation` mutation.
- * @permissions: COLLECTIONS_EDIT,ADMIN
+ * @permissions: COLLECTION_EDITOR,ADMIN
  */
 export type UpdateCollectionRelationInput = {
   /**
@@ -16942,6 +17779,8 @@ export type UpdateCollectionRelationInput = {
 /** The output of our update `CollectionRelation` mutation. */
 export type UpdateCollectionRelationPayload = {
   __typename?: 'UpdateCollectionRelationPayload';
+  /** Reads a single `Collection` that is related to this `CollectionRelation`. */
+  childCollection?: Maybe<Collection>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -17084,6 +17923,77 @@ export type UpdateContentOwnerPayload = {
 /** The output of our update `ContentOwner` mutation. */
 export type UpdateContentOwnerPayloadContentOwnerEdgeArgs = {
   orderBy?: InputMaybe<Array<ContentOwnersOrderBy>>;
+};
+
+/** All input for the `updateCountryGroup` mutation. */
+export type UpdateCountryGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `CountryGroup` being updated. */
+  patch: CountryGroupPatch;
+};
+
+/** The output of our update `CountryGroup` mutation. */
+export type UpdateCountryGroupPayload = {
+  __typename?: 'UpdateCountryGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `CountryGroup` that was updated by this mutation. */
+  countryGroup?: Maybe<CountryGroup>;
+  /** An edge for our `CountryGroup`. May be used by Relay 1. */
+  countryGroupEdge?: Maybe<CountryGroupsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `CountryGroup` mutation. */
+export type UpdateCountryGroupPayloadCountryGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<CountryGroupsOrderBy>>;
+};
+
+/** All input for the `updateCountryGroupsCountry` mutation. */
+export type UpdateCountryGroupsCountryInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  countryId: IsoAlphaTwoCountryCodes;
+  groupId: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `CountryGroupsCountry` being updated. */
+  patch: CountryGroupsCountryPatch;
+};
+
+/** The output of our update `CountryGroupsCountry` mutation. */
+export type UpdateCountryGroupsCountryPayload = {
+  __typename?: 'UpdateCountryGroupsCountryPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `CountryGroupsCountry` that was updated by this mutation. */
+  countryGroupsCountry?: Maybe<CountryGroupsCountry>;
+  /** An edge for our `CountryGroupsCountry`. May be used by Relay 1. */
+  countryGroupsCountryEdge?: Maybe<CountryGroupsCountriesEdge>;
+  /** Reads a single `CountryGroup` that is related to this `CountryGroupsCountry`. */
+  group?: Maybe<CountryGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `CountryGroupsCountry` mutation. */
+export type UpdateCountryGroupsCountryPayloadCountryGroupsCountryEdgeArgs = {
+  orderBy?: InputMaybe<Array<CountryGroupsCountriesOrderBy>>;
 };
 
 /**
@@ -18533,7 +19443,7 @@ export type CollectionQueryVariables = Exact<{
 }>;
 
 
-export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageType: CollectionImageType, imageId: any }> }, movies: { __typename?: 'CollectionRelationsConnection', totalCount: number }, tvshows: { __typename?: 'CollectionRelationsConnection', totalCount: number }, seasons: { __typename?: 'CollectionRelationsConnection', totalCount: number }, episodes: { __typename?: 'CollectionRelationsConnection', totalCount: number } } | null };
+export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, languages?: Array<string | null> | null, extendedField?: string | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', id: any, collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageType: CollectionImageType, imageId: any }> }, movies: { __typename?: 'CollectionRelationsConnection', totalCount: number }, tvshows: { __typename?: 'CollectionRelationsConnection', totalCount: number }, seasons: { __typename?: 'CollectionRelationsConnection', totalCount: number }, episodes: { __typename?: 'CollectionRelationsConnection', totalCount: number } } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null, allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
 
 export type DeleteCollectionMutationVariables = Exact<{
   input: DeleteCollectionInput;
@@ -18576,7 +19486,7 @@ export type CollectionRelatedEntitiesQueryVariables = Exact<{
 }>;
 
 
-export type CollectionRelatedEntitiesQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, movie?: { __typename?: 'Movie', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> } } | null, tvshow?: { __typename?: 'Tvshow', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null, season?: { __typename?: 'Season', index: number, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> } } | null, episode?: { __typename?: 'Episode', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> } } | null }> } } | null };
+export type CollectionRelatedEntitiesQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, movie?: { __typename?: 'Movie', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> } } | null, tvshow?: { __typename?: 'Tvshow', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null, season?: { __typename?: 'Season', index: number, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> } } | null, episode?: { __typename?: 'Episode', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> } } | null, childCollection?: { __typename?: 'Collection', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null }> } } | null };
 
 export type CollectionImagesQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -18592,7 +19502,7 @@ export type CreateCollectionSnapshotMutationVariables = Exact<{
 
 export type CreateCollectionSnapshotMutation = { __typename?: 'Mutation', createCollectionSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
-export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
+export type CollectionExplorerPropertiesFragment = { __typename: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, languages?: Array<string | null> | null, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
 
 export type CollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -18601,12 +19511,12 @@ export type CollectionsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
+export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, languages?: Array<string | null> | null, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
 
 export type CollectionsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, publishStatus: PublishStatus, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
+export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, languages?: Array<string | null> | null, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
 
 export type BulkDeleteCollectionsMutationVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -18635,6 +19545,51 @@ export type BulkCreateCollectionSnapshotsMutationVariables = Exact<{
 
 
 export type BulkCreateCollectionSnapshotsMutation = { __typename?: 'Mutation', createCollectionSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
+
+export type CreateCountryGroupMutationVariables = Exact<{
+  input: CreateCountryGroupInput;
+}>;
+
+
+export type CreateCountryGroupMutation = { __typename?: 'Mutation', createCountryGroup?: { __typename?: 'CreateCountryGroupPayload', countryGroup?: { __typename?: 'CountryGroup', name: string, id: any } | null } | null };
+
+export type CountryGroupQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type CountryGroupQuery = { __typename?: 'Query', countryGroup?: { __typename?: 'CountryGroup', id: any, name: string, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, countryGroupsCountriesByGroupId: { __typename?: 'CountryGroupsCountriesConnection', nodes: Array<{ __typename?: 'CountryGroupsCountry', countryId: IsoAlphaTwoCountryCodes }> } } | null };
+
+export type CountryGroupTitleQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type CountryGroupTitleQuery = { __typename?: 'Query', countryGroup?: { __typename?: 'CountryGroup', name: string } | null };
+
+export type DeleteCountryGroupMutationVariables = Exact<{
+  input: DeleteCountryGroupInput;
+}>;
+
+
+export type DeleteCountryGroupMutation = { __typename?: 'Mutation', deleteCountryGroup?: { __typename?: 'DeleteCountryGroupPayload', countryGroup?: { __typename?: 'CountryGroup', id: any } | null } | null };
+
+export type UpdateCountryGroupMutationVariables = Exact<{
+  input: UpdateCountryGroupInput;
+}>;
+
+
+export type UpdateCountryGroupMutation = { __typename?: 'Mutation', updateCountryGroup?: { __typename?: 'UpdateCountryGroupPayload', countryGroup?: { __typename?: 'CountryGroup', id: any } | null } | null };
+
+export type CountryGroupExplorerPropertiesFragment = { __typename?: 'CountryGroup', id: any, name: string, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, countryGroupsCountriesByGroupId: { __typename?: 'CountryGroupsCountriesConnection', nodes: Array<{ __typename?: 'CountryGroupsCountry', countryId: IsoAlphaTwoCountryCodes, groupId: any }> } };
+
+export type CountryGroupsQueryVariables = Exact<{
+  filter?: InputMaybe<CountryGroupFilter>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+}>;
+
+
+export type CountryGroupsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CountryGroupsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'CountryGroup', id: any, name: string, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, countryGroupsCountriesByGroupId: { __typename?: 'CountryGroupsCountriesConnection', nodes: Array<{ __typename?: 'CountryGroupsCountry', countryId: IsoAlphaTwoCountryCodes, groupId: any }> } }> } | null, nonFiltered?: { __typename?: 'CountryGroupsConnection', totalCount: number } | null };
 
 export type CreateEpisodeMutationVariables = Exact<{
   input: CreateEpisodeInput;
@@ -18941,39 +19896,10 @@ export type UpdateLanguageMutationVariables = Exact<{
 
 export type UpdateLanguageMutation = { __typename?: 'Mutation', updateLanguage?: { __typename?: 'UpdateLanguagePayload', clientMutationId?: string | null } | null };
 
-export type BulkDeleteMoviesMutationVariables = Exact<{
-  filter?: InputMaybe<MovieFilter>;
-}>;
-
-
-export type BulkDeleteMoviesMutation = { __typename?: 'Mutation', deleteMovies?: { __typename?: 'BulkMutationIntPayload', affectedIds?: Array<number | null> | null } | null };
-
-export type BulkPublishMoviesMutationVariables = Exact<{
-  filter?: InputMaybe<MovieFilter>;
-}>;
-
-
-export type BulkPublishMoviesMutation = { __typename?: 'Mutation', publishMovies?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
-
-export type BulkUnpublishMoviesMutationVariables = Exact<{
-  filter?: InputMaybe<MovieFilter>;
-}>;
-
-
-export type BulkUnpublishMoviesMutation = { __typename?: 'Mutation', unpublishMovies?: { __typename?: 'BulkMutationPayload', affectedIds?: Array<number | null> | null } | null };
-
-export type BulkCreateMovieSnapshotsMutationVariables = Exact<{
-  filter?: InputMaybe<MovieFilter>;
-}>;
-
-
-export type BulkCreateMovieSnapshotsMutation = { __typename?: 'Mutation', createMovieSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
-
 export type LanguageExplorerPropertiesFragment = { __typename?: 'Language', code: string, title: string, createdDate: any, createdUser: string, id: number, native?: string | null, updatedDate: any, updatedUser: string };
 
 export type LanguagesQueryVariables = Exact<{
   filter?: InputMaybe<LanguageFilter>;
-  orderBy?: InputMaybe<Array<LanguagesOrderBy> | LanguagesOrderBy>;
   after?: InputMaybe<Scalars['Cursor']['input']>;
 }>;
 
@@ -19154,6 +20080,34 @@ export type MovieVideosQueryVariables = Exact<{
 
 
 export type MovieVideosQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', mainVideoId?: any | null, moviesTrailers: { __typename?: 'MoviesTrailersConnection', nodes: Array<{ __typename?: 'MoviesTrailer', videoId: any }> } } | null };
+
+export type BulkDeleteMoviesMutationVariables = Exact<{
+  filter?: InputMaybe<MovieFilter>;
+}>;
+
+
+export type BulkDeleteMoviesMutation = { __typename?: 'Mutation', deleteMovies?: { __typename?: 'BulkMutationIntPayload', affectedIds?: Array<number | null> | null } | null };
+
+export type BulkPublishMoviesMutationVariables = Exact<{
+  filter?: InputMaybe<MovieFilter>;
+}>;
+
+
+export type BulkPublishMoviesMutation = { __typename?: 'Mutation', publishMovies?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
+
+export type BulkUnpublishMoviesMutationVariables = Exact<{
+  filter?: InputMaybe<MovieFilter>;
+}>;
+
+
+export type BulkUnpublishMoviesMutation = { __typename?: 'Mutation', unpublishMovies?: { __typename?: 'BulkMutationPayload', affectedIds?: Array<number | null> | null } | null };
+
+export type BulkCreateMovieSnapshotsMutationVariables = Exact<{
+  filter?: InputMaybe<MovieFilter>;
+}>;
+
+
+export type BulkCreateMovieSnapshotsMutation = { __typename?: 'Mutation', createMovieSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
 
 export type PublishingSnapshotQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -19626,6 +20580,8 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
     fragment CollectionExplorerProperties on Collection {
   id
   title
+  description
+  __typename
   externalId
   collectionsTags {
     nodes {
@@ -19635,7 +20591,17 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
   publishedDate
   createdDate
   updatedDate
+  updatedUser
   publishStatus
+  languages
+  assetSubtype
+  collectionCountries {
+    nodes {
+      collectionId
+      countryGroupId
+      countryId
+    }
+  }
   collectionsImages {
     nodes {
       imageId
@@ -19644,6 +20610,22 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
   collectionRelations(orderBy: SORT_ORDER_DESC) {
     nodes {
       sortOrder
+    }
+  }
+}
+    `;
+export const CountryGroupExplorerPropertiesFragmentDoc = gql`
+    fragment CountryGroupExplorerProperties on CountryGroup {
+  id
+  name
+  createdDate
+  createdUser
+  updatedDate
+  updatedUser
+  countryGroupsCountriesByGroupId {
+    nodes {
+      countryId
+      groupId
     }
   }
 }
@@ -19955,6 +20937,16 @@ export const CollectionDocument = gql`
     synopsis
     description
     externalId
+    languages
+    extendedField
+    collectionCountries {
+      nodes {
+        id
+        collectionId
+        countryGroupId
+        countryId
+      }
+    }
     collectionsTags {
       nodes {
         name
@@ -19985,6 +20977,18 @@ export const CollectionDocument = gql`
     }
     episodes: collectionRelations(filter: {episodeExists: true}) {
       totalCount
+    }
+  }
+  languages(orderBy: TITLE_ASC) {
+    nodes {
+      code
+      title
+    }
+  }
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
     }
   }
 }
@@ -20231,6 +21235,16 @@ export const CollectionRelatedEntitiesDocument = gql`
           title
           publishStatus
           entityImages: episodesImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+        childCollection {
+          entityId: id
+          title
+          publishStatus
+          entityImages: collectionsImages {
             nodes {
               imageId
             }
@@ -20561,6 +21575,243 @@ export function useBulkCreateCollectionSnapshotsMutation(baseOptions?: Apollo.Mu
 export type BulkCreateCollectionSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateCollectionSnapshotsMutation>;
 export type BulkCreateCollectionSnapshotsMutationResult = Apollo.MutationResult<BulkCreateCollectionSnapshotsMutation>;
 export type BulkCreateCollectionSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateCollectionSnapshotsMutation, BulkCreateCollectionSnapshotsMutationVariables>;
+export const CreateCountryGroupDocument = gql`
+    mutation CreateCountryGroup($input: CreateCountryGroupInput!) {
+  createCountryGroup(input: $input) {
+    countryGroup {
+      name
+      id
+    }
+  }
+}
+    `;
+export type CreateCountryGroupMutationFn = Apollo.MutationFunction<CreateCountryGroupMutation, CreateCountryGroupMutationVariables>;
+
+/**
+ * __useCreateCountryGroupMutation__
+ *
+ * To run a mutation, you first call `useCreateCountryGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCountryGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCountryGroupMutation, { data, loading, error }] = useCreateCountryGroupMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCountryGroupMutation(baseOptions?: Apollo.MutationHookOptions<CreateCountryGroupMutation, CreateCountryGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCountryGroupMutation, CreateCountryGroupMutationVariables>(CreateCountryGroupDocument, options);
+      }
+export type CreateCountryGroupMutationHookResult = ReturnType<typeof useCreateCountryGroupMutation>;
+export type CreateCountryGroupMutationResult = Apollo.MutationResult<CreateCountryGroupMutation>;
+export type CreateCountryGroupMutationOptions = Apollo.BaseMutationOptions<CreateCountryGroupMutation, CreateCountryGroupMutationVariables>;
+export const CountryGroupDocument = gql`
+    query CountryGroup($id: UUID!) {
+  countryGroup(id: $id) {
+    id
+    name
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+    countryGroupsCountriesByGroupId {
+      nodes {
+        countryId
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useCountryGroupQuery__
+ *
+ * To run a query within a React component, call `useCountryGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountryGroupQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountryGroupQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCountryGroupQuery(baseOptions: Apollo.QueryHookOptions<CountryGroupQuery, CountryGroupQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountryGroupQuery, CountryGroupQueryVariables>(CountryGroupDocument, options);
+      }
+export function useCountryGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountryGroupQuery, CountryGroupQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountryGroupQuery, CountryGroupQueryVariables>(CountryGroupDocument, options);
+        }
+export type CountryGroupQueryHookResult = ReturnType<typeof useCountryGroupQuery>;
+export type CountryGroupLazyQueryHookResult = ReturnType<typeof useCountryGroupLazyQuery>;
+export type CountryGroupQueryResult = Apollo.QueryResult<CountryGroupQuery, CountryGroupQueryVariables>;
+export const CountryGroupTitleDocument = gql`
+    query CountryGroupTitle($id: UUID!) {
+  countryGroup(id: $id) {
+    name
+  }
+}
+    `;
+
+/**
+ * __useCountryGroupTitleQuery__
+ *
+ * To run a query within a React component, call `useCountryGroupTitleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountryGroupTitleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountryGroupTitleQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCountryGroupTitleQuery(baseOptions: Apollo.QueryHookOptions<CountryGroupTitleQuery, CountryGroupTitleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountryGroupTitleQuery, CountryGroupTitleQueryVariables>(CountryGroupTitleDocument, options);
+      }
+export function useCountryGroupTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountryGroupTitleQuery, CountryGroupTitleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountryGroupTitleQuery, CountryGroupTitleQueryVariables>(CountryGroupTitleDocument, options);
+        }
+export type CountryGroupTitleQueryHookResult = ReturnType<typeof useCountryGroupTitleQuery>;
+export type CountryGroupTitleLazyQueryHookResult = ReturnType<typeof useCountryGroupTitleLazyQuery>;
+export type CountryGroupTitleQueryResult = Apollo.QueryResult<CountryGroupTitleQuery, CountryGroupTitleQueryVariables>;
+export const DeleteCountryGroupDocument = gql`
+    mutation DeleteCountryGroup($input: DeleteCountryGroupInput!) {
+  deleteCountryGroup(input: $input) {
+    countryGroup {
+      id
+    }
+  }
+}
+    `;
+export type DeleteCountryGroupMutationFn = Apollo.MutationFunction<DeleteCountryGroupMutation, DeleteCountryGroupMutationVariables>;
+
+/**
+ * __useDeleteCountryGroupMutation__
+ *
+ * To run a mutation, you first call `useDeleteCountryGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCountryGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCountryGroupMutation, { data, loading, error }] = useDeleteCountryGroupMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteCountryGroupMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCountryGroupMutation, DeleteCountryGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCountryGroupMutation, DeleteCountryGroupMutationVariables>(DeleteCountryGroupDocument, options);
+      }
+export type DeleteCountryGroupMutationHookResult = ReturnType<typeof useDeleteCountryGroupMutation>;
+export type DeleteCountryGroupMutationResult = Apollo.MutationResult<DeleteCountryGroupMutation>;
+export type DeleteCountryGroupMutationOptions = Apollo.BaseMutationOptions<DeleteCountryGroupMutation, DeleteCountryGroupMutationVariables>;
+export const UpdateCountryGroupDocument = gql`
+    mutation UpdateCountryGroup($input: UpdateCountryGroupInput!) {
+  updateCountryGroup(input: $input) {
+    countryGroup {
+      id
+    }
+  }
+}
+    `;
+export type UpdateCountryGroupMutationFn = Apollo.MutationFunction<UpdateCountryGroupMutation, UpdateCountryGroupMutationVariables>;
+
+/**
+ * __useUpdateCountryGroupMutation__
+ *
+ * To run a mutation, you first call `useUpdateCountryGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCountryGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCountryGroupMutation, { data, loading, error }] = useUpdateCountryGroupMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCountryGroupMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCountryGroupMutation, UpdateCountryGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCountryGroupMutation, UpdateCountryGroupMutationVariables>(UpdateCountryGroupDocument, options);
+      }
+export type UpdateCountryGroupMutationHookResult = ReturnType<typeof useUpdateCountryGroupMutation>;
+export type UpdateCountryGroupMutationResult = Apollo.MutationResult<UpdateCountryGroupMutation>;
+export type UpdateCountryGroupMutationOptions = Apollo.BaseMutationOptions<UpdateCountryGroupMutation, UpdateCountryGroupMutationVariables>;
+export const CountryGroupsDocument = gql`
+    query CountryGroups($filter: CountryGroupFilter, $after: Cursor) {
+  filtered: countryGroups(
+    filter: $filter
+    orderBy: NAME_ASC
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...CountryGroupExplorerProperties
+    }
+  }
+  nonFiltered: countryGroups {
+    totalCount
+  }
+}
+    ${CountryGroupExplorerPropertiesFragmentDoc}`;
+
+/**
+ * __useCountryGroupsQuery__
+ *
+ * To run a query within a React component, call `useCountryGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountryGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountryGroupsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useCountryGroupsQuery(baseOptions?: Apollo.QueryHookOptions<CountryGroupsQuery, CountryGroupsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountryGroupsQuery, CountryGroupsQueryVariables>(CountryGroupsDocument, options);
+      }
+export function useCountryGroupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountryGroupsQuery, CountryGroupsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountryGroupsQuery, CountryGroupsQueryVariables>(CountryGroupsDocument, options);
+        }
+export type CountryGroupsQueryHookResult = ReturnType<typeof useCountryGroupsQuery>;
+export type CountryGroupsLazyQueryHookResult = ReturnType<typeof useCountryGroupsLazyQuery>;
+export type CountryGroupsQueryResult = Apollo.QueryResult<CountryGroupsQuery, CountryGroupsQueryVariables>;
 export const CreateEpisodeDocument = gql`
     mutation CreateEpisode($input: CreateEpisodeInput!) {
   createEpisode(input: $input) {
@@ -22235,143 +23486,11 @@ export function useUpdateLanguageMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateLanguageMutationHookResult = ReturnType<typeof useUpdateLanguageMutation>;
 export type UpdateLanguageMutationResult = Apollo.MutationResult<UpdateLanguageMutation>;
 export type UpdateLanguageMutationOptions = Apollo.BaseMutationOptions<UpdateLanguageMutation, UpdateLanguageMutationVariables>;
-export const BulkDeleteMoviesDocument = gql`
-    mutation BulkDeleteMovies($filter: MovieFilter) {
-  deleteMovies(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkDeleteMoviesMutationFn = Apollo.MutationFunction<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
-
-/**
- * __useBulkDeleteMoviesMutation__
- *
- * To run a mutation, you first call `useBulkDeleteMoviesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkDeleteMoviesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkDeleteMoviesMutation, { data, loading, error }] = useBulkDeleteMoviesMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkDeleteMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>(BulkDeleteMoviesDocument, options);
-      }
-export type BulkDeleteMoviesMutationHookResult = ReturnType<typeof useBulkDeleteMoviesMutation>;
-export type BulkDeleteMoviesMutationResult = Apollo.MutationResult<BulkDeleteMoviesMutation>;
-export type BulkDeleteMoviesMutationOptions = Apollo.BaseMutationOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
-export const BulkPublishMoviesDocument = gql`
-    mutation BulkPublishMovies($filter: MovieFilter) {
-  publishMovies(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkPublishMoviesMutationFn = Apollo.MutationFunction<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
-
-/**
- * __useBulkPublishMoviesMutation__
- *
- * To run a mutation, you first call `useBulkPublishMoviesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkPublishMoviesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkPublishMoviesMutation, { data, loading, error }] = useBulkPublishMoviesMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkPublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>(BulkPublishMoviesDocument, options);
-      }
-export type BulkPublishMoviesMutationHookResult = ReturnType<typeof useBulkPublishMoviesMutation>;
-export type BulkPublishMoviesMutationResult = Apollo.MutationResult<BulkPublishMoviesMutation>;
-export type BulkPublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
-export const BulkUnpublishMoviesDocument = gql`
-    mutation BulkUnpublishMovies($filter: MovieFilter) {
-  unpublishMovies(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkUnpublishMoviesMutationFn = Apollo.MutationFunction<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
-
-/**
- * __useBulkUnpublishMoviesMutation__
- *
- * To run a mutation, you first call `useBulkUnpublishMoviesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkUnpublishMoviesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkUnpublishMoviesMutation, { data, loading, error }] = useBulkUnpublishMoviesMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkUnpublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>(BulkUnpublishMoviesDocument, options);
-      }
-export type BulkUnpublishMoviesMutationHookResult = ReturnType<typeof useBulkUnpublishMoviesMutation>;
-export type BulkUnpublishMoviesMutationResult = Apollo.MutationResult<BulkUnpublishMoviesMutation>;
-export type BulkUnpublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
-export const BulkCreateMovieSnapshotsDocument = gql`
-    mutation BulkCreateMovieSnapshots($filter: MovieFilter) {
-  createMovieSnapshots(filter: $filter) {
-    affectedIds
-  }
-}
-    `;
-export type BulkCreateMovieSnapshotsMutationFn = Apollo.MutationFunction<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
-
-/**
- * __useBulkCreateMovieSnapshotsMutation__
- *
- * To run a mutation, you first call `useBulkCreateMovieSnapshotsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBulkCreateMovieSnapshotsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [bulkCreateMovieSnapshotsMutation, { data, loading, error }] = useBulkCreateMovieSnapshotsMutation({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useBulkCreateMovieSnapshotsMutation(baseOptions?: Apollo.MutationHookOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>(BulkCreateMovieSnapshotsDocument, options);
-      }
-export type BulkCreateMovieSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateMovieSnapshotsMutation>;
-export type BulkCreateMovieSnapshotsMutationResult = Apollo.MutationResult<BulkCreateMovieSnapshotsMutation>;
-export type BulkCreateMovieSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
 export const LanguagesDocument = gql`
-    query Languages($filter: LanguageFilter, $orderBy: [LanguagesOrderBy!], $after: Cursor) {
+    query Languages($filter: LanguageFilter, $after: Cursor) {
   filtered: languages(
     filter: $filter
-    orderBy: $orderBy
+    orderBy: TITLE_ASC
     first: 30
     after: $after
   ) {
@@ -22384,7 +23503,7 @@ export const LanguagesDocument = gql`
       ...LanguageExplorerProperties
     }
   }
-  nonFiltered: languages {
+  nonFiltered: languages(orderBy: TITLE_ASC) {
     totalCount
   }
 }
@@ -22403,7 +23522,6 @@ export const LanguagesDocument = gql`
  * const { data, loading, error } = useLanguagesQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      orderBy: // value for 'orderBy'
  *      after: // value for 'after'
  *   },
  * });
@@ -23446,6 +24564,138 @@ export function useMovieVideosLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type MovieVideosQueryHookResult = ReturnType<typeof useMovieVideosQuery>;
 export type MovieVideosLazyQueryHookResult = ReturnType<typeof useMovieVideosLazyQuery>;
 export type MovieVideosQueryResult = Apollo.QueryResult<MovieVideosQuery, MovieVideosQueryVariables>;
+export const BulkDeleteMoviesDocument = gql`
+    mutation BulkDeleteMovies($filter: MovieFilter) {
+  deleteMovies(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkDeleteMoviesMutationFn = Apollo.MutationFunction<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
+
+/**
+ * __useBulkDeleteMoviesMutation__
+ *
+ * To run a mutation, you first call `useBulkDeleteMoviesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkDeleteMoviesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkDeleteMoviesMutation, { data, loading, error }] = useBulkDeleteMoviesMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkDeleteMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>(BulkDeleteMoviesDocument, options);
+      }
+export type BulkDeleteMoviesMutationHookResult = ReturnType<typeof useBulkDeleteMoviesMutation>;
+export type BulkDeleteMoviesMutationResult = Apollo.MutationResult<BulkDeleteMoviesMutation>;
+export type BulkDeleteMoviesMutationOptions = Apollo.BaseMutationOptions<BulkDeleteMoviesMutation, BulkDeleteMoviesMutationVariables>;
+export const BulkPublishMoviesDocument = gql`
+    mutation BulkPublishMovies($filter: MovieFilter) {
+  publishMovies(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkPublishMoviesMutationFn = Apollo.MutationFunction<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
+
+/**
+ * __useBulkPublishMoviesMutation__
+ *
+ * To run a mutation, you first call `useBulkPublishMoviesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkPublishMoviesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkPublishMoviesMutation, { data, loading, error }] = useBulkPublishMoviesMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkPublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>(BulkPublishMoviesDocument, options);
+      }
+export type BulkPublishMoviesMutationHookResult = ReturnType<typeof useBulkPublishMoviesMutation>;
+export type BulkPublishMoviesMutationResult = Apollo.MutationResult<BulkPublishMoviesMutation>;
+export type BulkPublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkPublishMoviesMutation, BulkPublishMoviesMutationVariables>;
+export const BulkUnpublishMoviesDocument = gql`
+    mutation BulkUnpublishMovies($filter: MovieFilter) {
+  unpublishMovies(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkUnpublishMoviesMutationFn = Apollo.MutationFunction<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
+
+/**
+ * __useBulkUnpublishMoviesMutation__
+ *
+ * To run a mutation, you first call `useBulkUnpublishMoviesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkUnpublishMoviesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkUnpublishMoviesMutation, { data, loading, error }] = useBulkUnpublishMoviesMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkUnpublishMoviesMutation(baseOptions?: Apollo.MutationHookOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>(BulkUnpublishMoviesDocument, options);
+      }
+export type BulkUnpublishMoviesMutationHookResult = ReturnType<typeof useBulkUnpublishMoviesMutation>;
+export type BulkUnpublishMoviesMutationResult = Apollo.MutationResult<BulkUnpublishMoviesMutation>;
+export type BulkUnpublishMoviesMutationOptions = Apollo.BaseMutationOptions<BulkUnpublishMoviesMutation, BulkUnpublishMoviesMutationVariables>;
+export const BulkCreateMovieSnapshotsDocument = gql`
+    mutation BulkCreateMovieSnapshots($filter: MovieFilter) {
+  createMovieSnapshots(filter: $filter) {
+    affectedIds
+  }
+}
+    `;
+export type BulkCreateMovieSnapshotsMutationFn = Apollo.MutationFunction<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
+
+/**
+ * __useBulkCreateMovieSnapshotsMutation__
+ *
+ * To run a mutation, you first call `useBulkCreateMovieSnapshotsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkCreateMovieSnapshotsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkCreateMovieSnapshotsMutation, { data, loading, error }] = useBulkCreateMovieSnapshotsMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBulkCreateMovieSnapshotsMutation(baseOptions?: Apollo.MutationHookOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>(BulkCreateMovieSnapshotsDocument, options);
+      }
+export type BulkCreateMovieSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateMovieSnapshotsMutation>;
+export type BulkCreateMovieSnapshotsMutationResult = Apollo.MutationResult<BulkCreateMovieSnapshotsMutation>;
+export type BulkCreateMovieSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateMovieSnapshotsMutation, BulkCreateMovieSnapshotsMutationVariables>;
 export const PublishingSnapshotDocument = gql`
     query PublishingSnapshot($id: Int!) {
   snapshot(id: $id) {

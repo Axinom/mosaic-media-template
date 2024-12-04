@@ -42,7 +42,7 @@ export function useCollectionDetailsActions(id: number): {
         path: `/collections/${id}/entities`,
       },
       {
-        label: 'Manage Cover Image',
+        label: 'Manage Images',
         path: `/collections/${id}/images`,
       },
       ...(localizationPath

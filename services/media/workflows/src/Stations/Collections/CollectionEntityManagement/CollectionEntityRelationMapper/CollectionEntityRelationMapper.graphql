@@ -46,6 +46,17 @@ query CollectionRelatedEntities($id: Int!) {
           }
         }
 
+        childCollection {
+          entityId: id
+          title
+          publishStatus
+          entityImages: collectionsImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+
         id
         sortOrder
       }

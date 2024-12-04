@@ -1,10 +1,8 @@
 import {
-  createDateRangeFilterValidators,
   filterToPostGraphileFilter,
   FilterType,
   FilterTypes,
   FilterValues,
-  transformRange,
 } from '@axinom/mosaic-ui';
 import { CollectionFilter, PublishStatus } from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
@@ -17,9 +15,6 @@ export function useCollectionsFilters(): {
     excludeItems?: number[],
   ) => CollectionFilter | undefined;
 } {
-  const [createFromDateFilterValidator, createToDateFilterValidator] =
-    createDateRangeFilterValidators<CollectionData>();
-
   const filterOptions: FilterType<CollectionData>[] = [
     {
       label: 'Title',
@@ -37,42 +32,33 @@ export function useCollectionsFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Publication Status',
+      label: 'Language',
+      property: 'languages',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Type',
+      property: '__typename',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Subtype',
+      property: 'assetSubtype',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Countries',
+      property: 'collectionCountries',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Publishing Status',
       property: 'publishStatus',
       type: FilterTypes.Options,
       options: Object.keys(PublishStatus).map((key) => ({
         value: PublishStatus[key],
         label: getEnumLabel(PublishStatus[key]),
       })),
-    },
-    {
-      label: 'Publication Period (From)',
-      property: 'publishedDate',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('publishedDate'),
-    },
-    {
-      label: 'Publication Period (To)',
-      property: 'publishedDate',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('publishedDate'),
-    },
-    {
-      label: 'Creation Period (From)',
-      property: 'createdDate',
-      type: FilterTypes.Date,
-      onValidate: createFromDateFilterValidator('createdDate'),
-    },
-    {
-      label: 'Creation Period (To)',
-      property: 'createdDate',
-      type: FilterTypes.Date,
-      onValidate: createToDateFilterValidator('createdDate'),
-    },
-    {
-      label: 'ID',
-      property: 'id',
-      type: FilterTypes.Numeric,
     },
   ];
 
@@ -81,12 +67,15 @@ export function useCollectionsFilters(): {
     excludeItems?: number[],
   ): CollectionFilter | undefined => {
     return filterToPostGraphileFilter<CollectionFilter>(filters, {
-      title: 'includes',
+      title: 'includesInsensitive',
       externalId: 'includes',
       collectionsTags: ['some', 'name', 'includes'],
+      languages: 'equalTo',
+      assetSubtype: 'equalTo',
+      collectionCountries: 'equalTo',
       publishStatus: 'in',
-      createdDate: transformRange,
-      publishedDate: transformRange,
+      // createdDate: transformRange,
+      // publishedDate: transformRange,
       id: (value) => {
         if (typeof value === 'number') {
           // User filter
