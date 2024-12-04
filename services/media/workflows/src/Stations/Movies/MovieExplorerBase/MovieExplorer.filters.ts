@@ -94,11 +94,6 @@ export function useMoviesFilters(): {
         label: getEnumLabel(BusinessType[key]),
       })),
     },
-    // {
-    //   label: 'TVOD Tier',
-    //   property: 'studio',
-    //   type: FilterTypes.FreeText,
-    // },
   ];
 
   const transformFilters = (
@@ -140,7 +135,7 @@ export function useMoviesFilters(): {
           return {
             every: {
               licenseEnd: {
-                lessThanOrEqualTo: '2024-09-29T18:30:00+00:00',
+                lessThanOrEqualTo: new Date(),
               },
             },
           };

@@ -10,7 +10,9 @@ import {
   getFormDiff,
   InfoPanel,
   Paragraph,
+  ReadOnlyTextField,
   Section,
+  SelectField,
   SingleLineTextField,
   TagsField,
   TextAreaField,
@@ -24,18 +26,25 @@ import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext } from '../../../externals';
 import {
+  AssetSubtype,
+  BusinessType,
   Mutation,
   MutationCreateTvshowsCastArgs,
+  MutationCreateTvshowsDirectorArgs,
   MutationCreateTvshowsProductionCountryArgs,
   MutationCreateTvshowsTagArgs,
   MutationCreateTvshowsTvshowGenreArgs,
   MutationDeleteTvshowsCastArgs,
+  MutationDeleteTvshowsDirectorArgs,
   MutationDeleteTvshowsProductionCountryArgs,
   MutationDeleteTvshowsTagArgs,
   MutationDeleteTvshowsTvshowGenreArgs,
   SearchTvShowCastDocument,
   SearchTvShowCastQuery,
   SearchTvShowCastQueryVariables,
+  SearchTvShowDirectorDocument,
+  SearchTvShowDirectorQuery,
+  SearchTvShowDirectorQueryVariables,
   SearchTvShowProductionCountriesDocument,
   SearchTvShowProductionCountriesQuery,
   SearchTvShowProductionCountriesQueryVariables,
@@ -64,6 +73,11 @@ const tvShowDetailSchema = Yup.object().shape<
   title: Yup.string().required('Title is a required field').max(100),
 });
 
+interface selectOption {
+  value: string;
+  label: string;
+}
+
 export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
   tvshowId,
 }) => {
@@ -73,7 +87,20 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
     fetchPolicy: 'network-only',
   });
 
-  const { allGenres, cast, genres, productionCountries, tags } = useMemo(
+  const {
+    allGenres,
+    cast,
+    genres,
+    productionCountries,
+    tags,
+    allAgeRatings,
+    allContentOwners,
+    director,
+    allLanguages,
+    audioLanguages,
+    subtitleLanguages,
+    captionLanguages,
+  } = useMemo(
     () => ({
       allGenres:
         data?.tvshowGenres?.nodes.reduce<{
@@ -90,6 +117,32 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
       productionCountries: data?.tvshow?.tvshowsProductionCountries.nodes.map(
         (node) => node.name,
       ),
+      audioLanguages: data?.tvshow?.audioLanguages?.map((lang) => lang ?? ''),
+      subtitleLanguages: data?.tvshow?.subtitleLanguages?.map(
+        (lang) => lang ?? '',
+      ),
+      captionLanguages: data?.tvshow?.captionLanguages?.map(
+        (lang) => lang ?? '',
+      ),
+      director: data?.tvshow?.tvshowsDirectors.nodes.map((node) => node.name),
+      allAgeRatings:
+        data?.ageRatings?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
+      allContentOwners:
+        data?.contentOwners?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
+
+      allLanguages: data?.languages?.nodes.map((node) => node.title) ?? [],
     }),
     [data],
   );
@@ -192,6 +245,22 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
         prefix: 'productionCountry',
       });
 
+      const directorAssignmentMutations = generateArrayMutations({
+        current: formData.director,
+        original: initialData.data?.director,
+        generateCreateMutation: (name) =>
+          generateUpdateGQLFragment<MutationCreateTvshowsDirectorArgs>(
+            'createMoviesDirector',
+            { input: { tvshowsDirector: { name, tvshowId } } },
+          ),
+        generateDeleteMutation: (name) =>
+          generateUpdateGQLFragment<MutationDeleteTvshowsDirectorArgs>(
+            'deleteMoviesDirector',
+            { input: { tvshowId, name } },
+          ),
+        prefix: 'director',
+      });
+
       const patch = createUpdateDto(formData, initialData.data);
 
       const GqlMutationDocument = gql`mutation UpdateTvShow($input: UpdateTvshowInput!) {
@@ -206,6 +275,7 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
         ${genreAssignmentMutations}
         ${castAssignmentMutations}
         ${productionCountriesAssignmentMutations}
+        ${directorAssignmentMutations}
       }`;
 
       await client.mutate<unknown, { input: UpdateTvshowInput }>({
@@ -233,6 +303,10 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
           genres,
           cast,
           productionCountries,
+          director,
+          audioLanguages,
+          subtitleLanguages,
+          captionLanguages,
         },
         loading,
         entityNotFound: data?.tvshow === null,
@@ -241,7 +315,12 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form genreOptions={Object.keys(allGenres)} />
+      <Form
+        genreOptions={Object.keys(allGenres)}
+        ageRatingOptions={allAgeRatings}
+        contentOwnerOptions={allContentOwners}
+        languageOptions={allLanguages}
+      />
     </Details>
   );
 };
@@ -257,11 +336,11 @@ const Panel: React.FC = () => {
 
     values.tvshowsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case TvshowImageType.Cover:
+        case TvshowImageType.Cover_1X1:
           coverImageCount++;
           coverImageId = imageId;
           break;
-        case TvshowImageType.Teaser:
+        case TvshowImageType.CleanCover_1X1:
           teaserImageCount++;
           break;
         default:
@@ -336,7 +415,17 @@ const Panel: React.FC = () => {
   ]);
 };
 
-const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
+const Form: React.FC<{
+  genreOptions?: string[];
+  ageRatingOptions?: selectOption[];
+  contentOwnerOptions?: selectOption[];
+  languageOptions?: string[];
+}> = ({
+  genreOptions,
+  ageRatingOptions,
+  contentOwnerOptions,
+  languageOptions,
+}) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchTvShowTagsQuery,
@@ -374,27 +463,54 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
     return data.getTvshowsProductionCountriesValues?.nodes ?? [];
   };
 
+  const directorSuggestionResolver = async (
+    value: string,
+  ): Promise<(string | null)[]> => {
+    const { data } = await client.query<
+      SearchTvShowDirectorQuery,
+      SearchTvShowDirectorQueryVariables
+    >({
+      query: SearchTvShowDirectorDocument,
+      variables: { searchKey: value, limit: 10 },
+    });
+    return data.getTvshowsDirectorsValues?.nodes ?? [];
+  };
+
+  const ValidateRating = (value: string): boolean => {
+    return value === null || value.trim() === ''
+      ? false
+      : isNaN(parseFloat(value)) ||
+          parseFloat(value) < 0 ||
+          parseFloat(value) > 100 ||
+          !/^(\d{1,2}(\.\d{1,2})?|100(\.0{1,2})?)$/.test(value);
+  };
+
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
-      <Field
-        name="originalTitle"
-        label="Original Title"
-        as={SingleLineTextField}
-      />
-      <Field name="synopsis" label="Synopsis" as={TextAreaField} />
+      <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
       <Field
-        name="externalId"
-        label="External ID"
-        className={classes.externalId}
-        as={SingleLineTextField}
+        name="businessType"
+        label="Business Type"
+        addEmptyOption={true}
+        options={Object.keys(BusinessType).map((key) => ({
+          value: BusinessType[key],
+          label: getEnumLabel(BusinessType[key]),
+        }))}
+        as={SelectField}
       />
       <Field
-        name="tags"
-        label="Tags"
-        liveSuggestionsResolver={tagsResolver}
-        as={CustomTagsField}
+        name="assetSubtype"
+        label="Subtype"
+        addEmptyOption={true}
+        options={Object.keys(AssetSubtype)
+          .filter((type) => type === 'TvShow')
+          .map((key) => ({
+            value: AssetSubtype[key],
+            label: getEnumLabel(AssetSubtype[key]),
+          }))}
+        as={SelectField}
       />
       <Field
         name="genres"
@@ -408,19 +524,77 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         liveSuggestionsResolver={castSuggestionResolver}
         as={CustomTagsField}
       />
-      <Field name="studio" label="Studio" as={SingleLineTextField} />
       <Field
-        name="productionCountries"
-        label="Production Countries"
-        liveSuggestionsResolver={productionCountriesResolver}
+        name="director"
+        label="Directors"
+        liveSuggestionsResolver={directorSuggestionResolver}
+        as={CustomTagsField}
+      />
+      <Field
+        name="tags"
+        label="Tags"
+        liveSuggestionsResolver={tagsResolver}
         as={CustomTagsField}
       />
       <Field
         name="released"
-        label="Released Date"
+        label="Released"
         as={DateTimeTextField}
         modifyTime={false}
       />
+      <Field
+        name="productionCountries"
+        label="Country"
+        liveSuggestionsResolver={productionCountriesResolver}
+        as={CustomTagsField}
+      />
+      <Field name="duration" label="Duration" as={SingleLineTextField} />
+      <Field
+        name="ageRating"
+        label="Age Rating"
+        addEmptyOption={true}
+        options={ageRatingOptions}
+        as={SelectField}
+      />
+      <Field
+        name="audioLanguages"
+        label="Audio Languages"
+        tagsOptions={languageOptions}
+        as={TagsField}
+      />
+      <Field
+        name="subtitleLanguages"
+        label="Subtitle Languages"
+        tagsOptions={languageOptions}
+        as={TagsField}
+      />
+      <Field
+        name="captionLanguages"
+        label="Closed Caption Languages"
+        tagsOptions={languageOptions}
+        as={TagsField}
+      />
+      <Field
+        name="rating"
+        label="Rating"
+        validate={ValidateRating}
+        as={SingleLineTextField}
+      />
+      <Field
+        name="contentOwner"
+        label="Content Owner"
+        addEmptyOption={true}
+        options={contentOwnerOptions}
+        as={SelectField}
+      />
+      <Field
+        name="customRating"
+        label="Custom Rating"
+        as={SingleLineTextField}
+      />
+
+      <Field name="extendedField" label="Custom" as={TextAreaField} />
+      <Field name="externalId" label="External Id" as={ReadOnlyTextField} />
     </>
   );
 };
@@ -429,10 +603,8 @@ function createUpdateDto(
   currentValues: TvShowDetailsFormData,
   initialValues?: TvShowDetailsFormData | null,
 ): Partial<TvShowDetailsFormData> {
-  const { tags, cast, productionCountries, genres, ...rest } = getFormDiff(
-    currentValues,
-    initialValues,
-  );
+  const { tags, cast, director, productionCountries, genres, ...rest } =
+    getFormDiff(currentValues, initialValues);
 
   return rest;
 }

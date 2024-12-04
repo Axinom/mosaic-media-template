@@ -3,7 +3,13 @@ fragment TVShowExplorerProperties on Tvshow {
   publishStatus
   title
   externalId
-  tvshowsImages(condition: { imageType: COVER }) {
+  ageRating
+  assetSubtype
+  audioLanguages
+  businessType
+  captionLanguages
+  contentOwner
+  tvshowsImages(condition: { imageType: COVER_1X1 }) {
     nodes {
       imageId
     }
@@ -17,6 +23,7 @@ fragment TVShowExplorerProperties on Tvshow {
   }
   createdDate
   updatedDate
+  updatedUser
   originalTitle
   tvshowsTags {
     nodes {
@@ -34,8 +41,28 @@ fragment TVShowExplorerProperties on Tvshow {
       name
     }
   }
+  tvshowsLicenses {
+    nodes {
+      licenseEnd
+      licenseStart
+    }
+  }
   studio
   publishedDate
+  seasons {
+    nodes {
+      episodes {
+        nodes {
+          episodesLicenses {
+            nodes {
+              licenseStart
+              licenseEnd
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 query TVShows(
@@ -69,6 +96,22 @@ subscription TVShowsMutated {
     eventKey
     tvshow {
       ...TVShowExplorerProperties
+    }
+  }
+}
+
+query GetAllOptionsData {
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
+
+  contentOwners {
+    nodes {
+      id
+      name
     }
   }
 }

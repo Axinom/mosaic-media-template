@@ -2,7 +2,6 @@ import { createThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow
 import {
   ActionData,
   Column,
-  createConnectionRenderer,
   DateRenderer,
   ExplorerDataProvider,
   IconName,
@@ -20,7 +19,6 @@ import {
   TvshowsOrderBy,
   TvShowsQuery,
   TvShowsQueryVariables,
-  TvshowsTvshowGenresConnection,
   TvshowSubscriptionEventKey,
   useCreateTvShowSnapshotMutation,
   useDeleteTvShowMutation,
@@ -28,6 +26,7 @@ import {
   useUnpublishTvShowMutation,
 } from '../../../generated/graphql';
 import { PublishStatusStateMap } from '../../../Util/PublishStatusStateMap/PublishStatusStateMap';
+import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useTvShowsFilters } from './TvShowExplorer.filters';
 import { TvShowData, TvShowExplorerProps } from './TvShowExplorer.types';
 
@@ -62,23 +61,20 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
       size: '80px',
     },
     { label: 'Title', propertyName: 'title', size: '2fr' },
-    { label: 'External ID', propertyName: 'externalId' },
     {
-      label: 'Genres',
-      sortable: false,
-      propertyName: 'tvshowsTvshowGenres',
-      render: createConnectionRenderer<TvshowsTvshowGenresConnection>(
-        (node) => {
-          return node.tvshowGenres?.title;
-        },
-      ),
+      label: 'Subtype',
+      propertyName: 'assetSubtype',
+      size: '1fr',
+      render: SubTypeRenderer,
     },
-    { label: 'Created At', propertyName: 'createdDate', render: DateRenderer },
+    { label: 'Published', propertyName: 'publishedDate' },
     {
-      label: 'Last Modified At',
+      label: 'Last Modified',
       propertyName: 'updatedDate',
       render: DateRenderer,
     },
+    { label: 'Modified By', propertyName: 'updatedUser' },
+    { label: 'External ID', propertyName: 'externalId' },
   ];
 
   // Data provider
@@ -211,4 +207,8 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
     default:
       return <div>Explorer type is not defined</div>;
   }
+};
+
+const SubTypeRenderer = (val: string | unknown): string => {
+  return typeof val === 'string' ? getEnumLabel(val) : '';
 };

@@ -61,6 +61,10 @@ export function useTvShowDetailsActions(id: number): {
         ]
       : []),
     {
+      label: 'Collection Assignment',
+      path: `/tvshows/${id}/CollectionsToTvShow`,
+    },
+    {
       label: 'Publish Now',
       confirmationMode: 'Simple',
       onActionSelected: async () => {

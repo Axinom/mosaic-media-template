@@ -17,12 +17,12 @@ import {
   MutationDeleteCollectionRelationArgs,
   MutationUpdateCollectionRelationArgs,
 } from '../../../generated/graphql';
-import { MovieRelatedCollections } from './CollectionEntityManagement.types';
-import { useMovieRelatedCollections } from './CollectionEntityRelationMapper/CollectionEntityRelationMapper';
+import { TvshowRelatedCollections } from './CollectionEntityManagement.types';
+import { useTvshowRelatedCollections } from './CollectionEntityRelationMapper/CollectionEntityRelationMapper';
 import { EntitySelectField } from './EntitySelectField/EntitySelectField';
 
 interface FormData {
-  entities: MovieRelatedCollections[] | undefined;
+  entities: TvshowRelatedCollections[] | undefined;
 }
 
 const collectionEntityManagementSchema = Yup.object().shape<
@@ -31,14 +31,14 @@ const collectionEntityManagementSchema = Yup.object().shape<
   entities: Yup.array().of(Yup.object()),
 });
 
-export const MovieCollectionAssignment: React.FC = () => {
-  const movieId = Number(
+export const TvShowCollectionAssignment: React.FC = () => {
+  const tvshowId = Number(
     useParams<{
-      movieId: string;
-    }>().movieId,
+      tvshowId: string;
+    }>().tvshowId,
   );
 
-  const { loading, data, error } = useMovieRelatedCollections(movieId);
+  const { loading, data, error } = useTvshowRelatedCollections(tvshowId);
 
   const onSubmit = useCallback(
     async (
@@ -60,7 +60,7 @@ export const MovieCollectionAssignment: React.FC = () => {
                   collectionRelation: {
                     collectionId: item?.entityId,
                     sortOrder: item.sortOrder,
-                    movieId: movieId,
+                    tvshowId: tvshowId,
                   },
                 },
               },
@@ -90,13 +90,13 @@ export const MovieCollectionAssignment: React.FC = () => {
 
       await client.mutate({ mutation: GqlMutationDocument });
     },
-    [movieId],
+    [tvshowId],
   );
 
   return (
     <Details<FormData>
       defaultTitle="Collection Assignment"
-      subtitle="Add movie to one or more collections"
+      subtitle="Add a TV Show to one or more Collections"
       validationSchema={collectionEntityManagementSchema}
       initialData={{
         data: { entities: data ?? [] },

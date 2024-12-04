@@ -3280,6 +3280,44 @@ export type CreateTvshowsCastPayloadTvshowsCastEdgeArgs = {
 };
 
 /**
+ * All input for the create `TvshowsDirector` mutation.
+ * @permissions: TVSHOW_EDITOR,ADMIN
+ */
+export type CreateTvshowsDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `TvshowsDirector` to be created by this mutation. */
+  tvshowsDirector: TvshowsDirectorInput;
+};
+
+/** The output of our create `TvshowsDirector` mutation. */
+export type CreateTvshowsDirectorPayload = {
+  __typename?: 'CreateTvshowsDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Tvshow` that is related to this `TvshowsDirector`. */
+  tvshow?: Maybe<Tvshow>;
+  /** The `TvshowsDirector` that was created by this mutation. */
+  tvshowsDirector?: Maybe<TvshowsDirector>;
+  /** An edge for our `TvshowsDirector`. May be used by Relay 1. */
+  tvshowsDirectorEdge?: Maybe<TvshowsDirectorsEdge>;
+};
+
+
+/** The output of our create `TvshowsDirector` mutation. */
+export type CreateTvshowsDirectorPayloadTvshowsDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<TvshowsDirectorsOrderBy>>;
+};
+
+/**
  * All input for the create `TvshowsImage` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
  */
@@ -5320,6 +5358,46 @@ export type DeleteTvshowsCastPayload = {
 /** The output of our delete `TvshowsCast` mutation. */
 export type DeleteTvshowsCastPayloadTvshowsCastEdgeArgs = {
   orderBy?: InputMaybe<Array<TvshowsCastsOrderBy>>;
+};
+
+/**
+ * All input for the `deleteTvshowsDirector` mutation.
+ * @permissions: TVSHOW_EDITOR,ADMIN
+ */
+export type DeleteTvshowsDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
+};
+
+/** The output of our delete `TvshowsDirector` mutation. */
+export type DeleteTvshowsDirectorPayload = {
+  __typename?: 'DeleteTvshowsDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedTvshowsDirectorNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Tvshow` that is related to this `TvshowsDirector`. */
+  tvshow?: Maybe<Tvshow>;
+  /** The `TvshowsDirector` that was deleted by this mutation. */
+  tvshowsDirector?: Maybe<TvshowsDirector>;
+  /** An edge for our `TvshowsDirector`. May be used by Relay 1. */
+  tvshowsDirectorEdge?: Maybe<TvshowsDirectorsEdge>;
+};
+
+
+/** The output of our delete `TvshowsDirector` mutation. */
+export type DeleteTvshowsDirectorPayloadTvshowsDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<TvshowsDirectorsOrderBy>>;
 };
 
 /**
@@ -7477,6 +7555,26 @@ export type GetTvshowsCastsValuesConnection = {
   __typename?: 'GetTvshowsCastsValuesConnection';
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetTvshowsCastsValueEdge>;
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']['output']>>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `String` edge in the connection. */
+export type GetTvshowsDirectorsValueEdge = {
+  __typename?: 'GetTvshowsDirectorsValueEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']['output']>;
+};
+
+/** A connection to a list of `String` values. */
+export type GetTvshowsDirectorsValuesConnection = {
+  __typename?: 'GetTvshowsDirectorsValuesConnection';
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<GetTvshowsDirectorsValueEdge>;
   /** A list of `String` objects. */
   nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
@@ -10720,6 +10818,8 @@ export type Mutation = {
   createTvshowGenresSnapshot?: Maybe<Snapshot>;
   /** Creates a single `TvshowsCast`. */
   createTvshowsCast?: Maybe<CreateTvshowsCastPayload>;
+  /** Creates a single `TvshowsDirector`. */
+  createTvshowsDirector?: Maybe<CreateTvshowsDirectorPayload>;
   /** Creates a single `TvshowsImage`. */
   createTvshowsImage?: Maybe<CreateTvshowsImagePayload>;
   /** Creates a single `TvshowsLicense`. */
@@ -10845,6 +10945,8 @@ export type Mutation = {
   deleteTvshows?: Maybe<BulkMutationIntPayload>;
   /** Deletes a single `TvshowsCast` using a unique key. */
   deleteTvshowsCast?: Maybe<DeleteTvshowsCastPayload>;
+  /** Deletes a single `TvshowsDirector` using a unique key. */
+  deleteTvshowsDirector?: Maybe<DeleteTvshowsDirectorPayload>;
   /** Deletes a single `TvshowsImage` using a unique key. */
   deleteTvshowsImageByTvshowIdAndImageType?: Maybe<DeleteTvshowsImagePayload>;
   /** Deletes a single `TvshowsLicense` using a unique key. */
@@ -10989,6 +11091,8 @@ export type Mutation = {
   updateTvshowGenre?: Maybe<UpdateTvshowGenrePayload>;
   /** Updates a single `TvshowsCast` using a unique key and a patch. */
   updateTvshowsCast?: Maybe<UpdateTvshowsCastPayload>;
+  /** Updates a single `TvshowsDirector` using a unique key and a patch. */
+  updateTvshowsDirector?: Maybe<UpdateTvshowsDirectorPayload>;
   /** Updates a single `TvshowsImage` using a unique key and a patch. */
   updateTvshowsImageByTvshowIdAndImageType?: Maybe<UpdateTvshowsImagePayload>;
   /** Updates a single `TvshowsLicense` using a unique key and a patch. */
@@ -11299,6 +11403,12 @@ export type MutationCreateTvshowGenreArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateTvshowsCastArgs = {
   input: CreateTvshowsCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateTvshowsDirectorArgs = {
+  input: CreateTvshowsDirectorInput;
 };
 
 
@@ -11713,6 +11823,12 @@ export type MutationDeleteTvshowsArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTvshowsCastArgs = {
   input: DeleteTvshowsCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTvshowsDirectorArgs = {
+  input: DeleteTvshowsDirectorInput;
 };
 
 
@@ -12185,6 +12301,12 @@ export type MutationUpdateTvshowsCastArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTvshowsDirectorArgs = {
+  input: UpdateTvshowsDirectorInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTvshowsImageByTvshowIdAndImageTypeArgs = {
   input: UpdateTvshowsImageByTvshowIdAndImageTypeInput;
 };
@@ -12342,6 +12464,7 @@ export type Query = {
   getSeasonsProductionCountriesValues?: Maybe<GetSeasonsProductionCountriesValuesConnection>;
   getSeasonsTagsValues?: Maybe<GetSeasonsTagsValuesConnection>;
   getTvshowsCastsValues?: Maybe<GetTvshowsCastsValuesConnection>;
+  getTvshowsDirectorsValues?: Maybe<GetTvshowsDirectorsValuesConnection>;
   getTvshowsProductionCountriesValues?: Maybe<GetTvshowsProductionCountriesValuesConnection>;
   getTvshowsTagsValues?: Maybe<GetTvshowsTagsValuesConnection>;
   ingestDocument?: Maybe<IngestDocument>;
@@ -12434,6 +12557,9 @@ export type Query = {
   tvshowsCast?: Maybe<TvshowsCast>;
   /** Reads and enables pagination through a set of `TvshowsCast`. */
   tvshowsCasts?: Maybe<TvshowsCastsConnection>;
+  tvshowsDirector?: Maybe<TvshowsDirector>;
+  /** Reads and enables pagination through a set of `TvshowsDirector`. */
+  tvshowsDirectors?: Maybe<TvshowsDirectorsConnection>;
   /** Reads and enables pagination through a set of `TvshowsImage`. */
   tvshowsImages?: Maybe<TvshowsImagesConnection>;
   tvshowsLicense?: Maybe<TvshowsLicense>;
@@ -12936,6 +13062,17 @@ export type QueryGetSeasonsTagsValuesArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetTvshowsCastsValuesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<StringFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetTvshowsDirectorsValuesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
@@ -13516,6 +13653,26 @@ export type QueryTvshowsCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsCastsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTvshowsDirectorArgs = {
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTvshowsDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TvshowsDirectorCondition>;
+  filter?: InputMaybe<TvshowsDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TvshowsDirectorsOrderBy>>;
 };
 
 
@@ -15963,6 +16120,8 @@ export type Tvshow = {
   title: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `TvshowsCast`. */
   tvshowsCasts: TvshowsCastsConnection;
+  /** Reads and enables pagination through a set of `TvshowsDirector`. */
+  tvshowsDirectors: TvshowsDirectorsConnection;
   /** Reads and enables pagination through a set of `TvshowsImage`. */
   tvshowsImages: TvshowsImagesConnection;
   /** Reads and enables pagination through a set of `TvshowsLicense`. */
@@ -16018,6 +16177,19 @@ export type TvshowTvshowsCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TvshowsCastsOrderBy>>;
+};
+
+
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
+export type TvshowTvshowsDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TvshowsDirectorCondition>;
+  filter?: InputMaybe<TvshowsDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TvshowsDirectorsOrderBy>>;
 };
 
 
@@ -16518,10 +16690,18 @@ export type TvshowGenreToManyTvshowsTvshowGenreFilter = {
 };
 
 export enum TvshowImageType {
-  /** Cover */
-  Cover = 'COVER',
-  /** Teaser */
-  Teaser = 'TEASER'
+  /** Clean Cover 16x9 */
+  CleanCover_16X9 = 'CLEAN_COVER_16X9',
+  /** Clean Cover 1x1 */
+  CleanCover_1X1 = 'CLEAN_COVER_1X1',
+  /** Cover 16x9 */
+  Cover_16X9 = 'COVER_16X9',
+  /** Cover 1x1 */
+  Cover_1X1 = 'COVER_1X1',
+  /** List 1x1 */
+  List_1X1 = 'LIST_1X1',
+  /** List 9x13 */
+  List_9X13 = 'LIST_9X13'
 }
 
 /** A filter to be used against TvshowImageType fields. All fields are combined with a logical ‘and.’ */
@@ -16710,6 +16890,29 @@ export type TvshowsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+export type TvshowsDirector = {
+  __typename?: 'TvshowsDirector';
+  name: Scalars['String']['output'];
+  /** Reads a single `Tvshow` that is related to this `TvshowsDirector`. */
+  tvshow?: Maybe<Tvshow>;
+  tvshowId: Scalars['Int']['output'];
+};
+
+/**
+ * A condition to be used against `TvshowsDirector` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type TvshowsDirectorCondition = {
+  /**
+   * Checks for equality with the object’s `name` field.
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `tvshowId` field. */
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** A filter to be used against `TvshowsDirector` object types. All fields are combined with a logical ‘and.’ */
 export type TvshowsDirectorFilter = {
   /** Checks for all expressions in this list. */
@@ -16725,6 +16928,56 @@ export type TvshowsDirectorFilter = {
   /** Filter by the object’s `tvshowId` field. */
   tvshowId?: InputMaybe<IntFilter>;
 };
+
+/** An input for mutations affecting `TvshowsDirector` */
+export type TvshowsDirectorInput = {
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+  tvshowId: Scalars['Int']['input'];
+};
+
+/** Represents an update to a `TvshowsDirector`. Fields that are set will be updated. */
+export type TvshowsDirectorPatch = {
+  /** @notEmpty() */
+  name?: InputMaybe<Scalars['String']['input']>;
+  tvshowId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/**
+ * A connection to a list of `TvshowsDirector` values.
+ * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ */
+export type TvshowsDirectorsConnection = {
+  __typename?: 'TvshowsDirectorsConnection';
+  /** A list of edges which contains the `TvshowsDirector` and cursor to aid in pagination. */
+  edges: Array<TvshowsDirectorsEdge>;
+  /** A list of `TvshowsDirector` objects. */
+  nodes: Array<TvshowsDirector>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TvshowsDirector` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `TvshowsDirector` edge in the connection. */
+export type TvshowsDirectorsEdge = {
+  __typename?: 'TvshowsDirectorsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `TvshowsDirector` at the end of the edge. */
+  node: TvshowsDirector;
+};
+
+/** Methods to use when ordering `TvshowsDirector`. */
+export enum TvshowsDirectorsOrderBy {
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  TvshowIdAsc = 'TVSHOW_ID_ASC',
+  TvshowIdDesc = 'TVSHOW_ID_DESC'
+}
 
 /** A `Tvshow` edge in the connection. */
 export type TvshowsEdge = {
@@ -19165,6 +19418,47 @@ export type UpdateTvshowsCastPayloadTvshowsCastEdgeArgs = {
 };
 
 /**
+ * All input for the `updateTvshowsDirector` mutation.
+ * @permissions: TVSHOW_EDITOR,ADMIN
+ */
+export type UpdateTvshowsDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `TvshowsDirector` being updated. */
+  patch: TvshowsDirectorPatch;
+  tvshowId: Scalars['Int']['input'];
+};
+
+/** The output of our update `TvshowsDirector` mutation. */
+export type UpdateTvshowsDirectorPayload = {
+  __typename?: 'UpdateTvshowsDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Tvshow` that is related to this `TvshowsDirector`. */
+  tvshow?: Maybe<Tvshow>;
+  /** The `TvshowsDirector` that was updated by this mutation. */
+  tvshowsDirector?: Maybe<TvshowsDirector>;
+  /** An edge for our `TvshowsDirector`. May be used by Relay 1. */
+  tvshowsDirectorEdge?: Maybe<TvshowsDirectorsEdge>;
+};
+
+
+/** The output of our update `TvshowsDirector` mutation. */
+export type UpdateTvshowsDirectorPayloadTvshowsDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<TvshowsDirectorsOrderBy>>;
+};
+
+/**
  * All input for the `updateTvshowsImageByTvshowIdAndImageType` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
  */
@@ -20381,6 +20675,13 @@ export type BulkCreateSeasonSnapshotsMutationVariables = Exact<{
 
 export type BulkCreateSeasonSnapshotsMutation = { __typename?: 'Mutation', createSeasonSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
 
+export type TvshowRelatedCollectionsQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type TvshowRelatedCollectionsQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', id: number, sortOrder: number, collection?: { __typename?: 'Collection', title: string, publishStatus: PublishStatus, entityId: number, entityImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> } } | null }> } } | null };
+
 export type CreateTvShowMutationVariables = Exact<{
   input: CreateTvshowInput;
 }>;
@@ -20393,7 +20694,7 @@ export type TvShowQueryVariables = Exact<{
 }>;
 
 
-export type TvShowQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, seasons: { __typename?: 'SeasonsConnection', totalCount: number }, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageType: TvshowImageType, imageId: any }> }, tvshowsTrailers: { __typename?: 'TvshowsTrailersConnection', totalCount: number } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null };
+export type TvShowQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, customRating?: string | null, creditsStartTime?: string | null, lengthInSeconds?: any | null, dynamicField?: string | null, extendedField?: string | null, captionLanguages?: Array<string | null> | null, audioLanguages?: Array<string | null> | null, subtitleLanguages?: Array<string | null> | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsDirectors: { __typename?: 'TvshowsDirectorsConnection', nodes: Array<{ __typename?: 'TvshowsDirector', name: string }> }, seasons: { __typename?: 'SeasonsConnection', totalCount: number }, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageType: TvshowImageType, imageId: any }> }, tvshowsTrailers: { __typename?: 'TvshowsTrailersConnection', totalCount: number } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
 
 export type DeleteTvShowMutationVariables = Exact<{
   input: DeleteTvshowInput;
@@ -20447,7 +20748,15 @@ export type SearchTvShowProductionCountriesQueryVariables = Exact<{
 
 export type SearchTvShowProductionCountriesQuery = { __typename?: 'Query', getTvshowsProductionCountriesValues?: { __typename?: 'GetTvshowsProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
 
-export type TvShowExplorerPropertiesFragment = { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, createdDate: any, updatedDate: any, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> } };
+export type SearchTvShowDirectorQueryVariables = Exact<{
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+}>;
+
+
+export type SearchTvShowDirectorQuery = { __typename?: 'Query', getTvshowsDirectorsValues?: { __typename?: 'GetTvshowsDirectorsValuesConnection', nodes: Array<string | null> } | null };
+
+export type TvShowExplorerPropertiesFragment = { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, ageRating?: string | null, assetSubtype: AssetSubtype, audioLanguages?: Array<string | null> | null, businessType: BusinessType, captionLanguages?: Array<string | null> | null, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null }> }, seasons: { __typename?: 'SeasonsConnection', nodes: Array<{ __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseStart?: any | null, licenseEnd?: any | null }> } }> } }> } };
 
 export type TvShowsQueryVariables = Exact<{
   filter?: InputMaybe<TvshowFilter>;
@@ -20456,12 +20765,17 @@ export type TvShowsQueryVariables = Exact<{
 }>;
 
 
-export type TvShowsQuery = { __typename?: 'Query', filtered?: { __typename?: 'TvshowsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, createdDate: any, updatedDate: any, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> } }> } | null, nonFiltered?: { __typename?: 'TvshowsConnection', totalCount: number } | null };
+export type TvShowsQuery = { __typename?: 'Query', filtered?: { __typename?: 'TvshowsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, ageRating?: string | null, assetSubtype: AssetSubtype, audioLanguages?: Array<string | null> | null, businessType: BusinessType, captionLanguages?: Array<string | null> | null, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null }> }, seasons: { __typename?: 'SeasonsConnection', nodes: Array<{ __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseStart?: any | null, licenseEnd?: any | null }> } }> } }> } }> } | null, nonFiltered?: { __typename?: 'TvshowsConnection', totalCount: number } | null };
 
 export type TvShowsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TvShowsMutatedSubscription = { __typename?: 'Subscription', tvshowMutated?: { __typename?: 'TvshowSubscriptionPayload', id: number, eventKey?: TvshowSubscriptionEventKey | null, tvshow?: { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, createdDate: any, updatedDate: any, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> } } | null } | null };
+export type TvShowsMutatedSubscription = { __typename?: 'Subscription', tvshowMutated?: { __typename?: 'TvshowSubscriptionPayload', id: number, eventKey?: TvshowSubscriptionEventKey | null, tvshow?: { __typename?: 'Tvshow', id: number, publishStatus: PublishStatus, title: string, externalId?: string | null, ageRating?: string | null, assetSubtype: AssetSubtype, audioLanguages?: Array<string | null> | null, businessType: BusinessType, captionLanguages?: Array<string | null> | null, contentOwner?: string | null, createdDate: any, updatedDate: any, updatedUser: string, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsLicenses: { __typename?: 'TvshowsLicensesConnection', nodes: Array<{ __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null }> }, seasons: { __typename?: 'SeasonsConnection', nodes: Array<{ __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', episodesLicenses: { __typename?: 'EpisodesLicensesConnection', nodes: Array<{ __typename?: 'EpisodesLicense', licenseStart?: any | null, licenseEnd?: any | null }> } }> } }> } } | null } | null };
+
+export type GetAllOptionsDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllOptionsDataQuery = { __typename?: 'Query', ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', id: any, name: string }> } | null };
 
 export type TvShowGenresQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -20859,7 +21173,13 @@ export const TvShowExplorerPropertiesFragmentDoc = gql`
   publishStatus
   title
   externalId
-  tvshowsImages(condition: {imageType: COVER}) {
+  ageRating
+  assetSubtype
+  audioLanguages
+  businessType
+  captionLanguages
+  contentOwner
+  tvshowsImages(condition: {imageType: COVER_1X1}) {
     nodes {
       imageId
     }
@@ -20873,6 +21193,7 @@ export const TvShowExplorerPropertiesFragmentDoc = gql`
   }
   createdDate
   updatedDate
+  updatedUser
   originalTitle
   tvshowsTags {
     nodes {
@@ -20890,8 +21211,28 @@ export const TvShowExplorerPropertiesFragmentDoc = gql`
       name
     }
   }
+  tvshowsLicenses {
+    nodes {
+      licenseEnd
+      licenseStart
+    }
+  }
   studio
   publishedDate
+  seasons {
+    nodes {
+      episodes {
+        nodes {
+          episodesLicenses {
+            nodes {
+              licenseStart
+              licenseEnd
+            }
+          }
+        }
+      }
+    }
+  }
 }
     `;
 export const CreateCollectionDocument = gql`
@@ -25279,7 +25620,7 @@ export const SeasonDocument = gql`
     tvshow {
       id
       title
-      tvshowsImages(condition: {imageType: COVER}, first: 1) {
+      tvshowsImages(condition: {imageType: COVER_1X1}, first: 1) {
         nodes {
           imageId
         }
@@ -26131,6 +26472,56 @@ export function useBulkCreateSeasonSnapshotsMutation(baseOptions?: Apollo.Mutati
 export type BulkCreateSeasonSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateSeasonSnapshotsMutation>;
 export type BulkCreateSeasonSnapshotsMutationResult = Apollo.MutationResult<BulkCreateSeasonSnapshotsMutation>;
 export type BulkCreateSeasonSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateSeasonSnapshotsMutation, BulkCreateSeasonSnapshotsMutationVariables>;
+export const TvshowRelatedCollectionsDocument = gql`
+    query TvshowRelatedCollections($id: Int!) {
+  tvshow(id: $id) {
+    collectionRelations(orderBy: SORT_ORDER_ASC) {
+      nodes {
+        collection {
+          entityId: id
+          title
+          publishStatus
+          entityImages: collectionsImages {
+            nodes {
+              imageId
+            }
+          }
+        }
+        id
+        sortOrder
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useTvshowRelatedCollectionsQuery__
+ *
+ * To run a query within a React component, call `useTvshowRelatedCollectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTvshowRelatedCollectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTvshowRelatedCollectionsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useTvshowRelatedCollectionsQuery(baseOptions: Apollo.QueryHookOptions<TvshowRelatedCollectionsQuery, TvshowRelatedCollectionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TvshowRelatedCollectionsQuery, TvshowRelatedCollectionsQueryVariables>(TvshowRelatedCollectionsDocument, options);
+      }
+export function useTvshowRelatedCollectionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TvshowRelatedCollectionsQuery, TvshowRelatedCollectionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TvshowRelatedCollectionsQuery, TvshowRelatedCollectionsQueryVariables>(TvshowRelatedCollectionsDocument, options);
+        }
+export type TvshowRelatedCollectionsQueryHookResult = ReturnType<typeof useTvshowRelatedCollectionsQuery>;
+export type TvshowRelatedCollectionsLazyQueryHookResult = ReturnType<typeof useTvshowRelatedCollectionsLazyQuery>;
+export type TvshowRelatedCollectionsQueryResult = Apollo.QueryResult<TvshowRelatedCollectionsQuery, TvshowRelatedCollectionsQueryVariables>;
 export const CreateTvShowDocument = gql`
     mutation CreateTvShow($input: CreateTvshowInput!) {
   createTvshow(input: $input) {
@@ -26175,6 +26566,19 @@ export const TvShowDocument = gql`
     synopsis
     description
     externalId
+    ageRating
+    businessType
+    contentOwner
+    rating
+    customRating
+    creditsStartTime
+    lengthInSeconds
+    dynamicField
+    extendedField
+    captionLanguages
+    audioLanguages
+    subtitleLanguages
+    assetSubtype
     tvshowsTags {
       nodes {
         name
@@ -26194,6 +26598,11 @@ export const TvShowDocument = gql`
     }
     studio
     tvshowsProductionCountries {
+      nodes {
+        name
+      }
+    }
+    tvshowsDirectors {
       nodes {
         name
       }
@@ -26224,6 +26633,24 @@ export const TvShowDocument = gql`
     nodes {
       title
       id
+    }
+  }
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
+  contentOwners {
+    nodes {
+      name
+      sortOrder
+    }
+  }
+  languages {
+    nodes {
+      code
+      title
     }
   }
 }
@@ -26505,6 +26932,45 @@ export function useSearchTvShowProductionCountriesLazyQuery(baseOptions?: Apollo
 export type SearchTvShowProductionCountriesQueryHookResult = ReturnType<typeof useSearchTvShowProductionCountriesQuery>;
 export type SearchTvShowProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchTvShowProductionCountriesLazyQuery>;
 export type SearchTvShowProductionCountriesQueryResult = Apollo.QueryResult<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>;
+export const SearchTvShowDirectorDocument = gql`
+    query SearchTvShowDirector($searchKey: String!, $limit: Int!) {
+  getTvshowsDirectorsValues(
+    filter: {startsWithInsensitive: $searchKey}
+    first: $limit
+  ) {
+    nodes
+  }
+}
+    `;
+
+/**
+ * __useSearchTvShowDirectorQuery__
+ *
+ * To run a query within a React component, call `useSearchTvShowDirectorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchTvShowDirectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchTvShowDirectorQuery({
+ *   variables: {
+ *      searchKey: // value for 'searchKey'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useSearchTvShowDirectorQuery(baseOptions: Apollo.QueryHookOptions<SearchTvShowDirectorQuery, SearchTvShowDirectorQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchTvShowDirectorQuery, SearchTvShowDirectorQueryVariables>(SearchTvShowDirectorDocument, options);
+      }
+export function useSearchTvShowDirectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTvShowDirectorQuery, SearchTvShowDirectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchTvShowDirectorQuery, SearchTvShowDirectorQueryVariables>(SearchTvShowDirectorDocument, options);
+        }
+export type SearchTvShowDirectorQueryHookResult = ReturnType<typeof useSearchTvShowDirectorQuery>;
+export type SearchTvShowDirectorLazyQueryHookResult = ReturnType<typeof useSearchTvShowDirectorLazyQuery>;
+export type SearchTvShowDirectorQueryResult = Apollo.QueryResult<SearchTvShowDirectorQuery, SearchTvShowDirectorQueryVariables>;
 export const TvShowsDocument = gql`
     query TVShows($filter: TvshowFilter, $orderBy: [TvshowsOrderBy!], $after: Cursor) {
   filtered: tvshows(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
@@ -26585,6 +27051,49 @@ export function useTvShowsMutatedSubscription(baseOptions?: Apollo.SubscriptionH
       }
 export type TvShowsMutatedSubscriptionHookResult = ReturnType<typeof useTvShowsMutatedSubscription>;
 export type TvShowsMutatedSubscriptionResult = Apollo.SubscriptionResult<TvShowsMutatedSubscription>;
+export const GetAllOptionsDataDocument = gql`
+    query GetAllOptionsData {
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
+  contentOwners {
+    nodes {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllOptionsDataQuery__
+ *
+ * To run a query within a React component, call `useGetAllOptionsDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllOptionsDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllOptionsDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllOptionsDataQuery(baseOptions?: Apollo.QueryHookOptions<GetAllOptionsDataQuery, GetAllOptionsDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllOptionsDataQuery, GetAllOptionsDataQueryVariables>(GetAllOptionsDataDocument, options);
+      }
+export function useGetAllOptionsDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllOptionsDataQuery, GetAllOptionsDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllOptionsDataQuery, GetAllOptionsDataQueryVariables>(GetAllOptionsDataDocument, options);
+        }
+export type GetAllOptionsDataQueryHookResult = ReturnType<typeof useGetAllOptionsDataQuery>;
+export type GetAllOptionsDataLazyQueryHookResult = ReturnType<typeof useGetAllOptionsDataLazyQuery>;
+export type GetAllOptionsDataQueryResult = Apollo.QueryResult<GetAllOptionsDataQuery, GetAllOptionsDataQueryVariables>;
 export const TvShowGenresDocument = gql`
     query TvShowGenres {
   tvshowGenres(orderBy: SORT_ORDER_ASC) {

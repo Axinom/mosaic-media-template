@@ -18,9 +18,7 @@ type SubmitResponse = CreateTvShowMutation['createTvshow'];
 
 const tvShowCreateSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>(
   {
-    title: Yup.string()
-      .required('Title is a required field')
-      .max(100),
+    title: Yup.string().required('Title is a required field').max(100),
   },
 );
 
@@ -32,12 +30,15 @@ export const TvShowCreate: React.FC = () => {
 
   const saveData = useCallback(
     async (formData: FormData): Promise<SubmitResponse> => {
+      const ContentProviderKey = 0;
+      const AssetType = 6;
       return (
         await tvShowCreate({
           variables: {
             input: {
               tvshow: {
                 title: formData.title,
+                externalId: `${ContentProviderKey}-${AssetType}-tvshow-${new Date().getTime()}`,
               },
             },
           },

@@ -5,6 +5,19 @@ query TvShow($id: Int!) {
     synopsis
     description
     externalId
+    ageRating
+    businessType
+    contentOwner
+    rating
+    customRating
+    creditsStartTime
+    lengthInSeconds
+    dynamicField
+    extendedField
+    captionLanguages
+    audioLanguages
+    subtitleLanguages
+    assetSubtype
     tvshowsTags {
       nodes {
         name
@@ -24,6 +37,11 @@ query TvShow($id: Int!) {
     }
     studio
     tvshowsProductionCountries {
+      nodes {
+        name
+      }
+    }
+    tvshowsDirectors {
       nodes {
         name
       }
@@ -55,6 +73,27 @@ query TvShow($id: Int!) {
     nodes {
       title
       id
+    }
+  }
+
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
+
+  contentOwners {
+    nodes {
+      name
+      sortOrder
+    }
+  }
+
+  languages {
+    nodes {
+      code
+      title
     }
   }
 }
@@ -104,6 +143,15 @@ query SearchTvShowCast($searchKey: String!, $limit: Int!) {
 
 query SearchTvShowProductionCountries($searchKey: String!, $limit: Int!) {
   getTvshowsProductionCountriesValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
+    nodes
+  }
+}
+
+query SearchTvShowDirector($searchKey: String!, $limit: Int!) {
+  getTvshowsDirectorsValues(
     filter: { startsWithInsensitive: $searchKey }
     first: $limit
   ) {
