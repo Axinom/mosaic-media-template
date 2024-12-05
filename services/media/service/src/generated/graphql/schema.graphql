@@ -3395,16 +3395,9 @@ type Movie {
   publishStatus: PublishStatus!
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
-  audioLanguages: [String]
-  subtitleLanguages: [String]
-  captionLanguages: [String]
   assetSubtype: AssetSubtype!
 
   """Reads and enables pagination through a set of `MoviesTag`."""
@@ -3768,20 +3761,8 @@ enum BusinessType {
   """Premium"""
   PREMIUM
 
-  """Free downloadable"""
-  FREE_DOWNLOADABLE
-
-  """Advertisement downloadable"""
-  ADVERTISEMENT_DOWNLOADABLE
-
-  """Premium downloadable"""
-  PREMIUM_DOWNLOADABLE
-
   """Free authenticated"""
   FREE_AUTHENTICATED
-
-  """Advertisement authenticated"""
-  ADVERTISEMENT_AUTHENTICATED
 }
 
 """
@@ -3929,18 +3910,6 @@ input MovieFilter {
   """Filter by the object’s `rating` field."""
   rating: BigFloatFilter
 
-  """Filter by the object’s `customRating` field."""
-  customRating: StringFilter
-
-  """Filter by the object’s `creditsStartTime` field."""
-  creditsStartTime: StringFilter
-
-  """Filter by the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloatFilter
-
-  """Filter by the object’s `dynamicField` field."""
-  dynamicField: StringFilter
-
   """Filter by the object’s `extendedField` field."""
   extendedField: StringFilter
 
@@ -3949,15 +3918,6 @@ input MovieFilter {
 
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
-
-  """Filter by the object’s `audioLanguages` field."""
-  audioLanguages: StringListFilter
-
-  """Filter by the object’s `subtitleLanguages` field."""
-  subtitleLanguages: StringListFilter
-
-  """Filter by the object’s `captionLanguages` field."""
-  captionLanguages: StringListFilter
 
   """Filter by the object’s `assetSubtype` field."""
   assetSubtype: AssetSubtypeFilter
@@ -4201,69 +4161,6 @@ input BusinessTypeFilter {
 }
 
 """
-A filter to be used against String List fields. All fields are combined with a logical ‘and.’
-"""
-input StringListFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: [String]
-
-  """Not equal to the specified value."""
-  notEqualTo: [String]
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: [String]
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: [String]
-
-  """Less than the specified value."""
-  lessThan: [String]
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: [String]
-
-  """Greater than the specified value."""
-  greaterThan: [String]
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: [String]
-
-  """Contains the specified list of values."""
-  contains: [String]
-
-  """Contained by the specified list of values."""
-  containedBy: [String]
-
-  """Overlaps the specified list of values."""
-  overlaps: [String]
-
-  """Any array item is equal to the specified value."""
-  anyEqualTo: String
-
-  """Any array item is not equal to the specified value."""
-  anyNotEqualTo: String
-
-  """Any array item is less than the specified value."""
-  anyLessThan: String
-
-  """Any array item is less than or equal to the specified value."""
-  anyLessThanOrEqualTo: String
-
-  """Any array item is greater than the specified value."""
-  anyGreaterThan: String
-
-  """Any array item is greater than or equal to the specified value."""
-  anyGreaterThanOrEqualTo: String
-}
-
-"""
 A filter to be used against AssetSubtype fields. All fields are combined with a logical ‘and.’
 """
 input AssetSubtypeFilter {
@@ -4410,6 +4307,18 @@ input MoviesLicenseFilter {
   """Filter by the object’s `updatedDate` field."""
   updatedDate: DatetimeFilter
 
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: IntFilter
+
+  """Filter by the object’s `isDownloadable` field."""
+  isDownloadable: BooleanFilter
+
   """Filter by the object’s `moviesLicensesCountries` relation."""
   moviesLicensesCountries: MoviesLicenseToManyMoviesLicensesCountryFilter
 
@@ -4427,6 +4336,48 @@ input MoviesLicenseFilter {
 
   """Negates the expression."""
   not: MoviesLicenseFilter
+}
+
+"""
+A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
+"""
+input BooleanFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Boolean
+
+  """Not equal to the specified value."""
+  notEqualTo: Boolean
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Boolean
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Boolean
+
+  """Included in the specified list."""
+  in: [Boolean!]
+
+  """Not included in the specified list."""
+  notIn: [Boolean!]
+
+  """Less than the specified value."""
+  lessThan: Boolean
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Boolean
+
+  """Greater than the specified value."""
+  greaterThan: Boolean
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Boolean
 }
 
 """
@@ -5004,6 +4955,69 @@ input CollectionFilter {
 }
 
 """
+A filter to be used against String List fields. All fields are combined with a logical ‘and.’
+"""
+input StringListFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: [String]
+
+  """Not equal to the specified value."""
+  notEqualTo: [String]
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: [String]
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: [String]
+
+  """Less than the specified value."""
+  lessThan: [String]
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: [String]
+
+  """Greater than the specified value."""
+  greaterThan: [String]
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: [String]
+
+  """Contains the specified list of values."""
+  contains: [String]
+
+  """Contained by the specified list of values."""
+  containedBy: [String]
+
+  """Overlaps the specified list of values."""
+  overlaps: [String]
+
+  """Any array item is equal to the specified value."""
+  anyEqualTo: String
+
+  """Any array item is not equal to the specified value."""
+  anyNotEqualTo: String
+
+  """Any array item is less than the specified value."""
+  anyLessThan: String
+
+  """Any array item is less than or equal to the specified value."""
+  anyLessThanOrEqualTo: String
+
+  """Any array item is greater than the specified value."""
+  anyGreaterThan: String
+
+  """Any array item is greater than or equal to the specified value."""
+  anyGreaterThanOrEqualTo: String
+}
+
+"""
 A filter to be used against many `CollectionRelation` object types. All fields are combined with a logical ‘and.’
 """
 input CollectionToManyCollectionRelationFilter {
@@ -5511,48 +5525,6 @@ enum SnapshotState {
 }
 
 """
-A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’
-"""
-input BooleanFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Boolean
-
-  """Not equal to the specified value."""
-  notEqualTo: Boolean
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Boolean
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Boolean
-
-  """Included in the specified list."""
-  in: [Boolean!]
-
-  """Not included in the specified list."""
-  notIn: [Boolean!]
-
-  """Less than the specified value."""
-  lessThan: Boolean
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Boolean
-
-  """Greater than the specified value."""
-  greaterThan: Boolean
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Boolean
-}
-
-"""
 A filter to be used against many `SnapshotValidationResult` object types. All fields are combined with a logical ‘and.’
 """
 input SnapshotToManySnapshotValidationResultFilter {
@@ -5863,18 +5835,6 @@ input TvshowFilter {
   """Filter by the object’s `rating` field."""
   rating: BigFloatFilter
 
-  """Filter by the object’s `customRating` field."""
-  customRating: StringFilter
-
-  """Filter by the object’s `creditsStartTime` field."""
-  creditsStartTime: StringFilter
-
-  """Filter by the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloatFilter
-
-  """Filter by the object’s `dynamicField` field."""
-  dynamicField: StringFilter
-
   """Filter by the object’s `extendedField` field."""
   extendedField: StringFilter
 
@@ -5883,15 +5843,6 @@ input TvshowFilter {
 
   """Filter by the object’s `businessType` field."""
   businessType: BusinessTypeFilter
-
-  """Filter by the object’s `audioLanguages` field."""
-  audioLanguages: StringListFilter
-
-  """Filter by the object’s `subtitleLanguages` field."""
-  subtitleLanguages: StringListFilter
-
-  """Filter by the object’s `captionLanguages` field."""
-  captionLanguages: StringListFilter
 
   """Filter by the object’s `assetSubtype` field."""
   assetSubtype: AssetSubtypeFilter
@@ -6099,6 +6050,18 @@ input TvshowsLicenseFilter {
 
   """Filter by the object’s `updatedDate` field."""
   updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: IntFilter
+
+  """Filter by the object’s `isDownloadable` field."""
+  isDownloadable: BooleanFilter
 
   """Filter by the object’s `tvshowsLicensesCountries` relation."""
   tvshowsLicensesCountries: TvshowsLicenseToManyTvshowsLicensesCountryFilter
@@ -6427,18 +6390,6 @@ input SeasonFilter {
   """Filter by the object’s `rating` field."""
   rating: BigFloatFilter
 
-  """Filter by the object’s `customRating` field."""
-  customRating: StringFilter
-
-  """Filter by the object’s `creditsStartTime` field."""
-  creditsStartTime: StringFilter
-
-  """Filter by the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloatFilter
-
-  """Filter by the object’s `dynamicField` field."""
-  dynamicField: StringFilter
-
   """Filter by the object’s `extendedField` field."""
   extendedField: StringFilter
 
@@ -6660,6 +6611,18 @@ input SeasonsLicenseFilter {
 
   """Filter by the object’s `updatedDate` field."""
   updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: IntFilter
+
+  """Filter by the object’s `isDownloadable` field."""
+  isDownloadable: BooleanFilter
 
   """Filter by the object’s `seasonsLicensesCountries` relation."""
   seasonsLicensesCountries: SeasonsLicenseToManySeasonsLicensesCountryFilter
@@ -7009,18 +6972,6 @@ input EpisodeFilter {
   """Filter by the object’s `rating` field."""
   rating: BigFloatFilter
 
-  """Filter by the object’s `customRating` field."""
-  customRating: StringFilter
-
-  """Filter by the object’s `creditsStartTime` field."""
-  creditsStartTime: StringFilter
-
-  """Filter by the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloatFilter
-
-  """Filter by the object’s `dynamicField` field."""
-  dynamicField: StringFilter
-
   """Filter by the object’s `extendedField` field."""
   extendedField: StringFilter
 
@@ -7236,6 +7187,18 @@ input EpisodesLicenseFilter {
 
   """Filter by the object’s `updatedDate` field."""
   updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: IntFilter
+
+  """Filter by the object’s `isDownloadable` field."""
+  isDownloadable: BooleanFilter
 
   """Filter by the object’s `episodesLicensesCountries` relation."""
   episodesLicensesCountries: EpisodesLicenseToManyEpisodesLicensesCountryFilter
@@ -8408,6 +8371,10 @@ type MoviesLicense {
   licenseEnd: Datetime
   createdDate: Datetime!
   updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean!
 
   """Reads a single `Movie` that is related to this `MoviesLicense`."""
   movie: Movie
@@ -8536,6 +8503,14 @@ enum MoviesLicensesOrderBy {
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
   UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  DOWNLOADED_ASSET_LIFESPAN_ASC
+  DOWNLOADED_ASSET_LIFESPAN_DESC
+  IS_DOWNLOADABLE_ASC
+  IS_DOWNLOADABLE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -8562,6 +8537,18 @@ input MoviesLicenseCondition {
 
   """Checks for equality with the object’s `updatedDate` field."""
   updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+
+  """Checks for equality with the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: Int
+
+  """Checks for equality with the object’s `isDownloadable` field."""
+  isDownloadable: Boolean
 }
 
 """
@@ -9361,16 +9348,9 @@ type Tvshow {
   publishStatus: PublishStatus!
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
-  audioLanguages: [String]
-  subtitleLanguages: [String]
-  captionLanguages: [String]
   assetSubtype: AssetSubtype!
 
   """Reads and enables pagination through a set of `TvshowsTag`."""
@@ -9906,6 +9886,10 @@ type TvshowsLicense {
   licenseEnd: Datetime
   createdDate: Datetime!
   updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean!
 
   """Reads a single `Tvshow` that is related to this `TvshowsLicense`."""
   tvshow: Tvshow
@@ -10036,6 +10020,14 @@ enum TvshowsLicensesOrderBy {
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
   UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  DOWNLOADED_ASSET_LIFESPAN_ASC
+  DOWNLOADED_ASSET_LIFESPAN_DESC
+  IS_DOWNLOADABLE_ASC
+  IS_DOWNLOADABLE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -10062,6 +10054,18 @@ input TvshowsLicenseCondition {
 
   """Checks for equality with the object’s `updatedDate` field."""
   updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+
+  """Checks for equality with the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: Int
+
+  """Checks for equality with the object’s `isDownloadable` field."""
+  isDownloadable: Boolean
 }
 
 """
@@ -10359,10 +10363,6 @@ type Season {
   publishStatus: PublishStatus!
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
@@ -10870,6 +10870,10 @@ type SeasonsLicense {
   licenseEnd: Datetime
   createdDate: Datetime!
   updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean!
 
   """Reads a single `Season` that is related to this `SeasonsLicense`."""
   season: Season
@@ -11000,6 +11004,14 @@ enum SeasonsLicensesOrderBy {
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
   UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  DOWNLOADED_ASSET_LIFESPAN_ASC
+  DOWNLOADED_ASSET_LIFESPAN_DESC
+  IS_DOWNLOADABLE_ASC
+  IS_DOWNLOADABLE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -11026,6 +11038,18 @@ input SeasonsLicenseCondition {
 
   """Checks for equality with the object’s `updatedDate` field."""
   updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+
+  """Checks for equality with the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: Int
+
+  """Checks for equality with the object’s `isDownloadable` field."""
+  isDownloadable: Boolean
 }
 
 """
@@ -11289,10 +11313,6 @@ type Episode {
   publishStatus: PublishStatus!
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType!
@@ -11768,6 +11788,10 @@ type EpisodesLicense {
   licenseEnd: Datetime
   createdDate: Datetime!
   updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean!
 
   """Reads a single `Episode` that is related to this `EpisodesLicense`."""
   episode: Episode
@@ -11898,6 +11922,14 @@ enum EpisodesLicensesOrderBy {
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
   UPDATED_DATE_DESC
+  CREATED_USER_ASC
+  CREATED_USER_DESC
+  UPDATED_USER_ASC
+  UPDATED_USER_DESC
+  DOWNLOADED_ASSET_LIFESPAN_ASC
+  DOWNLOADED_ASSET_LIFESPAN_DESC
+  IS_DOWNLOADABLE_ASC
+  IS_DOWNLOADABLE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -11924,6 +11956,18 @@ input EpisodesLicenseCondition {
 
   """Checks for equality with the object’s `updatedDate` field."""
   updatedDate: Datetime
+
+  """Checks for equality with the object’s `createdUser` field."""
+  createdUser: String
+
+  """Checks for equality with the object’s `updatedUser` field."""
+  updatedUser: String
+
+  """Checks for equality with the object’s `downloadedAssetLifespan` field."""
+  downloadedAssetLifespan: Int
+
+  """Checks for equality with the object’s `isDownloadable` field."""
+  isDownloadable: Boolean
 }
 
 """
@@ -12312,14 +12356,6 @@ enum EpisodesOrderBy {
   AGE_RATING_DESC
   RATING_ASC
   RATING_DESC
-  CUSTOM_RATING_ASC
-  CUSTOM_RATING_DESC
-  CREDITS_START_TIME_ASC
-  CREDITS_START_TIME_DESC
-  LENGTH_IN_SECONDS_ASC
-  LENGTH_IN_SECONDS_DESC
-  DYNAMIC_FIELD_ASC
-  DYNAMIC_FIELD_DESC
   EXTENDED_FIELD_ASC
   EXTENDED_FIELD_DESC
   CONTENT_OWNER_ASC
@@ -12399,18 +12435,6 @@ input EpisodeCondition {
 
   """Checks for equality with the object’s `rating` field."""
   rating: BigFloat
-
-  """Checks for equality with the object’s `customRating` field."""
-  customRating: String
-
-  """Checks for equality with the object’s `creditsStartTime` field."""
-  creditsStartTime: String
-
-  """Checks for equality with the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloat
-
-  """Checks for equality with the object’s `dynamicField` field."""
-  dynamicField: String
 
   """Checks for equality with the object’s `extendedField` field."""
   extendedField: String
@@ -12703,14 +12727,6 @@ enum SeasonsOrderBy {
   AGE_RATING_DESC
   RATING_ASC
   RATING_DESC
-  CUSTOM_RATING_ASC
-  CUSTOM_RATING_DESC
-  CREDITS_START_TIME_ASC
-  CREDITS_START_TIME_DESC
-  LENGTH_IN_SECONDS_ASC
-  LENGTH_IN_SECONDS_DESC
-  DYNAMIC_FIELD_ASC
-  DYNAMIC_FIELD_DESC
   EXTENDED_FIELD_ASC
   EXTENDED_FIELD_DESC
   CONTENT_OWNER_ASC
@@ -12777,18 +12793,6 @@ input SeasonCondition {
 
   """Checks for equality with the object’s `rating` field."""
   rating: BigFloat
-
-  """Checks for equality with the object’s `customRating` field."""
-  customRating: String
-
-  """Checks for equality with the object’s `creditsStartTime` field."""
-  creditsStartTime: String
-
-  """Checks for equality with the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloat
-
-  """Checks for equality with the object’s `dynamicField` field."""
-  dynamicField: String
 
   """Checks for equality with the object’s `extendedField` field."""
   extendedField: String
@@ -15268,26 +15272,12 @@ enum MoviesOrderBy {
   AGE_RATING_DESC
   RATING_ASC
   RATING_DESC
-  CUSTOM_RATING_ASC
-  CUSTOM_RATING_DESC
-  CREDITS_START_TIME_ASC
-  CREDITS_START_TIME_DESC
-  LENGTH_IN_SECONDS_ASC
-  LENGTH_IN_SECONDS_DESC
-  DYNAMIC_FIELD_ASC
-  DYNAMIC_FIELD_DESC
   EXTENDED_FIELD_ASC
   EXTENDED_FIELD_DESC
   CONTENT_OWNER_ASC
   CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
-  AUDIO_LANGUAGES_ASC
-  AUDIO_LANGUAGES_DESC
-  SUBTITLE_LANGUAGES_ASC
-  SUBTITLE_LANGUAGES_DESC
-  CAPTION_LANGUAGES_ASC
-  CAPTION_LANGUAGES_DESC
   ASSET_SUBTYPE_ASC
   ASSET_SUBTYPE_DESC
   PRIMARY_KEY_ASC
@@ -15356,18 +15346,6 @@ input MovieCondition {
   """Checks for equality with the object’s `rating` field."""
   rating: BigFloat
 
-  """Checks for equality with the object’s `customRating` field."""
-  customRating: String
-
-  """Checks for equality with the object’s `creditsStartTime` field."""
-  creditsStartTime: String
-
-  """Checks for equality with the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloat
-
-  """Checks for equality with the object’s `dynamicField` field."""
-  dynamicField: String
-
   """Checks for equality with the object’s `extendedField` field."""
   extendedField: String
 
@@ -15376,15 +15354,6 @@ input MovieCondition {
 
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
-
-  """Checks for equality with the object’s `audioLanguages` field."""
-  audioLanguages: [String]
-
-  """Checks for equality with the object’s `subtitleLanguages` field."""
-  subtitleLanguages: [String]
-
-  """Checks for equality with the object’s `captionLanguages` field."""
-  captionLanguages: [String]
 
   """Checks for equality with the object’s `assetSubtype` field."""
   assetSubtype: AssetSubtype
@@ -15670,26 +15639,12 @@ enum TvshowsOrderBy {
   AGE_RATING_DESC
   RATING_ASC
   RATING_DESC
-  CUSTOM_RATING_ASC
-  CUSTOM_RATING_DESC
-  CREDITS_START_TIME_ASC
-  CREDITS_START_TIME_DESC
-  LENGTH_IN_SECONDS_ASC
-  LENGTH_IN_SECONDS_DESC
-  DYNAMIC_FIELD_ASC
-  DYNAMIC_FIELD_DESC
   EXTENDED_FIELD_ASC
   EXTENDED_FIELD_DESC
   CONTENT_OWNER_ASC
   CONTENT_OWNER_DESC
   BUSINESS_TYPE_ASC
   BUSINESS_TYPE_DESC
-  AUDIO_LANGUAGES_ASC
-  AUDIO_LANGUAGES_DESC
-  SUBTITLE_LANGUAGES_ASC
-  SUBTITLE_LANGUAGES_DESC
-  CAPTION_LANGUAGES_ASC
-  CAPTION_LANGUAGES_DESC
   ASSET_SUBTYPE_ASC
   ASSET_SUBTYPE_DESC
   PRIMARY_KEY_ASC
@@ -15755,18 +15710,6 @@ input TvshowCondition {
   """Checks for equality with the object’s `rating` field."""
   rating: BigFloat
 
-  """Checks for equality with the object’s `customRating` field."""
-  customRating: String
-
-  """Checks for equality with the object’s `creditsStartTime` field."""
-  creditsStartTime: String
-
-  """Checks for equality with the object’s `lengthInSeconds` field."""
-  lengthInSeconds: BigFloat
-
-  """Checks for equality with the object’s `dynamicField` field."""
-  dynamicField: String
-
   """Checks for equality with the object’s `extendedField` field."""
   extendedField: String
 
@@ -15775,15 +15718,6 @@ input TvshowCondition {
 
   """Checks for equality with the object’s `businessType` field."""
   businessType: BusinessType
-
-  """Checks for equality with the object’s `audioLanguages` field."""
-  audioLanguages: [String]
-
-  """Checks for equality with the object’s `subtitleLanguages` field."""
-  subtitleLanguages: [String]
-
-  """Checks for equality with the object’s `captionLanguages` field."""
-  captionLanguages: [String]
 
   """Checks for equality with the object’s `assetSubtype` field."""
   assetSubtype: AssetSubtype
@@ -18277,10 +18211,6 @@ input EpisodeInput {
   mainVideoId: UUID
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType
@@ -18430,6 +18360,8 @@ input EpisodesLicenseInput {
   episodeId: Int!
   licenseStart: Datetime
   licenseEnd: Datetime
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean
 }
 
 """The output of our create `EpisodesLicensesCountry` mutation."""
@@ -18837,16 +18769,9 @@ input MovieInput {
   mainVideoId: UUID
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType
-  audioLanguages: [String]
-  subtitleLanguages: [String]
-  captionLanguages: [String]
   assetSubtype: AssetSubtype
 }
 
@@ -19042,6 +18967,8 @@ input MoviesLicenseInput {
   movieId: Int!
   licenseStart: Datetime
   licenseEnd: Datetime
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean
 }
 
 """The output of our create `MoviesLicensesCountry` mutation."""
@@ -19344,10 +19271,6 @@ input SeasonInput {
   released: Date
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType
@@ -19497,6 +19420,8 @@ input SeasonsLicenseInput {
   seasonId: Int!
   licenseStart: Datetime
   licenseEnd: Datetime
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean
 }
 
 """The output of our create `SeasonsLicensesCountry` mutation."""
@@ -19849,16 +19774,9 @@ input TvshowInput {
   released: Date
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType
-  audioLanguages: [String]
-  subtitleLanguages: [String]
-  captionLanguages: [String]
   assetSubtype: AssetSubtype
 }
 
@@ -20054,6 +19972,8 @@ input TvshowsLicenseInput {
   tvshowId: Int!
   licenseStart: Datetime
   licenseEnd: Datetime
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean
 }
 
 """The output of our create `TvshowsLicensesCountry` mutation."""
@@ -20839,10 +20759,6 @@ input EpisodePatch {
   mainVideoId: UUID
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType
@@ -21027,6 +20943,8 @@ input EpisodesLicensePatch {
   episodeId: Int
   licenseStart: Datetime
   licenseEnd: Datetime
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean
 }
 
 """The output of our update `EpisodesLicensesCountry` mutation."""
@@ -21417,16 +21335,9 @@ input MoviePatch {
   mainVideoId: UUID
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType
-  audioLanguages: [String]
-  subtitleLanguages: [String]
-  captionLanguages: [String]
   assetSubtype: AssetSubtype
 }
 
@@ -21665,6 +21576,8 @@ input MoviesLicensePatch {
   movieId: Int
   licenseStart: Datetime
   licenseEnd: Datetime
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean
 }
 
 """The output of our update `MoviesLicensesCountry` mutation."""
@@ -21890,10 +21803,6 @@ input SeasonPatch {
   released: Date
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType
@@ -22078,6 +21987,8 @@ input SeasonsLicensePatch {
   seasonId: Int
   licenseStart: Datetime
   licenseEnd: Datetime
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean
 }
 
 """The output of our update `SeasonsLicensesCountry` mutation."""
@@ -22358,16 +22269,9 @@ input TvshowPatch {
   released: Date
   ageRating: String
   rating: BigFloat
-  customRating: String
-  creditsStartTime: String
-  lengthInSeconds: BigFloat
-  dynamicField: String
   extendedField: String
   contentOwner: String
   businessType: BusinessType
-  audioLanguages: [String]
-  subtitleLanguages: [String]
-  captionLanguages: [String]
   assetSubtype: AssetSubtype
 }
 
@@ -22606,6 +22510,8 @@ input TvshowsLicensePatch {
   tvshowId: Int
   licenseStart: Datetime
   licenseEnd: Datetime
+  downloadedAssetLifespan: Int
+  isDownloadable: Boolean
 }
 
 """The output of our update `TvshowsLicensesCountry` mutation."""

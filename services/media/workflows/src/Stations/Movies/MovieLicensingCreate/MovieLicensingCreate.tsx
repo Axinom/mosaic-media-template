@@ -104,7 +104,7 @@ const Form: React.FC = () => {
   return (
     <>
       <Field name="licenseStart" label="From" as={DateTimeTextField} />
-      <Field name="licenseEnd" label="To" as={DateTimeTextField} />
+      <Field name="licenseEnd" label="Until" as={DateTimeTextField} />
     </>
   );
 };

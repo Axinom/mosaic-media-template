@@ -52,11 +52,6 @@ export function useMoviesFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Audio Languages',
-      property: 'audioLanguages',
-      type: FilterTypes.FreeText,
-    },
-    {
       label: 'Cast',
       property: 'moviesCasts',
       type: FilterTypes.FreeText,
@@ -117,7 +112,6 @@ export function useMoviesFilters(): {
       ],
       ageRating: 'includesInsensitive',
       publishStatus: 'in',
-      audioLanguages: 'equalTo',
       moviesCasts: ['some', 'name', 'includesInsensitive'],
       externalId: 'includesInsensitive',
       contentOwner: 'includesInsensitive',

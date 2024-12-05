@@ -8,6 +8,12 @@ query MoviesLicense($id: Int!) {
     licenseEnd
     licenseStart
     movieId
+    createdDate
+    updatedDate
+    updatedUser
+    createdUser
+    isDownloadable
+    downloadedAssetLifespan
   }
 }
 

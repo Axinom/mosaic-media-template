@@ -5,9 +5,7 @@ fragment TVShowExplorerProperties on Tvshow {
   externalId
   ageRating
   assetSubtype
-  audioLanguages
   businessType
-  captionLanguages
   contentOwner
   tvshowsImages(condition: { imageType: COVER_1X1 }) {
     nodes {

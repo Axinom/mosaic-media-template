@@ -2744,30 +2744,6 @@ declare module 'zapatos/schema' {
       */
       rating: number | null;
       /**
-      * **episodes.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating: string | null;
-      /**
-      * **episodes.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time: string | null;
-      /**
-      * **episodes.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds: number | null;
-      /**
-      * **episodes.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field: string | null;
-      /**
       * **episodes.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -2782,7 +2758,7 @@ declare module 'zapatos/schema' {
       /**
       * **episodes.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type: c.BusinessTypeEnum;
       /**
@@ -2922,30 +2898,6 @@ declare module 'zapatos/schema' {
       */
       rating: number | null;
       /**
-      * **episodes.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating: string | null;
-      /**
-      * **episodes.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time: string | null;
-      /**
-      * **episodes.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds: number | null;
-      /**
-      * **episodes.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field: string | null;
-      /**
       * **episodes.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -2960,7 +2912,7 @@ declare module 'zapatos/schema' {
       /**
       * **episodes.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type: c.BusinessTypeEnum;
       /**
@@ -3100,30 +3052,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **episodes.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **episodes.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **episodes.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **episodes.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **episodes.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -3138,7 +3066,7 @@ declare module 'zapatos/schema' {
       /**
       * **episodes.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -3278,30 +3206,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **episodes.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **episodes.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **episodes.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **episodes.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **episodes.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -3316,7 +3220,7 @@ declare module 'zapatos/schema' {
       /**
       * **episodes.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment;
       /**
@@ -3456,30 +3360,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **episodes.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **episodes.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **episodes.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **episodes.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **episodes.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -3494,7 +3374,7 @@ declare module 'zapatos/schema' {
       /**
       * **episodes.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment>;
       /**
@@ -3817,6 +3697,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
+      /**
+      * **episodes_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user: string;
+      /**
+      * **episodes_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user: string;
+      /**
+      * **episodes_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan: number | null;
+      /**
+      * **episodes_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable: boolean;
     }
     export interface JSONSelectable {
       /**
@@ -3855,6 +3759,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
+      /**
+      * **episodes_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user: string;
+      /**
+      * **episodes_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user: string;
+      /**
+      * **episodes_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan: number | null;
+      /**
+      * **episodes_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable: boolean;
     }
     export interface Whereable {
       /**
@@ -3893,6 +3821,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -3931,6 +3883,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -3969,6 +3945,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'episodes_licenses_pkey';
     export type Column = keyof Selectable;
@@ -7008,30 +7008,6 @@ declare module 'zapatos/schema' {
       */
       rating: number | null;
       /**
-      * **movies.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating: string | null;
-      /**
-      * **movies.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time: string | null;
-      /**
-      * **movies.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds: number | null;
-      /**
-      * **movies.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field: string | null;
-      /**
       * **movies.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -7046,27 +7022,9 @@ declare module 'zapatos/schema' {
       /**
       * **movies.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type: c.BusinessTypeEnum;
-      /**
-      * **movies.audio_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      audio_languages: string[] | null;
-      /**
-      * **movies.subtitle_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      subtitle_languages: string[] | null;
-      /**
-      * **movies.caption_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      caption_languages: string[] | null;
       /**
       * **movies.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -7192,30 +7150,6 @@ declare module 'zapatos/schema' {
       */
       rating: number | null;
       /**
-      * **movies.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating: string | null;
-      /**
-      * **movies.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time: string | null;
-      /**
-      * **movies.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds: number | null;
-      /**
-      * **movies.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field: string | null;
-      /**
       * **movies.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -7230,27 +7164,9 @@ declare module 'zapatos/schema' {
       /**
       * **movies.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type: c.BusinessTypeEnum;
-      /**
-      * **movies.audio_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      audio_languages: string[] | null;
-      /**
-      * **movies.subtitle_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      subtitle_languages: string[] | null;
-      /**
-      * **movies.caption_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      caption_languages: string[] | null;
       /**
       * **movies.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -7376,30 +7292,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **movies.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **movies.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **movies.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **movies.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **movies.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -7414,27 +7306,9 @@ declare module 'zapatos/schema' {
       /**
       * **movies.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **movies.audio_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      audio_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **movies.subtitle_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      subtitle_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **movies.caption_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      caption_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
       /**
       * **movies.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -7560,30 +7434,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **movies.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **movies.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **movies.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **movies.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **movies.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -7598,27 +7448,9 @@ declare module 'zapatos/schema' {
       /**
       * **movies.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment;
-      /**
-      * **movies.audio_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **movies.subtitle_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **movies.caption_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
       /**
       * **movies.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -7744,30 +7576,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **movies.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **movies.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **movies.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **movies.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **movies.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -7782,27 +7590,9 @@ declare module 'zapatos/schema' {
       /**
       * **movies.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **movies.audio_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **movies.subtitle_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **movies.caption_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **movies.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -8123,6 +7913,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
+      /**
+      * **movies_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user: string;
+      /**
+      * **movies_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user: string;
+      /**
+      * **movies_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan: number | null;
+      /**
+      * **movies_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable: boolean;
     }
     export interface JSONSelectable {
       /**
@@ -8161,6 +7975,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
+      /**
+      * **movies_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user: string;
+      /**
+      * **movies_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user: string;
+      /**
+      * **movies_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan: number | null;
+      /**
+      * **movies_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable: boolean;
     }
     export interface Whereable {
       /**
@@ -8199,6 +8037,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -8237,6 +8099,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -8275,6 +8161,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movies_licenses_pkey';
     export type Column = keyof Selectable;
@@ -9029,30 +8939,6 @@ declare module 'zapatos/schema' {
       */
       rating: number | null;
       /**
-      * **seasons.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating: string | null;
-      /**
-      * **seasons.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time: string | null;
-      /**
-      * **seasons.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds: number | null;
-      /**
-      * **seasons.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field: string | null;
-      /**
       * **seasons.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -9067,7 +8953,7 @@ declare module 'zapatos/schema' {
       /**
       * **seasons.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type: c.BusinessTypeEnum;
       /**
@@ -9189,30 +9075,6 @@ declare module 'zapatos/schema' {
       */
       rating: number | null;
       /**
-      * **seasons.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating: string | null;
-      /**
-      * **seasons.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time: string | null;
-      /**
-      * **seasons.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds: number | null;
-      /**
-      * **seasons.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field: string | null;
-      /**
       * **seasons.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -9227,7 +9089,7 @@ declare module 'zapatos/schema' {
       /**
       * **seasons.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type: c.BusinessTypeEnum;
       /**
@@ -9349,30 +9211,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **seasons.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **seasons.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **seasons.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **seasons.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **seasons.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -9387,7 +9225,7 @@ declare module 'zapatos/schema' {
       /**
       * **seasons.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -9509,30 +9347,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **seasons.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **seasons.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **seasons.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **seasons.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **seasons.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -9547,7 +9361,7 @@ declare module 'zapatos/schema' {
       /**
       * **seasons.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment;
       /**
@@ -9669,30 +9483,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **seasons.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **seasons.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **seasons.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **seasons.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **seasons.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -9707,7 +9497,7 @@ declare module 'zapatos/schema' {
       /**
       * **seasons.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment>;
       /**
@@ -10030,6 +9820,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
+      /**
+      * **seasons_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user: string;
+      /**
+      * **seasons_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user: string;
+      /**
+      * **seasons_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan: number | null;
+      /**
+      * **seasons_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable: boolean;
     }
     export interface JSONSelectable {
       /**
@@ -10068,6 +9882,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
+      /**
+      * **seasons_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user: string;
+      /**
+      * **seasons_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user: string;
+      /**
+      * **seasons_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan: number | null;
+      /**
+      * **seasons_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable: boolean;
     }
     export interface Whereable {
       /**
@@ -10106,6 +9944,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -10144,6 +10006,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -10182,6 +10068,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'seasons_licenses_pkey';
     export type Column = keyof Selectable;
@@ -12160,30 +12070,6 @@ declare module 'zapatos/schema' {
       */
       rating: number | null;
       /**
-      * **tvshows.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating: string | null;
-      /**
-      * **tvshows.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time: string | null;
-      /**
-      * **tvshows.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds: number | null;
-      /**
-      * **tvshows.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field: string | null;
-      /**
       * **tvshows.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -12198,27 +12084,9 @@ declare module 'zapatos/schema' {
       /**
       * **tvshows.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type: c.BusinessTypeEnum;
-      /**
-      * **tvshows.audio_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      audio_languages: string[] | null;
-      /**
-      * **tvshows.subtitle_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      subtitle_languages: string[] | null;
-      /**
-      * **tvshows.caption_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      caption_languages: string[] | null;
       /**
       * **tvshows.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -12338,30 +12206,6 @@ declare module 'zapatos/schema' {
       */
       rating: number | null;
       /**
-      * **tvshows.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating: string | null;
-      /**
-      * **tvshows.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time: string | null;
-      /**
-      * **tvshows.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds: number | null;
-      /**
-      * **tvshows.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field: string | null;
-      /**
       * **tvshows.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -12376,27 +12220,9 @@ declare module 'zapatos/schema' {
       /**
       * **tvshows.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type: c.BusinessTypeEnum;
-      /**
-      * **tvshows.audio_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      audio_languages: string[] | null;
-      /**
-      * **tvshows.subtitle_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      subtitle_languages: string[] | null;
-      /**
-      * **tvshows.caption_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      caption_languages: string[] | null;
       /**
       * **tvshows.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -12516,30 +12342,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **tvshows.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tvshows.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tvshows.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tvshows.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **tvshows.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -12554,27 +12356,9 @@ declare module 'zapatos/schema' {
       /**
       * **tvshows.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tvshows.audio_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      audio_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tvshows.subtitle_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      subtitle_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tvshows.caption_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      caption_languages?: string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string[] | db.Parameter<string[]> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tvshows.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -12694,30 +12478,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **tvshows.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tvshows.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tvshows.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tvshows.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **tvshows.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -12732,27 +12492,9 @@ declare module 'zapatos/schema' {
       /**
       * **tvshows.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment;
-      /**
-      * **tvshows.audio_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tvshows.subtitle_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tvshows.caption_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment;
       /**
       * **tvshows.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -12872,30 +12614,6 @@ declare module 'zapatos/schema' {
       */
       rating?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **tvshows.custom_rating**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      custom_rating?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tvshows.credits_start_time**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      credits_start_time?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tvshows.length_in_seconds**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      length_in_seconds?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tvshows.dynamic_field**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      dynamic_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **tvshows.extended_field**
       * - `text` in database
       * - Nullable, no default
@@ -12910,27 +12628,9 @@ declare module 'zapatos/schema' {
       /**
       * **tvshows.business_type**
       * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium_downloadable'::text`
+      * - `NOT NULL`, default: `'premium'::text`
       */
       business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tvshows.audio_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      audio_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tvshows.subtitle_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      subtitle_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tvshows.caption_languages**
-      * - `_text` in database
-      * - Nullable, default: `'{}'::text[]`
-      */
-      caption_languages?: string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string[] | db.Parameter<string[]> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **tvshows.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -13251,6 +12951,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: Date;
+      /**
+      * **tvshows_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user: string;
+      /**
+      * **tvshows_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user: string;
+      /**
+      * **tvshows_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan: number | null;
+      /**
+      * **tvshows_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable: boolean;
     }
     export interface JSONSelectable {
       /**
@@ -13289,6 +13013,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date: db.DateString;
+      /**
+      * **tvshows_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user: string;
+      /**
+      * **tvshows_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user: string;
+      /**
+      * **tvshows_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan: number | null;
+      /**
+      * **tvshows_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable: boolean;
     }
     export interface Whereable {
       /**
@@ -13327,6 +13075,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -13365,6 +13137,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -13403,6 +13199,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
       */
       updated_date?: (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (Date | db.DateString) | db.Parameter<(Date | db.DateString)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows_licenses.created_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      created_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows_licenses.updated_user**
+      * - `text` in database
+      * - `NOT NULL`, default: `'Unknown'::text`
+      */
+      updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows_licenses.downloaded_asset_lifespan**
+      * - `int4` in database
+      * - Nullable, default: `0`
+      */
+      downloaded_asset_lifespan?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows_licenses.is_downloadable**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      is_downloadable?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshows_licenses_pkey';
     export type Column = keyof Selectable;

@@ -9,14 +9,7 @@ query TvShow($id: Int!) {
     businessType
     contentOwner
     rating
-    customRating
-    creditsStartTime
-    lengthInSeconds
-    dynamicField
     extendedField
-    captionLanguages
-    audioLanguages
-    subtitleLanguages
     assetSubtype
     tvshowsTags {
       nodes {

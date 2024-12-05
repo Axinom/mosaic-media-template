@@ -116,11 +116,6 @@ export function useTvShowsFilters(): {
       })),
     },
     {
-      label: 'Audio Languages',
-      property: 'audioLanguages',
-      type: FilterTypes.FreeText,
-    },
-    {
       label: 'Cast',
       property: 'tvshowsCasts',
       type: FilterTypes.FreeText,
@@ -240,7 +235,6 @@ export function useTvShowsFilters(): {
       studio: 'includesInsensitive',
       publishStatus: 'in',
       ageRating: 'includesInsensitive',
-      audioLanguages: 'equalTo',
       contentOwner: 'includesInsensitive',
       tvshowsLicenses: (value) => {
         if (value === 'Valid license') {

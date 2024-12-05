@@ -97,9 +97,6 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
     allContentOwners,
     director,
     allLanguages,
-    audioLanguages,
-    subtitleLanguages,
-    captionLanguages,
   } = useMemo(
     () => ({
       allGenres:
@@ -116,13 +113,6 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
       cast: data?.tvshow?.tvshowsCasts.nodes.map((node) => node.name),
       productionCountries: data?.tvshow?.tvshowsProductionCountries.nodes.map(
         (node) => node.name,
-      ),
-      audioLanguages: data?.tvshow?.audioLanguages?.map((lang) => lang ?? ''),
-      subtitleLanguages: data?.tvshow?.subtitleLanguages?.map(
-        (lang) => lang ?? '',
-      ),
-      captionLanguages: data?.tvshow?.captionLanguages?.map(
-        (lang) => lang ?? '',
       ),
       director: data?.tvshow?.tvshowsDirectors.nodes.map((node) => node.name),
       allAgeRatings:
@@ -304,9 +294,6 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
           cast,
           productionCountries,
           director,
-          audioLanguages,
-          subtitleLanguages,
-          captionLanguages,
         },
         loading,
         entityNotFound: data?.tvshow === null,
@@ -557,24 +544,6 @@ const Form: React.FC<{
         as={SelectField}
       />
       <Field
-        name="audioLanguages"
-        label="Audio Languages"
-        tagsOptions={languageOptions}
-        as={TagsField}
-      />
-      <Field
-        name="subtitleLanguages"
-        label="Subtitle Languages"
-        tagsOptions={languageOptions}
-        as={TagsField}
-      />
-      <Field
-        name="captionLanguages"
-        label="Closed Caption Languages"
-        tagsOptions={languageOptions}
-        as={TagsField}
-      />
-      <Field
         name="rating"
         label="Rating"
         validate={ValidateRating}
@@ -586,11 +555,6 @@ const Form: React.FC<{
         addEmptyOption={true}
         options={contentOwnerOptions}
         as={SelectField}
-      />
-      <Field
-        name="customRating"
-        label="Custom Rating"
-        as={SingleLineTextField}
       />
 
       <Field name="extendedField" label="Custom" as={TextAreaField} />
