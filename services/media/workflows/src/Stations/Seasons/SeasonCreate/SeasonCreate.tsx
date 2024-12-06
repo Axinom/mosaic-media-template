@@ -22,6 +22,7 @@ const tvShowCreateSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>(
       .positive('Season Index must be a positive number')
       .integer('Season Index must be an integer')
       .required('Season Index is a required field'),
+    title: Yup.string().required('Title is a required field'),
   },
 );
 
@@ -33,12 +34,16 @@ export const SeasonCreate: React.FC = () => {
 
   const saveData = useCallback(
     async (formData: FormData): Promise<SubmitResponse> => {
+      const ContentProviderKey = 0;
+      const AssetType = 2;
       return (
         await seasonCreate({
           variables: {
             input: {
               season: {
+                title: formData.title,
                 index: Number(formData.index),
+                externalId: `${ContentProviderKey}-${AssetType}-season-${new Date().getTime()}`,
               },
             },
           },
@@ -79,6 +84,12 @@ export const SeasonCreate: React.FC = () => {
         type="number"
         name="index"
         label="Season Index"
+        as={SingleLineTextField}
+      />
+      <Field
+        type="string"
+        name="title"
+        label="Title"
         as={SingleLineTextField}
       />
     </Create>

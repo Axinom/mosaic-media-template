@@ -82,11 +82,15 @@ export const SeasonExplorer: React.FC<SeasonExplorerProps> = (props) => {
         },
       ),
     },
-    { label: 'Created At', propertyName: 'createdDate', render: DateRenderer },
+    { label: 'Created', propertyName: 'createdDate', render: DateRenderer },
     {
-      label: 'Last Modified At',
+      label: 'Last Modified',
       propertyName: 'updatedDate',
       render: DateRenderer,
+    },
+    {
+      label: 'Modified By',
+      propertyName: 'updatedUser',
     },
   ];
 

@@ -100,7 +100,7 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
       {
         is_default_locale: true,
         language_tag: DEFAULT_LOCALE_TAG,
-        title: '',
+        title: season.title,
         synopsis: season.synopsis ?? undefined,
         description: season.description ?? undefined,
       },

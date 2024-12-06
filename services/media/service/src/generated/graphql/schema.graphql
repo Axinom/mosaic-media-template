@@ -1236,6 +1236,40 @@ type Query {
     filter: SeasonsCastFilter
   ): SeasonsCastsConnection
 
+  """Reads and enables pagination through a set of `SeasonsDirector`."""
+  seasonsDirectors(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `SeasonsDirector`."""
+    orderBy: [SeasonsDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SeasonsDirectorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SeasonsDirectorFilter
+  ): SeasonsDirectorsConnection
+
   """Reads and enables pagination through a set of `SeasonsImage`."""
   seasonsImages(
     """Only read the first `n` values of the set."""
@@ -1924,6 +1958,7 @@ type Query {
   season(id: Int!): Season
   seasonByExternalId(externalId: String!): Season
   seasonsCast(seasonId: Int!, name: String!): SeasonsCast
+  seasonsDirector(seasonId: Int!, name: String!): SeasonsDirector
   seasonsLicense(id: Int!): SeasonsLicense
   seasonsLicensesCountry(seasonsLicenseId: Int!, code: IsoAlphaTwoCountryCodes!): SeasonsLicensesCountry
   seasonsProductionCountry(seasonId: Int!, name: String!): SeasonsProductionCountry
@@ -2158,6 +2193,30 @@ type Query {
     """
     filter: StringFilter
   ): GetSeasonsCastsValuesConnection
+  getSeasonsDirectorsValues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StringFilter
+  ): GetSeasonsDirectorsValuesConnection
   getSeasonsProductionCountriesValues(
     """Only read the first `n` values of the set."""
     first: Int
@@ -6402,6 +6461,9 @@ input SeasonFilter {
   """Filter by the object’s `assetSubtype` field."""
   assetSubtype: AssetSubtypeFilter
 
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
   """Filter by the object’s `seasonsTags` relation."""
   seasonsTags: SeasonToManySeasonsTagFilter
 
@@ -6838,11 +6900,23 @@ input SeasonImageTypeFilter {
 }
 
 enum SeasonImageType {
-  """Cover"""
-  COVER
+  """Cover 1x1"""
+  COVER_1X1
 
-  """Teaser"""
-  TEASER
+  """Cover 16x9"""
+  COVER_16X9
+
+  """Clean Cover 1x1"""
+  CLEAN_COVER_1X1
+
+  """Clean Cover 16x9"""
+  CLEAN_COVER_16X9
+
+  """List 9x13"""
+  LIST_9X13
+
+  """List 1x1"""
+  LIST_1X1
 }
 
 """
@@ -10367,6 +10441,7 @@ type Season {
   contentOwner: String
   businessType: BusinessType!
   assetSubtype: AssetSubtype!
+  title: String!
 
   """Reads a single `Tvshow` that is related to this `Season`."""
   tvshow: Tvshow
@@ -10712,6 +10787,40 @@ type Season {
     """
     filter: SeasonsSnapshotFilter
   ): SeasonsSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `SeasonsDirector`."""
+  seasonsDirectors(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `SeasonsDirector`."""
+    orderBy: [SeasonsDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SeasonsDirectorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SeasonsDirectorFilter
+  ): SeasonsDirectorsConnection!
 }
 
 """
@@ -12515,6 +12624,72 @@ input SeasonsSnapshotCondition {
   snapshotId: Int
 }
 
+"""
+A connection to a list of `SeasonsDirector` values.
+@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+"""
+type SeasonsDirectorsConnection {
+  """A list of `SeasonsDirector` objects."""
+  nodes: [SeasonsDirector!]!
+
+  """
+  A list of edges which contains the `SeasonsDirector` and cursor to aid in pagination.
+  """
+  edges: [SeasonsDirectorsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `SeasonsDirector` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN"""
+type SeasonsDirector {
+  seasonId: Int!
+  name: String!
+
+  """Reads a single `Season` that is related to this `SeasonsDirector`."""
+  season: Season
+}
+
+"""A `SeasonsDirector` edge in the connection."""
+type SeasonsDirectorsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `SeasonsDirector` at the end of the edge."""
+  node: SeasonsDirector!
+}
+
+"""Methods to use when ordering `SeasonsDirector`."""
+enum SeasonsDirectorsOrderBy {
+  NATURAL
+  SEASON_ID_ASC
+  SEASON_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `SeasonsDirector` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input SeasonsDirectorCondition {
+  """Checks for equality with the object’s `seasonId` field."""
+  seasonId: Int
+
+  """
+  Checks for equality with the object’s `name` field.
+  @notEmpty()
+  """
+  name: String
+}
+
 """A `SeasonsTvshowGenre` edge in the connection."""
 type SeasonsTvshowGenresEdge {
   """A cursor for use in pagination."""
@@ -12735,6 +12910,8 @@ enum SeasonsOrderBy {
   BUSINESS_TYPE_DESC
   ASSET_SUBTYPE_ASC
   ASSET_SUBTYPE_DESC
+  TITLE_ASC
+  TITLE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -12805,6 +12982,9 @@ input SeasonCondition {
 
   """Checks for equality with the object’s `assetSubtype` field."""
   assetSubtype: AssetSubtype
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
 }
 
 """Methods to use when ordering `TvshowsSnapshot`."""
@@ -15931,6 +16111,29 @@ type GetSeasonsCastsValueEdge {
 }
 
 """A connection to a list of `String` values."""
+type GetSeasonsDirectorsValuesConnection {
+  """A list of `String` objects."""
+  nodes: [String]!
+
+  """
+  A list of edges which contains the `String` and cursor to aid in pagination.
+  """
+  edges: [GetSeasonsDirectorsValueEdge!]!
+
+  """The count of *all* `String` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `String` edge in the connection."""
+type GetSeasonsDirectorsValueEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `String` at the end of the edge."""
+  node: String
+}
+
+"""A connection to a list of `String` values."""
 type GetSeasonsProductionCountriesValuesConnection {
   """A list of `String` objects."""
   nodes: [String]!
@@ -16518,6 +16721,14 @@ type Mutation {
     input: CreateSeasonsCastInput!
   ): CreateSeasonsCastPayload
 
+  """Creates a single `SeasonsDirector`."""
+  createSeasonsDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSeasonsDirectorInput!
+  ): CreateSeasonsDirectorPayload
+
   """Creates a single `SeasonsImage`."""
   createSeasonsImage(
     """
@@ -16927,6 +17138,14 @@ type Mutation {
     """
     input: UpdateSeasonsCastInput!
   ): UpdateSeasonsCastPayload
+
+  """Updates a single `SeasonsDirector` using a unique key and a patch."""
+  updateSeasonsDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSeasonsDirectorInput!
+  ): UpdateSeasonsDirectorPayload
 
   """Updates a single `SeasonsImage` using a unique key and a patch."""
   updateSeasonsImageBySeasonIdAndImageType(
@@ -17343,6 +17562,14 @@ type Mutation {
     """
     input: DeleteSeasonsCastInput!
   ): DeleteSeasonsCastPayload
+
+  """Deletes a single `SeasonsDirector` using a unique key."""
+  deleteSeasonsDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSeasonsDirectorInput!
+  ): DeleteSeasonsDirectorPayload
 
   """Deletes a single `SeasonsImage` using a unique key."""
   deleteSeasonsImageBySeasonIdAndImageType(
@@ -19275,6 +19502,7 @@ input SeasonInput {
   contentOwner: String
   businessType: BusinessType
   assetSubtype: AssetSubtype
+  title: String!
 }
 
 """The output of our create `SeasonsCast` mutation."""
@@ -19320,6 +19548,55 @@ input CreateSeasonsCastInput {
 
 """An input for mutations affecting `SeasonsCast`"""
 input SeasonsCastInput {
+  seasonId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""The output of our create `SeasonsDirector` mutation."""
+type CreateSeasonsDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SeasonsDirector` that was created by this mutation."""
+  seasonsDirector: SeasonsDirector
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Season` that is related to this `SeasonsDirector`."""
+  season: Season
+
+  """An edge for our `SeasonsDirector`. May be used by Relay 1."""
+  seasonsDirectorEdge(
+    """The method to use when ordering `SeasonsDirector`."""
+    orderBy: [SeasonsDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SeasonsDirectorsEdge
+}
+
+"""
+All input for the create `SeasonsDirector` mutation.
+@permissions: TVSHOW_EDITOR,ADMIN
+"""
+input CreateSeasonsDirectorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `SeasonsDirector` to be created by this mutation."""
+  seasonsDirector: SeasonsDirectorInput!
+}
+
+"""An input for mutations affecting `SeasonsDirector`"""
+input SeasonsDirectorInput {
   seasonId: Int!
 
   """@notEmpty()"""
@@ -21807,6 +22084,7 @@ input SeasonPatch {
   contentOwner: String
   businessType: BusinessType
   assetSubtype: AssetSubtype
+  title: String
 }
 
 """
@@ -21878,6 +22156,63 @@ input UpdateSeasonsCastInput {
 Represents an update to a `SeasonsCast`. Fields that are set will be updated.
 """
 input SeasonsCastPatch {
+  """@notEmpty()"""
+  name: String
+}
+
+"""The output of our update `SeasonsDirector` mutation."""
+type UpdateSeasonsDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SeasonsDirector` that was updated by this mutation."""
+  seasonsDirector: SeasonsDirector
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Season` that is related to this `SeasonsDirector`."""
+  season: Season
+
+  """An edge for our `SeasonsDirector`. May be used by Relay 1."""
+  seasonsDirectorEdge(
+    """The method to use when ordering `SeasonsDirector`."""
+    orderBy: [SeasonsDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SeasonsDirectorsEdge
+}
+
+"""
+All input for the `updateSeasonsDirector` mutation.
+@permissions: TVSHOW_EDITOR,ADMIN
+"""
+input UpdateSeasonsDirectorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `SeasonsDirector` being updated.
+  """
+  patch: SeasonsDirectorPatch!
+  seasonId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""
+Represents an update to a `SeasonsDirector`. Fields that are set will be updated.
+"""
+input SeasonsDirectorPatch {
+  seasonId: Int
+
   """@notEmpty()"""
   name: String
 }
@@ -24052,6 +24387,49 @@ All input for the `deleteSeasonsCast` mutation.
 @permissions: TVSHOWS_EDIT,ADMIN
 """
 input DeleteSeasonsCastInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  seasonId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""The output of our delete `SeasonsDirector` mutation."""
+type DeleteSeasonsDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SeasonsDirector` that was deleted by this mutation."""
+  seasonsDirector: SeasonsDirector
+  deletedSeasonsDirectorNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Season` that is related to this `SeasonsDirector`."""
+  season: Season
+
+  """An edge for our `SeasonsDirector`. May be used by Relay 1."""
+  seasonsDirectorEdge(
+    """The method to use when ordering `SeasonsDirector`."""
+    orderBy: [SeasonsDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SeasonsDirectorsEdge
+}
+
+"""
+All input for the `deleteSeasonsDirector` mutation.
+@permissions: TVSHOW_EDITOR,ADMIN
+"""
+input DeleteSeasonsDirectorInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

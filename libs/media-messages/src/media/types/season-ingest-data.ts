@@ -7,6 +7,7 @@ export interface SeasonIngestData
   extends TrailersIngestElement,
     ImagesIngestElement,
     LocalizationsIngestElement {
+  title?: string;
   index?: number;
   parent_external_id?: string;
   description?: string;

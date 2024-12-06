@@ -2894,6 +2894,44 @@ export type CreateSeasonsCastPayloadSeasonsCastEdgeArgs = {
 };
 
 /**
+ * All input for the create `SeasonsDirector` mutation.
+ * @permissions: TVSHOW_EDITOR,ADMIN
+ */
+export type CreateSeasonsDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `SeasonsDirector` to be created by this mutation. */
+  seasonsDirector: SeasonsDirectorInput;
+};
+
+/** The output of our create `SeasonsDirector` mutation. */
+export type CreateSeasonsDirectorPayload = {
+  __typename?: 'CreateSeasonsDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Season` that is related to this `SeasonsDirector`. */
+  season?: Maybe<Season>;
+  /** The `SeasonsDirector` that was created by this mutation. */
+  seasonsDirector?: Maybe<SeasonsDirector>;
+  /** An edge for our `SeasonsDirector`. May be used by Relay 1. */
+  seasonsDirectorEdge?: Maybe<SeasonsDirectorsEdge>;
+};
+
+
+/** The output of our create `SeasonsDirector` mutation. */
+export type CreateSeasonsDirectorPayloadSeasonsDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<SeasonsDirectorsOrderBy>>;
+};
+
+/**
  * All input for the create `SeasonsImage` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
  */
@@ -4910,6 +4948,46 @@ export type DeleteSeasonsCastPayload = {
 /** The output of our delete `SeasonsCast` mutation. */
 export type DeleteSeasonsCastPayloadSeasonsCastEdgeArgs = {
   orderBy?: InputMaybe<Array<SeasonsCastsOrderBy>>;
+};
+
+/**
+ * All input for the `deleteSeasonsDirector` mutation.
+ * @permissions: TVSHOW_EDITOR,ADMIN
+ */
+export type DeleteSeasonsDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
+};
+
+/** The output of our delete `SeasonsDirector` mutation. */
+export type DeleteSeasonsDirectorPayload = {
+  __typename?: 'DeleteSeasonsDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedSeasonsDirectorNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Season` that is related to this `SeasonsDirector`. */
+  season?: Maybe<Season>;
+  /** The `SeasonsDirector` that was deleted by this mutation. */
+  seasonsDirector?: Maybe<SeasonsDirector>;
+  /** An edge for our `SeasonsDirector`. May be used by Relay 1. */
+  seasonsDirectorEdge?: Maybe<SeasonsDirectorsEdge>;
+};
+
+
+/** The output of our delete `SeasonsDirector` mutation. */
+export type DeleteSeasonsDirectorPayloadSeasonsDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<SeasonsDirectorsOrderBy>>;
 };
 
 /**
@@ -7483,6 +7561,26 @@ export type GetSeasonsCastsValuesConnection = {
   __typename?: 'GetSeasonsCastsValuesConnection';
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetSeasonsCastsValueEdge>;
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']['output']>>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `String` edge in the connection. */
+export type GetSeasonsDirectorsValueEdge = {
+  __typename?: 'GetSeasonsDirectorsValueEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']['output']>;
+};
+
+/** A connection to a list of `String` values. */
+export type GetSeasonsDirectorsValuesConnection = {
+  __typename?: 'GetSeasonsDirectorsValuesConnection';
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<GetSeasonsDirectorsValueEdge>;
   /** A list of `String` objects. */
   nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
@@ -10750,6 +10848,8 @@ export type Mutation = {
   createSeason?: Maybe<CreateSeasonPayload>;
   /** Creates a single `SeasonsCast`. */
   createSeasonsCast?: Maybe<CreateSeasonsCastPayload>;
+  /** Creates a single `SeasonsDirector`. */
+  createSeasonsDirector?: Maybe<CreateSeasonsDirectorPayload>;
   /** Creates a single `SeasonsImage`. */
   createSeasonsImage?: Maybe<CreateSeasonsImagePayload>;
   /** Creates a single `SeasonsLicense`. */
@@ -10874,6 +10974,8 @@ export type Mutation = {
   deleteSeasons?: Maybe<BulkMutationIntPayload>;
   /** Deletes a single `SeasonsCast` using a unique key. */
   deleteSeasonsCast?: Maybe<DeleteSeasonsCastPayload>;
+  /** Deletes a single `SeasonsDirector` using a unique key. */
+  deleteSeasonsDirector?: Maybe<DeleteSeasonsDirectorPayload>;
   /** Deletes a single `SeasonsImage` using a unique key. */
   deleteSeasonsImageBySeasonIdAndImageType?: Maybe<DeleteSeasonsImagePayload>;
   /** Deletes a single `SeasonsLicense` using a unique key. */
@@ -11030,6 +11132,8 @@ export type Mutation = {
   updateSeasonByExternalId?: Maybe<UpdateSeasonPayload>;
   /** Updates a single `SeasonsCast` using a unique key and a patch. */
   updateSeasonsCast?: Maybe<UpdateSeasonsCastPayload>;
+  /** Updates a single `SeasonsDirector` using a unique key and a patch. */
+  updateSeasonsDirector?: Maybe<UpdateSeasonsDirectorPayload>;
   /** Updates a single `SeasonsImage` using a unique key and a patch. */
   updateSeasonsImageBySeasonIdAndImageType?: Maybe<UpdateSeasonsImagePayload>;
   /** Updates a single `SeasonsLicense` using a unique key and a patch. */
@@ -11288,6 +11392,12 @@ export type MutationCreateSeasonArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateSeasonsCastArgs = {
   input: CreateSeasonsCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateSeasonsDirectorArgs = {
+  input: CreateSeasonsDirectorInput;
 };
 
 
@@ -11684,6 +11794,12 @@ export type MutationDeleteSeasonsArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteSeasonsCastArgs = {
   input: DeleteSeasonsCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteSeasonsDirectorArgs = {
+  input: DeleteSeasonsDirectorInput;
 };
 
 
@@ -12204,6 +12320,12 @@ export type MutationUpdateSeasonsCastArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateSeasonsDirectorArgs = {
+  input: UpdateSeasonsDirectorInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateSeasonsImageBySeasonIdAndImageTypeArgs = {
   input: UpdateSeasonsImageBySeasonIdAndImageTypeInput;
 };
@@ -12418,6 +12540,7 @@ export type Query = {
   getMoviesProductionCountriesValues?: Maybe<GetMoviesProductionCountriesValuesConnection>;
   getMoviesTagsValues?: Maybe<GetMoviesTagsValuesConnection>;
   getSeasonsCastsValues?: Maybe<GetSeasonsCastsValuesConnection>;
+  getSeasonsDirectorsValues?: Maybe<GetSeasonsDirectorsValuesConnection>;
   getSeasonsProductionCountriesValues?: Maybe<GetSeasonsProductionCountriesValuesConnection>;
   getSeasonsTagsValues?: Maybe<GetSeasonsTagsValuesConnection>;
   getTvshowsCastsValues?: Maybe<GetTvshowsCastsValuesConnection>;
@@ -12481,6 +12604,9 @@ export type Query = {
   seasonsCast?: Maybe<SeasonsCast>;
   /** Reads and enables pagination through a set of `SeasonsCast`. */
   seasonsCasts?: Maybe<SeasonsCastsConnection>;
+  seasonsDirector?: Maybe<SeasonsDirector>;
+  /** Reads and enables pagination through a set of `SeasonsDirector`. */
+  seasonsDirectors?: Maybe<SeasonsDirectorsConnection>;
   /** Reads and enables pagination through a set of `SeasonsImage`. */
   seasonsImages?: Maybe<SeasonsImagesConnection>;
   seasonsLicense?: Maybe<SeasonsLicense>;
@@ -12996,6 +13122,17 @@ export type QueryGetSeasonsCastsValuesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryGetSeasonsDirectorsValuesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<StringFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryGetSeasonsProductionCountriesValuesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -13399,6 +13536,26 @@ export type QuerySeasonsCastsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QuerySeasonsDirectorArgs = {
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySeasonsDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SeasonsDirectorCondition>;
+  filter?: InputMaybe<SeasonsDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SeasonsDirectorsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QuerySeasonsImagesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -13789,6 +13946,8 @@ export type Season = {
   released?: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `SeasonsCast`. */
   seasonsCasts: SeasonsCastsConnection;
+  /** Reads and enables pagination through a set of `SeasonsDirector`. */
+  seasonsDirectors: SeasonsDirectorsConnection;
   /** Reads and enables pagination through a set of `SeasonsImage`. */
   seasonsImages: SeasonsImagesConnection;
   /** Reads and enables pagination through a set of `SeasonsLicense`. */
@@ -13805,6 +13964,7 @@ export type Season = {
   seasonsTvshowGenres: SeasonsTvshowGenresConnection;
   studio?: Maybe<Scalars['String']['output']>;
   synopsis?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
   /** Reads a single `Tvshow` that is related to this `Season`. */
   tvshow?: Maybe<Tvshow>;
   tvshowId?: Maybe<Scalars['Int']['output']>;
@@ -13849,6 +14009,19 @@ export type SeasonSeasonsCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SeasonsCastsOrderBy>>;
+};
+
+
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
+export type SeasonSeasonsDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SeasonsDirectorCondition>;
+  filter?: InputMaybe<SeasonsDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SeasonsDirectorsOrderBy>>;
 };
 
 
@@ -13980,6 +14153,8 @@ export type SeasonCondition = {
   studio?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `synopsis` field. */
   synopsis?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tvshowId` field. */
   tvshowId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
@@ -14076,6 +14251,8 @@ export type SeasonFilter = {
   studio?: InputMaybe<StringFilter>;
   /** Filter by the object’s `synopsis` field. */
   synopsis?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: InputMaybe<StringFilter>;
   /** Filter by the object’s `tvshow` relation. */
   tvshow?: InputMaybe<TvshowFilter>;
   /** A related `tvshow` exists. */
@@ -14089,10 +14266,18 @@ export type SeasonFilter = {
 };
 
 export enum SeasonImageType {
-  /** Cover */
-  Cover = 'COVER',
-  /** Teaser */
-  Teaser = 'TEASER'
+  /** Clean Cover 16x9 */
+  CleanCover_16X9 = 'CLEAN_COVER_16X9',
+  /** Clean Cover 1x1 */
+  CleanCover_1X1 = 'CLEAN_COVER_1X1',
+  /** Cover 16x9 */
+  Cover_16X9 = 'COVER_16X9',
+  /** Cover 1x1 */
+  Cover_1X1 = 'COVER_1X1',
+  /** List 1x1 */
+  List_1X1 = 'LIST_1X1',
+  /** List 9x13 */
+  List_9X13 = 'LIST_9X13'
 }
 
 /** A filter to be used against SeasonImageType fields. All fields are combined with a logical ‘and.’ */
@@ -14135,6 +14320,7 @@ export type SeasonInput = {
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
   tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -14152,6 +14338,7 @@ export type SeasonPatch = {
   released?: InputMaybe<Scalars['Date']['input']>;
   studio?: InputMaybe<Scalars['String']['input']>;
   synopsis?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   tvshowId?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -14259,6 +14446,29 @@ export type SeasonsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+export type SeasonsDirector = {
+  __typename?: 'SeasonsDirector';
+  name: Scalars['String']['output'];
+  /** Reads a single `Season` that is related to this `SeasonsDirector`. */
+  season?: Maybe<Season>;
+  seasonId: Scalars['Int']['output'];
+};
+
+/**
+ * A condition to be used against `SeasonsDirector` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type SeasonsDirectorCondition = {
+  /**
+   * Checks for equality with the object’s `name` field.
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `seasonId` field. */
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
+};
+
 /** A filter to be used against `SeasonsDirector` object types. All fields are combined with a logical ‘and.’ */
 export type SeasonsDirectorFilter = {
   /** Checks for all expressions in this list. */
@@ -14274,6 +14484,56 @@ export type SeasonsDirectorFilter = {
   /** Filter by the object’s `seasonId` field. */
   seasonId?: InputMaybe<IntFilter>;
 };
+
+/** An input for mutations affecting `SeasonsDirector` */
+export type SeasonsDirectorInput = {
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+  seasonId: Scalars['Int']['input'];
+};
+
+/** Represents an update to a `SeasonsDirector`. Fields that are set will be updated. */
+export type SeasonsDirectorPatch = {
+  /** @notEmpty() */
+  name?: InputMaybe<Scalars['String']['input']>;
+  seasonId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/**
+ * A connection to a list of `SeasonsDirector` values.
+ * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ */
+export type SeasonsDirectorsConnection = {
+  __typename?: 'SeasonsDirectorsConnection';
+  /** A list of edges which contains the `SeasonsDirector` and cursor to aid in pagination. */
+  edges: Array<SeasonsDirectorsEdge>;
+  /** A list of `SeasonsDirector` objects. */
+  nodes: Array<SeasonsDirector>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SeasonsDirector` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `SeasonsDirector` edge in the connection. */
+export type SeasonsDirectorsEdge = {
+  __typename?: 'SeasonsDirectorsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `SeasonsDirector` at the end of the edge. */
+  node: SeasonsDirector;
+};
+
+/** Methods to use when ordering `SeasonsDirector`. */
+export enum SeasonsDirectorsOrderBy {
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SeasonIdAsc = 'SEASON_ID_ASC',
+  SeasonIdDesc = 'SEASON_ID_DESC'
+}
 
 /** A `Season` edge in the connection. */
 export type SeasonsEdge = {
@@ -14676,6 +14936,8 @@ export enum SeasonsOrderBy {
   StudioDesc = 'STUDIO_DESC',
   SynopsisAsc = 'SYNOPSIS_ASC',
   SynopsisDesc = 'SYNOPSIS_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
   TvshowIdAsc = 'TVSHOW_ID_ASC',
   TvshowIdDesc = 'TVSHOW_ID_DESC',
   UpdatedDateAsc = 'UPDATED_DATE_ASC',
@@ -19009,6 +19271,47 @@ export type UpdateSeasonsCastPayloadSeasonsCastEdgeArgs = {
 };
 
 /**
+ * All input for the `updateSeasonsDirector` mutation.
+ * @permissions: TVSHOW_EDITOR,ADMIN
+ */
+export type UpdateSeasonsDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `SeasonsDirector` being updated. */
+  patch: SeasonsDirectorPatch;
+  seasonId: Scalars['Int']['input'];
+};
+
+/** The output of our update `SeasonsDirector` mutation. */
+export type UpdateSeasonsDirectorPayload = {
+  __typename?: 'UpdateSeasonsDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Season` that is related to this `SeasonsDirector`. */
+  season?: Maybe<Season>;
+  /** The `SeasonsDirector` that was updated by this mutation. */
+  seasonsDirector?: Maybe<SeasonsDirector>;
+  /** An edge for our `SeasonsDirector`. May be used by Relay 1. */
+  seasonsDirectorEdge?: Maybe<SeasonsDirectorsEdge>;
+};
+
+
+/** The output of our update `SeasonsDirector` mutation. */
+export type UpdateSeasonsDirectorPayloadSeasonsDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<SeasonsDirectorsOrderBy>>;
+};
+
+/**
  * All input for the `updateSeasonsImageBySeasonIdAndImageType` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
  */
@@ -20427,14 +20730,14 @@ export type CreateSeasonMutationVariables = Exact<{
 }>;
 
 
-export type CreateSeasonMutation = { __typename?: 'Mutation', createSeason?: { __typename?: 'CreateSeasonPayload', season?: { __typename?: 'Season', id: number, index: number } | null } | null };
+export type CreateSeasonMutation = { __typename?: 'Mutation', createSeason?: { __typename?: 'CreateSeasonPayload', season?: { __typename?: 'Season', id: number, index: number, title: string } | null } | null };
 
 export type SeasonQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type SeasonQuery = { __typename?: 'Query', season?: { __typename?: 'Season', index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, episodes: { __typename?: 'EpisodesConnection', totalCount: number }, seasonsTrailers: { __typename?: 'SeasonsTrailersConnection', totalCount: number }, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageType: SeasonImageType, imageId: any }> }, tvshow?: { __typename?: 'Tvshow', id: number, title: string, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null };
+export type SeasonQuery = { __typename?: 'Query', season?: { __typename?: 'Season', index: number, title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, rating?: any | null, contentOwner?: string | null, extendedField?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsDirectors: { __typename?: 'SeasonsDirectorsConnection', nodes: Array<{ __typename?: 'SeasonsDirector', name: string }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, episodes: { __typename?: 'EpisodesConnection', totalCount: number }, seasonsTrailers: { __typename?: 'SeasonsTrailersConnection', totalCount: number }, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageType: SeasonImageType, imageId: any }> }, tvshow?: { __typename?: 'Tvshow', id: number, title: string, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null };
 
 export type DeleteSeasonMutationVariables = Exact<{
   input: DeleteSeasonInput;
@@ -20488,6 +20791,14 @@ export type SearchSeasonProductionCountriesQueryVariables = Exact<{
 
 export type SearchSeasonProductionCountriesQuery = { __typename?: 'Query', getSeasonsProductionCountriesValues?: { __typename?: 'GetSeasonsProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
 
+export type SearchSeasonDirectorQueryVariables = Exact<{
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+}>;
+
+
+export type SearchSeasonDirectorQuery = { __typename?: 'Query', getSeasonsDirectorsValues?: { __typename?: 'GetSeasonsDirectorsValuesConnection', nodes: Array<string | null> } | null };
+
 export type SeasonEpisodesQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
@@ -20495,7 +20806,7 @@ export type SeasonEpisodesQueryVariables = Exact<{
 
 export type SeasonEpisodesQuery = { __typename?: 'Query', season?: { __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', id: number, index: number, externalId?: string | null, title: string }> } } | null };
 
-export type SeasonExplorerPropertiesFragment = { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, createdDate: any, updatedDate: any, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } };
+export type SeasonExplorerPropertiesFragment = { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } };
 
 export type SeasonsQueryVariables = Exact<{
   filter?: InputMaybe<SeasonFilter>;
@@ -20504,12 +20815,12 @@ export type SeasonsQueryVariables = Exact<{
 }>;
 
 
-export type SeasonsQuery = { __typename?: 'Query', filtered?: { __typename?: 'SeasonsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, createdDate: any, updatedDate: any, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } }> } | null, nonFiltered?: { __typename?: 'SeasonsConnection', totalCount: number } | null };
+export type SeasonsQuery = { __typename?: 'Query', filtered?: { __typename?: 'SeasonsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } }> } | null, nonFiltered?: { __typename?: 'SeasonsConnection', totalCount: number } | null };
 
 export type SeasonsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SeasonsMutatedSubscription = { __typename?: 'Subscription', seasonMutated?: { __typename?: 'SeasonSubscriptionPayload', id: number, eventKey?: SeasonSubscriptionEventKey | null, season?: { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, createdDate: any, updatedDate: any, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } } | null } | null };
+export type SeasonsMutatedSubscription = { __typename?: 'Subscription', seasonMutated?: { __typename?: 'SeasonSubscriptionPayload', id: number, eventKey?: SeasonSubscriptionEventKey | null, season?: { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, studio?: string | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> } } | null } | null };
 
 export type SeasonImagesQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -21049,11 +21360,12 @@ export const SeasonExplorerPropertiesFragmentDoc = gql`
   publishStatus
   index
   externalId
+  ageRating
   tvshow {
     id
     title
   }
-  seasonsImages(condition: {imageType: COVER}) {
+  seasonsImages(condition: {imageType: COVER_1X1}) {
     nodes {
       imageId
     }
@@ -21067,6 +21379,7 @@ export const SeasonExplorerPropertiesFragmentDoc = gql`
   }
   createdDate
   updatedDate
+  updatedUser
   seasonsTags {
     nodes {
       name
@@ -22161,7 +22474,7 @@ export const EpisodeDocument = gql`
     season {
       id
       index
-      seasonsImages(condition: {imageType: COVER}, first: 1) {
+      seasonsImages(condition: {imageType: COVER_1X1}, first: 1) {
         nodes {
           imageId
         }
@@ -25447,6 +25760,7 @@ export const CreateSeasonDocument = gql`
     season {
       id
       index
+      title
     }
   }
 }
@@ -25481,10 +25795,19 @@ export const SeasonDocument = gql`
     query Season($id: Int!) {
   season(id: $id) {
     index
+    title
     synopsis
     description
     externalId
+    rating
+    contentOwner
+    extendedField
     seasonsTags {
+      nodes {
+        name
+      }
+    }
+    seasonsDirectors {
       nodes {
         name
       }
@@ -25542,6 +25865,18 @@ export const SeasonDocument = gql`
     nodes {
       title
       id
+    }
+  }
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
+  contentOwners {
+    nodes {
+      name
+      sortOrder
     }
   }
 }
@@ -25823,6 +26158,45 @@ export function useSearchSeasonProductionCountriesLazyQuery(baseOptions?: Apollo
 export type SearchSeasonProductionCountriesQueryHookResult = ReturnType<typeof useSearchSeasonProductionCountriesQuery>;
 export type SearchSeasonProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchSeasonProductionCountriesLazyQuery>;
 export type SearchSeasonProductionCountriesQueryResult = Apollo.QueryResult<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>;
+export const SearchSeasonDirectorDocument = gql`
+    query SearchSeasonDirector($searchKey: String!, $limit: Int!) {
+  getSeasonsDirectorsValues(
+    filter: {startsWithInsensitive: $searchKey}
+    first: $limit
+  ) {
+    nodes
+  }
+}
+    `;
+
+/**
+ * __useSearchSeasonDirectorQuery__
+ *
+ * To run a query within a React component, call `useSearchSeasonDirectorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchSeasonDirectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchSeasonDirectorQuery({
+ *   variables: {
+ *      searchKey: // value for 'searchKey'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useSearchSeasonDirectorQuery(baseOptions: Apollo.QueryHookOptions<SearchSeasonDirectorQuery, SearchSeasonDirectorQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchSeasonDirectorQuery, SearchSeasonDirectorQueryVariables>(SearchSeasonDirectorDocument, options);
+      }
+export function useSearchSeasonDirectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchSeasonDirectorQuery, SearchSeasonDirectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchSeasonDirectorQuery, SearchSeasonDirectorQueryVariables>(SearchSeasonDirectorDocument, options);
+        }
+export type SearchSeasonDirectorQueryHookResult = ReturnType<typeof useSearchSeasonDirectorQuery>;
+export type SearchSeasonDirectorLazyQueryHookResult = ReturnType<typeof useSearchSeasonDirectorLazyQuery>;
+export type SearchSeasonDirectorQueryResult = Apollo.QueryResult<SearchSeasonDirectorQuery, SearchSeasonDirectorQueryVariables>;
 export const SeasonEpisodesDocument = gql`
     query SeasonEpisodes($id: Int!) {
   season(id: $id) {

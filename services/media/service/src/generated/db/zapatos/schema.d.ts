@@ -8962,6 +8962,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'SEASON'::text`
       */
       asset_subtype: c.AssetSubtypeEnum;
+      /**
+      * **seasons.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
     }
     export interface JSONSelectable {
       /**
@@ -9098,6 +9104,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'SEASON'::text`
       */
       asset_subtype: c.AssetSubtypeEnum;
+      /**
+      * **seasons.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
     }
     export interface Whereable {
       /**
@@ -9234,6 +9246,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'SEASON'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -9370,6 +9388,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'SEASON'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -9506,6 +9530,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'SEASON'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'seasons_external_id_key' | 'seasons_pkey';
     export type Column = keyof Selectable;

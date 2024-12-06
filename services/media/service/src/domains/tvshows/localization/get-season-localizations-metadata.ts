@@ -15,6 +15,7 @@ import {
 import { LOCALIZATION_SEASON_TYPE } from './constants';
 
 export interface GqlSeasonLocalization extends GqlLocalization {
+  title: string;
   description?: string | null;
   synopsis?: string | null;
 }
@@ -46,7 +47,7 @@ export const getSeasonLocalizationsMetadata = async (
         (l) => ({
           is_default_locale: l[LOCALIZATION_IS_DEFAULT_LOCALE],
           language_tag: l[LOCALIZATION_LANGUAGE_TAG],
-          title: '',
+          title: l.title,
           description: l.description,
           synopsis: l.synopsis,
         }),

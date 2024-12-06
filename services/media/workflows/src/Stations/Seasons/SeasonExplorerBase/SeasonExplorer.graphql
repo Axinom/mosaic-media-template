@@ -3,11 +3,12 @@ fragment SeasonExplorerProperties on Season {
   publishStatus
   index
   externalId
+  ageRating
   tvshow {
     id
     title
   }
-  seasonsImages(condition: { imageType: COVER }) {
+  seasonsImages(condition: { imageType: COVER_1X1 }) {
     nodes {
       imageId
     }
@@ -21,6 +22,7 @@ fragment SeasonExplorerProperties on Season {
   }
   createdDate
   updatedDate
+  updatedUser
   seasonsTags {
     nodes {
       name

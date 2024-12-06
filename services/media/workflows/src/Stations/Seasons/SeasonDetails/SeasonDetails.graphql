@@ -1,10 +1,19 @@
 query Season($id: Int!) {
   season(id: $id) {
     index
+    title
     synopsis
     description
     externalId
+    rating
+    contentOwner
+    extendedField
     seasonsTags {
+      nodes {
+        name
+      }
+    }
+    seasonsDirectors {
       nodes {
         name
       }
@@ -65,6 +74,20 @@ query Season($id: Int!) {
       id
     }
   }
+
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
+
+  contentOwners {
+    nodes {
+      name
+      sortOrder
+    }
+  }
 }
 
 mutation DeleteSeason($input: DeleteSeasonInput!) {
@@ -112,6 +135,15 @@ query SearchSeasonCast($searchKey: String!, $limit: Int!) {
 
 query SearchSeasonProductionCountries($searchKey: String!, $limit: Int!) {
   getSeasonsProductionCountriesValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
+    nodes
+  }
+}
+
+query SearchSeasonDirector($searchKey: String!, $limit: Int!) {
+  getSeasonsDirectorsValues(
     filter: { startsWithInsensitive: $searchKey }
     first: $limit
   ) {

@@ -1091,7 +1091,7 @@ CREATE FUNCTION app_hidden.localizable_season_delete() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
-	_fields text[] := string_to_array('id,index,tvshow_id', ',');
+	_fields text[] := string_to_array('id,index,title,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
@@ -1197,7 +1197,7 @@ CREATE FUNCTION app_hidden.localizable_season_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('synopsis,description,tvshow_id', ',') || string_to_array('id,index,tvshow_id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,tvshow_id', ',') || string_to_array('id,index,title,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1224,8 +1224,8 @@ CREATE FUNCTION app_hidden.localizable_season_update() RETURNS trigger
 DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_required_fields text[] := string_to_array('id,index,tvshow_id', ',');
-	_localizable_fields text[] := string_to_array('synopsis,description,tvshow_id', ',');
+	_required_fields text[] := string_to_array('id,index,title,tvshow_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -6148,7 +6148,8 @@ CREATE TABLE app_public.seasons (
     extended_field text,
     content_owner text,
     business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
-    asset_subtype app_public.asset_subtype_enum DEFAULT 'SEASON'::text NOT NULL
+    asset_subtype app_public.asset_subtype_enum DEFAULT 'SEASON'::text NOT NULL,
+    title text NOT NULL
 );
 
 
@@ -16581,6 +16582,13 @@ GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.seasons TO
 --
 
 GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.seasons TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN seasons.title; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(title),UPDATE(title) ON TABLE app_public.seasons TO media_service_gql_role;
 
 
 --

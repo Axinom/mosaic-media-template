@@ -33,16 +33,34 @@ export class LocalizableSeasonImageCreatedDbMessageHandler extends LocalizableMe
   }: TypedTransactionalMessage<LocalizableSeasonImageDbEvent>): Promise<
     LocalizationMessageData | undefined
   > {
-    if (image_type !== 'COVER') {
-      // Ignore any changes to non-cover image relations
-      return undefined;
+    let fields = {};
+    switch (image_type) {
+      case 'COVER_1x1':
+        fields = { image_id_cover_1x1: image_id };
+        break;
+      case 'COVER_16x9':
+        fields = { image_id_cover_16x9: image_id };
+        break;
+      case 'CLEAN_COVER_1x1':
+        fields = { image_id_clean_cover_1x1: image_id };
+        break;
+      case 'CLEAN_COVER_16x9':
+        fields = { image_id_clean_cover_16x9: image_id };
+        break;
+      case 'LIST_1x1':
+        fields = { image_id_list_1x1: image_id };
+        break;
+      case 'LIST_9x13':
+        fields = { image_id_list_9x13: image_id };
+        break;
+      default:
+        return undefined;
     }
-
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_SEASON_TYPE,
       season_id,
-      {}, // Localizable fields are never updated on image assignment
+      fields, // Localizable fields are never updated on image assignment
       undefined, // Title is never updated on image assignment
       image_id,
     );
@@ -63,16 +81,34 @@ export class LocalizableSeasonImageUpdatedDbMessageHandler extends LocalizableMe
   }: TypedTransactionalMessage<LocalizableSeasonImageDbEvent>): Promise<
     LocalizationMessageData | undefined
   > {
-    if (image_type !== 'COVER') {
-      // Ignore any changes to non-cover image relations
-      return undefined;
+    let fields = {};
+    switch (image_type) {
+      case 'COVER_1x1':
+        fields = { image_id_cover_1x1: image_id };
+        break;
+      case 'COVER_16x9':
+        fields = { image_id_cover_16x9: image_id };
+        break;
+      case 'CLEAN_COVER_1x1':
+        fields = { image_id_clean_cover_1x1: image_id };
+        break;
+      case 'CLEAN_COVER_16x9':
+        fields = { image_id_clean_cover_16x9: image_id };
+        break;
+      case 'LIST_1x1':
+        fields = { image_id_list_1x1: image_id };
+        break;
+      case 'LIST_9x13':
+        fields = { image_id_list_9x13: image_id };
+        break;
+      default:
+        return undefined;
     }
-
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_SEASON_TYPE,
       season_id,
-      {}, // Localizable fields are never updated on image assignment
+      fields, // Localizable fields are never updated on image assignment
       undefined, // Title is never updated on image assignment
       image_id,
     );
@@ -94,23 +130,43 @@ export class LocalizableSeasonImageDeletedDbMessageHandler extends LocalizableMe
     }: TypedTransactionalMessage<LocalizableSeasonImageDbEvent>,
     ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
-    if (
-      image_type !== 'COVER' ||
-      (await this.seasonIsDeleted(season_id, ownerClient))
-    ) {
+    if (await this.seasonIsDeleted(season_id, ownerClient)) {
       // Ignore any changes to non-cover image relations
       // If image relation is deleted as part of a cascade delete of season - no need to upsert
       return undefined;
+    } else {
+      let fields = {};
+      switch (image_type) {
+        case 'COVER_1x1':
+          fields = { image_id_cover_1x1: '' };
+          break;
+        case 'COVER_16x9':
+          fields = { image_id_cover_16x9: '' };
+          break;
+        case 'CLEAN_COVER_1x1':
+          fields = { image_id_clean_cover_1x1: '' };
+          break;
+        case 'CLEAN_COVER_16x9':
+          fields = { image_id_clean_cover_16x9: '' };
+          break;
+        case 'LIST_1x1':
+          fields = { image_id_list_1x1: '' };
+          break;
+        case 'LIST_9x13':
+          fields = { image_id_list_9x13: '' };
+          break;
+        default:
+          return undefined;
+      }
+      return getUpsertMessageData(
+        this.config.serviceId,
+        LOCALIZATION_SEASON_TYPE,
+        season_id,
+        fields, // Localizable fields are never updated on image unassign
+        undefined, // Title is never updated on image unassign
+        null, // Explicit unassign of an image
+      );
     }
-
-    return getUpsertMessageData(
-      this.config.serviceId,
-      LOCALIZATION_SEASON_TYPE,
-      season_id,
-      {}, // Localizable fields are never updated on image unassign
-      undefined, // Title is never updated on image unassign
-      null, // Explicit unassign of an image
-    );
   }
 
   async seasonIsDeleted(
