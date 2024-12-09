@@ -393,6 +393,8 @@ export type Collection = {
   collectionCountries: CollectionCountriesConnection;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
+  /** Reads and enables pagination through a set of `CollectionRelation`. */
+  collectionRelationsByChildCollectionId: CollectionRelationsConnection;
   /** Reads and enables pagination through a set of `CollectionsImage`. */
   collectionsImages: CollectionsImagesConnection;
   /** Reads and enables pagination through a set of `CollectionsSnapshot`. */
@@ -431,6 +433,19 @@ export type CollectionCollectionCountriesArgs = {
 
 /** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type CollectionCollectionRelationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CollectionRelationCondition>;
+  filter?: InputMaybe<CollectionRelationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CollectionRelationsOrderBy>>;
+};
+
+
+/** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
+export type CollectionCollectionRelationsByChildCollectionIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionRelationCondition>;
@@ -5901,8 +5916,6 @@ export type Episode = {
   externalId?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   index: Scalars['Int']['output'];
-  introEndTime?: Maybe<Scalars['String']['output']>;
-  introStartTime?: Maybe<Scalars['String']['output']>;
   mainVideoId?: Maybe<Scalars['UUID']['output']>;
   originalTitle?: Maybe<Scalars['String']['output']>;
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
@@ -6074,10 +6087,6 @@ export type EpisodeCondition = {
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `index` field. */
   index?: InputMaybe<Scalars['Int']['input']>;
-  /** Checks for equality with the object’s `introEndTime` field. */
-  introEndTime?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `introStartTime` field. */
-  introStartTime?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `mainVideoId` field. */
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `originalTitle` field. */
@@ -6176,10 +6185,6 @@ export type EpisodeFilter = {
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `index` field. */
   index?: InputMaybe<IntFilter>;
-  /** Filter by the object’s `introEndTime` field. */
-  introEndTime?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `introStartTime` field. */
-  introStartTime?: InputMaybe<StringFilter>;
   /** Filter by the object’s `mainVideoId` field. */
   mainVideoId?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
@@ -6263,20 +6268,12 @@ export type EpisodeInput = {
   assetSubtype?: InputMaybe<AssetSubtype>;
   businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
-  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
-  createdUser?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['Int']['input']>;
   index: Scalars['Int']['input'];
-  introEndTime?: InputMaybe<Scalars['String']['input']>;
-  introStartTime?: InputMaybe<Scalars['String']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
-  publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
-  publishedUser?: InputMaybe<Scalars['String']['input']>;
-  publishStatus?: InputMaybe<PublishStatus>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   seasonId?: InputMaybe<Scalars['Int']['input']>;
@@ -6287,8 +6284,6 @@ export type EpisodeInput = {
    * @notEmpty()
    */
   title: Scalars['String']['input'];
-  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
-  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents an update to a `Episode`. Fields that are set will be updated. */
@@ -6301,8 +6296,6 @@ export type EpisodePatch = {
   extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
-  introEndTime?: InputMaybe<Scalars['String']['input']>;
-  introStartTime?: InputMaybe<Scalars['String']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
@@ -6894,10 +6887,6 @@ export enum EpisodesOrderBy {
   IdDesc = 'ID_DESC',
   IndexAsc = 'INDEX_ASC',
   IndexDesc = 'INDEX_DESC',
-  IntroEndTimeAsc = 'INTRO_END_TIME_ASC',
-  IntroEndTimeDesc = 'INTRO_END_TIME_DESC',
-  IntroStartTimeAsc = 'INTRO_START_TIME_ASC',
-  IntroStartTimeDesc = 'INTRO_START_TIME_DESC',
   MainVideoIdAsc = 'MAIN_VIDEO_ID_ASC',
   MainVideoIdDesc = 'MAIN_VIDEO_ID_DESC',
   Natural = 'NATURAL',
@@ -21178,7 +21167,7 @@ export type SeasonsLicenseQueryVariables = Exact<{
 }>;
 
 
-export type SeasonsLicenseQuery = { __typename?: 'Query', seasonsLicense?: { __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonId: number, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
+export type SeasonsLicenseQuery = { __typename?: 'Query', seasonsLicense?: { __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonId: number, createdDate: any, updatedDate: any, updatedUser: string, createdUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
 
 export type UpdateSeasonsLicenseMutationVariables = Exact<{
   input: UpdateSeasonsLicenseInput;
@@ -21386,7 +21375,7 @@ export type TvshowsLicenseQueryVariables = Exact<{
 }>;
 
 
-export type TvshowsLicenseQuery = { __typename?: 'Query', tvshowsLicense?: { __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null, tvshowId: number, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
+export type TvshowsLicenseQuery = { __typename?: 'Query', tvshowsLicense?: { __typename?: 'TvshowsLicense', licenseEnd?: any | null, licenseStart?: any | null, tvshowId: number, createdDate: any, updatedDate: any, updatedUser: string, createdUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, tvshowsLicensesCountries: { __typename?: 'TvshowsLicensesCountriesConnection', nodes: Array<{ __typename?: 'TvshowsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
 
 export type UpdateTvshowsLicenseMutationVariables = Exact<{
   input: UpdateTvshowsLicenseInput;
@@ -26851,6 +26840,12 @@ export const SeasonsLicenseDocument = gql`
     licenseEnd
     licenseStart
     seasonId
+    createdDate
+    updatedDate
+    updatedUser
+    createdUser
+    isDownloadable
+    downloadedAssetLifespan
   }
 }
     `;
@@ -28050,6 +28045,12 @@ export const TvshowsLicenseDocument = gql`
     licenseEnd
     licenseStart
     tvshowId
+    createdDate
+    updatedDate
+    updatedUser
+    createdUser
+    isDownloadable
+    downloadedAssetLifespan
   }
 }
     `;
