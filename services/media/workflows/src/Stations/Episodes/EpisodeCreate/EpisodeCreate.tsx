@@ -37,6 +37,8 @@ export const EpisodeCreate: React.FC = () => {
 
   const saveData = useCallback(
     async (formData: FormData): Promise<SubmitResponse> => {
+      const ContentProviderKey = 0;
+      const AssetType = 1;
       return (
         await episodeCreate({
           variables: {
@@ -44,6 +46,7 @@ export const EpisodeCreate: React.FC = () => {
               episode: {
                 title: formData.title,
                 index: Number(formData.index),
+                externalId: `${ContentProviderKey}-${AssetType}-episode-${new Date().getTime()}`,
               },
             },
           },

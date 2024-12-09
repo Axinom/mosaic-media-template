@@ -772,7 +772,7 @@ CREATE FUNCTION app_hidden.localizable_episode_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,season_id', ',') || string_to_array('id,index,season_id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,season_id', ',') || string_to_array('id,index,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -800,7 +800,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id,index,season_id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,season_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;

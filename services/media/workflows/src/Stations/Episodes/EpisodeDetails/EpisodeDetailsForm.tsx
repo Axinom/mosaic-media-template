@@ -10,7 +10,9 @@ import {
   getFormDiff,
   InfoPanel,
   Paragraph,
+  ReadOnlyTextField,
   Section,
+  SelectField,
   SingleLineTextField,
   TagsField,
   TextAreaField,
@@ -25,21 +27,27 @@ import { client } from '../../../apolloClient';
 import { InfoPanelParent } from '../../../components';
 import { ExtensionsContext } from '../../../externals';
 import {
+  AssetSubtype,
   Episode,
   EpisodeDocument,
   EpisodeImageType,
   Mutation,
   MutationCreateEpisodesCastArgs,
+  MutationCreateEpisodesDirectorArgs,
   MutationCreateEpisodesProductionCountryArgs,
   MutationCreateEpisodesTagArgs,
   MutationCreateEpisodesTvshowGenreArgs,
   MutationDeleteEpisodesCastArgs,
+  MutationDeleteEpisodesDirectorArgs,
   MutationDeleteEpisodesProductionCountryArgs,
   MutationDeleteEpisodesTagArgs,
   MutationDeleteEpisodesTvshowGenreArgs,
   SearchEpisodeCastDocument,
   SearchEpisodeCastQuery,
   SearchEpisodeCastQueryVariables,
+  SearchEpisodeDirectorDocument,
+  SearchEpisodeDirectorQuery,
+  SearchEpisodeDirectorQueryVariables,
   SearchEpisodeProductionCountriesDocument,
   SearchEpisodeProductionCountriesQuery,
   SearchEpisodeProductionCountriesQueryVariables,
@@ -59,6 +67,10 @@ import { EpisodeDetailsFormData } from './EpisodeDetails.types';
 interface EpisodeDetailsFormProps {
   episodeId: number;
 }
+interface selectOption {
+  value: string;
+  label: string;
+}
 
 const episodeDetailSchema = Yup.object<
   ObjectSchemaDefinition<EpisodeDetailsFormData>
@@ -68,6 +80,11 @@ const episodeDetailSchema = Yup.object<
     .positive('Episode Index must be a positive number')
     .integer('Episode Index must be an integer')
     .required('Episode Index is a required field'),
+  rating: Yup.number()
+    .nullable()
+    .min(0, 'Rating must not be less than 0.')
+    .max(100, 'Rating must not be greater than 100.')
+    .typeError('Rating must be a number between 0 and 100.'),
 });
 
 export const EpisodeDetailsForm: React.FC<EpisodeDetailsFormProps> = ({
@@ -79,7 +96,16 @@ export const EpisodeDetailsForm: React.FC<EpisodeDetailsFormProps> = ({
     fetchPolicy: 'network-only',
   });
 
-  const { allGenres, cast, genres, productionCountries, tags } = useMemo(
+  const {
+    allGenres,
+    cast,
+    genres,
+    productionCountries,
+    tags,
+    allAgeRatings,
+    allContentOwners,
+    director,
+  } = useMemo(
     () => ({
       allGenres:
         data?.tvshowGenres?.nodes.reduce<{
@@ -93,9 +119,26 @@ export const EpisodeDetailsForm: React.FC<EpisodeDetailsFormProps> = ({
         (node) => node.tvshowGenres?.title ?? '',
       ),
       cast: data?.episode?.episodesCasts.nodes.map((node) => node.name),
+      director: data?.episode?.episodesDirectors.nodes.map((node) => node.name),
       productionCountries: data?.episode?.episodesProductionCountries.nodes.map(
         (node) => node.name,
       ),
+      allAgeRatings:
+        data?.ageRatings?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
+      allContentOwners:
+        data?.contentOwners?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
     }),
     [data],
   );
@@ -198,6 +241,22 @@ export const EpisodeDetailsForm: React.FC<EpisodeDetailsFormProps> = ({
         prefix: 'productionCountry',
       });
 
+      const directorAssignmentMutations = generateArrayMutations({
+        current: formData.director,
+        original: initialData.data?.director,
+        generateCreateMutation: (name) =>
+          generateUpdateGQLFragment<MutationCreateEpisodesDirectorArgs>(
+            'createEpisodesDirector',
+            { input: { episodesDirector: { name, episodeId } } },
+          ),
+        generateDeleteMutation: (name) =>
+          generateUpdateGQLFragment<MutationDeleteEpisodesDirectorArgs>(
+            'deleteEpisodesDirector',
+            { input: { episodeId, name } },
+          ),
+        prefix: 'director',
+      });
+
       const patch = createUpdateDto(formData, initialData.data);
 
       const GqlMutationDocument = gql`mutation UpdateEpisode($input: UpdateEpisodeInput!) {
@@ -212,6 +271,7 @@ export const EpisodeDetailsForm: React.FC<EpisodeDetailsFormProps> = ({
         ${genreAssignmentMutations}
         ${castAssignmentMutations}
         ${productionCountriesAssignmentMutations}
+        ${directorAssignmentMutations}
       }`;
 
       await client.mutate<
@@ -242,6 +302,7 @@ export const EpisodeDetailsForm: React.FC<EpisodeDetailsFormProps> = ({
           genres,
           cast,
           productionCountries,
+          director,
         },
         loading,
         entityNotFound: data?.episode === null,
@@ -250,7 +311,11 @@ export const EpisodeDetailsForm: React.FC<EpisodeDetailsFormProps> = ({
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form genreOptions={Object.keys(allGenres)} />
+      <Form
+        genreOptions={Object.keys(allGenres)}
+        ageRatingOptions={allAgeRatings}
+        contentOwnerOptions={allContentOwners}
+      />
     </Details>
   );
 };
@@ -262,16 +327,12 @@ const Panel: React.FC = () => {
   return useMemo(() => {
     let coverImageId: ID;
     let coverImageCount = 0;
-    let teaserImageCount = 0;
 
     values.episodesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case EpisodeImageType.Cover:
+        case EpisodeImageType.Cover_1X1:
           coverImageCount++;
           coverImageId = imageId;
-          break;
-        case EpisodeImageType.Teaser:
-          teaserImageCount++;
           break;
         default:
           break;
@@ -340,10 +401,6 @@ const Panel: React.FC = () => {
               >
                 {coverImageCount} / 1
               </div>
-              <div>Teaser</div>
-              <div className={classes.rightAlignment}>
-                {teaserImageCount} / 1
-              </div>
             </div>
           </Paragraph>
         </Section>
@@ -367,7 +424,20 @@ const Panel: React.FC = () => {
   ]);
 };
 
-const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
+const Form: React.FC<{
+  genreOptions?: string[];
+  ageRatingOptions?: selectOption[];
+  contentOwnerOptions?: selectOption[];
+}> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
+  const ValidateRating = (value: string): boolean => {
+    return value === null || value.trim() === ''
+      ? false
+      : isNaN(parseFloat(value)) ||
+          parseFloat(value) < 0 ||
+          parseFloat(value) > 100 ||
+          !/^(\d{1,2}(\.\d{1,2})?|100(\.0{1,2})?)$/.test(value);
+  };
+
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchEpisodeTagsQuery,
@@ -405,34 +475,46 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
     return data.getEpisodesProductionCountriesValues?.nodes ?? [];
   };
 
+  const directorSuggestionResolver = async (
+    value: string,
+  ): Promise<(string | null)[]> => {
+    const { data } = await client.query<
+      SearchEpisodeDirectorQuery,
+      SearchEpisodeDirectorQueryVariables
+    >({
+      query: SearchEpisodeDirectorDocument,
+      variables: { searchKey: value, limit: 10 },
+    });
+    return data.getEpisodesDirectorsValues?.nodes ?? [];
+  };
+
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
       <Field
         name="originalTitle"
-        label="Original Title"
+        label="Short Description"
         as={SingleLineTextField}
+      />
+      <Field name="description" label="Description" as={TextAreaField} />
+      <Field
+        name="assetSubtype"
+        label="Subtype"
+        addEmptyOption={true}
+        options={Object.keys(AssetSubtype)
+          .filter((type) => type === 'Episode')
+          .map((key) => ({
+            value: AssetSubtype[key],
+            label: getEnumLabel(AssetSubtype[key]),
+          }))}
+        as={SelectField}
       />
       <Field
         type="number"
         name="index"
-        label="Episode Index"
+        label="Index"
         className={classes.episodeIndex}
         as={SingleLineTextField}
-      />
-      <Field name="synopsis" label="Synopsis" as={TextAreaField} />
-      <Field name="description" label="Description" as={TextAreaField} />
-      <Field
-        name="externalId"
-        label="External ID"
-        className={classes.externalId}
-        as={SingleLineTextField}
-      />
-      <Field
-        name="tags"
-        label="Tags"
-        liveSuggestionsResolver={tagsResolver}
-        as={CustomTagsField}
       />
       <Field
         name="genres"
@@ -446,11 +528,16 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         liveSuggestionsResolver={castSuggestionResolver}
         as={CustomTagsField}
       />
-      <Field name="studio" label="Studio" as={SingleLineTextField} />
       <Field
-        name="productionCountries"
-        label="Production Countries"
-        liveSuggestionsResolver={productionCountriesResolver}
+        name="director"
+        label="Directors"
+        liveSuggestionsResolver={directorSuggestionResolver}
+        as={CustomTagsField}
+      />
+      <Field
+        name="tags"
+        label="Tags"
+        liveSuggestionsResolver={tagsResolver}
         as={CustomTagsField}
       />
       <Field
@@ -459,6 +546,34 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         as={DateTimeTextField}
         modifyTime={false}
       />
+      <Field
+        name="productionCountries"
+        label="Country"
+        liveSuggestionsResolver={productionCountriesResolver}
+        as={CustomTagsField}
+      />
+      <Field
+        name="ageRating"
+        label="Age Rating"
+        addEmptyOption={true}
+        options={ageRatingOptions}
+        as={SelectField}
+      />
+      <Field
+        name="rating"
+        label="Rating"
+        validate={ValidateRating}
+        as={SingleLineTextField}
+      />
+      <Field
+        name="contentOwner"
+        label="Content Owner"
+        addEmptyOption={true}
+        options={contentOwnerOptions}
+        as={SelectField}
+      />
+      <Field name="extendedField" label="Custom" as={TextAreaField} />
+      <Field name="externalId" label="External Id" as={ReadOnlyTextField} />
     </>
   );
 };
@@ -472,6 +587,7 @@ function createUpdateDto(
     tags,
     cast,
     productionCountries,
+    director,
     genres,
     ...rest
   } = getFormDiff(currentValues, initialValues);

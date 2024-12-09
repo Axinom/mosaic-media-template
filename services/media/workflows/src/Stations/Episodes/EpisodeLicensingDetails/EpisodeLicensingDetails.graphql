@@ -8,6 +8,12 @@ query EpisodesLicense($id: Int!) {
     }
     licenseEnd
     licenseStart
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+    isDownloadable
+    downloadedAssetLifespan
   }
 }
 

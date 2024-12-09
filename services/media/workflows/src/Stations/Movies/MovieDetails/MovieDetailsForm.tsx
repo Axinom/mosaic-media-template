@@ -9,7 +9,6 @@ import {
   generateArrayMutations,
   getFormDiff,
   InfoPanel,
-  MaskedSingleLineText,
   Paragraph,
   ReadOnlyTextField,
   Section,
@@ -18,7 +17,7 @@ import {
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
-import { Field, useField, useFormikContext } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useContext, useMemo } from 'react';
@@ -26,7 +25,6 @@ import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext } from '../../../externals';
 import {
-  AssetSubtype,
   BusinessType,
   Movie,
   MovieDocument,
@@ -71,7 +69,11 @@ const movieDetailSchema = Yup.object<
   ObjectSchemaDefinition<MovieDetailsFormData>
 >({
   title: Yup.string().required('Title is a required field').max(100),
-  rating: Yup.number().min(0, 'Rating must not be less than 0.').max(100,'Rating must not be greater than 100.').typeError('Rating must be a number between 0 and 100.'),
+  rating: Yup.number()
+    .nullable()
+    .min(0, 'Rating must not be less than 0.')
+    .max(100, 'Rating must not be greater than 100.')
+    .typeError('Rating must be a number between 0 and 100.'),
 });
 
 interface selectOption {
@@ -110,7 +112,7 @@ export const MovieDetailsForm: React.FC<MovieDetailsFormProps> = ({
       genres: data?.movie?.moviesMovieGenres.nodes.map(
         (node) => node.movieGenres?.title ?? '',
       ),
-      
+
       cast: data?.movie?.moviesCasts.nodes.map((node) => node.name),
       director: data?.movie?.moviesDirectors.nodes.map((node) => node.name),
       productionCountries: data?.movie?.moviesProductionCountries.nodes.map(
@@ -334,9 +336,7 @@ const Panel: React.FC = () => {
           <ImageCover id={coverImageId} />
         </Section>
         <Section title="Additional Information">
-        <Paragraph title="Sub Type">
-            {values.assetSubtype}
-          </Paragraph>
+          <Paragraph title="Sub Type">{values.assetSubtype}</Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -378,6 +378,7 @@ const Panel: React.FC = () => {
     );
   }, [
     ImageCover,
+    values.assetSubtype,
     values.createdDate,
     values.createdUser,
     values.mainVideoId,
@@ -396,11 +397,7 @@ const Form: React.FC<{
   ageRatingOptions?: selectOption[];
   contentOwnerOptions?: selectOption[];
   languageOptions?: string[];
-}> = ({
-  genreOptions,
-  ageRatingOptions,
-  contentOwnerOptions,
-}) => {
+}> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchMovieTagsQuery,
@@ -450,7 +447,7 @@ const Form: React.FC<{
     });
     return data.getMoviesProductionCountriesValues?.nodes ?? [];
   };
-  
+
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />

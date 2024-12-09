@@ -2098,6 +2098,44 @@ export type CreateEpisodesCastPayloadEpisodesCastEdgeArgs = {
 };
 
 /**
+ * All input for the create `EpisodesDirector` mutation.
+ * @permissions: TVSHOW_EDITOR,ADMIN
+ */
+export type CreateEpisodesDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `EpisodesDirector` to be created by this mutation. */
+  episodesDirector: EpisodesDirectorInput;
+};
+
+/** The output of our create `EpisodesDirector` mutation. */
+export type CreateEpisodesDirectorPayload = {
+  __typename?: 'CreateEpisodesDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Episode` that is related to this `EpisodesDirector`. */
+  episode?: Maybe<Episode>;
+  /** The `EpisodesDirector` that was created by this mutation. */
+  episodesDirector?: Maybe<EpisodesDirector>;
+  /** An edge for our `EpisodesDirector`. May be used by Relay 1. */
+  episodesDirectorEdge?: Maybe<EpisodesDirectorsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `EpisodesDirector` mutation. */
+export type CreateEpisodesDirectorPayloadEpisodesDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<EpisodesDirectorsOrderBy>>;
+};
+
+/**
  * All input for the create `EpisodesImage` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
  */
@@ -4107,6 +4145,46 @@ export type DeleteEpisodesCastPayloadEpisodesCastEdgeArgs = {
 };
 
 /**
+ * All input for the `deleteEpisodesDirector` mutation.
+ * @permissions: TVSHOW_EDITOR,ADMIN
+ */
+export type DeleteEpisodesDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+};
+
+/** The output of our delete `EpisodesDirector` mutation. */
+export type DeleteEpisodesDirectorPayload = {
+  __typename?: 'DeleteEpisodesDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEpisodesDirectorNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Reads a single `Episode` that is related to this `EpisodesDirector`. */
+  episode?: Maybe<Episode>;
+  /** The `EpisodesDirector` that was deleted by this mutation. */
+  episodesDirector?: Maybe<EpisodesDirector>;
+  /** An edge for our `EpisodesDirector`. May be used by Relay 1. */
+  episodesDirectorEdge?: Maybe<EpisodesDirectorsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `EpisodesDirector` mutation. */
+export type DeleteEpisodesDirectorPayloadEpisodesDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<EpisodesDirectorsOrderBy>>;
+};
+
+/**
  * All input for the `deleteEpisodesImageByEpisodeIdAndImageType` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
  */
@@ -5803,6 +5881,8 @@ export type Episode = {
   description?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EpisodesCast`. */
   episodesCasts: EpisodesCastsConnection;
+  /** Reads and enables pagination through a set of `EpisodesDirector`. */
+  episodesDirectors: EpisodesDirectorsConnection;
   /** Reads and enables pagination through a set of `EpisodesImage`. */
   episodesImages: EpisodesImagesConnection;
   /** Reads and enables pagination through a set of `EpisodesLicense`. */
@@ -5821,6 +5901,8 @@ export type Episode = {
   externalId?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   index: Scalars['Int']['output'];
+  introEndTime?: Maybe<Scalars['String']['output']>;
+  introStartTime?: Maybe<Scalars['String']['output']>;
   mainVideoId?: Maybe<Scalars['UUID']['output']>;
   originalTitle?: Maybe<Scalars['String']['output']>;
   publishedDate?: Maybe<Scalars['Datetime']['output']>;
@@ -5862,6 +5944,19 @@ export type EpisodeEpisodesCastsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EpisodesCastsOrderBy>>;
+};
+
+
+/** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
+export type EpisodeEpisodesDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EpisodesDirectorCondition>;
+  filter?: InputMaybe<EpisodesDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EpisodesDirectorsOrderBy>>;
 };
 
 
@@ -5979,6 +6074,10 @@ export type EpisodeCondition = {
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `index` field. */
   index?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `introEndTime` field. */
+  introEndTime?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `introStartTime` field. */
+  introStartTime?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `mainVideoId` field. */
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `originalTitle` field. */
@@ -6077,6 +6176,10 @@ export type EpisodeFilter = {
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `index` field. */
   index?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `introEndTime` field. */
+  introEndTime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `introStartTime` field. */
+  introStartTime?: InputMaybe<StringFilter>;
   /** Filter by the object’s `mainVideoId` field. */
   mainVideoId?: InputMaybe<UuidFilter>;
   /** Negates the expression. */
@@ -6114,10 +6217,18 @@ export type EpisodeFilter = {
 };
 
 export enum EpisodeImageType {
-  /** Cover */
-  Cover = 'COVER',
-  /** Teaser */
-  Teaser = 'TEASER'
+  /** Clean Cover 16x9 */
+  CleanCover_16X9 = 'CLEAN_COVER_16X9',
+  /** Clean Cover 1x1 */
+  CleanCover_1X1 = 'CLEAN_COVER_1X1',
+  /** Cover 16x9 */
+  Cover_16X9 = 'COVER_16X9',
+  /** Cover 1x1 */
+  Cover_1X1 = 'COVER_1X1',
+  /** List 1x1 */
+  List_1X1 = 'LIST_1X1',
+  /** List 9x13 */
+  List_9X13 = 'LIST_9X13'
 }
 
 /** A filter to be used against EpisodeImageType fields. All fields are combined with a logical ‘and.’ */
@@ -6152,12 +6263,20 @@ export type EpisodeInput = {
   assetSubtype?: InputMaybe<AssetSubtype>;
   businessType?: InputMaybe<BusinessType>;
   contentOwner?: InputMaybe<Scalars['String']['input']>;
+  createdDate?: InputMaybe<Scalars['Datetime']['input']>;
+  createdUser?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   index: Scalars['Int']['input'];
+  introEndTime?: InputMaybe<Scalars['String']['input']>;
+  introStartTime?: InputMaybe<Scalars['String']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
+  publishedDate?: InputMaybe<Scalars['Datetime']['input']>;
+  publishedUser?: InputMaybe<Scalars['String']['input']>;
+  publishStatus?: InputMaybe<PublishStatus>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
   released?: InputMaybe<Scalars['Date']['input']>;
   seasonId?: InputMaybe<Scalars['Int']['input']>;
@@ -6168,6 +6287,8 @@ export type EpisodeInput = {
    * @notEmpty()
    */
   title: Scalars['String']['input'];
+  updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedUser?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents an update to a `Episode`. Fields that are set will be updated. */
@@ -6180,6 +6301,8 @@ export type EpisodePatch = {
   extendedField?: InputMaybe<Scalars['String']['input']>;
   externalId?: InputMaybe<Scalars['String']['input']>;
   index?: InputMaybe<Scalars['Int']['input']>;
+  introEndTime?: InputMaybe<Scalars['String']['input']>;
+  introStartTime?: InputMaybe<Scalars['String']['input']>;
   mainVideoId?: InputMaybe<Scalars['UUID']['input']>;
   originalTitle?: InputMaybe<Scalars['String']['input']>;
   rating?: InputMaybe<Scalars['BigFloat']['input']>;
@@ -6298,6 +6421,29 @@ export type EpisodesConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN */
+export type EpisodesDirector = {
+  __typename?: 'EpisodesDirector';
+  /** Reads a single `Episode` that is related to this `EpisodesDirector`. */
+  episode?: Maybe<Episode>;
+  episodeId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
+/**
+ * A condition to be used against `EpisodesDirector` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type EpisodesDirectorCondition = {
+  /** Checks for equality with the object’s `episodeId` field. */
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
+  /**
+   * Checks for equality with the object’s `name` field.
+   * @notEmpty()
+   */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** A filter to be used against `EpisodesDirector` object types. All fields are combined with a logical ‘and.’ */
 export type EpisodesDirectorFilter = {
   /** Checks for all expressions in this list. */
@@ -6313,6 +6459,56 @@ export type EpisodesDirectorFilter = {
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<EpisodesDirectorFilter>>;
 };
+
+/** An input for mutations affecting `EpisodesDirector` */
+export type EpisodesDirectorInput = {
+  episodeId: Scalars['Int']['input'];
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+};
+
+/** Represents an update to a `EpisodesDirector`. Fields that are set will be updated. */
+export type EpisodesDirectorPatch = {
+  episodeId?: InputMaybe<Scalars['Int']['input']>;
+  /** @notEmpty() */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/**
+ * A connection to a list of `EpisodesDirector` values.
+ * @permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+ */
+export type EpisodesDirectorsConnection = {
+  __typename?: 'EpisodesDirectorsConnection';
+  /** A list of edges which contains the `EpisodesDirector` and cursor to aid in pagination. */
+  edges: Array<EpisodesDirectorsEdge>;
+  /** A list of `EpisodesDirector` objects. */
+  nodes: Array<EpisodesDirector>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EpisodesDirector` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `EpisodesDirector` edge in the connection. */
+export type EpisodesDirectorsEdge = {
+  __typename?: 'EpisodesDirectorsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `EpisodesDirector` at the end of the edge. */
+  node: EpisodesDirector;
+};
+
+/** Methods to use when ordering `EpisodesDirector`. */
+export enum EpisodesDirectorsOrderBy {
+  EpisodeIdAsc = 'EPISODE_ID_ASC',
+  EpisodeIdDesc = 'EPISODE_ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
 
 /** A `Episode` edge in the connection. */
 export type EpisodesEdge = {
@@ -6698,6 +6894,10 @@ export enum EpisodesOrderBy {
   IdDesc = 'ID_DESC',
   IndexAsc = 'INDEX_ASC',
   IndexDesc = 'INDEX_DESC',
+  IntroEndTimeAsc = 'INTRO_END_TIME_ASC',
+  IntroEndTimeDesc = 'INTRO_END_TIME_DESC',
+  IntroStartTimeAsc = 'INTRO_START_TIME_ASC',
+  IntroStartTimeDesc = 'INTRO_START_TIME_DESC',
   MainVideoIdAsc = 'MAIN_VIDEO_ID_ASC',
   MainVideoIdDesc = 'MAIN_VIDEO_ID_DESC',
   Natural = 'NATURAL',
@@ -7421,6 +7621,26 @@ export type GetEpisodesCastsValuesConnection = {
   __typename?: 'GetEpisodesCastsValuesConnection';
   /** A list of edges which contains the `String` and cursor to aid in pagination. */
   edges: Array<GetEpisodesCastsValueEdge>;
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']['output']>>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `String` edge in the connection. */
+export type GetEpisodesDirectorsValueEdge = {
+  __typename?: 'GetEpisodesDirectorsValueEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']['output']>;
+};
+
+/** A connection to a list of `String` values. */
+export type GetEpisodesDirectorsValuesConnection = {
+  __typename?: 'GetEpisodesDirectorsValuesConnection';
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<GetEpisodesDirectorsValueEdge>;
   /** A list of `String` objects. */
   nodes: Array<Maybe<Scalars['String']['output']>>;
   /** The count of *all* `String` you could get from the connection. */
@@ -10798,6 +11018,8 @@ export type Mutation = {
   createEpisode?: Maybe<CreateEpisodePayload>;
   /** Creates a single `EpisodesCast`. */
   createEpisodesCast?: Maybe<CreateEpisodesCastPayload>;
+  /** Creates a single `EpisodesDirector`. */
+  createEpisodesDirector?: Maybe<CreateEpisodesDirectorPayload>;
   /** Creates a single `EpisodesImage`. */
   createEpisodesImage?: Maybe<CreateEpisodesImagePayload>;
   /** Creates a single `EpisodesLicense`. */
@@ -10923,6 +11145,8 @@ export type Mutation = {
   deleteEpisodes?: Maybe<BulkMutationIntPayload>;
   /** Deletes a single `EpisodesCast` using a unique key. */
   deleteEpisodesCast?: Maybe<DeleteEpisodesCastPayload>;
+  /** Deletes a single `EpisodesDirector` using a unique key. */
+  deleteEpisodesDirector?: Maybe<DeleteEpisodesDirectorPayload>;
   /** Deletes a single `EpisodesImage` using a unique key. */
   deleteEpisodesImageByEpisodeIdAndImageType?: Maybe<DeleteEpisodesImagePayload>;
   /** Deletes a single `EpisodesLicense` using a unique key. */
@@ -11092,6 +11316,8 @@ export type Mutation = {
   updateEpisodeByExternalId?: Maybe<UpdateEpisodePayload>;
   /** Updates a single `EpisodesCast` using a unique key and a patch. */
   updateEpisodesCast?: Maybe<UpdateEpisodesCastPayload>;
+  /** Updates a single `EpisodesDirector` using a unique key and a patch. */
+  updateEpisodesDirector?: Maybe<UpdateEpisodesDirectorPayload>;
   /** Updates a single `EpisodesImage` using a unique key and a patch. */
   updateEpisodesImageByEpisodeIdAndImageType?: Maybe<UpdateEpisodesImagePayload>;
   /** Updates a single `EpisodesLicense` using a unique key and a patch. */
@@ -11242,6 +11468,12 @@ export type MutationCreateEpisodeArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateEpisodesCastArgs = {
   input: CreateEpisodesCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateEpisodesDirectorArgs = {
+  input: CreateEpisodesDirectorInput;
 };
 
 
@@ -11626,6 +11858,12 @@ export type MutationDeleteEpisodesArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteEpisodesCastArgs = {
   input: DeleteEpisodesCastInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEpisodesDirectorArgs = {
+  input: DeleteEpisodesDirectorInput;
 };
 
 
@@ -12200,6 +12438,12 @@ export type MutationUpdateEpisodesCastArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEpisodesDirectorArgs = {
+  input: UpdateEpisodesDirectorInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateEpisodesImageByEpisodeIdAndImageTypeArgs = {
   input: UpdateEpisodesImageByEpisodeIdAndImageTypeInput;
 };
@@ -12511,6 +12755,9 @@ export type Query = {
   episodesCast?: Maybe<EpisodesCast>;
   /** Reads and enables pagination through a set of `EpisodesCast`. */
   episodesCasts?: Maybe<EpisodesCastsConnection>;
+  episodesDirector?: Maybe<EpisodesDirector>;
+  /** Reads and enables pagination through a set of `EpisodesDirector`. */
+  episodesDirectors?: Maybe<EpisodesDirectorsConnection>;
   /** Reads and enables pagination through a set of `EpisodesImage`. */
   episodesImages?: Maybe<EpisodesImagesConnection>;
   episodesLicense?: Maybe<EpisodesLicense>;
@@ -12533,6 +12780,7 @@ export type Query = {
   episodesTvshowGenres?: Maybe<EpisodesTvshowGenresConnection>;
   getCollectionsTagsValues?: Maybe<GetCollectionsTagsValuesConnection>;
   getEpisodesCastsValues?: Maybe<GetEpisodesCastsValuesConnection>;
+  getEpisodesDirectorsValues?: Maybe<GetEpisodesDirectorsValuesConnection>;
   getEpisodesProductionCountriesValues?: Maybe<GetEpisodesProductionCountriesValuesConnection>;
   getEpisodesTagsValues?: Maybe<GetEpisodesTagsValuesConnection>;
   getMoviesCastsValues?: Maybe<GetMoviesCastsValuesConnection>;
@@ -12891,6 +13139,26 @@ export type QueryEpisodesCastsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryEpisodesDirectorArgs = {
+  episodeId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEpisodesDirectorsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EpisodesDirectorCondition>;
+  filter?: InputMaybe<EpisodesDirectorFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EpisodesDirectorsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryEpisodesImagesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -13035,6 +13303,17 @@ export type QueryGetCollectionsTagsValuesArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetEpisodesCastsValuesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<StringFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetEpisodesDirectorsValuesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   filter?: InputMaybe<StringFilter>;
@@ -18529,6 +18808,47 @@ export type UpdateEpisodesCastPayloadEpisodesCastEdgeArgs = {
 };
 
 /**
+ * All input for the `updateEpisodesDirector` mutation.
+ * @permissions: TVSHOW_EDITOR,ADMIN
+ */
+export type UpdateEpisodesDirectorInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  episodeId: Scalars['Int']['input'];
+  /** @notEmpty() */
+  name: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `EpisodesDirector` being updated. */
+  patch: EpisodesDirectorPatch;
+};
+
+/** The output of our update `EpisodesDirector` mutation. */
+export type UpdateEpisodesDirectorPayload = {
+  __typename?: 'UpdateEpisodesDirectorPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Episode` that is related to this `EpisodesDirector`. */
+  episode?: Maybe<Episode>;
+  /** The `EpisodesDirector` that was updated by this mutation. */
+  episodesDirector?: Maybe<EpisodesDirector>;
+  /** An edge for our `EpisodesDirector`. May be used by Relay 1. */
+  episodesDirectorEdge?: Maybe<EpisodesDirectorsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `EpisodesDirector` mutation. */
+export type UpdateEpisodesDirectorPayloadEpisodesDirectorEdgeArgs = {
+  orderBy?: InputMaybe<Array<EpisodesDirectorsOrderBy>>;
+};
+
+/**
  * All input for the `updateEpisodesImageByEpisodeIdAndImageType` mutation.
  * @permissions: TVSHOWS_EDIT,ADMIN
  */
@@ -20122,7 +20442,7 @@ export type EpisodeQueryVariables = Exact<{
 }>;
 
 
-export type EpisodeQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', title: string, originalTitle?: string | null, index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, mainVideoId?: any | null, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesTrailers: { __typename?: 'EpisodesTrailersConnection', totalCount: number }, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageType: EpisodeImageType, imageId: any }> }, season?: { __typename?: 'Season', id: number, index: number, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null };
+export type EpisodeQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', title: string, originalTitle?: string | null, index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, mainVideoId?: any | null, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesDirectors: { __typename?: 'EpisodesDirectorsConnection', nodes: Array<{ __typename?: 'EpisodesDirector', name: string }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesTrailers: { __typename?: 'EpisodesTrailersConnection', totalCount: number }, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageType: EpisodeImageType, imageId: any }> }, season?: { __typename?: 'Season', id: number, index: number, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null };
 
 export type UpdateEpisodeMutationVariables = Exact<{
   input: UpdateEpisodeInput;
@@ -20183,6 +20503,14 @@ export type SearchEpisodeProductionCountriesQueryVariables = Exact<{
 
 export type SearchEpisodeProductionCountriesQuery = { __typename?: 'Query', getEpisodesProductionCountriesValues?: { __typename?: 'GetEpisodesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
 
+export type SearchEpisodeDirectorQueryVariables = Exact<{
+  searchKey: Scalars['String']['input'];
+  limit: Scalars['Int']['input'];
+}>;
+
+
+export type SearchEpisodeDirectorQuery = { __typename?: 'Query', getEpisodesDirectorsValues?: { __typename?: 'GetEpisodesDirectorsValuesConnection', nodes: Array<string | null> } | null };
+
 export type EpisodeExplorerPropertiesFragment = { __typename?: 'Episode', publishStatus: PublishStatus, title: string, index: number, externalId?: string | null, mainVideoId?: any | null, createdDate: any, updatedDate: any, originalTitle?: string | null, released?: any | null, studio?: string | null, publishedDate?: any | null, id: number, season?: { __typename?: 'Season', id: number, index: number, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageId: any }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> } };
 
 export type EpisodesQueryVariables = Exact<{
@@ -20227,7 +20555,7 @@ export type EpisodesLicenseQueryVariables = Exact<{
 }>;
 
 
-export type EpisodesLicenseQuery = { __typename?: 'Query', episodesLicense?: { __typename?: 'EpisodesLicense', episodeId: number, licenseEnd?: any | null, licenseStart?: any | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
+export type EpisodesLicenseQuery = { __typename?: 'Query', episodesLicense?: { __typename?: 'EpisodesLicense', episodeId: number, licenseEnd?: any | null, licenseStart?: any | null, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, isDownloadable: boolean, downloadedAssetLifespan?: number | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', code: IsoAlphaTwoCountryCodes }> } } | null };
 
 export type UpdateEpisodesLicenseMutationVariables = Exact<{
   input: UpdateEpisodesLicenseInput;
@@ -21191,7 +21519,7 @@ export const EpisodeExplorerPropertiesFragmentDoc = gql`
       title
     }
   }
-  episodesImages(condition: {imageType: COVER}) {
+  episodesImages(condition: {imageType: COVER_1X1}) {
     nodes {
       imageId
     }
@@ -22429,7 +22757,17 @@ export const EpisodeDocument = gql`
     synopsis
     description
     externalId
+    ageRating
+    contentOwner
+    rating
+    extendedField
+    assetSubtype
     episodesTags {
+      nodes {
+        name
+      }
+    }
+    episodesDirectors {
       nodes {
         name
       }
@@ -22488,6 +22826,18 @@ export const EpisodeDocument = gql`
     nodes {
       title
       id
+    }
+  }
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
+  contentOwners {
+    nodes {
+      name
+      sortOrder
     }
   }
 }
@@ -22809,6 +23159,45 @@ export function useSearchEpisodeProductionCountriesLazyQuery(baseOptions?: Apoll
 export type SearchEpisodeProductionCountriesQueryHookResult = ReturnType<typeof useSearchEpisodeProductionCountriesQuery>;
 export type SearchEpisodeProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchEpisodeProductionCountriesLazyQuery>;
 export type SearchEpisodeProductionCountriesQueryResult = Apollo.QueryResult<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>;
+export const SearchEpisodeDirectorDocument = gql`
+    query SearchEpisodeDirector($searchKey: String!, $limit: Int!) {
+  getEpisodesDirectorsValues(
+    filter: {startsWithInsensitive: $searchKey}
+    first: $limit
+  ) {
+    nodes
+  }
+}
+    `;
+
+/**
+ * __useSearchEpisodeDirectorQuery__
+ *
+ * To run a query within a React component, call `useSearchEpisodeDirectorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchEpisodeDirectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchEpisodeDirectorQuery({
+ *   variables: {
+ *      searchKey: // value for 'searchKey'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useSearchEpisodeDirectorQuery(baseOptions: Apollo.QueryHookOptions<SearchEpisodeDirectorQuery, SearchEpisodeDirectorQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchEpisodeDirectorQuery, SearchEpisodeDirectorQueryVariables>(SearchEpisodeDirectorDocument, options);
+      }
+export function useSearchEpisodeDirectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchEpisodeDirectorQuery, SearchEpisodeDirectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchEpisodeDirectorQuery, SearchEpisodeDirectorQueryVariables>(SearchEpisodeDirectorDocument, options);
+        }
+export type SearchEpisodeDirectorQueryHookResult = ReturnType<typeof useSearchEpisodeDirectorQuery>;
+export type SearchEpisodeDirectorLazyQueryHookResult = ReturnType<typeof useSearchEpisodeDirectorLazyQuery>;
+export type SearchEpisodeDirectorQueryResult = Apollo.QueryResult<SearchEpisodeDirectorQuery, SearchEpisodeDirectorQueryVariables>;
 export const EpisodesDocument = gql`
     query Episodes($filter: EpisodeFilter, $orderBy: [EpisodesOrderBy!], $after: Cursor) {
   filtered: episodes(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
@@ -23026,6 +23415,12 @@ export const EpisodesLicenseDocument = gql`
     }
     licenseEnd
     licenseStart
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+    isDownloadable
+    downloadedAssetLifespan
   }
 }
     `;

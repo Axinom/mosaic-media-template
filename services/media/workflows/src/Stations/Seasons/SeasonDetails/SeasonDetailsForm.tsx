@@ -29,10 +29,12 @@ import { ExtensionsContext } from '../../../externals';
 import {
   Mutation,
   MutationCreateSeasonsCastArgs,
+  MutationCreateSeasonsDirectorArgs,
   MutationCreateSeasonsProductionCountryArgs,
   MutationCreateSeasonsTagArgs,
   MutationCreateSeasonsTvshowGenreArgs,
   MutationDeleteSeasonsCastArgs,
+  MutationDeleteSeasonsDirectorArgs,
   MutationDeleteSeasonsProductionCountryArgs,
   MutationDeleteSeasonsTagArgs,
   MutationDeleteSeasonsTvshowGenreArgs,
@@ -72,7 +74,11 @@ const seasonDetailSchema = Yup.object().shape<
     .integer('Season Index must be an integer')
     .required('Season Index is a required field'),
   title: Yup.string().required('Title is a required field'),
-  rating: Yup.number().min(0, 'Rating must not be less than 0.').max(100,'Rating must not be greater than 100.').typeError('Rating must be a number between 0 and 100.'),
+  rating: Yup.number()
+    .nullable()
+    .min(0, 'Rating must not be less than 0.')
+    .max(100, 'Rating must not be greater than 100.')
+    .typeError('Rating must be a number between 0 and 100.'),
 });
 
 interface selectOption {
@@ -97,6 +103,7 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
     tags,
     allAgeRatings,
     allContentOwners,
+    director,
   } = useMemo(
     () => ({
       allGenres:
@@ -111,6 +118,7 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
         (node) => node.tvshowGenres?.title ?? '',
       ),
       cast: data?.season?.seasonsCasts.nodes.map((node) => node.name),
+      director: data?.season?.seasonsDirectors.nodes.map((node) => node.name),
       productionCountries: data?.season?.seasonsProductionCountries.nodes.map(
         (node) => node.name,
       ),
@@ -232,6 +240,22 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
         prefix: 'productionCountry',
       });
 
+      const directorAssignmentMutations = generateArrayMutations({
+        current: formData.director,
+        original: initialData.data?.director,
+        generateCreateMutation: (name) =>
+          generateUpdateGQLFragment<MutationCreateSeasonsDirectorArgs>(
+            'createSeasonsDirector',
+            { input: { seasonsDirector: { name, seasonId } } },
+          ),
+        generateDeleteMutation: (name) =>
+          generateUpdateGQLFragment<MutationDeleteSeasonsDirectorArgs>(
+            'deleteSeasonsDirector',
+            { input: { seasonId, name } },
+          ),
+        prefix: 'director',
+      });
+
       const patch = createUpdateDto(formData, initialData.data);
 
       const GqlMutationDocument = gql`mutation UpdateSeason($input: UpdateSeasonInput!) {
@@ -246,6 +270,7 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
         ${genreAssignmentMutations}
         ${castAssignmentMutations}
         ${productionCountriesAssignmentMutations}
+        ${directorAssignmentMutations}
       }`;
 
       await client.mutate<unknown, { input: UpdateSeasonInput }>({
@@ -272,6 +297,7 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
           genres,
           cast,
           productionCountries,
+          director,
         },
         loading,
         entityNotFound: data?.season === null,
@@ -296,16 +322,12 @@ const Panel: React.FC = () => {
   return useMemo(() => {
     let coverImageId: ID;
     let coverImageCount = 0;
-    let teaserImageCount = 0;
 
     values.seasonsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case SeasonImageType.CleanCover_16X9:
+        case SeasonImageType.Cover_1X1:
           coverImageCount++;
           coverImageId = imageId;
-          break;
-        case SeasonImageType.CleanCover_1X1:
-          teaserImageCount++;
           break;
         default:
           break;
@@ -366,10 +388,6 @@ const Panel: React.FC = () => {
                 )}
               >
                 {coverImageCount} / 1
-              </div>
-              <div>Teaser</div>
-              <div className={classes.rightAlignment}>
-                {teaserImageCount} / 1
               </div>
             </div>
           </Paragraph>
@@ -482,7 +500,6 @@ const Form: React.FC<{
         liveSuggestionsResolver={castSuggestionResolver}
         as={CustomTagsField}
       />
-      {/* add directors */}
       <Field
         name="director"
         label="Directors"
@@ -542,6 +559,7 @@ function createUpdateDto(
     tags,
     cast,
     productionCountries,
+    director,
     genres,
     ...rest
   } = getFormDiff(currentValues, initialValues);

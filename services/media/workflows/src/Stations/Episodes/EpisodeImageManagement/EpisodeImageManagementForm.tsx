@@ -17,6 +17,7 @@ import {
   MutationUpdateEpisodesImageByEpisodeIdAndImageTypeArgs,
   useEpisodeImagesQuery,
 } from '../../../generated/graphql';
+import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 
 interface EpisodeImageManagementFormProps {
   episodeId: number;
@@ -30,15 +31,37 @@ type FormData = Record<EpisodeImageType, string[]>;
 const Form: React.FC<{ imageSelectField: unknown }> = ({
   imageSelectField,
 }) => {
+  const customSortedEpisodeImageTypes = Object.values(EpisodeImageType).sort(
+    (a, b) => {
+      const order = [
+        'COVER_1X1',
+        'COVER_16X9',
+        'CLEAN_COVER_1X1',
+        'CLEAN_COVER_16X9',
+        'LIST_1X1',
+        'LIST_9X13',
+      ];
+      return order.indexOf(a) - order.indexOf(b);
+    },
+  );
+
+  const episodeImageTypesObject = customSortedEpisodeImageTypes.reduce(
+    (acc, curr) => {
+      acc[curr] = curr;
+      return acc;
+    },
+    {} as { [key: string]: string },
+  );
   return (
     <>
-      {Object.keys(EpisodeImageType).map((type) => {
-        const field = EpisodeImageType[type];
+      {Object.keys(episodeImageTypesObject).map((type) => {
+        const field = episodeImageTypesObject[type];
+        const label = getEnumLabel(episodeImageTypesObject[type]);
         return (
           <Field
             key={field}
             name={field}
-            label={type}
+            label={label}
             as={imageSelectField}
             maxItems={1}
             title="Select Image"

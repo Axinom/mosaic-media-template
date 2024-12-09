@@ -8,4 +8,5 @@ export type SeasonDetailsFormData = Nullable<
   genres?: string[];
   cast?: string[];
   productionCountries?: string[];
+  director?: string[];
 };

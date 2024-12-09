@@ -414,6 +414,40 @@ type Query {
     filter: EpisodesCastFilter
   ): EpisodesCastsConnection
 
+  """Reads and enables pagination through a set of `EpisodesDirector`."""
+  episodesDirectors(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodesDirector`."""
+    orderBy: [EpisodesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodesDirectorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodesDirectorFilter
+  ): EpisodesDirectorsConnection
+
   """Reads and enables pagination through a set of `EpisodesImage`."""
   episodesImages(
     """Only read the first `n` values of the set."""
@@ -1934,6 +1968,7 @@ type Query {
   episode(id: Int!): Episode
   episodeByExternalId(externalId: String!): Episode
   episodesCast(episodeId: Int!, name: String!): EpisodesCast
+  episodesDirector(episodeId: Int!, name: String!): EpisodesDirector
   episodesLicense(id: Int!): EpisodesLicense
   episodesLicensesCountry(episodesLicenseId: Int!, code: IsoAlphaTwoCountryCodes!): EpisodesLicensesCountry
   episodesProductionCountry(episodeId: Int!, name: String!): EpisodesProductionCountry
@@ -2025,6 +2060,30 @@ type Query {
     """
     filter: StringFilter
   ): GetEpisodesCastsValuesConnection
+  getEpisodesDirectorsValues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: StringFilter
+  ): GetEpisodesDirectorsValuesConnection
   getEpisodesProductionCountriesValues(
     """Only read the first `n` values of the set."""
     first: Int
@@ -7514,11 +7573,23 @@ input EpisodeImageTypeFilter {
 }
 
 enum EpisodeImageType {
-  """Cover"""
-  COVER
+  """Cover 1x1"""
+  COVER_1X1
 
-  """Teaser"""
-  TEASER
+  """Cover 16x9"""
+  COVER_16X9
+
+  """Clean Cover 1x1"""
+  CLEAN_COVER_1X1
+
+  """Clean Cover 16x9"""
+  CLEAN_COVER_16X9
+
+  """List 1x1"""
+  LIST_1X1
+
+  """List 9x13"""
+  LIST_9X13
 }
 
 """
@@ -11737,6 +11808,40 @@ type Episode {
     """
     filter: EpisodesSnapshotFilter
   ): EpisodesSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `EpisodesDirector`."""
+  episodesDirectors(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `EpisodesDirector`."""
+    orderBy: [EpisodesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EpisodesDirectorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EpisodesDirectorFilter
+  ): EpisodesDirectorsConnection!
 }
 
 """
@@ -12411,6 +12516,72 @@ input EpisodesSnapshotCondition {
 
   """Checks for equality with the object’s `snapshotId` field."""
   snapshotId: Int
+}
+
+"""
+A connection to a list of `EpisodesDirector` values.
+@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN
+"""
+type EpisodesDirectorsConnection {
+  """A list of `EpisodesDirector` objects."""
+  nodes: [EpisodesDirector!]!
+
+  """
+  A list of edges which contains the `EpisodesDirector` and cursor to aid in pagination.
+  """
+  edges: [EpisodesDirectorsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `EpisodesDirector` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""@permissions: TVSHOW_READER,TVSHOW_EDITOR,ADMIN"""
+type EpisodesDirector {
+  episodeId: Int!
+  name: String!
+
+  """Reads a single `Episode` that is related to this `EpisodesDirector`."""
+  episode: Episode
+}
+
+"""A `EpisodesDirector` edge in the connection."""
+type EpisodesDirectorsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EpisodesDirector` at the end of the edge."""
+  node: EpisodesDirector!
+}
+
+"""Methods to use when ordering `EpisodesDirector`."""
+enum EpisodesDirectorsOrderBy {
+  NATURAL
+  EPISODE_ID_ASC
+  EPISODE_ID_DESC
+  NAME_ASC
+  NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `EpisodesDirector` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EpisodesDirectorCondition {
+  """Checks for equality with the object’s `episodeId` field."""
+  episodeId: Int
+
+  """
+  Checks for equality with the object’s `name` field.
+  @notEmpty()
+  """
+  name: String
 }
 
 """A `Episode` edge in the connection."""
@@ -15950,6 +16121,29 @@ type GetEpisodesCastsValueEdge {
 }
 
 """A connection to a list of `String` values."""
+type GetEpisodesDirectorsValuesConnection {
+  """A list of `String` objects."""
+  nodes: [String]!
+
+  """
+  A list of edges which contains the `String` and cursor to aid in pagination.
+  """
+  edges: [GetEpisodesDirectorsValueEdge!]!
+
+  """The count of *all* `String` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `String` edge in the connection."""
+type GetEpisodesDirectorsValueEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `String` at the end of the edge."""
+  node: String
+}
+
+"""A connection to a list of `String` values."""
 type GetEpisodesProductionCountriesValuesConnection {
   """A list of `String` objects."""
   nodes: [String]!
@@ -16553,6 +16747,14 @@ type Mutation {
     input: CreateEpisodesCastInput!
   ): CreateEpisodesCastPayload
 
+  """Creates a single `EpisodesDirector`."""
+  createEpisodesDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEpisodesDirectorInput!
+  ): CreateEpisodesDirectorPayload
+
   """Creates a single `EpisodesImage`."""
   createEpisodesImage(
     """
@@ -16971,6 +17173,14 @@ type Mutation {
     input: UpdateEpisodesCastInput!
   ): UpdateEpisodesCastPayload
 
+  """Updates a single `EpisodesDirector` using a unique key and a patch."""
+  updateEpisodesDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEpisodesDirectorInput!
+  ): UpdateEpisodesDirectorPayload
+
   """Updates a single `EpisodesImage` using a unique key and a patch."""
   updateEpisodesImageByEpisodeIdAndImageType(
     """
@@ -17378,6 +17588,14 @@ type Mutation {
     """
     input: DeleteEpisodesCastInput!
   ): DeleteEpisodesCastPayload
+
+  """Deletes a single `EpisodesDirector` using a unique key."""
+  deleteEpisodesDirector(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEpisodesDirectorInput!
+  ): DeleteEpisodesDirectorPayload
 
   """Deletes a single `EpisodesImage` using a unique key."""
   deleteEpisodesImageByEpisodeIdAndImageType(
@@ -18487,6 +18705,55 @@ input CreateEpisodesCastInput {
 
 """An input for mutations affecting `EpisodesCast`"""
 input EpisodesCastInput {
+  episodeId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""The output of our create `EpisodesDirector` mutation."""
+type CreateEpisodesDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EpisodesDirector` that was created by this mutation."""
+  episodesDirector: EpisodesDirector
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Episode` that is related to this `EpisodesDirector`."""
+  episode: Episode
+
+  """An edge for our `EpisodesDirector`. May be used by Relay 1."""
+  episodesDirectorEdge(
+    """The method to use when ordering `EpisodesDirector`."""
+    orderBy: [EpisodesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EpisodesDirectorsEdge
+}
+
+"""
+All input for the create `EpisodesDirector` mutation.
+@permissions: TVSHOW_EDITOR,ADMIN
+"""
+input CreateEpisodesDirectorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `EpisodesDirector` to be created by this mutation."""
+  episodesDirector: EpisodesDirectorInput!
+}
+
+"""An input for mutations affecting `EpisodesDirector`"""
+input EpisodesDirectorInput {
   episodeId: Int!
 
   """@notEmpty()"""
@@ -21115,6 +21382,63 @@ input EpisodesCastPatch {
   name: String
 }
 
+"""The output of our update `EpisodesDirector` mutation."""
+type UpdateEpisodesDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EpisodesDirector` that was updated by this mutation."""
+  episodesDirector: EpisodesDirector
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Episode` that is related to this `EpisodesDirector`."""
+  episode: Episode
+
+  """An edge for our `EpisodesDirector`. May be used by Relay 1."""
+  episodesDirectorEdge(
+    """The method to use when ordering `EpisodesDirector`."""
+    orderBy: [EpisodesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EpisodesDirectorsEdge
+}
+
+"""
+All input for the `updateEpisodesDirector` mutation.
+@permissions: TVSHOW_EDITOR,ADMIN
+"""
+input UpdateEpisodesDirectorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `EpisodesDirector` being updated.
+  """
+  patch: EpisodesDirectorPatch!
+  episodeId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""
+Represents an update to a `EpisodesDirector`. Fields that are set will be updated.
+"""
+input EpisodesDirectorPatch {
+  episodeId: Int
+
+  """@notEmpty()"""
+  name: String
+}
+
 """The output of our update `EpisodesImage` mutation."""
 type UpdateEpisodesImagePayload {
   """
@@ -23481,6 +23805,49 @@ All input for the `deleteEpisodesCast` mutation.
 @permissions: TVSHOWS_EDIT,ADMIN
 """
 input DeleteEpisodesCastInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  episodeId: Int!
+
+  """@notEmpty()"""
+  name: String!
+}
+
+"""The output of our delete `EpisodesDirector` mutation."""
+type DeleteEpisodesDirectorPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EpisodesDirector` that was deleted by this mutation."""
+  episodesDirector: EpisodesDirector
+  deletedEpisodesDirectorNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Episode` that is related to this `EpisodesDirector`."""
+  episode: Episode
+
+  """An edge for our `EpisodesDirector`. May be used by Relay 1."""
+  episodesDirectorEdge(
+    """The method to use when ordering `EpisodesDirector`."""
+    orderBy: [EpisodesDirectorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EpisodesDirectorsEdge
+}
+
+"""
+All input for the `deleteEpisodesDirector` mutation.
+@permissions: TVSHOW_EDITOR,ADMIN
+"""
+input DeleteEpisodesDirectorInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

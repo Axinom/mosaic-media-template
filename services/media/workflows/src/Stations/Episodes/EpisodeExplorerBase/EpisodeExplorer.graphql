@@ -11,7 +11,7 @@ fragment EpisodeExplorerProperties on Episode {
       title
     }
   }
-  episodesImages(condition: { imageType: COVER }) {
+  episodesImages(condition: { imageType: COVER_1X1 }) {
     nodes {
       imageId
     }

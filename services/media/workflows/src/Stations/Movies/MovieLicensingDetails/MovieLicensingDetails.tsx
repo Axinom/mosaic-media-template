@@ -46,7 +46,7 @@ const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   licenseEnd: getLicenseEndSchema().label('To'),
   downloadedAssetLifespan: Yup.number()
     .nullable()
-    .positive('Downloaded Asset Lifespan must be a positive number')
+    .min(0, 'Downloaded Asset Lifespan must be a positive number')
     .integer('Downloaded Asset Lifespan must be an Integer'),
 });
 
