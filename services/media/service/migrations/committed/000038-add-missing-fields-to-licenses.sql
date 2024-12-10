@@ -1,21 +1,47 @@
 --! Previous: sha1:cbef1a7c7d58c08a2959c41d8b7c30a3327b6478
---! Hash: sha1:3441b4c0ec81d4f4d2bac47a8aa021d34ac064d7
+--! Hash: sha1:24e06d6bb9b811b4563b9a57f05bdd9ef6d58017
 --! Message: add-missing-fields-to-licenses
 
 -- change business-type enum values
 ALTER TABLE app_public.movies ALTER COLUMN business_type DROP DEFAULT;
 ALTER TABLE app_public.movies ALTER COLUMN business_type SET DEFAULT 'free';
 
+ALTER TABLE app_public.tvshows ALTER COLUMN business_type DROP DEFAULT;
+ALTER TABLE app_public.tvshows ALTER COLUMN business_type SET DEFAULT 'free';
+
+ALTER TABLE app_public.seasons ALTER COLUMN business_type DROP DEFAULT;
+ALTER TABLE app_public.seasons ALTER COLUMN business_type SET DEFAULT 'free';
+
+ALTER TABLE app_public.episodes ALTER COLUMN business_type DROP DEFAULT;
+ALTER TABLE app_public.episodes ALTER COLUMN business_type SET DEFAULT 'free';
+
+
 UPDATE app_public.movies SET business_type = 'free' WHERE business_type = 'free_downloadable';
+UPDATE app_public.tvshows SET business_type = 'free' WHERE business_type = 'free_downloadable';
+UPDATE app_public.seasons SET business_type = 'free' WHERE business_type = 'free_downloadable';
+UPDATE app_public.episodes SET business_type = 'free' WHERE business_type = 'free_downloadable';
+
 DELETE FROM app_public.business_type WHERE value = 'free_downloadable';
 
 UPDATE app_public.movies SET business_type = 'advertisement' WHERE business_type = 'advertisement_downloadable';
+UPDATE app_public.tvshows SET business_type = 'advertisement' WHERE business_type = 'advertisement_downloadable';
+UPDATE app_public.seasons SET business_type = 'advertisement' WHERE business_type = 'advertisement_downloadable';
+UPDATE app_public.episodes SET business_type = 'advertisement' WHERE business_type = 'advertisement_downloadable';
+
 DELETE FROM app_public.business_type WHERE value = 'advertisement_downloadable';
 
 UPDATE app_public.movies SET business_type = 'premium' WHERE business_type = 'premium_downloadable';
+UPDATE app_public.tvshows SET business_type = 'premium' WHERE business_type = 'premium_downloadable';
+UPDATE app_public.seasons SET business_type = 'premium' WHERE business_type = 'premium_downloadable';
+UPDATE app_public.episodes SET business_type = 'premium' WHERE business_type = 'premium_downloadable';
+
 DELETE FROM app_public.business_type WHERE value = 'premium_downloadable';
 
 UPDATE app_public.movies SET business_type = 'advertisement' WHERE business_type = 'advertisement_authenticated';
+UPDATE app_public.tvshows SET business_type = 'advertisement' WHERE business_type = 'advertisement_authenticated';
+UPDATE app_public.seasons SET business_type = 'advertisement' WHERE business_type = 'advertisement_authenticated';
+UPDATE app_public.episodes SET business_type = 'advertisement' WHERE business_type = 'advertisement_authenticated';
+
 DELETE FROM app_public.business_type WHERE value = 'advertisement_authenticated';
 
 -- add missing fields to movies_licenses

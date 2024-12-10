@@ -1,5 +1,5 @@
---! Previous: sha1:4f4a931d7c24fdd1dc1483da81e9fdf383640650
---! Hash: sha1:484f1c95ce6887c3a9a3f8fa283975a9bf211b74
+--! Previous: sha1:be0c253b661930f7866804ec4aa5409e0e798561
+--! Hash: sha1:f976448088c61d3d058d2eb1c4a0894a14da7aa5
 --! Message: add-missing-fields-for-licenses
 
 -- add missing fields to seasons-licenses

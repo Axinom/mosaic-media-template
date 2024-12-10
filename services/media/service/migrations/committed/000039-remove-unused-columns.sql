@@ -1,5 +1,5 @@
---! Previous: sha1:3441b4c0ec81d4f4d2bac47a8aa021d34ac064d7
---! Hash: sha1:98c7759a2b7ada0a4a081ed3e167a859f7ed2134
+--! Previous: sha1:24e06d6bb9b811b4563b9a57f05bdd9ef6d58017
+--! Hash: sha1:2335564ab3bb983447fe05ee3d0becccf0cf9641
 --! Message: remove-unused-columns
 
 -- Movies table

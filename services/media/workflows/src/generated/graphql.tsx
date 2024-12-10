@@ -393,8 +393,6 @@ export type Collection = {
   collectionCountries: CollectionCountriesConnection;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
-  /** Reads and enables pagination through a set of `CollectionRelation`. */
-  collectionRelationsByChildCollectionId: CollectionRelationsConnection;
   /** Reads and enables pagination through a set of `CollectionsImage`. */
   collectionsImages: CollectionsImagesConnection;
   /** Reads and enables pagination through a set of `CollectionsSnapshot`. */
@@ -433,19 +431,6 @@ export type CollectionCollectionCountriesArgs = {
 
 /** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type CollectionCollectionRelationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CollectionRelationCondition>;
-  filter?: InputMaybe<CollectionRelationFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CollectionRelationsOrderBy>>;
-};
-
-
-/** @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
-export type CollectionCollectionRelationsByChildCollectionIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CollectionRelationCondition>;

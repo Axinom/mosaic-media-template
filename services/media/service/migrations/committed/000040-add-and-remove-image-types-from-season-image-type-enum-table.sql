@@ -1,5 +1,5 @@
---! Previous: sha1:98c7759a2b7ada0a4a081ed3e167a859f7ed2134
---! Hash: sha1:2eb25348b46a67a7aafbfe93b3904f1773fcbc2a
+--! Previous: sha1:2335564ab3bb983447fe05ee3d0becccf0cf9641
+--! Hash: sha1:959055d039bbb8e76e507b67f683e7e6e88df070
 --! Message: add-and-remove-image-types-from-season-image-type-enum-table
 
 -- season_image_type enum
