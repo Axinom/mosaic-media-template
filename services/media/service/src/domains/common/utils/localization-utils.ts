@@ -12,6 +12,7 @@ export const getUpsertMessageData = (
   fields: Record<string, unknown>,
   entityTitle: string | undefined,
   imageId: string | null | undefined,
+  aggregateId?: string,
 ): LocalizationMessageData => {
   const payload: UpsertLocalizationSourceEntityCommand = {
     service_id: serviceId,
@@ -25,6 +26,7 @@ export const getUpsertMessageData = (
     settings:
       LocalizationServiceMultiTenantMessagingSettings.UpsertLocalizationSourceEntity,
     payload,
+    aggregateId: aggregateId ?? String(entityId),
   };
 };
 

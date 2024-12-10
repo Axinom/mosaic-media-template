@@ -63,7 +63,8 @@ export class LocalizableEpisodeImageCreatedDbMessageHandler extends LocalizableM
       episode_id,
       fields, // Localizable fields are never updated on image assignment
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined,
+      `${episode_id}-${image_type}`,
     );
   }
 }
@@ -112,7 +113,8 @@ export class LocalizableEpisodeImageUpdatedDbMessageHandler extends LocalizableM
       episode_id,
       fields, // Localizable fields are never updated on image assignment
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined,
+      `${episode_id}-${image_type}`,
     );
   }
 }
@@ -167,7 +169,8 @@ export class LocalizableEpisodeImageDeletedDbMessageHandler extends LocalizableM
         episode_id,
         fields, // Localizable fields are never updated on image unassign
         undefined, // Title is never updated on image unassign
-        null, // Explicit unassign of an image
+        undefined, // Explicit unassign of an image
+        `${episode_id}-${image_type}`,
       );
     }
   }

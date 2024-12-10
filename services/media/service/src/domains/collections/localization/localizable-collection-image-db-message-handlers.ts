@@ -63,7 +63,8 @@ export class LocalizableCollectionImageCreatedDbMessageHandler extends Localizab
       collection_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined,
+      `${collection_id}-${image_type}`,
     );
   }
 }
@@ -112,7 +113,8 @@ export class LocalizableCollectionImageUpdatedDbMessageHandler extends Localizab
       collection_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined,
+      `${collection_id}-${image_type}`,
     );
   }
 }
@@ -166,6 +168,7 @@ export class LocalizableCollectionImageDeletedDbMessageHandler extends Localizab
         fields, // localizable image id fields
         undefined, // Title is never updated on image unassign
         null, // Explicit unassign of an image
+        `${collection_id}-${image_type}`,
       );
     }
   }

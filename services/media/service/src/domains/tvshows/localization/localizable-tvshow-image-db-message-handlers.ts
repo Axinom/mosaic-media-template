@@ -63,7 +63,8 @@ export class LocalizableTvshowImageCreatedDbMessageHandler extends LocalizableMe
       tvshow_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined,
+      `${tvshow_id}-${image_type}`,
     );
   }
 }
@@ -112,7 +113,8 @@ export class LocalizableTvshowImageUpdatedDbMessageHandler extends LocalizableMe
       tvshow_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined,
+      `${tvshow_id}-${image_type}`,
     );
   }
 }
@@ -165,7 +167,8 @@ export class LocalizableTvshowImageDeletedDbMessageHandler extends LocalizableMe
         tvshow_id,
         fields, // localizable image id fields
         undefined, // Title is never updated on image unassign
-        null, // Explicit unassign of an image
+        undefined,
+        `${tvshow_id}-${image_type}`,
       );
     }
   }

@@ -62,7 +62,8 @@ export class LocalizableSeasonImageCreatedDbMessageHandler extends LocalizableMe
       season_id,
       fields, // Localizable fields are never updated on image assignment
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined,
+      `${season_id}-${image_type}`,
     );
   }
 }
@@ -110,7 +111,8 @@ export class LocalizableSeasonImageUpdatedDbMessageHandler extends LocalizableMe
       season_id,
       fields, // Localizable fields are never updated on image assignment
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined,
+      `${season_id}-${image_type}`,
     );
   }
 }
@@ -164,7 +166,8 @@ export class LocalizableSeasonImageDeletedDbMessageHandler extends LocalizableMe
         season_id,
         fields, // Localizable fields are never updated on image unassign
         undefined, // Title is never updated on image unassign
-        null, // Explicit unassign of an image
+        undefined,
+        `${season_id}-${image_type}`,
       );
     }
   }

@@ -63,7 +63,8 @@ export class LocalizableMovieImageCreatedDbMessageHandler extends LocalizableMed
       movie_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined, // Image ID assignment is handled through fields
+      `${movie_id}-${image_type}`, // Use a combination of movie_id and image_type as the aggregate_id to avoid concurrency issues.
     );
   }
 }
@@ -112,7 +113,8 @@ export class LocalizableMovieImageUpdatedDbMessageHandler extends LocalizableMed
       movie_id,
       fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined, // Image ID assignment is handled through fields
+      `${movie_id}-${image_type}`, // Use a combination of movie_id and image_type as the aggregate_id to avoid concurrency issues.
     );
   }
 }
@@ -165,7 +167,8 @@ export class LocalizableMovieImageDeletedDbMessageHandler extends LocalizableMed
         movie_id,
         fields, // Localizable fields are never updated on image unassign
         undefined, // Title is never updated on image unassign
-        null, // Explicit unassign of an image
+        undefined, // Image ID unassignment is handled through fields
+        `${movie_id}-${image_type}`, // Use a combination of movie_id and image_type as the aggregate_id to avoid concurrency issues.
       );
     }
   }
