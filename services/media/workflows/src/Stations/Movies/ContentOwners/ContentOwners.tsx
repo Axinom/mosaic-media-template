@@ -23,10 +23,9 @@ import {
   MutationUpdateContentOwnerArgs,
   useContentOwnersQuery,
 } from '../../../generated/graphql';
-import { useMovieGenresActions } from './ContentOwners.actions';
 import classes from './ContentOwners.module.scss';
 import {
-  ContentOwnersFormData,
+  AssetContentOwnersFormData,
   FormDataContentOwners,
 } from './ContentOwners.types';
 
@@ -38,8 +37,8 @@ export const ContentOwners: React.FC = () => {
 
   const onSubmit = useCallback(
     async (
-      formData: ContentOwnersFormData,
-      initialData: DetailsProps<ContentOwnersFormData>['initialData'],
+      formData: AssetContentOwnersFormData,
+      initialData: DetailsProps<AssetContentOwnersFormData>['initialData'],
     ): Promise<void> => {
       const generateUpdateGQLFragment =
         createUpdateGQLFragmentGenerator<Mutation>();
@@ -87,10 +86,8 @@ export const ContentOwners: React.FC = () => {
     [],
   );
 
-  const { actions } = useMovieGenresActions();
-
   return (
-    <Details<ContentOwnersFormData>
+    <Details<AssetContentOwnersFormData>
       defaultTitle="Video Content Owners"
       subtitle="Content Owner's names appear for selection at the properties station of a video"
       initialData={{
@@ -100,7 +97,6 @@ export const ContentOwners: React.FC = () => {
       }}
       saveData={onSubmit}
       infoPanel={<Panel data={data} />}
-      actions={actions}
     >
       <Form />
     </Details>
@@ -108,7 +104,8 @@ export const ContentOwners: React.FC = () => {
 };
 
 const Form: React.FC = () => {
-  const { values, setFieldValue } = useFormikContext<ContentOwnersFormData>();
+  const { values, setFieldValue } =
+    useFormikContext<AssetContentOwnersFormData>();
 
   return (
     <DynamicDataList<FormDataContentOwners>
