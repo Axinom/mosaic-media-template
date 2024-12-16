@@ -1,11 +1,10 @@
 query AgeRatings {
-  ageRatings(orderBy: SORT_ORDER_ASC) {
+  ageRatings(orderBy: NAME_ASC) {
     nodes {
       id
       name
       createdDate
       createdUser
-      sortOrder
       updatedDate
       updatedUser
     }

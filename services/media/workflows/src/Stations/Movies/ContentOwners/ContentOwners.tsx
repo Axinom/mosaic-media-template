@@ -52,7 +52,7 @@ export const ContentOwners: React.FC = () => {
             'createContentOwner',
             {
               input: {
-                contentOwner: { sortOrder: item.sortOrder, name: item.name },
+                contentOwner: { name: item.name },
               },
             },
           ),
@@ -67,7 +67,7 @@ export const ContentOwners: React.FC = () => {
             {
               input: {
                 id: item.id,
-                patch: { name: item.name, sortOrder: item.sortOrder },
+                patch: { name: item.name },
               },
             },
           ),
@@ -122,13 +122,13 @@ const Form: React.FC = () => {
         },
       ]}
       allowNewData={true}
-      positionPropertyName="sortOrder"
       value={values.contentOwners ?? []}
       onChange={(v) => {
         setFieldValue('contentOwners', v);
       }}
       stickyHeader={false}
       allowEditing
+      allowReordering={false}
     />
   );
 };

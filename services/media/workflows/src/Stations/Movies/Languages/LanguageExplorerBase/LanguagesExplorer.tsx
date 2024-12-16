@@ -74,7 +74,7 @@ export const LanguagesExplorer: React.FC<LanguageExplorerProps> = (props) => {
           columns={explorerColumns}
           dataProvider={dataProvider}
           defaultSortOrder={{ column: 'updatedDate', direction: 'desc' }}
-          generateItemLink={(item) => `/languages/${item.id}`}
+          generateItemLink={(item) => `/settings/media/languages/${item.id}`}
         />
       );
     default:

@@ -52,7 +52,9 @@ export const LanguageCreate: React.FC = () => {
   const onProceed = useCallback<ActionHandler<FormData, SubmitResponse>>(
     ({ submitResponse }) => {
       if (submitResponse?.language) {
-        history.push(`/languages/${submitResponse?.language.id}`);
+        history.push(
+          `/settings/media/languages/${submitResponse?.language.id}`,
+        );
       } else {
         // The schema has the response.data properties marked as optional, since theoretically a user could have
         // permissions to mutate but not to read. In practice this can not happen on that service, so we just throw

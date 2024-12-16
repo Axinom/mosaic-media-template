@@ -2443,7 +2443,6 @@ type AgeRatingsConnection {
 type AgeRating {
   id: UUID!
   name: String!
-  sortOrder: Int!
   createdDate: Datetime!
   updatedDate: Datetime!
   createdUser: String!
@@ -2495,8 +2494,6 @@ enum AgeRatingsOrderBy {
   ID_DESC
   NAME_ASC
   NAME_DESC
-  SORT_ORDER_ASC
-  SORT_ORDER_DESC
   CREATED_DATE_ASC
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
@@ -2525,9 +2522,6 @@ input AgeRatingCondition {
   """
   name: String
 
-  """Checks for equality with the object’s `sortOrder` field."""
-  sortOrder: Int
-
   """Checks for equality with the object’s `createdDate` field."""
   createdDate: Datetime
 
@@ -2550,9 +2544,6 @@ input AgeRatingFilter {
 
   """Filter by the object’s `name` field."""
   name: StringFilter
-
-  """Filter by the object’s `sortOrder` field."""
-  sortOrder: IntFilter
 
   """Filter by the object’s `createdDate` field."""
   createdDate: DatetimeFilter
@@ -2748,48 +2739,6 @@ input StringFilter {
 
   """Greater than or equal to the specified value (case-insensitive)."""
   greaterThanOrEqualToInsensitive: String
-}
-
-"""
-A filter to be used against Int fields. All fields are combined with a logical ‘and.’
-"""
-input IntFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Int
-
-  """Not equal to the specified value."""
-  notEqualTo: Int
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Int
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Int
-
-  """Included in the specified list."""
-  in: [Int!]
-
-  """Not included in the specified list."""
-  notIn: [Int!]
-
-  """Less than the specified value."""
-  lessThan: Int
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Int
-
-  """Greater than the specified value."""
-  greaterThan: Int
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Int
 }
 
 """
@@ -3968,6 +3917,48 @@ input MoviesTagFilter {
 
   """Negates the expression."""
   not: MoviesTagFilter
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
 }
 
 """
@@ -13891,7 +13882,6 @@ type ContentOwnersConnection {
 type ContentOwner {
   id: UUID!
   name: String!
-  sortOrder: Int!
   createdDate: Datetime!
   updatedDate: Datetime!
   createdUser: String!
@@ -13914,8 +13904,6 @@ enum ContentOwnersOrderBy {
   ID_DESC
   NAME_ASC
   NAME_DESC
-  SORT_ORDER_ASC
-  SORT_ORDER_DESC
   CREATED_DATE_ASC
   CREATED_DATE_DESC
   UPDATED_DATE_ASC
@@ -13944,9 +13932,6 @@ input ContentOwnerCondition {
   """
   name: String
 
-  """Checks for equality with the object’s `sortOrder` field."""
-  sortOrder: Int
-
   """Checks for equality with the object’s `createdDate` field."""
   createdDate: Datetime
 
@@ -13969,9 +13954,6 @@ input ContentOwnerFilter {
 
   """Filter by the object’s `name` field."""
   name: StringFilter
-
-  """Filter by the object’s `sortOrder` field."""
-  sortOrder: IntFilter
 
   """Filter by the object’s `createdDate` field."""
   createdDate: DatetimeFilter
@@ -18226,7 +18208,6 @@ input AgeRatingInput {
   @notEmpty()
   """
   name: String!
-  sortOrder: Int!
 }
 
 """The output of our create `CollectionCountry` mutation."""
@@ -18549,7 +18530,6 @@ input ContentOwnerInput {
   @notEmpty()
   """
   name: String!
-  sortOrder: Int!
 }
 
 """The output of our create `CountryGroup` mutation."""
@@ -20816,7 +20796,6 @@ input AgeRatingPatch {
   @notEmpty()
   """
   name: String
-  sortOrder: Int
 }
 
 """The output of our update `CollectionRelation` mutation."""
@@ -21130,7 +21109,6 @@ input ContentOwnerPatch {
   @notEmpty()
   """
   name: String
-  sortOrder: Int
 }
 
 """The output of our update `CountryGroup` mutation."""

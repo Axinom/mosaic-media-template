@@ -77,7 +77,7 @@ query Movie($id: Int!) {
   contentOwners {
     nodes {
       name
-      sortOrder
+      id
     }
   }
 }

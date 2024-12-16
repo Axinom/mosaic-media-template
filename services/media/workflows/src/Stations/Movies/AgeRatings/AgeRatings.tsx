@@ -49,7 +49,7 @@ export const AgeRatings: React.FC = () => {
             'createAgeRating',
             {
               input: {
-                ageRating: { sortOrder: item.sortOrder, name: item.name },
+                ageRating: { name: item.name },
               },
             },
           ),
@@ -64,7 +64,7 @@ export const AgeRatings: React.FC = () => {
             {
               input: {
                 id: item.id,
-                patch: { name: item.name, sortOrder: item.sortOrder },
+                patch: { name: item.name },
               },
             },
           ),
@@ -119,13 +119,13 @@ const Form: React.FC = () => {
         },
       ]}
       allowNewData={true}
-      positionPropertyName="sortOrder"
       value={values.ageRatings ?? []}
       onChange={(v) => {
         setFieldValue('ageRatings', v);
       }}
       stickyHeader={false}
       allowEditing
+      allowReordering={false}
     />
   );
 };

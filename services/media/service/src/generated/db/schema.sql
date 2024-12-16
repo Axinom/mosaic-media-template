@@ -4979,7 +4979,6 @@ CREATE TABLE app_private.messaging_counter (
 CREATE TABLE app_public.age_ratings (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     name text NOT NULL,
-    sort_order integer NOT NULL,
     created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
@@ -5237,7 +5236,6 @@ COMMENT ON TABLE app_public.collections_tags IS '@subscription_events_collection
 CREATE TABLE app_public.content_owners (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     name text NOT NULL,
-    sort_order integer NOT NULL,
     created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
@@ -7743,13 +7741,6 @@ CREATE INDEX idx_age_ratings_name_desc_with_id ON app_public.age_ratings USING b
 
 
 --
--- Name: idx_age_ratings_sort_order; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_age_ratings_sort_order ON app_public.age_ratings USING btree (sort_order);
-
-
---
 -- Name: idx_age_ratings_updated_date_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -7915,13 +7906,6 @@ CREATE INDEX idx_content_owners_name_asc_with_id ON app_public.content_owners US
 --
 
 CREATE INDEX idx_content_owners_name_desc_with_id ON app_public.content_owners USING btree (name DESC, id);
-
-
---
--- Name: idx_content_owners_sort_order; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_content_owners_sort_order ON app_public.content_owners USING btree (sort_order);
 
 
 --
@@ -11569,6 +11553,14 @@ ALTER TABLE ONLY app_public.country_groups_countries
 
 
 --
+-- Name: episodes episodes_age_rating_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.episodes
+    ADD CONSTRAINT episodes_age_rating_fkey FOREIGN KEY (age_rating) REFERENCES app_public.age_ratings(name);
+
+
+--
 -- Name: episodes episodes_asset_subtype_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11590,6 +11582,14 @@ ALTER TABLE ONLY app_public.episodes
 
 ALTER TABLE ONLY app_public.episodes_casts
     ADD CONSTRAINT episodes_casts_episode_id_fkey FOREIGN KEY (episode_id) REFERENCES app_public.episodes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: episodes episodes_content_owner_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.episodes
+    ADD CONSTRAINT episodes_content_owner_fkey FOREIGN KEY (content_owner) REFERENCES app_public.content_owners(name);
 
 
 --
@@ -11777,6 +11777,14 @@ ALTER TABLE ONLY app_public.ingest_items
 
 
 --
+-- Name: movies movies_age_rating_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.movies
+    ADD CONSTRAINT movies_age_rating_fkey FOREIGN KEY (age_rating) REFERENCES app_public.age_ratings(name);
+
+
+--
 -- Name: movies movies_asset_subtype_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11798,6 +11806,14 @@ ALTER TABLE ONLY app_public.movies
 
 ALTER TABLE ONLY app_public.movies_casts
     ADD CONSTRAINT movies_casts_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES app_public.movies(id) ON DELETE CASCADE;
+
+
+--
+-- Name: movies movies_content_owner_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.movies
+    ADD CONSTRAINT movies_content_owner_fkey FOREIGN KEY (content_owner) REFERENCES app_public.content_owners(name);
 
 
 --
@@ -11913,6 +11929,14 @@ ALTER TABLE ONLY app_public.movies_trailers
 
 
 --
+-- Name: seasons seasons_age_rating_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.seasons
+    ADD CONSTRAINT seasons_age_rating_fkey FOREIGN KEY (age_rating) REFERENCES app_public.age_ratings(name);
+
+
+--
 -- Name: seasons seasons_asset_subtype_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11934,6 +11958,14 @@ ALTER TABLE ONLY app_public.seasons
 
 ALTER TABLE ONLY app_public.seasons_casts
     ADD CONSTRAINT seasons_casts_season_id_fkey FOREIGN KEY (season_id) REFERENCES app_public.seasons(id) ON DELETE CASCADE;
+
+
+--
+-- Name: seasons seasons_content_owner_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.seasons
+    ADD CONSTRAINT seasons_content_owner_fkey FOREIGN KEY (content_owner) REFERENCES app_public.content_owners(name);
 
 
 --
@@ -12113,6 +12145,14 @@ ALTER TABLE ONLY app_public.snapshots
 
 
 --
+-- Name: tvshows tvshows_age_rating_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.tvshows
+    ADD CONSTRAINT tvshows_age_rating_fkey FOREIGN KEY (age_rating) REFERENCES app_public.age_ratings(name);
+
+
+--
 -- Name: tvshows tvshows_asset_subtype_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -12134,6 +12174,14 @@ ALTER TABLE ONLY app_public.tvshows
 
 ALTER TABLE ONLY app_public.tvshows_casts
     ADD CONSTRAINT tvshows_casts_tvshow_id_fkey FOREIGN KEY (tvshow_id) REFERENCES app_public.tvshows(id) ON DELETE CASCADE;
+
+
+--
+-- Name: tvshows tvshows_content_owner_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.tvshows
+    ADD CONSTRAINT tvshows_content_owner_fkey FOREIGN KEY (content_owner) REFERENCES app_public.content_owners(name);
 
 
 --
@@ -15339,13 +15387,6 @@ GRANT INSERT(name),UPDATE(name) ON TABLE app_public.age_ratings TO media_service
 
 
 --
--- Name: COLUMN age_ratings.sort_order; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(sort_order),UPDATE(sort_order) ON TABLE app_public.age_ratings TO media_service_gql_role;
-
-
---
 -- Name: TABLE country_groups; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15567,13 +15608,6 @@ GRANT SELECT,DELETE ON TABLE app_public.content_owners TO media_service_gql_role
 --
 
 GRANT INSERT(name),UPDATE(name) ON TABLE app_public.content_owners TO media_service_gql_role;
-
-
---
--- Name: COLUMN content_owners.sort_order; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(sort_order),UPDATE(sort_order) ON TABLE app_public.content_owners TO media_service_gql_role;
 
 
 --

@@ -164,12 +164,6 @@ declare module 'zapatos/schema' {
       */
       name: string;
       /**
-      * **age_ratings.sort_order**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      sort_order: number;
-      /**
       * **age_ratings.created_date**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
@@ -207,12 +201,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       name: string;
-      /**
-      * **age_ratings.sort_order**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      sort_order: number;
       /**
       * **age_ratings.created_date**
       * - `timestamptz` in database
@@ -252,12 +240,6 @@ declare module 'zapatos/schema' {
       */
       name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **age_ratings.sort_order**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      sort_order?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **age_ratings.created_date**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
@@ -295,12 +277,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       name: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **age_ratings.sort_order**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      sort_order: number | db.Parameter<number> | db.SQLFragment;
       /**
       * **age_ratings.created_date**
       * - `timestamptz` in database
@@ -340,12 +316,6 @@ declare module 'zapatos/schema' {
       */
       name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **age_ratings.sort_order**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      sort_order?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
-      /**
       * **age_ratings.created_date**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
@@ -370,7 +340,7 @@ declare module 'zapatos/schema' {
       */
       updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'age_ratings_pkey' | 'idx_age_ratings_name' | 'idx_age_ratings_sort_order';
+    export type UniqueIndex = 'age_ratings_pkey' | 'idx_age_ratings_name';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -1843,12 +1813,6 @@ declare module 'zapatos/schema' {
       */
       name: string;
       /**
-      * **content_owners.sort_order**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      sort_order: number;
-      /**
       * **content_owners.created_date**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
@@ -1886,12 +1850,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       name: string;
-      /**
-      * **content_owners.sort_order**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      sort_order: number;
       /**
       * **content_owners.created_date**
       * - `timestamptz` in database
@@ -1931,12 +1889,6 @@ declare module 'zapatos/schema' {
       */
       name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **content_owners.sort_order**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      sort_order?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **content_owners.created_date**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
@@ -1974,12 +1926,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       name: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **content_owners.sort_order**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      sort_order: number | db.Parameter<number> | db.SQLFragment;
       /**
       * **content_owners.created_date**
       * - `timestamptz` in database
@@ -2019,12 +1965,6 @@ declare module 'zapatos/schema' {
       */
       name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **content_owners.sort_order**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      sort_order?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
-      /**
       * **content_owners.created_date**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `(now() AT TIME ZONE 'utc'::text)`
@@ -2049,7 +1989,7 @@ declare module 'zapatos/schema' {
       */
       updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'content_owners_pkey' | 'idx_content_owners_name' | 'idx_content_owners_sort_order';
+    export type UniqueIndex = 'content_owners_pkey' | 'idx_content_owners_name';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;

@@ -32,7 +32,6 @@ export type AgeRating = {
   createdUser: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
   name: Scalars['String']['output'];
-  sortOrder: Scalars['Int']['output'];
   updatedDate: Scalars['Datetime']['output'];
   updatedUser: Scalars['String']['output'];
 };
@@ -55,8 +54,6 @@ export type AgeRatingCondition = {
    * @notEmpty()
    */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `sortOrder` field. */
-  sortOrder?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
@@ -71,16 +68,30 @@ export type AgeRatingFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `episodesByAgeRating` relation. */
+  episodesByAgeRating?: InputMaybe<AgeRatingToManyEpisodeFilter>;
+  /** Some related `episodesByAgeRating` exist. */
+  episodesByAgeRatingExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `moviesByAgeRating` relation. */
+  moviesByAgeRating?: InputMaybe<AgeRatingToManyMovieFilter>;
+  /** Some related `moviesByAgeRating` exist. */
+  moviesByAgeRatingExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `name` field. */
   name?: InputMaybe<StringFilter>;
   /** Negates the expression. */
   not?: InputMaybe<AgeRatingFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<AgeRatingFilter>>;
-  /** Filter by the object’s `sortOrder` field. */
-  sortOrder?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `seasonsByAgeRating` relation. */
+  seasonsByAgeRating?: InputMaybe<AgeRatingToManySeasonFilter>;
+  /** Some related `seasonsByAgeRating` exist. */
+  seasonsByAgeRatingExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `tvshowsByAgeRating` relation. */
+  tvshowsByAgeRating?: InputMaybe<AgeRatingToManyTvshowFilter>;
+  /** Some related `tvshowsByAgeRating` exist. */
+  tvshowsByAgeRatingExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `updatedUser` field. */
@@ -95,7 +106,6 @@ export type AgeRatingInput = {
    * @notEmpty()
    */
   name: Scalars['String']['input'];
-  sortOrder: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `AgeRating`. Fields that are set will be updated. */
@@ -106,7 +116,6 @@ export type AgeRatingPatch = {
    * @notEmpty()
    */
   name?: InputMaybe<Scalars['String']['input']>;
-  sortOrder?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A connection to a list of `AgeRating` values. */
@@ -144,13 +153,51 @@ export enum AgeRatingsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  SortOrderAsc = 'SORT_ORDER_ASC',
-  SortOrderDesc = 'SORT_ORDER_DESC',
   UpdatedDateAsc = 'UPDATED_DATE_ASC',
   UpdatedDateDesc = 'UPDATED_DATE_DESC',
   UpdatedUserAsc = 'UPDATED_USER_ASC',
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
+
+/** A filter to be used against many `Episode` object types. All fields are combined with a logical ‘and.’ */
+export type AgeRatingToManyEpisodeFilter = {
+  /** Every related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodeFilter>;
+  /** No related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodeFilter>;
+  /** Some related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodeFilter>;
+};
+
+/** A filter to be used against many `Movie` object types. All fields are combined with a logical ‘and.’ */
+export type AgeRatingToManyMovieFilter = {
+  /** Every related `Movie` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MovieFilter>;
+  /** No related `Movie` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MovieFilter>;
+  /** Some related `Movie` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MovieFilter>;
+};
+
+/** A filter to be used against many `Season` object types. All fields are combined with a logical ‘and.’ */
+export type AgeRatingToManySeasonFilter = {
+  /** Every related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonFilter>;
+  /** No related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonFilter>;
+  /** Some related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonFilter>;
+};
+
+/** A filter to be used against many `Tvshow` object types. All fields are combined with a logical ‘and.’ */
+export type AgeRatingToManyTvshowFilter = {
+  /** Every related `Tvshow` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowFilter>;
+  /** No related `Tvshow` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowFilter>;
+  /** Some related `Tvshow` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowFilter>;
+};
 
 export type AllCountryType = {
   __typename?: 'AllCountryType';
@@ -1318,7 +1365,6 @@ export type ContentOwner = {
   createdUser: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
   name: Scalars['String']['output'];
-  sortOrder: Scalars['Int']['output'];
   updatedDate: Scalars['Datetime']['output'];
   updatedUser: Scalars['String']['output'];
 };
@@ -1341,8 +1387,6 @@ export type ContentOwnerCondition = {
    * @notEmpty()
    */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `sortOrder` field. */
-  sortOrder?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedUser` field. */
@@ -1357,16 +1401,30 @@ export type ContentOwnerFilter = {
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
   createdUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `episodesByContentOwner` relation. */
+  episodesByContentOwner?: InputMaybe<ContentOwnerToManyEpisodeFilter>;
+  /** Some related `episodesByContentOwner` exist. */
+  episodesByContentOwnerExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `moviesByContentOwner` relation. */
+  moviesByContentOwner?: InputMaybe<ContentOwnerToManyMovieFilter>;
+  /** Some related `moviesByContentOwner` exist. */
+  moviesByContentOwnerExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `name` field. */
   name?: InputMaybe<StringFilter>;
   /** Negates the expression. */
   not?: InputMaybe<ContentOwnerFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<ContentOwnerFilter>>;
-  /** Filter by the object’s `sortOrder` field. */
-  sortOrder?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `seasonsByContentOwner` relation. */
+  seasonsByContentOwner?: InputMaybe<ContentOwnerToManySeasonFilter>;
+  /** Some related `seasonsByContentOwner` exist. */
+  seasonsByContentOwnerExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `tvshowsByContentOwner` relation. */
+  tvshowsByContentOwner?: InputMaybe<ContentOwnerToManyTvshowFilter>;
+  /** Some related `tvshowsByContentOwner` exist. */
+  tvshowsByContentOwnerExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `updatedDate` field. */
   updatedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `updatedUser` field. */
@@ -1381,7 +1439,6 @@ export type ContentOwnerInput = {
    * @notEmpty()
    */
   name: Scalars['String']['input'];
-  sortOrder: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `ContentOwner`. Fields that are set will be updated. */
@@ -1392,7 +1449,6 @@ export type ContentOwnerPatch = {
    * @notEmpty()
    */
   name?: InputMaybe<Scalars['String']['input']>;
-  sortOrder?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A connection to a list of `ContentOwner` values. */
@@ -1430,13 +1486,51 @@ export enum ContentOwnersOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  SortOrderAsc = 'SORT_ORDER_ASC',
-  SortOrderDesc = 'SORT_ORDER_DESC',
   UpdatedDateAsc = 'UPDATED_DATE_ASC',
   UpdatedDateDesc = 'UPDATED_DATE_DESC',
   UpdatedUserAsc = 'UPDATED_USER_ASC',
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
+
+/** A filter to be used against many `Episode` object types. All fields are combined with a logical ‘and.’ */
+export type ContentOwnerToManyEpisodeFilter = {
+  /** Every related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EpisodeFilter>;
+  /** No related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EpisodeFilter>;
+  /** Some related `Episode` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EpisodeFilter>;
+};
+
+/** A filter to be used against many `Movie` object types. All fields are combined with a logical ‘and.’ */
+export type ContentOwnerToManyMovieFilter = {
+  /** Every related `Movie` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<MovieFilter>;
+  /** No related `Movie` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<MovieFilter>;
+  /** Some related `Movie` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<MovieFilter>;
+};
+
+/** A filter to be used against many `Season` object types. All fields are combined with a logical ‘and.’ */
+export type ContentOwnerToManySeasonFilter = {
+  /** Every related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SeasonFilter>;
+  /** No related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SeasonFilter>;
+  /** Some related `Season` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SeasonFilter>;
+};
+
+/** A filter to be used against many `Tvshow` object types. All fields are combined with a logical ‘and.’ */
+export type ContentOwnerToManyTvshowFilter = {
+  /** Every related `Tvshow` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<TvshowFilter>;
+  /** No related `Tvshow` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<TvshowFilter>;
+  /** Some related `Tvshow` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<TvshowFilter>;
+};
 
 export type CountryGroup = {
   __typename?: 'CountryGroup';
@@ -2038,11 +2132,15 @@ export type CreateEpisodeInput = {
 /** The output of our create `Episode` mutation. */
 export type CreateEpisodePayload = {
   __typename?: 'CreateEpisodePayload';
+  /** Reads a single `AgeRating` that is related to this `Episode`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Episode`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   /** The `Episode` that was created by this mutation. */
   episode?: Maybe<Episode>;
   /** An edge for our `Episode`. May be used by Relay 1. */
@@ -2492,11 +2590,15 @@ export type CreateMovieInput = {
 /** The output of our create `Movie` mutation. */
 export type CreateMoviePayload = {
   __typename?: 'CreateMoviePayload';
+  /** Reads a single `AgeRating` that is related to this `Movie`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Movie`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   /** The `Movie` that was created by this mutation. */
   movie?: Maybe<Movie>;
   /** An edge for our `Movie`. May be used by Relay 1. */
@@ -2872,11 +2974,15 @@ export type CreateSeasonInput = {
 /** The output of our create `Season` mutation. */
 export type CreateSeasonPayload = {
   __typename?: 'CreateSeasonPayload';
+  /** Reads a single `AgeRating` that is related to this `Season`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Season`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Season` that was created by this mutation. */
@@ -3290,11 +3396,15 @@ export type CreateTvshowInput = {
 /** The output of our create `Tvshow` mutation. */
 export type CreateTvshowPayload = {
   __typename?: 'CreateTvshowPayload';
+  /** Reads a single `AgeRating` that is related to this `Tvshow`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Tvshow`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Tvshow` that was created by this mutation. */
@@ -4082,11 +4192,15 @@ export type DeleteEpisodeInput = {
 /** The output of our delete `Episode` mutation. */
 export type DeleteEpisodePayload = {
   __typename?: 'DeleteEpisodePayload';
+  /** Reads a single `AgeRating` that is related to this `Episode`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Episode`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   deletedEpisodeNodeId?: Maybe<Scalars['ID']['output']>;
   /** The `Episode` that was deleted by this mutation. */
   episode?: Maybe<Episode>;
@@ -4561,11 +4675,15 @@ export type DeleteMovieInput = {
 /** The output of our delete `Movie` mutation. */
 export type DeleteMoviePayload = {
   __typename?: 'DeleteMoviePayload';
+  /** Reads a single `AgeRating` that is related to this `Movie`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Movie`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   deletedMovieNodeId?: Maybe<Scalars['ID']['output']>;
   /** The `Movie` that was deleted by this mutation. */
   movie?: Maybe<Movie>;
@@ -4966,11 +5084,15 @@ export type DeleteSeasonInput = {
 /** The output of our delete `Season` mutation. */
 export type DeleteSeasonPayload = {
   __typename?: 'DeleteSeasonPayload';
+  /** Reads a single `AgeRating` that is related to this `Season`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Season`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   deletedSeasonNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
@@ -5448,11 +5570,15 @@ export type DeleteTvshowInput = {
 /** The output of our delete `Tvshow` mutation. */
 export type DeleteTvshowPayload = {
   __typename?: 'DeleteTvshowPayload';
+  /** Reads a single `AgeRating` that is related to this `Tvshow`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Tvshow`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   deletedTvshowNodeId?: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
@@ -5871,11 +5997,15 @@ export type EntityTypeFilter = {
 export type Episode = {
   __typename?: 'Episode';
   ageRating?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `AgeRating` that is related to this `Episode`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   assetSubtype: AssetSubtype;
   businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Episode`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   createdDate: Scalars['Datetime']['output'];
   createdUser: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -6108,6 +6238,10 @@ export type EpisodeCondition = {
 export type EpisodeFilter = {
   /** Filter by the object’s `ageRating` field. */
   ageRating?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `ageRatingByAgeRating` relation. */
+  ageRatingByAgeRating?: InputMaybe<AgeRatingFilter>;
+  /** A related `ageRatingByAgeRating` exists. */
+  ageRatingByAgeRatingExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<EpisodeFilter>>;
   /** Filter by the object’s `assetSubtype` field. */
@@ -6120,6 +6254,10 @@ export type EpisodeFilter = {
   collectionRelationsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `contentOwnerByContentOwner` relation. */
+  contentOwnerByContentOwner?: InputMaybe<ContentOwnerFilter>;
+  /** A related `contentOwnerByContentOwner` exists. */
+  contentOwnerByContentOwnerExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
@@ -9463,6 +9601,10 @@ export type MovieCondition = {
 export type MovieFilter = {
   /** Filter by the object’s `ageRating` field. */
   ageRating?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `ageRatingByAgeRating` relation. */
+  ageRatingByAgeRating?: InputMaybe<AgeRatingFilter>;
+  /** A related `ageRatingByAgeRating` exists. */
+  ageRatingByAgeRatingExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<MovieFilter>>;
   /** Filter by the object’s `assetSubtype` field. */
@@ -9475,6 +9617,10 @@ export type MovieFilter = {
   collectionRelationsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `contentOwnerByContentOwner` relation. */
+  contentOwnerByContentOwner?: InputMaybe<ContentOwnerFilter>;
+  /** A related `contentOwnerByContentOwner` exists. */
+  contentOwnerByContentOwnerExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
@@ -14178,11 +14324,15 @@ export type QueryTvshowsTvshowGenresArgs = {
 export type Season = {
   __typename?: 'Season';
   ageRating?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `AgeRating` that is related to this `Season`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   assetSubtype: AssetSubtype;
   businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Season`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   createdDate: Scalars['Datetime']['output'];
   createdUser: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -14420,6 +14570,10 @@ export type SeasonCondition = {
 export type SeasonFilter = {
   /** Filter by the object’s `ageRating` field. */
   ageRating?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `ageRatingByAgeRating` relation. */
+  ageRatingByAgeRating?: InputMaybe<AgeRatingFilter>;
+  /** A related `ageRatingByAgeRating` exists. */
+  ageRatingByAgeRatingExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<SeasonFilter>>;
   /** Filter by the object’s `assetSubtype` field. */
@@ -14432,6 +14586,10 @@ export type SeasonFilter = {
   collectionRelationsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `contentOwnerByContentOwner` relation. */
+  contentOwnerByContentOwner?: InputMaybe<ContentOwnerFilter>;
+  /** A related `contentOwnerByContentOwner` exists. */
+  contentOwnerByContentOwnerExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
@@ -16557,11 +16715,15 @@ export type Subscription = {
 export type Tvshow = {
   __typename?: 'Tvshow';
   ageRating?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `AgeRating` that is related to this `Tvshow`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   assetSubtype: AssetSubtype;
   businessType: BusinessType;
   /** Reads and enables pagination through a set of `CollectionRelation`. */
   collectionRelations: CollectionRelationsConnection;
   contentOwner?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Tvshow`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   createdDate: Scalars['Datetime']['output'];
   createdUser: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -16798,6 +16960,10 @@ export type TvshowCondition = {
 export type TvshowFilter = {
   /** Filter by the object’s `ageRating` field. */
   ageRating?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `ageRatingByAgeRating` relation. */
+  ageRatingByAgeRating?: InputMaybe<AgeRatingFilter>;
+  /** A related `ageRatingByAgeRating` exists. */
+  ageRatingByAgeRatingExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<TvshowFilter>>;
   /** Filter by the object’s `assetSubtype` field. */
@@ -16810,6 +16976,10 @@ export type TvshowFilter = {
   collectionRelationsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `contentOwner` field. */
   contentOwner?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `contentOwnerByContentOwner` relation. */
+  contentOwnerByContentOwner?: InputMaybe<ContentOwnerFilter>;
+  /** A related `contentOwnerByContentOwner` exists. */
+  contentOwnerByContentOwnerExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `createdDate` field. */
   createdDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdUser` field. */
@@ -18719,11 +18889,15 @@ export type UpdateEpisodeInput = {
 /** The output of our update `Episode` mutation. */
 export type UpdateEpisodePayload = {
   __typename?: 'UpdateEpisodePayload';
+  /** Reads a single `AgeRating` that is related to this `Episode`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Episode`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   /** The `Episode` that was updated by this mutation. */
   episode?: Maybe<Episode>;
   /** An edge for our `Episode`. May be used by Relay 1. */
@@ -19167,11 +19341,15 @@ export type UpdateMovieInput = {
 /** The output of our update `Movie` mutation. */
 export type UpdateMoviePayload = {
   __typename?: 'UpdateMoviePayload';
+  /** Reads a single `AgeRating` that is related to this `Movie`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Movie`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   /** The `Movie` that was updated by this mutation. */
   movie?: Maybe<Movie>;
   /** An edge for our `Movie`. May be used by Relay 1. */
@@ -19502,11 +19680,15 @@ export type UpdateSeasonInput = {
 /** The output of our update `Season` mutation. */
 export type UpdateSeasonPayload = {
   __typename?: 'UpdateSeasonPayload';
+  /** Reads a single `AgeRating` that is related to this `Season`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Season`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Season` that was updated by this mutation. */
@@ -19876,11 +20058,15 @@ export type UpdateTvshowInput = {
 /** The output of our update `Tvshow` mutation. */
 export type UpdateTvshowPayload = {
   __typename?: 'UpdateTvshowPayload';
+  /** Reads a single `AgeRating` that is related to this `Tvshow`. */
+  ageRatingByAgeRating?: Maybe<AgeRating>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `ContentOwner` that is related to this `Tvshow`. */
+  contentOwnerByContentOwner?: Maybe<ContentOwner>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** The `Tvshow` that was updated by this mutation. */
@@ -20416,7 +20602,7 @@ export type EpisodeQueryVariables = Exact<{
 }>;
 
 
-export type EpisodeQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', title: string, originalTitle?: string | null, index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, mainVideoId?: any | null, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesDirectors: { __typename?: 'EpisodesDirectorsConnection', nodes: Array<{ __typename?: 'EpisodesDirector', name: string }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesTrailers: { __typename?: 'EpisodesTrailersConnection', totalCount: number }, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageType: EpisodeImageType, imageId: any }> }, season?: { __typename?: 'Season', id: number, index: number, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null };
+export type EpisodeQuery = { __typename?: 'Query', episode?: { __typename?: 'Episode', title: string, originalTitle?: string | null, index: number, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, mainVideoId?: any | null, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, episodesTags: { __typename?: 'EpisodesTagsConnection', nodes: Array<{ __typename?: 'EpisodesTag', name: string }> }, episodesDirectors: { __typename?: 'EpisodesDirectorsConnection', nodes: Array<{ __typename?: 'EpisodesDirector', name: string }> }, episodesTvshowGenres: { __typename?: 'EpisodesTvshowGenresConnection', nodes: Array<{ __typename?: 'EpisodesTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, episodesCasts: { __typename?: 'EpisodesCastsConnection', nodes: Array<{ __typename?: 'EpisodesCast', name: string }> }, episodesProductionCountries: { __typename?: 'EpisodesProductionCountriesConnection', nodes: Array<{ __typename?: 'EpisodesProductionCountry', name: string }> }, episodesTrailers: { __typename?: 'EpisodesTrailersConnection', totalCount: number }, episodesImages: { __typename?: 'EpisodesImagesConnection', nodes: Array<{ __typename?: 'EpisodesImage', imageType: EpisodeImageType, imageId: any }> }, season?: { __typename?: 'Season', id: number, index: number, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, tvshow?: { __typename?: 'Tvshow', title: string } | null } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
 
 export type UpdateEpisodeMutationVariables = Exact<{
   input: UpdateEpisodeInput;
@@ -20633,7 +20819,7 @@ export type IngestDocumentsMutatedSubscription = { __typename?: 'Subscription', 
 export type AgeRatingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AgeRatingsQuery = { __typename?: 'Query', ageRatings?: { __typename?: 'AgeRatingsConnection', totalCount: number, nodes: Array<{ __typename?: 'AgeRating', id: any, name: string, createdDate: any, createdUser: string, sortOrder: number, updatedDate: any, updatedUser: string }> } | null };
+export type AgeRatingsQuery = { __typename?: 'Query', ageRatings?: { __typename?: 'AgeRatingsConnection', totalCount: number, nodes: Array<{ __typename?: 'AgeRating', id: any, name: string, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string }> } | null };
 
 export type CreateAgeRatingMutationVariables = Exact<{
   input: CreateAgeRatingInput;
@@ -20659,7 +20845,7 @@ export type DeleteAgeRatingMutation = { __typename?: 'Mutation', deleteAgeRating
 export type ContentOwnersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ContentOwnersQuery = { __typename?: 'Query', contentOwners?: { __typename?: 'ContentOwnersConnection', totalCount: number, nodes: Array<{ __typename?: 'ContentOwner', createdDate: any, createdUser: string, id: any, name: string, sortOrder: number, updatedDate: any, updatedUser: string }> } | null };
+export type ContentOwnersQuery = { __typename?: 'Query', contentOwners?: { __typename?: 'ContentOwnersConnection', totalCount: number, nodes: Array<{ __typename?: 'ContentOwner', createdDate: any, createdUser: string, id: any, name: string, updatedDate: any, updatedUser: string }> } | null };
 
 export type CreateContentOwnerMutationVariables = Exact<{
   input: CreateContentOwnerInput;
@@ -20746,7 +20932,7 @@ export type MovieQueryVariables = Exact<{
 }>;
 
 
-export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null };
+export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesDirectors: { __typename?: 'MoviesDirectorsConnection', nodes: Array<{ __typename?: 'MoviesDirector', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
 
 export type DeleteMovieMutationVariables = Exact<{
   input: DeleteMovieInput;
@@ -21039,7 +21225,7 @@ export type SeasonQueryVariables = Exact<{
 }>;
 
 
-export type SeasonQuery = { __typename?: 'Query', season?: { __typename?: 'Season', index: number, title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, rating?: any | null, contentOwner?: string | null, extendedField?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsDirectors: { __typename?: 'SeasonsDirectorsConnection', nodes: Array<{ __typename?: 'SeasonsDirector', name: string }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, episodes: { __typename?: 'EpisodesConnection', totalCount: number }, seasonsTrailers: { __typename?: 'SeasonsTrailersConnection', totalCount: number }, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageType: SeasonImageType, imageId: any }> }, tvshow?: { __typename?: 'Tvshow', id: number, title: string, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null };
+export type SeasonQuery = { __typename?: 'Query', season?: { __typename?: 'Season', index: number, title: string, synopsis?: string | null, description?: string | null, externalId?: string | null, rating?: any | null, contentOwner?: string | null, extendedField?: string | null, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsDirectors: { __typename?: 'SeasonsDirectorsConnection', nodes: Array<{ __typename?: 'SeasonsDirector', name: string }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, episodes: { __typename?: 'EpisodesConnection', totalCount: number }, seasonsTrailers: { __typename?: 'SeasonsTrailersConnection', totalCount: number }, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageType: SeasonImageType, imageId: any }> }, tvshow?: { __typename?: 'Tvshow', id: number, title: string, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageId: any }> } } | null } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null };
 
 export type DeleteSeasonMutationVariables = Exact<{
   input: DeleteSeasonInput;
@@ -21229,7 +21415,7 @@ export type TvShowQueryVariables = Exact<{
 }>;
 
 
-export type TvShowQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsDirectors: { __typename?: 'TvshowsDirectorsConnection', nodes: Array<{ __typename?: 'TvshowsDirector', name: string }> }, seasons: { __typename?: 'SeasonsConnection', totalCount: number }, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageType: TvshowImageType, imageId: any }> }, tvshowsTrailers: { __typename?: 'TvshowsTrailersConnection', totalCount: number } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, sortOrder: number }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
+export type TvShowQuery = { __typename?: 'Query', tvshow?: { __typename?: 'Tvshow', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, ageRating?: string | null, businessType: BusinessType, contentOwner?: string | null, rating?: any | null, extendedField?: string | null, assetSubtype: AssetSubtype, studio?: string | null, released?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, tvshowsTags: { __typename?: 'TvshowsTagsConnection', nodes: Array<{ __typename?: 'TvshowsTag', name: string }> }, tvshowsTvshowGenres: { __typename?: 'TvshowsTvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, tvshowsCasts: { __typename?: 'TvshowsCastsConnection', nodes: Array<{ __typename?: 'TvshowsCast', name: string }> }, tvshowsProductionCountries: { __typename?: 'TvshowsProductionCountriesConnection', nodes: Array<{ __typename?: 'TvshowsProductionCountry', name: string }> }, tvshowsDirectors: { __typename?: 'TvshowsDirectorsConnection', nodes: Array<{ __typename?: 'TvshowsDirector', name: string }> }, seasons: { __typename?: 'SeasonsConnection', totalCount: number }, tvshowsImages: { __typename?: 'TvshowsImagesConnection', nodes: Array<{ __typename?: 'TvshowsImage', imageType: TvshowImageType, imageId: any }> }, tvshowsTrailers: { __typename?: 'TvshowsTrailersConnection', totalCount: number } } | null, tvshowGenres?: { __typename?: 'TvshowGenresConnection', nodes: Array<{ __typename?: 'TvshowGenre', title: string, id: number }> } | null, ageRatings?: { __typename?: 'AgeRatingsConnection', nodes: Array<{ __typename?: 'AgeRating', name: string, id: any }> } | null, contentOwners?: { __typename?: 'ContentOwnersConnection', nodes: Array<{ __typename?: 'ContentOwner', name: string, id: any }> } | null, languages?: { __typename?: 'LanguagesConnection', nodes: Array<{ __typename?: 'Language', code: string, title: string }> } | null };
 
 export type DeleteTvShowMutationVariables = Exact<{
   input: DeleteTvshowInput;
@@ -22811,7 +22997,7 @@ export const EpisodeDocument = gql`
   contentOwners {
     nodes {
       name
-      sortOrder
+      id
     }
   }
 }
@@ -23946,13 +24132,12 @@ export type IngestDocumentsMutatedSubscriptionHookResult = ReturnType<typeof use
 export type IngestDocumentsMutatedSubscriptionResult = Apollo.SubscriptionResult<IngestDocumentsMutatedSubscription>;
 export const AgeRatingsDocument = gql`
     query AgeRatings {
-  ageRatings(orderBy: SORT_ORDER_ASC) {
+  ageRatings(orderBy: NAME_ASC) {
     nodes {
       id
       name
       createdDate
       createdUser
-      sortOrder
       updatedDate
       updatedUser
     }
@@ -24097,13 +24282,12 @@ export type DeleteAgeRatingMutationResult = Apollo.MutationResult<DeleteAgeRatin
 export type DeleteAgeRatingMutationOptions = Apollo.BaseMutationOptions<DeleteAgeRatingMutation, DeleteAgeRatingMutationVariables>;
 export const ContentOwnersDocument = gql`
     query ContentOwners {
-  contentOwners(orderBy: SORT_ORDER_ASC) {
+  contentOwners {
     nodes {
       createdDate
       createdUser
       id
       name
-      sortOrder
       updatedDate
       updatedUser
     }
@@ -24641,7 +24825,7 @@ export const MovieDocument = gql`
   contentOwners {
     nodes {
       name
-      sortOrder
+      id
     }
   }
 }
@@ -26245,7 +26429,7 @@ export const SeasonDocument = gql`
   contentOwners {
     nodes {
       name
-      sortOrder
+      id
     }
   }
 }
@@ -27297,7 +27481,7 @@ export const TvShowDocument = gql`
   contentOwners {
     nodes {
       name
-      sortOrder
+      id
     }
   }
   languages {

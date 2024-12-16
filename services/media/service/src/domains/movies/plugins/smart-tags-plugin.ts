@@ -29,6 +29,20 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
       },
+      'app_public.movies': {
+        constraint: {
+          movies_age_rating_fkey: {
+            tags: {
+              omit: true,
+            },
+          },
+          movies_content_owner_fkey: {
+            tags: {
+              omit: true,
+            },
+          },
+        },
+      },
     },
   },
 });

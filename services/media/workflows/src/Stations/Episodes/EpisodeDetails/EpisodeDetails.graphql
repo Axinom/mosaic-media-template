@@ -89,7 +89,7 @@ query Episode($id: Int!) {
   contentOwners {
     nodes {
       name
-      sortOrder
+      id
     }
   }
 }

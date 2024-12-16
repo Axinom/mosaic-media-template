@@ -79,6 +79,48 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           },
         },
       },
+      'app_public.tvshows': {
+        constraint: {
+          tvshows_age_rating_fkey: {
+            tags: {
+              omit: true,
+            },
+          },
+          tvshows_content_owner_fkey: {
+            tags: {
+              omit: true,
+            },
+          },
+        },
+      },
+      'app_public.seasons': {
+        constraint: {
+          seasons_age_rating_fkey: {
+            tags: {
+              omit: true,
+            },
+          },
+          seasons_content_owner_fkey: {
+            tags: {
+              omit: true,
+            },
+          },
+        },
+      },
+      'app_public.episodes': {
+        constraint: {
+          episodes_age_rating_fkey: {
+            tags: {
+              omit: true,
+            },
+          },
+          episodes_content_owner_fkey: {
+            tags: {
+              omit: true,
+            },
+          },
+        },
+      },
     },
   },
 });
