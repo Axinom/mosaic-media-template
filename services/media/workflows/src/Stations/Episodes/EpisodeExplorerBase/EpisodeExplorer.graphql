@@ -45,6 +45,8 @@ fragment EpisodeExplorerProperties on Episode {
   studio
   publishedDate
   id
+  ageRating
+  contentOwner
 }
 
 query Episodes(
@@ -78,6 +80,29 @@ subscription EpisodesMutated {
     eventKey
     episode {
       ...EpisodeExplorerProperties
+    }
+  }
+}
+
+query GetEpisodesFilterOptionsData {
+  ageRatings {
+    nodes {
+      id
+      name
+    }
+  }
+
+  contentOwners {
+    nodes {
+      id
+      name
+    }
+  }
+
+  movieGenres {
+    nodes {
+      id
+      title
     }
   }
 }

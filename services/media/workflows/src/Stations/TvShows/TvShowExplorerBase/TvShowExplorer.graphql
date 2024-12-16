@@ -98,11 +98,11 @@ subscription TVShowsMutated {
   }
 }
 
-query GetAllOptionsData {
+query GetTvShowsFilterOptionsData {
   ageRatings {
     nodes {
-      name
       id
+      name
     }
   }
 
@@ -110,6 +110,13 @@ query GetAllOptionsData {
     nodes {
       id
       name
+    }
+  }
+
+  movieGenres {
+    nodes {
+      id
+      title
     }
   }
 }

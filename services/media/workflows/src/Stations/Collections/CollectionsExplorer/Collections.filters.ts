@@ -42,11 +42,6 @@ export function useCollectionsFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Subtype',
-      property: 'assetSubtype',
-      type: FilterTypes.FreeText,
-    },
-    {
       label: 'Countries',
       property: 'collectionCountries',
       type: FilterTypes.FreeText,
@@ -71,11 +66,8 @@ export function useCollectionsFilters(): {
       externalId: 'includes',
       collectionsTags: ['some', 'name', 'includes'],
       languages: 'equalTo',
-      assetSubtype: 'equalTo',
       collectionCountries: 'equalTo',
       publishStatus: 'in',
-      // createdDate: transformRange,
-      // publishedDate: transformRange,
       id: (value) => {
         if (typeof value === 'number') {
           // User filter

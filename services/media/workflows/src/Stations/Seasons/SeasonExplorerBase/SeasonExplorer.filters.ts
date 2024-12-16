@@ -4,11 +4,24 @@ import {
   FilterType,
   FilterTypes,
   FilterValues,
+  Option,
   transformRange,
 } from '@axinom/mosaic-ui';
-import { PublishStatus, SeasonFilter } from '../../../generated/graphql';
+import { useEffect, useState } from 'react';
+import { client } from '../../../apolloClient';
+import {
+  PublishStatus,
+  SeasonFilter,
+  useGetSeasonsFilterOptionsDataQuery,
+} from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { SeasonData } from './SeasonExplorer.types';
+
+interface allOptions {
+  allAgeRatings: Option[];
+  allContentOwners: Option[];
+  allGenres: Option[];
+}
 
 export function useSeasonsFilters(): {
   readonly filterOptions: FilterType<SeasonData>[];
@@ -19,6 +32,66 @@ export function useSeasonsFilters(): {
 } {
   const [createFromDateFilterValidator, createToDateFilterValidator] =
     createDateRangeFilterValidators<SeasonData>();
+
+  const [AllFilterOptions, setAllFilterOptions] = useState<allOptions>({
+    allAgeRatings: [],
+    allContentOwners: [],
+    allGenres: [],
+  });
+
+  const { data, error } = useGetSeasonsFilterOptionsDataQuery({ client });
+
+  useEffect(() => {
+    if (error) {
+      setAllFilterOptions({
+        allAgeRatings: [
+          {
+            label: 'Unable to load age rating options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allContentOwners: [
+          {
+            label: 'Unable to load content owner options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allGenres: [
+          {
+            label: 'Unable to load genres options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+      });
+    } else {
+      let ageRating: Option[] = [];
+      let contentOwner: Option[] = [];
+      let genres: Option[] = [];
+      if (data?.ageRatings?.nodes !== undefined) {
+        ageRating = data.ageRatings.nodes.map(({ name }) => ({
+          label: name,
+          value: name,
+        }));
+      }
+      if (data?.contentOwners?.nodes !== undefined) {
+        contentOwner = data.contentOwners.nodes.map(({ name }) => ({
+          label: name,
+          value: name,
+        }));
+      }
+      if (data?.movieGenres?.nodes !== undefined) {
+        genres = data.movieGenres.nodes.map(({ title }) => ({
+          label: title,
+          value: title,
+        }));
+      }
+      setAllFilterOptions({
+        allAgeRatings: ageRating,
+        allContentOwners: contentOwner,
+        allGenres: genres,
+      });
+    }
+  }, [data]);
 
   const filterOptions: FilterType<
     SeasonData & {
@@ -58,7 +131,12 @@ export function useSeasonsFilters(): {
     {
       label: 'Genre',
       property: 'seasonsTvshowGenres',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allGenres.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Cast',
@@ -86,6 +164,26 @@ export function useSeasonsFilters(): {
       label: 'Studio',
       property: 'studio',
       type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Content Owners',
+      property: 'contentOwner',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allContentOwners.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+    },
+    {
+      label: 'Age Ratings',
+      property: 'ageRating',
+      type: FilterTypes.SearcheableOptions,
+      searchInputPlaceholder: 'Search',
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allAgeRatings.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Publication Status',
@@ -144,6 +242,8 @@ export function useSeasonsFilters(): {
       seasonsCasts: ['some', 'name', 'includesInsensitive'],
       seasonsProductionCountries: ['some', 'name', 'includesInsensitive'],
       studio: 'includesInsensitive',
+      ageRating: 'includesInsensitive',
+      contentOwner: 'includesInsensitive',
       publishStatus: 'in',
       id: (value) => {
         if (typeof value === 'number') {

@@ -4,6 +4,7 @@ fragment SeasonExplorerProperties on Season {
   index
   externalId
   ageRating
+  contentOwner
   tvshow {
     id
     title
@@ -74,6 +75,29 @@ subscription SeasonsMutated {
     eventKey
     season {
       ...SeasonExplorerProperties
+    }
+  }
+}
+
+query GetSeasonsFilterOptionsData {
+  ageRatings {
+    nodes {
+      id
+      name
+    }
+  }
+
+  contentOwners {
+    nodes {
+      id
+      name
+    }
+  }
+
+  movieGenres {
+    nodes {
+      id
+      title
     }
   }
 }

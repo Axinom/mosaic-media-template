@@ -13,7 +13,7 @@ import {
   BusinessType,
   PublishStatus,
   TvshowFilter,
-  useGetAllOptionsDataQuery,
+  useGetTvShowsFilterOptionsDataQuery,
 } from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { TvShowData } from './TvShowExplorer.types';
@@ -21,6 +21,7 @@ import { TvShowData } from './TvShowExplorer.types';
 interface allOptions {
   allAgeRatings: Option[];
   allContentOwners: Option[];
+  allGenres: Option[];
 }
 
 export function useTvShowsFilters(): {
@@ -33,9 +34,10 @@ export function useTvShowsFilters(): {
   const [AllFilterOptions, setAllFilterOptions] = useState<allOptions>({
     allAgeRatings: [],
     allContentOwners: [],
+    allGenres: [],
   });
 
-  const { data, error } = useGetAllOptionsDataQuery({ client });
+  const { data, error } = useGetTvShowsFilterOptionsDataQuery({ client });
 
   useEffect(() => {
     if (error) {
@@ -52,10 +54,17 @@ export function useTvShowsFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
+        allGenres: [
+          {
+            label: 'Unable to load genres options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
       });
     } else {
       let ageRating: Option[] = [];
       let contentOwner: Option[] = [];
+      let genres: Option[] = [];
       if (data?.ageRatings?.nodes !== undefined) {
         ageRating = data.ageRatings.nodes.map(({ name }) => ({
           label: name,
@@ -68,9 +77,16 @@ export function useTvShowsFilters(): {
           value: name,
         }));
       }
+      if (data?.movieGenres?.nodes !== undefined) {
+        genres = data.movieGenres.nodes.map(({ title }) => ({
+          label: title,
+          value: title,
+        }));
+      }
       setAllFilterOptions({
         allAgeRatings: ageRating,
         allContentOwners: contentOwner,
+        allGenres: genres,
       });
     }
   }, [data]);
@@ -87,7 +103,12 @@ export function useTvShowsFilters(): {
     {
       label: 'Genre',
       property: 'tvshowsTvshowGenres',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allGenres.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Tags',
@@ -97,14 +118,22 @@ export function useTvShowsFilters(): {
     {
       label: 'Content Owners',
       property: 'contentOwner',
-      type: FilterTypes.Options,
-      options: AllFilterOptions.allContentOwners,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allContentOwners.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Age Ratings',
       property: 'ageRating',
-      type: FilterTypes.Options,
-      options: AllFilterOptions.allAgeRatings,
+      type: FilterTypes.SearcheableOptions,
+      searchInputPlaceholder: 'Search',
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allAgeRatings.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Publishing Status',

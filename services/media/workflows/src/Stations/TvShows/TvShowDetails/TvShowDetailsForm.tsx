@@ -96,7 +96,6 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
     allAgeRatings,
     allContentOwners,
     director,
-    allLanguages,
   } = useMemo(
     () => ({
       allGenres:
@@ -131,8 +130,6 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
               label: node.name,
             } as selectOption),
         ) ?? [],
-
-      allLanguages: data?.languages?.nodes.map((node) => node.title) ?? [],
     }),
     [data],
   );
@@ -306,7 +303,6 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
         genreOptions={Object.keys(allGenres)}
         ageRatingOptions={allAgeRatings}
         contentOwnerOptions={allContentOwners}
-        languageOptions={allLanguages}
       />
     </Details>
   );
@@ -398,13 +394,7 @@ const Form: React.FC<{
   genreOptions?: string[];
   ageRatingOptions?: selectOption[];
   contentOwnerOptions?: selectOption[];
-  languageOptions?: string[];
-}> = ({
-  genreOptions,
-  ageRatingOptions,
-  contentOwnerOptions,
-  languageOptions,
-}) => {
+}> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchTvShowTagsQuery,

@@ -87,3 +87,33 @@ subscription MoviesMutated {
     }
   }
 }
+
+query GetMoviesFilterOptionsData {
+  ageRatings {
+    nodes {
+      id
+      name
+    }
+  }
+
+  contentOwners {
+    nodes {
+      id
+      name
+    }
+  }
+
+  movieGenres {
+    nodes {
+      id
+      title
+    }
+  }
+
+  collections {
+    nodes {
+      id
+      title
+    }
+  }
+}
