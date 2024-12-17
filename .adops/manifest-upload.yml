@@ -1,0 +1,38 @@
+trigger: none
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+parameters:
+  - name: environments
+    type: object
+    default:
+    - name: int
+      mosaicHostingClientId: $(mosaicHostingClientIdInt)
+      mosaicHostingClientSecret: $(mosaicHostingClientSecretInt)
+    - name: perf
+      mosaicHostingClientId: $(mosaicHostingClientIdPerf)
+      mosaicHostingClientSecret: $(mosaicHostingClientSecretPerf)
+    - name: nfn-acceptance
+      mosaicHostingClientId: $(mosaicHostingClientIdNfnAcc)
+      mosaicHostingClientSecret: $(mosaicHostingClientSecretNfnAcc)
+    - name: nfn-production
+      mosaicHostingClientId: $(mosaicHostingClientIdNfnProd)
+      mosaicHostingClientSecret: $(mosaicHostingClientSecretNfnProd)
+    - name: lov-acceptance
+      mosaicHostingClientId: $(mosaicHostingClientIdLovAcc)
+      mosaicHostingClientSecret: $(mosaicHostingClientSecretLovAcc)
+    - name: lov-production
+      mosaicHostingClientId: $(mosaicHostingClientIdLovProd)
+      mosaicHostingClientSecret: $(mosaicHostingClientSecretLovProd)
+
+stages:
+  - ${{ each env in parameters.environments }}:
+      - template: templates/template-manifest-upload.yml
+        parameters:
+          serviceName: $(serviceName) 
+          serviceId: $(serviceId)
+          environmentName: ${{ env.name }}
+          mosaicHostingClientId: ${{ env.mosaicHostingClientId }}
+          mosaicHostingClientSecret: ${{ env.mosaicHostingClientSecret }}

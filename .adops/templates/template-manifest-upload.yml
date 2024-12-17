@@ -1,0 +1,42 @@
+parameters:
+  - name: serviceName
+  - name: serviceId
+  - name: environmentName
+  - name: mosaicHostingClientId
+  - name: mosaicHostingClientSecret
+
+stages:
+  - stage: ${{ parameters.environmentName }}
+    jobs:
+      - job: ${{ parameters.environmentName }}
+        displayName: 'Upload to ${{ parameters.environmentName }}'
+        variables:
+          - group: vault-${{ parameters.environmentName }}
+        steps:
+          - bash: |
+              apt install -y jq
+              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
+              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
+              mv package.updated.json package.json
+              yarn install
+            displayName: 'Install Dev Dependencies'
+          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
+            displayName: 'Replace tokens'
+            inputs:
+              sources: 'services/${{ parameters.serviceName }}/service/mosaic-hosting-deployment-manifest.yaml'
+              caseInsensitivePaths: false
+              includeDotPaths: false
+              missingVarAction: keep
+              missingVarLog: error
+              ifNoFilesFound: error
+          - task: Bash@3
+            displayName: 'Upload manifest'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting manifest upload -n "mosaic-${{ parameters.serviceName }}-manifest-$(Build.BuildNumber)" -i "${{ parameters.serviceId }}" -p "services/${{ parameters.serviceName }}/service"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: ${{ parameters.mosaicHostingClientId }}
+              MOSAIC_HOSTING_CLIENT_SECRET: ${{ parameters.mosaicHostingClientSecret }}
+              ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
+              HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
