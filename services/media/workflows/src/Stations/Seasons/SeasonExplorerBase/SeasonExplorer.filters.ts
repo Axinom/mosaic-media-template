@@ -21,6 +21,7 @@ interface allOptions {
   allAgeRatings: Option[];
   allContentOwners: Option[];
   allGenres: Option[];
+  allCountries: Option[];
 }
 
 export function useSeasonsFilters(): {
@@ -37,6 +38,7 @@ export function useSeasonsFilters(): {
     allAgeRatings: [],
     allContentOwners: [],
     allGenres: [],
+    allCountries: [],
   });
 
   const { data, error } = useGetSeasonsFilterOptionsDataQuery({ client });
@@ -62,11 +64,18 @@ export function useSeasonsFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
+        allCountries: [
+          {
+            label: 'Unable to load country options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
       });
     } else {
       let ageRating: Option[] = [];
       let contentOwner: Option[] = [];
       let genres: Option[] = [];
+      let countries: Option[] = [];
       if (data?.ageRatings?.nodes !== undefined) {
         ageRating = data.ageRatings.nodes.map(({ name }) => ({
           label: name,
@@ -85,10 +94,17 @@ export function useSeasonsFilters(): {
           value: title,
         }));
       }
+      if (data?.allCountryTypes?.nodes !== undefined) {
+        countries = data.allCountryTypes.nodes.map(({ name, id }) => ({
+          label: name ?? '',
+          value: id,
+        }));
+      }
       setAllFilterOptions({
         allAgeRatings: ageRating,
         allContentOwners: contentOwner,
         allGenres: genres,
+        allCountries: countries,
       });
     }
   }, [data]);
@@ -142,6 +158,25 @@ export function useSeasonsFilters(): {
       label: 'Cast',
       property: 'seasonsCasts',
       type: FilterTypes.FreeText,
+    },
+    {
+      label: 'License Countries',
+      property: 'seasonsLicenses',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+    },
+    {
+      label: 'Valid Licensing',
+      property: 'seasonsLicenses',
+      options: [
+        { value: 'Valid License', label: 'Valid License' },
+        { value: 'No Valid License', label: 'No Valid License' },
+      ],
+      type: FilterTypes.Options,
     },
     {
       label: 'Release Period (From)',
@@ -245,6 +280,38 @@ export function useSeasonsFilters(): {
       ageRating: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
       publishStatus: 'in',
+      seasonsLicenses: (value: unknown) => {
+        const [countryCode, licensesStatus] = value as [string, string];
+        if (licensesStatus === 'Valid License') {
+          return {
+            some: {
+              licenseEnd: {
+                greaterThan: new Date(),
+              },
+            },
+          };
+        } else if (licensesStatus === 'No Valid License') {
+          return {
+            every: {
+              licenseEnd: {
+                lessThanOrEqualTo: new Date(),
+              },
+            },
+          };
+        } else {
+          return {
+            some: {
+              seasonsLicensesCountries: {
+                some: {
+                  code: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
+        }
+      },
       id: (value) => {
         if (typeof value === 'number') {
           // User filter

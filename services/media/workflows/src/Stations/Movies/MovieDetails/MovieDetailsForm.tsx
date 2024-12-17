@@ -10,7 +10,6 @@ import {
   getFormDiff,
   InfoPanel,
   Paragraph,
-  ReadOnlyTextField,
   Section,
   SelectField,
   SingleLineTextField,
@@ -336,7 +335,10 @@ const Panel: React.FC = () => {
           <ImageCover id={coverImageId} />
         </Section>
         <Section title="Additional Information">
-          <Paragraph title="Sub Type">{values.assetSubtype}</Paragraph>
+          <Paragraph title="External ID">{values.externalId}</Paragraph>
+          <Paragraph title="Subtype">
+            {getEnumLabel(values.assetSubtype)}
+          </Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -381,6 +383,7 @@ const Panel: React.FC = () => {
     values.assetSubtype,
     values.createdDate,
     values.createdUser,
+    values.externalId,
     values.mainVideoId,
     values.moviesImages?.nodes,
     values.moviesTrailers?.totalCount,
@@ -456,7 +459,6 @@ const Form: React.FC<{
       <Field
         name="businessType"
         label="Business Type"
-        addEmptyOption={true}
         options={Object.keys(BusinessType).map((key) => ({
           value: BusinessType[key],
           label: getEnumLabel(BusinessType[key]),
@@ -509,8 +511,8 @@ const Form: React.FC<{
       <Field
         name="rating"
         label="Rating"
-        //validate={ValidateRating}
         as={SingleLineTextField}
+        className={classes.rating}
       />
       <Field
         name="contentOwner"
@@ -521,7 +523,6 @@ const Form: React.FC<{
       />
 
       <Field name="extendedField" label="Custom" as={TextAreaField} />
-      <Field name="externalId" label="External Id" as={ReadOnlyTextField} />
     </>
   );
 };

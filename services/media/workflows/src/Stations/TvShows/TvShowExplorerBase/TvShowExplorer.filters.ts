@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from 'react';
 import { client } from '../../../apolloClient';
 import {
+  AssetSubtype,
   BusinessType,
   PublishStatus,
   TvshowFilter,
@@ -22,6 +23,7 @@ interface allOptions {
   allAgeRatings: Option[];
   allContentOwners: Option[];
   allGenres: Option[];
+  allCountries: Option[];
 }
 
 export function useTvShowsFilters(): {
@@ -35,6 +37,7 @@ export function useTvShowsFilters(): {
     allAgeRatings: [],
     allContentOwners: [],
     allGenres: [],
+    allCountries: [],
   });
 
   const { data, error } = useGetTvShowsFilterOptionsDataQuery({ client });
@@ -60,11 +63,18 @@ export function useTvShowsFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
+        allCountries: [
+          {
+            label: 'Unable to load country options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
       });
     } else {
       let ageRating: Option[] = [];
       let contentOwner: Option[] = [];
       let genres: Option[] = [];
+      let countries: Option[] = [];
       if (data?.ageRatings?.nodes !== undefined) {
         ageRating = data.ageRatings.nodes.map(({ name }) => ({
           label: name,
@@ -83,10 +93,17 @@ export function useTvShowsFilters(): {
           value: title,
         }));
       }
+      if (data?.allCountryTypes?.nodes !== undefined) {
+        countries = data.allCountryTypes.nodes.map(({ name, id }) => ({
+          label: name ?? '',
+          value: id,
+        }));
+      }
       setAllFilterOptions({
         allAgeRatings: ageRating,
         allContentOwners: contentOwner,
         allGenres: genres,
+        allCountries: countries,
       });
     }
   }, [data]);
@@ -151,21 +168,17 @@ export function useTvShowsFilters(): {
     },
     {
       label: 'License Countries',
-      property: 'tvshowsProductionCountries',
-      type: FilterTypes.FreeText,
+      property: 'tvshowsLicenses',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'TV Show Valid Licensing',
       property: 'tvshowsLicenses',
-      options: [
-        { value: 'Valid license', label: 'Valid license' },
-        { value: 'No valid license', label: 'No valid license' },
-      ],
-      type: FilterTypes.Options,
-    },
-    {
-      label: 'Episode Valid Licensing',
-      property: 'seasons',
       options: [
         { value: 'Valid license', label: 'Valid license' },
         { value: 'No valid license', label: 'No valid license' },
@@ -187,9 +200,15 @@ export function useTvShowsFilters(): {
       })),
     },
     {
-      label: 'Episode Subtype',
-      property: 'seasons',
-      type: FilterTypes.FreeText,
+      label: 'TV Show Subtype',
+      property: 'assetSubtype',
+      type: FilterTypes.Options,
+      options: Object.keys(AssetSubtype)
+        .filter((type) => type === 'TvShow')
+        .map((key) => ({
+          value: AssetSubtype[key],
+          label: getEnumLabel(AssetSubtype[key]),
+        })),
     },
     {
       label: 'Release Period (From)',
@@ -265,8 +284,9 @@ export function useTvShowsFilters(): {
       publishStatus: 'in',
       ageRating: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
-      tvshowsLicenses: (value) => {
-        if (value === 'Valid license') {
+      tvshowsLicenses: (value: unknown) => {
+        const [countryCode, licensesStatus] = value as [string, string];
+        if (licensesStatus === 'Valid license') {
           return {
             some: {
               licenseEnd: {
@@ -274,7 +294,7 @@ export function useTvShowsFilters(): {
               },
             },
           };
-        } else {
+        } else if (licensesStatus === 'No valid license') {
           return {
             every: {
               licenseEnd: {
@@ -282,48 +302,13 @@ export function useTvShowsFilters(): {
               },
             },
           };
-        }
-      },
-      seasons: (value: any) => {
-        if (value[0] === 'Valid license') {
-          return {
-            some: {
-              episodes: {
-                some: {
-                  episodesLicenses: {
-                    some: {
-                      licenseEnd: {
-                        greaterThan: new Date(),
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          };
-        } else if (value[0] === 'No valid license') {
-          return {
-            every: {
-              episodes: {
-                every: {
-                  episodesLicenses: {
-                    every: {
-                      licenseEnd: {
-                        lessThanOrEqualTo: new Date(),
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          };
         } else {
           return {
             some: {
-              episodes: {
+              tvshowsLicensesCountries: {
                 some: {
-                  assetSubtype: {
-                    in: value[1],
+                  code: {
+                    equalTo: countryCode,
                   },
                 },
               },

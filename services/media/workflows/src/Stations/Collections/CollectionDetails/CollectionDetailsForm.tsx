@@ -10,7 +10,6 @@ import {
   InfoPanel,
   ObjectSchemaDefinition,
   Paragraph,
-  ReadOnlyTextField,
   Section,
   SingleLineTextField,
   TagsField,
@@ -223,6 +222,10 @@ const Panel: React.FC = () => {
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
+          <Paragraph title="External ID">{values.externalId}</Paragraph>
+          <Paragraph title="Subtype">
+            {getEnumLabel(values.assetSubtype)}
+          </Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -277,17 +280,19 @@ const Panel: React.FC = () => {
   }, [
     values.collectionsImages?.nodes,
     values.id,
+    values.externalId,
+    values.assetSubtype,
     values.createdDate,
     values.createdUser,
     values.updatedDate,
     values.updatedUser,
+    values.publishStatus,
+    values.publishedDate,
+    values.publishedUser,
     values.movies?.totalCount,
     values.tvshows?.totalCount,
     values.seasons?.totalCount,
     values.episodes?.totalCount,
-    values.publishStatus,
-    values.publishedDate,
-    values.publishedUser,
     ImageCover,
   ]);
 };
@@ -326,14 +331,7 @@ const Form: React.FC<{
         displayKey="display"
         valueKey="value"
       />
-      <Field
-        name="languages"
-        label="Languages"
-        tagsOptions={languageOptions}
-        as={TagsField}
-      />
       <Field name="extendedField" label="Custom" as={TextAreaField} />
-      <Field name="externalId" label="External Id" as={ReadOnlyTextField} />
     </>
   );
 };

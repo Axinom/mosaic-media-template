@@ -10,7 +10,6 @@ import {
   getFormDiff,
   InfoPanel,
   Paragraph,
-  ReadOnlyTextField,
   Section,
   SelectField,
   SingleLineTextField,
@@ -341,6 +340,10 @@ const Panel: React.FC = () => {
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
+          <Paragraph title="External ID">{values.externalId}</Paragraph>
+          <Paragraph title="Subtype">
+            {getEnumLabel(values.assetSubtype)}
+          </Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -397,9 +400,11 @@ const Panel: React.FC = () => {
   }, [
     ImageCover,
     ImagePreview,
+    values.assetSubtype,
     values.createdDate,
     values.createdUser,
     values.episodes?.totalCount,
+    values.externalId,
     values.id,
     values.publishStatus,
     values.publishedDate,
@@ -467,15 +472,6 @@ const Form: React.FC<{
     return data.getSeasonsProductionCountriesValues?.nodes ?? [];
   };
 
-  const ValidateRating = (value: string): boolean => {
-    return value === null || value.trim() === ''
-      ? false
-      : isNaN(parseFloat(value)) ||
-          parseFloat(value) < 0 ||
-          parseFloat(value) > 100 ||
-          !/^(\d{1,2}(\.\d{1,2})?|100(\.0{1,2})?)$/.test(value);
-  };
-
   return (
     <>
       <Field
@@ -534,8 +530,8 @@ const Form: React.FC<{
       <Field
         name="rating"
         label="Rating"
-        validate={ValidateRating}
         as={SingleLineTextField}
+        className={classes.rating}
       />
       <Field
         name="contentOwner"
@@ -545,7 +541,6 @@ const Form: React.FC<{
         as={SelectField}
       />
       <Field name="extendedField" label="Custom" as={TextAreaField} />
-      <Field name="externalId" label="External Id" as={ReadOnlyTextField} />
     </>
   );
 };

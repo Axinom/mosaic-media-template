@@ -26,6 +26,7 @@ fragment EpisodeExplorerProperties on Episode {
   createdDate
   updatedDate
   originalTitle
+  assetSubtype
   episodesTags {
     nodes {
       name
@@ -40,6 +41,17 @@ fragment EpisodeExplorerProperties on Episode {
   episodesProductionCountries {
     nodes {
       name
+    }
+  }
+  episodesLicenses {
+    nodes {
+      licenseEnd
+      licenseStart
+      episodesLicensesCountries {
+        nodes {
+          code
+        }
+      }
     }
   }
   studio
@@ -103,6 +115,13 @@ query GetEpisodesFilterOptionsData {
     nodes {
       id
       title
+    }
+  }
+
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
     }
   }
 }

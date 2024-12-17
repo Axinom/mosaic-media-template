@@ -40,6 +40,17 @@ fragment SeasonExplorerProperties on Season {
       name
     }
   }
+  seasonsLicenses {
+    nodes {
+      licenseEnd
+      licenseStart
+      seasonsLicensesCountries {
+        nodes {
+          code
+        }
+      }
+    }
+  }
   studio
   publishedDate
 }
@@ -98,6 +109,13 @@ query GetSeasonsFilterOptionsData {
     nodes {
       id
       title
+    }
+  }
+
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
     }
   }
 }

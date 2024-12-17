@@ -10,7 +10,6 @@ import {
   getFormDiff,
   InfoPanel,
   Paragraph,
-  ReadOnlyTextField,
   Section,
   SelectField,
   SingleLineTextField,
@@ -26,7 +25,6 @@ import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext } from '../../../externals';
 import {
-  AssetSubtype,
   BusinessType,
   Mutation,
   MutationCreateTvshowsCastArgs,
@@ -71,6 +69,11 @@ const tvShowDetailSchema = Yup.object().shape<
   ObjectSchemaDefinition<TvShowDetailsFormData>
 >({
   title: Yup.string().required('Title is a required field').max(100),
+  rating: Yup.number()
+    .nullable()
+    .min(0, 'Rating must not be less than 0.')
+    .max(100, 'Rating must not be greater than 100.')
+    .typeError('Rating must be a number between 0 and 100.'),
 });
 
 interface selectOption {
@@ -237,12 +240,12 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
         original: initialData.data?.director,
         generateCreateMutation: (name) =>
           generateUpdateGQLFragment<MutationCreateTvshowsDirectorArgs>(
-            'createMoviesDirector',
+            'createTvshowsDirector',
             { input: { tvshowsDirector: { name, tvshowId } } },
           ),
         generateDeleteMutation: (name) =>
           generateUpdateGQLFragment<MutationDeleteTvshowsDirectorArgs>(
-            'deleteMoviesDirector',
+            'deleteTvshowsDirector',
             { input: { tvshowId, name } },
           ),
         prefix: 'director',
@@ -334,6 +337,10 @@ const Panel: React.FC = () => {
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
+          <Paragraph title="External ID">{values.externalId}</Paragraph>
+          <Paragraph title="Subtype">
+            {getEnumLabel(values.assetSubtype)}
+          </Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -376,8 +383,10 @@ const Panel: React.FC = () => {
     );
   }, [
     ImageCover,
+    values.assetSubtype,
     values.createdDate,
     values.createdUser,
+    values.externalId,
     values.id,
     values.publishStatus,
     values.publishedDate,
@@ -445,15 +454,6 @@ const Form: React.FC<{
     return data.getTvshowsDirectorsValues?.nodes ?? [];
   };
 
-  const ValidateRating = (value: string): boolean => {
-    return value === null || value.trim() === ''
-      ? false
-      : isNaN(parseFloat(value)) ||
-          parseFloat(value) < 0 ||
-          parseFloat(value) > 100 ||
-          !/^(\d{1,2}(\.\d{1,2})?|100(\.0{1,2})?)$/.test(value);
-  };
-
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
@@ -462,23 +462,10 @@ const Form: React.FC<{
       <Field
         name="businessType"
         label="Business Type"
-        addEmptyOption={true}
         options={Object.keys(BusinessType).map((key) => ({
           value: BusinessType[key],
           label: getEnumLabel(BusinessType[key]),
         }))}
-        as={SelectField}
-      />
-      <Field
-        name="assetSubtype"
-        label="Subtype"
-        addEmptyOption={true}
-        options={Object.keys(AssetSubtype)
-          .filter((type) => type === 'TvShow')
-          .map((key) => ({
-            value: AssetSubtype[key],
-            label: getEnumLabel(AssetSubtype[key]),
-          }))}
         as={SelectField}
       />
       <Field
@@ -517,7 +504,6 @@ const Form: React.FC<{
         liveSuggestionsResolver={productionCountriesResolver}
         as={CustomTagsField}
       />
-      <Field name="duration" label="Duration" as={SingleLineTextField} />
       <Field
         name="ageRating"
         label="Age Rating"
@@ -528,8 +514,8 @@ const Form: React.FC<{
       <Field
         name="rating"
         label="Rating"
-        validate={ValidateRating}
         as={SingleLineTextField}
+        className={classes.rating}
       />
       <Field
         name="contentOwner"
@@ -540,7 +526,6 @@ const Form: React.FC<{
       />
 
       <Field name="extendedField" label="Custom" as={TextAreaField} />
-      <Field name="externalId" label="External Id" as={ReadOnlyTextField} />
     </>
   );
 };

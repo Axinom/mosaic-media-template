@@ -21,6 +21,7 @@ interface allOptions {
   allContentOwners: Option[];
   allGenres: Option[];
   allCollections: Option[];
+  allCountries: Option[];
 }
 
 export function useMoviesFilters(): {
@@ -35,6 +36,7 @@ export function useMoviesFilters(): {
     allContentOwners: [],
     allGenres: [],
     allCollections: [],
+    allCountries: [],
   });
 
   const { data, error } = useGetMoviesFilterOptionsDataQuery({ client });
@@ -66,12 +68,20 @@ export function useMoviesFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
+        allCountries: [
+          {
+            label: 'Unable to load country options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
       });
     } else {
       let ageRating: Option[] = [];
       let contentOwner: Option[] = [];
       let genres: Option[] = [];
       let collections: Option[] = [];
+      let countries: Option[] = [];
+
       if (data?.ageRatings?.nodes !== undefined) {
         ageRating = data.ageRatings.nodes.map(({ name }) => ({
           label: name,
@@ -96,11 +106,18 @@ export function useMoviesFilters(): {
           value: title,
         }));
       }
+      if (data?.allCountryTypes?.nodes !== undefined) {
+        countries = data.allCountryTypes.nodes.map(({ name, id }) => ({
+          label: name ?? '',
+          value: id,
+        }));
+      }
       setAllFilterOptions({
         allAgeRatings: ageRating,
         allContentOwners: contentOwner,
         allGenres: genres,
         allCollections: collections,
+        allCountries: countries,
       });
     }
   }, [data]);
@@ -177,8 +194,13 @@ export function useMoviesFilters(): {
     },
     {
       label: 'License Countries',
-      property: 'moviesProductionCountries',
-      type: FilterTypes.FreeText,
+      property: 'moviesLicenses',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Valid Licensing',
@@ -229,9 +251,9 @@ export function useMoviesFilters(): {
       moviesCasts: ['some', 'name', 'includesInsensitive'],
       externalId: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
-      moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
-      moviesLicenses: (value) => {
-        if (value === 'Valid License') {
+      moviesLicenses: (value: unknown) => {
+        const [countryCode, licensesStatus] = value as [string, string];
+        if (licensesStatus === 'Valid License') {
           return {
             some: {
               licenseEnd: {
@@ -239,11 +261,23 @@ export function useMoviesFilters(): {
               },
             },
           };
-        } else {
+        } else if (licensesStatus === 'No Valid License') {
           return {
             every: {
               licenseEnd: {
                 lessThanOrEqualTo: new Date(),
+              },
+            },
+          };
+        } else {
+          return {
+            some: {
+              moviesLicensesCountries: {
+                some: {
+                  code: {
+                    equalTo: countryCode,
+                  },
+                },
               },
             },
           };

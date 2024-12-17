@@ -43,6 +43,11 @@ fragment TVShowExplorerProperties on Tvshow {
     nodes {
       licenseEnd
       licenseStart
+      tvshowsLicensesCountries {
+        nodes {
+          code
+        }
+      }
     }
   }
   studio
@@ -117,6 +122,13 @@ query GetTvShowsFilterOptionsData {
     nodes {
       id
       title
+    }
+  }
+
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
     }
   }
 }

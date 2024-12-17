@@ -10,7 +10,6 @@ import {
   getFormDiff,
   InfoPanel,
   Paragraph,
-  ReadOnlyTextField,
   Section,
   SelectField,
   SingleLineTextField,
@@ -27,7 +26,6 @@ import { client } from '../../../apolloClient';
 import { InfoPanelParent } from '../../../components';
 import { ExtensionsContext } from '../../../externals';
 import {
-  AssetSubtype,
   Episode,
   EpisodeDocument,
   EpisodeImageType,
@@ -346,6 +344,10 @@ const Panel: React.FC = () => {
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
+          <Paragraph title="External ID">{values.externalId}</Paragraph>
+          <Paragraph title="Subtype">
+            {getEnumLabel(values.assetSubtype)}
+          </Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -409,10 +411,12 @@ const Panel: React.FC = () => {
   }, [
     ImageCover,
     ImagePreview,
+    values.assetSubtype,
     values.createdDate,
     values.createdUser,
     values.episodesImages?.nodes,
     values.episodesTrailers?.totalCount,
+    values.externalId,
     values.id,
     values.mainVideoId,
     values.publishStatus,
@@ -429,15 +433,6 @@ const Form: React.FC<{
   ageRatingOptions?: selectOption[];
   contentOwnerOptions?: selectOption[];
 }> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
-  const ValidateRating = (value: string): boolean => {
-    return value === null || value.trim() === ''
-      ? false
-      : isNaN(parseFloat(value)) ||
-          parseFloat(value) < 0 ||
-          parseFloat(value) > 100 ||
-          !/^(\d{1,2}(\.\d{1,2})?|100(\.0{1,2})?)$/.test(value);
-  };
-
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchEpisodeTagsQuery,
@@ -498,18 +493,6 @@ const Form: React.FC<{
       />
       <Field name="description" label="Description" as={TextAreaField} />
       <Field
-        name="assetSubtype"
-        label="Subtype"
-        addEmptyOption={true}
-        options={Object.keys(AssetSubtype)
-          .filter((type) => type === 'Episode')
-          .map((key) => ({
-            value: AssetSubtype[key],
-            label: getEnumLabel(AssetSubtype[key]),
-          }))}
-        as={SelectField}
-      />
-      <Field
         type="number"
         name="index"
         label="Index"
@@ -562,8 +545,8 @@ const Form: React.FC<{
       <Field
         name="rating"
         label="Rating"
-        validate={ValidateRating}
         as={SingleLineTextField}
+        className={classes.rating}
       />
       <Field
         name="contentOwner"
@@ -573,7 +556,6 @@ const Form: React.FC<{
         as={SelectField}
       />
       <Field name="extendedField" label="Custom" as={TextAreaField} />
-      <Field name="externalId" label="External Id" as={ReadOnlyTextField} />
     </>
   );
 };

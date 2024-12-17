@@ -12,6 +12,11 @@ fragment MovieExplorerProperties on Movie {
     nodes {
       licenseEnd
       licenseStart
+      moviesLicensesCountries {
+        nodes {
+          code
+        }
+      }
     }
   }
   moviesImages(condition: { imageType: COVER_1X1 }) {
@@ -114,6 +119,13 @@ query GetMoviesFilterOptionsData {
     nodes {
       id
       title
+    }
+  }
+
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
     }
   }
 }

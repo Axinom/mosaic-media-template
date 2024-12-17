@@ -9,10 +9,6 @@ import {
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
 import { AgeRatings } from './AgeRatings/AgeRatings';
 import { ContentOwners } from './ContentOwners/ContentOwners';
-import { LanguageCreate } from './Languages/LanguageCreate/LanguageCreate';
-import { LanguageDetails } from './Languages/LanguageDetails/LanguageDetails';
-import { LanguageDetailsCrumb } from './Languages/LanguageDetails/LanguageDetailsCrumb';
-import { Language } from './Languages/LanguageExplorer/Language';
 import { MovieCollectionAssignment } from './MovieCollectionAssignment/MovieCollectionAssignment';
 import { MovieCreate } from './MovieCreate/MovieCreate';
 import { MovieDetails } from './MovieDetails/MovieDetails';
@@ -297,55 +293,4 @@ export function register(app: PiletApi, extensions: Extensions): void {
       'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
     },
   });
-
-  const languagesSettingsNav = {
-    name: 'languages',
-    path: '/settings/media/languages',
-    label: 'Languages',
-    icon: <MediaIcons icon={MediaIconName.MovieGenres} />,
-  };
-
-  app.registerTile(
-    {
-      ...languagesSettingsNav,
-      kind: 'settings',
-      groupName: settingsGroupName,
-    },
-    false,
-  );
-
-  app.registerNavigationItem({
-    ...languagesSettingsNav,
-    parentName: parentName,
-    categoryName: 'Settings',
-  });
-
-  app.registerPage('/settings/media/languages', Language, {
-    breadcrumb: () => 'Languages',
-    permissions: {
-      'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
-    },
-  });
-
-  app.registerPage('/settings/media/languages/create', LanguageCreate, {
-    breadcrumb: () => 'New Language',
-    permissions: {
-      'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
-    },
-  });
-
-  app.registerPage(
-    '/settings/media/languages/:languageId',
-    () => (
-      <ExtensionsContext.Provider value={extensions}>
-        <LanguageDetails />
-      </ExtensionsContext.Provider>
-    ),
-    {
-      breadcrumb: LanguageDetailsCrumb,
-      permissions: {
-        'media-service': ['ADMIN', 'SETTINGS_VIEW', 'SETTINGS_EDIT'],
-      },
-    },
-  );
 }

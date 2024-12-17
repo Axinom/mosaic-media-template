@@ -8,6 +8,7 @@ query Season($id: Int!) {
     rating
     contentOwner
     extendedField
+    assetSubtype
     seasonsTags {
       nodes {
         name

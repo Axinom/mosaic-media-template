@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from 'react';
 import { client } from '../../../apolloClient';
 import {
+  AssetSubtype,
   EpisodeFilter,
   PublishStatus,
   useGetEpisodesFilterOptionsDataQuery,
@@ -21,6 +22,7 @@ interface allOptions {
   allAgeRatings: Option[];
   allContentOwners: Option[];
   allGenres: Option[];
+  allCountries: Option[];
 }
 
 export function useEpisodesFilters(): {
@@ -37,6 +39,7 @@ export function useEpisodesFilters(): {
     allAgeRatings: [],
     allContentOwners: [],
     allGenres: [],
+    allCountries: [],
   });
 
   const { data, error } = useGetEpisodesFilterOptionsDataQuery({ client });
@@ -62,11 +65,18 @@ export function useEpisodesFilters(): {
             value: 'FAILED_TO_LOAD_ERROR',
           },
         ],
+        allCountries: [
+          {
+            label: 'Unable to load country options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
       });
     } else {
       let ageRating: Option[] = [];
       let contentOwner: Option[] = [];
       let genres: Option[] = [];
+      let countries: Option[] = [];
       if (data?.ageRatings?.nodes !== undefined) {
         ageRating = data.ageRatings.nodes.map(({ name }) => ({
           label: name,
@@ -85,10 +95,17 @@ export function useEpisodesFilters(): {
           value: title,
         }));
       }
+      if (data?.allCountryTypes?.nodes !== undefined) {
+        countries = data.allCountryTypes.nodes.map(({ name, id }) => ({
+          label: name ?? '',
+          value: id,
+        }));
+      }
       setAllFilterOptions({
         allAgeRatings: ageRating,
         allContentOwners: contentOwner,
         allGenres: genres,
+        allCountries: countries,
       });
     }
   }, [data]);
@@ -152,6 +169,36 @@ export function useEpisodesFilters(): {
       label: 'Cast',
       property: 'episodesCasts',
       type: FilterTypes.FreeText,
+    },
+    {
+      label: 'License Countries',
+      property: 'episodesLicenses',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+    },
+    {
+      label: 'Episode Valid Licensing',
+      property: 'episodesLicenses',
+      options: [
+        { value: 'Valid license', label: 'Valid license' },
+        { value: 'No valid license', label: 'No valid license' },
+      ],
+      type: FilterTypes.Options,
+    },
+    {
+      label: 'Episode Subtype',
+      property: 'assetSubtype',
+      type: FilterTypes.Options,
+      options: Object.keys(AssetSubtype)
+        .filter((type) => type === 'Episode')
+        .map((key) => ({
+          value: AssetSubtype[key],
+          label: getEnumLabel(AssetSubtype[key]),
+        })),
     },
     {
       label: 'Release Period (From)',
@@ -272,6 +319,38 @@ export function useEpisodesFilters(): {
       ageRating: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
       publishStatus: 'in',
+      episodesLicenses: (value: unknown) => {
+        const [countryCode, licensesStatus] = value as [string, string];
+        if (licensesStatus === 'Valid license') {
+          return {
+            some: {
+              licenseEnd: {
+                greaterThan: new Date(),
+              },
+            },
+          };
+        } else if (licensesStatus === 'No valid license') {
+          return {
+            every: {
+              licenseEnd: {
+                lessThanOrEqualTo: new Date(),
+              },
+            },
+          };
+        } else {
+          return {
+            some: {
+              episodesLicensesCountries: {
+                some: {
+                  code: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
+        }
+      },
       id: (value) => {
         if (typeof value === 'number') {
           // User filter
@@ -289,6 +368,7 @@ export function useEpisodesFilters(): {
       released: transformRange,
       createdDate: transformRange,
       publishedDate: transformRange,
+      assetSubtype: 'equalTo',
       mainVideoId: (value) => ({
         isNull: !value,
       }),
