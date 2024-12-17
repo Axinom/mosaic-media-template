@@ -41,6 +41,21 @@ export const getConfigDefinitions = (
       return Buffer.from(this.drmLicenseCommunicationKey(), 'base64');
     },
 
+    widevineLicenseServiceUrl: () =>
+      env.get('WIDEVINE_LICENSE_SERVICE_URL').required().asString(),
+
+    playreadyLicenseServiceUrl: () =>
+      env.get('PLAYREADY_LICENSE_SERVICE_URL').required().asString(),
+
+    fairPlayLicenseServiceUrl: () =>
+      env.get('FAIRPLAY_LICENSE_SERVICE_URL').required().asString(),
+
+    fairplayStreamingCertificateUrl: () =>
+      env.get('FAIRPLAY_STREAMING_CERTIFICATE_URL').required().asString(),
+
+    entitlementWebhookSecret: () => 
+      env.get('ENTITLEMENT_WEBHOOK_SECRET').required().asString(),
+
     userSessionPublicKey: () =>
       env.get('USER_SESSION_PUBLIC_KEY').required().asString(),
     userSessionPublicKeyRSA: function () {
