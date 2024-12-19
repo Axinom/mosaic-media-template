@@ -36,3 +36,17 @@ stages:
           environmentName: ${{ env.name }}
           mosaicHostingClientId: ${{ env.mosaicHostingClientId }}
           mosaicHostingClientSecret: ${{ env.mosaicHostingClientSecret }}
+
+  - stage: PublishArtifact
+    jobs:
+      - job: PublishBuildNumber
+        steps:
+          - script: |
+              echo "$(Build.BuildNumber)" > buildNumber.txt
+            displayName: 'Write BuildNumber to file'
+
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: buildNumber.txt
+              artifact: drop
+            displayName: 'Publish BuildNumber value as an artifact'
