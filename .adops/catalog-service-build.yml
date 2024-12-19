@@ -2,45 +2,11 @@ trigger: none
 pr: none
 
 pool:
-  vmImage: 'ubuntu-latest'
-
-parameters:
-  - name: build
-    displayName: Build
-    type: boolean
-    default: true
-  - name: int
-    displayName: Release to INT
-    type: boolean
-    default: true
-  - name: nfn_acceptance
-    displayName: Release to NFN acceptance
-    type: boolean
-    default: false
-  - name: nfn_production
-    displayName: Release to NFN production
-    type: boolean
-    default: false
-  - name: lov_acceptance
-    displayName: Release to LOV acceptance
-    type: boolean
-    default: false
-  - name: lov_production
-    displayName: Release to LOV production
-    type: boolean
-    default: false
-
+  vmImage: ubuntu-latest
+# TODO: rename file to backend-service-build and use single file for catalog, entitlement and media
 variables:
-  serviceId: dc-mosaic-catalog-service
-  containerRegistry: 'harbor-beyonddutch-automation'
-  dockerfilePath: 'Dockerfile'
-  packageRoot: 'services/catalog/service'
-  packageBuildCommand: 'build:catalog-service:prod'
-  imageRepository: 'beyonddutch-mosaic/mosaic-catalog-service'
-  tag: '$(Build.BuildNumber)'
-  ID_SERVICE_AUTH_BASE_URL: https://id.service.eu.axinom.net
-  HOSTING_SERVICE_BASE_URL: https://hosting.service.eu.axinom.net
-  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+  containerRegistry: harbor-beyonddutch-automation
+  tag: $(Build.BuildNumber)
 
 stages:
   - stage: Build
@@ -48,271 +14,38 @@ stages:
     jobs:
       - job: Build
         displayName: Build
-        condition: ${{ eq(parameters.build, true) }}
         steps:
           - task: NodeTool@0
             inputs:
               versionSpec: '18.x'
             displayName: 'Install Node.js'
 
-          - task: Cache@2
-            inputs:
-              key: 'yarn | "$(Agent.OS)" | yarn.lock'
-              restoreKeys: |
-                yarn | "$(Agent.OS)"
-                yarn
-              path: $(YARN_CACHE_FOLDER)
-            displayName: Cache Yarn packages
-
           - task: Docker@2
             displayName: Build Docker Image
             inputs:
               containerRegistry: $(containerRegistry)
-              repository: $(imageRepository)
-              command: 'build'
-              Dockerfile: $(dockerfilePath)
+              repository: beyonddutch-mosaic/$(imageRepo)
+              command: build
+              Dockerfile: Dockerfile
               buildContext: '.'
-              tags: '$(tag)'
+              tags: $(tag)
               arguments:
-                '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg
-                PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
-
-          - task: Bash@3
-            displayName:
-              'Install Dev Dependencies'
-            inputs:
-              targetType: 'inline'
-              script: |
-                apt install -y jq
-                echo "Temporarily switch to newer version of Mosaic CLI in package.json"
-                jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
-                mv package.updated.json package.json
-                yarn install
+                '--build-arg PACKAGE_ROOT=$(packageRoot) --build-arg PACKAGE_BUILD_COMMAND=$(packageBuildCommand)'
 
           - task: Docker@2
             displayName: Push Docker Image to Axinom Container Registry
             inputs:
               containerRegistry: $(containerRegistry)
-              repository: $(imageRepository)
-              command: 'push'
-              tags: '$(tag)'
+              repository: beyonddutch-mosaic/$(imageRepo)
+              command: push
+              tags: $(tag)
 
-      - job: Release_INT
-        dependsOn: Build
-        displayName: 'Release to INT'
-        condition: ${{ eq(parameters.int, true) }}
-        variables:
-          - group: vault-int
-        steps:
-          - bash: |
-              apt install -y jq
-              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
-              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
-              mv package.updated.json package.json
-              yarn install
-            displayName: 'Install Dev Dependencies'
-          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
-            displayName: 'Replace tokens'
-            inputs:
-              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
-              caseInsensitivePaths: false
-              includeDotPaths: false
-              missingVarAction: keep
-              missingVarLog: error
-              ifNoFilesFound: error
-          - task: Bash@3
-            displayName:
-              'Upload manifest'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting manifest upload -n "mosaic-catalog-int-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
-          # - task: Bash@3
-          #   displayName:
-          #     'Deploy Mosaic service'
-          #   inputs:
-          #     targetType: 'inline'
-          #     script: |
-          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m mosaic-catalog-int-$(tag) -n "catalog-service-$(tag)"
-          #   env:
-          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdInt)
-          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretInt)
+          - script: |
+              echo "$(Build.BuildNumber)" > buildNumber.txt
+            displayName: 'Write BuildNumber to file'
 
-      - job: Release_NFN_Acceptance
-        dependsOn: Build
-        displayName: 'Release to NFN Acceptance'
-        condition: ${{ eq(parameters.nfn_acceptance, true) }}
-        variables:
-          - group: vault-nfn-acceptance
-        steps:
-          - bash: |
-              apt install -y jq
-              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
-              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
-              mv package.updated.json package.json
-              yarn install
-            displayName: 'Install Dev Dependencies'
-          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
-            displayName: 'Replace tokens'
+          - task: PublishPipelineArtifact@1
             inputs:
-              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
-              caseInsensitivePaths: false
-              includeDotPaths: false
-              missingVarAction: keep
-              missingVarLog: error
-              ifNoFilesFound: error
-          - task: Bash@3
-            displayName:
-              'Upload manifest'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
-          # - task: Bash@3
-          #   displayName:
-          #     'Deploy Mosaic service'
-          #   inputs:
-          #     targetType: 'inline'
-          #     script: |
-          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m nfn-mosaic-catalog-acceptance-$(tag) -n "catalog-service-$(tag)"
-          #   env:
-          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdAcc)
-          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretAcc)
-
-      - job: Release_NFN_Production
-        dependsOn: Build
-        displayName: 'Release to NFN Production'
-        condition: ${{ eq(parameters.nfn_production, true) }}
-        variables:
-          - group: vault-nfn-production
-        steps:
-          - bash: |
-              apt install -y jq
-              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
-              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
-              mv package.updated.json package.json
-              yarn install
-            displayName: 'Install Dev Dependencies'
-          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
-            displayName: 'Replace tokens'
-            inputs:
-              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
-              caseInsensitivePaths: false
-              includeDotPaths: false
-              missingVarAction: keep
-              missingVarLog: error
-              ifNoFilesFound: error
-          - task: Bash@3
-            displayName:
-              'Upload manifest'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting manifest upload -n "nfn-mosaic-catalog-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
-          # - task: Bash@3
-          #   displayName:
-          #     'Deploy Mosaic service'
-          #   inputs:
-          #     targetType: 'inline'
-          #     script: |
-          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m nfn-mosaic-catalog-production-$(tag) -n "catalog-service-$(tag)"
-          #   env:
-          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdProd)
-          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretProd)
-
-      - job: Release_LOV_Acceptance
-        dependsOn: Build
-        displayName: 'Release to LOV Acceptance'
-        condition: ${{ eq(parameters.lov_acceptance, true) }}
-        variables:
-          - group: vault-lov-acceptance
-        steps:
-          - bash: |
-              apt install -y jq
-              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
-              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
-              mv package.updated.json package.json
-              yarn install
-            displayName: 'Install Dev Dependencies'
-          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
-            displayName: 'Replace tokens'
-            inputs:
-              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
-              caseInsensitivePaths: false
-              includeDotPaths: false
-              missingVarAction: keep
-              missingVarLog: error
-              ifNoFilesFound: error
-          - task: Bash@3
-            displayName:
-              'Upload manifest'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting manifest upload -n "lov-mosaic-catalog-acceptance-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
-          # - task: Bash@3
-          #   displayName:
-          #     'Deploy Mosaic service'
-          #   inputs:
-          #     targetType: 'inline'
-          #     script: |
-          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m lov-mosaic-catalog-acceptance-$(tag) -n "catalog-service-$(tag)"
-          #   env:
-          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientILovAcc)
-          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
-
-      - job: Release_LOV_Production
-        dependsOn: Build
-        displayName: 'Release to LOV Production'
-        condition: ${{ eq(parameters.lov_production, true) }}
-        variables:
-          - group: vault-lov-production
-        steps:
-          - bash: |
-              apt install -y jq
-              echo "Temporarily switch to newer version of Mosaic CLI in package.json"
-              jq '.devDependencies."@axinom/mosaic-cli"="0.20.0"' package.json > package.updated.json
-              mv package.updated.json package.json
-              yarn install
-            displayName: 'Install Dev Dependencies'
-          - task: qetza.replacetokens.replacetokens-task.replacetokens@6
-            displayName: 'Replace tokens'
-            inputs:
-              sources: '$(packageRoot)/mosaic-hosting-deployment-manifest.yaml'
-              caseInsensitivePaths: false
-              includeDotPaths: false
-              missingVarAction: keep
-              missingVarLog: error
-              ifNoFilesFound: error
-          - task: Bash@3
-            displayName:
-              'Upload manifest'
-            inputs:
-              targetType: 'inline'
-              script: |
-                yarn mosaic hosting manifest upload -n "lov-mosaic-catalog-production-$(tag)" -i "$(serviceId)" -p "$(packageRoot)"
-            env:
-              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovProd)
-              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
-          # - task: Bash@3
-          #   displayName:
-          #     'Deploy Mosaic service'
-          #   inputs:
-          #     targetType: 'inline'
-          #     script: |
-          #       yarn mosaic hosting service deploy -i "$(serviceId)" -t $(tag) -m lov-mosaic-catalog-production-$(tag) -n "catalog-service-$(tag)"
-          #   env:
-          #     MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientILovProd)
-          #     MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovProd)
+              targetPath: buildNumber.txt
+              artifact: drop
+            displayName: Publish BuildNumber value as an artifact
