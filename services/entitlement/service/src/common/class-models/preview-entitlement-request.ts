@@ -10,9 +10,6 @@ export class VideoStreamModel {
 export class VideoEncodingModel {
     @IsNotEmpty({ message: 'Invalid preview entitlement request. Video streams not provided' })
     video_streams: VideoStreamModel[];
-
-    @IsBoolean({ message: 'Invalid preview entitlement request. is_protected not provided' })
-    is_protected: boolean;
 }
 
 export class VideoModel {

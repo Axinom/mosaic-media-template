@@ -9,8 +9,6 @@ import {
 } from '../../common';
 import { EntitlementTokenHandler } from '../../domains';
 
-const webhookSignatureHeader = 'x-mosaic-signature';
-
 const getKeyId = (req: PreviewEntitlementRequestModel): string | undefined => 
     req.payload.video.video_encoding.video_streams.find( s => !isNullOrWhitespace(s.key_id))?.key_id
 
@@ -24,7 +22,8 @@ export const PreviewEntitlementRequestHandling = async (
       config,
       context: PreviewEntitlementRequestHandling.name,
     });
-    const signature = req.get(webhookSignatureHeader);
+    console.log(req.body);
+    const signature = req.get(config.entitlementWebhookSignatureHeader);
     if(!signature) {
       const msg = 'Invalid signature';
       logger.error({

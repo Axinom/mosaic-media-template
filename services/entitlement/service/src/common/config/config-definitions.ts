@@ -56,6 +56,8 @@ export const getConfigDefinitions = (
     entitlementWebhookSecret: () => 
       env.get('ENTITLEMENT_WEBHOOK_SECRET').required().asString(),
 
+    entitlementWebhookSignatureHeader: () => env.get('ENTITLEMENT_WEBHOOK_SIGNATURE_HEADER').default('x-mosaic-signature').asString(),
+
     userSessionPublicKey: () =>
       env.get('USER_SESSION_PUBLIC_KEY').required().asString(),
     userSessionPublicKeyRSA: function () {
