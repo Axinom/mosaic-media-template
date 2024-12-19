@@ -11,7 +11,7 @@ stages:
       - job: ${{ parameters.environmentName }}
         displayName: 'Upload to ${{ parameters.environmentName }}'
         variables:
-          - group: vault-${{ parameters.environmentName }}
+          - group: vault-${{ replace(parameters.environmentName, '_', '-') }}
         steps:
           - bash: |
               apt install -y jq

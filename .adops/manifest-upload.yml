@@ -14,16 +14,16 @@ parameters:
     - name: perf
       mosaicHostingClientId: $(mosaicHostingClientIdPerf)
       mosaicHostingClientSecret: $(mosaicHostingClientSecretPerf)
-    - name: nfn-acceptance
+    - name: nfn_acceptance
       mosaicHostingClientId: $(mosaicHostingClientIdNfnAcc)
       mosaicHostingClientSecret: $(mosaicHostingClientSecretNfnAcc)
-    - name: nfn-production
+    - name: nfn_production
       mosaicHostingClientId: $(mosaicHostingClientIdNfnProd)
       mosaicHostingClientSecret: $(mosaicHostingClientSecretNfnProd)
-    - name: lov-acceptance
+    - name: lov_acceptance
       mosaicHostingClientId: $(mosaicHostingClientIdLovAcc)
       mosaicHostingClientSecret: $(mosaicHostingClientSecretLovAcc)
-    - name: lov-production
+    - name: lov_production
       mosaicHostingClientId: $(mosaicHostingClientIdLovProd)
       mosaicHostingClientSecret: $(mosaicHostingClientSecretLovProd)
 
