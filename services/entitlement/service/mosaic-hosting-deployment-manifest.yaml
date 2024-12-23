@@ -68,6 +68,13 @@ secureVariables:
   DRM_LICENSE_COMMUNICATION_KEY: '#{MOSAIC-DRM-LICENSE-COMMUNICATION-KEY}#'
   DRM_LICENSE_COMMUNICATION_KEY_ID: '#{MOSAIC-DRM-LICENSE-COMMUNICATION-KEY-ID}#'
 
+  # Preview entitlement settings
+  WIDEVINE_LICENSE_SERVICE_URL: 'https://drm-widevine-licensing.axprod.net/AcquireLicense'
+  PLAYREADY_LICENSE_SERVICE_URL: 'https://drm-playready-licensing.axtest.net/AcquireLicense'
+  FAIRPLAY_LICENSE_SERVICE_URL: 'https://drm-fairplay-licensing.axtest.net/AcquireLicense'
+  FAIRPLAY_STREAMING_CERTIFICATE_URL: 'https://vtb.axinom.com/FPScert/fairplay.cer'
+  ENTITLEMENT_WEBHOOK_SECRET: '#{MOSAIC-ENTITLEMENT-WEBHOOK-SECRET}#'
+
   # User JWT token validation public key
   USER_SESSION_PUBLIC_KEY: '#{session-public-key}#'
 
