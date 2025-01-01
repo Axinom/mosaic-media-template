@@ -97,7 +97,7 @@ describe('inMemoryLocales', () => {
       expect(localesChanged).toEqual(false);
     });
 
-    it('Sync with single default element and filled in-memory locales array -> updated in-memory locales array and locales rows', async () => {
+    it('Sync with single default element and filled in-memory locales array -> updated in-memory locales array and locales rows. default locale is not changed', async () => {
       // Array
       await populateLocales();
       await loadInMemoryLocales(ctx.ownerPool, logger);
@@ -109,7 +109,13 @@ describe('inMemoryLocales', () => {
       );
 
       // Assert
-      const expectedLocales = [{ locale: 'en-US', is_default: true }];
+      const expectedLocales = [
+        { locale: DEFAULT_LOCALE_TAG, is_default: true },
+        { locale: 'de-DE', is_default: false },
+        { locale: 'et-EE', is_default: false },
+        { locale: 'en-US', is_default: false },
+      ];
+
       const locales = exportedForTesting.getInMemoryLocales();
       expect(locales).toEqual(expectedLocales);
       const dbEntries = await select('locales', all).run(ctx.ownerPool);
@@ -145,7 +151,7 @@ describe('inMemoryLocales', () => {
       expect(localesChanged).toEqual(true);
     });
 
-    it('Sync with same locales as before, but default locale is switched -> updated in-memory locales array and locales rows', async () => {
+    it('Sync with same locales as before, but default locale is switched -> no updates to in-memory locales array and locales rows', async () => {
       // Array
       await insert('locales', [
         { locale: 'en-US', is_default: true },
@@ -164,8 +170,8 @@ describe('inMemoryLocales', () => {
 
       // Assert
       const expectedLocales = [
-        { locale: 'en-US', is_default: false },
-        { locale: 'de-DE', is_default: true },
+        { locale: 'en-US', is_default: true },
+        { locale: 'de-DE', is_default: false },
       ];
       const locales = exportedForTesting.getInMemoryLocales();
       expect(locales).toIncludeSameMembers(expectedLocales);
@@ -207,6 +213,68 @@ describe('inMemoryLocales', () => {
       expect(dbEntries).toIncludeSameMembers(expectedLocales);
       expect(results.filter((x) => x)).toHaveLength(1);
       expect(results.filter((x) => !x)).toHaveLength(9);
+    });
+
+    it('Sync locales with locales not in db -> new locales added to db, previous locales maintained', async () => {
+      // Array
+      await insert('locales', [
+        { locale: DEFAULT_LOCALE_TAG, is_default: true },
+        { locale: 'de-DE', is_default: false },
+      ]).run(ctx.ownerPool);
+      await loadInMemoryLocales(ctx.ownerPool, logger);
+
+      // Act
+      const newLocalesAdded = await syncInMemoryLocales(
+        [
+          { language_tag: 'nl-NL', is_default_locale: false },
+          { language_tag: 'sv-SE', is_default_locale: false },
+        ],
+        ctx.ownerPool,
+      );
+
+      // Assert
+      const expectedLocales = [
+        { locale: DEFAULT_LOCALE_TAG, is_default: true },
+        { locale: 'de-DE', is_default: false },
+        { locale: 'nl-NL', is_default: false },
+        { locale: 'sv-SE', is_default: false },
+      ];
+      const locales = exportedForTesting.getInMemoryLocales();
+      expect(locales).toIncludeSameMembers(expectedLocales);
+      const dbEntries = await select('locales', all).run(ctx.ownerPool);
+      expect(dbEntries).toIncludeSameMembers(expectedLocales);
+      expect(newLocalesAdded).toEqual(true);
+    });
+
+    it('Sync locales with locales not in db including a new default -> new locales added to db, default locale is not changed, previous locales maintained', async () => {
+      // Array
+      await insert('locales', [
+        { locale: DEFAULT_LOCALE_TAG, is_default: true },
+        { locale: 'de-DE', is_default: false },
+      ]).run(ctx.ownerPool);
+      await loadInMemoryLocales(ctx.ownerPool, logger);
+
+      // Act
+      const newLocalesAdded = await syncInMemoryLocales(
+        [
+          { language_tag: 'nl-NL', is_default_locale: true },
+          { language_tag: 'sv-SE', is_default_locale: false },
+        ],
+        ctx.ownerPool,
+      );
+
+      // Assert
+      const expectedLocales = [
+        { locale: DEFAULT_LOCALE_TAG, is_default: true },
+        { locale: 'de-DE', is_default: false },
+        { locale: 'nl-NL', is_default: false },
+        { locale: 'sv-SE', is_default: false },
+      ];
+      const locales = exportedForTesting.getInMemoryLocales();
+      expect(locales).toIncludeSameMembers(expectedLocales);
+      const dbEntries = await select('locales', all).run(ctx.ownerPool);
+      expect(dbEntries).toIncludeSameMembers(expectedLocales);
+      expect(newLocalesAdded).toEqual(true);
     });
   });
 

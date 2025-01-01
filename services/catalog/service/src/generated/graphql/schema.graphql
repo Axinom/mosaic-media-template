@@ -319,7 +319,7 @@ type Query {
   movie(id: String!, countryCode: String): Movie
   season(id: String!): Season
   tvshowGenre(id: String!): TvshowGenre
-  tvshow(id: String!): Tvshow
+  tvshow(id: String!, countryCode: String): Tvshow
 }
 
 """A connection to a list of `Channel` values."""
@@ -4654,13 +4654,13 @@ type Season {
   assetType: Int
   assetSubtype: String
   originalTitle: String
-  title: String
 
   """Extended synopsis."""
   description: String
 
   """Short description of the main plot elements."""
   synopsis: String
+  title: String
 
   """Reads a single `Tvshow` that is related to this `Season`."""
   tvshow: Tvshow

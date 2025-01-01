@@ -51,6 +51,7 @@ const generateSampleSeason = (tvshowId: number): seasons.Insertable => {
     tvshow_id: tvshowId,
     index: faker.datatype.number({ min: 0, max: 15 }),
     external_id: faker.datatype.uuid(),
+    title: faker.lorem.text(),
     synopsis: faker.lorem.paragraph(1),
     description: faker.lorem.paragraph(5),
     studio: faker.company.name(),

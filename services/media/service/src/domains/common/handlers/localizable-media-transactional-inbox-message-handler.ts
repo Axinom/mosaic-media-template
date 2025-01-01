@@ -43,7 +43,7 @@ export abstract class LocalizableMediaTransactionalInboxMessageHandler<
 
     const accessToken = await requestServiceAccountToken(this.config);
     await this.storeOutboxMessage(
-      data.payload.entity_id,
+      data.aggregateId ?? data.payload.entity_id,
       data.settings,
       data.payload,
       ownerClient,

@@ -23,9 +23,11 @@ import {
   MutationUpdateAgeRatingArgs,
   useAgeRatingsQuery,
 } from '../../../generated/graphql';
-import { useMovieGenresActions } from './AgeRatings.actions';
 import classes from './AgeRatings.module.scss';
-import { AgeRatingsFormData, FormDataAgeRatings } from './AgeRatings.types';
+import {
+  AssetAgeRatingsFormData,
+  FormDataAgeRatings,
+} from './AgeRatings.types';
 
 export const AgeRatings: React.FC = () => {
   const { loading, data, error } = useAgeRatingsQuery({
@@ -35,8 +37,8 @@ export const AgeRatings: React.FC = () => {
 
   const onSubmit = useCallback(
     async (
-      formData: AgeRatingsFormData,
-      initialData: DetailsProps<AgeRatingsFormData>['initialData'],
+      formData: AssetAgeRatingsFormData,
+      initialData: DetailsProps<AssetAgeRatingsFormData>['initialData'],
     ): Promise<void> => {
       const generateUpdateGQLFragment =
         createUpdateGQLFragmentGenerator<Mutation>();
@@ -49,7 +51,7 @@ export const AgeRatings: React.FC = () => {
             'createAgeRating',
             {
               input: {
-                ageRating: { sortOrder: item.sortOrder, name: item.name },
+                ageRating: { name: item.name },
               },
             },
           ),
@@ -64,7 +66,7 @@ export const AgeRatings: React.FC = () => {
             {
               input: {
                 id: item.id,
-                patch: { name: item.name, sortOrder: item.sortOrder },
+                patch: { name: item.name },
               },
             },
           ),
@@ -84,10 +86,8 @@ export const AgeRatings: React.FC = () => {
     [],
   );
 
-  const { actions } = useMovieGenresActions();
-
   return (
-    <Details<AgeRatingsFormData>
+    <Details<AssetAgeRatingsFormData>
       defaultTitle="Age Ratings"
       subtitle="Age ratings appear for selection at the properties station of a video and an audio"
       initialData={{
@@ -97,7 +97,6 @@ export const AgeRatings: React.FC = () => {
       }}
       saveData={onSubmit}
       infoPanel={<Panel data={data} />}
-      actions={actions}
     >
       <Form />
     </Details>
@@ -105,7 +104,7 @@ export const AgeRatings: React.FC = () => {
 };
 
 const Form: React.FC = () => {
-  const { values, setFieldValue } = useFormikContext<AgeRatingsFormData>();
+  const { values, setFieldValue } = useFormikContext<AssetAgeRatingsFormData>();
 
   return (
     <DynamicDataList<FormDataAgeRatings>
@@ -119,13 +118,13 @@ const Form: React.FC = () => {
         },
       ]}
       allowNewData={true}
-      positionPropertyName="sortOrder"
       value={values.ageRatings ?? []}
       onChange={(v) => {
         setFieldValue('ageRatings', v);
       }}
       stickyHeader={false}
       allowEditing
+      allowReordering={false}
     />
   );
 };

@@ -602,7 +602,7 @@ CREATE FUNCTION app_hidden.localizable_collection_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_4x1,image_id_clean_cover_1x1,image_id_clean_cover_4x1,image_id_list_1x1,image_id_list_15x16', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -630,7 +630,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_4x1,image_id_clean_cover_1x1,image_id_clean_cover_4x1,image_id_list_1x1,image_id_list_15x16', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -772,7 +772,7 @@ CREATE FUNCTION app_hidden.localizable_episode_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,season_id', ',') || string_to_array('id,index,season_id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,season_id', ',') || string_to_array('id,index,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -800,7 +800,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id,index,season_id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,season_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1091,7 +1091,7 @@ CREATE FUNCTION app_hidden.localizable_season_delete() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
-	_fields text[] := string_to_array('id,index,tvshow_id', ',');
+	_fields text[] := string_to_array('id,index,title,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
@@ -1197,7 +1197,7 @@ CREATE FUNCTION app_hidden.localizable_season_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('synopsis,description,tvshow_id', ',') || string_to_array('id,index,tvshow_id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,tvshow_id', ',') || string_to_array('id,index,title,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1224,8 +1224,8 @@ CREATE FUNCTION app_hidden.localizable_season_update() RETURNS trigger
 DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_required_fields text[] := string_to_array('id,index,tvshow_id', ',');
-	_localizable_fields text[] := string_to_array('synopsis,description,tvshow_id', ',');
+	_required_fields text[] := string_to_array('id,index,title,tvshow_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1452,7 +1452,7 @@ CREATE FUNCTION app_hidden.localizable_tvshow_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1480,7 +1480,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -4979,7 +4979,6 @@ CREATE TABLE app_private.messaging_counter (
 CREATE TABLE app_public.age_ratings (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     name text NOT NULL,
-    sort_order integer NOT NULL,
     created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
@@ -4988,6 +4987,53 @@ CREATE TABLE app_public.age_ratings (
     CONSTRAINT name_max_length CHECK (ax_utils.constraint_max_length(name, 50, 'The name can only be %2$s characters long.'::text)),
     CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
 );
+
+
+--
+-- Name: country_groups; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.country_groups (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    name text NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    created_user text DEFAULT 'Unknown'::text NOT NULL,
+    updated_user text DEFAULT 'Unknown'::text NOT NULL,
+    CONSTRAINT name_max_length CHECK (ax_utils.constraint_max_length(name, 200, 'The name can only be %2$s characters long.'::text)),
+    CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
+);
+
+
+--
+-- Name: iso_alpha_two_country_codes; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.iso_alpha_two_country_codes (
+    value text NOT NULL,
+    description text
+);
+
+
+--
+-- Name: TABLE iso_alpha_two_country_codes; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.iso_alpha_two_country_codes IS '@enum';
+
+
+--
+-- Name: all_country_types; Type: VIEW; Schema: app_public; Owner: -
+--
+
+CREATE VIEW app_public.all_country_types AS
+ SELECT (country_groups.id)::text AS id,
+    country_groups.name
+   FROM app_public.country_groups
+UNION ALL
+ SELECT iso_alpha_two_country_codes.value AS id,
+    iso_alpha_two_country_codes.description AS name
+   FROM app_public.iso_alpha_two_country_codes;
 
 
 --
@@ -5025,6 +5071,18 @@ COMMENT ON TABLE app_public.business_type IS '@enum';
 
 
 --
+-- Name: collection_countries; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.collection_countries (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    collection_id integer NOT NULL,
+    country_group_id uuid,
+    country_id text
+);
+
+
+--
 -- Name: collection_image_type; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -5053,7 +5111,8 @@ CREATE TABLE app_public.collection_relations (
     tvshow_id integer,
     season_id integer,
     episode_id integer,
-    CONSTRAINT exactly_one_relation CHECK ((num_nonnulls(movie_id, tvshow_id, season_id, episode_id) = 1))
+    child_collection_id integer,
+    CONSTRAINT exactly_one_relation CHECK ((num_nonnulls(movie_id, tvshow_id, season_id, episode_id, child_collection_id) = 1))
 );
 
 
@@ -5097,6 +5156,7 @@ CREATE TABLE app_public.collections (
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
     languages text[] DEFAULT '{}'::text[],
     asset_subtype app_public.asset_subtype_enum DEFAULT 'COLLECTION'::text NOT NULL,
+    extended_field text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5176,7 +5236,6 @@ COMMENT ON TABLE app_public.collections_tags IS '@subscription_events_collection
 CREATE TABLE app_public.content_owners (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     name text NOT NULL,
-    sort_order integer NOT NULL,
     created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
@@ -5184,6 +5243,20 @@ CREATE TABLE app_public.content_owners (
     CONSTRAINT name_is_trimmed CHECK (ax_utils.constraint_is_trimmed(name, 'The name must not start or end with whitespace value.'::text)),
     CONSTRAINT name_max_length CHECK (ax_utils.constraint_max_length(name, 50, 'The name can only be %2$s characters long.'::text)),
     CONSTRAINT name_not_empty CHECK (ax_utils.constraint_not_empty(name, 'The name cannot be empty.'::text))
+);
+
+
+--
+-- Name: country_groups_countries; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.country_groups_countries (
+    group_id uuid NOT NULL,
+    country_id text NOT NULL,
+    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    created_user text DEFAULT 'Unknown'::text NOT NULL,
+    updated_user text DEFAULT 'Unknown'::text NOT NULL
 );
 
 
@@ -5247,13 +5320,9 @@ CREATE TABLE app_public.episodes (
     ingest_correlation_id integer,
     age_rating text,
     rating numeric(18,2),
-    custom_rating text,
-    credits_start_time text,
-    length_in_seconds numeric(13,5),
-    dynamic_field text,
     extended_field text,
     content_owner text,
-    business_type app_public.business_type_enum DEFAULT 'premium_downloadable'::text NOT NULL,
+    business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'EPISODE'::text NOT NULL,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
@@ -5345,7 +5414,11 @@ CREATE TABLE app_public.episodes_licenses (
     license_start timestamp with time zone,
     license_end timestamp with time zone,
     created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
-    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    created_user text DEFAULT 'Unknown'::text NOT NULL,
+    updated_user text DEFAULT 'Unknown'::text NOT NULL,
+    downloaded_asset_lifespan integer DEFAULT 0,
+    is_downloadable boolean DEFAULT false NOT NULL
 );
 
 
@@ -5680,23 +5753,6 @@ COMMENT ON TABLE app_public.ingest_status IS '@enum';
 
 
 --
--- Name: iso_alpha_two_country_codes; Type: TABLE; Schema: app_public; Owner: -
---
-
-CREATE TABLE app_public.iso_alpha_two_country_codes (
-    value text NOT NULL,
-    description text
-);
-
-
---
--- Name: TABLE iso_alpha_two_country_codes; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON TABLE app_public.iso_alpha_two_country_codes IS '@enum';
-
-
---
 -- Name: languages; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -5810,16 +5866,9 @@ CREATE TABLE app_public.movies (
     ingest_correlation_id integer,
     age_rating text,
     rating numeric(18,2),
-    custom_rating text,
-    credits_start_time text,
-    length_in_seconds numeric(13,5),
-    dynamic_field text,
     extended_field text,
     content_owner text,
-    business_type app_public.business_type_enum DEFAULT 'premium_downloadable'::text NOT NULL,
-    audio_languages text[] DEFAULT '{}'::text[],
-    subtitle_languages text[] DEFAULT '{}'::text[],
-    caption_languages text[] DEFAULT '{}'::text[],
+    business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'MOVIE'::text NOT NULL,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
@@ -5911,7 +5960,11 @@ CREATE TABLE app_public.movies_licenses (
     license_start timestamp with time zone,
     license_end timestamp with time zone,
     created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
-    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    created_user text DEFAULT 'Unknown'::text NOT NULL,
+    updated_user text DEFAULT 'Unknown'::text NOT NULL,
+    downloaded_asset_lifespan integer DEFAULT 0,
+    is_downloadable boolean DEFAULT false NOT NULL
 );
 
 
@@ -6090,14 +6143,11 @@ CREATE TABLE app_public.seasons (
     ingest_correlation_id integer,
     age_rating text,
     rating numeric(18,2),
-    custom_rating text,
-    credits_start_time text,
-    length_in_seconds numeric(13,5),
-    dynamic_field text,
     extended_field text,
     content_owner text,
-    business_type app_public.business_type_enum DEFAULT 'premium_downloadable'::text NOT NULL,
-    asset_subtype app_public.asset_subtype_enum DEFAULT 'SEASON'::text NOT NULL
+    business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
+    asset_subtype app_public.asset_subtype_enum DEFAULT 'SEASON'::text NOT NULL,
+    title text NOT NULL
 );
 
 
@@ -6186,7 +6236,11 @@ CREATE TABLE app_public.seasons_licenses (
     license_start timestamp with time zone,
     license_end timestamp with time zone,
     created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
-    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    created_user text DEFAULT 'Unknown'::text NOT NULL,
+    updated_user text DEFAULT 'Unknown'::text NOT NULL,
+    downloaded_asset_lifespan integer DEFAULT 0,
+    is_downloadable boolean DEFAULT false NOT NULL
 );
 
 
@@ -6537,16 +6591,9 @@ CREATE TABLE app_public.tvshows (
     ingest_correlation_id integer,
     age_rating text,
     rating numeric(18,2),
-    custom_rating text,
-    credits_start_time text,
-    length_in_seconds numeric(13,5),
-    dynamic_field text,
     extended_field text,
     content_owner text,
-    business_type app_public.business_type_enum DEFAULT 'premium_downloadable'::text NOT NULL,
-    audio_languages text[] DEFAULT '{}'::text[],
-    subtitle_languages text[] DEFAULT '{}'::text[],
-    caption_languages text[] DEFAULT '{}'::text[],
+    business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'TV_SHOW'::text NOT NULL,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
@@ -6638,7 +6685,11 @@ CREATE TABLE app_public.tvshows_licenses (
     license_start timestamp with time zone,
     license_end timestamp with time zone,
     created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
-    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL
+    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
+    created_user text DEFAULT 'Unknown'::text NOT NULL,
+    updated_user text DEFAULT 'Unknown'::text NOT NULL,
+    downloaded_asset_lifespan integer DEFAULT 0,
+    is_downloadable boolean DEFAULT false NOT NULL
 );
 
 
@@ -6809,6 +6860,14 @@ ALTER TABLE ONLY app_public.business_type
 
 
 --
+-- Name: collection_countries collection_countries_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_countries
+    ADD CONSTRAINT collection_countries_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: collections_images collection_id_image_type_are_unique; Type: CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -6886,6 +6945,22 @@ ALTER TABLE ONLY app_public.collections_tags
 
 ALTER TABLE ONLY app_public.content_owners
     ADD CONSTRAINT content_owners_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: country_groups_countries country_groups_countries_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.country_groups_countries
+    ADD CONSTRAINT country_groups_countries_pkey PRIMARY KEY (group_id, country_id);
+
+
+--
+-- Name: country_groups country_groups_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.country_groups
+    ADD CONSTRAINT country_groups_pkey PRIMARY KEY (id);
 
 
 --
@@ -7521,6 +7596,14 @@ ALTER TABLE ONLY app_public.tvshows_tvshow_genres
 
 
 --
+-- Name: collection_relations unique_child_collection_per_collection; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_relations
+    ADD CONSTRAINT unique_child_collection_per_collection UNIQUE (collection_id, child_collection_id);
+
+
+--
 -- Name: collection_relations unique_episode_per_collection; Type: CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -7658,13 +7741,6 @@ CREATE INDEX idx_age_ratings_name_desc_with_id ON app_public.age_ratings USING b
 
 
 --
--- Name: idx_age_ratings_sort_order; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_age_ratings_sort_order ON app_public.age_ratings USING btree (sort_order);
-
-
---
 -- Name: idx_age_ratings_updated_date_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -7676,6 +7752,13 @@ CREATE INDEX idx_age_ratings_updated_date_asc_with_id ON app_public.age_ratings 
 --
 
 CREATE INDEX idx_age_ratings_updated_date_desc_with_id ON app_public.age_ratings USING btree (updated_date DESC, id);
+
+
+--
+-- Name: idx_collection_relations_child_collection_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_collection_relations_child_collection_id ON app_public.collection_relations USING btree (child_collection_id);
 
 
 --
@@ -7826,13 +7909,6 @@ CREATE INDEX idx_content_owners_name_desc_with_id ON app_public.content_owners U
 
 
 --
--- Name: idx_content_owners_sort_order; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_content_owners_sort_order ON app_public.content_owners USING btree (sort_order);
-
-
---
 -- Name: idx_content_owners_updated_date_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -7844,6 +7920,20 @@ CREATE INDEX idx_content_owners_updated_date_asc_with_id ON app_public.content_o
 --
 
 CREATE INDEX idx_content_owners_updated_date_desc_with_id ON app_public.content_owners USING btree (updated_date DESC, id);
+
+
+--
+-- Name: idx_country_groups_countries_country_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_country_groups_countries_country_id ON app_public.country_groups_countries USING btree (country_id);
+
+
+--
+-- Name: idx_country_groups_name; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_country_groups_name ON app_public.country_groups USING btree (name);
 
 
 --
@@ -8348,13 +8438,6 @@ CREATE INDEX idx_movie_genres_updated_date_asc_with_id ON app_public.movie_genre
 --
 
 CREATE INDEX idx_movie_genres_updated_date_desc_with_id ON app_public.movie_genres USING btree (updated_date DESC, id);
-
-
---
--- Name: idx_movies_audio_languages; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE INDEX idx_movies_audio_languages ON app_public.movies USING btree (audio_languages);
 
 
 --
@@ -9177,13 +9260,6 @@ CREATE INDEX idx_tvshow_genres_updated_date_desc_with_id ON app_public.tvshow_ge
 
 
 --
--- Name: idx_tvshows_audio_languages; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE INDEX idx_tvshows_audio_languages ON app_public.tvshows USING btree (audio_languages);
-
-
---
 -- Name: idx_tvshows_casts_tvshow_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -9440,6 +9516,20 @@ CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.collections FOR EACH 
 --
 
 CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.content_owners FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
+
+
+--
+-- Name: country_groups _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.country_groups FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
+
+
+--
+-- Name: country_groups_countries _100_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_public.country_groups_countries FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__timestamps();
 
 
 --
@@ -9814,10 +9904,31 @@ CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.content_owners FOR EACH
 
 
 --
+-- Name: country_groups _200_username; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.country_groups FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: country_groups_countries _200_username; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.country_groups_countries FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
 -- Name: episodes _200_username; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
 CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_public.episodes FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: episodes_licenses _200_username; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.episodes_licenses FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
@@ -9863,10 +9974,24 @@ CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_public.movies FOR EA
 
 
 --
+-- Name: movies_licenses _200_username; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.movies_licenses FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
 -- Name: seasons _200_username; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
 CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_public.seasons FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: seasons_licenses _200_username; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.seasons_licenses FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
@@ -9891,6 +10016,13 @@ CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_public.tvshows FOR E
 
 
 --
+-- Name: tvshows_licenses _200_username; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username BEFORE UPDATE ON app_public.tvshows_licenses FOR EACH ROW WHEN ((old.* IS DISTINCT FROM new.*)) EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
 -- Name: age_ratings _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -9905,10 +10037,52 @@ CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.content_o
 
 
 --
+-- Name: country_groups _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.country_groups FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: country_groups_countries _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.country_groups_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: episodes_licenses _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.episodes_licenses FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
 -- Name: languages _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
 CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.languages FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: movies_licenses _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.movies_licenses FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: seasons_licenses _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.seasons_licenses FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
+
+
+--
+-- Name: tvshows_licenses _200_username_before_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _200_username_before_insert BEFORE INSERT ON app_public.tvshows_licenses FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --
@@ -11235,6 +11409,38 @@ CREATE TRIGGER tg_cleanup_orphaned_tvshow_snapshots AFTER DELETE ON app_public.t
 
 
 --
+-- Name: collection_countries collection_countries_collection_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_countries
+    ADD CONSTRAINT collection_countries_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES app_public.collections(id) ON DELETE CASCADE;
+
+
+--
+-- Name: collection_countries collection_countries_country_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_countries
+    ADD CONSTRAINT collection_countries_country_group_id_fkey FOREIGN KEY (country_group_id) REFERENCES app_public.country_groups(id);
+
+
+--
+-- Name: collection_countries collection_countries_country_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_countries
+    ADD CONSTRAINT collection_countries_country_id_fkey FOREIGN KEY (country_id) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: collection_relations collection_relations_child_collection_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.collection_relations
+    ADD CONSTRAINT collection_relations_child_collection_id_fkey FOREIGN KEY (child_collection_id) REFERENCES app_public.collections(id) ON DELETE CASCADE;
+
+
+--
 -- Name: collection_relations collection_relations_collection_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11331,6 +11537,30 @@ ALTER TABLE ONLY app_public.collections_tags
 
 
 --
+-- Name: country_groups_countries country_groups_countries_country_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.country_groups_countries
+    ADD CONSTRAINT country_groups_countries_country_id_fkey FOREIGN KEY (country_id) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: country_groups_countries country_groups_countries_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.country_groups_countries
+    ADD CONSTRAINT country_groups_countries_group_id_fkey FOREIGN KEY (group_id) REFERENCES app_public.country_groups(id) ON DELETE CASCADE;
+
+
+--
+-- Name: episodes episodes_age_rating_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.episodes
+    ADD CONSTRAINT episodes_age_rating_fkey FOREIGN KEY (age_rating) REFERENCES app_public.age_ratings(name);
+
+
+--
 -- Name: episodes episodes_asset_subtype_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11352,6 +11582,14 @@ ALTER TABLE ONLY app_public.episodes
 
 ALTER TABLE ONLY app_public.episodes_casts
     ADD CONSTRAINT episodes_casts_episode_id_fkey FOREIGN KEY (episode_id) REFERENCES app_public.episodes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: episodes episodes_content_owner_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.episodes
+    ADD CONSTRAINT episodes_content_owner_fkey FOREIGN KEY (content_owner) REFERENCES app_public.content_owners(name);
 
 
 --
@@ -11539,6 +11777,14 @@ ALTER TABLE ONLY app_public.ingest_items
 
 
 --
+-- Name: movies movies_age_rating_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.movies
+    ADD CONSTRAINT movies_age_rating_fkey FOREIGN KEY (age_rating) REFERENCES app_public.age_ratings(name);
+
+
+--
 -- Name: movies movies_asset_subtype_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11560,6 +11806,14 @@ ALTER TABLE ONLY app_public.movies
 
 ALTER TABLE ONLY app_public.movies_casts
     ADD CONSTRAINT movies_casts_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES app_public.movies(id) ON DELETE CASCADE;
+
+
+--
+-- Name: movies movies_content_owner_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.movies
+    ADD CONSTRAINT movies_content_owner_fkey FOREIGN KEY (content_owner) REFERENCES app_public.content_owners(name);
 
 
 --
@@ -11675,6 +11929,14 @@ ALTER TABLE ONLY app_public.movies_trailers
 
 
 --
+-- Name: seasons seasons_age_rating_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.seasons
+    ADD CONSTRAINT seasons_age_rating_fkey FOREIGN KEY (age_rating) REFERENCES app_public.age_ratings(name);
+
+
+--
 -- Name: seasons seasons_asset_subtype_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11696,6 +11958,14 @@ ALTER TABLE ONLY app_public.seasons
 
 ALTER TABLE ONLY app_public.seasons_casts
     ADD CONSTRAINT seasons_casts_season_id_fkey FOREIGN KEY (season_id) REFERENCES app_public.seasons(id) ON DELETE CASCADE;
+
+
+--
+-- Name: seasons seasons_content_owner_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.seasons
+    ADD CONSTRAINT seasons_content_owner_fkey FOREIGN KEY (content_owner) REFERENCES app_public.content_owners(name);
 
 
 --
@@ -11875,6 +12145,14 @@ ALTER TABLE ONLY app_public.snapshots
 
 
 --
+-- Name: tvshows tvshows_age_rating_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.tvshows
+    ADD CONSTRAINT tvshows_age_rating_fkey FOREIGN KEY (age_rating) REFERENCES app_public.age_ratings(name);
+
+
+--
 -- Name: tvshows tvshows_asset_subtype_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11896,6 +12174,14 @@ ALTER TABLE ONLY app_public.tvshows
 
 ALTER TABLE ONLY app_public.tvshows_casts
     ADD CONSTRAINT tvshows_casts_tvshow_id_fkey FOREIGN KEY (tvshow_id) REFERENCES app_public.tvshows(id) ON DELETE CASCADE;
+
+
+--
+-- Name: tvshows tvshows_content_owner_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.tvshows
+    ADD CONSTRAINT tvshows_content_owner_fkey FOREIGN KEY (content_owner) REFERENCES app_public.content_owners(name);
 
 
 --
@@ -12020,14 +12306,14 @@ ALTER TABLE app_public.collection_relations ENABLE ROW LEVEL SECURITY;
 -- Name: collection_relations collection_relations_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collection_relations_authorization ON app_public.collection_relations USING ((( SELECT ax_utils.user_has_permission('COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY collection_relations_authorization ON app_public.collection_relations USING ((( SELECT ax_utils.user_has_permission('COLLECTION_READER,COLLECTION_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('COLLECTION_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: collection_relations collection_relations_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY collection_relations_authorization_delete ON app_public.collection_relations AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('COLLECTIONS_EDIT,ADMIN'::text) AS user_has_permission));
+CREATE POLICY collection_relations_authorization_delete ON app_public.collection_relations AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('COLLECTION_EDITOR,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -15101,10 +15387,31 @@ GRANT INSERT(name),UPDATE(name) ON TABLE app_public.age_ratings TO media_service
 
 
 --
--- Name: COLUMN age_ratings.sort_order; Type: ACL; Schema: app_public; Owner: -
+-- Name: TABLE country_groups; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT INSERT(sort_order),UPDATE(sort_order) ON TABLE app_public.age_ratings TO media_service_gql_role;
+GRANT SELECT,DELETE ON TABLE app_public.country_groups TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN country_groups.name; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(name),UPDATE(name) ON TABLE app_public.country_groups TO media_service_gql_role;
+
+
+--
+-- Name: TABLE iso_alpha_two_country_codes; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT ON TABLE app_public.iso_alpha_two_country_codes TO media_service_login;
+
+
+--
+-- Name: TABLE all_country_types; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT ON TABLE app_public.all_country_types TO media_service_gql_role;
 
 
 --
@@ -15119,6 +15426,13 @@ GRANT SELECT ON TABLE app_public.asset_subtype TO media_service_login;
 --
 
 GRANT SELECT ON TABLE app_public.business_type TO media_service_login;
+
+
+--
+-- Name: TABLE collection_countries; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,INSERT,DELETE ON TABLE app_public.collection_countries TO media_service_gql_role;
 
 
 --
@@ -15178,6 +15492,13 @@ GRANT UPDATE(episode_id) ON TABLE app_public.collection_relations TO media_servi
 
 
 --
+-- Name: COLUMN collection_relations.child_collection_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(child_collection_id) ON TABLE app_public.collection_relations TO media_service_gql_role;
+
+
+--
 -- Name: SEQUENCE collection_relations_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15234,6 +15555,13 @@ GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.collection
 
 
 --
+-- Name: COLUMN collections.extended_field; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.collections TO media_service_gql_role;
+
+
+--
 -- Name: SEQUENCE collections_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15283,10 +15611,10 @@ GRANT INSERT(name),UPDATE(name) ON TABLE app_public.content_owners TO media_serv
 
 
 --
--- Name: COLUMN content_owners.sort_order; Type: ACL; Schema: app_public; Owner: -
+-- Name: TABLE country_groups_countries; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT INSERT(sort_order),UPDATE(sort_order) ON TABLE app_public.content_owners TO media_service_gql_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.country_groups_countries TO media_service_gql_role;
 
 
 --
@@ -15402,34 +15730,6 @@ GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.episodes TO media_servic
 
 
 --
--- Name: COLUMN episodes.custom_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.episodes TO media_service_gql_role;
-
-
---
--- Name: COLUMN episodes.credits_start_time; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(credits_start_time),UPDATE(credits_start_time) ON TABLE app_public.episodes TO media_service_gql_role;
-
-
---
--- Name: COLUMN episodes.length_in_seconds; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(length_in_seconds),UPDATE(length_in_seconds) ON TABLE app_public.episodes TO media_service_gql_role;
-
-
---
--- Name: COLUMN episodes.dynamic_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.episodes TO media_service_gql_role;
-
-
---
 -- Name: COLUMN episodes.extended_field; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15518,6 +15818,20 @@ GRANT INSERT(license_start),UPDATE(license_start) ON TABLE app_public.episodes_l
 --
 
 GRANT INSERT(license_end),UPDATE(license_end) ON TABLE app_public.episodes_licenses TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN episodes_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.episodes_licenses TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN episodes_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.episodes_licenses TO media_service_gql_role;
 
 
 --
@@ -15857,13 +16171,6 @@ GRANT SELECT ON TABLE app_public.ingest_status TO media_service_login;
 
 
 --
--- Name: TABLE iso_alpha_two_country_codes; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT SELECT ON TABLE app_public.iso_alpha_two_country_codes TO media_service_login;
-
-
---
 -- Name: TABLE languages; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -16018,34 +16325,6 @@ GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.movies TO media_service_
 
 
 --
--- Name: COLUMN movies.custom_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.movies TO media_service_gql_role;
-
-
---
--- Name: COLUMN movies.credits_start_time; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(credits_start_time),UPDATE(credits_start_time) ON TABLE app_public.movies TO media_service_gql_role;
-
-
---
--- Name: COLUMN movies.length_in_seconds; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(length_in_seconds),UPDATE(length_in_seconds) ON TABLE app_public.movies TO media_service_gql_role;
-
-
---
--- Name: COLUMN movies.dynamic_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.movies TO media_service_gql_role;
-
-
---
 -- Name: COLUMN movies.extended_field; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -16064,27 +16343,6 @@ GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.movies TO 
 --
 
 GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.movies TO media_service_gql_role;
-
-
---
--- Name: COLUMN movies.audio_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(audio_languages),UPDATE(audio_languages) ON TABLE app_public.movies TO media_service_gql_role;
-
-
---
--- Name: COLUMN movies.subtitle_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(subtitle_languages),UPDATE(subtitle_languages) ON TABLE app_public.movies TO media_service_gql_role;
-
-
---
--- Name: COLUMN movies.caption_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(caption_languages),UPDATE(caption_languages) ON TABLE app_public.movies TO media_service_gql_role;
 
 
 --
@@ -16155,6 +16413,20 @@ GRANT INSERT(license_start),UPDATE(license_start) ON TABLE app_public.movies_lic
 --
 
 GRANT INSERT(license_end),UPDATE(license_end) ON TABLE app_public.movies_licenses TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN movies_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.movies_licenses TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN movies_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.movies_licenses TO media_service_gql_role;
 
 
 --
@@ -16319,34 +16591,6 @@ GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.seasons TO media_service
 
 
 --
--- Name: COLUMN seasons.custom_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.seasons TO media_service_gql_role;
-
-
---
--- Name: COLUMN seasons.credits_start_time; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(credits_start_time),UPDATE(credits_start_time) ON TABLE app_public.seasons TO media_service_gql_role;
-
-
---
--- Name: COLUMN seasons.length_in_seconds; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(length_in_seconds),UPDATE(length_in_seconds) ON TABLE app_public.seasons TO media_service_gql_role;
-
-
---
--- Name: COLUMN seasons.dynamic_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.seasons TO media_service_gql_role;
-
-
---
 -- Name: COLUMN seasons.extended_field; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -16372,6 +16616,13 @@ GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.seasons TO
 --
 
 GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.seasons TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN seasons.title; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(title),UPDATE(title) ON TABLE app_public.seasons TO media_service_gql_role;
 
 
 --
@@ -16435,6 +16686,20 @@ GRANT INSERT(license_start),UPDATE(license_start) ON TABLE app_public.seasons_li
 --
 
 GRANT INSERT(license_end),UPDATE(license_end) ON TABLE app_public.seasons_licenses TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN seasons_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.seasons_licenses TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN seasons_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.seasons_licenses TO media_service_gql_role;
 
 
 --
@@ -16802,34 +17067,6 @@ GRANT INSERT(rating),UPDATE(rating) ON TABLE app_public.tvshows TO media_service
 
 
 --
--- Name: COLUMN tvshows.custom_rating; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(custom_rating),UPDATE(custom_rating) ON TABLE app_public.tvshows TO media_service_gql_role;
-
-
---
--- Name: COLUMN tvshows.credits_start_time; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(credits_start_time),UPDATE(credits_start_time) ON TABLE app_public.tvshows TO media_service_gql_role;
-
-
---
--- Name: COLUMN tvshows.length_in_seconds; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(length_in_seconds),UPDATE(length_in_seconds) ON TABLE app_public.tvshows TO media_service_gql_role;
-
-
---
--- Name: COLUMN tvshows.dynamic_field; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(dynamic_field),UPDATE(dynamic_field) ON TABLE app_public.tvshows TO media_service_gql_role;
-
-
---
 -- Name: COLUMN tvshows.extended_field; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -16848,27 +17085,6 @@ GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.tvshows TO
 --
 
 GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.tvshows TO media_service_gql_role;
-
-
---
--- Name: COLUMN tvshows.audio_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(audio_languages),UPDATE(audio_languages) ON TABLE app_public.tvshows TO media_service_gql_role;
-
-
---
--- Name: COLUMN tvshows.subtitle_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(subtitle_languages),UPDATE(subtitle_languages) ON TABLE app_public.tvshows TO media_service_gql_role;
-
-
---
--- Name: COLUMN tvshows.caption_languages; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(caption_languages),UPDATE(caption_languages) ON TABLE app_public.tvshows TO media_service_gql_role;
 
 
 --
@@ -16939,6 +17155,20 @@ GRANT INSERT(license_start),UPDATE(license_start) ON TABLE app_public.tvshows_li
 --
 
 GRANT INSERT(license_end),UPDATE(license_end) ON TABLE app_public.tvshows_licenses TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshows_licenses.downloaded_asset_lifespan; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(downloaded_asset_lifespan),UPDATE(downloaded_asset_lifespan) ON TABLE app_public.tvshows_licenses TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshows_licenses.is_downloadable; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.tvshows_licenses TO media_service_gql_role;
 
 
 --

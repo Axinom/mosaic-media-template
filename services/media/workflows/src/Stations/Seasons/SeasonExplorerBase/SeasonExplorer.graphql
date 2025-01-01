@@ -3,11 +3,13 @@ fragment SeasonExplorerProperties on Season {
   publishStatus
   index
   externalId
+  ageRating
+  contentOwner
   tvshow {
     id
     title
   }
-  seasonsImages(condition: { imageType: COVER }) {
+  seasonsImages(condition: { imageType: COVER_1X1 }) {
     nodes {
       imageId
     }
@@ -21,6 +23,7 @@ fragment SeasonExplorerProperties on Season {
   }
   createdDate
   updatedDate
+  updatedUser
   seasonsTags {
     nodes {
       name
@@ -35,6 +38,17 @@ fragment SeasonExplorerProperties on Season {
   seasonsProductionCountries {
     nodes {
       name
+    }
+  }
+  seasonsLicenses {
+    nodes {
+      licenseEnd
+      licenseStart
+      seasonsLicensesCountries {
+        nodes {
+          code
+        }
+      }
     }
   }
   studio
@@ -72,6 +86,36 @@ subscription SeasonsMutated {
     eventKey
     season {
       ...SeasonExplorerProperties
+    }
+  }
+}
+
+query GetSeasonsFilterOptionsData {
+  ageRatings {
+    nodes {
+      id
+      name
+    }
+  }
+
+  contentOwners {
+    nodes {
+      id
+      name
+    }
+  }
+
+  movieGenres {
+    nodes {
+      id
+      title
+    }
+  }
+
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
     }
   }
 }

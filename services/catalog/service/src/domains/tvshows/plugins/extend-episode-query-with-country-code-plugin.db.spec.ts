@@ -69,32 +69,6 @@ describe('ExtendEpisodeQueryWithCountryCodePlugin', () => {
       expect(resp.errors).toBeFalsy();
     });
 
-    it('no license -> error for no license', async () => {
-      // Act
-      const resp = await ctx.runGqlQuery(EPISODE_REQUEST, {
-        id: episodeId,
-        countryCode: 'DE',
-      });
-
-      // Assert
-      expect(resp?.data?.episode).toBeFalsy();
-      expect(resp.errors).toMatchObject([
-        {
-          code: CommonErrors.LicenseNotFound.code,
-          details: undefined,
-          message: 'The episode does not have a license.',
-          path: ['episode'],
-        },
-      ]);
-
-      const loggedObject = getFirstMockResult<any>(errorOverride);
-      expect(loggedObject).toMatchObject({
-        message: 'The episode does not have a license.',
-        loglevel: 'ERROR',
-        details: { code: CommonErrors.LicenseNotFound.code },
-      });
-    });
-
     it('license with no values set -> error for not valid license', async () => {
       // Arrange
       await insert('episode_licenses', {
@@ -360,6 +334,21 @@ describe('ExtendEpisodeQueryWithCountryCodePlugin', () => {
       expect(debugOverride).toHaveBeenCalledTimes(0);
     });
 
+    it('no license -> returns episode', async () => {
+      // Act
+      const resp = await ctx.runGqlQuery(EPISODE_REQUEST, {
+        id: episodeId,
+        countryCode: 'DE',
+      });
+
+      // Assert
+      expect(resp.errors).toBeFalsy();
+
+      expect(resp?.data?.episode.id).toEqual(episodeId);
+      expect(errorOverride).toHaveBeenCalledTimes(0);
+      expect(debugOverride).toHaveBeenCalledTimes(0);
+    });
+
     it('license with only start date before current date -> episode returned', async () => {
       // Arrange
       await insert('episode_licenses', {
@@ -509,32 +498,6 @@ describe('ExtendEpisodeQueryWithCountryCodePlugin', () => {
 
     afterAll(async () => {
       await ctx?.truncate('season');
-    });
-
-    it('no license -> error for no license', async () => {
-      // Act
-      const resp = await ctx.runGqlQuery(EPISODE_REQUEST, {
-        id: episodeId,
-        countryCode: 'DE',
-      });
-
-      // Assert
-      expect(resp?.data?.episode).toBeFalsy();
-      expect(resp.errors).toMatchObject([
-        {
-          code: CommonErrors.LicenseNotFound.code,
-          details: undefined,
-          message: 'The episode does not have a license.',
-          path: ['episode'],
-        },
-      ]);
-
-      const loggedObject = getFirstMockResult<any>(errorOverride);
-      expect(loggedObject).toMatchObject({
-        message: 'The episode does not have a license.',
-        loglevel: 'ERROR',
-        details: { code: CommonErrors.LicenseNotFound.code },
-      });
     });
 
     it('license with no values set -> error for not valid license', async () => {
@@ -778,6 +741,21 @@ describe('ExtendEpisodeQueryWithCountryCodePlugin', () => {
       await ctx?.truncate('season');
     });
 
+    it('no license -> episode returned', async () => {
+      // Act
+      const resp = await ctx.runGqlQuery(EPISODE_REQUEST, {
+        id: episodeId,
+        countryCode: 'DE',
+      });
+
+      // Assert
+      expect(resp.errors).toBeFalsy();
+
+      expect(resp?.data?.episode.id).toEqual(episodeId);
+      expect(errorOverride).toHaveBeenCalledTimes(0);
+      expect(debugOverride).toHaveBeenCalledTimes(0);
+    });
+
     it('license with only start date before current date -> episode returned', async () => {
       // Arrange
       await insert('season_licenses', {
@@ -931,32 +909,6 @@ describe('ExtendEpisodeQueryWithCountryCodePlugin', () => {
     afterAll(async () => {
       await ctx?.truncate('season');
       await ctx?.truncate('tvshow');
-    });
-
-    it('no license -> error for no license', async () => {
-      // Act
-      const resp = await ctx.runGqlQuery(EPISODE_REQUEST, {
-        id: episodeId,
-        countryCode: 'DE',
-      });
-
-      // Assert
-      expect(resp?.data?.episode).toBeFalsy();
-      expect(resp.errors).toMatchObject([
-        {
-          code: CommonErrors.LicenseNotFound.code,
-          details: undefined,
-          message: 'The episode does not have a license.',
-          path: ['episode'],
-        },
-      ]);
-
-      const loggedObject = getFirstMockResult<any>(errorOverride);
-      expect(loggedObject).toMatchObject({
-        message: 'The episode does not have a license.',
-        loglevel: 'ERROR',
-        details: { code: CommonErrors.LicenseNotFound.code },
-      });
     });
 
     it('license with no values set -> error for not valid license', async () => {

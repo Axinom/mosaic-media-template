@@ -1,11 +1,10 @@
 query ContentOwners {
-  contentOwners(orderBy: SORT_ORDER_ASC) {
+  contentOwners {
     nodes {
       createdDate
       createdUser
       id
       name
-      sortOrder
       updatedDate
       updatedUser
     }

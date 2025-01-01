@@ -3,6 +3,7 @@ import { useEpisodeSelectExplorerModal } from '../../../../Episodes/EpisodeSelec
 import { useMovieSelectExplorerModal } from '../../../../Movies/MovieSelectExplorerModal/MovieSelectExplorerModal';
 import { useSeasonSelectExplorerModal } from '../../../../Seasons/SeasonSelectExplorerModal/SeasonSelectExplorerModal';
 import { useTvShowSelectExplorerModal } from '../../../../TvShows/TvShowSelectExplorerModal/TvShowSelectExplorerModal';
+import { useCollectionSelectExplorerModal } from '../../../CollectionSelectExplorerModal/CollectionSelectExplorerModal';
 import { UseAddOptionsResult } from './EntityDataListDataEntry.types';
 
 export const useAddOptions: UseAddOptionsResult = (
@@ -95,6 +96,33 @@ export const useAddOptions: UseAddOptionsResult = (
                 publishStatus: item.publishStatus,
                 title: item.title,
                 sortOrder: sortOrder + index,
+                entityId: item.id,
+              });
+            });
+          }
+        }
+      },
+    }),
+  },
+  {
+    title: 'Add Collection',
+    ...useCollectionSelectExplorerModal({
+      excludeItems: excludes[EntityType.Collection],
+      onSelection: (selection) => {
+        if (selection.mode === 'SINGLE_ITEMS') {
+          const items = selection.items;
+          if (items && onActionClicked) {
+            items.forEach((item, _index) => {
+              onActionClicked({
+                entityType: EntityType.Collection,
+                entityImages: item.collectionsImages,
+                publishStatus: item.publishStatus,
+                title: item.title,
+                sortOrder:
+                  sortOrder >
+                  (item?.collectionRelations?.nodes[0]?.sortOrder ?? 0) + 1
+                    ? sortOrder
+                    : (item?.collectionRelations?.nodes[0]?.sortOrder ?? 0) + 1,
                 entityId: item.id,
               });
             });

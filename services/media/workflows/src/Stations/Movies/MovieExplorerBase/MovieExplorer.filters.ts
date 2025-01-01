@@ -3,10 +3,26 @@ import {
   FilterType,
   FilterTypes,
   FilterValues,
+  Option,
 } from '@axinom/mosaic-ui';
-import { BusinessType, MovieFilter } from '../../../generated/graphql';
+import { useEffect, useState } from 'react';
+import { client } from '../../../apolloClient';
+import {
+  BusinessType,
+  MovieFilter,
+  PublishStatus,
+  useGetMoviesFilterOptionsDataQuery,
+} from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { MovieData } from './MovieExplorer.types';
+
+interface allOptions {
+  allAgeRatings: Option[];
+  allContentOwners: Option[];
+  allGenres: Option[];
+  allCollections: Option[];
+  allCountries: Option[];
+}
 
 export function useMoviesFilters(): {
   readonly filterOptions: FilterType<MovieData>[];
@@ -15,6 +31,97 @@ export function useMoviesFilters(): {
     excludeItems?: number[],
   ) => MovieFilter | undefined;
 } {
+  const [AllFilterOptions, setAllFilterOptions] = useState<allOptions>({
+    allAgeRatings: [],
+    allContentOwners: [],
+    allGenres: [],
+    allCollections: [],
+    allCountries: [],
+  });
+
+  const { data, error } = useGetMoviesFilterOptionsDataQuery({ client });
+
+  useEffect(() => {
+    if (error) {
+      setAllFilterOptions({
+        allAgeRatings: [
+          {
+            label: 'Unable to load age rating options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allContentOwners: [
+          {
+            label: 'Unable to load content owner options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allGenres: [
+          {
+            label: 'Unable to load genres options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allCollections: [
+          {
+            label: 'Unable to load collection options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allCountries: [
+          {
+            label: 'Unable to load country options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+      });
+    } else {
+      let ageRating: Option[] = [];
+      let contentOwner: Option[] = [];
+      let genres: Option[] = [];
+      let collections: Option[] = [];
+      let countries: Option[] = [];
+
+      if (data?.ageRatings?.nodes !== undefined) {
+        ageRating = data.ageRatings.nodes.map(({ name }) => ({
+          label: name,
+          value: name,
+        }));
+      }
+      if (data?.contentOwners?.nodes !== undefined) {
+        contentOwner = data.contentOwners.nodes.map(({ name }) => ({
+          label: name,
+          value: name,
+        }));
+      }
+      if (data?.movieGenres?.nodes !== undefined) {
+        genres = data.movieGenres.nodes.map(({ title }) => ({
+          label: title,
+          value: title,
+        }));
+      }
+      if (data?.collections?.nodes !== undefined) {
+        collections = data.collections.nodes.map(({ title }) => ({
+          label: title,
+          value: title,
+        }));
+      }
+      if (data?.allCountryTypes?.nodes !== undefined) {
+        countries = data.allCountryTypes.nodes.map(({ name, id }) => ({
+          label: name ?? '',
+          value: id,
+        }));
+      }
+      setAllFilterOptions({
+        allAgeRatings: ageRating,
+        allContentOwners: contentOwner,
+        allGenres: genres,
+        allCollections: collections,
+        allCountries: countries,
+      });
+    }
+  }, [data]);
+
   const filterOptions: FilterType<MovieData>[] = [
     {
       label: 'Title',
@@ -24,7 +131,12 @@ export function useMoviesFilters(): {
     {
       label: 'Genre',
       property: 'moviesMovieGenres',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allGenres.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Tags',
@@ -34,27 +146,41 @@ export function useMoviesFilters(): {
     {
       label: 'Collections',
       property: 'collectionRelations',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCollections.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Content Owners',
       property: 'contentOwner',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allContentOwners.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Age Ratings',
       property: 'ageRating',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allAgeRatings.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Publishing Status',
       property: 'publishStatus',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Audio Languages',
-      property: 'audioLanguages',
-      type: FilterTypes.FreeText,
+      type: FilterTypes.Options,
+      options: Object.keys(PublishStatus).map((key) => ({
+        value: PublishStatus[key],
+        label: getEnumLabel(PublishStatus[key]),
+      })),
     },
     {
       label: 'Cast',
@@ -68,8 +194,13 @@ export function useMoviesFilters(): {
     },
     {
       label: 'License Countries',
-      property: 'moviesProductionCountries',
-      type: FilterTypes.FreeText,
+      property: 'moviesLicenses',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Valid Licensing',
@@ -94,16 +225,11 @@ export function useMoviesFilters(): {
         label: getEnumLabel(BusinessType[key]),
       })),
     },
-    // {
-    //   label: 'TVOD Tier',
-    //   property: 'studio',
-    //   type: FilterTypes.FreeText,
-    // },
   ];
 
   const transformFilters = (
     filters: FilterValues<MovieData>,
-    _excludeItems?: number[],
+    excludeItems?: number[],
   ): MovieFilter | undefined => {
     return filterToPostGraphileFilter<MovieFilter>(filters, {
       title: 'includesInsensitive',
@@ -122,13 +248,12 @@ export function useMoviesFilters(): {
       ],
       ageRating: 'includesInsensitive',
       publishStatus: 'in',
-      audioLanguages: 'equalTo',
       moviesCasts: ['some', 'name', 'includesInsensitive'],
       externalId: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
-      moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
-      moviesLicenses: (value) => {
-        if (value === 'Valid License') {
+      moviesLicenses: (value: unknown) => {
+        const [countryCode, licensesStatus] = value as [string, string];
+        if (licensesStatus === 'Valid License') {
           return {
             some: {
               licenseEnd: {
@@ -136,11 +261,23 @@ export function useMoviesFilters(): {
               },
             },
           };
-        } else {
+        } else if (licensesStatus === 'No Valid License') {
           return {
             every: {
               licenseEnd: {
-                lessThanOrEqualTo: '2024-09-29T18:30:00+00:00',
+                lessThanOrEqualTo: new Date(),
+              },
+            },
+          };
+        } else {
+          return {
+            some: {
+              moviesLicensesCountries: {
+                some: {
+                  code: {
+                    equalTo: countryCode,
+                  },
+                },
               },
             },
           };
@@ -148,6 +285,20 @@ export function useMoviesFilters(): {
       },
       assetSubtype: 'equalTo',
       businessType: 'in',
+      id: (value) => {
+        if (typeof value === 'number') {
+          // User filter
+          return {
+            equalTo: value,
+            notIn: excludeItems,
+          };
+        } else {
+          // Exclude items
+          return {
+            notIn: excludeItems,
+          };
+        }
+      },
     });
   };
 

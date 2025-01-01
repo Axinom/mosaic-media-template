@@ -17,3 +17,7 @@ export const CountryNames = Object.keys(IsoAlphaTwoCountryCodes)
     value: IsoAlphaTwoCountryCodes[key],
   }))
   .sort((v1, v2) => (v1.display > v2.display ? 1 : -1));
+
+export const getCountryCode = (countryName: string): string => {
+  return countries.getAlpha2Code(countryName, 'en');
+};

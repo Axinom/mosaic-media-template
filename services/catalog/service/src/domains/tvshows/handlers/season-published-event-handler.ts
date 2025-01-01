@@ -56,7 +56,6 @@ export class SeasonPublishedEventHandler extends TransactionalInboxMessageHandle
       age_rating: payload.age_rating,
       asset_type: payload.asset_type,
       asset_subtype: payload.asset_subtype,
-      title: payload.title,
       original_title: payload.original_title,
     }).run(txnClient);
 
@@ -136,6 +135,7 @@ export class SeasonPublishedEventHandler extends TransactionalInboxMessageHandle
             season_id: payload.content_id,
             is_default_locale: l.is_default_locale,
             locale: l.language_tag,
+            title: l.title,
             synopsis: l.synopsis,
             description: l.description,
           }),

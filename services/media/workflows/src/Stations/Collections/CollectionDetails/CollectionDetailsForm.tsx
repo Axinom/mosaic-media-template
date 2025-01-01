@@ -1,4 +1,4 @@
-import { ID } from '@axinom/mosaic-managed-workflow-integration';
+import { ID, Maybe } from '@axinom/mosaic-managed-workflow-integration';
 import {
   createUpdateGQLFragmentGenerator,
   CustomTagsField,
@@ -12,20 +12,28 @@ import {
   Paragraph,
   Section,
   SingleLineTextField,
+  TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import React, { useCallback, useContext, useMemo } from 'react';
+import { validate as isUuid } from 'uuid';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext } from '../../../externals';
 import {
+  AllCountryType,
+  CollectionCountry,
+  CollectionCountryInput,
   CollectionDocument,
   CollectionImageType,
   CollectionQuery,
+  DeleteCollectionCountryInput,
   Mutation,
+  MutationCreateCollectionCountryArgs,
   MutationCreateCollectionsTagArgs,
+  MutationDeleteCollectionCountryArgs,
   MutationDeleteCollectionsTagArgs,
   SearchCollectionTagsDocument,
   SearchCollectionTagsQuery,
@@ -33,6 +41,10 @@ import {
   UpdateCollectionInput,
   useCollectionQuery,
 } from '../../../generated/graphql';
+import {
+  getCountryCode,
+  getCountryName,
+} from '../../../Util/CountryNames/CountryNames';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useCollectionDetailsActions } from './CollectionDetails.actions';
 import classes from './CollectionDetails.module.scss';
@@ -60,9 +72,18 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
     fetchPolicy: 'network-only',
   });
 
-  const { tags } = useMemo(
+  const { tags, allLanguages, languages, allCountries, countries } = useMemo(
     () => ({
       tags: data?.collection?.collectionsTags.nodes.map((node) => node.name),
+      allLanguages: data?.languages?.nodes.map((node) => node.title) ?? [],
+      languages: data?.collection?.languages?.map((lang) => lang ?? ''),
+      allCountries:
+        data?.allCountryTypes?.nodes.map((node: AllCountryType) =>
+          isUuid(node.id ?? '') ? node.name : getCountryName(node.id ?? ''),
+        ) ?? [],
+      countries: data?.collection?.collectionCountries.nodes.map((country) =>
+        getCountryNameById(country, data?.allCountryTypes?.nodes),
+      ),
     }),
     [data],
   );
@@ -93,6 +114,36 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
         prefix: 'collectionsTag',
       });
 
+      const countriesAssignmentMutations = generateArrayMutations({
+        current: formData.countries,
+        original: initialData.data?.countries,
+        generateCreateMutation: (name) =>
+          generateUpdateGQLFragment<MutationCreateCollectionCountryArgs>(
+            'createCollectionCountry',
+            {
+              input: {
+                collectionCountry: generateCountryAssignmentPatch(
+                  name,
+                  collectionId,
+                  data?.allCountryTypes?.nodes,
+                ),
+              },
+            },
+          ),
+        generateDeleteMutation: (name) =>
+          generateUpdateGQLFragment<MutationDeleteCollectionCountryArgs>(
+            'deleteCollectionCountry',
+            {
+              input: generateDeleteCountryAssignmentPatch(
+                name,
+                data?.collection?.collectionCountries.nodes,
+                data?.allCountryTypes?.nodes,
+              ),
+            },
+          ),
+        prefix: 'collectionCountry',
+      });
+
       const patch = createUpdateDto(formData, initialData.data);
 
       const GqlMutationDocument = gql`mutation UpdateCollection($input: UpdateCollectionInput!) {
@@ -104,6 +155,7 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
             }
           }
           ${tagAssignmentMutations}
+          ${countriesAssignmentMutations}
         }`;
 
       await client.mutate<unknown, { input: UpdateCollectionInput }>({
@@ -113,7 +165,7 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
         awaitRefetchQueries: true,
       });
     },
-    [collectionId],
+    [collectionId, data],
   );
 
   return (
@@ -128,6 +180,8 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
         data: {
           ...data?.collection,
           tags,
+          languages,
+          countries,
         },
         loading,
         entityNotFound: data?.collection === null,
@@ -136,7 +190,7 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form />
+      <Form languageOptions={allLanguages} countryOptions={allCountries} />
     </Details>
   );
 };
@@ -152,7 +206,7 @@ const Panel: React.FC = () => {
 
     values.collectionsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case CollectionImageType.Cover:
+        case CollectionImageType.Cover_1X1:
           coverImageCount++;
           coverImageId = imageId;
           break;
@@ -168,6 +222,10 @@ const Panel: React.FC = () => {
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
+          <Paragraph title="External ID">{values.externalId}</Paragraph>
+          <Paragraph title="Subtype">
+            {getEnumLabel(values.assetSubtype)}
+          </Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -178,7 +236,7 @@ const Panel: React.FC = () => {
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
           {values.publishedDate ? (
-            <Paragraph title="Last Published">
+            <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
           ) : null}
@@ -202,6 +260,10 @@ const Panel: React.FC = () => {
               <div className={classes.rightAlignment}>
                 {values.episodes?.totalCount} / many
               </div>
+              <div>Collections</div>
+              <div className={classes.rightAlignment}>
+                {values.episodes?.totalCount} / many
+              </div>
             </div>
           </Paragraph>
           <Paragraph title="Images">
@@ -218,22 +280,27 @@ const Panel: React.FC = () => {
   }, [
     values.collectionsImages?.nodes,
     values.id,
+    values.externalId,
+    values.assetSubtype,
     values.createdDate,
     values.createdUser,
     values.updatedDate,
     values.updatedUser,
+    values.publishStatus,
+    values.publishedDate,
+    values.publishedUser,
     values.movies?.totalCount,
     values.tvshows?.totalCount,
     values.seasons?.totalCount,
     values.episodes?.totalCount,
-    values.publishStatus,
-    values.publishedDate,
-    values.publishedUser,
     ImageCover,
   ]);
 };
 
-const Form: React.FC = () => {
+const Form: React.FC<{
+  languageOptions?: string[];
+  countryOptions?: (Maybe<string> | undefined)[];
+}> = ({ languageOptions, countryOptions }) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchCollectionTagsQuery,
@@ -248,15 +315,23 @@ const Form: React.FC = () => {
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
-      <Field name="synopsis" label="Synopsis" as={TextAreaField} />
+      <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
-      <Field name="externalId" label="External ID" as={SingleLineTextField} />
       <Field
         name="tags"
         label="Tags"
         liveSuggestionsResolver={tagsResolver}
         as={CustomTagsField}
       />
+      <Field
+        name="countries"
+        label="Country"
+        tagsOptions={countryOptions}
+        as={TagsField}
+        displayKey="display"
+        valueKey="value"
+      />
+      <Field name="extendedField" label="Custom" as={TextAreaField} />
     </>
   );
 };
@@ -266,6 +341,77 @@ function createUpdateDto(
   initialValues?: CollectionDetailsFormData | null,
 ): CollectionDetailsFormData {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { tags, ...rest } = getFormDiff(currentValues, initialValues);
+  const { tags, countries, ...rest } = getFormDiff(
+    currentValues,
+    initialValues,
+  );
   return rest;
 }
+
+const getCountryNameById = (
+  country: CollectionCountry['id'],
+  allCountries: AllCountryType[] | undefined,
+): string => {
+  if (isUuid(country.countryGroupId)) {
+    return (
+      allCountries?.filter((con) => con.id === country.countryGroupId)[0]
+        .name ?? ''
+    );
+  } else {
+    return getCountryName(country.countryId);
+  }
+};
+
+const generateCountryAssignmentPatch = (
+  name: string,
+  collectionId: number,
+  allCountries: AllCountryType[] | undefined,
+): CollectionCountryInput['id'] => {
+  const countryCode = getCountryCode(name);
+  if (countryCode) {
+    return {
+      collectionId,
+      countryId: { type: 'enum', value: countryCode },
+    };
+  } else {
+    if (allCountries) {
+      const countryGroup = allCountries.find((con) => con.name === name);
+      if (countryGroup) {
+        return {
+          collectionId,
+          countryGroupId: countryGroup.id,
+        };
+      }
+    }
+  }
+};
+
+const generateDeleteCountryAssignmentPatch = (
+  name: string,
+  collectionCountries: CollectionCountry['id'],
+  allCountries: AllCountryType[] | undefined,
+): DeleteCollectionCountryInput => {
+  const countryCode = getCountryCode(name);
+  if (countryCode) {
+    const country = collectionCountries.find(
+      (con: CollectionCountry['id']) => con.countryId === countryCode,
+    );
+    if (country) {
+      return { id: country.id };
+    }
+  } else {
+    if (allCountries) {
+      const countryGroup = allCountries.find((con) => con.name === name);
+      if (countryGroup) {
+        const collectionCountry = collectionCountries.find(
+          (con: CollectionCountry['id']) =>
+            con.countryGroupId === countryGroup.id,
+        );
+        if (collectionCountry) {
+          return { id: collectionCountry.id };
+        }
+      }
+    }
+  }
+  return { id: '' };
+};

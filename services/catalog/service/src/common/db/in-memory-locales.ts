@@ -5,7 +5,7 @@ import {
   sleep,
 } from '@axinom/mosaic-service-common';
 import { Client } from 'pg';
-import { all, deletes, insert, Queryable, select } from 'zapatos/db';
+import { all, doNothing, Queryable, select, upsert } from 'zapatos/db';
 import { locales } from 'zapatos/schema';
 import { Config } from '../config';
 import { DEFAULT_LOCALE_TAG, MOSAIC_LOCALE_NOTIFY } from '../constants';
@@ -42,6 +42,10 @@ export const getInMemoryLocale = (locale: string): string => {
  *
  * Returns false if no changes were made and true if local `app_public.locales`
  * table was updated
+ *
+ * BeyondDutch: We do not delete any existing locales since the locales may change from asset to asset.
+ * Hence, we only add new locales.
+ * We do not change the default locale if it is already set.
  */
 export const syncInMemoryLocales = async (
   input: { language_tag: string; is_default_locale: boolean }[],
@@ -56,21 +60,40 @@ export const syncInMemoryLocales = async (
   const inputDefault = input.find((x) => x.is_default_locale);
 
   const localesToAdd = difference(locales, currentLocales);
-  const localesToDrop = difference(currentLocales, locales);
   if (
-    localesToDrop.length === 0 &&
     localesToAdd.length === 0 &&
     inputDefault?.language_tag === currentDefault?.locale
   ) {
     return false;
   }
-  inMemoryLocales = input.map((i) => ({
-    locale: i.language_tag,
-    is_default: i.is_default_locale,
-  }));
 
-  await deletes('locales', {}).run(queryable);
-  await insert('locales', inMemoryLocales).run(queryable);
+  let inputLocales: {
+    locale: string;
+    is_default: boolean;
+  }[] = [];
+
+  if (localesToAdd.length > 0) {
+    inputLocales = input
+      .filter((l) => localesToAdd.includes(l.language_tag))
+      .map((i) => ({
+        locale: i.language_tag,
+        // We only set the very first value with is_default_locale set to true as the default locale.
+        // After that we assume that the default locale is not changed. This is specific to BeyondDutch requirements.
+        // https://axinom.slack.com/archives/C6DV4C1NG/p1732086948451999?thread_ts=1731569080.738099&cid=C6DV4C1NG
+        is_default:
+          currentDefault === undefined && i.is_default_locale ? true : false,
+      }));
+
+    inMemoryLocales = [...inMemoryLocales, ...inputLocales];
+  }
+
+  // We do db operations in the end so there is no latency in keeping the `inMemoryLocales` array upto date.
+  if (inputLocales.length > 0) {
+    await upsert('locales', inputLocales, ['locale'], {
+      updateColumns: doNothing,
+    }).run(queryable);
+  }
+
   return true;
 };
 

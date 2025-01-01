@@ -284,16 +284,19 @@ CREATE FUNCTION app_private.define_localization_view(tablename text, localizatio
 DECLARE
   localizableFieldsSelect text;
 BEGIN
-  SELECT 'l.' || string_agg(column_name, ', l.')
-  INTO localizableFieldsSelect
-  FROM information_schema.columns
-  WHERE table_schema = 'app_public' AND table_name = localizationsTableName AND column_name != 'locale' AND column_name != 'id' AND column_name != 'is_default_locale' AND column_name != fkColumn;
+  SELECT string_agg(c, ', ')
+	INTO localizableFieldsSelect
+	FROM (
+		SELECT 'COALESCE(pl.' || column_name ||', dl.'||column_name||') as '|| column_name as c
+		FROM information_schema.columns
+		WHERE table_schema = 'app_public' AND table_name = localizationsTableName AND column_name != 'locale' AND column_name != 'id' AND column_name != 'is_default_locale' AND column_name != fkColumn
+	);
         
   EXECUTE 'DROP VIEW IF EXISTS app_public.' || tableName || '_view CASCADE;';
   EXECUTE 'CREATE VIEW app_public.' || tableName || '_view AS ' ||
-          'SELECT p.*, ' || localizableFieldsSelect || ' FROM app_public.' || localizationsTableName || ' as l ' ||
-          'JOIN app_public.' || tableName || ' AS p ON l.' || fkColumn || ' = p.id ' ||
-          'WHERE l.locale = (SELECT pg_catalog.current_setting(''mosaic.locale'', true));';
+          'SELECT p.*, ' || localizableFieldsSelect || ' FROM app_public.' || tableName || ' as p ' ||
+          'LEFT JOIN app_public.' || localizationsTableName || ' AS pl ON pl.' || fkColumn || ' = p.id AND pl.locale = (SELECT pg_catalog.current_setting(''mosaic.locale'', true)) ' ||
+		  'LEFT JOIN app_public.' || localizationsTableName || ' AS dl ON dl.' || fkColumn || ' = p.id AND dl.locale = '||' ''default'''||''; -- in case a locale is not found, default locale is used
 
   EXECUTE 'GRANT SELECT ON app_public.' || tableName || '_view TO "catalog_service_gql_role";';
 
@@ -2234,7 +2237,7 @@ CREATE TABLE app_public.collection_localizations (
     collection_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL,
+    title text NOT NULL COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
@@ -2274,12 +2277,12 @@ CREATE VIEW app_public.collection_view AS
     p.dynamic_field,
     p.extended_field,
     p.original_title,
-    l.title,
-    l.description,
-    l.synopsis
-   FROM (app_public.collection_localizations l
-     JOIN app_public.collection p ON ((l.collection_id = p.id)))
-  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
+    COALESCE(pl.title, dl.title) AS title,
+    COALESCE(pl.description, dl.description) AS description,
+    COALESCE(pl.synopsis, dl.synopsis) AS synopsis
+   FROM ((app_public.collection p
+     LEFT JOIN app_public.collection_localizations pl ON (((pl.collection_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
+     LEFT JOIN app_public.collection_localizations dl ON (((dl.collection_id = p.id) AND (dl.locale = 'default'::text))));
 
 
 --
@@ -2423,7 +2426,7 @@ CREATE TABLE app_public.episode_localizations (
     episode_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL,
+    title text NOT NULL COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
@@ -2582,12 +2585,12 @@ CREATE VIEW app_public.episode_view AS
     p.tvshow_id,
     p.intro_start_time,
     p.intro_end_time,
-    l.title,
-    l.description,
-    l.synopsis
-   FROM (app_public.episode_localizations l
-     JOIN app_public.episode p ON ((l.episode_id = p.id)))
-  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
+    COALESCE(pl.title, dl.title) AS title,
+    COALESCE(pl.description, dl.description) AS description,
+    COALESCE(pl.synopsis, dl.synopsis) AS synopsis
+   FROM ((app_public.episode p
+     LEFT JOIN app_public.episode_localizations pl ON (((pl.episode_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
+     LEFT JOIN app_public.episode_localizations dl ON (((dl.episode_id = p.id) AND (dl.locale = 'default'::text))));
 
 
 --
@@ -2672,7 +2675,7 @@ CREATE TABLE app_public.movie_genre_localizations (
     movie_genre_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL
+    title text NOT NULL COLLATE pg_catalog."und-x-icu"
 );
 
 
@@ -2704,10 +2707,10 @@ ALTER TABLE app_public.movie_genre_localizations ALTER COLUMN id ADD GENERATED B
 CREATE VIEW app_public.movie_genre_view AS
  SELECT p.id,
     p.order_no,
-    l.title
-   FROM (app_public.movie_genre_localizations l
-     JOIN app_public.movie_genre p ON ((l.movie_genre_id = p.id)))
-  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
+    COALESCE(pl.title, dl.title) AS title
+   FROM ((app_public.movie_genre p
+     LEFT JOIN app_public.movie_genre_localizations pl ON (((pl.movie_genre_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
+     LEFT JOIN app_public.movie_genre_localizations dl ON (((dl.movie_genre_id = p.id) AND (dl.locale = 'default'::text))));
 
 
 --
@@ -2813,7 +2816,7 @@ CREATE TABLE app_public.movie_localizations (
     movie_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL,
+    title text NOT NULL COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
@@ -2971,12 +2974,12 @@ CREATE VIEW app_public.movie_view AS
     p.age_rating,
     p.asset_type,
     p.asset_subtype,
-    l.title,
-    l.description,
-    l.synopsis
-   FROM (app_public.movie_localizations l
-     JOIN app_public.movie p ON ((l.movie_id = p.id)))
-  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
+    COALESCE(pl.title, dl.title) AS title,
+    COALESCE(pl.description, dl.description) AS description,
+    COALESCE(pl.synopsis, dl.synopsis) AS synopsis
+   FROM ((app_public.movie p
+     LEFT JOIN app_public.movie_localizations pl ON (((pl.movie_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
+     LEFT JOIN app_public.movie_localizations dl ON (((dl.movie_id = p.id) AND (dl.locale = 'default'::text))));
 
 
 --
@@ -3008,8 +3011,7 @@ CREATE TABLE app_public.season (
     age_rating text,
     asset_type integer,
     asset_subtype text,
-    original_title text,
-    title text
+    original_title text
 );
 
 
@@ -3117,7 +3119,8 @@ CREATE TABLE app_public.season_localizations (
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
     description text,
-    synopsis text
+    synopsis text,
+    title text NOT NULL
 );
 
 
@@ -3269,12 +3272,12 @@ CREATE VIEW app_public.season_view AS
     p.asset_type,
     p.asset_subtype,
     p.original_title,
-    p.title,
-    l.description,
-    l.synopsis
-   FROM (app_public.season_localizations l
-     JOIN app_public.season p ON ((l.season_id = p.id)))
-  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
+    COALESCE(pl.description, dl.description) AS description,
+    COALESCE(pl.synopsis, dl.synopsis) AS synopsis,
+    COALESCE(pl.title, dl.title) AS title
+   FROM ((app_public.season p
+     LEFT JOIN app_public.season_localizations pl ON (((pl.season_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
+     LEFT JOIN app_public.season_localizations dl ON (((dl.season_id = p.id) AND (dl.locale = 'default'::text))));
 
 
 --
@@ -3347,7 +3350,7 @@ CREATE TABLE app_public.tvshow_genre_localizations (
     tvshow_genre_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL
+    title text NOT NULL COLLATE pg_catalog."und-x-icu"
 );
 
 
@@ -3379,10 +3382,10 @@ ALTER TABLE app_public.tvshow_genre_localizations ALTER COLUMN id ADD GENERATED 
 CREATE VIEW app_public.tvshow_genre_view AS
  SELECT p.id,
     p.order_no,
-    l.title
-   FROM (app_public.tvshow_genre_localizations l
-     JOIN app_public.tvshow_genre p ON ((l.tvshow_genre_id = p.id)))
-  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
+    COALESCE(pl.title, dl.title) AS title
+   FROM ((app_public.tvshow_genre p
+     LEFT JOIN app_public.tvshow_genre_localizations pl ON (((pl.tvshow_genre_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
+     LEFT JOIN app_public.tvshow_genre_localizations dl ON (((dl.tvshow_genre_id = p.id) AND (dl.locale = 'default'::text))));
 
 
 --
@@ -3488,7 +3491,7 @@ CREATE TABLE app_public.tvshow_localizations (
     tvshow_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL,
+    title text NOT NULL COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
@@ -3644,12 +3647,12 @@ CREATE VIEW app_public.tvshow_view AS
     p.age_rating,
     p.asset_type,
     p.asset_subtype,
-    l.title,
-    l.description,
-    l.synopsis
-   FROM (app_public.tvshow_localizations l
-     JOIN app_public.tvshow p ON ((l.tvshow_id = p.id)))
-  WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));
+    COALESCE(pl.title, dl.title) AS title,
+    COALESCE(pl.description, dl.description) AS description,
+    COALESCE(pl.synopsis, dl.synopsis) AS synopsis
+   FROM ((app_public.tvshow p
+     LEFT JOIN app_public.tvshow_localizations pl ON (((pl.tvshow_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
+     LEFT JOIN app_public.tvshow_localizations dl ON (((dl.tvshow_id = p.id) AND (dl.locale = 'default'::text))));
 
 
 --

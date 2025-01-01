@@ -1,6 +1,7 @@
 import {
   Mutations as M,
   Queries as Q,
+  Relations as R,
   Subscriptions as S,
 } from '../../generated/graphql/operations';
 
@@ -31,9 +32,13 @@ export const CollectionsReadOperations = [
   Q.collectionsTag,
   Q.collectionsTags,
   Q.getCollectionsTagsValues,
+  Q.collectionCountry,
+  Q.collectionCountries,
   Sub.collectionsSnapshots,
   Sub.snapshotValidationResults,
   S.collectionMutated,
+  R.childCollection,
+  R.collectionCountries,
 ];
 
 export const CollectionsMutateOperations = [
@@ -59,6 +64,8 @@ export const CollectionsMutateOperations = [
   M.unpublishCollections,
   M.createCollectionSnapshot,
   M.createCollectionSnapshots,
+  M.createCollectionCountry,
+  M.deleteCollectionCountry,
 ];
 
 export const CollectionDevOperations = [M.populateCollections];

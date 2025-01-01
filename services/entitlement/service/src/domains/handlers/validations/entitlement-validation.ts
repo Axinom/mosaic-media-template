@@ -53,21 +53,35 @@ export const EntitlementValidation = (
     );
 
     entitled = authenticated
-      ? FreeTypes.concat(AuthenticatedTypes).includes(license.businessType)
-      : FreeTypes.includes(license.businessType);
-  }
+      ? FreeTypes.concat(AuthenticatedTypes).includes(assetData.businessType)
+      : FreeTypes.includes(assetData.businessType);
 
-  return {
-    isValid: true,
-    error: null,
-    message: 'Validation successful',
-    data: {
-      assetId: assetData.id,
-      assetType: assetData.assetType,
-      keyId: '',
-      Entitled: entitled,
-      DownloadDuration: downloadDuration,
-      IsDownloadable: downloadable,
-    },
-  };
+    return {
+      isValid: true,
+      error: null,
+      message: 'Validation successful',
+      data: {
+        assetId: assetData.id,
+        assetType: assetData.assetType,
+        keyId: '',
+        Entitled: entitled,
+        DownloadDuration: downloadDuration,
+        IsDownloadable: downloadable,
+      },
+    };
+  } else {
+    return {
+      isValid: false,
+      error: { status: 400, message: 'Validation error: No licenses found' },
+      message: 'No licenses found',
+      data: {
+        assetId: assetData.id,
+        assetType: assetData.assetType,
+        keyId: '',
+        Entitled: entitled,
+        DownloadDuration: downloadDuration,
+        IsDownloadable: downloadable,
+      },
+    };
+  }
 };

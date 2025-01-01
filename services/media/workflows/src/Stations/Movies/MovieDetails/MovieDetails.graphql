@@ -9,14 +9,7 @@ query Movie($id: Int!) {
     businessType
     contentOwner
     rating
-    customRating
-    creditsStartTime
-    lengthInSeconds
-    dynamicField
     extendedField
-    captionLanguages
-    audioLanguages
-    subtitleLanguages
     assetSubtype
     moviesTags {
       nodes {
@@ -84,14 +77,7 @@ query Movie($id: Int!) {
   contentOwners {
     nodes {
       name
-      sortOrder
-    }
-  }
-
-  languages {
-    nodes {
-      code
-      title
+      id
     }
   }
 }

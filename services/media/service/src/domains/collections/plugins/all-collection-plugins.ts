@@ -8,6 +8,7 @@ import {
 } from '../../../publishing';
 import { PopulateEndpointPlugin } from './populate-endpoint-plugin';
 import { SmartTagsPlugin } from './smart-tags-plugin';
+import { CreateCollectionRelationPlugin } from './wrappers/create-collection-relation';
 
 export const AllCollectionPlugins = makePluginByCombiningPlugins(
   SmartTagsPlugin,
@@ -16,6 +17,7 @@ export const AllCollectionPlugins = makePluginByCombiningPlugins(
   BulkUnpublishingPluginFactory('collections'),
   EntityPublishingEndpointsPluginFactory('collections'),
   BulkDeletePluginFactory('CollectionRelationFilter', 'CollectionFilter'),
+  CreateCollectionRelationPlugin,
 );
 
 export const AllCollectionDevPlugins = makePluginByCombiningPlugins(

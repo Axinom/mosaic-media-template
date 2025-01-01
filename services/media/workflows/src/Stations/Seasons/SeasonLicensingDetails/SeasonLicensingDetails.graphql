@@ -8,6 +8,12 @@ query SeasonsLicense($id: Int!) {
     licenseEnd
     licenseStart
     seasonId
+    createdDate
+    updatedDate
+    updatedUser
+    createdUser
+    isDownloadable
+    downloadedAssetLifespan
   }
 }
 

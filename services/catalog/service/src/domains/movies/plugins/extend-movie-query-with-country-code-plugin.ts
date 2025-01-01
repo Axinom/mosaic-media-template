@@ -4,15 +4,14 @@ import {
   makeWrapResolversPlugin,
 } from 'graphile-utils';
 import { select } from 'zapatos/db';
-import { isLicenseValid } from '../../../common';
+import { CommonErrors, isLicenseValid } from '../../../common';
 import { CountryCodeQueryArgPluginFactory } from '../../../graphql/plugins';
 
 const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
   Query: {
     async movie(resolve, source, args, context, resolveInfo) {
       const result = await resolve(source, args, context, resolveInfo);
-
-      if (isNullOrWhitespace(args.countryCode) || !result) {
+      if (!result) {
         return result;
       }
 
@@ -22,8 +21,9 @@ const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
         { columns: ['countries', 'start_time', 'end_time'] },
       ).run(context.pgClient);
       const validity = isLicenseValid(args.countryCode, 'movie', licenses);
-
-      if (validity === true) {
+      
+      // No licenses is also fine
+      if (validity === true || validity.code === CommonErrors.LicenseNotFound.code) {
         return result;
       } else {
         throw new MosaicError(validity);

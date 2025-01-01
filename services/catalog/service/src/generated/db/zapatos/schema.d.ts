@@ -9474,12 +9474,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       original_title: string | null;
-      /**
-      * **season.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -9584,12 +9578,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       original_title: string | null;
-      /**
-      * **season.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
     }
     export interface Whereable {
       /**
@@ -9694,12 +9682,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       original_title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **season.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -9804,12 +9786,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       original_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **season.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -9914,12 +9890,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       original_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **season.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'season_pkey';
     export type Column = keyof Selectable;
@@ -10624,6 +10594,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **season_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
     }
     export interface JSONSelectable {
       /**
@@ -10662,6 +10638,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **season_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
     }
     export interface Whereable {
       /**
@@ -10700,6 +10682,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -10738,6 +10726,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -10776,6 +10770,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_localizations.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'season_localizations_pkey' | 'unique_by_season_id_and_locale';
     export type Column = keyof Selectable;
@@ -12117,12 +12117,6 @@ declare module 'zapatos/schema' {
       */
       original_title: string | null;
       /**
-      * **season_view.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
-      /**
       * **season_view.description**
       * - `text` in database
       * - Nullable, no default
@@ -12134,6 +12128,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **season_view.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -12239,12 +12239,6 @@ declare module 'zapatos/schema' {
       */
       original_title: string | null;
       /**
-      * **season_view.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title: string | null;
-      /**
       * **season_view.description**
       * - `text` in database
       * - Nullable, no default
@@ -12256,6 +12250,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **season_view.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
     }
     export interface Whereable {
       /**
@@ -12361,12 +12361,6 @@ declare module 'zapatos/schema' {
       */
       original_title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **season_view.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **season_view.description**
       * - `text` in database
       * - Nullable, no default
@@ -12378,6 +12372,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_view.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -12483,12 +12483,6 @@ declare module 'zapatos/schema' {
       */
       original_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **season_view.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **season_view.description**
       * - `text` in database
       * - Nullable, no default
@@ -12500,6 +12494,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_view.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -12605,12 +12605,6 @@ declare module 'zapatos/schema' {
       */
       original_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **season_view.title**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **season_view.description**
       * - `text` in database
       * - Nullable, no default
@@ -12622,6 +12616,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_view.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;

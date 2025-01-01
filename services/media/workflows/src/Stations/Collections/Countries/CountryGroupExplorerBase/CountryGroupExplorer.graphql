@@ -1,0 +1,39 @@
+fragment CountryGroupExplorerProperties on CountryGroup {
+  id
+  name
+  createdDate
+  createdUser
+  updatedDate
+  updatedUser
+  countryGroupsCountriesByGroupId {
+    nodes {
+      countryId
+      groupId
+    }
+  }
+}
+
+query CountryGroups(
+  $filter: CountryGroupFilter
+  # $orderBy: [CountriesOrderBy!]
+  $after: Cursor
+) {
+  filtered: countryGroups(
+    filter: $filter
+    orderBy: NAME_ASC
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      ...CountryGroupExplorerProperties
+    }
+  }
+  nonFiltered: countryGroups {
+    totalCount
+  }
+}

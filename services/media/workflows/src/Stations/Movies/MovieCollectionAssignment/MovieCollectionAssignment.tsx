@@ -97,11 +97,11 @@ export const MovieCollectionAssignment: React.FC = () => {
     <Details<FormData>
       defaultTitle="Collection Assignment"
       subtitle="Add movie to one or more collections"
-      // validationSchema={collectionEntityManagementSchema}
+      validationSchema={collectionEntityManagementSchema}
       initialData={{
         data: { entities: data ?? [] },
         loading,
-        // entityNotFound: data?.filtered?.nodes === null,
+        entityNotFound: data === null,
         error: error?.message,
       }}
       saveData={onSubmit}

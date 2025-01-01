@@ -1,0 +1,37 @@
+query CountryGroup($id: UUID!) {
+  countryGroup(id: $id) {
+    id
+    name
+    createdDate
+    createdUser
+    updatedDate
+    updatedUser
+    countryGroupsCountriesByGroupId {
+      nodes {
+        countryId
+      }
+    }
+  }
+}
+
+query CountryGroupTitle($id: UUID!) {
+  countryGroup(id: $id) {
+    name
+  }
+}
+
+mutation DeleteCountryGroup($input: DeleteCountryGroupInput!) {
+  deleteCountryGroup(input: $input) {
+    countryGroup {
+      id
+    }
+  }
+}
+
+mutation UpdateCountryGroup($input: UpdateCountryGroupInput!) {
+  updateCountryGroup(input: $input) {
+    countryGroup {
+      id
+    }
+  }
+}

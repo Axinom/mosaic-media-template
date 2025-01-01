@@ -9,16 +9,14 @@ import {
   generateArrayMutations,
   getFormDiff,
   InfoPanel,
-  MaskedSingleLineText,
   Paragraph,
-  ReadOnlyTextField,
   Section,
   SelectField,
   SingleLineTextField,
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
-import { Field, useField, useFormikContext } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useContext, useMemo } from 'react';
@@ -26,7 +24,6 @@ import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext } from '../../../externals';
 import {
-  AssetSubtype,
   BusinessType,
   Movie,
   MovieDocument,
@@ -71,6 +68,11 @@ const movieDetailSchema = Yup.object<
   ObjectSchemaDefinition<MovieDetailsFormData>
 >({
   title: Yup.string().required('Title is a required field').max(100),
+  rating: Yup.number()
+    .nullable()
+    .min(0, 'Rating must not be less than 0.')
+    .max(100, 'Rating must not be greater than 100.')
+    .typeError('Rating must be a number between 0 and 100.'),
 });
 
 interface selectOption {
@@ -96,11 +98,6 @@ export const MovieDetailsForm: React.FC<MovieDetailsFormProps> = ({
     allAgeRatings,
     allContentOwners,
     director,
-    allLanguages,
-    audioLanguages,
-    subtitleLanguages,
-    captionLanguages,
-    creditsStartTime,
   } = useMemo(
     () => ({
       allGenres:
@@ -114,14 +111,7 @@ export const MovieDetailsForm: React.FC<MovieDetailsFormProps> = ({
       genres: data?.movie?.moviesMovieGenres.nodes.map(
         (node) => node.movieGenres?.title ?? '',
       ),
-      audioLanguages: data?.movie?.audioLanguages?.map((lang) => lang ?? ''),
-      subtitleLanguages: data?.movie?.subtitleLanguages?.map(
-        (lang) => lang ?? '',
-      ),
-      captionLanguages: data?.movie?.captionLanguages?.map(
-        (lang) => lang ?? '',
-      ),
-      creditsStartTime: '',
+
       cast: data?.movie?.moviesCasts.nodes.map((node) => node.name),
       director: data?.movie?.moviesDirectors.nodes.map((node) => node.name),
       productionCountries: data?.movie?.moviesProductionCountries.nodes.map(
@@ -143,8 +133,6 @@ export const MovieDetailsForm: React.FC<MovieDetailsFormProps> = ({
               label: node.name,
             } as selectOption),
         ) ?? [],
-
-      allLanguages: data?.languages?.nodes.map((node) => node.title) ?? [],
     }),
     [data],
   );
@@ -305,10 +293,6 @@ export const MovieDetailsForm: React.FC<MovieDetailsFormProps> = ({
           cast,
           director,
           productionCountries,
-          audioLanguages,
-          subtitleLanguages,
-          captionLanguages,
-          creditsStartTime,
         },
         loading,
         entityNotFound: data?.movie === null,
@@ -321,7 +305,6 @@ export const MovieDetailsForm: React.FC<MovieDetailsFormProps> = ({
         genreOptions={Object.keys(allGenres)}
         ageRatingOptions={allAgeRatings}
         contentOwnerOptions={allContentOwners}
-        languageOptions={allLanguages}
       />
     </Details>
   );
@@ -352,6 +335,10 @@ const Panel: React.FC = () => {
           <ImageCover id={coverImageId} />
         </Section>
         <Section title="Additional Information">
+          <Paragraph title="External ID">{values.externalId}</Paragraph>
+          <Paragraph title="Subtype">
+            {getEnumLabel(values.assetSubtype)}
+          </Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -362,7 +349,7 @@ const Panel: React.FC = () => {
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
           {values.publishedDate ? (
-            <Paragraph title="Last Published">
+            <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
           ) : null}
@@ -393,8 +380,10 @@ const Panel: React.FC = () => {
     );
   }, [
     ImageCover,
+    values.assetSubtype,
     values.createdDate,
     values.createdUser,
+    values.externalId,
     values.mainVideoId,
     values.moviesImages?.nodes,
     values.moviesTrailers?.totalCount,
@@ -411,12 +400,7 @@ const Form: React.FC<{
   ageRatingOptions?: selectOption[];
   contentOwnerOptions?: selectOption[];
   languageOptions?: string[];
-}> = ({
-  genreOptions,
-  ageRatingOptions,
-  contentOwnerOptions,
-  languageOptions,
-}) => {
+}> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchMovieTagsQuery,
@@ -467,17 +451,6 @@ const Form: React.FC<{
     return data.getMoviesProductionCountriesValues?.nodes ?? [];
   };
 
-  const [, , helpers] = useField('creditsStartTime');
-
-  const ValidateRating = (value: string): boolean => {
-    return value === null || value.trim() === ''
-      ? false
-      : isNaN(parseFloat(value)) ||
-          parseFloat(value) < 0 ||
-          parseFloat(value) > 100 ||
-          !/^(\d{1,2}(\.\d{1,2})?|100(\.0{1,2})?)$/.test(value);
-  };
-
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
@@ -486,23 +459,10 @@ const Form: React.FC<{
       <Field
         name="businessType"
         label="Business Type"
-        addEmptyOption={true}
         options={Object.keys(BusinessType).map((key) => ({
           value: BusinessType[key],
           label: getEnumLabel(BusinessType[key]),
         }))}
-        as={SelectField}
-      />
-      <Field
-        name="assetSubtype"
-        label="Subtype"
-        addEmptyOption={true}
-        options={Object.keys(AssetSubtype)
-          .filter((type) => type === 'Movie')
-          .map((key) => ({
-            value: AssetSubtype[key],
-            label: getEnumLabel(AssetSubtype[key]),
-          }))}
         as={SelectField}
       />
       <Field
@@ -541,7 +501,6 @@ const Form: React.FC<{
         liveSuggestionsResolver={productionCountriesResolver}
         as={CustomTagsField}
       />
-      <Field name="duration" label="Duration" as={SingleLineTextField} />
       <Field
         name="ageRating"
         label="Age Rating"
@@ -550,28 +509,10 @@ const Form: React.FC<{
         as={SelectField}
       />
       <Field
-        name="audioLanguages"
-        label="Audio Languages"
-        tagsOptions={languageOptions}
-        as={TagsField}
-      />
-      <Field
-        name="subtitleLanguages"
-        label="Subtitle Languages"
-        tagsOptions={languageOptions}
-        as={TagsField}
-      />
-      <Field
-        name="captionLanguages"
-        label="Closed Caption Languages"
-        tagsOptions={languageOptions}
-        as={TagsField}
-      />
-      <Field
         name="rating"
         label="Rating"
-        validate={ValidateRating}
         as={SingleLineTextField}
+        className={classes.rating}
       />
       <Field
         name="contentOwner"
@@ -580,26 +521,8 @@ const Form: React.FC<{
         options={contentOwnerOptions}
         as={SelectField}
       />
-      <Field
-        name="creditsStartTime"
-        label="Credit Start Time"
-        mask={'00:00:00'}
-        onChange={(value: string) => {
-          helpers.setValue(value);
-        }}
-        lazy={false}
-        overwrite={true}
-        placeholderChar={0}
-        as={MaskedSingleLineText}
-      />
-      <Field
-        name="customRating"
-        label="Custom Rating"
-        as={SingleLineTextField}
-      />
 
       <Field name="extendedField" label="Custom" as={TextAreaField} />
-      <Field name="externalId" label="External Id" as={ReadOnlyTextField} />
     </>
   );
 };

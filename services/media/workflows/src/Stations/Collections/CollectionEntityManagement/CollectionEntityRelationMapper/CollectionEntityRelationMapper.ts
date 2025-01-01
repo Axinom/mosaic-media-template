@@ -52,6 +52,13 @@ export const useCollectionRelatedEntities = (
           sortOrder: node.sortOrder,
           entityType: EntityType.Episode,
         };
+      } else if (node && node.childCollection) {
+        return {
+          ...node.childCollection,
+          id: node.id,
+          sortOrder: node.sortOrder,
+          entityType: EntityType.Collection,
+        };
       } else {
         throw new Error('Invalid Collection Entity');
       }

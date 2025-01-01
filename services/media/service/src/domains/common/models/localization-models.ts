@@ -9,4 +9,5 @@ export interface LocalizationMessageData {
   payload:
     | DeleteLocalizationSourceEntityCommand
     | UpsertLocalizationSourceEntityCommand;
+  aggregateId?: string;
 }

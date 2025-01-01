@@ -11,6 +11,7 @@ import {
   InfoPanel,
   Paragraph,
   Section,
+  SelectField,
   SingleLineTextField,
   TagsField,
   TextAreaField,
@@ -24,18 +25,24 @@ import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { ExtensionsContext } from '../../../externals';
 import {
+  BusinessType,
   Mutation,
   MutationCreateTvshowsCastArgs,
+  MutationCreateTvshowsDirectorArgs,
   MutationCreateTvshowsProductionCountryArgs,
   MutationCreateTvshowsTagArgs,
   MutationCreateTvshowsTvshowGenreArgs,
   MutationDeleteTvshowsCastArgs,
+  MutationDeleteTvshowsDirectorArgs,
   MutationDeleteTvshowsProductionCountryArgs,
   MutationDeleteTvshowsTagArgs,
   MutationDeleteTvshowsTvshowGenreArgs,
   SearchTvShowCastDocument,
   SearchTvShowCastQuery,
   SearchTvShowCastQueryVariables,
+  SearchTvShowDirectorDocument,
+  SearchTvShowDirectorQuery,
+  SearchTvShowDirectorQueryVariables,
   SearchTvShowProductionCountriesDocument,
   SearchTvShowProductionCountriesQuery,
   SearchTvShowProductionCountriesQueryVariables,
@@ -62,7 +69,17 @@ const tvShowDetailSchema = Yup.object().shape<
   ObjectSchemaDefinition<TvShowDetailsFormData>
 >({
   title: Yup.string().required('Title is a required field').max(100),
+  rating: Yup.number()
+    .nullable()
+    .min(0, 'Rating must not be less than 0.')
+    .max(100, 'Rating must not be greater than 100.')
+    .typeError('Rating must be a number between 0 and 100.'),
 });
+
+interface selectOption {
+  value: string;
+  label: string;
+}
 
 export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
   tvshowId,
@@ -73,7 +90,16 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
     fetchPolicy: 'network-only',
   });
 
-  const { allGenres, cast, genres, productionCountries, tags } = useMemo(
+  const {
+    allGenres,
+    cast,
+    genres,
+    productionCountries,
+    tags,
+    allAgeRatings,
+    allContentOwners,
+    director,
+  } = useMemo(
     () => ({
       allGenres:
         data?.tvshowGenres?.nodes.reduce<{
@@ -90,6 +116,23 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
       productionCountries: data?.tvshow?.tvshowsProductionCountries.nodes.map(
         (node) => node.name,
       ),
+      director: data?.tvshow?.tvshowsDirectors.nodes.map((node) => node.name),
+      allAgeRatings:
+        data?.ageRatings?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
+      allContentOwners:
+        data?.contentOwners?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
     }),
     [data],
   );
@@ -192,6 +235,22 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
         prefix: 'productionCountry',
       });
 
+      const directorAssignmentMutations = generateArrayMutations({
+        current: formData.director,
+        original: initialData.data?.director,
+        generateCreateMutation: (name) =>
+          generateUpdateGQLFragment<MutationCreateTvshowsDirectorArgs>(
+            'createTvshowsDirector',
+            { input: { tvshowsDirector: { name, tvshowId } } },
+          ),
+        generateDeleteMutation: (name) =>
+          generateUpdateGQLFragment<MutationDeleteTvshowsDirectorArgs>(
+            'deleteTvshowsDirector',
+            { input: { tvshowId, name } },
+          ),
+        prefix: 'director',
+      });
+
       const patch = createUpdateDto(formData, initialData.data);
 
       const GqlMutationDocument = gql`mutation UpdateTvShow($input: UpdateTvshowInput!) {
@@ -206,6 +265,7 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
         ${genreAssignmentMutations}
         ${castAssignmentMutations}
         ${productionCountriesAssignmentMutations}
+        ${directorAssignmentMutations}
       }`;
 
       await client.mutate<unknown, { input: UpdateTvshowInput }>({
@@ -233,6 +293,7 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
           genres,
           cast,
           productionCountries,
+          director,
         },
         loading,
         entityNotFound: data?.tvshow === null,
@@ -241,7 +302,11 @@ export const TvShowDetailsForm: React.FC<TvShowDetailsProps> = ({
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form genreOptions={Object.keys(allGenres)} />
+      <Form
+        genreOptions={Object.keys(allGenres)}
+        ageRatingOptions={allAgeRatings}
+        contentOwnerOptions={allContentOwners}
+      />
     </Details>
   );
 };
@@ -253,16 +318,12 @@ const Panel: React.FC = () => {
   return useMemo(() => {
     let coverImageId: ID;
     let coverImageCount = 0;
-    let teaserImageCount = 0;
 
     values.tvshowsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case TvshowImageType.Cover:
+        case TvshowImageType.Cover_1X1:
           coverImageCount++;
           coverImageId = imageId;
-          break;
-        case TvshowImageType.Teaser:
-          teaserImageCount++;
           break;
         default:
           break;
@@ -276,6 +337,10 @@ const Panel: React.FC = () => {
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
+          <Paragraph title="External ID">{values.externalId}</Paragraph>
+          <Paragraph title="Subtype">
+            {getEnumLabel(values.assetSubtype)}
+          </Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -311,10 +376,6 @@ const Panel: React.FC = () => {
               >
                 {coverImageCount} / 1
               </div>
-              <div>Teaser</div>
-              <div className={classes.rightAlignment}>
-                {teaserImageCount} / 1
-              </div>
             </div>
           </Paragraph>
         </Section>
@@ -322,8 +383,10 @@ const Panel: React.FC = () => {
     );
   }, [
     ImageCover,
+    values.assetSubtype,
     values.createdDate,
     values.createdUser,
+    values.externalId,
     values.id,
     values.publishStatus,
     values.publishedDate,
@@ -336,7 +399,11 @@ const Panel: React.FC = () => {
   ]);
 };
 
-const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
+const Form: React.FC<{
+  genreOptions?: string[];
+  ageRatingOptions?: selectOption[];
+  contentOwnerOptions?: selectOption[];
+}> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchTvShowTagsQuery,
@@ -374,27 +441,32 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
     return data.getTvshowsProductionCountriesValues?.nodes ?? [];
   };
 
+  const directorSuggestionResolver = async (
+    value: string,
+  ): Promise<(string | null)[]> => {
+    const { data } = await client.query<
+      SearchTvShowDirectorQuery,
+      SearchTvShowDirectorQueryVariables
+    >({
+      query: SearchTvShowDirectorDocument,
+      variables: { searchKey: value, limit: 10 },
+    });
+    return data.getTvshowsDirectorsValues?.nodes ?? [];
+  };
+
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
-      <Field
-        name="originalTitle"
-        label="Original Title"
-        as={SingleLineTextField}
-      />
-      <Field name="synopsis" label="Synopsis" as={TextAreaField} />
+      <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
       <Field
-        name="externalId"
-        label="External ID"
-        className={classes.externalId}
-        as={SingleLineTextField}
-      />
-      <Field
-        name="tags"
-        label="Tags"
-        liveSuggestionsResolver={tagsResolver}
-        as={CustomTagsField}
+        name="businessType"
+        label="Business Type"
+        options={Object.keys(BusinessType).map((key) => ({
+          value: BusinessType[key],
+          label: getEnumLabel(BusinessType[key]),
+        }))}
+        as={SelectField}
       />
       <Field
         name="genres"
@@ -408,19 +480,52 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         liveSuggestionsResolver={castSuggestionResolver}
         as={CustomTagsField}
       />
-      <Field name="studio" label="Studio" as={SingleLineTextField} />
       <Field
-        name="productionCountries"
-        label="Production Countries"
-        liveSuggestionsResolver={productionCountriesResolver}
+        name="director"
+        label="Directors"
+        liveSuggestionsResolver={directorSuggestionResolver}
+        as={CustomTagsField}
+      />
+      <Field
+        name="tags"
+        label="Tags"
+        liveSuggestionsResolver={tagsResolver}
         as={CustomTagsField}
       />
       <Field
         name="released"
-        label="Released Date"
+        label="Released"
         as={DateTimeTextField}
         modifyTime={false}
       />
+      <Field
+        name="productionCountries"
+        label="Country"
+        liveSuggestionsResolver={productionCountriesResolver}
+        as={CustomTagsField}
+      />
+      <Field
+        name="ageRating"
+        label="Age Rating"
+        addEmptyOption={true}
+        options={ageRatingOptions}
+        as={SelectField}
+      />
+      <Field
+        name="rating"
+        label="Rating"
+        as={SingleLineTextField}
+        className={classes.rating}
+      />
+      <Field
+        name="contentOwner"
+        label="Content Owner"
+        addEmptyOption={true}
+        options={contentOwnerOptions}
+        as={SelectField}
+      />
+
+      <Field name="extendedField" label="Custom" as={TextAreaField} />
     </>
   );
 };
@@ -429,10 +534,8 @@ function createUpdateDto(
   currentValues: TvShowDetailsFormData,
   initialValues?: TvShowDetailsFormData | null,
 ): Partial<TvShowDetailsFormData> {
-  const { tags, cast, productionCountries, genres, ...rest } = getFormDiff(
-    currentValues,
-    initialValues,
-  );
+  const { tags, cast, director, productionCountries, genres, ...rest } =
+    getFormDiff(currentValues, initialValues);
 
   return rest;
 }

@@ -7,6 +7,7 @@ import {
   settingsGroupName,
 } from '../../index';
 import { MediaIconName, MediaIcons } from '../../MediaIcons';
+import { TvShowCollectionAssignment } from './TvShowCollectionAssignment/TvShowCollectionAssignment';
 import { TvShowCreate } from './TvShowCreate/TvShowCreate';
 import { TvShowDetails } from './TvShowDetails/TvShowDetails';
 import { TvShowDetailsCrumb } from './TvShowDetails/TvShowDetailsCrumb';
@@ -237,6 +238,21 @@ export function register(app: PiletApi, extensions: Extensions): void {
       breadcrumb: TvShowGenreSnapshotDetailsCrumb,
       permissions: {
         'media-service': ['ADMIN', 'SETTINGS_EDIT', 'SETTINGS_VIEW'],
+      },
+    },
+  );
+
+  app.registerPage(
+    '/tvshows/:tvshowId/CollectionsToTvShow',
+    () => (
+      <ExtensionsContext.Provider value={extensions}>
+        <TvShowCollectionAssignment />
+      </ExtensionsContext.Provider>
+    ),
+    {
+      breadcrumb: () => 'Collection Assignment',
+      permissions: {
+        'media-service': ['ADMIN', 'COLLECTIONS_EDIT', 'COLLECTIONS_VIEW'],
       },
     },
   );

@@ -8,6 +8,12 @@ query TvshowsLicense($id: Int!) {
     licenseEnd
     licenseStart
     tvshowId
+    createdDate
+    updatedDate
+    updatedUser
+    createdUser
+    isDownloadable
+    downloadedAssetLifespan
   }
 }
 

@@ -6,6 +6,7 @@ import {
   InlineMenu,
 } from '@axinom/mosaic-ui';
 import React, { useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { CollectionRelatedEntity } from '../../CollectionEntityManagement.types';
 import { useAddOptions } from './EntityDataListDataEntry.actions';
 import {
@@ -19,11 +20,19 @@ export const useEntityDataListDataEntry = (
   const EntityDataListDataEntry: React.FC<
     DynamicListDataEntryProps<CollectionRelatedEntity>
   > = (props) => {
+    const collectionId = Number(
+      useParams<{
+        collectionId: string;
+      }>().collectionId,
+    );
     const [sortOrder, setSortOrder] = useState<number>(-1);
     const { onActionClicked, ...rest } = props;
 
     const excludes = useMemo(() => {
-      const excludes = {} as Record<string, number[]>;
+      const excludes = { COLLECTION: [collectionId] } as Record<
+        string,
+        number[]
+      >;
       options.excludeItems &&
         options.excludeItems.forEach((value) => {
           if (excludes[value.entityType] === undefined) {

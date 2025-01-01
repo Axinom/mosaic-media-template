@@ -5,5 +5,6 @@ export type TvShowDetailsFormData =
     tags?: string[];
     genres?: string[];
     cast?: string[];
+    director?: string[];
     productionCountries?: string[];
   };

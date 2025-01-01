@@ -15,8 +15,7 @@ const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
       },
       async resolve(resolver, source, args, context, resolveInfo) {
         const result = await resolver(source, args, context, resolveInfo);
-
-        if (isNullOrWhitespace(args.countryCode) || !result) {
+        if (!result) {
           return result;
         }
 
@@ -79,7 +78,8 @@ const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
               season?.tvshow?.licenses,
             );
 
-            if (tvshowValidity === true) {
+            // No licenses is also fine, all levels (episode, season, TV) are not protected by licensing
+            if (tvshowValidity === true || tvshowValidity.code === CommonErrors.LicenseNotFound.code) {
               return result;
             }
           }

@@ -51,6 +51,7 @@ export const TvShowsReadOperations = [
   Q.getTvshowsCastsValues,
   Q.getTvshowsProductionCountriesValues,
   Q.getTvshowsTagsValues,
+  Q.getTvshowsDirectorsValues,
   Q.tvshow,
   Q.tvshowByExternalId,
   Q.tvshows,
@@ -73,6 +74,8 @@ export const TvShowsReadOperations = [
   Sub.tvshowsSnapshots,
   Sub.snapshotValidationResults,
   R.tvshowGenres,
+  Q.tvshowsDirector,
+  Q.tvshowsDirectors,
 ];
 
 export const TvShowsMutateOperations = [
@@ -89,6 +92,7 @@ export const TvShowsMutateOperations = [
   M.deleteTvshowByExternalId,
   M.deleteTvshows,
   M.deleteTvshowsCast,
+  M.deleteTvshowsDirector,
   M.deleteTvshowsImageByTvshowIdAndImageType,
   M.deleteTvshowsLicense,
   M.deleteTvshowsLicenses,
@@ -101,6 +105,7 @@ export const TvShowsMutateOperations = [
   M.updateTvshow,
   M.updateTvshowByExternalId,
   M.updateTvshowsCast,
+  M.updateTvshowsDirector,
   M.updateTvshowsImageByTvshowIdAndImageType,
   M.updateTvshowsLicense,
   M.updateTvshowsLicensesCountry,
@@ -112,10 +117,12 @@ export const TvShowsMutateOperations = [
   M.unpublishTvshows,
   M.createTvshowSnapshot,
   M.createTvshowSnapshots,
+  M.createTvshowsDirector,
 ];
 
 export const SeasonsReadOperations = [
   Q.getSeasonsCastsValues,
+  Q.getSeasonsDirectorsValues,
   Q.getSeasonsProductionCountriesValues,
   Q.getSeasonsTagsValues,
   Q.season,
@@ -136,6 +143,8 @@ export const SeasonsReadOperations = [
   Q.seasonsTrailers,
   Q.seasonsTvshowGenre,
   Q.seasonsTvshowGenres,
+  Q.seasonsDirector,
+  Q.seasonsDirectors,
   S.seasonMutated,
   Sub.seasonsSnapshots,
   Sub.snapshotValidationResults,
@@ -155,6 +164,7 @@ export const SeasonsMutateOperations = [
   M.deleteSeasonByExternalId,
   M.deleteSeasons,
   M.deleteSeasonsCast,
+  M.deleteSeasonsDirector,
   M.deleteSeasonsImageBySeasonIdAndImageType,
   M.deleteSeasonsLicense,
   M.deleteSeasonsLicenses,
@@ -167,6 +177,7 @@ export const SeasonsMutateOperations = [
   M.updateSeason,
   M.updateSeasonByExternalId,
   M.updateSeasonsCast,
+  M.updateSeasonsDirector,
   M.updateSeasonsImageBySeasonIdAndImageType,
   M.updateSeasonsLicense,
   M.updateSeasonsLicensesCountry,
@@ -178,6 +189,7 @@ export const SeasonsMutateOperations = [
   M.unpublishSeasons,
   M.createSeasonSnapshot,
   M.createSeasonSnapshots,
+  M.createSeasonsDirector,
 ];
 
 export const EpisodesReadOperations = [
@@ -200,8 +212,11 @@ export const EpisodesReadOperations = [
   Q.episodesTvshowGenre,
   Q.episodesTvshowGenres,
   Q.getEpisodesCastsValues,
+  Q.getEpisodesDirectorsValues,
   Q.getEpisodesProductionCountriesValues,
   Q.getEpisodesTagsValues,
+  Q.episodesDirector,
+  Q.episodesDirectors,
   S.episodeMutated,
   Sub.episodesSnapshots,
   Sub.snapshotValidationResults,
@@ -210,6 +225,7 @@ export const EpisodesReadOperations = [
 export const EpisodesMutateOperations = [
   M.createEpisode,
   M.createEpisodesCast,
+  M.createEpisodesDirector,
   M.createEpisodesImage,
   M.createEpisodesLicense,
   M.createEpisodesLicensesCountry,
@@ -221,6 +237,7 @@ export const EpisodesMutateOperations = [
   M.deleteEpisodeByExternalId,
   M.deleteEpisodes,
   M.deleteEpisodesCast,
+  M.deleteEpisodesDirector,
   M.deleteEpisodesImageByEpisodeIdAndImageType,
   M.deleteEpisodesLicense,
   M.deleteEpisodesLicenses,
@@ -233,6 +250,7 @@ export const EpisodesMutateOperations = [
   M.updateEpisode,
   M.updateEpisodeByExternalId,
   M.updateEpisodesCast,
+  M.updateEpisodesDirector,
   M.updateEpisodesImageByEpisodeIdAndImageType,
   M.updateEpisodesLicense,
   M.updateEpisodesLicensesCountry,

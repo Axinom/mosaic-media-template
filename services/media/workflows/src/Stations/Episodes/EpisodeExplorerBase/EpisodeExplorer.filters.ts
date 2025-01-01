@@ -4,11 +4,26 @@ import {
   FilterType,
   FilterTypes,
   FilterValues,
+  Option,
   transformRange,
 } from '@axinom/mosaic-ui';
-import { EpisodeFilter, PublishStatus } from '../../../generated/graphql';
+import { useEffect, useState } from 'react';
+import { client } from '../../../apolloClient';
+import {
+  AssetSubtype,
+  EpisodeFilter,
+  PublishStatus,
+  useGetEpisodesFilterOptionsDataQuery,
+} from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { EpisodeData } from './EpisodeExplorer.types';
+
+interface allOptions {
+  allAgeRatings: Option[];
+  allContentOwners: Option[];
+  allGenres: Option[];
+  allCountries: Option[];
+}
 
 export function useEpisodesFilters(): {
   readonly filterOptions: FilterType<EpisodeData>[];
@@ -19,6 +34,81 @@ export function useEpisodesFilters(): {
 } {
   const [createFromDateFilterValidator, createToDateFilterValidator] =
     createDateRangeFilterValidators<EpisodeData>();
+
+  const [AllFilterOptions, setAllFilterOptions] = useState<allOptions>({
+    allAgeRatings: [],
+    allContentOwners: [],
+    allGenres: [],
+    allCountries: [],
+  });
+
+  const { data, error } = useGetEpisodesFilterOptionsDataQuery({ client });
+
+  useEffect(() => {
+    if (error) {
+      setAllFilterOptions({
+        allAgeRatings: [
+          {
+            label: 'Unable to load age rating options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allContentOwners: [
+          {
+            label: 'Unable to load content owner options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allGenres: [
+          {
+            label: 'Unable to load genres options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allCountries: [
+          {
+            label: 'Unable to load country options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+      });
+    } else {
+      let ageRating: Option[] = [];
+      let contentOwner: Option[] = [];
+      let genres: Option[] = [];
+      let countries: Option[] = [];
+      if (data?.ageRatings?.nodes !== undefined) {
+        ageRating = data.ageRatings.nodes.map(({ name }) => ({
+          label: name,
+          value: name,
+        }));
+      }
+      if (data?.contentOwners?.nodes !== undefined) {
+        contentOwner = data.contentOwners.nodes.map(({ name }) => ({
+          label: name,
+          value: name,
+        }));
+      }
+      if (data?.movieGenres?.nodes !== undefined) {
+        genres = data.movieGenres.nodes.map(({ title }) => ({
+          label: title,
+          value: title,
+        }));
+      }
+      if (data?.allCountryTypes?.nodes !== undefined) {
+        countries = data.allCountryTypes.nodes.map(({ name, id }) => ({
+          label: name ?? '',
+          value: id,
+        }));
+      }
+      setAllFilterOptions({
+        allAgeRatings: ageRating,
+        allContentOwners: contentOwner,
+        allGenres: genres,
+        allCountries: countries,
+      });
+    }
+  }, [data]);
 
   const filterOptions: FilterType<
     EpisodeData & {
@@ -68,12 +158,47 @@ export function useEpisodesFilters(): {
     {
       label: 'Genre',
       property: 'episodesTvshowGenres',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allGenres.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Cast',
       property: 'episodesCasts',
       type: FilterTypes.FreeText,
+    },
+    {
+      label: 'License Countries',
+      property: 'episodesLicenses',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+    },
+    {
+      label: 'Episode Valid Licensing',
+      property: 'episodesLicenses',
+      options: [
+        { value: 'Valid license', label: 'Valid license' },
+        { value: 'No valid license', label: 'No valid license' },
+      ],
+      type: FilterTypes.Options,
+    },
+    {
+      label: 'Episode Subtype',
+      property: 'assetSubtype',
+      type: FilterTypes.Options,
+      options: Object.keys(AssetSubtype)
+        .filter((type) => type === 'Episode')
+        .map((key) => ({
+          value: AssetSubtype[key],
+          label: getEnumLabel(AssetSubtype[key]),
+        })),
     },
     {
       label: 'Release Period (From)',
@@ -96,6 +221,26 @@ export function useEpisodesFilters(): {
       label: 'Studio',
       property: 'studio',
       type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Content Owners',
+      property: 'contentOwner',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allContentOwners.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+    },
+    {
+      label: 'Age Ratings',
+      property: 'ageRating',
+      type: FilterTypes.SearcheableOptions,
+      searchInputPlaceholder: 'Search',
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allAgeRatings.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Publication Status',
@@ -171,7 +316,41 @@ export function useEpisodesFilters(): {
       episodesCasts: ['some', 'name', 'includesInsensitive'],
       episodesProductionCountries: ['some', 'name', 'includesInsensitive'],
       studio: 'includesInsensitive',
+      ageRating: 'includesInsensitive',
+      contentOwner: 'includesInsensitive',
       publishStatus: 'in',
+      episodesLicenses: (value: unknown) => {
+        const [countryCode, licensesStatus] = value as [string, string];
+        if (licensesStatus === 'Valid license') {
+          return {
+            some: {
+              licenseEnd: {
+                greaterThan: new Date(),
+              },
+            },
+          };
+        } else if (licensesStatus === 'No valid license') {
+          return {
+            every: {
+              licenseEnd: {
+                lessThanOrEqualTo: new Date(),
+              },
+            },
+          };
+        } else {
+          return {
+            some: {
+              episodesLicensesCountries: {
+                some: {
+                  code: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
+        }
+      },
       id: (value) => {
         if (typeof value === 'number') {
           // User filter
@@ -189,6 +368,7 @@ export function useEpisodesFilters(): {
       released: transformRange,
       createdDate: transformRange,
       publishedDate: transformRange,
+      assetSubtype: 'equalTo',
       mainVideoId: (value) => ({
         isNull: !value,
       }),

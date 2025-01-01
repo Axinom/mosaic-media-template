@@ -3,6 +3,7 @@ mutation CreateSeason($input: CreateSeasonInput!) {
     season {
       id
       index
+      title
     }
   }
 }

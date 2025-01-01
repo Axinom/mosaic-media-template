@@ -4,6 +4,17 @@ query Collection($id: Int!) {
     synopsis
     description
     externalId
+    languages
+    extendedField
+    assetSubtype
+    collectionCountries {
+      nodes {
+        id
+        collectionId
+        countryGroupId
+        countryId
+      }
+    }
     collectionsTags {
       nodes {
         name
@@ -23,17 +34,29 @@ query Collection($id: Int!) {
     publishStatus
     publishedDate
     publishedUser
-    movies: collectionRelations(filter: {movieExists: true}) {
+    movies: collectionRelations(filter: { movieExists: true }) {
       totalCount
     }
-    tvshows: collectionRelations(filter: {tvshowExists: true}) {
+    tvshows: collectionRelations(filter: { tvshowExists: true }) {
       totalCount
     }
-    seasons: collectionRelations(filter: {seasonExists: true}) {
+    seasons: collectionRelations(filter: { seasonExists: true }) {
       totalCount
     }
-    episodes: collectionRelations(filter: {episodeExists: true}) {
+    episodes: collectionRelations(filter: { episodeExists: true }) {
       totalCount
+    }
+  }
+  languages(orderBy: TITLE_ASC) {
+    nodes {
+      code
+      title
+    }
+  }
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
     }
   }
 }
@@ -43,7 +66,6 @@ mutation DeleteCollection($input: DeleteCollectionInput!) {
     clientMutationId
   }
 }
-
 
 mutation PublishCollection($id: Int!) {
   publishCollection(collectionId: $id) {

@@ -1,0 +1,8 @@
+mutation CreateCountryGroup($input: CreateCountryGroupInput!) {
+  createCountryGroup(input: $input) {
+    countryGroup {
+      name
+      id
+    }
+  }
+}

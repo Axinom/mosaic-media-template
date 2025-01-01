@@ -1,14 +1,20 @@
 import {
+  CheckboxField,
   createUpdateGQLFragmentGenerator,
   DateTimeTextField,
   Details,
   DetailsProps,
   FormActionData,
+  formatDateTime,
   generateArrayMutations,
   getFormDiff,
+  InfoPanel,
+  Paragraph,
+  Section,
+  SingleLineTextField,
   TagsField,
 } from '@axinom/mosaic-ui';
-import { Field } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useMemo } from 'react';
@@ -17,6 +23,7 @@ import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
   IsoAlphaTwoCountryCodes,
+  MoviesLicense,
   Mutation,
   MutationCreateMoviesLicensesCountryArgs,
   MutationDeleteMoviesLicensesCountryArgs,
@@ -37,6 +44,10 @@ type FormData = MutationUpdateMoviesLicenseArgs['input']['patch'] & {
 const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   licenseStart: getLicenseStartSchema().label('From'),
   licenseEnd: getLicenseEndSchema().label('To'),
+  downloadedAssetLifespan: Yup.number()
+    .nullable()
+    .min(0, 'Downloaded Asset Lifespan must be a positive number')
+    .integer('Downloaded Asset Lifespan must be an Integer'),
 });
 
 export const MovieLicensingDetails: React.FC = () => {
@@ -134,10 +145,34 @@ export const MovieLicensingDetails: React.FC = () => {
         error: error?.message,
       }}
       saveData={onSubmit}
+      infoPanel={<Panel />}
     >
       <Form />
     </Details>
   );
+};
+const Panel: React.FC = () => {
+  const { values } = useFormikContext<MoviesLicense>();
+
+  return useMemo(() => {
+    return (
+      <InfoPanel>
+        <Section title="Additional Information">
+          <Paragraph title="Created">
+            {formatDateTime(values.createdDate)} by {values.createdUser}
+          </Paragraph>
+          <Paragraph title="Last Modified">
+            {formatDateTime(values.updatedDate)} by {values.updatedUser}
+          </Paragraph>
+        </Section>
+      </InfoPanel>
+    );
+  }, [
+    values.createdDate,
+    values.createdUser,
+    values.updatedDate,
+    values.updatedUser,
+  ]);
 };
 
 const Form: React.FC = () => {
@@ -152,6 +187,13 @@ const Form: React.FC = () => {
         as={TagsField}
         displayKey="display"
         valueKey="value"
+      />
+      <Field name="isDownloadable" label="Downloadable" as={CheckboxField} />
+      <Field
+        name="downloadedAssetLifespan"
+        label="Downloaded asset lifespan (days)"
+        type="number"
+        as={SingleLineTextField}
       />
     </>
   );

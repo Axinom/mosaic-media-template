@@ -1,10 +1,20 @@
 query Season($id: Int!) {
   season(id: $id) {
     index
+    title
     synopsis
     description
     externalId
+    rating
+    contentOwner
+    extendedField
+    assetSubtype
     seasonsTags {
+      nodes {
+        name
+      }
+    }
+    seasonsDirectors {
       nodes {
         name
       }
@@ -51,9 +61,9 @@ query Season($id: Int!) {
     tvshow {
       id
       title
-      tvshowsImages(condition: {imageType: COVER}, first: 1) {
+      tvshowsImages(condition: { imageType: COVER_1X1 }, first: 1) {
         nodes {
-            imageId
+          imageId
         }
       }
     }
@@ -65,6 +75,20 @@ query Season($id: Int!) {
       id
     }
   }
+
+  ageRatings {
+    nodes {
+      name
+      id
+    }
+  }
+
+  contentOwners {
+    nodes {
+      name
+      id
+    }
+  }
 }
 
 mutation DeleteSeason($input: DeleteSeasonInput!) {
@@ -72,7 +96,6 @@ mutation DeleteSeason($input: DeleteSeasonInput!) {
     clientMutationId
   }
 }
-
 
 mutation PublishSeason($id: Int!) {
   publishSeason(seasonId: $id) {
@@ -86,7 +109,6 @@ mutation UnpublishSeason($id: Int!) {
   }
 }
 
-
 query SeasonTitle($id: Int!) {
   season(id: $id) {
     id
@@ -95,19 +117,37 @@ query SeasonTitle($id: Int!) {
 }
 
 query SearchSeasonTags($searchKey: String!, $limit: Int!) {
-  getSeasonsTagsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getSeasonsTagsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }
 
 query SearchSeasonCast($searchKey: String!, $limit: Int!) {
-  getSeasonsCastsValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getSeasonsCastsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }
 
 query SearchSeasonProductionCountries($searchKey: String!, $limit: Int!) {
-  getSeasonsProductionCountriesValues(filter: {startsWithInsensitive: $searchKey}, first: $limit) {
+  getSeasonsProductionCountriesValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
+    nodes
+  }
+}
+
+query SearchSeasonDirector($searchKey: String!, $limit: Int!) {
+  getSeasonsDirectorsValues(
+    filter: { startsWithInsensitive: $searchKey }
+    first: $limit
+  ) {
     nodes
   }
 }

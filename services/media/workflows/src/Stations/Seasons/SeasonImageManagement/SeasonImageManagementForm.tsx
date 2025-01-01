@@ -17,6 +17,7 @@ import {
   SeasonsImage,
   useSeasonImagesQuery,
 } from '../../../generated/graphql';
+import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 
 interface SeasonImageManagementFormProps {
   seasonId: number;
@@ -30,15 +31,38 @@ type FormData = Record<SeasonImageType, string[]>;
 const Form: React.FC<{ imageSelectField: unknown }> = ({
   imageSelectField,
 }) => {
+  const customSortedSeasonImageTypes = Object.values(SeasonImageType).sort(
+    (a, b) => {
+      const order = [
+        'COVER_1X1',
+        'COVER_16X9',
+        'CLEAN_COVER_1X1',
+        'CLEAN_COVER_16X9',
+        'LIST_1X1',
+        'LIST_9X13',
+      ];
+      return order.indexOf(a) - order.indexOf(b);
+    },
+  );
+
+  const seasonImageTypesObject = customSortedSeasonImageTypes.reduce(
+    (acc, curr) => {
+      acc[curr] = curr;
+      return acc;
+    },
+    {} as { [key: string]: string },
+  );
+
   return (
     <>
-      {Object.keys(SeasonImageType).map((type) => {
-        const field = SeasonImageType[type];
+      {Object.keys(seasonImageTypesObject).map((type) => {
+        const field = seasonImageTypesObject[type];
+        const label = getEnumLabel(seasonImageTypesObject[type]);
         return (
           <Field
             key={field}
             name={field}
-            label={type}
+            label={label}
             as={imageSelectField}
             maxItems={1}
             title="Select Image"

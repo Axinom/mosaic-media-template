@@ -2,8 +2,7 @@
   display: grid;
   grid-template-columns: 1fr 100px;
 
-  .rightAlignment
-  {
+  .rightAlignment {
     text-align: right;
   }
 }
@@ -16,4 +15,10 @@
 
 .assignedItemsSpacing {
   margin-top: 20px;
+}
+
+.rating {
+  input {
+    width: 320px;
+  }
 }

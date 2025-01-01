@@ -39,6 +39,7 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
         index: item.data.index as number,
         tvshow_id: parentTvShow?.id,
         external_id: item.external_id,
+        title: String(item.data.title),
         display_title: buildDisplayTitle(
           'SEASON',
           item.data as { index: number },

@@ -2,6 +2,10 @@ import { registerLocalizationEntryPoints } from '@axinom/mosaic-managed-workflow
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions, ExtensionsContext } from '../../externals';
+import {
+  mediaManagementParentName as parentName,
+  settingsGroupName,
+} from '../../index';
 import { MediaIconName } from '../../MediaIcons';
 import { MediaIcons } from '../../MediaIcons/MediaIcons';
 import { CollectionCreate } from './CollectionCreate/CollectionCreate';
@@ -13,6 +17,10 @@ import { Collections } from './CollectionsExplorer/Collections';
 import { CollectionSnapshotDetails } from './CollectionSnapshotDetails/CollectionSnapshotDetails';
 import { CollectionSnapshotDetailsCrumb } from './CollectionSnapshotDetails/CollectionSnapshotDetailsCrumb';
 import { CollectionSnapshots } from './CollectionSnapshots/CollectionSnapshots';
+import { CountryGroupCreate } from './Countries/CountryCreate/CountryGroupCreate';
+import { CountryGroupDetails } from './Countries/CountryDetails/CountryGroupDetails';
+import { CountryGroupDetailsCrumb } from './Countries/CountryDetails/CountryGroupDetailsCrumb';
+import { CountryGroup } from './Countries/CountryExplorer/CountryGroup';
 
 export function register(app: PiletApi, extensions: Extensions): void {
   const collectionsNav = {
@@ -144,6 +152,55 @@ export function register(app: PiletApi, extensions: Extensions): void {
       breadcrumb: CollectionSnapshotDetailsCrumb,
       permissions: {
         'media-service': ['ADMIN', 'COLLECTIONS_EDIT', 'COLLECTIONS_VIEW'],
+      },
+    },
+  );
+
+  const collectionSettingsNav = {
+    name: 'countries',
+    path: '/settings/media/countries',
+    label: 'Country Groups',
+    icon: <MediaIcons icon={MediaIconName.TvShowGenres} />,
+  };
+
+  app.registerTile(
+    {
+      ...collectionSettingsNav,
+      kind: 'settings',
+      groupName: settingsGroupName,
+    },
+    false,
+  );
+
+  app.registerNavigationItem({
+    ...collectionSettingsNav,
+    parentName: parentName,
+    categoryName: 'Settings',
+  });
+
+  app.registerPage('/settings/media/countries', CountryGroup, {
+    breadcrumb: () => 'Countries',
+    permissions: { 'media-service': ['SETTINGS_VIEW'] },
+  });
+
+  app.registerPage('/settings/media/countries/create', CountryGroupCreate, {
+    breadcrumb: () => 'New Country Group',
+    permissions: {
+      'media-service': ['SETTINGS_VIEW'],
+    },
+  });
+
+  app.registerPage(
+    '/settings/media/countries/:countryId',
+    () => (
+      <ExtensionsContext.Provider value={extensions}>
+        <CountryGroupDetails />
+      </ExtensionsContext.Provider>
+    ),
+    {
+      breadcrumb: CountryGroupDetailsCrumb,
+      permissions: {
+        'media-service': ['SETTINGS_VIEW'],
       },
     },
   );

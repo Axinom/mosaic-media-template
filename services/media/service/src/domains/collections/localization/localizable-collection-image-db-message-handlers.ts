@@ -33,18 +33,38 @@ export class LocalizableCollectionImageCreatedDbMessageHandler extends Localizab
   }: TypedTransactionalMessage<LocalizableCollectionImageDbEvent>): Promise<
     LocalizationMessageData | undefined
   > {
-    if (image_type !== 'COVER') {
-      // Ignore any changes to non-cover image relations
-      return undefined;
+    let fields = {};
+    switch (image_type) {
+      case 'COVER_1x1':
+        fields = { image_id_cover_1x1: image_id };
+        break;
+      case 'COVER_4x1':
+        fields = { image_id_cover_4x1: image_id };
+        break;
+      case 'CLEAN_COVER_1x1':
+        fields = { image_id_clean_cover_1x1: image_id };
+        break;
+      case 'CLEAN_COVER_4x1':
+        fields = { image_id_clean_cover_4x1: image_id };
+        break;
+      case 'LIST_1x1':
+        fields = { image_id_list_1x1: image_id };
+        break;
+      case 'LIST_15x16':
+        fields = { image_id_list_15x16: image_id };
+        break;
+      default:
+        return undefined;
     }
 
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_COLLECTION_TYPE,
       collection_id,
-      {}, // Localizable fields are never updated on image assignment
+      fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined,
+      `${collection_id}-${image_type}`,
     );
   }
 }
@@ -63,18 +83,38 @@ export class LocalizableCollectionImageUpdatedDbMessageHandler extends Localizab
   }: TypedTransactionalMessage<LocalizableCollectionImageDbEvent>): Promise<
     LocalizationMessageData | undefined
   > {
-    if (image_type !== 'COVER') {
-      // Ignore any changes to non-cover image relations
-      return undefined;
+    let fields = {};
+    switch (image_type) {
+      case 'COVER_1x1':
+        fields = { image_id_cover_1x1: image_id };
+        break;
+      case 'COVER_4x1':
+        fields = { image_id_cover_4x1: image_id };
+        break;
+      case 'CLEAN_COVER_1x1':
+        fields = { image_id_clean_cover_1x1: image_id };
+        break;
+      case 'CLEAN_COVER_4x1':
+        fields = { image_id_clean_cover_4x1: image_id };
+        break;
+      case 'LIST_1x1':
+        fields = { image_id_list_1x1: image_id };
+        break;
+      case 'LIST_15x16':
+        fields = { image_id_list_15x16: image_id };
+        break;
+      default:
+        return undefined;
     }
 
     return getUpsertMessageData(
       this.config.serviceId,
       LOCALIZATION_COLLECTION_TYPE,
       collection_id,
-      {}, // Localizable fields are never updated on image assignment
+      fields, // localizable image id fields
       undefined, // Title is never updated on image assignment
-      image_id,
+      undefined,
+      `${collection_id}-${image_type}`,
     );
   }
 }
@@ -94,23 +134,43 @@ export class LocalizableCollectionImageDeletedDbMessageHandler extends Localizab
     }: TypedTransactionalMessage<LocalizableCollectionImageDbEvent>,
     ownerClient: ClientBase,
   ): Promise<LocalizationMessageData | undefined> {
-    if (
-      image_type !== 'COVER' ||
-      (await this.collectionIsDeleted(collection_id, ownerClient))
-    ) {
-      // Ignore any changes to non-cover image relations
-      // If image relation is deleted as part of a cascade delete of collection - no need to upsert
+    if (await this.collectionIsDeleted(collection_id, ownerClient)) {
+      // If image relation is deleted as part of a cascade delete of tvshow - no need to upsert
       return undefined;
+    } else {
+      let fields = {};
+      switch (image_type) {
+        case 'COVER_1x1':
+          fields = { image_id_cover_1x1: '' };
+          break;
+        case 'COVER_4x1':
+          fields = { image_id_cover_4x1: '' };
+          break;
+        case 'CLEAN_COVER_1x1':
+          fields = { image_id_clean_cover_1x1: '' };
+          break;
+        case 'CLEAN_COVER_4x1':
+          fields = { image_id_clean_cover_4x1: '' };
+          break;
+        case 'LIST_1x1':
+          fields = { image_id_list_1x1: '' };
+          break;
+        case 'LIST_15x16':
+          fields = { image_id_list_15x16: '' };
+          break;
+        default:
+          return undefined;
+      }
+      return getUpsertMessageData(
+        this.config.serviceId,
+        LOCALIZATION_COLLECTION_TYPE,
+        collection_id,
+        fields, // localizable image id fields
+        undefined, // Title is never updated on image unassign
+        null, // Explicit unassign of an image
+        `${collection_id}-${image_type}`,
+      );
     }
-
-    return getUpsertMessageData(
-      this.config.serviceId,
-      LOCALIZATION_COLLECTION_TYPE,
-      collection_id,
-      {}, // Localizable fields are never updated on image unassign
-      undefined, // Title is never updated on image unassign
-      null, // Explicit unassign of an image
-    );
   }
 
   async collectionIsDeleted(

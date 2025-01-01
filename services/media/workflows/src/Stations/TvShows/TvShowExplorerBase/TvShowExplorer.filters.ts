@@ -4,11 +4,27 @@ import {
   FilterType,
   FilterTypes,
   FilterValues,
+  Option,
   transformRange,
 } from '@axinom/mosaic-ui';
-import { PublishStatus, TvshowFilter } from '../../../generated/graphql';
+import { useEffect, useState } from 'react';
+import { client } from '../../../apolloClient';
+import {
+  AssetSubtype,
+  BusinessType,
+  PublishStatus,
+  TvshowFilter,
+  useGetTvShowsFilterOptionsDataQuery,
+} from '../../../generated/graphql';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { TvShowData } from './TvShowExplorer.types';
+
+interface allOptions {
+  allAgeRatings: Option[];
+  allContentOwners: Option[];
+  allGenres: Option[];
+  allCountries: Option[];
+}
 
 export function useTvShowsFilters(): {
   readonly filterOptions: FilterType<TvShowData>[];
@@ -17,6 +33,81 @@ export function useTvShowsFilters(): {
     excludeItems?: number[],
   ) => TvshowFilter | undefined;
 } {
+  const [AllFilterOptions, setAllFilterOptions] = useState<allOptions>({
+    allAgeRatings: [],
+    allContentOwners: [],
+    allGenres: [],
+    allCountries: [],
+  });
+
+  const { data, error } = useGetTvShowsFilterOptionsDataQuery({ client });
+
+  useEffect(() => {
+    if (error) {
+      setAllFilterOptions({
+        allAgeRatings: [
+          {
+            label: 'Unable to load age rating options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allContentOwners: [
+          {
+            label: 'Unable to load content owner options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allGenres: [
+          {
+            label: 'Unable to load genres options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+        allCountries: [
+          {
+            label: 'Unable to load country options data.',
+            value: 'FAILED_TO_LOAD_ERROR',
+          },
+        ],
+      });
+    } else {
+      let ageRating: Option[] = [];
+      let contentOwner: Option[] = [];
+      let genres: Option[] = [];
+      let countries: Option[] = [];
+      if (data?.ageRatings?.nodes !== undefined) {
+        ageRating = data.ageRatings.nodes.map(({ name }) => ({
+          label: name,
+          value: name,
+        }));
+      }
+      if (data?.contentOwners?.nodes !== undefined) {
+        contentOwner = data.contentOwners.nodes.map(({ name }) => ({
+          label: name,
+          value: name,
+        }));
+      }
+      if (data?.movieGenres?.nodes !== undefined) {
+        genres = data.movieGenres.nodes.map(({ title }) => ({
+          label: title,
+          value: title,
+        }));
+      }
+      if (data?.allCountryTypes?.nodes !== undefined) {
+        countries = data.allCountryTypes.nodes.map(({ name, id }) => ({
+          label: name ?? '',
+          value: id,
+        }));
+      }
+      setAllFilterOptions({
+        allAgeRatings: ageRating,
+        allContentOwners: contentOwner,
+        allGenres: genres,
+        allCountries: countries,
+      });
+    }
+  }, [data]);
+
   const [createFromDateFilterValidator, createToDateFilterValidator] =
     createDateRangeFilterValidators<TvShowData>();
 
@@ -27,14 +118,14 @@ export function useTvShowsFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Original Title',
-      property: 'originalTitle',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'External ID',
-      property: 'externalId',
-      type: FilterTypes.FreeText,
+      label: 'Genre',
+      property: 'tvshowsTvshowGenres',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allGenres.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Tags',
@@ -42,14 +133,82 @@ export function useTvShowsFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Genre',
-      property: 'tvshowsTvshowGenres',
-      type: FilterTypes.FreeText,
+      label: 'Content Owners',
+      property: 'contentOwner',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allContentOwners.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+    },
+    {
+      label: 'Age Ratings',
+      property: 'ageRating',
+      type: FilterTypes.SearcheableOptions,
+      searchInputPlaceholder: 'Search',
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allAgeRatings.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+    },
+    {
+      label: 'Publishing Status',
+      property: 'publishStatus',
+      type: FilterTypes.Options,
+      options: Object.keys(PublishStatus).map((key) => ({
+        value: PublishStatus[key],
+        label: getEnumLabel(PublishStatus[key]),
+      })),
     },
     {
       label: 'Cast',
       property: 'tvshowsCasts',
       type: FilterTypes.FreeText,
+    },
+    {
+      label: 'License Countries',
+      property: 'tvshowsLicenses',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+    },
+    {
+      label: 'TV Show Valid Licensing',
+      property: 'tvshowsLicenses',
+      options: [
+        { value: 'Valid license', label: 'Valid license' },
+        { value: 'No valid license', label: 'No valid license' },
+      ],
+      type: FilterTypes.Options,
+    },
+    {
+      label: 'External ID',
+      property: 'externalId',
+      type: FilterTypes.FreeText,
+    },
+    {
+      label: 'Business Type',
+      property: 'businessType',
+      type: FilterTypes.Options,
+      options: Object.keys(BusinessType).map((key) => ({
+        value: BusinessType[key],
+        label: getEnumLabel(BusinessType[key]),
+      })),
+    },
+    {
+      label: 'TV Show Subtype',
+      property: 'assetSubtype',
+      type: FilterTypes.Options,
+      options: Object.keys(AssetSubtype)
+        .filter((type) => type === 'TvShow')
+        .map((key) => ({
+          value: AssetSubtype[key],
+          label: getEnumLabel(AssetSubtype[key]),
+        })),
     },
     {
       label: 'Release Period (From)',
@@ -73,15 +232,7 @@ export function useTvShowsFilters(): {
       property: 'studio',
       type: FilterTypes.FreeText,
     },
-    {
-      label: 'Publication Status',
-      property: 'publishStatus',
-      type: FilterTypes.Options,
-      options: Object.keys(PublishStatus).map((key) => ({
-        value: PublishStatus[key],
-        label: getEnumLabel(PublishStatus[key]),
-      })),
-    },
+
     {
       label: 'Publication Period (From)',
       property: 'publishedDate',
@@ -119,7 +270,6 @@ export function useTvShowsFilters(): {
   ): TvshowFilter | undefined => {
     return filterToPostGraphileFilter<TvshowFilter>(filters, {
       title: 'includesInsensitive',
-      originalTitle: 'includesInsensitive',
       externalId: 'includesInsensitive',
       tvshowsTags: ['some', 'name', 'includesInsensitive'],
       tvshowsTvshowGenres: [
@@ -132,6 +282,42 @@ export function useTvShowsFilters(): {
       tvshowsProductionCountries: ['some', 'name', 'includesInsensitive'],
       studio: 'includesInsensitive',
       publishStatus: 'in',
+      ageRating: 'includesInsensitive',
+      contentOwner: 'includesInsensitive',
+      tvshowsLicenses: (value: unknown) => {
+        const [countryCode, licensesStatus] = value as [string, string];
+        if (licensesStatus === 'Valid license') {
+          return {
+            some: {
+              licenseEnd: {
+                greaterThan: new Date(),
+              },
+            },
+          };
+        } else if (licensesStatus === 'No valid license') {
+          return {
+            every: {
+              licenseEnd: {
+                lessThanOrEqualTo: new Date(),
+              },
+            },
+          };
+        } else {
+          return {
+            some: {
+              tvshowsLicensesCountries: {
+                some: {
+                  code: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
+        }
+      },
+      assetSubtype: 'equalTo',
+      businessType: 'in',
       id: (value) => {
         if (typeof value === 'number') {
           // User filter

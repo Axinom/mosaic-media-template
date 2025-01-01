@@ -7,12 +7,16 @@ fragment MovieExplorerProperties on Movie {
   ageRating
   contentOwner
   businessType
-  audioLanguages
   assetSubtype
   moviesLicenses {
     nodes {
       licenseEnd
       licenseStart
+      moviesLicensesCountries {
+        nodes {
+          code
+        }
+      }
     }
   }
   moviesImages(condition: { imageType: COVER_1X1 }) {
@@ -56,7 +60,6 @@ fragment MovieExplorerProperties on Movie {
   updatedDate
   updatedUser
   publishStatus
-  __typename
 }
 
 query Movies($filter: MovieFilter, $orderBy: [MoviesOrderBy!], $after: Cursor) {
@@ -86,6 +89,43 @@ subscription MoviesMutated {
     eventKey
     movie {
       ...MovieExplorerProperties
+    }
+  }
+}
+
+query GetMoviesFilterOptionsData {
+  ageRatings {
+    nodes {
+      id
+      name
+    }
+  }
+
+  contentOwners {
+    nodes {
+      id
+      name
+    }
+  }
+
+  movieGenres {
+    nodes {
+      id
+      title
+    }
+  }
+
+  collections {
+    nodes {
+      id
+      title
+    }
+  }
+
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
     }
   }
 }

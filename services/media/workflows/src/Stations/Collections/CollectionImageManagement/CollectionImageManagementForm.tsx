@@ -17,6 +17,7 @@ import {
   MutationUpdateCollectionsImageByCollectionIdAndImageTypeArgs,
   useCollectionImagesQuery,
 } from '../../../generated/graphql';
+import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 
 interface CollectionImageManagementFormProps {
   collectionId: number;
@@ -31,15 +32,37 @@ type FormData = Record<CollectionImageType, string[]>;
 const Form: React.FC<{ imageSelectField: unknown }> = ({
   imageSelectField,
 }) => {
+  const customSortedCollectionImageTypes = Object.values(
+    CollectionImageType,
+  ).sort((a, b) => {
+    const order = [
+      'COVER_1X1',
+      'COVER_4X1',
+      'CLEAN_COVER_1X1',
+      'CLEAN_COVER_4X1',
+      'LIST_1X1',
+      'LIST_15X16',
+    ];
+    return order.indexOf(a) - order.indexOf(b);
+  });
+
+  const collectionImageTypesObject = customSortedCollectionImageTypes.reduce(
+    (acc, curr) => {
+      acc[curr] = curr;
+      return acc;
+    },
+    {} as { [key: string]: string },
+  );
   return (
     <>
-      {Object.keys(CollectionImageType).map((type) => {
-        const field = CollectionImageType[type];
+      {Object.keys(collectionImageTypesObject).map((type) => {
+        const field = collectionImageTypesObject[type];
+        const label = getEnumLabel(collectionImageTypesObject[type]);
         return (
           <Field
             key={field}
             name={field}
-            label={type}
+            label={label}
             as={imageSelectField}
             maxItems={1}
             title="Select Image"

@@ -11,6 +11,7 @@ import {
   InfoPanel,
   Paragraph,
   Section,
+  SelectField,
   SingleLineTextField,
   TagsField,
   TextAreaField,
@@ -27,16 +28,21 @@ import { ExtensionsContext } from '../../../externals';
 import {
   Mutation,
   MutationCreateSeasonsCastArgs,
+  MutationCreateSeasonsDirectorArgs,
   MutationCreateSeasonsProductionCountryArgs,
   MutationCreateSeasonsTagArgs,
   MutationCreateSeasonsTvshowGenreArgs,
   MutationDeleteSeasonsCastArgs,
+  MutationDeleteSeasonsDirectorArgs,
   MutationDeleteSeasonsProductionCountryArgs,
   MutationDeleteSeasonsTagArgs,
   MutationDeleteSeasonsTvshowGenreArgs,
   SearchSeasonCastDocument,
   SearchSeasonCastQuery,
   SearchSeasonCastQueryVariables,
+  SearchSeasonDirectorDocument,
+  SearchSeasonDirectorQuery,
+  SearchSeasonDirectorQueryVariables,
   SearchSeasonProductionCountriesDocument,
   SearchSeasonProductionCountriesQuery,
   SearchSeasonProductionCountriesQueryVariables,
@@ -66,7 +72,18 @@ const seasonDetailSchema = Yup.object().shape<
     .positive('Season Index must be a positive number')
     .integer('Season Index must be an integer')
     .required('Season Index is a required field'),
+  title: Yup.string().required('Title is a required field'),
+  rating: Yup.number()
+    .nullable()
+    .min(0, 'Rating must not be less than 0.')
+    .max(100, 'Rating must not be greater than 100.')
+    .typeError('Rating must be a number between 0 and 100.'),
 });
+
+interface selectOption {
+  value: string;
+  label: string;
+}
 
 export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
   seasonId,
@@ -77,7 +94,16 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
     fetchPolicy: 'network-only',
   });
 
-  const { allGenres, cast, genres, productionCountries, tags } = useMemo(
+  const {
+    allGenres,
+    cast,
+    genres,
+    productionCountries,
+    tags,
+    allAgeRatings,
+    allContentOwners,
+    director,
+  } = useMemo(
     () => ({
       allGenres:
         data?.tvshowGenres?.nodes.reduce<{
@@ -91,9 +117,26 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
         (node) => node.tvshowGenres?.title ?? '',
       ),
       cast: data?.season?.seasonsCasts.nodes.map((node) => node.name),
+      director: data?.season?.seasonsDirectors.nodes.map((node) => node.name),
       productionCountries: data?.season?.seasonsProductionCountries.nodes.map(
         (node) => node.name,
       ),
+      allAgeRatings:
+        data?.ageRatings?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
+      allContentOwners:
+        data?.contentOwners?.nodes.map(
+          (node) =>
+            ({
+              value: node.name,
+              label: node.name,
+            } as selectOption),
+        ) ?? [],
     }),
     [data],
   );
@@ -196,6 +239,22 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
         prefix: 'productionCountry',
       });
 
+      const directorAssignmentMutations = generateArrayMutations({
+        current: formData.director,
+        original: initialData.data?.director,
+        generateCreateMutation: (name) =>
+          generateUpdateGQLFragment<MutationCreateSeasonsDirectorArgs>(
+            'createSeasonsDirector',
+            { input: { seasonsDirector: { name, seasonId } } },
+          ),
+        generateDeleteMutation: (name) =>
+          generateUpdateGQLFragment<MutationDeleteSeasonsDirectorArgs>(
+            'deleteSeasonsDirector',
+            { input: { seasonId, name } },
+          ),
+        prefix: 'director',
+      });
+
       const patch = createUpdateDto(formData, initialData.data);
 
       const GqlMutationDocument = gql`mutation UpdateSeason($input: UpdateSeasonInput!) {
@@ -210,6 +269,7 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
         ${genreAssignmentMutations}
         ${castAssignmentMutations}
         ${productionCountriesAssignmentMutations}
+        ${directorAssignmentMutations}
       }`;
 
       await client.mutate<unknown, { input: UpdateSeasonInput }>({
@@ -236,6 +296,7 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
           genres,
           cast,
           productionCountries,
+          director,
         },
         loading,
         entityNotFound: data?.season === null,
@@ -244,7 +305,11 @@ export const SeasonDetailsForm: React.FC<SeasonDetailsFormProps> = ({
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form genreOptions={Object.keys(allGenres)} />
+      <Form
+        genreOptions={Object.keys(allGenres)}
+        ageRatingOptions={allAgeRatings}
+        contentOwnerOptions={allContentOwners}
+      />
     </Details>
   );
 };
@@ -256,16 +321,12 @@ const Panel: React.FC = () => {
   return useMemo(() => {
     let coverImageId: ID;
     let coverImageCount = 0;
-    let teaserImageCount = 0;
 
     values.seasonsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case SeasonImageType.Cover:
+        case SeasonImageType.Cover_1X1:
           coverImageCount++;
           coverImageId = imageId;
-          break;
-        case SeasonImageType.Teaser:
-          teaserImageCount++;
           break;
         default:
           break;
@@ -279,6 +340,10 @@ const Panel: React.FC = () => {
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
+          <Paragraph title="External ID">{values.externalId}</Paragraph>
+          <Paragraph title="Subtype">
+            {getEnumLabel(values.assetSubtype)}
+          </Paragraph>
           <Paragraph title="Created">
             {formatDateTime(values.createdDate)} by {values.createdUser}
           </Paragraph>
@@ -327,10 +392,6 @@ const Panel: React.FC = () => {
               >
                 {coverImageCount} / 1
               </div>
-              <div>Teaser</div>
-              <div className={classes.rightAlignment}>
-                {teaserImageCount} / 1
-              </div>
             </div>
           </Paragraph>
         </Section>
@@ -339,9 +400,11 @@ const Panel: React.FC = () => {
   }, [
     ImageCover,
     ImagePreview,
+    values.assetSubtype,
     values.createdDate,
     values.createdUser,
     values.episodes?.totalCount,
+    values.externalId,
     values.id,
     values.publishStatus,
     values.publishedDate,
@@ -354,7 +417,11 @@ const Panel: React.FC = () => {
   ]);
 };
 
-const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
+const Form: React.FC<{
+  genreOptions?: string[];
+  ageRatingOptions?: selectOption[];
+  contentOwnerOptions?: selectOption[];
+}> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchSeasonTagsQuery,
@@ -364,6 +431,19 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
       variables: { searchKey: value, limit: 10 },
     });
     return data.getSeasonsTagsValues?.nodes ?? [];
+  };
+
+  const directorSuggestionResolver = async (
+    value: string,
+  ): Promise<(string | null)[]> => {
+    const { data } = await client.query<
+      SearchSeasonDirectorQuery,
+      SearchSeasonDirectorQueryVariables
+    >({
+      query: SearchSeasonDirectorDocument,
+      variables: { searchKey: value, limit: 10 },
+    });
+    return data.getSeasonsDirectorsValues?.nodes ?? [];
   };
 
   const castSuggestionResolver = async (
@@ -401,20 +481,9 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         className={classes.seasonIndex}
         as={SingleLineTextField}
       />
-      <Field name="synopsis" label="Synopsis" as={TextAreaField} />
+      <Field name="title" label="Title" as={SingleLineTextField} />
+      <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
-      <Field
-        name="externalId"
-        label="External ID"
-        className={classes.externalId}
-        as={SingleLineTextField}
-      />
-      <Field
-        name="tags"
-        label="Tags"
-        liveSuggestionsResolver={tagsResolver}
-        as={CustomTagsField}
-      />
       <Field
         name="genres"
         label="Genres"
@@ -427,11 +496,16 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         liveSuggestionsResolver={castSuggestionResolver}
         as={CustomTagsField}
       />
-      <Field name="studio" label="Studio" as={SingleLineTextField} />
       <Field
-        name="productionCountries"
-        label="Production Countries"
-        liveSuggestionsResolver={productionCountriesResolver}
+        name="director"
+        label="Directors"
+        liveSuggestionsResolver={directorSuggestionResolver}
+        as={CustomTagsField}
+      />
+      <Field
+        name="tags"
+        label="Tags"
+        liveSuggestionsResolver={tagsResolver}
         as={CustomTagsField}
       />
       <Field
@@ -440,6 +514,33 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
         as={DateTimeTextField}
         modifyTime={false}
       />
+      <Field
+        name="productionCountries"
+        label="Country"
+        liveSuggestionsResolver={productionCountriesResolver}
+        as={CustomTagsField}
+      />
+      <Field
+        name="ageRating"
+        label="Age Rating"
+        addEmptyOption={true}
+        options={ageRatingOptions}
+        as={SelectField}
+      />
+      <Field
+        name="rating"
+        label="Rating"
+        as={SingleLineTextField}
+        className={classes.rating}
+      />
+      <Field
+        name="contentOwner"
+        label="Content Owner"
+        addEmptyOption={true}
+        options={contentOwnerOptions}
+        as={SelectField}
+      />
+      <Field name="extendedField" label="Custom" as={TextAreaField} />
     </>
   );
 };
@@ -453,6 +554,7 @@ function createUpdateDto(
     tags,
     cast,
     productionCountries,
+    director,
     genres,
     ...rest
   } = getFormDiff(currentValues, initialValues);

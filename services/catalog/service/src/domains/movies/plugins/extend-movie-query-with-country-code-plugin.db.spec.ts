@@ -65,32 +65,6 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
       expect(resp.errors).toBeFalsy();
     });
 
-    it('no license -> error for no license', async () => {
-      // Act
-      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
-        id: movieId,
-        countryCode: 'DE',
-      });
-
-      // Assert
-      expect(resp?.data?.movie).toBeFalsy();
-      expect(resp.errors).toMatchObject([
-        {
-          code: CommonErrors.LicenseNotFound.code,
-          details: undefined,
-          message: 'The movie does not have a license.',
-          path: ['movie'],
-        },
-      ]);
-
-      const loggedObject = getFirstMockResult<any>(errorOverride);
-      expect(loggedObject).toMatchObject({
-        message: 'The movie does not have a license.',
-        loglevel: 'ERROR',
-        details: { code: CommonErrors.LicenseNotFound.code },
-      });
-    });
-
     it('license with no values set -> error for not valid license', async () => {
       // Arrange
       await insert('movie_licenses', {
@@ -334,7 +308,7 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
   });
 
   describe('Success cases', () => {
-    // Control case to make sure that passing country code triggers validation logic
+    // Control case to make sure that not passing country code also triggers validation logic
     it('movie without license, no code passed -> movie returned', async () => {
       // Act
       const resp = await ctx.runGqlQuery(
@@ -347,6 +321,21 @@ describe('ExtendMovieQueryWithCountryCodePlugin', () => {
         `,
         { id: movieId },
       );
+
+      // Assert
+      expect(resp.errors).toBeFalsy();
+
+      expect(resp?.data?.movie.id).toEqual(movieId);
+      expect(errorOverride).toHaveBeenCalledTimes(0);
+      expect(debugOverride).toHaveBeenCalledTimes(0);
+    });
+
+    it('no license -> -> movie returned', async () => {
+      // Act
+      const resp = await ctx.runGqlQuery(MOVIE_REQUEST, {
+        id: movieId,
+        countryCode: 'DE',
+      });
 
       // Assert
       expect(resp.errors).toBeFalsy();

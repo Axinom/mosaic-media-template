@@ -14,7 +14,7 @@
       "description": "Season number",
       "type": "integer",
       "minimum": 1
-    },    
+    },
     "synopsis": {
       "description": "Short description of the main plot elements.",
       "$ref": "../common.json#/definitions/non_empty_string"
@@ -22,7 +22,7 @@
     "description": {
       "description": "Extended synopsis.",
       "type": "string"
-    },    
+    },
     "studio": {
       "description": "Name of the producing studio.",
       "type": "string"
@@ -103,7 +103,7 @@
         "type": "object",
         "additionalProperties": false,
         "title": "season_localization",
-        "required": ["is_default_locale", "language_tag"],
+        "required": ["is_default_locale", "language_tag", "title"],
         "properties": {
           "is_default_locale": {
             "type": "boolean",
@@ -112,6 +112,10 @@
           "language_tag": {
             "type": "string",
             "description": "The locale for which the values are localized."
+          },
+          "title": {
+            "type": "string",
+            "description": "The localized title of this season."
           },
           "description": {
             "type": ["string", "null"],

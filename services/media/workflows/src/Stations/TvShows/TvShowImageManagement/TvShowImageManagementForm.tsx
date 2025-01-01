@@ -17,6 +17,7 @@ import {
   TvshowsImage,
   useTvshowImagesQuery,
 } from '../../../generated/graphql';
+import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 
 interface TvShowImageManagementFormProps {
   tvshowId: number;
@@ -30,15 +31,37 @@ type FormData = Record<TvshowImageType, string[]>;
 const Form: React.FC<{ imageSelectField: unknown }> = ({
   imageSelectField,
 }) => {
+  const customSortedTvshowImageTypes = Object.values(TvshowImageType).sort(
+    (a, b) => {
+      const order = [
+        'COVER_1X1',
+        'COVER_16X9',
+        'CLEAN_COVER_1X1',
+        'CLEAN_COVER_16X9',
+        'LIST_1X1',
+        'LIST_9X13',
+      ];
+      return order.indexOf(a) - order.indexOf(b);
+    },
+  );
+
+  const tvshowImageTypesObject = customSortedTvshowImageTypes.reduce(
+    (acc, curr) => {
+      acc[curr] = curr;
+      return acc;
+    },
+    {} as { [key: string]: string },
+  );
   return (
     <>
-      {Object.keys(TvshowImageType).map((type) => {
-        const field = TvshowImageType[type];
+      {Object.keys(tvshowImageTypesObject).map((type) => {
+        const field = tvshowImageTypesObject[type];
+        const label = getEnumLabel(tvshowImageTypesObject[type]);
         return (
           <Field
             key={field}
             name={field}
-            label={type}
+            label={label}
             as={imageSelectField}
             maxItems={1}
             title="Select Image"
