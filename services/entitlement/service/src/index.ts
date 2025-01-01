@@ -85,6 +85,12 @@ async function bootstrap(): Promise<void> {
 
   setupRestEndpoints(app);
 
+  if (config.recurlyEntitlementMockRequest) {
+    logger.warn(
+      'Recurly entitlement mock request is enabled in the configuration (RECURLY_ENTITLEMENT_MOCK_REQUEST).',
+    );
+  }
+
   const server = app.listen(config.port, () => {
     if (config.isDev) {
       logger.log(`App is ready! Listening on port ${config.port}`);
