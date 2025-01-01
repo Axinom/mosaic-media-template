@@ -85,7 +85,6 @@ class LicenseNode {
   countries: string[];
 
   // @IsNotEmpty()
-  businessType: BusinessType;
 
   @IsNotEmpty()
   downloadedAssetLifespan: number;
@@ -113,6 +112,9 @@ export class AssetModel {
   @IsNotEmpty()
   @IsNumber()
   assetType: number;
+
+  @IsNotEmpty()
+  businessType: BusinessType;
 
   @ValidateNested()
   @Type(() => Licenses)
