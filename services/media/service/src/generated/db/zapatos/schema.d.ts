@@ -3921,33 +3921,63 @@ declare module 'zapatos/schema' {
     export type Table = 'episodes_licenses_countries';
     export interface Selectable {
       /**
+      * **episodes_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
       * **episodes_licenses_countries.episodes_license_id**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       episodes_license_id: number;
       /**
-      * **episodes_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **episodes_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum;
+      country_group_id: string | null;
+      /**
+      * **episodes_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code: string | null;
     }
     export interface JSONSelectable {
       /**
+      * **episodes_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
       * **episodes_licenses_countries.episodes_license_id**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       episodes_license_id: number;
       /**
-      * **episodes_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **episodes_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum;
+      country_group_id: string | null;
+      /**
+      * **episodes_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code: string | null;
     }
     export interface Whereable {
+      /**
+      * **episodes_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **episodes_licenses_countries.episodes_license_id**
       * - `int4` in database
@@ -3955,13 +3985,25 @@ declare module 'zapatos/schema' {
       */
       episodes_license_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **episodes_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **episodes_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code?: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.ParentColumn>;
+      country_group_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **episodes_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **episodes_licenses_countries.episodes_license_id**
       * - `int4` in database
@@ -3969,13 +4011,25 @@ declare module 'zapatos/schema' {
       */
       episodes_license_id: number | db.Parameter<number> | db.SQLFragment;
       /**
-      * **episodes_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **episodes_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment;
+      country_group_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **episodes_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **episodes_licenses_countries.episodes_license_id**
       * - `int4` in database
@@ -3983,11 +4037,17 @@ declare module 'zapatos/schema' {
       */
       episodes_license_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
-      * **episodes_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **episodes_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code?: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.SQLFragment<any, c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment>;
+      country_group_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'episodes_licenses_countries_pkey';
     export type Column = keyof Selectable;
@@ -8137,33 +8197,63 @@ declare module 'zapatos/schema' {
     export type Table = 'movies_licenses_countries';
     export interface Selectable {
       /**
+      * **movies_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
       * **movies_licenses_countries.movies_license_id**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       movies_license_id: number;
       /**
-      * **movies_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **movies_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum;
+      country_group_id: string | null;
+      /**
+      * **movies_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code: string | null;
     }
     export interface JSONSelectable {
       /**
+      * **movies_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
       * **movies_licenses_countries.movies_license_id**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       movies_license_id: number;
       /**
-      * **movies_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **movies_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum;
+      country_group_id: string | null;
+      /**
+      * **movies_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code: string | null;
     }
     export interface Whereable {
+      /**
+      * **movies_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **movies_licenses_countries.movies_license_id**
       * - `int4` in database
@@ -8171,13 +8261,25 @@ declare module 'zapatos/schema' {
       */
       movies_license_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **movies_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **movies_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code?: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.ParentColumn>;
+      country_group_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **movies_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **movies_licenses_countries.movies_license_id**
       * - `int4` in database
@@ -8185,13 +8287,25 @@ declare module 'zapatos/schema' {
       */
       movies_license_id: number | db.Parameter<number> | db.SQLFragment;
       /**
-      * **movies_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **movies_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment;
+      country_group_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **movies_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **movies_licenses_countries.movies_license_id**
       * - `int4` in database
@@ -8199,11 +8313,17 @@ declare module 'zapatos/schema' {
       */
       movies_license_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
-      * **movies_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **movies_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code?: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.SQLFragment<any, c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment>;
+      country_group_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movies_licenses_countries_pkey';
     export type Column = keyof Selectable;
@@ -10074,33 +10194,63 @@ declare module 'zapatos/schema' {
     export type Table = 'seasons_licenses_countries';
     export interface Selectable {
       /**
+      * **seasons_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
       * **seasons_licenses_countries.seasons_license_id**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       seasons_license_id: number;
       /**
-      * **seasons_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **seasons_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum;
+      country_group_id: string | null;
+      /**
+      * **seasons_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code: string | null;
     }
     export interface JSONSelectable {
       /**
+      * **seasons_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
       * **seasons_licenses_countries.seasons_license_id**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       seasons_license_id: number;
       /**
-      * **seasons_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **seasons_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum;
+      country_group_id: string | null;
+      /**
+      * **seasons_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code: string | null;
     }
     export interface Whereable {
+      /**
+      * **seasons_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **seasons_licenses_countries.seasons_license_id**
       * - `int4` in database
@@ -10108,13 +10258,25 @@ declare module 'zapatos/schema' {
       */
       seasons_license_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **seasons_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **seasons_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code?: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.ParentColumn>;
+      country_group_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **seasons_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **seasons_licenses_countries.seasons_license_id**
       * - `int4` in database
@@ -10122,13 +10284,25 @@ declare module 'zapatos/schema' {
       */
       seasons_license_id: number | db.Parameter<number> | db.SQLFragment;
       /**
-      * **seasons_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **seasons_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment;
+      country_group_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **seasons_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **seasons_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **seasons_licenses_countries.seasons_license_id**
       * - `int4` in database
@@ -10136,11 +10310,17 @@ declare module 'zapatos/schema' {
       */
       seasons_license_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
-      * **seasons_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **seasons_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code?: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.SQLFragment<any, c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment>;
+      country_group_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **seasons_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'seasons_licenses_countries_pkey';
     export type Column = keyof Selectable;
@@ -13205,33 +13385,63 @@ declare module 'zapatos/schema' {
     export type Table = 'tvshows_licenses_countries';
     export interface Selectable {
       /**
+      * **tvshows_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
       * **tvshows_licenses_countries.tvshows_license_id**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       tvshows_license_id: number;
       /**
-      * **tvshows_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **tvshows_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum;
+      country_group_id: string | null;
+      /**
+      * **tvshows_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code: string | null;
     }
     export interface JSONSelectable {
       /**
+      * **tvshows_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
       * **tvshows_licenses_countries.tvshows_license_id**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       tvshows_license_id: number;
       /**
-      * **tvshows_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **tvshows_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum;
+      country_group_id: string | null;
+      /**
+      * **tvshows_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code: string | null;
     }
     export interface Whereable {
+      /**
+      * **tvshows_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tvshows_licenses_countries.tvshows_license_id**
       * - `int4` in database
@@ -13239,13 +13449,25 @@ declare module 'zapatos/schema' {
       */
       tvshows_license_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **tvshows_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **tvshows_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code?: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.ParentColumn>;
+      country_group_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **tvshows_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **tvshows_licenses_countries.tvshows_license_id**
       * - `int4` in database
@@ -13253,13 +13475,25 @@ declare module 'zapatos/schema' {
       */
       tvshows_license_id: number | db.Parameter<number> | db.SQLFragment;
       /**
-      * **tvshows_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **tvshows_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment;
+      country_group_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **tvshows_licenses_countries.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **tvshows_licenses_countries.tvshows_license_id**
       * - `int4` in database
@@ -13267,11 +13501,17 @@ declare module 'zapatos/schema' {
       */
       tvshows_license_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
-      * **tvshows_licenses_countries.code**
-      * - `iso_alpha_two_country_codes_enum` (base type: `text`) in database
-      * - `NOT NULL`, no default
+      * **tvshows_licenses_countries.country_group_id**
+      * - `uuid` in database
+      * - Nullable, no default
       */
-      code?: c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment | db.SQLFragment<any, c.IsoAlphaTwoCountryCodesEnum | db.Parameter<c.IsoAlphaTwoCountryCodesEnum> | db.SQLFragment>;
+      country_group_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows_licenses_countries.country_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      country_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshows_licenses_countries_pkey';
     export type Column = keyof Selectable;

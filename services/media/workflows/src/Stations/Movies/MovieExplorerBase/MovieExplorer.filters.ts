@@ -6,6 +6,7 @@ import {
   Option,
 } from '@axinom/mosaic-ui';
 import { useEffect, useState } from 'react';
+import { validate as isUuid } from 'uuid';
 import { client } from '../../../apolloClient';
 import {
   BusinessType,
@@ -264,12 +265,24 @@ export function useMoviesFilters(): {
               },
             },
           };
+        } else if (!isUuid(countryCode)) {
+          return {
+            some: {
+              moviesLicensesCountries: {
+                some: {
+                  countryCode: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
         } else {
           return {
             some: {
               moviesLicensesCountries: {
                 some: {
-                  code: {
+                  countryGroupId: {
                     equalTo: countryCode,
                   },
                 },

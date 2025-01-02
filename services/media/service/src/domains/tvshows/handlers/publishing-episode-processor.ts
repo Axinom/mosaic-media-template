@@ -93,7 +93,7 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     licenses: episode.licenses.map((license) => ({
       start_time: license.license_start ?? undefined,
       end_time: license.license_end ?? undefined,
-      countries: license.countries.map((country) => country.code),
+      countries: license.countries.map((country) => country.country_code ?? ''),
     })),
     images,
     videos,

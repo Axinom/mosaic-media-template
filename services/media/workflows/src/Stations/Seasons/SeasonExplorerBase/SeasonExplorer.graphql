@@ -46,7 +46,8 @@ fragment SeasonExplorerProperties on Season {
       licenseStart
       seasonsLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
     }

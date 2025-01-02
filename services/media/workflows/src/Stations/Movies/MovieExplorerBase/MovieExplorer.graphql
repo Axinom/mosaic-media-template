@@ -14,7 +14,8 @@ fragment MovieExplorerProperties on Movie {
       licenseStart
       moviesLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
     }

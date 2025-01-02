@@ -8,6 +8,7 @@ import {
   transformRange,
 } from '@axinom/mosaic-ui';
 import { useEffect, useState } from 'react';
+import { validate as isUuid } from 'uuid';
 import { client } from '../../../apolloClient';
 import {
   PublishStatus,
@@ -292,12 +293,24 @@ export function useSeasonsFilters(): {
               },
             },
           };
+        } else if (!isUuid(countryCode)) {
+          return {
+            some: {
+              seasonsLicensesCountries: {
+                some: {
+                  countryCode: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
         } else {
           return {
             some: {
               seasonsLicensesCountries: {
                 some: {
-                  code: {
+                  countryGroupId: {
                     equalTo: countryCode,
                   },
                 },

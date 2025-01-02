@@ -19,19 +19,23 @@ import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { validate as isUuid } from 'uuid';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
+  AllCountryType,
+  DeleteSeasonsLicensesCountryInput,
   IsoAlphaTwoCountryCodes,
   Mutation,
   MutationCreateSeasonsLicensesCountryArgs,
   MutationDeleteSeasonsLicensesCountryArgs,
   MutationUpdateSeasonsLicenseArgs,
   SeasonsLicense,
+  SeasonsLicensesCountry,
+  SeasonsLicensesCountryInput,
   useDeleteSeasonsLicenseMutation,
   useSeasonsLicenseQuery,
 } from '../../../generated/graphql';
-import { CountryNames } from '../../../Util/CountryNames/CountryNames';
 import {
   getLicenseEndSchema,
   getLicenseStartSchema,
@@ -66,11 +70,17 @@ export const SeasonLicensingDetails: React.FC = () => {
     fetchPolicy: 'no-cache',
   });
 
-  const { countries } = useMemo(
+  const { countries, allCountries } = useMemo(
     () => ({
-      countries: data?.seasonsLicense?.seasonsLicensesCountries.nodes.map(
-        (country) => country.code,
+      countries: data?.seasonsLicense?.seasonsLicensesCountries.nodes.flatMap(
+        (country) =>
+          [country.countryCode, country.countryGroupId].filter(Boolean),
       ),
+      allCountries:
+        data?.allCountryTypes?.nodes.map(({ name, id }) => ({
+          display: name ?? '',
+          value: id,
+        })) ?? [],
     }),
     [data],
   );
@@ -93,10 +103,10 @@ export const SeasonLicensingDetails: React.FC = () => {
             'createSeasonsLicensesCountry',
             {
               input: {
-                seasonsLicensesCountry: {
-                  code: { type: 'enum', value: code },
+                seasonsLicensesCountry: generateCountryAssignmentPatch(
+                  code,
                   seasonsLicenseId,
-                },
+                ),
               },
             },
           ),
@@ -104,7 +114,11 @@ export const SeasonLicensingDetails: React.FC = () => {
           generateUpdateGQLFragment<MutationDeleteSeasonsLicensesCountryArgs>(
             'deleteSeasonsLicensesCountry',
             {
-              input: { code: { type: 'enum', value: code }, seasonsLicenseId },
+              input: generateDeleteCountryAssignmentPatch(
+                code,
+                data?.seasonsLicense?.seasonsLicensesCountries.nodes,
+                data?.allCountryTypes?.nodes,
+              ),
             },
           ),
       });
@@ -128,7 +142,7 @@ export const SeasonLicensingDetails: React.FC = () => {
 
       await client.mutate({ mutation: GqlMutationDocument });
     },
-    [seasonsLicenseId],
+    [seasonsLicenseId, data],
   );
 
   return (
@@ -150,7 +164,7 @@ export const SeasonLicensingDetails: React.FC = () => {
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form />
+      <Form countryOptions={allCountries} />
     </Details>
   );
 };
@@ -179,7 +193,14 @@ const Panel: React.FC = () => {
   ]);
 };
 
-const Form: React.FC = () => {
+interface Option {
+  display: string;
+  value: any;
+}
+
+const Form: React.FC<{
+  countryOptions?: Option[];
+}> = ({ countryOptions }) => {
   return (
     <>
       <Field name="licenseStart" label="From" as={DateTimeTextField} />
@@ -187,7 +208,7 @@ const Form: React.FC = () => {
       <Field
         name="countries"
         label="Licensing Countries"
-        tagsOptions={CountryNames}
+        tagsOptions={countryOptions}
         as={TagsField}
         displayKey="display"
         valueKey="value"
@@ -249,3 +270,45 @@ function createUpdateDto(
     return rest;
   }
 }
+
+const generateDeleteCountryAssignmentPatch = (
+  countryId: string,
+  licensesCountries: SeasonsLicensesCountry['id'],
+  allCountries: AllCountryType[] | undefined,
+): DeleteSeasonsLicensesCountryInput => {
+  if (!isUuid(countryId)) {
+    const country = licensesCountries.find(
+      (con: SeasonsLicensesCountry['id']) => con.countryCode === countryId,
+    );
+    if (country) {
+      return { id: country.id };
+    }
+  } else {
+    if (allCountries) {
+      const licensesCountry = licensesCountries.find(
+        (con: SeasonsLicensesCountry['id']) => con.countryGroupId === countryId,
+      );
+      if (licensesCountry) {
+        return { id: licensesCountry.id };
+      }
+    }
+  }
+  return { id: 0 };
+};
+
+const generateCountryAssignmentPatch = (
+  countryId: IsoAlphaTwoCountryCodes,
+  seasonsLicenseId: number,
+): SeasonsLicensesCountryInput['id'] => {
+  if (!isUuid(countryId)) {
+    return {
+      seasonsLicenseId,
+      countryCode: { type: 'enum', value: countryId },
+    };
+  } else {
+    return {
+      seasonsLicenseId,
+      countryGroupId: countryId,
+    };
+  }
+};

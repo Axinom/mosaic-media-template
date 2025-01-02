@@ -49,7 +49,8 @@ fragment EpisodeExplorerProperties on Episode {
       licenseStart
       episodesLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
     }

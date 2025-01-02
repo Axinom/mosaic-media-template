@@ -45,7 +45,8 @@ fragment TVShowExplorerProperties on Tvshow {
       licenseStart
       tvshowsLicensesCountries {
         nodes {
-          code
+          countryCode
+          countryGroupId
         }
       }
     }

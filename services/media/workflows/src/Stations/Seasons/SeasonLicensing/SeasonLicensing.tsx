@@ -18,6 +18,7 @@ import {
   SeasonsLicensesQuery,
   SeasonsLicensesQueryVariables,
   useDeleteSeasonsLicenseMutation,
+  useGetAllCountryDataQuery,
 } from '../../../generated/graphql';
 import { getCountryName } from '../../../Util/CountryNames/CountryNames';
 
@@ -33,6 +34,10 @@ export const SeasonLicensing: React.FC = () => {
   );
 
   const history = useHistory();
+  const { data } = useGetAllCountryDataQuery({
+    client,
+    fetchPolicy: 'no-cache',
+  });
 
   const [deleteSeasonsLicenseMutation] = useDeleteSeasonsLicenseMutation({
     client,
@@ -57,7 +62,13 @@ export const SeasonLicensing: React.FC = () => {
       size: '4fr',
       sortable: false,
       render: createConnectionRenderer<SeasonsLicensesCountriesConnection>(
-        (node) => getCountryName(node.code),
+        (node) =>
+          [
+            getCountryName(node.countryCode ?? ''),
+            data?.allCountryTypes?.nodes.find(
+              (country) => country.id === node.countryGroupId,
+            )?.name,
+          ].filter(Boolean),
       ),
     },
   ];

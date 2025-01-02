@@ -18,6 +18,7 @@ import {
   MoviesLicensesQuery,
   MoviesLicensesQueryVariables,
   useDeleteMoviesLicenseMutation,
+  useGetAllCountryDataQuery,
 } from '../../../generated/graphql';
 import { getCountryName } from '../../../Util/CountryNames/CountryNames';
 
@@ -33,6 +34,10 @@ export const MovieLicensing: React.FC = () => {
   );
 
   const history = useHistory();
+  const { data } = useGetAllCountryDataQuery({
+    client,
+    fetchPolicy: 'no-cache',
+  });
 
   const [deleteMoviesLicenseMutation] = useDeleteMoviesLicenseMutation({
     client,
@@ -57,7 +62,13 @@ export const MovieLicensing: React.FC = () => {
       size: '4fr',
       sortable: false,
       render: createConnectionRenderer<MoviesLicensesCountriesConnection>(
-        (node) => getCountryName(node.code),
+        (node) =>
+          [
+            getCountryName(node.countryCode ?? ''),
+            data?.allCountryTypes?.nodes.find(
+              (country) => country.id === node.countryGroupId,
+            )?.name,
+          ].filter(Boolean),
       ),
     },
   ];

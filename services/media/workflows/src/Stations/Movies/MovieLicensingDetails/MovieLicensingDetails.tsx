@@ -19,11 +19,16 @@ import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { validate as isUuid } from 'uuid';
 import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
+  AllCountryType,
+  DeleteMoviesLicensesCountryInput,
   IsoAlphaTwoCountryCodes,
   MoviesLicense,
+  MoviesLicensesCountry,
+  MoviesLicensesCountryInput,
   Mutation,
   MutationCreateMoviesLicensesCountryArgs,
   MutationDeleteMoviesLicensesCountryArgs,
@@ -31,7 +36,6 @@ import {
   useDeleteMoviesLicenseMutation,
   useMoviesLicenseQuery,
 } from '../../../generated/graphql';
-import { CountryNames } from '../../../Util/CountryNames/CountryNames';
 import {
   getLicenseEndSchema,
   getLicenseStartSchema,
@@ -65,11 +69,17 @@ export const MovieLicensingDetails: React.FC = () => {
     fetchPolicy: 'no-cache',
   });
 
-  const { countries } = useMemo(
+  const { countries, allCountries } = useMemo(
     () => ({
-      countries: data?.moviesLicense?.moviesLicensesCountries.nodes.map(
-        (country) => country.code,
+      countries: data?.moviesLicense?.moviesLicensesCountries.nodes.flatMap(
+        (country) =>
+          [country.countryCode, country.countryGroupId].filter(Boolean),
       ),
+      allCountries:
+        data?.allCountryTypes?.nodes.map(({ name, id }) => ({
+          display: name ?? '',
+          value: id,
+        })) ?? [],
     }),
     [data],
   );
@@ -92,17 +102,23 @@ export const MovieLicensingDetails: React.FC = () => {
             'createMoviesLicensesCountry',
             {
               input: {
-                moviesLicensesCountry: {
-                  code: { type: 'enum', value: code },
+                moviesLicensesCountry: generateCountryAssignmentPatch(
+                  code,
                   moviesLicenseId,
-                },
+                ),
               },
             },
           ),
         generateDeleteMutation: (code) =>
           generateUpdateGQLFragment<MutationDeleteMoviesLicensesCountryArgs>(
             'deleteMoviesLicensesCountry',
-            { input: { code: { type: 'enum', value: code }, moviesLicenseId } },
+            {
+              input: generateDeleteCountryAssignmentPatch(
+                code,
+                data?.moviesLicense?.moviesLicensesCountries.nodes,
+                data?.allCountryTypes?.nodes,
+              ),
+            },
           ),
       });
 
@@ -125,7 +141,7 @@ export const MovieLicensingDetails: React.FC = () => {
 
       await client.mutate({ mutation: GqlMutationDocument });
     },
-    [moviesLicenseId],
+    [moviesLicenseId, data],
   );
 
   return (
@@ -147,7 +163,7 @@ export const MovieLicensingDetails: React.FC = () => {
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form />
+      <Form countryOptions={allCountries} />
     </Details>
   );
 };
@@ -175,7 +191,13 @@ const Panel: React.FC = () => {
   ]);
 };
 
-const Form: React.FC = () => {
+interface Option {
+  display: string;
+  value: any;
+}
+const Form: React.FC<{
+  countryOptions?: Option[];
+}> = ({ countryOptions }) => {
   return (
     <>
       <Field name="licenseStart" label="From" as={DateTimeTextField} />
@@ -183,7 +205,7 @@ const Form: React.FC = () => {
       <Field
         name="countries"
         label="Licensing Countries"
-        tagsOptions={CountryNames}
+        tagsOptions={countryOptions}
         as={TagsField}
         displayKey="display"
         valueKey="value"
@@ -245,3 +267,45 @@ function createUpdateDto(
     return rest;
   }
 }
+
+const generateDeleteCountryAssignmentPatch = (
+  countryId: string,
+  licensesCountries: MoviesLicensesCountry['id'],
+  allCountries: AllCountryType[] | undefined,
+): DeleteMoviesLicensesCountryInput => {
+  if (!isUuid(countryId)) {
+    const country = licensesCountries.find(
+      (con: MoviesLicensesCountry['id']) => con.countryCode === countryId,
+    );
+    if (country) {
+      return { id: country.id };
+    }
+  } else {
+    if (allCountries) {
+      const licensesCountry = licensesCountries.find(
+        (con: MoviesLicensesCountry['id']) => con.countryGroupId === countryId,
+      );
+      if (licensesCountry) {
+        return { id: licensesCountry.id };
+      }
+    }
+  }
+  return { id: 0 };
+};
+
+const generateCountryAssignmentPatch = (
+  countryId: IsoAlphaTwoCountryCodes,
+  moviesLicenseId: number,
+): MoviesLicensesCountryInput['id'] => {
+  if (!isUuid(countryId)) {
+    return {
+      moviesLicenseId,
+      countryCode: { type: 'enum', value: countryId },
+    };
+  } else {
+    return {
+      moviesLicenseId,
+      countryGroupId: countryId,
+    };
+  }
+};

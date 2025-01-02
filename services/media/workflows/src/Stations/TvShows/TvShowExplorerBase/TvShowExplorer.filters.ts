@@ -8,6 +8,7 @@ import {
   transformRange,
 } from '@axinom/mosaic-ui';
 import { useEffect, useState } from 'react';
+import { validate as isUuid } from 'uuid';
 import { client } from '../../../apolloClient';
 import {
   BusinessType,
@@ -283,12 +284,24 @@ export function useTvShowsFilters(): {
               },
             },
           };
+        } else if (!isUuid(countryCode)) {
+          return {
+            some: {
+              tvshowsLicensesCountries: {
+                some: {
+                  countryCode: {
+                    equalTo: countryCode,
+                  },
+                },
+              },
+            },
+          };
         } else {
           return {
             some: {
               tvshowsLicensesCountries: {
                 some: {
-                  code: {
+                  countryGroupId: {
                     equalTo: countryCode,
                   },
                 },

@@ -5434,8 +5434,10 @@ COMMENT ON TABLE app_public.episodes_licenses IS '@subscription_events_episodes 
 --
 
 CREATE TABLE app_public.episodes_licenses_countries (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     episodes_license_id integer NOT NULL,
-    code app_public.iso_alpha_two_country_codes_enum NOT NULL
+    country_group_id uuid,
+    country_code text
 );
 
 
@@ -5443,7 +5445,7 @@ CREATE TABLE app_public.episodes_licenses_countries (
 -- Name: TABLE episodes_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
 --
 
-COMMENT ON TABLE app_public.episodes_licenses_countries IS '@subscription_events_episodes_licenses EPISODE_LICENSE_COUNTRY_CREATED,EPISODE_LICENSE_COUNTRY_CHANGED,EPISODE_LICENSE_COUNTRY_DELETED';
+COMMENT ON TABLE app_public.episodes_licenses_countries IS '@subscription_events_episodes_licenses MovieLicensesCountry_CREATED,MovieLicensesCountry_CHANGED,MovieLicensesCountry_DELETED';
 
 
 --
@@ -5980,8 +5982,10 @@ COMMENT ON TABLE app_public.movies_licenses IS '@subscription_events_movies MOVI
 --
 
 CREATE TABLE app_public.movies_licenses_countries (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     movies_license_id integer NOT NULL,
-    code app_public.iso_alpha_two_country_codes_enum NOT NULL
+    country_group_id uuid,
+    country_code text
 );
 
 
@@ -5989,7 +5993,7 @@ CREATE TABLE app_public.movies_licenses_countries (
 -- Name: TABLE movies_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
 --
 
-COMMENT ON TABLE app_public.movies_licenses_countries IS '@subscription_events_movies_licenses MOVIE_LICENSE_COUNTRY_CREATED,MOVIE_LICENSE_COUNTRY_CHANGED,MOVIE_LICENSE_COUNTRY_DELETED';
+COMMENT ON TABLE app_public.movies_licenses_countries IS '@subscription_events_movies_licenses MovieLicensesCountry_CREATED,MovieLicensesCountry_CHANGED,MovieLicensesCountry_DELETED';
 
 
 --
@@ -6256,8 +6260,10 @@ COMMENT ON TABLE app_public.seasons_licenses IS '@subscription_events_seasons SE
 --
 
 CREATE TABLE app_public.seasons_licenses_countries (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     seasons_license_id integer NOT NULL,
-    code app_public.iso_alpha_two_country_codes_enum NOT NULL
+    country_group_id uuid,
+    country_code text
 );
 
 
@@ -6265,7 +6271,7 @@ CREATE TABLE app_public.seasons_licenses_countries (
 -- Name: TABLE seasons_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
 --
 
-COMMENT ON TABLE app_public.seasons_licenses_countries IS '@subscription_events_seasons_licenses SEASON_LICENSE_COUNTRY_CREATED,SEASON_LICENSE_COUNTRY_CHANGED,SEASON_LICENSE_COUNTRY_DELETED';
+COMMENT ON TABLE app_public.seasons_licenses_countries IS '@subscription_events_seasons_licenses MovieLicensesCountry_CREATED,MovieLicensesCountry_CHANGED,MovieLicensesCountry_DELETED';
 
 
 --
@@ -6705,8 +6711,10 @@ COMMENT ON TABLE app_public.tvshows_licenses IS '@subscription_events_tvshows TV
 --
 
 CREATE TABLE app_public.tvshows_licenses_countries (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     tvshows_license_id integer NOT NULL,
-    code app_public.iso_alpha_two_country_codes_enum NOT NULL
+    country_group_id uuid,
+    country_code text
 );
 
 
@@ -6714,7 +6722,7 @@ CREATE TABLE app_public.tvshows_licenses_countries (
 -- Name: TABLE tvshows_licenses_countries; Type: COMMENT; Schema: app_public; Owner: -
 --
 
-COMMENT ON TABLE app_public.tvshows_licenses_countries IS '@subscription_events_tvshows_licenses TVSHOW_LICENSE_COUNTRY_CREATED,TVSHOW_LICENSE_COUNTRY_CHANGED,TVSHOW_LICENSE_COUNTRY_DELETED';
+COMMENT ON TABLE app_public.tvshows_licenses_countries IS '@subscription_events_tvshows_licenses MovieLicensesCountry_CREATED,MovieLicensesCountry_CHANGED,MovieLicensesCountry_DELETED';
 
 
 --
@@ -7024,7 +7032,7 @@ ALTER TABLE ONLY app_public.episodes_images
 --
 
 ALTER TABLE ONLY app_public.episodes_licenses_countries
-    ADD CONSTRAINT episodes_licenses_countries_pkey PRIMARY KEY (episodes_license_id, code);
+    ADD CONSTRAINT episodes_licenses_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -7240,7 +7248,7 @@ ALTER TABLE ONLY app_public.movies_images
 --
 
 ALTER TABLE ONLY app_public.movies_licenses_countries
-    ADD CONSTRAINT movies_licenses_countries_pkey PRIMARY KEY (movies_license_id, code);
+    ADD CONSTRAINT movies_licenses_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -7360,7 +7368,7 @@ ALTER TABLE ONLY app_public.seasons_images
 --
 
 ALTER TABLE ONLY app_public.seasons_licenses_countries
-    ADD CONSTRAINT seasons_licenses_countries_pkey PRIMARY KEY (seasons_license_id, code);
+    ADD CONSTRAINT seasons_licenses_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -7536,7 +7544,7 @@ ALTER TABLE ONLY app_public.tvshows_images
 --
 
 ALTER TABLE ONLY app_public.tvshows_licenses_countries
-    ADD CONSTRAINT tvshows_licenses_countries_pkey PRIMARY KEY (tvshows_license_id, code);
+    ADD CONSTRAINT tvshows_licenses_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -7997,13 +8005,6 @@ CREATE INDEX idx_episodes_index_asc_with_id ON app_public.episodes USING btree (
 --
 
 CREATE INDEX idx_episodes_index_desc_with_id ON app_public.episodes USING btree (index DESC, id);
-
-
---
--- Name: idx_episodes_licenses_countries_code; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE INDEX idx_episodes_licenses_countries_code ON app_public.episodes_licenses_countries USING btree (code);
 
 
 --
@@ -8490,13 +8491,6 @@ CREATE INDEX idx_movies_images_movie_id ON app_public.movies_images USING btree 
 
 
 --
--- Name: idx_movies_licenses_countries_code; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE INDEX idx_movies_licenses_countries_code ON app_public.movies_licenses_countries USING btree (code);
-
-
---
 -- Name: idx_movies_licenses_countries_movies_license_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -8697,13 +8691,6 @@ CREATE INDEX idx_seasons_index_asc_with_id ON app_public.seasons USING btree (in
 --
 
 CREATE INDEX idx_seasons_index_desc_with_id ON app_public.seasons USING btree (index DESC, id);
-
-
---
--- Name: idx_seasons_licenses_countries_code; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE INDEX idx_seasons_licenses_countries_code ON app_public.seasons_licenses_countries USING btree (code);
 
 
 --
@@ -9309,13 +9296,6 @@ CREATE INDEX idx_tvshows_images_tvshow_id ON app_public.tvshows_images USING btr
 
 
 --
--- Name: idx_tvshows_licenses_countries_code; Type: INDEX; Schema: app_public; Owner: -
---
-
-CREATE INDEX idx_tvshows_licenses_countries_code ON app_public.tvshows_licenses_countries USING btree (code);
-
-
---
 -- Name: idx_tvshows_licenses_countries_tvshows_license_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -9680,13 +9660,6 @@ CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app
 
 
 --
--- Name: episodes_licenses_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
---
-
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION app_public.tg_episodes_licenses_countries__episodes_licenses_ts_propagtn();
-
-
---
 -- Name: episodes_production_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -9733,13 +9706,6 @@ CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app
 --
 
 CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.movies_licenses FOR EACH ROW EXECUTE FUNCTION app_public.tg_movies_licenses__movies_ts_propagation();
-
-
---
--- Name: movies_licenses_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
---
-
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION app_public.tg_movies_licenses_countries__movies_licenses_ts_propagation();
 
 
 --
@@ -9792,13 +9758,6 @@ CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app
 
 
 --
--- Name: seasons_licenses_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
---
-
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION app_public.tg_seasons_licenses_countries__seasons_licenses_ts_propagation();
-
-
---
 -- Name: seasons_production_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -9845,13 +9804,6 @@ CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app
 --
 
 CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.tvshows_licenses FOR EACH ROW EXECUTE FUNCTION app_public.tg_tvshows_licenses__tvshows_ts_propagation();
-
-
---
--- Name: tvshows_licenses_countries _200_propogate_timestamps; Type: TRIGGER; Schema: app_public; Owner: -
---
-
-CREATE TRIGGER _200_propogate_timestamps AFTER INSERT OR DELETE OR UPDATE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION app_public.tg_tvshows_licenses_countries__tvshows_licenses_ts_propagation();
 
 
 --
@@ -10299,21 +10251,21 @@ CREATE TRIGGER _500_gql_episodes_inserted AFTER INSERT ON app_public.episodes FO
 -- Name: episodes_licenses_countries _500_gql_episodes_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_countries_deleted BEFORE DELETE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('EPISODE_LICENSE_COUNTRY_DELETED', 'graphql:episodes_licenses', 'episodes_license_id');
+CREATE TRIGGER _500_gql_episodes_licenses_countries_deleted BEFORE DELETE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_DELETED', 'graphql:episodes_licenses', 'episodes_license_id');
 
 
 --
 -- Name: episodes_licenses_countries _500_gql_episodes_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_countries_inserted AFTER INSERT ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('EPISODE_LICENSE_COUNTRY_CREATED', 'graphql:episodes_licenses', 'episodes_license_id');
+CREATE TRIGGER _500_gql_episodes_licenses_countries_inserted AFTER INSERT ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CREATED', 'graphql:episodes_licenses', 'episodes_license_id');
 
 
 --
 -- Name: episodes_licenses_countries _500_gql_episodes_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_episodes_licenses_countries_updated AFTER UPDATE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('EPISODE_LICENSE_COUNTRY_CHANGED', 'graphql:episodes_licenses', 'episodes_license_id');
+CREATE TRIGGER _500_gql_episodes_licenses_countries_updated AFTER UPDATE ON app_public.episodes_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CHANGED', 'graphql:episodes_licenses', 'episodes_license_id');
 
 
 --
@@ -10551,21 +10503,21 @@ CREATE TRIGGER _500_gql_movies_inserted AFTER INSERT ON app_public.movies FOR EA
 -- Name: movies_licenses_countries _500_gql_movies_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_countries_deleted BEFORE DELETE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MOVIE_LICENSE_COUNTRY_DELETED', 'graphql:movies_licenses', 'movies_license_id');
+CREATE TRIGGER _500_gql_movies_licenses_countries_deleted BEFORE DELETE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_DELETED', 'graphql:movies_licenses', 'movies_license_id');
 
 
 --
 -- Name: movies_licenses_countries _500_gql_movies_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_countries_inserted AFTER INSERT ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MOVIE_LICENSE_COUNTRY_CREATED', 'graphql:movies_licenses', 'movies_license_id');
+CREATE TRIGGER _500_gql_movies_licenses_countries_inserted AFTER INSERT ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CREATED', 'graphql:movies_licenses', 'movies_license_id');
 
 
 --
 -- Name: movies_licenses_countries _500_gql_movies_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_movies_licenses_countries_updated AFTER UPDATE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MOVIE_LICENSE_COUNTRY_CHANGED', 'graphql:movies_licenses', 'movies_license_id');
+CREATE TRIGGER _500_gql_movies_licenses_countries_updated AFTER UPDATE ON app_public.movies_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CHANGED', 'graphql:movies_licenses', 'movies_license_id');
 
 
 --
@@ -10740,21 +10692,21 @@ CREATE TRIGGER _500_gql_seasons_inserted AFTER INSERT ON app_public.seasons FOR 
 -- Name: seasons_licenses_countries _500_gql_seasons_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_countries_deleted BEFORE DELETE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('SEASON_LICENSE_COUNTRY_DELETED', 'graphql:seasons_licenses', 'seasons_license_id');
+CREATE TRIGGER _500_gql_seasons_licenses_countries_deleted BEFORE DELETE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_DELETED', 'graphql:seasons_licenses', 'seasons_license_id');
 
 
 --
 -- Name: seasons_licenses_countries _500_gql_seasons_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_countries_inserted AFTER INSERT ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('SEASON_LICENSE_COUNTRY_CREATED', 'graphql:seasons_licenses', 'seasons_license_id');
+CREATE TRIGGER _500_gql_seasons_licenses_countries_inserted AFTER INSERT ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CREATED', 'graphql:seasons_licenses', 'seasons_license_id');
 
 
 --
 -- Name: seasons_licenses_countries _500_gql_seasons_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_seasons_licenses_countries_updated AFTER UPDATE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('SEASON_LICENSE_COUNTRY_CHANGED', 'graphql:seasons_licenses', 'seasons_license_id');
+CREATE TRIGGER _500_gql_seasons_licenses_countries_updated AFTER UPDATE ON app_public.seasons_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CHANGED', 'graphql:seasons_licenses', 'seasons_license_id');
 
 
 --
@@ -10992,21 +10944,21 @@ CREATE TRIGGER _500_gql_tvshows_inserted AFTER INSERT ON app_public.tvshows FOR 
 -- Name: tvshows_licenses_countries _500_gql_tvshows_licenses_countries_deleted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_countries_deleted BEFORE DELETE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_COUNTRY_DELETED', 'graphql:tvshows_licenses', 'tvshows_license_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_countries_deleted BEFORE DELETE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_DELETED', 'graphql:tvshows_licenses', 'tvshows_license_id');
 
 
 --
 -- Name: tvshows_licenses_countries _500_gql_tvshows_licenses_countries_inserted; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_countries_inserted AFTER INSERT ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_COUNTRY_CREATED', 'graphql:tvshows_licenses', 'tvshows_license_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_countries_inserted AFTER INSERT ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CREATED', 'graphql:tvshows_licenses', 'tvshows_license_id');
 
 
 --
 -- Name: tvshows_licenses_countries _500_gql_tvshows_licenses_countries_updated; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _500_gql_tvshows_licenses_countries_updated AFTER UPDATE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('TVSHOW_LICENSE_COUNTRY_CHANGED', 'graphql:tvshows_licenses', 'tvshows_license_id');
+CREATE TRIGGER _500_gql_tvshows_licenses_countries_updated AFTER UPDATE ON app_public.tvshows_licenses_countries FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__graphql_subscription('MovieLicensesCountry_CHANGED', 'graphql:tvshows_licenses', 'tvshows_license_id');
 
 
 --
@@ -11617,11 +11569,19 @@ ALTER TABLE ONLY app_public.episodes_images
 
 
 --
--- Name: episodes_licenses_countries episodes_licenses_countries_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+-- Name: episodes_licenses_countries episodes_licenses_countries_country_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
 ALTER TABLE ONLY app_public.episodes_licenses_countries
-    ADD CONSTRAINT episodes_licenses_countries_code_fkey FOREIGN KEY (code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+    ADD CONSTRAINT episodes_licenses_countries_country_code_fkey FOREIGN KEY (country_code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: episodes_licenses_countries episodes_licenses_countries_country_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.episodes_licenses_countries
+    ADD CONSTRAINT episodes_licenses_countries_country_group_id_fkey FOREIGN KEY (country_group_id) REFERENCES app_public.country_groups(id);
 
 
 --
@@ -11841,11 +11801,19 @@ ALTER TABLE ONLY app_public.movies_images
 
 
 --
--- Name: movies_licenses_countries movies_licenses_countries_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+-- Name: movies_licenses_countries movies_licenses_countries_country_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
 ALTER TABLE ONLY app_public.movies_licenses_countries
-    ADD CONSTRAINT movies_licenses_countries_code_fkey FOREIGN KEY (code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+    ADD CONSTRAINT movies_licenses_countries_country_code_fkey FOREIGN KEY (country_code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: movies_licenses_countries movies_licenses_countries_country_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.movies_licenses_countries
+    ADD CONSTRAINT movies_licenses_countries_country_group_id_fkey FOREIGN KEY (country_group_id) REFERENCES app_public.country_groups(id);
 
 
 --
@@ -11993,11 +11961,19 @@ ALTER TABLE ONLY app_public.seasons_images
 
 
 --
--- Name: seasons_licenses_countries seasons_licenses_countries_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+-- Name: seasons_licenses_countries seasons_licenses_countries_country_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
 ALTER TABLE ONLY app_public.seasons_licenses_countries
-    ADD CONSTRAINT seasons_licenses_countries_code_fkey FOREIGN KEY (code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+    ADD CONSTRAINT seasons_licenses_countries_country_code_fkey FOREIGN KEY (country_code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: seasons_licenses_countries seasons_licenses_countries_country_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.seasons_licenses_countries
+    ADD CONSTRAINT seasons_licenses_countries_country_group_id_fkey FOREIGN KEY (country_group_id) REFERENCES app_public.country_groups(id);
 
 
 --
@@ -12209,11 +12185,19 @@ ALTER TABLE ONLY app_public.tvshows_images
 
 
 --
--- Name: tvshows_licenses_countries tvshows_licenses_countries_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+-- Name: tvshows_licenses_countries tvshows_licenses_countries_country_code_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
 ALTER TABLE ONLY app_public.tvshows_licenses_countries
-    ADD CONSTRAINT tvshows_licenses_countries_code_fkey FOREIGN KEY (code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+    ADD CONSTRAINT tvshows_licenses_countries_country_code_fkey FOREIGN KEY (country_code) REFERENCES app_public.iso_alpha_two_country_codes(value);
+
+
+--
+-- Name: tvshows_licenses_countries tvshows_licenses_countries_country_group_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.tvshows_licenses_countries
+    ADD CONSTRAINT tvshows_licenses_countries_country_group_id_fkey FOREIGN KEY (country_group_id) REFERENCES app_public.country_groups(id);
 
 
 --
@@ -12506,14 +12490,14 @@ ALTER TABLE app_public.episodes_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: episodes_licenses_countries episodes_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_licenses_countries_authorization ON app_public.episodes_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY episodes_licenses_countries_authorization ON app_public.episodes_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOW_READER,TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: episodes_licenses_countries episodes_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY episodes_licenses_countries_authorization_delete ON app_public.episodes_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
+CREATE POLICY episodes_licenses_countries_authorization_delete ON app_public.episodes_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -12826,14 +12810,14 @@ ALTER TABLE app_public.movies_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: movies_licenses_countries movies_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_licenses_countries_authorization ON app_public.movies_licenses_countries USING ((( SELECT ax_utils.user_has_permission('MOVIES_VIEW,MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY movies_licenses_countries_authorization ON app_public.movies_licenses_countries USING ((( SELECT ax_utils.user_has_permission('MOVIE_READER,MOVIE_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('MOVIE_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: movies_licenses_countries movies_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY movies_licenses_countries_authorization_delete ON app_public.movies_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIES_EDIT,ADMIN'::text) AS user_has_permission));
+CREATE POLICY movies_licenses_countries_authorization_delete ON app_public.movies_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('MOVIE_EDITOR,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -13046,14 +13030,14 @@ ALTER TABLE app_public.seasons_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: seasons_licenses_countries seasons_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_licenses_countries_authorization ON app_public.seasons_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY seasons_licenses_countries_authorization ON app_public.seasons_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOW_READER,TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: seasons_licenses_countries seasons_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY seasons_licenses_countries_authorization_delete ON app_public.seasons_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
+CREATE POLICY seasons_licenses_countries_authorization_delete ON app_public.seasons_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -13690,14 +13674,14 @@ ALTER TABLE app_public.tvshows_licenses_countries ENABLE ROW LEVEL SECURITY;
 -- Name: tvshows_licenses_countries tvshows_licenses_countries_authorization; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_licenses_countries_authorization ON app_public.tvshows_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
+CREATE POLICY tvshows_licenses_countries_authorization ON app_public.tvshows_licenses_countries USING ((( SELECT ax_utils.user_has_permission('TVSHOW_READER,TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1))) WITH CHECK ((( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission) AND (1 = 1)));
 
 
 --
 -- Name: tvshows_licenses_countries tvshows_licenses_countries_authorization_delete; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY tvshows_licenses_countries_authorization_delete ON app_public.tvshows_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOWS_EDIT,ADMIN'::text) AS user_has_permission));
+CREATE POLICY tvshows_licenses_countries_authorization_delete ON app_public.tvshows_licenses_countries AS RESTRICTIVE FOR DELETE USING (( SELECT ax_utils.user_has_permission('TVSHOW_EDITOR,ADMIN'::text) AS user_has_permission));
 
 
 --
@@ -15838,14 +15822,7 @@ GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.episod
 -- Name: TABLE episodes_licenses_countries; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE ON TABLE app_public.episodes_licenses_countries TO media_service_gql_role;
-
-
---
--- Name: COLUMN episodes_licenses_countries.code; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT UPDATE(code) ON TABLE app_public.episodes_licenses_countries TO media_service_gql_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.episodes_licenses_countries TO media_service_gql_role;
 
 
 --
@@ -16433,14 +16410,7 @@ GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.movies
 -- Name: TABLE movies_licenses_countries; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE ON TABLE app_public.movies_licenses_countries TO media_service_gql_role;
-
-
---
--- Name: COLUMN movies_licenses_countries.code; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT UPDATE(code) ON TABLE app_public.movies_licenses_countries TO media_service_gql_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.movies_licenses_countries TO media_service_gql_role;
 
 
 --
@@ -16706,14 +16676,7 @@ GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.season
 -- Name: TABLE seasons_licenses_countries; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE ON TABLE app_public.seasons_licenses_countries TO media_service_gql_role;
-
-
---
--- Name: COLUMN seasons_licenses_countries.code; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT UPDATE(code) ON TABLE app_public.seasons_licenses_countries TO media_service_gql_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.seasons_licenses_countries TO media_service_gql_role;
 
 
 --
@@ -17175,14 +17138,7 @@ GRANT INSERT(is_downloadable),UPDATE(is_downloadable) ON TABLE app_public.tvshow
 -- Name: TABLE tvshows_licenses_countries; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,INSERT,DELETE ON TABLE app_public.tvshows_licenses_countries TO media_service_gql_role;
-
-
---
--- Name: COLUMN tvshows_licenses_countries.code; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT UPDATE(code) ON TABLE app_public.tvshows_licenses_countries TO media_service_gql_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE app_public.tvshows_licenses_countries TO media_service_gql_role;
 
 
 --

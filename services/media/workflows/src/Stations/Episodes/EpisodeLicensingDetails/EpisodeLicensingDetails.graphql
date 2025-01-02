@@ -3,7 +3,9 @@ query EpisodesLicense($id: Int!) {
     episodeId
     episodesLicensesCountries {
       nodes {
-        code
+        countryCode
+        countryGroupId
+        id
       }
     }
     licenseEnd
@@ -14,6 +16,12 @@ query EpisodesLicense($id: Int!) {
     updatedUser
     isDownloadable
     downloadedAssetLifespan
+  }
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
   }
 }
 
