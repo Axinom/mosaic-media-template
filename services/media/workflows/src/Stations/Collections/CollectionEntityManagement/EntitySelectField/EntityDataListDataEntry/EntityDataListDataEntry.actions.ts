@@ -1,7 +1,6 @@
 import { EntityType } from '../../../../../generated/graphql';
 import { useEpisodeSelectExplorerModal } from '../../../../Episodes/EpisodeSelectExplorerModal/EpisodeSelectExplorerModal';
 import { useMovieSelectExplorerModal } from '../../../../Movies/MovieSelectExplorerModal/MovieSelectExplorerModal';
-import { useSeasonSelectExplorerModal } from '../../../../Seasons/SeasonSelectExplorerModal/SeasonSelectExplorerModal';
 import { useTvShowSelectExplorerModal } from '../../../../TvShows/TvShowSelectExplorerModal/TvShowSelectExplorerModal';
 import { useCollectionSelectExplorerModal } from '../../../CollectionSelectExplorerModal/CollectionSelectExplorerModal';
 import { UseAddOptionsResult } from './EntityDataListDataEntry.types';
@@ -48,30 +47,6 @@ export const useAddOptions: UseAddOptionsResult = (
                 entityImages: item.tvshowsImages,
                 publishStatus: item.publishStatus,
                 title: item.title,
-                sortOrder: sortOrder + index,
-                entityId: item.id,
-              });
-            });
-          }
-        }
-      },
-    }),
-  },
-  {
-    title: 'Add Season',
-    ...useSeasonSelectExplorerModal({
-      excludeItems: excludes[EntityType.Season],
-      onSelection: (selection) => {
-        if (selection.mode === 'SINGLE_ITEMS') {
-          const items = selection.items;
-          if (items && onActionClicked) {
-            items.forEach((item, index) => {
-              onActionClicked({
-                entityType: EntityType.Season,
-                entityImages: item.seasonsImages,
-                publishStatus: item.publishStatus,
-                index: item.index,
-                title: `Season ${item.index}`,
                 sortOrder: sortOrder + index,
                 entityId: item.id,
               });
