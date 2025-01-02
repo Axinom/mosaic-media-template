@@ -7,12 +7,14 @@ import {
   formatDateTime,
   generateArrayMutationsWithUpdates,
   InfoPanel,
+  ObjectSchemaDefinition,
   Paragraph,
   Section,
 } from '@axinom/mosaic-ui';
 import { useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import React, { useCallback, useMemo } from 'react';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import {
   AgeRatingsDocument,
@@ -28,6 +30,10 @@ import {
   AssetAgeRatingsFormData,
   FormDataAgeRatings,
 } from './AgeRatings.types';
+
+const validationSchema = Yup.object<ObjectSchemaDefinition>({
+  name: Yup.string().trim().required('Age Rating is required.'),
+});
 
 export const AgeRatings: React.FC = () => {
   const { loading, data, error } = useAgeRatingsQuery({
@@ -111,9 +117,9 @@ const Form: React.FC = () => {
       columns={[
         {
           propertyName: 'name',
-          label: 'Title',
+          label: 'Age Rating',
           dataEntryRender: createInputRenderer({
-            placeholder: 'Enter Title',
+            placeholder: 'Enter Age Rating',
           }),
         },
       ]}
@@ -125,6 +131,7 @@ const Form: React.FC = () => {
       stickyHeader={false}
       allowEditing
       allowReordering={false}
+      rowValidationSchema={validationSchema}
     />
   );
 };

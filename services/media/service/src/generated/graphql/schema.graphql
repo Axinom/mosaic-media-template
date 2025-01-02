@@ -2894,6 +2894,162 @@ type CollectionCountry {
 }
 
 enum IsoAlphaTwoCountryCodes {
+  """Andorra"""
+  AD
+
+  """United Arab Emirates"""
+  AE
+
+  """Afghanistan"""
+  AF
+
+  """Antigua and Barbuda"""
+  AG
+
+  """Anguilla"""
+  AI
+
+  """Albania"""
+  AL
+
+  """Armenia"""
+  AM
+
+  """Angola"""
+  AO
+
+  """Antarctica"""
+  AQ
+
+  """Argentina"""
+  AR
+
+  """American Samoa"""
+  AS
+
+  """Austria"""
+  AT
+
+  """Australia"""
+  AU
+
+  """Aruba"""
+  AW
+
+  """Åland Islands"""
+  AX
+
+  """Azerbaijan"""
+  AZ
+
+  """Bosnia and Herzegovina"""
+  BA
+
+  """Barbados"""
+  BB
+
+  """Bangladesh"""
+  BD
+
+  """Belgium"""
+  BE
+
+  """Burkina Faso"""
+  BF
+
+  """Bulgaria"""
+  BG
+
+  """Bahrain"""
+  BH
+
+  """Burundi"""
+  BI
+
+  """Benin"""
+  BJ
+
+  """Saint Barthélemy"""
+  BL
+
+  """Bermuda"""
+  BM
+
+  """Brunei Darussalam"""
+  BN
+
+  """Bolivia (Plurinational State of)"""
+  BO
+
+  """Bonaire, Sint Eustatius and Saba"""
+  BQ
+
+  """Brazil"""
+  BR
+
+  """Bahamas"""
+  BS
+
+  """Bhutan"""
+  BT
+
+  """Bouvet Island"""
+  BV
+
+  """Botswana"""
+  BW
+
+  """Belarus"""
+  BY
+
+  """Belize"""
+  BZ
+
+  """Canada"""
+  CA
+
+  """Cocos (Keeling) Islands"""
+  CC
+
+  """Congo (Democratic Republic of the)"""
+  CD
+
+  """Central African Republic"""
+  CF
+
+  """Congo"""
+  CG
+
+  """Switzerland"""
+  CH
+
+  """Côte d'Ivoire"""
+  CI
+
+  """Cook Islands"""
+  CK
+
+  """Chile"""
+  CL
+
+  """Cameroon"""
+  CM
+
+  """China"""
+  CN
+
+  """Colombia"""
+  CO
+
+  """Costa Rica"""
+  CR
+
+  """Cuba"""
+  CU
+
+  """Cabo Verde"""
+  CV
+
   """Curaçao"""
   CW
 
@@ -3121,60 +3277,6 @@ enum IsoAlphaTwoCountryCodes {
 
   """Saint Lucia"""
   LC
-
-  """Andorra"""
-  AD
-
-  """United Arab Emirates"""
-  AE
-
-  """Afghanistan"""
-  AF
-
-  """Antigua and Barbuda"""
-  AG
-
-  """Anguilla"""
-  AI
-
-  """Albania"""
-  AL
-
-  """Armenia"""
-  AM
-
-  """Angola"""
-  AO
-
-  """Antarctica"""
-  AQ
-
-  """Argentina"""
-  AR
-
-  """American Samoa"""
-  AS
-
-  """Austria"""
-  AT
-
-  """Australia"""
-  AU
-
-  """Aruba"""
-  AW
-
-  """Åland Islands"""
-  AX
-
-  """Azerbaijan"""
-  AZ
-
-  """Bosnia and Herzegovina"""
-  BA
-
-  """Cuba"""
-  CU
 
   """Liechtenstein"""
   LI
@@ -3538,108 +3640,6 @@ enum IsoAlphaTwoCountryCodes {
 
   """Zimbabwe"""
   ZW
-
-  """Barbados"""
-  BB
-
-  """Bangladesh"""
-  BD
-
-  """Belgium"""
-  BE
-
-  """Burkina Faso"""
-  BF
-
-  """Bulgaria"""
-  BG
-
-  """Bahrain"""
-  BH
-
-  """Burundi"""
-  BI
-
-  """Benin"""
-  BJ
-
-  """Saint Barthélemy"""
-  BL
-
-  """Bermuda"""
-  BM
-
-  """Brunei Darussalam"""
-  BN
-
-  """Bolivia (Plurinational State of)"""
-  BO
-
-  """Bonaire, Sint Eustatius and Saba"""
-  BQ
-
-  """Brazil"""
-  BR
-
-  """Bahamas"""
-  BS
-
-  """Bhutan"""
-  BT
-
-  """Bouvet Island"""
-  BV
-
-  """Botswana"""
-  BW
-
-  """Belarus"""
-  BY
-
-  """Belize"""
-  BZ
-
-  """Canada"""
-  CA
-
-  """Cocos (Keeling) Islands"""
-  CC
-
-  """Congo (Democratic Republic of the)"""
-  CD
-
-  """Central African Republic"""
-  CF
-
-  """Congo"""
-  CG
-
-  """Switzerland"""
-  CH
-
-  """Côte d'Ivoire"""
-  CI
-
-  """Cook Islands"""
-  CK
-
-  """Chile"""
-  CL
-
-  """Cameroon"""
-  CM
-
-  """China"""
-  CN
-
-  """Colombia"""
-  CO
-
-  """Costa Rica"""
-  CR
-
-  """Cabo Verde"""
-  CV
 }
 
 """@permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN"""

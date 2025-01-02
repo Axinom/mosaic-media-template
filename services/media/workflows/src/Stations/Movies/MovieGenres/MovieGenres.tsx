@@ -9,12 +9,14 @@ import {
   formatDateTime,
   generateArrayMutationsWithUpdates,
   InfoPanel,
+  ObjectSchemaDefinition,
   Paragraph,
   Section,
 } from '@axinom/mosaic-ui';
 import { useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import React, { useCallback, useMemo } from 'react';
+import * as Yup from 'yup';
 import { client } from '../../../apolloClient';
 import { Constants } from '../../../constants';
 import {
@@ -30,6 +32,10 @@ import {
 import { useMovieGenresActions } from './MovieGenres.actions';
 import classes from './MovieGenres.module.scss';
 import { FormDataGenre, MovieGenresFormData } from './MovieGenres.types';
+
+const validationSchema = Yup.object<ObjectSchemaDefinition>({
+  title: Yup.string().trim().required('Title is required.'),
+});
 
 export const MovieGenres: React.FC = () => {
   const { loading, data, error } = useMovieGenresQuery({
@@ -156,6 +162,7 @@ const Form: React.FC = () => {
       }}
       stickyHeader={false}
       inlineMenuActions={generateInlineMenuActions}
+      rowValidationSchema={validationSchema}
     />
   );
 };
