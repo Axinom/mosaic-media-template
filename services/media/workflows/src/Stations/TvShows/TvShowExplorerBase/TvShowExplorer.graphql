@@ -50,7 +50,6 @@ fragment TVShowExplorerProperties on Tvshow {
       }
     }
   }
-  studio
   publishedDate
   seasons {
     nodes {

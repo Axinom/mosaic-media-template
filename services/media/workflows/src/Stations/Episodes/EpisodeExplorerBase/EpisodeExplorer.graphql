@@ -54,7 +54,6 @@ fragment EpisodeExplorerProperties on Episode {
       }
     }
   }
-  studio
   publishedDate
   id
   ageRating

@@ -51,7 +51,6 @@ fragment SeasonExplorerProperties on Season {
       }
     }
   }
-  studio
   publishedDate
 }
 

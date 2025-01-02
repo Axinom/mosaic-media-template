@@ -64,7 +64,7 @@ export function useCollectionsFilters(): {
     return filterToPostGraphileFilter<CollectionFilter>(filters, {
       title: 'includesInsensitive',
       externalId: 'includes',
-      collectionsTags: ['some', 'name', 'includes'],
+      collectionsTags: ['some', 'name', 'includesInsensitive'],
       languages: 'equalTo',
       collectionCountries: 'equalTo',
       publishStatus: 'in',

@@ -196,11 +196,6 @@ export function useSeasonsFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Studio',
-      property: 'studio',
-      type: FilterTypes.FreeText,
-    },
-    {
       label: 'Content Owners',
       property: 'contentOwner',
       searchInputPlaceholder: 'Search',
@@ -276,7 +271,6 @@ export function useSeasonsFilters(): {
       ],
       seasonsCasts: ['some', 'name', 'includesInsensitive'],
       seasonsProductionCountries: ['some', 'name', 'includesInsensitive'],
-      studio: 'includesInsensitive',
       ageRating: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
       publishStatus: 'in',

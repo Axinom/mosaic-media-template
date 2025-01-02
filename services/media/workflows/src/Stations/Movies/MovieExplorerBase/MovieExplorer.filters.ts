@@ -212,11 +212,6 @@ export function useMoviesFilters(): {
       type: FilterTypes.Options,
     },
     {
-      label: 'Sub Type',
-      property: 'assetSubtype',
-      type: FilterTypes.FreeText,
-    },
-    {
       label: 'Business Type',
       property: 'businessType',
       type: FilterTypes.Options,
@@ -283,7 +278,6 @@ export function useMoviesFilters(): {
           };
         }
       },
-      assetSubtype: 'equalTo',
       businessType: 'in',
       id: (value) => {
         if (typeof value === 'number') {

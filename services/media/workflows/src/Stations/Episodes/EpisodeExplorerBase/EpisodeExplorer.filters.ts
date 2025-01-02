@@ -10,7 +10,6 @@ import {
 import { useEffect, useState } from 'react';
 import { client } from '../../../apolloClient';
 import {
-  AssetSubtype,
   EpisodeFilter,
   PublishStatus,
   useGetEpisodesFilterOptionsDataQuery,
@@ -190,17 +189,6 @@ export function useEpisodesFilters(): {
       type: FilterTypes.Options,
     },
     {
-      label: 'Episode Subtype',
-      property: 'assetSubtype',
-      type: FilterTypes.Options,
-      options: Object.keys(AssetSubtype)
-        .filter((type) => type === 'Episode')
-        .map((key) => ({
-          value: AssetSubtype[key],
-          label: getEnumLabel(AssetSubtype[key]),
-        })),
-    },
-    {
       label: 'Release Period (From)',
       property: 'released',
       type: FilterTypes.Date,
@@ -215,11 +203,6 @@ export function useEpisodesFilters(): {
     {
       label: 'Production Country',
       property: 'episodesProductionCountries',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Studio',
-      property: 'studio',
       type: FilterTypes.FreeText,
     },
     {
@@ -315,7 +298,6 @@ export function useEpisodesFilters(): {
       ],
       episodesCasts: ['some', 'name', 'includesInsensitive'],
       episodesProductionCountries: ['some', 'name', 'includesInsensitive'],
-      studio: 'includesInsensitive',
       ageRating: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
       publishStatus: 'in',
@@ -368,7 +350,6 @@ export function useEpisodesFilters(): {
       released: transformRange,
       createdDate: transformRange,
       publishedDate: transformRange,
-      assetSubtype: 'equalTo',
       mainVideoId: (value) => ({
         isNull: !value,
       }),

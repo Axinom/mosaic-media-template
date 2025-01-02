@@ -54,7 +54,6 @@ fragment MovieExplorerProperties on Movie {
       }
     }
   }
-  studio
   publishedDate
   createdDate
   updatedDate

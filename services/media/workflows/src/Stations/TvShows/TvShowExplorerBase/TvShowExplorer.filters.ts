@@ -10,7 +10,6 @@ import {
 import { useEffect, useState } from 'react';
 import { client } from '../../../apolloClient';
 import {
-  AssetSubtype,
   BusinessType,
   PublishStatus,
   TvshowFilter,
@@ -200,17 +199,6 @@ export function useTvShowsFilters(): {
       })),
     },
     {
-      label: 'TV Show Subtype',
-      property: 'assetSubtype',
-      type: FilterTypes.Options,
-      options: Object.keys(AssetSubtype)
-        .filter((type) => type === 'TvShow')
-        .map((key) => ({
-          value: AssetSubtype[key],
-          label: getEnumLabel(AssetSubtype[key]),
-        })),
-    },
-    {
       label: 'Release Period (From)',
       property: 'released',
       type: FilterTypes.Date,
@@ -227,12 +215,6 @@ export function useTvShowsFilters(): {
       property: 'tvshowsProductionCountries',
       type: FilterTypes.FreeText,
     },
-    {
-      label: 'Studio',
-      property: 'studio',
-      type: FilterTypes.FreeText,
-    },
-
     {
       label: 'Publication Period (From)',
       property: 'publishedDate',
@@ -280,7 +262,6 @@ export function useTvShowsFilters(): {
       ],
       tvshowsCasts: ['some', 'name', 'includesInsensitive'],
       tvshowsProductionCountries: ['some', 'name', 'includesInsensitive'],
-      studio: 'includesInsensitive',
       publishStatus: 'in',
       ageRating: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
@@ -316,7 +297,6 @@ export function useTvShowsFilters(): {
           };
         }
       },
-      assetSubtype: 'equalTo',
       businessType: 'in',
       id: (value) => {
         if (typeof value === 'number') {
