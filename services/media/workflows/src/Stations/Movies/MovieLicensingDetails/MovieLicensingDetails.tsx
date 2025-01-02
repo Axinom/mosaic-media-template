@@ -233,6 +233,15 @@ function createUpdateDto(
   initialValues?: FormData | null,
 ): Partial<FormData> {
   const { countries, ...rest } = getFormDiff(currentValues, initialValues);
-
-  return rest;
+  if (rest.downloadedAssetLifespan !== undefined) {
+    return {
+      ...rest,
+      downloadedAssetLifespan:
+        typeof rest.downloadedAssetLifespan === 'string'
+          ? 0
+          : rest.downloadedAssetLifespan,
+    };
+  } else {
+    return rest;
+  }
 }
