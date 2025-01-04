@@ -18,7 +18,7 @@ export const EntitlementValidation = (
   let entitled = false;
   let downloadDuration: number = Number.MAX_SAFE_INTEGER;
 
-  if (config.geoBlockingFeatureSwitch && assetData.licenses.nodes.length > 0) {
+  if (assetData.licenses.nodes.length > 0) {
     const license = assetData.licenses.nodes.find((node) =>
       node.countries.some((c) => c.toUpperCase() === country.toUpperCase()),
     );
