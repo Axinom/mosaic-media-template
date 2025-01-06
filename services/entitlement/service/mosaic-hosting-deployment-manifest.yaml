@@ -53,7 +53,7 @@ regularVariables:
   GEOIP2_DATABASE_FILE: 'GeoIP2-City.mmdb'
   GEOIP2_UPDATE_SCHEDULE: '0 0 * * *'
 
-  GEO_BLOCKING_FEATURE_SWITCH: true
+  # GEO_BLOCKING_FEATURE_SWITCH: true // Blocking users based on their location is not an optional feature in BD context.
 
   RECURLY_ENTITLEMENT_MOCK_REQUESTS: '#{RECURLY-ENTITLEMENT-MOCK-REQUESTS}#'
 

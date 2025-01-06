@@ -7,10 +7,10 @@ export const catalogQueries = {
       asset: movie(id: $id) {
         id
         assetType
+        businessType
         licenses {
           nodes {
             isDownloadable
-            businessType
             countries
             downloadedAssetLifespan
             startTime
@@ -32,10 +32,10 @@ export const catalogQueries = {
       asset: episode(id: $id) {
         id
         assetType
+        businessType
         licenses {
           nodes {
             isDownloadable
-            businessType
             countries
             downloadedAssetLifespan
             startTime

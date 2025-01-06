@@ -77,12 +77,25 @@ export const EntitlementRequestHandling = async (
 
   const entitlementTokenHandler = new EntitlementTokenHandler(drmMosaicOptions);
 
-  const token = entitlementTokenHandler.getToken(
-    true,
-    entitlement.data?.DownloadDuration,
-    entitlement.data?.keyId,
-  );
-  return res.send({
-    drm: token,
-  });
+  try {
+    const token = entitlementTokenHandler.getToken(
+      true,
+      entitlement.data?.DownloadDuration,
+      entitlement.data?.keyId,
+    );
+    return res.send({
+      drm: token,
+    });
+  } catch (error) {
+    logger.error({
+      name: 'Entitlement token generation failed',
+      message: `Entitlement token generation failed for asset ${
+        entitlementRequest.asset_id
+      }. Error : ${error}, Data: ${JSON.stringify(entitlement)}`,
+    });
+    return res.status(500).send({
+      success: false,
+      message: `Entitlement token generation failed.`,
+    });
+  }
 };
