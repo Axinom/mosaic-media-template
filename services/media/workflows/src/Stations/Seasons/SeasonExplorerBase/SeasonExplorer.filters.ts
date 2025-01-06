@@ -116,6 +116,11 @@ export function useSeasonsFilters(): {
     }
   >[] = [
     {
+      label: 'Title',
+      property: 'title',
+      type: FilterTypes.FreeText,
+    },
+    {
       label: 'Season Index',
       property: 'index',
       type: FilterTypes.Numeric,
@@ -261,6 +266,7 @@ export function useSeasonsFilters(): {
     excludeItems?: number[],
   ): SeasonFilter | undefined => {
     return filterToPostGraphileFilter<SeasonFilter>(filters, {
+      title: 'includesInsensitive',
       index: 'equalTo',
       externalId: 'includesInsensitive',
       seasonsTags: ['some', 'name', 'includesInsensitive'],

@@ -5,6 +5,7 @@ fragment SeasonExplorerProperties on Season {
   externalId
   ageRating
   contentOwner
+  title
   tvshow {
     id
     title
