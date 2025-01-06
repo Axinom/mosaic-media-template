@@ -90,6 +90,12 @@ export const EntitlementHandler = async (
         data: entitlementValidationResult.data,
       };
     }
+
+    if (config.recurlyEntitlementMockRequest) {
+      entitlementValidationResult.data.Entitled = true;
+      return entitlementValidationResult;
+    }
+
     const isUserSubscribed =
       await new RecurlyEntitlementHandler().VerifySubscription(
         userId ? userId : '',
