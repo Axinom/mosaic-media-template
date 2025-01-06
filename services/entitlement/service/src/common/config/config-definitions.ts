@@ -53,10 +53,14 @@ export const getConfigDefinitions = (
     fairplayStreamingCertificateUrl: () =>
       env.get('FAIRPLAY_STREAMING_CERTIFICATE_URL').required().asString(),
 
-    entitlementWebhookSecret: () => 
+    entitlementWebhookSecret: () =>
       env.get('ENTITLEMENT_WEBHOOK_SECRET').required().asString(),
 
-    entitlementWebhookSignatureHeader: () => env.get('ENTITLEMENT_WEBHOOK_SIGNATURE_HEADER').default('x-mosaic-signature').asString(),
+    entitlementWebhookSignatureHeader: () =>
+      env
+        .get('ENTITLEMENT_WEBHOOK_SIGNATURE_HEADER')
+        .default('x-mosaic-signature')
+        .asString(),
 
     userSessionPublicKey: () =>
       env.get('USER_SESSION_PUBLIC_KEY').required().asString(),
@@ -94,8 +98,6 @@ export const getConfigDefinitions = (
 
     geoIP2UpdateSchedule: () =>
       env.get('GEOIP2_UPDATE_SCHEDULE').required().asString(),
-    geoBlockingFeatureSwitch: () =>
-      env.get('GEO_BLOCKING_FEATURE_SWITCH').asString(),
 
     /**
      * Optional User Service GraphQL Endpoint, used to get user auth token
