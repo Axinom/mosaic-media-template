@@ -4,13 +4,13 @@ import {
   FilterType,
   FilterTypes,
   FilterValues,
-  transformRange,
 } from '@axinom/mosaic-ui';
 import {
   SnapshotFilter,
   SnapshotState,
   SnapshotValidationStatus,
 } from '../../../generated/graphql';
+import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { SnapshotData } from './PublishingSnapshotExplorer.types';
 
@@ -21,10 +21,8 @@ export function usePublishingSnapshotFilters(): {
     excludeItems?: number[],
   ) => SnapshotFilter | undefined;
 } {
-  const [
-    createFromDateFilterValidator,
-    createToDateFilterValidator,
-  ] = createDateRangeFilterValidators<SnapshotData>();
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<SnapshotData>();
 
   const filterOptions: FilterType<SnapshotData>[] = [
     {

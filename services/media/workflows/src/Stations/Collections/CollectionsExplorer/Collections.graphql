@@ -2,7 +2,6 @@ fragment CollectionExplorerProperties on Collection {
   id
   title
   description
-  __typename
   externalId
   collectionsTags {
     nodes {
@@ -14,7 +13,6 @@ fragment CollectionExplorerProperties on Collection {
   updatedDate
   updatedUser
   publishStatus
-  languages
   assetSubtype
   collectionCountries {
     nodes {

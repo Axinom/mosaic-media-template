@@ -70,7 +70,6 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
     },
     { label: 'Title', propertyName: 'title', size: '2fr' },
     { label: 'Description', propertyName: 'description', size: '2fr' },
-    { label: 'Type', propertyName: '__typename' },
     {
       label: 'Last Modified',
       propertyName: 'updatedDate',

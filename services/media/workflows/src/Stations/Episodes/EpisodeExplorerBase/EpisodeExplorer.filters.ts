@@ -5,7 +5,6 @@ import {
   FilterTypes,
   FilterValues,
   Option,
-  transformRange,
 } from '@axinom/mosaic-ui';
 import { useEffect, useState } from 'react';
 import { validate as isUuid } from 'uuid';
@@ -15,6 +14,7 @@ import {
   PublishStatus,
   useGetEpisodesFilterOptionsDataQuery,
 } from '../../../generated/graphql';
+import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { EpisodeData } from './EpisodeExplorer.types';
 

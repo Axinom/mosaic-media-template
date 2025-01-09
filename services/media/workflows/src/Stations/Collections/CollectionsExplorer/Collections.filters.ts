@@ -62,16 +62,6 @@ export function useCollectionsFilters(): {
       type: FilterTypes.FreeText,
     },
     {
-      label: 'Language',
-      property: 'languages',
-      type: FilterTypes.FreeText,
-    },
-    {
-      label: 'Type',
-      property: '__typename',
-      type: FilterTypes.FreeText,
-    },
-    {
       label: 'Countries',
       property: 'collectionCountries',
       searchInputPlaceholder: 'Search',

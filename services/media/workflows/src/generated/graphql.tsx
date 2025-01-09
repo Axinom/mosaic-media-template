@@ -20770,7 +20770,7 @@ export type CreateCollectionSnapshotMutationVariables = Exact<{
 
 export type CreateCollectionSnapshotMutation = { __typename?: 'Mutation', createCollectionSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
-export type CollectionExplorerPropertiesFragment = { __typename: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, languages?: Array<string | null> | null, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
+export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
 
 export type CollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -20779,12 +20779,12 @@ export type CollectionsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, languages?: Array<string | null> | null, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
+export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
 
 export type CollectionsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, languages?: Array<string | null> | null, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
+export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
 
 export type BulkDeleteCollectionsMutationVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -21833,7 +21833,6 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
   id
   title
   description
-  __typename
   externalId
   collectionsTags {
     nodes {
@@ -21845,7 +21844,6 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
   updatedDate
   updatedUser
   publishStatus
-  languages
   assetSubtype
   collectionCountries {
     nodes {
