@@ -20989,6 +20989,11 @@ export type CreateEpisodesLicenseMutationVariables = Exact<{
 
 export type CreateEpisodesLicenseMutation = { __typename?: 'Mutation', createEpisodesLicense?: { __typename?: 'CreateEpisodesLicensePayload', episodesLicense?: { __typename?: 'EpisodesLicense', id: number } | null } | null };
 
+export type GetAllCountryTypesDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllCountryTypesDataQuery = { __typename?: 'Query', allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
+
 export type EpisodesLicenseQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
@@ -21533,7 +21538,7 @@ export type SeasonEpisodesQueryVariables = Exact<{
 
 export type SeasonEpisodesQuery = { __typename?: 'Query', season?: { __typename?: 'Season', episodes: { __typename?: 'EpisodesConnection', nodes: Array<{ __typename?: 'Episode', id: number, index: number, externalId?: string | null, title: string }> } } | null };
 
-export type SeasonExplorerPropertiesFragment = { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, title: string, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } };
+export type SeasonExplorerPropertiesFragment = { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, title: string, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } };
 
 export type SeasonsQueryVariables = Exact<{
   filter?: InputMaybe<SeasonFilter>;
@@ -21542,12 +21547,12 @@ export type SeasonsQueryVariables = Exact<{
 }>;
 
 
-export type SeasonsQuery = { __typename?: 'Query', filtered?: { __typename?: 'SeasonsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, title: string, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } }> } | null, nonFiltered?: { __typename?: 'SeasonsConnection', totalCount: number } | null };
+export type SeasonsQuery = { __typename?: 'Query', filtered?: { __typename?: 'SeasonsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, title: string, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } }> } | null, nonFiltered?: { __typename?: 'SeasonsConnection', totalCount: number } | null };
 
 export type SeasonsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SeasonsMutatedSubscription = { __typename?: 'Subscription', seasonMutated?: { __typename?: 'SeasonSubscriptionPayload', id: number, eventKey?: SeasonSubscriptionEventKey | null, season?: { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, title: string, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', code: IsoAlphaTwoCountryCodes }> } }> } } | null } | null };
+export type SeasonsMutatedSubscription = { __typename?: 'Subscription', seasonMutated?: { __typename?: 'SeasonSubscriptionPayload', id: number, eventKey?: SeasonSubscriptionEventKey | null, season?: { __typename?: 'Season', id: number, publishStatus: PublishStatus, index: number, externalId?: string | null, ageRating?: string | null, contentOwner?: string | null, title: string, createdDate: any, updatedDate: any, updatedUser: string, released?: any | null, publishedDate?: any | null, tvshow?: { __typename?: 'Tvshow', id: number, title: string } | null, seasonsImages: { __typename?: 'SeasonsImagesConnection', nodes: Array<{ __typename?: 'SeasonsImage', imageId: any }> }, seasonsTvshowGenres: { __typename?: 'SeasonsTvshowGenresConnection', nodes: Array<{ __typename?: 'SeasonsTvshowGenre', tvshowGenres?: { __typename?: 'TvshowGenre', title: string } | null }> }, seasonsTags: { __typename?: 'SeasonsTagsConnection', nodes: Array<{ __typename?: 'SeasonsTag', name: string }> }, seasonsCasts: { __typename?: 'SeasonsCastsConnection', nodes: Array<{ __typename?: 'SeasonsCast', name: string }> }, seasonsProductionCountries: { __typename?: 'SeasonsProductionCountriesConnection', nodes: Array<{ __typename?: 'SeasonsProductionCountry', name: string }> }, seasonsLicenses: { __typename?: 'SeasonsLicensesConnection', nodes: Array<{ __typename?: 'SeasonsLicense', licenseEnd?: any | null, licenseStart?: any | null, seasonsLicensesCountries: { __typename?: 'SeasonsLicensesCountriesConnection', nodes: Array<{ __typename?: 'SeasonsLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } } | null } | null };
 
 export type GetSeasonsFilterOptionsDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -23917,6 +23922,43 @@ export function useCreateEpisodesLicenseMutation(baseOptions?: Apollo.MutationHo
 export type CreateEpisodesLicenseMutationHookResult = ReturnType<typeof useCreateEpisodesLicenseMutation>;
 export type CreateEpisodesLicenseMutationResult = Apollo.MutationResult<CreateEpisodesLicenseMutation>;
 export type CreateEpisodesLicenseMutationOptions = Apollo.BaseMutationOptions<CreateEpisodesLicenseMutation, CreateEpisodesLicenseMutationVariables>;
+export const GetAllCountryTypesDataDocument = gql`
+    query GetAllCountryTypesData {
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllCountryTypesDataQuery__
+ *
+ * To run a query within a React component, call `useGetAllCountryTypesDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCountryTypesDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCountryTypesDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllCountryTypesDataQuery(baseOptions?: Apollo.QueryHookOptions<GetAllCountryTypesDataQuery, GetAllCountryTypesDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllCountryTypesDataQuery, GetAllCountryTypesDataQueryVariables>(GetAllCountryTypesDataDocument, options);
+      }
+export function useGetAllCountryTypesDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllCountryTypesDataQuery, GetAllCountryTypesDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllCountryTypesDataQuery, GetAllCountryTypesDataQueryVariables>(GetAllCountryTypesDataDocument, options);
+        }
+export type GetAllCountryTypesDataQueryHookResult = ReturnType<typeof useGetAllCountryTypesDataQuery>;
+export type GetAllCountryTypesDataLazyQueryHookResult = ReturnType<typeof useGetAllCountryTypesDataLazyQuery>;
+export type GetAllCountryTypesDataQueryResult = Apollo.QueryResult<GetAllCountryTypesDataQuery, GetAllCountryTypesDataQueryVariables>;
 export const EpisodesLicenseDocument = gql`
     query EpisodesLicense($id: Int!) {
   episodesLicense(id: $id) {

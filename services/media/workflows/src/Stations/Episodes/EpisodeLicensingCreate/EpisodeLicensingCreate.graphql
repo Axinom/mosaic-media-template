@@ -5,3 +5,12 @@ mutation CreateEpisodesLicense($input: CreateEpisodesLicenseInput!) {
     }
   }
 }
+
+query GetAllCountryTypesData {
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
+  }
+}

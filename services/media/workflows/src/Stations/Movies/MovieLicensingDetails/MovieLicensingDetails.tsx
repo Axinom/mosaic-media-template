@@ -44,6 +44,10 @@ import {
 type FormData = MutationUpdateMoviesLicenseArgs['input']['patch'] & {
   countries?: IsoAlphaTwoCountryCodes[];
 };
+interface Option {
+  display: string;
+  value: any;
+}
 
 const licenseSchema = Yup.object().shape<ObjectSchemaDefinition<FormData>>({
   licenseStart: getLicenseStartSchema().label('From'),
@@ -191,10 +195,6 @@ const Panel: React.FC = () => {
   ]);
 };
 
-interface Option {
-  display: string;
-  value: any;
-}
 const Form: React.FC<{
   countryOptions?: Option[];
 }> = ({ countryOptions }) => {
