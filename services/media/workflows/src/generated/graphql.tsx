@@ -20814,6 +20814,11 @@ export type BulkCreateCollectionSnapshotsMutationVariables = Exact<{
 
 export type BulkCreateCollectionSnapshotsMutation = { __typename?: 'Mutation', createCollectionSnapshots?: { __typename?: 'BulkPublishingPayload', affectedIds?: Array<number | null> | null } | null };
 
+export type GetAllCountryDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllCountryDataQuery = { __typename?: 'Query', allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
+
 export type CreateCountryGroupMutationVariables = Exact<{
   input: CreateCountryGroupInput;
 }>;
@@ -20924,14 +20929,6 @@ export type SearchEpisodeCastQueryVariables = Exact<{
 
 export type SearchEpisodeCastQuery = { __typename?: 'Query', getEpisodesCastsValues?: { __typename?: 'GetEpisodesCastsValuesConnection', nodes: Array<string | null> } | null };
 
-export type SearchEpisodeProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String']['input'];
-  limit: Scalars['Int']['input'];
-}>;
-
-
-export type SearchEpisodeProductionCountriesQuery = { __typename?: 'Query', getEpisodesProductionCountriesValues?: { __typename?: 'GetEpisodesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
-
 export type SearchEpisodeDirectorQueryVariables = Exact<{
   searchKey: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
@@ -20976,11 +20973,6 @@ export type EpisodesLicensesQueryVariables = Exact<{
 
 
 export type EpisodesLicensesQuery = { __typename?: 'Query', episodesLicenses?: { __typename?: 'EpisodesLicensesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'EpisodesLicense', id: number, licenseEnd?: any | null, licenseStart?: any | null, episodesLicensesCountries: { __typename?: 'EpisodesLicensesCountriesConnection', nodes: Array<{ __typename?: 'EpisodesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> } | null };
-
-export type GetAllCountryDataQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAllCountryDataQuery = { __typename?: 'Query', allCountryTypes?: { __typename?: 'AllCountryTypesConnection', nodes: Array<{ __typename?: 'AllCountryType', name?: string | null, id?: string | null }> } | null };
 
 export type CreateEpisodesLicenseMutationVariables = Exact<{
   input: CreateEpisodesLicenseInput;
@@ -21224,14 +21216,6 @@ export type SearchMovieDirectorQueryVariables = Exact<{
 
 
 export type SearchMovieDirectorQuery = { __typename?: 'Query', getMoviesDirectorsValues?: { __typename?: 'GetMoviesDirectorsValuesConnection', nodes: Array<string | null> } | null };
-
-export type SearchMovieProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String']['input'];
-  limit: Scalars['Int']['input'];
-}>;
-
-
-export type SearchMovieProductionCountriesQuery = { __typename?: 'Query', getMoviesProductionCountriesValues?: { __typename?: 'GetMoviesProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
 
 export type MovieExplorerPropertiesFragment = { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
 
@@ -21515,14 +21499,6 @@ export type SearchSeasonCastQueryVariables = Exact<{
 
 export type SearchSeasonCastQuery = { __typename?: 'Query', getSeasonsCastsValues?: { __typename?: 'GetSeasonsCastsValuesConnection', nodes: Array<string | null> } | null };
 
-export type SearchSeasonProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String']['input'];
-  limit: Scalars['Int']['input'];
-}>;
-
-
-export type SearchSeasonProductionCountriesQuery = { __typename?: 'Query', getSeasonsProductionCountriesValues?: { __typename?: 'GetSeasonsProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
-
 export type SearchSeasonDirectorQueryVariables = Exact<{
   searchKey: Scalars['String']['input'];
   limit: Scalars['Int']['input'];
@@ -21709,14 +21685,6 @@ export type SearchTvShowCastQueryVariables = Exact<{
 
 
 export type SearchTvShowCastQuery = { __typename?: 'Query', getTvshowsCastsValues?: { __typename?: 'GetTvshowsCastsValuesConnection', nodes: Array<string | null> } | null };
-
-export type SearchTvShowProductionCountriesQueryVariables = Exact<{
-  searchKey: Scalars['String']['input'];
-  limit: Scalars['Int']['input'];
-}>;
-
-
-export type SearchTvShowProductionCountriesQuery = { __typename?: 'Query', getTvshowsProductionCountriesValues?: { __typename?: 'GetTvshowsProductionCountriesValuesConnection', nodes: Array<string | null> } | null };
 
 export type SearchTvShowDirectorQueryVariables = Exact<{
   searchKey: Scalars['String']['input'];
@@ -22900,6 +22868,43 @@ export function useBulkCreateCollectionSnapshotsMutation(baseOptions?: Apollo.Mu
 export type BulkCreateCollectionSnapshotsMutationHookResult = ReturnType<typeof useBulkCreateCollectionSnapshotsMutation>;
 export type BulkCreateCollectionSnapshotsMutationResult = Apollo.MutationResult<BulkCreateCollectionSnapshotsMutation>;
 export type BulkCreateCollectionSnapshotsMutationOptions = Apollo.BaseMutationOptions<BulkCreateCollectionSnapshotsMutation, BulkCreateCollectionSnapshotsMutationVariables>;
+export const GetAllCountryDataDocument = gql`
+    query GetAllCountryData {
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllCountryDataQuery__
+ *
+ * To run a query within a React component, call `useGetAllCountryDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCountryDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCountryDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllCountryDataQuery(baseOptions?: Apollo.QueryHookOptions<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>(GetAllCountryDataDocument, options);
+      }
+export function useGetAllCountryDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>(GetAllCountryDataDocument, options);
+        }
+export type GetAllCountryDataQueryHookResult = ReturnType<typeof useGetAllCountryDataQuery>;
+export type GetAllCountryDataLazyQueryHookResult = ReturnType<typeof useGetAllCountryDataLazyQuery>;
+export type GetAllCountryDataQueryResult = Apollo.QueryResult<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>;
 export const CreateCountryGroupDocument = gql`
     mutation CreateCountryGroup($input: CreateCountryGroupInput!) {
   createCountryGroup(input: $input) {
@@ -23545,45 +23550,6 @@ export function useSearchEpisodeCastLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type SearchEpisodeCastQueryHookResult = ReturnType<typeof useSearchEpisodeCastQuery>;
 export type SearchEpisodeCastLazyQueryHookResult = ReturnType<typeof useSearchEpisodeCastLazyQuery>;
 export type SearchEpisodeCastQueryResult = Apollo.QueryResult<SearchEpisodeCastQuery, SearchEpisodeCastQueryVariables>;
-export const SearchEpisodeProductionCountriesDocument = gql`
-    query SearchEpisodeProductionCountries($searchKey: String!, $limit: Int!) {
-  getEpisodesProductionCountriesValues(
-    filter: {startsWithInsensitive: $searchKey}
-    first: $limit
-  ) {
-    nodes
-  }
-}
-    `;
-
-/**
- * __useSearchEpisodeProductionCountriesQuery__
- *
- * To run a query within a React component, call `useSearchEpisodeProductionCountriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchEpisodeProductionCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchEpisodeProductionCountriesQuery({
- *   variables: {
- *      searchKey: // value for 'searchKey'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useSearchEpisodeProductionCountriesQuery(baseOptions: Apollo.QueryHookOptions<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>(SearchEpisodeProductionCountriesDocument, options);
-      }
-export function useSearchEpisodeProductionCountriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>(SearchEpisodeProductionCountriesDocument, options);
-        }
-export type SearchEpisodeProductionCountriesQueryHookResult = ReturnType<typeof useSearchEpisodeProductionCountriesQuery>;
-export type SearchEpisodeProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchEpisodeProductionCountriesLazyQuery>;
-export type SearchEpisodeProductionCountriesQueryResult = Apollo.QueryResult<SearchEpisodeProductionCountriesQuery, SearchEpisodeProductionCountriesQueryVariables>;
 export const SearchEpisodeDirectorDocument = gql`
     query SearchEpisodeDirector($searchKey: String!, $limit: Int!) {
   getEpisodesDirectorsValues(
@@ -23850,43 +23816,6 @@ export function useEpisodesLicensesLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type EpisodesLicensesQueryHookResult = ReturnType<typeof useEpisodesLicensesQuery>;
 export type EpisodesLicensesLazyQueryHookResult = ReturnType<typeof useEpisodesLicensesLazyQuery>;
 export type EpisodesLicensesQueryResult = Apollo.QueryResult<EpisodesLicensesQuery, EpisodesLicensesQueryVariables>;
-export const GetAllCountryDataDocument = gql`
-    query GetAllCountryData {
-  allCountryTypes(orderBy: NAME_ASC) {
-    nodes {
-      name
-      id
-    }
-  }
-}
-    `;
-
-/**
- * __useGetAllCountryDataQuery__
- *
- * To run a query within a React component, call `useGetAllCountryDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllCountryDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllCountryDataQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetAllCountryDataQuery(baseOptions?: Apollo.QueryHookOptions<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>(GetAllCountryDataDocument, options);
-      }
-export function useGetAllCountryDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>(GetAllCountryDataDocument, options);
-        }
-export type GetAllCountryDataQueryHookResult = ReturnType<typeof useGetAllCountryDataQuery>;
-export type GetAllCountryDataLazyQueryHookResult = ReturnType<typeof useGetAllCountryDataLazyQuery>;
-export type GetAllCountryDataQueryResult = Apollo.QueryResult<GetAllCountryDataQuery, GetAllCountryDataQueryVariables>;
 export const CreateEpisodesLicenseDocument = gql`
     mutation CreateEpisodesLicense($input: CreateEpisodesLicenseInput!) {
   createEpisodesLicense(input: $input) {
@@ -25275,45 +25204,6 @@ export function useSearchMovieDirectorLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type SearchMovieDirectorQueryHookResult = ReturnType<typeof useSearchMovieDirectorQuery>;
 export type SearchMovieDirectorLazyQueryHookResult = ReturnType<typeof useSearchMovieDirectorLazyQuery>;
 export type SearchMovieDirectorQueryResult = Apollo.QueryResult<SearchMovieDirectorQuery, SearchMovieDirectorQueryVariables>;
-export const SearchMovieProductionCountriesDocument = gql`
-    query SearchMovieProductionCountries($searchKey: String!, $limit: Int!) {
-  getMoviesProductionCountriesValues(
-    filter: {startsWithInsensitive: $searchKey}
-    first: $limit
-  ) {
-    nodes
-  }
-}
-    `;
-
-/**
- * __useSearchMovieProductionCountriesQuery__
- *
- * To run a query within a React component, call `useSearchMovieProductionCountriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchMovieProductionCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchMovieProductionCountriesQuery({
- *   variables: {
- *      searchKey: // value for 'searchKey'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useSearchMovieProductionCountriesQuery(baseOptions: Apollo.QueryHookOptions<SearchMovieProductionCountriesQuery, SearchMovieProductionCountriesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchMovieProductionCountriesQuery, SearchMovieProductionCountriesQueryVariables>(SearchMovieProductionCountriesDocument, options);
-      }
-export function useSearchMovieProductionCountriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchMovieProductionCountriesQuery, SearchMovieProductionCountriesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchMovieProductionCountriesQuery, SearchMovieProductionCountriesQueryVariables>(SearchMovieProductionCountriesDocument, options);
-        }
-export type SearchMovieProductionCountriesQueryHookResult = ReturnType<typeof useSearchMovieProductionCountriesQuery>;
-export type SearchMovieProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchMovieProductionCountriesLazyQuery>;
-export type SearchMovieProductionCountriesQueryResult = Apollo.QueryResult<SearchMovieProductionCountriesQuery, SearchMovieProductionCountriesQueryVariables>;
 export const MoviesDocument = gql`
     query Movies($filter: MovieFilter, $orderBy: [MoviesOrderBy!], $after: Cursor) {
   filtered: movies(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {
@@ -26915,45 +26805,6 @@ export function useSearchSeasonCastLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type SearchSeasonCastQueryHookResult = ReturnType<typeof useSearchSeasonCastQuery>;
 export type SearchSeasonCastLazyQueryHookResult = ReturnType<typeof useSearchSeasonCastLazyQuery>;
 export type SearchSeasonCastQueryResult = Apollo.QueryResult<SearchSeasonCastQuery, SearchSeasonCastQueryVariables>;
-export const SearchSeasonProductionCountriesDocument = gql`
-    query SearchSeasonProductionCountries($searchKey: String!, $limit: Int!) {
-  getSeasonsProductionCountriesValues(
-    filter: {startsWithInsensitive: $searchKey}
-    first: $limit
-  ) {
-    nodes
-  }
-}
-    `;
-
-/**
- * __useSearchSeasonProductionCountriesQuery__
- *
- * To run a query within a React component, call `useSearchSeasonProductionCountriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchSeasonProductionCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchSeasonProductionCountriesQuery({
- *   variables: {
- *      searchKey: // value for 'searchKey'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useSearchSeasonProductionCountriesQuery(baseOptions: Apollo.QueryHookOptions<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>(SearchSeasonProductionCountriesDocument, options);
-      }
-export function useSearchSeasonProductionCountriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>(SearchSeasonProductionCountriesDocument, options);
-        }
-export type SearchSeasonProductionCountriesQueryHookResult = ReturnType<typeof useSearchSeasonProductionCountriesQuery>;
-export type SearchSeasonProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchSeasonProductionCountriesLazyQuery>;
-export type SearchSeasonProductionCountriesQueryResult = Apollo.QueryResult<SearchSeasonProductionCountriesQuery, SearchSeasonProductionCountriesQueryVariables>;
 export const SearchSeasonDirectorDocument = gql`
     query SearchSeasonDirector($searchKey: String!, $limit: Int!) {
   getSeasonsDirectorsValues(
@@ -28037,45 +27888,6 @@ export function useSearchTvShowCastLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type SearchTvShowCastQueryHookResult = ReturnType<typeof useSearchTvShowCastQuery>;
 export type SearchTvShowCastLazyQueryHookResult = ReturnType<typeof useSearchTvShowCastLazyQuery>;
 export type SearchTvShowCastQueryResult = Apollo.QueryResult<SearchTvShowCastQuery, SearchTvShowCastQueryVariables>;
-export const SearchTvShowProductionCountriesDocument = gql`
-    query SearchTvShowProductionCountries($searchKey: String!, $limit: Int!) {
-  getTvshowsProductionCountriesValues(
-    filter: {startsWithInsensitive: $searchKey}
-    first: $limit
-  ) {
-    nodes
-  }
-}
-    `;
-
-/**
- * __useSearchTvShowProductionCountriesQuery__
- *
- * To run a query within a React component, call `useSearchTvShowProductionCountriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchTvShowProductionCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchTvShowProductionCountriesQuery({
- *   variables: {
- *      searchKey: // value for 'searchKey'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useSearchTvShowProductionCountriesQuery(baseOptions: Apollo.QueryHookOptions<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>(SearchTvShowProductionCountriesDocument, options);
-      }
-export function useSearchTvShowProductionCountriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>(SearchTvShowProductionCountriesDocument, options);
-        }
-export type SearchTvShowProductionCountriesQueryHookResult = ReturnType<typeof useSearchTvShowProductionCountriesQuery>;
-export type SearchTvShowProductionCountriesLazyQueryHookResult = ReturnType<typeof useSearchTvShowProductionCountriesLazyQuery>;
-export type SearchTvShowProductionCountriesQueryResult = Apollo.QueryResult<SearchTvShowProductionCountriesQuery, SearchTvShowProductionCountriesQueryVariables>;
 export const SearchTvShowDirectorDocument = gql`
     query SearchTvShowDirector($searchKey: String!, $limit: Int!) {
   getTvshowsDirectorsValues(

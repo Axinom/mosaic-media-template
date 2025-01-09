@@ -135,15 +135,6 @@ query SearchSeasonCast($searchKey: String!, $limit: Int!) {
   }
 }
 
-query SearchSeasonProductionCountries($searchKey: String!, $limit: Int!) {
-  getSeasonsProductionCountriesValues(
-    filter: { startsWithInsensitive: $searchKey }
-    first: $limit
-  ) {
-    nodes
-  }
-}
-
 query SearchSeasonDirector($searchKey: String!, $limit: Int!) {
   getSeasonsDirectorsValues(
     filter: { startsWithInsensitive: $searchKey }

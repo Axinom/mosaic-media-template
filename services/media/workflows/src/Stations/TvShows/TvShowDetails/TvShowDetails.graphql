@@ -134,15 +134,6 @@ query SearchTvShowCast($searchKey: String!, $limit: Int!) {
   }
 }
 
-query SearchTvShowProductionCountries($searchKey: String!, $limit: Int!) {
-  getTvshowsProductionCountriesValues(
-    filter: { startsWithInsensitive: $searchKey }
-    first: $limit
-  ) {
-    nodes
-  }
-}
-
 query SearchTvShowDirector($searchKey: String!, $limit: Int!) {
   getTvshowsDirectorsValues(
     filter: { startsWithInsensitive: $searchKey }

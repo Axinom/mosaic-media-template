@@ -93,3 +93,12 @@ mutation BulkCreateCollectionSnapshots($filter: CollectionFilter) {
     affectedIds
   }
 }
+
+query GetAllCountryData {
+  allCountryTypes(orderBy: NAME_ASC) {
+    nodes {
+      name
+      id
+    }
+  }
+}

@@ -194,6 +194,16 @@ export function useMoviesFilters(): {
       type: FilterTypes.FreeText,
     },
     {
+      label: 'Production Country',
+      property: 'moviesProductionCountries',
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+    },
+    {
       label: 'License Countries',
       property: 'moviesLicenses',
       searchInputPlaceholder: 'Search',
@@ -247,6 +257,7 @@ export function useMoviesFilters(): {
       moviesCasts: ['some', 'name', 'includesInsensitive'],
       externalId: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
+      moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
       moviesLicenses: (value: unknown) => {
         const [countryCode, licensesStatus] = value as [string, string];
         if (licensesStatus === 'Valid License') {

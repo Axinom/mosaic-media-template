@@ -199,7 +199,12 @@ export function useSeasonsFilters(): {
     {
       label: 'Production Country',
       property: 'seasonsProductionCountries',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Content Owners',

@@ -147,15 +147,6 @@ query SearchEpisodeCast($searchKey: String!, $limit: Int!) {
   }
 }
 
-query SearchEpisodeProductionCountries($searchKey: String!, $limit: Int!) {
-  getEpisodesProductionCountriesValues(
-    filter: { startsWithInsensitive: $searchKey }
-    first: $limit
-  ) {
-    nodes
-  }
-}
-
 query SearchEpisodeDirector($searchKey: String!, $limit: Int!) {
   getEpisodesDirectorsValues(
     filter: { startsWithInsensitive: $searchKey }

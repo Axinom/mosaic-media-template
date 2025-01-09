@@ -46,15 +46,13 @@ import {
   SearchMovieDirectorDocument,
   SearchMovieDirectorQuery,
   SearchMovieDirectorQueryVariables,
-  SearchMovieProductionCountriesDocument,
-  SearchMovieProductionCountriesQuery,
-  SearchMovieProductionCountriesQueryVariables,
   SearchMovieTagsDocument,
   SearchMovieTagsQuery,
   SearchMovieTagsQueryVariables,
   UpdateMovieInput,
   useMovieQuery,
 } from '../../../generated/graphql';
+import { CountryNames } from '../../../Util/CountryNames/CountryNames';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useMovieDetailsActions } from './MovieDetails.actions';
 import classes from './MovieDetails.module.scss';
@@ -438,19 +436,6 @@ const Form: React.FC<{
     return data.getMoviesDirectorsValues?.nodes ?? [];
   };
 
-  const productionCountriesResolver = async (
-    value: string,
-  ): Promise<(string | null)[]> => {
-    const { data } = await client.query<
-      SearchMovieProductionCountriesQuery,
-      SearchMovieProductionCountriesQueryVariables
-    >({
-      query: SearchMovieProductionCountriesDocument,
-      variables: { searchKey: value, limit: 10 },
-    });
-    return data.getMoviesProductionCountriesValues?.nodes ?? [];
-  };
-
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
@@ -498,8 +483,10 @@ const Form: React.FC<{
       <Field
         name="productionCountries"
         label="Country"
-        liveSuggestionsResolver={productionCountriesResolver}
-        as={CustomTagsField}
+        tagsOptions={CountryNames}
+        as={TagsField}
+        displayKey="display"
+        valueKey="value"
       />
       <Field
         name="ageRating"

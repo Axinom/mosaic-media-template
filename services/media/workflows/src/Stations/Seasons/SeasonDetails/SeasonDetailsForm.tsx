@@ -43,9 +43,6 @@ import {
   SearchSeasonDirectorDocument,
   SearchSeasonDirectorQuery,
   SearchSeasonDirectorQueryVariables,
-  SearchSeasonProductionCountriesDocument,
-  SearchSeasonProductionCountriesQuery,
-  SearchSeasonProductionCountriesQueryVariables,
   SearchSeasonTagsDocument,
   SearchSeasonTagsQuery,
   SearchSeasonTagsQueryVariables,
@@ -56,6 +53,7 @@ import {
   UpdateSeasonInput,
   useSeasonQuery,
 } from '../../../generated/graphql';
+import { CountryNames } from '../../../Util/CountryNames/CountryNames';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useSeasonDetailsActions } from './SeasonDetails.actions';
 import classes from './SeasonDetails.module.scss';
@@ -459,19 +457,6 @@ const Form: React.FC<{
     return data.getSeasonsCastsValues?.nodes ?? [];
   };
 
-  const productionCountriesResolver = async (
-    value: string,
-  ): Promise<(string | null)[]> => {
-    const { data } = await client.query<
-      SearchSeasonProductionCountriesQuery,
-      SearchSeasonProductionCountriesQueryVariables
-    >({
-      query: SearchSeasonProductionCountriesDocument,
-      variables: { searchKey: value, limit: 10 },
-    });
-    return data.getSeasonsProductionCountriesValues?.nodes ?? [];
-  };
-
   return (
     <>
       <Field
@@ -517,8 +502,10 @@ const Form: React.FC<{
       <Field
         name="productionCountries"
         label="Country"
-        liveSuggestionsResolver={productionCountriesResolver}
-        as={CustomTagsField}
+        tagsOptions={CountryNames}
+        as={TagsField}
+        displayKey="display"
+        valueKey="value"
       />
       <Field
         name="ageRating"

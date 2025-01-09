@@ -214,7 +214,12 @@ export function useTvShowsFilters(): {
     {
       label: 'Production Country',
       property: 'tvshowsProductionCountries',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Publication Period (From)',

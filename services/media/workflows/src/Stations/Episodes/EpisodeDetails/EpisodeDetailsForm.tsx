@@ -46,9 +46,6 @@ import {
   SearchEpisodeDirectorDocument,
   SearchEpisodeDirectorQuery,
   SearchEpisodeDirectorQueryVariables,
-  SearchEpisodeProductionCountriesDocument,
-  SearchEpisodeProductionCountriesQuery,
-  SearchEpisodeProductionCountriesQueryVariables,
   SearchEpisodeTagsDocument,
   SearchEpisodeTagsQuery,
   SearchEpisodeTagsQueryVariables,
@@ -57,6 +54,7 @@ import {
   UpdateEpisodeMutationVariables,
   useEpisodeQuery,
 } from '../../../generated/graphql';
+import { CountryNames } from '../../../Util/CountryNames/CountryNames';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useEpisodeDetailsActions } from './EpisodeDetails.actions';
 import classes from './EpisodeDetails.module.scss';
@@ -457,19 +455,6 @@ const Form: React.FC<{
     return data.getEpisodesCastsValues?.nodes ?? [];
   };
 
-  const productionCountriesResolver = async (
-    value: string,
-  ): Promise<(string | null)[]> => {
-    const { data } = await client.query<
-      SearchEpisodeProductionCountriesQuery,
-      SearchEpisodeProductionCountriesQueryVariables
-    >({
-      query: SearchEpisodeProductionCountriesDocument,
-      variables: { searchKey: value, limit: 10 },
-    });
-    return data.getEpisodesProductionCountriesValues?.nodes ?? [];
-  };
-
   const directorSuggestionResolver = async (
     value: string,
   ): Promise<(string | null)[]> => {
@@ -532,8 +517,10 @@ const Form: React.FC<{
       <Field
         name="productionCountries"
         label="Country"
-        liveSuggestionsResolver={productionCountriesResolver}
-        as={CustomTagsField}
+        tagsOptions={CountryNames}
+        as={TagsField}
+        displayKey="display"
+        valueKey="value"
       />
       <Field
         name="ageRating"

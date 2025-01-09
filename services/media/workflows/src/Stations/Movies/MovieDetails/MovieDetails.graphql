@@ -133,12 +133,3 @@ query SearchMovieDirector($searchKey: String!, $limit: Int!) {
     nodes
   }
 }
-
-query SearchMovieProductionCountries($searchKey: String!, $limit: Int!) {
-  getMoviesProductionCountriesValues(
-    filter: { startsWithInsensitive: $searchKey }
-    first: $limit
-  ) {
-    nodes
-  }
-}

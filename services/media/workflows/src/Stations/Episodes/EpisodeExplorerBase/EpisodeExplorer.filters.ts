@@ -204,7 +204,12 @@ export function useEpisodesFilters(): {
     {
       label: 'Production Country',
       property: 'episodesProductionCountries',
-      type: FilterTypes.FreeText,
+      searchInputPlaceholder: 'Search',
+      type: FilterTypes.SearcheableOptions,
+      optionsProvider: (searchText) =>
+        AllFilterOptions.allCountries.filter((option) =>
+          option.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
     },
     {
       label: 'Content Owners',

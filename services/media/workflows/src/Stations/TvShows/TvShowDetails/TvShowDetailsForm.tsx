@@ -43,9 +43,6 @@ import {
   SearchTvShowDirectorDocument,
   SearchTvShowDirectorQuery,
   SearchTvShowDirectorQueryVariables,
-  SearchTvShowProductionCountriesDocument,
-  SearchTvShowProductionCountriesQuery,
-  SearchTvShowProductionCountriesQueryVariables,
   SearchTvShowTagsDocument,
   SearchTvShowTagsQuery,
   SearchTvShowTagsQueryVariables,
@@ -56,6 +53,7 @@ import {
   UpdateTvshowInput,
   useTvShowQuery,
 } from '../../../generated/graphql';
+import { CountryNames } from '../../../Util/CountryNames/CountryNames';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { useTvShowDetailsActions } from './TvShowDetails.actions';
 import classes from './TvShowDetails.module.scss';
@@ -428,19 +426,6 @@ const Form: React.FC<{
     return data.getTvshowsCastsValues?.nodes ?? [];
   };
 
-  const productionCountriesResolver = async (
-    value: string,
-  ): Promise<(string | null)[]> => {
-    const { data } = await client.query<
-      SearchTvShowProductionCountriesQuery,
-      SearchTvShowProductionCountriesQueryVariables
-    >({
-      query: SearchTvShowProductionCountriesDocument,
-      variables: { searchKey: value, limit: 10 },
-    });
-    return data.getTvshowsProductionCountriesValues?.nodes ?? [];
-  };
-
   const directorSuggestionResolver = async (
     value: string,
   ): Promise<(string | null)[]> => {
@@ -501,8 +486,10 @@ const Form: React.FC<{
       <Field
         name="productionCountries"
         label="Country"
-        liveSuggestionsResolver={productionCountriesResolver}
-        as={CustomTagsField}
+        tagsOptions={CountryNames}
+        as={TagsField}
+        displayKey="display"
+        valueKey="value"
       />
       <Field
         name="ageRating"
