@@ -17,7 +17,7 @@ import {
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { validate as isUuid } from 'uuid';
 import * as Yup from 'yup';
@@ -198,6 +198,12 @@ const Panel: React.FC = () => {
 const Form: React.FC<{
   countryOptions?: Option[];
 }> = ({ countryOptions }) => {
+  const { values, setFieldValue } = useFormikContext<FormData>();
+  useEffect(() => {
+    if (!values.isDownloadable) {
+      setFieldValue('downloadedAssetLifespan', 0);
+    }
+  }, [setFieldValue, values.isDownloadable]);
   return (
     <>
       <Field name="licenseStart" label="From" as={DateTimeTextField} />
@@ -215,6 +221,7 @@ const Form: React.FC<{
         name="downloadedAssetLifespan"
         label="Downloaded asset lifespan (days)"
         type="number"
+        disabled={!values.isDownloadable}
         as={SingleLineTextField}
       />
     </>
@@ -255,11 +262,15 @@ function createUpdateDto(
   initialValues?: FormData | null,
 ): Partial<FormData> {
   const { countries, ...rest } = getFormDiff(currentValues, initialValues);
-  if (rest.downloadedAssetLifespan !== undefined) {
+  if (
+    rest.downloadedAssetLifespan !== undefined ||
+    rest.isDownloadable !== undefined
+  ) {
     return {
       ...rest,
       downloadedAssetLifespan:
-        typeof rest.downloadedAssetLifespan === 'string'
+        typeof rest.downloadedAssetLifespan === 'string' ||
+        rest.isDownloadable === false
           ? 0
           : rest.downloadedAssetLifespan,
     };

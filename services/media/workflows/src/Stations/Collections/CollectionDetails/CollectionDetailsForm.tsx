@@ -72,11 +72,9 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
     fetchPolicy: 'network-only',
   });
 
-  const { tags, allLanguages, languages, allCountries, countries } = useMemo(
+  const { tags, allCountries, countries } = useMemo(
     () => ({
       tags: data?.collection?.collectionsTags.nodes.map((node) => node.name),
-      allLanguages: data?.languages?.nodes.map((node) => node.title) ?? [],
-      languages: data?.collection?.languages?.map((lang) => lang ?? ''),
       allCountries:
         data?.allCountryTypes?.nodes.map((node: AllCountryType) =>
           isUuid(node.id ?? '') ? node.name : getCountryName(node.id ?? ''),
@@ -180,7 +178,6 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
         data: {
           ...data?.collection,
           tags,
-          languages,
           countries,
         },
         loading,
@@ -190,7 +187,7 @@ export const CollectionDetailsForm: React.FC<CollectionDetailsFormProps> = ({
       saveData={onSubmit}
       infoPanel={<Panel />}
     >
-      <Form languageOptions={allLanguages} countryOptions={allCountries} />
+      <Form countryOptions={allCountries} />
     </Details>
   );
 };
@@ -298,9 +295,8 @@ const Panel: React.FC = () => {
 };
 
 const Form: React.FC<{
-  languageOptions?: string[];
   countryOptions?: (Maybe<string> | undefined)[];
-}> = ({ languageOptions, countryOptions }) => {
+}> = ({ countryOptions }) => {
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchCollectionTagsQuery,
