@@ -3,7 +3,6 @@ pr: none
 
 pool:
   vmImage: ubuntu-latest
-# TODO: rename file to backend-service-build and use single file for catalog, entitlement and media
 variables:
   containerRegistry: harbor-beyonddutch-automation
   tag: $(Build.BuildNumber)
