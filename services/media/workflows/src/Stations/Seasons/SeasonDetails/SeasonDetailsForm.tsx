@@ -16,7 +16,6 @@ import {
   TagsField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
-import clsx from 'clsx';
 import { Field, useFormikContext } from 'formik';
 import gql from 'graphql-tag';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
@@ -317,14 +316,34 @@ const Panel: React.FC = () => {
   const { values } = useFormikContext<Season>();
 
   return useMemo(() => {
-    let coverImageId: ID;
-    let coverImageCount = 0;
+    let cover1x1ImageId: ID;
+    let cover1x1ImageCount = 0;
+    let cover16x9ImageCount = 0;
+    let cleanCover1x1ImageCount = 0;
+    let cleanCover16x9ImageCount = 0;
+    let list1x1ImageCount = 0;
+    let list16x9ImageCount = 0;
 
     values.seasonsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
         case SeasonImageType.Cover_1X1:
-          coverImageCount++;
-          coverImageId = imageId;
+          cover1x1ImageCount++;
+          cover1x1ImageId = imageId;
+          break;
+        case SeasonImageType.Cover_16X9:
+          cover16x9ImageCount++;
+          break;
+        case SeasonImageType.CleanCover_1X1:
+          cleanCover1x1ImageCount++;
+          break;
+        case SeasonImageType.CleanCover_16X9:
+          cleanCover16x9ImageCount++;
+          break;
+        case SeasonImageType.List_1X1:
+          list1x1ImageCount++;
+          break;
+        case SeasonImageType.List_9X13:
+          list16x9ImageCount++;
           break;
         default:
           break;
@@ -334,7 +353,7 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={coverImageId} />
+          <ImageCover id={cover1x1ImageId} />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
@@ -372,25 +391,56 @@ const Panel: React.FC = () => {
             )}
           </Paragraph>
           <Paragraph title="Assigned items">
-            <div className={classes.datalist}>
-              <div>Episodes</div>
-              <div className={classes.rightAlignment}>
-                {values.episodes?.totalCount}/many
+            <Paragraph>
+              <div className={classes.datalist}>
+                <div>Episodes</div>
+                <div className={classes.rightAlignment}>
+                  {values.episodes?.totalCount}/many
+                </div>
+                <div>Trailers</div>{' '}
+                <div className={classes.rightAlignment}>
+                  {values.seasonsTrailers?.totalCount}/many
+                </div>
               </div>
-              <div>Trailers</div>{' '}
-              <div className={classes.rightAlignment}>
-                {values.seasonsTrailers?.totalCount}/many
+            </Paragraph>
+            <Paragraph title="Images">
+              <div className={classes.datalist}>
+                <div>Cover 1x1</div>
+                <div className={classes.rightAlignment}>
+                  {cover1x1ImageCount} / 1
+                </div>
               </div>
-              <div className={classes.assignedItemsSpacing}>Cover</div>
-              <div
-                className={clsx(
-                  classes.rightAlignment,
-                  classes.assignedItemsSpacing,
-                )}
-              >
-                {coverImageCount} / 1
+              <div className={classes.datalist}>
+                <div>Cover 16x9</div>
+                <div className={classes.rightAlignment}>
+                  {cover16x9ImageCount} / 1
+                </div>
               </div>
-            </div>
+              <div className={classes.datalist}>
+                <div>Clean Cover 1x1</div>
+                <div className={classes.rightAlignment}>
+                  {cleanCover1x1ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>Clean Cover 16x9</div>
+                <div className={classes.rightAlignment}>
+                  {cleanCover16x9ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>List 1x1</div>
+                <div className={classes.rightAlignment}>
+                  {list1x1ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>List 16x9</div>
+                <div className={classes.rightAlignment}>
+                  {list16x9ImageCount} / 1
+                </div>
+              </div>
+            </Paragraph>
           </Paragraph>
         </Section>
       </InfoPanel>

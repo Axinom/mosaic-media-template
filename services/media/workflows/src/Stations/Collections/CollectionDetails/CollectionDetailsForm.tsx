@@ -198,14 +198,34 @@ const Panel: React.FC = () => {
     useFormikContext<NonNullable<CollectionQuery['collection']>>();
 
   return useMemo(() => {
-    let coverImageId: ID;
-    let coverImageCount = 0;
+    let cover1x1ImageId: ID;
+    let cover1x1ImageCount = 0;
+    let cover4x1ImageCount = 0;
+    let cleanCover1x1ImageCount = 0;
+    let cleanCover4x1ImageCount = 0;
+    let list1x1ImageCount = 0;
+    let list15x16ImageCount = 0;
 
     values.collectionsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
         case CollectionImageType.Cover_1X1:
-          coverImageCount++;
-          coverImageId = imageId;
+          cover1x1ImageCount++;
+          cover1x1ImageId = imageId;
+          break;
+        case CollectionImageType.Cover_4X1:
+          cover4x1ImageCount++;
+          break;
+        case CollectionImageType.CleanCover_1X1:
+          cleanCover1x1ImageCount++;
+          break;
+        case CollectionImageType.CleanCover_4X1:
+          cleanCover4x1ImageCount++;
+          break;
+        case CollectionImageType.List_1X1:
+          list1x1ImageCount++;
+          break;
+        case CollectionImageType.List_15X16:
+          list15x16ImageCount++;
           break;
         default:
           break;
@@ -215,7 +235,7 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={coverImageId} />
+          <ImageCover id={cover1x1ImageId} />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
@@ -265,9 +285,39 @@ const Panel: React.FC = () => {
           </Paragraph>
           <Paragraph title="Images">
             <div className={classes.datalist}>
-              <div>Cover</div>
+              <div>Cover 1x1</div>
               <div className={classes.rightAlignment}>
-                {coverImageCount} / 1
+                {cover1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Cover 4x1</div>
+              <div className={classes.rightAlignment}>
+                {cover4x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Clean Cover 1x1</div>
+              <div className={classes.rightAlignment}>
+                {cleanCover1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Clean Cover 4x1</div>
+              <div className={classes.rightAlignment}>
+                {cleanCover4x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>List 1x1</div>
+              <div className={classes.rightAlignment}>
+                {list1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>List 15x16</div>
+              <div className={classes.rightAlignment}>
+                {list15x16ImageCount} / 1
               </div>
             </div>
           </Paragraph>

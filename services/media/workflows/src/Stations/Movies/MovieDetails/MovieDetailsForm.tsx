@@ -313,14 +313,34 @@ const Panel: React.FC = () => {
   const { values } = useFormikContext<Movie>();
 
   return useMemo(() => {
-    let coverImageId: ID;
-    let coverImageCount = 0;
+    let cover1x1ImageId: ID;
+    let cover1x1ImageCount = 0;
+    let cover16x9ImageCount = 0;
+    let cleanCover1x1ImageCount = 0;
+    let cleanCover16x9ImageCount = 0;
+    let list1x1ImageCount = 0;
+    let list16x9ImageCount = 0;
 
     values.moviesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
         case MovieImageType.Cover_1X1:
-          coverImageCount++;
-          coverImageId = imageId;
+          cover1x1ImageCount++;
+          cover1x1ImageId = imageId;
+          break;
+        case MovieImageType.Cover_16X9:
+          cover16x9ImageCount++;
+          break;
+        case MovieImageType.CleanCover_1X1:
+          cleanCover1x1ImageCount++;
+          break;
+        case MovieImageType.CleanCover_16X9:
+          cleanCover16x9ImageCount++;
+          break;
+        case MovieImageType.List_1X1:
+          list1x1ImageCount++;
+          break;
+        case MovieImageType.List_9X13:
+          list16x9ImageCount++;
           break;
         default:
           break;
@@ -330,7 +350,7 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={coverImageId} />
+          <ImageCover id={cover1x1ImageId} />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="External ID">{values.externalId}</Paragraph>
@@ -367,9 +387,39 @@ const Panel: React.FC = () => {
           </Paragraph>
           <Paragraph title="Images">
             <div className={classes.datalist}>
-              <div>Cover</div>
+              <div>Cover 1x1</div>
               <div className={classes.rightAlignment}>
-                {coverImageCount} / 1
+                {cover1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Cover 16x9</div>
+              <div className={classes.rightAlignment}>
+                {cover16x9ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Clean Cover 1x1</div>
+              <div className={classes.rightAlignment}>
+                {cleanCover1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>Clean Cover 16x9</div>
+              <div className={classes.rightAlignment}>
+                {cleanCover16x9ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>List 1x1</div>
+              <div className={classes.rightAlignment}>
+                {list1x1ImageCount} / 1
+              </div>
+            </div>
+            <div className={classes.datalist}>
+              <div>List 16x9</div>
+              <div className={classes.rightAlignment}>
+                {list16x9ImageCount} / 1
               </div>
             </div>
           </Paragraph>
