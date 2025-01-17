@@ -42,7 +42,10 @@ export function useMoviesFilters(): {
     allCountries: [],
   });
 
-  const { data, error } = useGetMoviesFilterOptionsDataQuery({ client });
+  const { data, error } = useGetMoviesFilterOptionsDataQuery({
+    client,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (error) {
@@ -123,7 +126,7 @@ export function useMoviesFilters(): {
         allCountries: countries,
       });
     }
-  }, [data]);
+  }, [data, error]);
 
   const [createFromDateFilterValidator, createToDateFilterValidator] =
     createDateRangeFilterValidators<MovieData>();

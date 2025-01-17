@@ -42,7 +42,10 @@ export function useEpisodesFilters(): {
     allCountries: [],
   });
 
-  const { data, error } = useGetEpisodesFilterOptionsDataQuery({ client });
+  const { data, error } = useGetEpisodesFilterOptionsDataQuery({
+    client,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (error) {

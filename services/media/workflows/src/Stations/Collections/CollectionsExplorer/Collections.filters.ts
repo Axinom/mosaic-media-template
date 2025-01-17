@@ -25,7 +25,10 @@ export function useCollectionsFilters(): {
     excludeItems?: number[],
   ) => CollectionFilter | undefined;
 } {
-  const { data, error } = useGetAllCountryDataQuery({ client });
+  const { data, error } = useGetAllCountryDataQuery({
+    client,
+    fetchPolicy: 'network-only',
+  });
   const [allCountryOptions, setAllCountryOptions] = useState<Option[]>([]);
 
   useEffect(() => {

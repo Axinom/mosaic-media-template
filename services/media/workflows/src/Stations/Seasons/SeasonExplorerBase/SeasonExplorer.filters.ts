@@ -42,7 +42,10 @@ export function useSeasonsFilters(): {
     allCountries: [],
   });
 
-  const { data, error } = useGetSeasonsFilterOptionsDataQuery({ client });
+  const { data, error } = useGetSeasonsFilterOptionsDataQuery({
+    client,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (error) {

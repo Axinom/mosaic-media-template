@@ -40,7 +40,10 @@ export function useTvShowsFilters(): {
     allCountries: [],
   });
 
-  const { data, error } = useGetTvShowsFilterOptionsDataQuery({ client });
+  const { data, error } = useGetTvShowsFilterOptionsDataQuery({
+    client,
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (error) {
