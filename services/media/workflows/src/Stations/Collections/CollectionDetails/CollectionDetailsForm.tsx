@@ -269,17 +269,13 @@ const Panel: React.FC = () => {
               <div className={classes.rightAlignment}>
                 {values.tvshows?.totalCount} / many
               </div>
-              <div>Seasons</div>
-              <div className={classes.rightAlignment}>
-                {values.seasons?.totalCount} / many
-              </div>
               <div>Episodes</div>
               <div className={classes.rightAlignment}>
                 {values.episodes?.totalCount} / many
               </div>
               <div>Collections</div>
               <div className={classes.rightAlignment}>
-                {values.episodes?.totalCount} / many
+                {values.childCollections?.totalCount} / many
               </div>
             </div>
           </Paragraph>
@@ -338,8 +334,8 @@ const Panel: React.FC = () => {
     values.publishedUser,
     values.movies?.totalCount,
     values.tvshows?.totalCount,
-    values.seasons?.totalCount,
     values.episodes?.totalCount,
+    values.childCollections?.totalCount,
     ImageCover,
   ]);
 };
