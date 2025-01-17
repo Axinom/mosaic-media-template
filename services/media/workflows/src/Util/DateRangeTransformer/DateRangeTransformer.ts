@@ -21,9 +21,11 @@ export const transformRange: FilterFunction = (value) => {
     greaterThanOrEqualTo: undefined,
     lessThanOrEqualTo: undefined,
   };
+  const endOfToDate = new Date(to as string);
+  endOfToDate.setHours(23, 59, 59, 999);
 
   from && (range.greaterThanOrEqualTo = from);
-  to && (range.lessThanOrEqualTo = to);
+  to && (range.lessThanOrEqualTo = endOfToDate);
 
   return range;
 };

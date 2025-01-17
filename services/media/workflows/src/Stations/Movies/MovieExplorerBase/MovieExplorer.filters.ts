@@ -1,4 +1,5 @@
 import {
+  createDateRangeFilterValidators,
   filterToPostGraphileFilter,
   FilterType,
   FilterTypes,
@@ -14,6 +15,7 @@ import {
   PublishStatus,
   useGetMoviesFilterOptionsDataQuery,
 } from '../../../generated/graphql';
+import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { MovieData } from './MovieExplorer.types';
 
@@ -123,6 +125,9 @@ export function useMoviesFilters(): {
     }
   }, [data]);
 
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<MovieData>();
+
   const filterOptions: FilterType<MovieData>[] = [
     {
       label: 'Title',
@@ -231,6 +236,47 @@ export function useMoviesFilters(): {
         label: getEnumLabel(BusinessType[key]),
       })),
     },
+    {
+      label: 'Release Period (From)',
+      property: 'released',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('released'),
+    },
+    {
+      label: 'Release Period (To)',
+      property: 'released',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('released'),
+    },
+    {
+      label: 'Publication Period (From)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Publication Period (To)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Creation Period (From)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'Creation Period (To)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'ID',
+      property: 'id',
+      type: FilterTypes.Numeric,
+    },
   ];
 
   const transformFilters = (
@@ -317,6 +363,9 @@ export function useMoviesFilters(): {
           };
         }
       },
+      released: transformRange,
+      createdDate: transformRange,
+      publishedDate: transformRange,
     });
   };
 

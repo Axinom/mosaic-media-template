@@ -1,4 +1,5 @@
 import {
+  createDateRangeFilterValidators,
   filterToPostGraphileFilter,
   FilterType,
   FilterTypes,
@@ -13,6 +14,7 @@ import {
   PublishStatus,
   useGetAllCountryDataQuery,
 } from '../../../generated/graphql';
+import { transformRange } from '../../../Util/DateRangeTransformer/DateRangeTransformer';
 import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import { CollectionData } from './Collections.types';
 
@@ -44,6 +46,9 @@ export function useCollectionsFilters(): {
       }
     }
   }, [data]);
+
+  const [createFromDateFilterValidator, createToDateFilterValidator] =
+    createDateRangeFilterValidators<CollectionData>();
 
   const filterOptions: FilterType<CollectionData>[] = [
     {
@@ -79,6 +84,35 @@ export function useCollectionsFilters(): {
         value: PublishStatus[key],
         label: getEnumLabel(PublishStatus[key]),
       })),
+    },
+    {
+      label: 'Publication Period (From)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Publication Period (To)',
+      property: 'publishedDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('publishedDate'),
+    },
+    {
+      label: 'Creation Period (From)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createFromDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'Creation Period (To)',
+      property: 'createdDate',
+      type: FilterTypes.Date,
+      onValidate: createToDateFilterValidator('createdDate'),
+    },
+    {
+      label: 'ID',
+      property: 'id',
+      type: FilterTypes.Numeric,
     },
   ];
 
@@ -126,6 +160,8 @@ export function useCollectionsFilters(): {
           };
         }
       },
+      createdDate: transformRange,
+      publishedDate: transformRange,
     });
   };
 
