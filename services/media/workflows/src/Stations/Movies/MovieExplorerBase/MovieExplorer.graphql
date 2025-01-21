@@ -20,7 +20,7 @@ fragment MovieExplorerProperties on Movie {
       }
     }
   }
-  moviesImages(condition: { imageType: COVER_1X1 }) {
+  moviesImages(condition: { imageType: MOVIE_COVER_1X1 }) {
     nodes {
       imageId
     }

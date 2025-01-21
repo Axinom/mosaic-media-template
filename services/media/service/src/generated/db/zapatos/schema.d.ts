@@ -1154,6 +1154,14 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field: string | null;
+      /**
+      * **collections.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
     }
     export interface JSONSelectable {
       /**
@@ -1246,6 +1254,14 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field: string | null;
+      /**
+      * **collections.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
     }
     export interface Whereable {
       /**
@@ -1338,6 +1354,14 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collections.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1430,6 +1454,14 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **collections.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1522,6 +1554,14 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       extended_field?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **collections.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'collections_external_id_key' | 'collections_pkey';
     export type Column = keyof Selectable;
@@ -2696,12 +2736,6 @@ declare module 'zapatos/schema' {
       */
       content_owner: string | null;
       /**
-      * **episodes.business_type**
-      * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium'::text`
-      */
-      business_type: c.BusinessTypeEnum;
-      /**
       * **episodes.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
       * - `NOT NULL`, default: `'EPISODE'::text`
@@ -2849,12 +2883,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       content_owner: string | null;
-      /**
-      * **episodes.business_type**
-      * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium'::text`
-      */
-      business_type: c.BusinessTypeEnum;
       /**
       * **episodes.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -3004,12 +3032,6 @@ declare module 'zapatos/schema' {
       */
       content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **episodes.business_type**
-      * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium'::text`
-      */
-      business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **episodes.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
       * - `NOT NULL`, default: `'EPISODE'::text`
@@ -3158,12 +3180,6 @@ declare module 'zapatos/schema' {
       */
       content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **episodes.business_type**
-      * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium'::text`
-      */
-      business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment;
-      /**
       * **episodes.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
       * - `NOT NULL`, default: `'EPISODE'::text`
@@ -3311,12 +3327,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **episodes.business_type**
-      * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium'::text`
-      */
-      business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment>;
       /**
       * **episodes.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -5335,6 +5345,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       entity_id: string | null;
+      /**
+      * **ingest_item_steps.language_tag**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_tag: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -5403,6 +5419,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       entity_id: string | null;
+      /**
+      * **ingest_item_steps.language_tag**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_tag: string | null;
     }
     export interface Whereable {
       /**
@@ -5471,6 +5493,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       entity_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **ingest_item_steps.language_tag**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_tag?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -5539,6 +5567,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       entity_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **ingest_item_steps.language_tag**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_tag?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -5607,6 +5641,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       entity_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **ingest_item_steps.language_tag**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      language_tag?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'ingest_item_steps_pkey';
     export type Column = keyof Selectable;
@@ -9011,12 +9051,6 @@ declare module 'zapatos/schema' {
       */
       content_owner: string | null;
       /**
-      * **seasons.business_type**
-      * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium'::text`
-      */
-      business_type: c.BusinessTypeEnum;
-      /**
       * **seasons.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
       * - `NOT NULL`, default: `'SEASON'::text`
@@ -9152,12 +9186,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       content_owner: string | null;
-      /**
-      * **seasons.business_type**
-      * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium'::text`
-      */
-      business_type: c.BusinessTypeEnum;
       /**
       * **seasons.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
@@ -9295,12 +9323,6 @@ declare module 'zapatos/schema' {
       */
       content_owner?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **seasons.business_type**
-      * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium'::text`
-      */
-      business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **seasons.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
       * - `NOT NULL`, default: `'SEASON'::text`
@@ -9437,12 +9459,6 @@ declare module 'zapatos/schema' {
       */
       content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **seasons.business_type**
-      * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium'::text`
-      */
-      business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment;
-      /**
       * **seasons.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database
       * - `NOT NULL`, default: `'SEASON'::text`
@@ -9578,12 +9594,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       content_owner?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **seasons.business_type**
-      * - `business_type_enum` (base type: `text`) in database
-      * - `NOT NULL`, default: `'premium'::text`
-      */
-      business_type?: c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.BusinessTypeEnum | db.Parameter<c.BusinessTypeEnum> | db.DefaultType | db.SQLFragment>;
       /**
       * **seasons.asset_subtype**
       * - `asset_subtype_enum` (base type: `text`) in database

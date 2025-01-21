@@ -36,12 +36,12 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
     CollectionImageType,
   ).sort((a, b) => {
     const order = [
-      'COVER_1X1',
-      'COVER_4X1',
-      'CLEAN_COVER_1X1',
-      'CLEAN_COVER_4X1',
-      'LIST_1X1',
-      'LIST_15X16',
+      'COLLECTION_COVER_1X1',
+      'COLLECTION_COVER_4X1',
+      'COLLECTION_CLEAN_COVER_1X1',
+      'COLLECTION_CLEAN_COVER_4X1',
+      'COLLECTION_LIST_1X1',
+      'COLLECTION_LIST_15X16',
     ];
     return order.indexOf(a) - order.indexOf(b);
   });
@@ -66,7 +66,7 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
             as={imageSelectField}
             maxItems={1}
             title="Select Image"
-            imageScope="collection"
+            imageType={field.toLocaleLowerCase()}
           />
         );
       })}

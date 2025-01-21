@@ -305,7 +305,7 @@ BEGIN
                 E'\t\t' || 'END IF;' || E'\n' ||
               E'\t' || 'END LOOP;' || E'\n' ||
               E'\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)' || E'\n' ||
-              E'\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Created'', ''parallel'', _payload, NOW());' || E'\n' ||
+              E'\t' || 'VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Created'', ''parallel'', _payload, NOW());' || E'\n' ||
               E'\t' || 'RETURN NEW;' || E'\n' ||
             'END;' || E'\n' ||
             '$body$ LANGUAGE plpgsql volatile;';
@@ -340,7 +340,7 @@ BEGIN
                   E'\t\t\t' || '_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);' || E'\n' ||
                 E'\t\t' || 'END LOOP;' || E'\n' ||
                 E'\t\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)' || E'\n' ||
-                E'\t\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Updated'', ''parallel'', _payload, _metadata, NOW());' || E'\n' ||
+                E'\t\t' || 'VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), NEW.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Updated'', ''parallel'', _payload, _metadata, NOW());' || E'\n' ||
               E'\t' || 'END IF;' || E'\n' ||
               E'\t' || 'RETURN NEW;' || E'\n' ||
             'END;' || E'\n' ||
@@ -360,7 +360,7 @@ BEGIN
               E'\t' || 'SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)' || E'\n' ||
               E'\t' || 'FROM (SELECT unnest(_fields) AS field) as f INTO _payload;' || E'\n' ||
               E'\t' || 'INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)' || E'\n' ||
-              E'\t' || 'VALUES (uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), OLD.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Deleted'', ''parallel'', _payload, NOW());' || E'\n' ||
+              E'\t' || 'VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case(''' || entityType || '''), OLD.' || aggregateId || ', ''Localizable'' || app_hidden.to_pascal_case(''' || entityType || ''') || ''Deleted'', ''parallel'', _payload, NOW());' || E'\n' ||
               E'\t' || 'RETURN OLD;' || E'\n' ||
             'END;' || E'\n' ||
             '$body$ LANGUAGE plpgsql volatile;';
@@ -502,7 +502,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -523,7 +523,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -549,7 +549,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -586,7 +586,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -602,7 +602,7 @@ CREATE FUNCTION app_hidden.localizable_collection_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_4x1,image_id_clean_cover_1x1,image_id_clean_cover_4x1,image_id_list_1x1,image_id_list_15x16', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,collection_cover_1x1,collection_cover_4x1,collection_clean_cover_1x1,collection_clean_cover_4x1,collection_list_1x1,collection_list_15x16', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -613,7 +613,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -630,7 +630,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_4x1,image_id_clean_cover_1x1,image_id_clean_cover_4x1,image_id_list_1x1,image_id_list_15x16', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,collection_cover_1x1,collection_cover_4x1,collection_clean_cover_1x1,collection_clean_cover_4x1,collection_list_1x1,collection_list_15x16', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -650,7 +650,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('COLLECTION'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('COLLECTION') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -672,7 +672,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -693,7 +693,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -719,7 +719,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -756,7 +756,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('EPISODE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -772,7 +772,7 @@ CREATE FUNCTION app_hidden.localizable_episode_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,season_id', ',') || string_to_array('id,index,season_id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,episode_cover_1x1,episode_cover_16x9,episode_clean_cover_1x1,episode_clean_cover_16x9,episode_list_1x1,episode_list_9x13,season_id', ',') || string_to_array('id,index,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -783,7 +783,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -800,7 +800,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id,index,season_id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,season_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,episode_cover_1x1,episode_cover_16x9,episode_clean_cover_1x1,episode_clean_cover_16x9,episode_list_1x1,episode_list_9x13,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -820,7 +820,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('EPISODE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('EPISODE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -842,7 +842,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -863,7 +863,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -889,7 +889,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -926,7 +926,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -948,7 +948,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -974,7 +974,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1011,7 +1011,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('MOVIE_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1027,7 +1027,7 @@ CREATE FUNCTION app_hidden.localizable_movie_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,movie_cover_1x1,movie_cover_16x9,movie_clean_cover_1x1,movie_clean_cover_16x9,movie_list_1x1,movie_list_9x13', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1038,7 +1038,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1055,7 +1055,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,movie_cover_1x1,movie_cover_16x9,movie_clean_cover_1x1,movie_clean_cover_16x9,movie_list_1x1,movie_list_9x13', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1075,7 +1075,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('MOVIE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('MOVIE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1097,7 +1097,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -1118,7 +1118,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -1144,7 +1144,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1181,7 +1181,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('SEASON_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1197,7 +1197,7 @@ CREATE FUNCTION app_hidden.localizable_season_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,tvshow_id', ',') || string_to_array('id,index,title,tvshow_id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,season_cover_1x1,season_cover_16x9,season_clean_cover_1x1,season_clean_cover_16x9,season_list_1x1,season_list_9x13,tvshow_id', ',') || string_to_array('id,index,title,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1208,7 +1208,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1225,7 +1225,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id,index,title,tvshow_id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13,tvshow_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,season_cover_1x1,season_cover_16x9,season_clean_cover_1x1,season_clean_cover_16x9,season_list_1x1,season_list_9x13,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1245,7 +1245,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('SEASON'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('SEASON') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1267,7 +1267,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -1288,7 +1288,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -1314,7 +1314,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1351,7 +1351,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_GENRE'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_GENRE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1373,7 +1373,7 @@ BEGIN
 	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
 	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), OLD.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Deleted', 'parallel', _payload, NOW());
 	RETURN OLD;
 END;
 $$;
@@ -1399,7 +1399,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1436,7 +1436,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW_IMAGE'), NEW.image_id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW_IMAGE') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1452,7 +1452,7 @@ CREATE FUNCTION app_hidden.localizable_tvshow_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,tvshow_cover_1x1,tvshow_cover_16x9,tvshow_clean_cover_1x1,tvshow_clean_cover_16x9,tvshow_list_1x1,tvshow_list_9x13', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1463,7 +1463,7 @@ BEGIN
 		END IF;
 	END LOOP;
 	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
-	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Created', 'parallel', _payload, NOW());
+	VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Created', 'parallel', _payload, NOW());
 	RETURN NEW;
 END;
 $$;
@@ -1480,7 +1480,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,image_id_cover_1x1,image_id_cover_16x9,image_id_clean_cover_1x1,image_id_clean_cover_16x9,image_id_list_1x1,image_id_list_9x13', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,tvshow_cover_1x1,tvshow_cover_16x9,tvshow_clean_cover_1x1,tvshow_clean_cover_16x9,tvshow_list_1x1,tvshow_list_9x13', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1500,7 +1500,7 @@ BEGIN
 			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
 		END LOOP;
 		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
-		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Updated', 'parallel', _payload, _metadata, NOW());
+		VALUES (public.uuid_generate_v4(), app_hidden.to_kebab_case('TVSHOW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('TVSHOW') || 'Updated', 'parallel', _payload, _metadata, NOW());
 	END IF;
 	RETURN NEW;
 END;
@@ -1769,6 +1769,54 @@ CREATE FUNCTION app_hidden.tg_collections__check_active_snapshots() RETURNS trig
 CREATE FUNCTION app_hidden.tg_episodes__check_active_snapshots() RETURNS trigger
     LANGUAGE plpgsql STABLE
     AS $$ BEGIN IF EXISTS (SELECT '' FROM app_public.snapshots s INNER JOIN app_public.episodes_snapshots es ON es.snapshot_id = s.id WHERE es.episode_id = OLD.id AND s.snapshot_state IN ('INITIALIZATION', 'VALIDATION', 'PUBLISHED')) THEN perform ax_utils.raise_error('%s with ID %s cannot be deleted as it has active snapshots.', 'ACSNS', 'Episode', OLD.id::text); END IF; RETURN OLD; END; $$;
+
+
+--
+-- Name: tg_ingest_item_steps__localizable_image_ingest_finished(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.tg_ingest_item_steps__localizable_image_ingest_finished() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	get_localization_step_finished CURSOR FOR
+		SELECT true
+		FROM app_public.ingest_item_steps iis 
+		WHERE iis.ingest_item_id = NEW.ingest_item_id
+		AND "type" = 'LOCALIZATIONS'
+		AND status = 'SUCCESS';
+	
+	get_image_ingest_step_in_progress CURSOR FOR
+		SELECT true
+		FROM app_public.ingest_item_steps iis 
+		WHERE iis.ingest_item_id = NEW.ingest_item_id
+		AND "type" ='IMAGE'
+		AND language_tag IS NOT NULL
+		AND status = 'IN_PROGRESS';
+
+	is_localization_step_finished_ BOOLEAN;
+	is_image_ingest_step_in_progress_ BOOLEAN;
+	payload_ JSONB := '{}'::JSONB;
+    
+BEGIN
+	OPEN get_localization_step_finished;
+	FETCH get_localization_step_finished INTO is_localization_step_finished_;
+	CLOSE get_localization_step_finished;
+
+	OPEN get_image_ingest_step_in_progress;
+	FETCH get_image_ingest_step_in_progress INTO is_image_ingest_step_in_progress_;
+	CLOSE get_image_ingest_step_in_progress;
+
+	-- we only want to send the message if the localization step is finished and no image ingest steps are still in progress
+	IF is_localization_step_finished_ AND is_image_ingest_step_in_progress_ IS NULL THEN
+		payload_ := jsonb_build_object('ingest_item_id', NEW.ingest_item_id);
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('INGEST'), NEW.ingest_item_id, 'Localizable' || app_hidden.to_pascal_case('IMAGE') || 'IngestFinished', 'parallel', payload_, NOW());
+	END IF;
+
+	RETURN NEW;
+END;
+$$;
 
 
 --
@@ -5157,6 +5205,7 @@ CREATE TABLE app_public.collections (
     languages text[] DEFAULT '{}'::text[],
     asset_subtype app_public.asset_subtype_enum DEFAULT 'COLLECTION'::text NOT NULL,
     extended_field text,
+    ingest_correlation_id integer,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5167,6 +5216,13 @@ CREATE TABLE app_public.collections (
 --
 
 COMMENT ON TABLE app_public.collections IS '@subscription_events_collections COLLECTION_CREATED,COLLECTION_CHANGED,COLLECTION_DELETED';
+
+
+--
+-- Name: COLUMN collections.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.collections.ingest_correlation_id IS '@omit';
 
 
 --
@@ -5322,7 +5378,6 @@ CREATE TABLE app_public.episodes (
     rating numeric(18,2),
     extended_field text,
     content_owner text,
-    business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'EPISODE'::text NOT NULL,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
@@ -5672,7 +5727,8 @@ CREATE TABLE app_public.ingest_item_steps (
     updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
-    entity_id text
+    entity_id text,
+    language_tag text
 );
 
 
@@ -6149,7 +6205,6 @@ CREATE TABLE app_public.seasons (
     rating numeric(18,2),
     extended_field text,
     content_owner text,
-    business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'SEASON'::text NOT NULL,
     title text NOT NULL
 );
@@ -11074,6 +11129,13 @@ CREATE TRIGGER _500_gql_tvshows_updated AFTER UPDATE ON app_public.tvshows FOR E
 
 
 --
+-- Name: ingest_item_steps _500_localizable_image_ingest_finished; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _500_localizable_image_ingest_finished AFTER UPDATE OF status ON app_public.ingest_item_steps FOR EACH ROW WHEN ((((new.status)::text = 'SUCCESS'::text) AND (((new.type)::text = 'IMAGE'::text) OR ((new.type)::text = 'LOCALIZATIONS'::text)))) EXECUTE FUNCTION app_hidden.tg_ingest_item_steps__localizable_image_ingest_finished();
+
+
+--
 -- Name: collections _900_localizable_collection_delete; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -11521,14 +11583,6 @@ ALTER TABLE ONLY app_public.episodes
 
 
 --
--- Name: episodes episodes_business_type_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
---
-
-ALTER TABLE ONLY app_public.episodes
-    ADD CONSTRAINT episodes_business_type_fkey FOREIGN KEY (business_type) REFERENCES app_public.business_type(value);
-
-
---
 -- Name: episodes_casts episodes_casts_episode_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -11910,14 +11964,6 @@ ALTER TABLE ONLY app_public.seasons
 
 ALTER TABLE ONLY app_public.seasons
     ADD CONSTRAINT seasons_asset_subtype_fkey FOREIGN KEY (asset_subtype) REFERENCES app_public.asset_subtype(value);
-
-
---
--- Name: seasons seasons_business_type_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
---
-
-ALTER TABLE ONLY app_public.seasons
-    ADD CONSTRAINT seasons_business_type_fkey FOREIGN KEY (business_type) REFERENCES app_public.business_type(value);
 
 
 --
@@ -14274,6 +14320,14 @@ GRANT ALL ON FUNCTION app_hidden.tg_episodes__check_active_snapshots() TO media_
 
 
 --
+-- Name: FUNCTION tg_ingest_item_steps__localizable_image_ingest_finished(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.tg_ingest_item_steps__localizable_image_ingest_finished() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.tg_ingest_item_steps__localizable_image_ingest_finished() TO media_service_gql_role;
+
+
+--
 -- Name: FUNCTION tg_movies__check_active_snapshots(); Type: ACL; Schema: app_hidden; Owner: -
 --
 
@@ -15546,6 +15600,13 @@ GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.collecti
 
 
 --
+-- Name: COLUMN collections.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.collections TO media_service_gql_role;
+
+
+--
 -- Name: SEQUENCE collections_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15725,13 +15786,6 @@ GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.episodes
 --
 
 GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.episodes TO media_service_gql_role;
-
-
---
--- Name: COLUMN episodes.business_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.episodes TO media_service_gql_role;
 
 
 --
@@ -16572,13 +16626,6 @@ GRANT INSERT(extended_field),UPDATE(extended_field) ON TABLE app_public.seasons 
 --
 
 GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.seasons TO media_service_gql_role;
-
-
---
--- Name: COLUMN seasons.business_type; Type: ACL; Schema: app_public; Owner: -
---
-
-GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.seasons TO media_service_gql_role;
 
 
 --

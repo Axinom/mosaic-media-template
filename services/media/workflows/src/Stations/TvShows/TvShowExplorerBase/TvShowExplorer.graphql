@@ -7,7 +7,7 @@ fragment TVShowExplorerProperties on Tvshow {
   assetSubtype
   businessType
   contentOwner
-  tvshowsImages(condition: { imageType: COVER_1X1 }) {
+  tvshowsImages(condition: { imageType: TVSHOW_COVER_1X1 }) {
     nodes {
       imageId
     }

@@ -36,7 +36,8 @@
             "MOVIE",
             "TVSHOW",
             "SEASON",
-            "EPISODE"
+            "EPISODE",
+            "COLLECTION"
           ],
           "description": "Type that specifies type of media item to be created or updated using this ingest item data."
         },

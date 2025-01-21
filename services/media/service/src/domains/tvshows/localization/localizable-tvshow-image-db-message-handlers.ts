@@ -35,23 +35,23 @@ export class LocalizableTvshowImageCreatedDbMessageHandler extends LocalizableMe
   > {
     let fields = {};
     switch (image_type) {
-      case 'COVER_1x1':
-        fields = { image_id_cover_1x1: image_id };
+      case 'TVSHOW_COVER_1x1':
+        fields = { tvshow_cover_1x1: image_id };
         break;
-      case 'COVER_16x9':
-        fields = { image_id_cover_16x9: image_id };
+      case 'TVSHOW_COVER_16x9':
+        fields = { tvshow_cover_16x9: image_id };
         break;
-      case 'CLEAN_COVER_1x1':
-        fields = { image_id_clean_cover_1x1: image_id };
+      case 'TVSHOW_CLEAN_COVER_1x1':
+        fields = { tvshow_clean_cover_1x1: image_id };
         break;
-      case 'CLEAN_COVER_16x9':
-        fields = { image_id_clean_cover_16x9: image_id };
+      case 'TVSHOW_CLEAN_COVER_16x9':
+        fields = { tvshow_clean_cover_16x9: image_id };
         break;
-      case 'LIST_1x1':
-        fields = { image_id_list_1x1: image_id };
+      case 'TVSHOW_LIST_1x1':
+        fields = { tvshow_list_1x1: image_id };
         break;
-      case 'LIST_9x13':
-        fields = { image_id_list_9x13: image_id };
+      case 'TVSHOW_LIST_9x13':
+        fields = { tvshow_list_9x13: image_id };
         break;
       default:
         return undefined;
@@ -85,23 +85,23 @@ export class LocalizableTvshowImageUpdatedDbMessageHandler extends LocalizableMe
   > {
     let fields = {};
     switch (image_type) {
-      case 'COVER_1x1':
-        fields = { image_id_cover_1x1: image_id };
+      case 'TVSHOW_COVER_1x1':
+        fields = { tvshow_cover_1x1: image_id };
         break;
-      case 'COVER_16x9':
-        fields = { image_id_cover_16x9: image_id };
+      case 'TVSHOW_COVER_16x9':
+        fields = { tvshow_cover_16x9: image_id };
         break;
-      case 'CLEAN_COVER_1x1':
-        fields = { image_id_clean_cover_1x1: image_id };
+      case 'TVSHOW_CLEAN_COVER_1x1':
+        fields = { tvshow_clean_cover_1x1: image_id };
         break;
-      case 'CLEAN_COVER_16x9':
-        fields = { image_id_clean_cover_16x9: image_id };
+      case 'TVSHOW_LEAN_COVER_16x9':
+        fields = { tvshow_clean_cover_16x9: image_id };
         break;
-      case 'LIST_1x1':
-        fields = { image_id_list_1x1: image_id };
+      case 'TVSHOW_LIST_1x1':
+        fields = { tvshow_list_1x1: image_id };
         break;
-      case 'LIST_9x13':
-        fields = { image_id_list_9x13: image_id };
+      case 'TVSHOW_LIST_9x13':
+        fields = { tvshow_list_9x13: image_id };
         break;
       default:
         return undefined;
@@ -140,23 +140,23 @@ export class LocalizableTvshowImageDeletedDbMessageHandler extends LocalizableMe
     } else {
       let fields = {};
       switch (image_type) {
-        case 'COVER_1x1':
-          fields = { image_id_cover_1x1: '' };
+        case 'TVSHOW_COVER_1x1':
+          fields = { tvshow_cover_1x1: '' };
           break;
-        case 'COVER_16x9':
-          fields = { image_id_cover_16x9: '' };
+        case 'TVSHOW_COVER_16x9':
+          fields = { tvshow_cover_16x9: '' };
           break;
-        case 'CLEAN_COVER_1x1':
-          fields = { image_id_clean_cover_1x1: '' };
+        case 'TVSHOW_CLEAN_COVER_1x1':
+          fields = { tvshow_clean_cover_1x1: '' };
           break;
-        case 'CLEAN_COVER_16x9':
-          fields = { image_id_clean_cover_16x9: '' };
+        case 'TVSHOW_CLEAN_COVER_16x9':
+          fields = { tvshow_clean_cover_16x9: '' };
           break;
-        case 'LIST_1x1':
-          fields = { image_id_list_1x1: '' };
+        case 'TVSHOW_LIST_1x1':
+          fields = { tvshow_list_1x1: '' };
           break;
-        case 'LIST_9x13':
-          fields = { image_id_list_9x13: '' };
+        case 'TVSHOW_LIST_9x13':
+          fields = { tvshow_list_9x13: '' };
           break;
         default:
           return undefined;

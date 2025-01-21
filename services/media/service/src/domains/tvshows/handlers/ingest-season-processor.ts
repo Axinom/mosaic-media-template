@@ -1,6 +1,5 @@
 import { nullable, optional } from '@axinom/mosaic-db-common';
 import {
-  ImageMessageContext,
   IngestItem,
   SeasonIngestData,
   StartIngestItemCommand,
@@ -70,6 +69,7 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
       ...this.orchestrateTrailers(season, content.ingest_item_id),
       ...this.orchestrateImages(season, content),
       ...this.orchestrateLocalizations(season, content),
+      ...this.orchestrateImageLocalizations(season, content),
     ];
 
     return orchestrationData;
@@ -93,6 +93,11 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
         })),
         ...nullable(season.studio, (val) => ({ studio: val?.trim() })),
         ...nullable(season.released, (val) => ({ released: val })),
+        ...nullable(season.business_type, (val) => ({ business_type: val })),
+        ...nullable(season.age_rating, (val) => ({ age_rating: val })),
+        ...nullable(season.rating, (val) => ({ rating: val })),
+        ...nullable(season.content_owner, (val) => ({ content_owner: val })),
+        ...nullable(season.custom, (val) => ({ extended_field: val })),
       },
       { id: content.entity_id },
     ).run(ctx);
@@ -125,6 +130,13 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
       ctx,
     );
 
+    await this.updateRelations(
+      'seasons_directors',
+      season.directors,
+      { season_id: content.entity_id },
+      ctx,
+    );
+
     await this.dropAddLicenseRelations(
       'seasons_licenses',
       'seasons_licenses_countries',
@@ -133,6 +145,8 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
           season_id: content.entity_id,
           license_start: r.start,
           license_end: r.end,
+          is_downloadable: r.is_downloadable,
+          downloaded_asset_lifespan: r.downloaded_asset_lifespan,
         },
         countries: r.countries,
       })),
@@ -175,7 +189,13 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
   public async processImage(
     entityId: number,
     imageId: string,
-    imageType: ImageMessageContext['imageType'],
+    imageType:
+      | 'SEASON_COVER_1x1'
+      | 'SEASON_COVER_16x9'
+      | 'SEASON_CLEAN_COVER_1x1'
+      | 'SEASON_CLEAN_COVER_16x9'
+      | 'SEASON_LIST_1x1'
+      | 'SEASON_LIST_9x13',
     dbContext: Queryable,
   ): Promise<void> {
     await upsert(

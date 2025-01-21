@@ -111,8 +111,7 @@
             "uniqueItems": true,
             "items": {
               "type": "string",
-              "pattern": "^[A-Z]{2}$",
-              "description": "License country code. Must be a 2-letter value with all letters in CAPS and correspond to an existing ISO-3166 alpha-2 country code value."
+              "description": "License country code or Country Group. If it's a Country Code, must be a 2-letter value with all letters in CAPS and correspond to an existing ISO-3166 alpha-2 country code value. If it's a Country Group, it must be defined as a Country Group in the Management System."
             }
           }
         }
@@ -136,6 +135,52 @@
         }
       }
     },
+    "cue_points": {
+      "type": ["array", "null"],
+      "description": "An array of cue points for the video. Only available when main_video is present.",
+      "items": {
+        "type": "object",
+        "required": ["time_in_seconds", "cue_point_type"],
+        "properties": {
+          "time_in_seconds": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Time in seconds when the cue point appears"
+          },
+          "cue_point_type": {
+            "$ref": "#/definitions/non-empty-string",
+            "description": "Type of the cue point"
+          },
+          "value": {
+            "$ref": "#/definitions/non-empty-string",
+            "description": "Value/text content of the cue point"
+          }
+        }
+      }
+    },
+    "collection_entities": {
+      "type": ["array"],
+      "description": "An array of entities for the collection.",
+      "items": {
+        "type": "object",
+        "required": ["sort_order", "type", "external_id"],
+        "properties": {
+          "sort_order": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Sort Order of the entity in the collection."
+          },
+          "type": {
+            "enum": ["MOVIE", "TVSHOW", "SEASON", "COLLECTION"],
+            "description": "Type of the entity"
+          },
+          "external_id": {
+            "type": "string",
+            "description": "External ID of the entity"
+          }
+        }
+      }
+    },
     "trailers": {
       "type": ["array", "null"],
       "description": "An array of objects describing a path to trailer video files and a way to process them.",
@@ -155,27 +200,6 @@
         }
       }
     },
-    "images": {
-      "type": ["array", "null"],
-      "description": "An array of objects describing a path to image files and image types.",
-      "items": {
-        "type": "object",
-        "description": "An object describing a path to image file and image type.",
-        "required": ["path", "type"],
-        "properties": {
-          "path": {
-            "type": "string",
-            "pattern": "^.*(.jpg|.jpeg|.png|.webp|.gif|.svg|.tiff|.avif|.heif)$",
-            "description": "Path to image file in file storage. Shall include filename with extension."
-          },
-          "type": {
-            "type": "string",
-            "enum": ["COVER", "TEASER"],
-            "description": "Type that an image shall be associated with."
-          }
-        }
-      }
-    },
     "localizations": {
       "type": ["array", "null"],
       "description": "Localizations for any defined locale.",
@@ -190,6 +214,11 @@
           }
         }
       }
+    },
+    "business_type": {
+      "type": "string",
+      "enum": ["free", "advertisement", "premium", "free_authenticated"],
+      "description": "Type of business for the asset."
     }
   },
   "properties": {
@@ -219,7 +248,7 @@
         "required": ["type", "external_id", "data"],
         "properties": {
           "type": {
-            "enum": ["MOVIE", "TVSHOW", "SEASON", "EPISODE"],
+            "enum": ["MOVIE", "TVSHOW", "SEASON", "EPISODE", "COLLECTION"],
             "description": "Must be one of supported type values that represents an entity type in media service.",
             "examples": ["MOVIE"]
           },
@@ -241,7 +270,18 @@
                 "data": {
                   "type": "object",
                   "description": "Object containing metadata of a specific media item.",
-                  "required": ["title"],
+                  "required": ["title", "business_type"],
+                  "dependencies": {
+                    "cue_points": {
+                      "required": ["main_video"],
+                      "properties": {
+                        "main_video": {
+                          "type": ["object"],
+                          "not": { "type": "null" }
+                        }
+                      }
+                    }
+                  },
                   "properties": {
                     "title": {
                       "$ref": "#/definitions/title",
@@ -306,6 +346,9 @@
                         }
                       ]
                     },
+                    "cue_points": {
+                      "$ref": "#/definitions/cue_points"
+                    },
                     "trailers": {
                       "$ref": "#/definitions/trailers",
                       "examples": [
@@ -319,7 +362,32 @@
                       ]
                     },
                     "images": {
-                      "$ref": "#/definitions/images",
+                      "type": ["array", "null"],
+                      "description": "An array of objects describing a path to image files and image types.",
+                      "items": {
+                        "type": "object",
+                        "description": "An object describing a path to image file and image type.",
+                        "required": ["path", "type"],
+                        "properties": {
+                          "path": {
+                            "type": "string",
+                            "pattern": "^.*(.jpg|.jpeg|.png|.webp|.gif|.svg|.tiff|.avif|.heif)$",
+                            "description": "Path to image file in file storage. Shall include filename with extension."
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "MOVIE_COVER_1x1",
+                              "MOVIE_COVER_16x9",
+                              "MOVIE_CLEAN_COVER_1x1",
+                              "MOVIE_CLEAN_COVER_16x9",
+                              "MOVIE_LIST_9x13",
+                              "MOVIE_LIST_1x1"
+                            ],
+                            "description": "Type that an image shall be associated with."
+                          }
+                        }
+                      },
                       "examples": [
                         [
                           {
@@ -351,6 +419,10 @@
                           }
                         ]
                       ]
+                    },
+                    "business_type": {
+                      "$ref": "#/definitions/business_type",
+                      "examples": ["premium", "free"]
                     }
                   }
                 }
@@ -368,7 +440,7 @@
                 "data": {
                   "type": "object",
                   "description": "Object containing metadata of a specific media item.",
-                  "required": ["title"],
+                  "required": ["title", "business_type"],
                   "properties": {
                     "title": {
                       "$ref": "#/definitions/title",
@@ -441,7 +513,32 @@
                       ]
                     },
                     "images": {
-                      "$ref": "#/definitions/images",
+                      "type": ["array", "null"],
+                      "description": "An array of objects describing a path to image files and image types.",
+                      "items": {
+                        "type": "object",
+                        "description": "An object describing a path to image file and image type.",
+                        "required": ["path", "type"],
+                        "properties": {
+                          "path": {
+                            "type": "string",
+                            "pattern": "^.*(.jpg|.jpeg|.png|.webp|.gif|.svg|.tiff|.avif|.heif)$",
+                            "description": "Path to image file in file storage. Shall include filename with extension."
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "TVSHOW_COVER_1x1",
+                              "TVSHOW_COVER_16x9",
+                              "TVSHOW_CLEAN_COVER_1x1",
+                              "TVSHOW_CLEAN_COVER_16x9",
+                              "TVSHOW_LIST_1x1",
+                              "TVSHOW_LIST_9x13"
+                            ],
+                            "description": "Type that an image shall be associated with."
+                          }
+                        }
+                      },
                       "examples": [
                         [
                           {
@@ -563,16 +660,41 @@
                       ]
                     },
                     "images": {
-                      "$ref": "#/definitions/images",
+                      "type": ["array", "null"],
+                      "description": "An array of objects describing a path to image files and image types.",
+                      "items": {
+                        "type": "object",
+                        "description": "An object describing a path to image file and image type.",
+                        "required": ["path", "type"],
+                        "properties": {
+                          "path": {
+                            "type": "string",
+                            "pattern": "^.*(.jpg|.jpeg|.png|.webp|.gif|.svg|.tiff|.avif|.heif)$",
+                            "description": "Path to image file in file storage. Shall include filename with extension."
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "SEASON_COVER_1x1",
+                              "SEASON_COVER_16x9",
+                              "SEASON_CLEAN_COVER_1x1",
+                              "SEASON_CLEAN_COVER_16x9",
+                              "SEASON_LIST_1x1",
+                              "SEASON_LIST_9x13"
+                            ],
+                            "description": "Type that an image shall be associated with."
+                          }
+                        }
+                      },
                       "examples": [
                         [
                           {
                             "path": "test-images/covers/mandalorian_s1.png",
-                            "type": "COVER"
+                            "type": "SEASON_COVER_1x1"
                           },
                           {
                             "path": "test-images/teasers/mandalorian_s1.png",
-                            "type": "TEASER"
+                            "type": "SEASON_COVER_16x9"
                           }
                         ]
                       ]
@@ -611,6 +733,17 @@
                   "type": "object",
                   "description": "Object containing metadata of a specific media item.",
                   "required": ["title", "index", "parent_external_id"],
+                  "dependencies": {
+                    "cue_points": {
+                      "required": ["main_video"],
+                      "properties": {
+                        "main_video": {
+                          "type": ["object"],
+                          "not": { "type": "null" }
+                        }
+                      }
+                    }
+                  },
                   "properties": {
                     "title": {
                       "$ref": "#/definitions/title",
@@ -687,6 +820,9 @@
                         }
                       ]
                     },
+                    "cue_points": {
+                      "$ref": "#/definitions/cue_points"
+                    },
                     "trailers": {
                       "$ref": "#/definitions/trailers",
                       "examples": [
@@ -702,16 +838,41 @@
                       ]
                     },
                     "images": {
-                      "$ref": "#/definitions/images",
+                      "type": ["array", "null"],
+                      "description": "An array of objects describing a path to image files and image types.",
+                      "items": {
+                        "type": "object",
+                        "description": "An object describing a path to image file and image type.",
+                        "required": ["path", "type"],
+                        "properties": {
+                          "path": {
+                            "type": "string",
+                            "pattern": "^.*(.jpg|.jpeg|.png|.webp|.gif|.svg|.tiff|.avif|.heif)$",
+                            "description": "Path to image file in file storage. Shall include filename with extension."
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "EPISODE_COVER_1x1",
+                              "EPISODE_COVER_16x9",
+                              "EPISODE_CLEAN_COVER_1x1",
+                              "EPISODE_CLEAN_COVER_16x9",
+                              "EPISODE_LIST_1x1",
+                              "EPISODE_LIST_9x13"
+                            ],
+                            "description": "Type that an image shall be associated with."
+                          }
+                        }
+                      },
                       "examples": [
                         [
                           {
                             "path": "test-images/covers/mandalorian_s2_e1_t1.png",
-                            "type": "COVER"
+                            "type": "EPISODE_COVER_1x1"
                           },
                           {
                             "path": "test-images/teasers/mandalorian_s2_e1_t1.png",
-                            "type": "TEASER"
+                            "type": "EPISODE_COVER_16x9"
                           }
                         ]
                       ]
@@ -731,6 +892,120 @@
                             "title": "The Mandalorian",
                             "description": "Pärast Jango ja Boba Fetti lugusid kerkib Tähesõdade universumis esile veel üks sõdalane...",
                             "synopsis": "Mandaloriat tõmbab Välisääre poole, et otsida teisi omasuguseid."
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": { "const": "COLLECTION" }
+              }
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "description": "Object containing metadata of a specific collection.",
+                  "required": ["title", "index", "entities"],
+                  "properties": {
+                    "title": {
+                      "$ref": "#/definitions/title",
+                      "examples": ["The Marshal"]
+                    },
+                    "description": {
+                      "$ref": "#/definitions/description",
+                      "examples": [
+                        "After the stories of Jango and Boba Fett, another warrior emerges in the Star Wars universe..."
+                      ]
+                    },
+                    "synopsis": {
+                      "$ref": "#/definitions/synopsis",
+                      "examples": [
+                        "The Mandalorian is drawn to the Outer Rim in search of others of his kind."
+                      ]
+                    },
+                    "tags": {
+                      "$ref": "#/definitions/tags",
+                      "examples": [
+                        ["star wars", "mandalorian", "bounty hunter"]
+                      ]
+                    },
+                    "entities": {
+                      "$ref": "#/definitions/collection_entities",
+                      "examples": [
+                        [
+                          {
+                            "sort_order": 1,
+                            "type": "MOVIE",
+                            "external_id": "avatar67A23"
+                          },
+                          {
+                            "sort_order": 2,
+                            "type": "TVSHOW",
+                            "external_id": "mandalorian12"
+                          }
+                        ]
+                      ]
+                    },
+                    "images": {
+                      "type": ["array", "null"],
+                      "description": "An array of objects describing a path to image files and image types.",
+                      "items": {
+                        "type": "object",
+                        "description": "An object describing a path to image file and image type.",
+                        "required": ["path", "type"],
+                        "properties": {
+                          "path": {
+                            "type": "string",
+                            "pattern": "^.*(.jpg|.jpeg|.png|.webp|.gif|.svg|.tiff|.avif|.heif)$",
+                            "description": "Path to image file in file storage. Shall include filename with extension."
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "COLLECTION_COVER_1x1",
+                              "COLLECTION_COVER_4x1",
+                              "COLLECTION_CLEAN_COVER_1x1",
+                              "COLLECTION_CLEAN_COVER_4x1",
+                              "COLLECTION_LIST_1x1",
+                              "COLLECTION_LIST_15x16"
+                            ],
+                            "description": "Type that an image shall be associated with."
+                          }
+                        }
+                      },
+                      "examples": [
+                        [
+                          {
+                            "path": "test-images/covers/mandalorian_s2_e1_t1.png",
+                            "type": "COLLECTION_COVER_1x1"
+                          },
+                          {
+                            "path": "test-images/teasers/mandalorian_s2_e1_t1.png",
+                            "type": "COLLECTION_COVER_4x1"
+                          }
+                        ]
+                      ]
+                    },
+                    "localizations": {
+                      "$ref": "#/definitions/localizations",
+                      "examples": [
+                        [
+                          {
+                            "language_tag": "de-DE",
+                            "description": "Nach den Geschichten von Jango und Boba Fett taucht ein weiterer Krieger im Star Wars-Universum auf...",
+                            "synopsis": "Ein mandalorianischer Kopfgeldjäger verfolgt ein Ziel für einen gut zahlenden, mysteriösen Kunden."
+                          },
+                          {
+                            "language_tag": "et-EE",
+                            "description": "Pärast Jango ja Boba Fetti lugusid kerkib Tähesõdade universumis esile veel üks sõdalane...",
+                            "synopsis": "Mandaloriast pärit pearahakütt jälitab hästi maksva ja salapärase kliendi sihtmärki."
                           }
                         ]
                       ]

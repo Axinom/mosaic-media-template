@@ -4,9 +4,12 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { IngestMessageContext } from 'media-messages';
+import {
+  ImageLocalizationMessageContext,
+  IngestMessageContext,
+} from 'media-messages';
 import { ClientBase } from 'pg';
-import { update } from 'zapatos/db';
+import { conditions as c, update } from 'zapatos/db';
 import { Config } from '../../common';
 import { MediaTransactionalInboxMessageHandler } from '../../messaging';
 import { checkIsIngestEvent } from '../utils/check-is-ingest-event';
@@ -39,12 +42,28 @@ export class LocalizeEntityFinishedHandler extends MediaTransactionalInboxMessag
       return;
     }
 
-    const messageContext = metadata.messageContext as IngestMessageContext;
+    if (
+      !(metadata.messageContext as ImageLocalizationMessageContext)
+        .isImageLocalization
+    ) {
+      const messageContext = metadata.messageContext as IngestMessageContext;
 
-    await update(
-      'ingest_item_steps',
-      { status: 'SUCCESS' },
-      { id: messageContext.ingestItemStepId },
-    ).run(ownerClient);
+      await update(
+        'ingest_item_steps',
+        { status: 'SUCCESS' },
+        { id: messageContext.ingestItemStepId },
+      ).run(ownerClient);
+    } else {
+      // When we localize images, we have multiple ingest item steps for each image type.
+      // We need to mark all of them as success.
+      const messageContext =
+        metadata.messageContext as ImageLocalizationMessageContext;
+
+      await update(
+        'ingest_item_steps',
+        { status: 'SUCCESS' },
+        { id: c.isIn(messageContext.ingestItemStepIds) },
+      ).run(ownerClient);
+    }
   }
 }

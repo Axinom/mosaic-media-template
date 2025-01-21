@@ -58,12 +58,14 @@ export abstract class ImageSucceededHandler<
       });
     }
 
-    await processor.processImage(
-      ingestItem.entity_id,
-      payload.image_id,
-      messageContext.imageType,
-      ownerClient,
-    );
+    if (!messageContext.isLocalization) {
+      await processor.processImage(
+        ingestItem.entity_id,
+        payload.image_id,
+        messageContext.imageType,
+        ownerClient,
+      );
+    }
 
     await update(
       'ingest_item_steps',

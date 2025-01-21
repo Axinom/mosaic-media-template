@@ -76,6 +76,7 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
       return;
     }
     const messageContext = metadata.messageContext as IngestMessageContext;
+
     await update(
       'ingest_item_steps',
       {
@@ -86,6 +87,16 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
         ),
       },
       { id: messageContext.ingestItemStepId },
+    ).run(ownerClient);
+
+    await update(
+      'ingest_item_steps',
+      {
+        status: 'ERROR',
+        response_message:
+          'Ingesting metadata failed. Cannot proceed with localization ingest.',
+      },
+      { ingest_item_id: messageContext.ingestItemId, type: 'LOCALIZATIONS' },
     ).run(ownerClient);
   }
 }

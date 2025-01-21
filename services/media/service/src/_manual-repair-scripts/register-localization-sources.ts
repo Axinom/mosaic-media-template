@@ -11,7 +11,6 @@ import {
 } from '@axinom/mosaic-messages';
 import { Logger, ShutdownAction } from '@axinom/mosaic-service-common';
 import { setupOutboxStorage } from '@axinom/mosaic-transactional-inbox-outbox';
-import { singularize } from 'inflection';
 import {
   getOutboxPollingListenerSettings,
   PollingListenerConfig,
@@ -258,56 +257,6 @@ const generateGenericPayloads = async (
       limit: 1000,
       columns: ['id', 'title', 'description', 'synopsis'],
       order: { by: 'id', direction: 'ASC' },
-      lateral: {
-        cover_1x1: selectOne(
-          imagesTableName,
-          {
-            [`${singularize(tableName)}_id`]: parent('id'),
-            image_type: 'COVER_1x1',
-          },
-          { columns: ['image_id'] },
-        ),
-        cover_16x9: selectOne(
-          imagesTableName,
-          {
-            [`${singularize(tableName)}_id`]: parent('id'),
-            image_type: 'COVER_16x9',
-          },
-          { columns: ['image_id'] },
-        ),
-        clean_cover_16x9: selectOne(
-          imagesTableName,
-          {
-            [`${singularize(tableName)}_id`]: parent('id'),
-            image_type: 'CLEAN_COVER_16x9',
-          },
-          { columns: ['image_id'] },
-        ),
-        clean_cover_1x1: selectOne(
-          imagesTableName,
-          {
-            [`${singularize(tableName)}_id`]: parent('id'),
-            image_type: 'COVER_1x1',
-          },
-          { columns: ['image_id'] },
-        ),
-        list_1x1: selectOne(
-          imagesTableName,
-          {
-            [`${singularize(tableName)}_id`]: parent('id'),
-            image_type: 'LIST_1x1',
-          },
-          { columns: ['image_id'] },
-        ),
-        list_9x13: selectOne(
-          imagesTableName,
-          {
-            [`${singularize(tableName)}_id`]: parent('id'),
-            image_type: 'LIST_9x13',
-          },
-          { columns: ['image_id'] },
-        ),
-      },
     },
   ).run(ownerPool);
 
@@ -317,17 +266,10 @@ const generateGenericPayloads = async (
       entity_type: entityType,
       entity_id: entity.id.toString(),
       entity_title: entity.title,
-      image_id: entity.cover_1x1?.image_id,
       fields: {
         title: entity.title,
         description: entity.description,
         synopsis: entity.synopsis,
-        image_id_cover_1x1: entity.cover_1x1?.image_id,
-        image_id_cover_16x9: entity.cover_16x9?.image_id,
-        image_id_clean_cover_16x9: entity.clean_cover_16x9?.image_id,
-        image_id_clean_cover_1x1: entity.clean_cover_1x1?.image_id,
-        image_id_list_1x1: entity.list_1x1?.image_id,
-        image_id_list_9x13: entity.list_9x13?.image_id,
       },
     }),
   );
@@ -357,7 +299,7 @@ const generateSeasonPayloads = async (
       lateral: {
         cover: selectOne(
           'seasons_images',
-          { season_id: parent('id'), image_type: 'COVER' },
+          { season_id: parent('id'), image_type: 'SEASON_COVER_1x1' },
           { columns: ['image_id'] },
         ),
         tvshow: selectOne(
@@ -408,7 +350,7 @@ const generateEpisodePayloads = async (
       lateral: {
         cover: selectOne(
           'episodes_images',
-          { episode_id: parent('id'), image_type: 'COVER' },
+          { episode_id: parent('id'), image_type: 'EPISODE_COVER_1x1' },
           { columns: ['image_id'] },
         ),
         season: selectOne(
@@ -445,7 +387,7 @@ const generateEpisodePayloads = async (
         title: entity.title,
         description: entity.description,
         synopsis: entity.synopsis,
-        image_id_cover_1x1: entity.cover?.image_id,
+        episode_cover_1x1: entity.cover?.image_id,
       },
     }),
   );

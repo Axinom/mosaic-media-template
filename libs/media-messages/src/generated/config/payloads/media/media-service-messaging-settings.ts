@@ -97,6 +97,18 @@ export class MediaServiceMessagingSettings implements MessagingSettings {
     'event',
     'entity'
     );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "LocalizableImageIngestFinished" and aggregate type "ingest".
+   * The aggregate ID field contains the value of the "ingest document ID" field.
+   */
+  public static LocalizableImageIngestFinished = new MediaServiceMessagingSettings(
+    'LocalizableImageIngestFinished', 
+    'inbox', 
+    'ingest.localizable_image_ingest_finished',
+    'event',
+    'ingest'
+    );
   
   public readonly serviceId = 'media-service';
   

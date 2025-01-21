@@ -12,6 +12,7 @@ import {
   normalizeRelativePath,
 } from '@axinom/mosaic-service-common';
 import {
+  CuePointsIngestElement,
   ImageMessageContext,
   ImagesIngestElement,
   IngestItem,
@@ -26,10 +27,7 @@ import {
   VideoMessageContext,
 } from 'media-messages';
 import { v4 as uuid } from 'uuid';
-import {
-  IngestItemTypeEnum,
-  IsoAlphaTwoCountryCodesEnum,
-} from 'zapatos/custom';
+import { IngestItemTypeEnum } from 'zapatos/custom';
 import {
   conditions as c,
   deletes,
@@ -37,6 +35,7 @@ import {
   param,
   Queryable,
   select,
+  selectOne,
   self as value,
   SQL,
   sql,
@@ -59,9 +58,11 @@ import {
 import {
   GenreRelationInsertable,
   GenreRelationTable,
+  ImagesFKSelector,
   ImagesRelationTable,
   IngestibleTable,
   IngestInsertable,
+  LicenseCountriesInsertable,
   LicenseCountriesRelationTable,
   LicenseFKSelector,
   LicenseRelationInsertable,
@@ -264,15 +265,21 @@ export abstract class DefaultIngestEntityProcessor
         type: 'IMAGE',
         ingest_item_id: content.ingest_item_id,
         sub_type: image.type,
+        language_tag: image.language_tag,
       };
       const messagePayload: EnsureImageExistsCommand = {
         image_location: normalizedPath,
-        image_type: `${content.item.type}_${image.type}`.toLowerCase(),
+        //image_type: `${content.item.type}_${image.type}`.toLowerCase(),
+        image_type: image.type.toLowerCase(),
+        tags:
+          image.language_tag !== undefined ? [image.language_tag] : undefined,
       };
       const messageContext: ImageMessageContext = {
         ingestItemStepId: stepId,
         ingestItemId: content.ingest_item_id,
         imageType: image.type,
+        isLocalization: image.language_tag !== undefined,
+        languageTag: image.language_tag,
       };
       orchestrationData.push({
         aggregateId: UNKNOWN_AGGREGATE_ID,
@@ -311,6 +318,78 @@ export abstract class DefaultIngestEntityProcessor
     return [orchestrationData];
   }
 
+  protected orchestrateImageLocalizations(
+    element: ImagesIngestElement,
+    content: StartIngestItemCommand,
+  ): OrchestrationData[] {
+    const orchestrationData: OrchestrationData[] = [];
+    const localizedImages = element.images?.filter(
+      (img) => img.language_tag !== undefined,
+    );
+    if (
+      !this.config.isLocalizationEnabled ||
+      !localizedImages ||
+      localizedImages.length === 0
+    ) {
+      return [];
+    }
+
+    // if there are is no localization section in the ingest document, but it still includes localizable images,
+    // we add a localization step to make sure that we only fire `LocalizeEntity` command after the `UpsertLocalizationSourceEntityFinished` event is received
+    if (
+      (element as LocalizationsIngestElement).localizations === undefined ||
+      (element as LocalizationsIngestElement).localizations?.length === 0
+    ) {
+      const stepId = uuid();
+      const ingestItemStep: ingest_item_steps.Insertable = {
+        id: stepId,
+        type: 'LOCALIZATIONS',
+        ingest_item_id: content.ingest_item_id,
+        sub_type: '',
+      };
+      orchestrationData.push({
+        ingestItemStep,
+      });
+    }
+
+    for (const image of localizedImages) {
+      const stepId = uuid();
+      const ingestItemStep: ingest_item_steps.Insertable = {
+        id: stepId,
+        type: 'IMAGE_LOCALIZATIONS',
+        ingest_item_id: content.ingest_item_id,
+        sub_type: image.type,
+        language_tag: image.language_tag,
+      };
+      orchestrationData.push({
+        ingestItemStep,
+      });
+    }
+
+    return orchestrationData;
+  }
+
+  protected orchestrateCuePoints(
+    element: CuePointsIngestElement,
+    content: StartIngestItemCommand,
+  ): OrchestrationData[] {
+    if (!element?.cue_points || element.cue_points.length === 0) {
+      return [];
+    }
+
+    const stepId = uuid();
+    const ingestItemStep: ingest_item_steps.Insertable = {
+      id: stepId,
+      type: 'CUE_POINTS',
+      ingest_item_id: content.ingest_item_id,
+      sub_type: '',
+    };
+    const orchestrationData: OrchestrationData = {
+      ingestItemStep,
+    };
+    return [orchestrationData];
+  }
+
   protected async clearOutdatedTrailers(
     tableName: TrailerRelationTable,
     fkSelector: RelationFKSelector,
@@ -339,7 +418,7 @@ export abstract class DefaultIngestEntityProcessor
 
   protected async clearOutdatedImages(
     tableName: ImagesRelationTable,
-    fkSelector: RelationFKSelector,
+    fkSelector: ImagesFKSelector,
     element: ImagesIngestElement,
     ctx: Queryable,
   ): Promise<void> {
@@ -352,7 +431,7 @@ export abstract class DefaultIngestEntityProcessor
       if (typesToDelete.length > 0) {
         await deletes(tableName, {
           ...fkSelector,
-          image_type: c.isIn(typesToDelete),
+          image_type: c.isIn(typesToDelete as any[]),
         }).run(ctx);
       }
     } else if (element.images?.length === 0) {
@@ -479,13 +558,26 @@ export abstract class DefaultIngestEntityProcessor
     for (const relation of relations) {
       const license = await insert(tableName, relation.insertable).run(ctx);
       if (relation.countries && relation.countries?.length > 0) {
-        await insert(
-          licenseCountryTableName,
-          relation.countries.map((code) => ({
-            ...licenseFkMapper(license.id),
-            code: code as IsoAlphaTwoCountryCodesEnum,
-          })),
-        ).run(ctx);
+        const licenseCountriesInsertable: LicenseCountriesInsertable[] = [];
+        for (const country of relation.countries) {
+          const countryGroup = await selectOne('country_groups', {
+            name: country,
+          }).run(ctx);
+          if (countryGroup !== undefined) {
+            licenseCountriesInsertable.push({
+              ...licenseFkMapper(license.id),
+              country_group_id: countryGroup.id,
+            });
+          } else {
+            licenseCountriesInsertable.push({
+              ...licenseFkMapper(license.id),
+              country_code: country,
+            });
+          }
+        }
+        await insert(licenseCountryTableName, licenseCountriesInsertable).run(
+          ctx,
+        );
       }
     }
   }

@@ -45,54 +45,180 @@ export const TvshowFieldDefinitions: EntityFieldDefinition[] = [
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_cover_1x1',
+    field_name: 'tvshow_cover_1x1',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized TV Show Cover 1x1 Image',
+          imageType: 'tvshow_cover_1x1',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Cover 1x1',
     description: 'The cover 1x1 image of the TV show.',
     sort_index: 4,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_cover_16x9',
+    field_name: 'tvshow_cover_16x9',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized TV Show Cover 16x9 Image',
+          imageType: 'tvshow_cover_16x9',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Cover 16x9',
     description: 'The cover 16x9 image of the TV show.',
     sort_index: 5,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_clean_cover_1x1',
+    field_name: 'tvshow_clean_cover_1x1',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized TV Show Clean Cover 1x1 Image',
+          imageType: 'tvshow_clean_cover_1x1',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Clean Cover 1x1',
     description: 'The clean cover 1x1 image of the TV show.',
     sort_index: 6,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_clean_cover_16x9',
+    field_name: 'tvshow_clean_cover_16x9',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized TV Show Clean Cover 16x9 Image',
+          imageType: 'tvshow_clean_cover_16x9',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Clean Cover 16x9',
     description: 'The clean cover 16x9 image of the TV show.',
     sort_index: 7,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_list_1x1',
+    field_name: 'tvshow_list_1x1',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized TV Show List 1x1 Image',
+          imageType: 'tvshow_list_1x1',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'List 1x1',
     description: 'The list 1x1 image of the TV show.',
     sort_index: 8,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_list_9x13',
+    field_name: 'tvshow_list_9x13',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized TV Show List 9x13 Image',
+          imageType: 'tvshow_list_9x13',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'List 9x13',
     description: 'The list 9x13 image of the TV show.',
     sort_index: 9,
@@ -136,54 +262,180 @@ export const SeasonFieldDefinitions: EntityFieldDefinition[] = [
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_cover_1x1',
+    field_name: 'season_cover_1x1',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Season Cover 1x1 Image',
+          imageType: 'season_cover_1x1',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Cover 1x1',
     description: 'The cover 1x1 image of the season.',
     sort_index: 4,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_cover_16x9',
+    field_name: 'season_cover_16x9',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Season Cover 16x9 Image',
+          imageType: 'season_cover_16x9',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Cover 16x9',
     description: 'The cover 16x9 image of the season.',
     sort_index: 5,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_clean_cover_1x1',
+    field_name: 'season_clean_cover_1x1',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Season Clean Cover 1x1 Image',
+          imageType: 'season_clean_cover_1x1',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Clean Cover 1x1',
     description: 'The clean cover 1x1 image of the season.',
     sort_index: 6,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_clean_cover_16x9',
+    field_name: 'season_clean_cover_16x9',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Season Clean Cover 16x9 Image',
+          imageType: 'season_clean_cover_16x9',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Clean Cover 16x9',
     description: 'The clean cover 16x9 image of the season.',
     sort_index: 7,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_list_1x1',
+    field_name: 'season_list_1x1',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Season List 1x1 Image',
+          imageType: 'season_list_1x1',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'List 1x1',
     description: 'The list 1x1 image of the season.',
     sort_index: 8,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_list_9x13',
+    field_name: 'season_list_9x13',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Season List 9x13 Image',
+          imageType: 'season_list_9x13',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'List 9x13',
     description: 'The list 9x13 image of the season.',
     sort_index: 9,
@@ -227,54 +479,180 @@ export const EpisodeFieldDefinitions: EntityFieldDefinition[] = [
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_cover_1x1',
+    field_name: 'episode_cover_1x1',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Episode Cover 1x1 Image',
+          imageType: 'episode_cover_1x1',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Cover 1x1',
     description: 'The cover 1x1 image of the episode.',
     sort_index: 4,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_cover_16x9',
+    field_name: 'episode_cover_16x9',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Episode Cover 16x9 Image',
+          imageType: 'episode_cover_16x9',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Cover 16x9',
     description: 'The cover 16x9 image of the episode.',
     sort_index: 5,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_clean_cover_1x1',
+    field_name: 'episode_clean_cover_1x1',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Episode Clean Cover 1x1 Image',
+          imageType: 'episode_clean_cover_1x1',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Clean Cover 1x1',
     description: 'The clean cover 1x1 image of the episode.',
     sort_index: 6,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_clean_cover_16x9',
+    field_name: 'episode_clean_cover_16x9',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Episode Clean Cover 16x9 Image',
+          imageType: 'episode_clean_cover_16x9',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'Clean Cover 16x9',
     description: 'The clean cover 16x9 image of the episode.',
     sort_index: 7,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_list_1x1',
+    field_name: 'episode_list_1x1',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Episode List 1x1 Image',
+          imageType: 'episode_list_1x1',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'List 1x1',
     description: 'The list 1x1 image of the episode.',
     sort_index: 8,
     field_validation_rules: [],
   },
   {
-    field_name: 'image_id_list_9x13',
+    field_name: 'episode_list_9x13',
     field_type: 'STRING',
-    ui_field_type: 'TEXTBOX',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Episode List 9x13 Image',
+          imageType: 'episode_list_9x13',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
     title: 'List 9x13',
     description: 'The list 9x13 image of the episode.',
     sort_index: 9,

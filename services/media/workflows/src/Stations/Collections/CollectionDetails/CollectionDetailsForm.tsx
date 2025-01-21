@@ -208,23 +208,23 @@ const Panel: React.FC = () => {
 
     values.collectionsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case CollectionImageType.Cover_1X1:
+        case CollectionImageType.CollectionCover_1X1:
           cover1x1ImageCount++;
           cover1x1ImageId = imageId;
           break;
-        case CollectionImageType.Cover_4X1:
+        case CollectionImageType.CollectionCover_4X1:
           cover4x1ImageCount++;
           break;
-        case CollectionImageType.CleanCover_1X1:
+        case CollectionImageType.CollectionCleanCover_1X1:
           cleanCover1x1ImageCount++;
           break;
-        case CollectionImageType.CleanCover_4X1:
+        case CollectionImageType.CollectionCleanCover_4X1:
           cleanCover4x1ImageCount++;
           break;
-        case CollectionImageType.List_1X1:
+        case CollectionImageType.CollectionList_1X1:
           list1x1ImageCount++;
           break;
-        case CollectionImageType.List_15X16:
+        case CollectionImageType.CollectionList_15X16:
           list15x16ImageCount++;
           break;
         default:

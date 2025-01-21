@@ -34,12 +34,12 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
   const customSortedMovieImageTypes = Object.values(MovieImageType).sort(
     (a, b) => {
       const order = [
-        'COVER_1X1',
-        'COVER_16X9',
-        'CLEAN_COVER_1X1',
-        'CLEAN_COVER_16X9',
-        'LIST_1X1',
-        'LIST_9X13',
+        'MOVIE_COVER_1X1',
+        'MOVIE_COVER_16X9',
+        'MOVIE_CLEAN_COVER_1X1',
+        'MOVIE_CLEAN_COVER_16X9',
+        'MOVIE_LIST_1X1',
+        'MOVIE_LIST_9X13',
       ];
       return order.indexOf(a) - order.indexOf(b);
     },
@@ -52,7 +52,7 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
     },
     {} as { [key: string]: string },
   );
-
+  
   return (
     <>
       {Object.keys(movieImageTypesObject).map((type) => {
@@ -66,7 +66,7 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
             as={imageSelectField}
             maxItems={1}
             title="Select Image"
-            imageScope="movie"
+            imageType={field.toLocaleLowerCase()}
           />
         );
       })}

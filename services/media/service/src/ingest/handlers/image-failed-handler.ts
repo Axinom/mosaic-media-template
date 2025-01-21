@@ -45,5 +45,25 @@ export class ImageFailedHandler extends MediaGuardedTransactionalInboxMessageHan
       },
       { id: messageContext.ingestItemStepId },
     ).run(ownerClient);
+
+    // If the ingest of a localized image fails, we also fail the localization step.
+    if (messageContext.isLocalization) {
+      await update(
+        'ingest_item_steps',
+        {
+          status: 'ERROR',
+          response_message:
+            'Image ingest failed. Cannot proceed with localization.',
+        },
+        {
+          ingest_item_id: messageContext.ingestItemId,
+          type: 'IMAGE_LOCALIZATIONS',
+          // At the moment, we mark all image localizations as error as well, since we send them all in one message.
+          // TODO: Improve this to so images are localized independently.
+          //sub_type: messageContext.imageType,
+          //language_tag: messageContext.languageTag,
+        },
+      ).run(ownerClient);
+    }
   }
 }

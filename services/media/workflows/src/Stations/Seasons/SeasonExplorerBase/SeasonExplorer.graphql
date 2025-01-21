@@ -10,7 +10,7 @@ fragment SeasonExplorerProperties on Season {
     id
     title
   }
-  seasonsImages(condition: { imageType: COVER_1X1 }) {
+  seasonsImages(condition: { imageType: SEASON_COVER_1X1 }) {
     nodes {
       imageId
     }

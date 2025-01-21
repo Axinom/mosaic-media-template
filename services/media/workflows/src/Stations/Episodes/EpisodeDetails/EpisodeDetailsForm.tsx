@@ -330,23 +330,23 @@ const Panel: React.FC = () => {
 
     values.episodesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case EpisodeImageType.Cover_1X1:
+        case EpisodeImageType.EpisodeCover_1X1:
           cover1x1ImageCount++;
           cover1x1ImageId = imageId;
           break;
-        case EpisodeImageType.Cover_16X9:
+        case EpisodeImageType.EpisodeCover_16X9:
           cover16x9ImageCount++;
           break;
-        case EpisodeImageType.CleanCover_1X1:
+        case EpisodeImageType.EpisodeCleanCover_1X1:
           cleanCover1x1ImageCount++;
           break;
-        case EpisodeImageType.CleanCover_16X9:
+        case EpisodeImageType.EpisodeCleanCover_16X9:
           cleanCover16x9ImageCount++;
           break;
-        case EpisodeImageType.List_1X1:
+        case EpisodeImageType.EpisodeList_1X1:
           list1x1ImageCount++;
           break;
-        case EpisodeImageType.List_9X13:
+        case EpisodeImageType.EpisodeList_9X13:
           list16x9ImageCount++;
           break;
         default:

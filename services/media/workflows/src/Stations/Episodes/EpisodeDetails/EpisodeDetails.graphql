@@ -61,7 +61,7 @@ query Episode($id: Int!) {
     season {
       id
       index
-      seasonsImages(condition: { imageType: COVER_1X1 }, first: 1) {
+      seasonsImages(condition: { imageType: SEASON_COVER_1X1 }, first: 1) {
         nodes {
           imageId
         }

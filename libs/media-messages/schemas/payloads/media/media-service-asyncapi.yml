@@ -75,6 +75,14 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/entity-deleted-event'
+  'ingest.localizable_image_ingest_finished':
+    bindings:
+      amqp:
+        queue:
+          name: inbox
+    subscribe:
+      message:
+        $ref: '#/components/messages/localizable-image-ingest-finished-event'
 components:
   messages:
     check-finish-ingest-document-command:
@@ -133,3 +141,10 @@ components:
       contentType: application/json
       payload:
         $ref: 'event/entity-deleted-event.json'
+    localizable-image-ingest-finished-event:
+      tags:
+        - name: aggregate-type:ingest
+        - name: aggregate-id-field:ingest document ID
+      contentType: application/json
+      payload:
+        $ref: 'event/localizable-image-ingest-finished-event.json'

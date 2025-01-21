@@ -92,7 +92,12 @@ export const customIngestValidation = (
     }
 
     const errors: IValidationError[] = Object.values(
-      groupBy((itemInfo.data.images as ImageIngestData[]) ?? [], 'type'),
+      groupBy(
+        (itemInfo.data.images as ImageIngestData[]).filter(
+          (img) => img.language_tag === undefined, // we only check duplicates for non-localized images
+        ) ?? [],
+        'type',
+      ),
     )
       .filter((group) => group.length > 1)
       .map((group) => ({
@@ -116,6 +121,15 @@ export const getIngestErrorMessage = (
   defaultMessage: string,
 ): string => {
   if (error instanceof MosaicError) {
+    if (!isNullOrWhitespace(error.innerError)) {
+      if ((error.innerError as any).message?.includes('age_rating_fkey')) {
+        return 'Age rating used in the ingest is not defined as an Age Rating in the Management System.';
+      } else if (
+        (error.innerError as any).message?.includes('content_owner_fkey')
+      ) {
+        return 'Content Owner used in the ingest is not defined as a Content Owner in the Management System.';
+      }
+    }
     return error.message;
   }
 

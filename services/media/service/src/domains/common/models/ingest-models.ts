@@ -1,7 +1,10 @@
 import {
+  collections,
+  collections_images,
   collections_tags,
   episodes,
   episodes_casts,
+  episodes_directors,
   episodes_images,
   episodes_licenses,
   episodes_licenses_countries,
@@ -11,6 +14,7 @@ import {
   episodes_tvshow_genres,
   movies,
   movies_casts,
+  movies_directors,
   movies_images,
   movies_licenses,
   movies_licenses_countries,
@@ -20,6 +24,7 @@ import {
   movies_trailers,
   seasons,
   seasons_casts,
+  seasons_directors,
   seasons_images,
   seasons_licenses,
   seasons_licenses_countries,
@@ -29,6 +34,7 @@ import {
   seasons_tvshow_genres,
   tvshows,
   tvshows_casts,
+  tvshows_directors,
   tvshows_images,
   tvshows_licenses,
   tvshows_licenses_countries,
@@ -42,28 +48,34 @@ export type IngestibleTable =
   | movies.Table
   | tvshows.Table
   | seasons.Table
-  | episodes.Table;
+  | episodes.Table
+  | collections.Table;
 
 export type IngestInsertable =
   | movies.Insertable
   | tvshows.Insertable
   | seasons.Insertable
-  | episodes.Insertable;
+  | episodes.Insertable
+  | collections.Insertable;
 
 export type NamedRelationTable =
   | collections_tags.Table
   | episodes_casts.Table
   | episodes_production_countries.Table
   | episodes_tags.Table
+  | episodes_directors.Table
   | movies_casts.Table
   | movies_production_countries.Table
   | movies_tags.Table
+  | movies_directors.Table
   | seasons_casts.Table
   | seasons_production_countries.Table
   | seasons_tags.Table
+  | seasons_directors.Table
   | tvshows_casts.Table
   | tvshows_production_countries.Table
-  | tvshows_tags.Table;
+  | tvshows_tags.Table
+  | tvshows_directors.Table;
 
 export type NamedRelationFKSelector =
   | { movie_id: number }
@@ -94,7 +106,8 @@ export type ImagesRelationTable =
   | movies_images.Table
   | tvshows_images.Table
   | seasons_images.Table
-  | episodes_images.Table;
+  | episodes_images.Table
+  | collections_images.Table;
 
 export type LicensesRelationTable =
   | movies_licenses.Table
@@ -108,6 +121,12 @@ export type LicenseCountriesRelationTable =
   | seasons_licenses_countries.Table
   | episodes_licenses_countries.Table;
 
+export type LicenseCountriesInsertable =
+  | movies_licenses_countries.Insertable
+  | tvshows_licenses_countries.Insertable
+  | seasons_licenses_countries.Insertable
+  | episodes_licenses_countries.Insertable;
+
 export type LicenseRelationInsertable =
   | movies_licenses.Insertable
   | tvshows_licenses.Insertable
@@ -119,6 +138,13 @@ export type RelationFKSelector =
   | { tvshow_id: number }
   | { season_id: number }
   | { episode_id: number };
+
+export type ImagesFKSelector =
+  | { movie_id: number }
+  | { tvshow_id: number }
+  | { season_id: number }
+  | { episode_id: number }
+  | { collection_id: number };
 
 export type LicenseFKSelector =
   | { movies_license_id: number }

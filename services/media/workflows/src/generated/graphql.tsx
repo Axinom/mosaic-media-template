@@ -673,18 +673,18 @@ export type CollectionFilter = {
 };
 
 export enum CollectionImageType {
-  /** Clean Cover 1x1 */
-  CleanCover_1X1 = 'CLEAN_COVER_1X1',
-  /** Clean Cover 4x1 */
-  CleanCover_4X1 = 'CLEAN_COVER_4X1',
-  /** Cover 1x1 */
-  Cover_1X1 = 'COVER_1X1',
-  /** Cover 4x1 */
-  Cover_4X1 = 'COVER_4X1',
-  /** List 15x16 */
-  List_15X16 = 'LIST_15X16',
-  /** List 1x1 */
-  List_1X1 = 'LIST_1X1'
+  /** Collection Clean Cover 1x1 */
+  CollectionCleanCover_1X1 = 'COLLECTION_CLEAN_COVER_1X1',
+  /** Collection Clean Cover 4x1 */
+  CollectionCleanCover_4X1 = 'COLLECTION_CLEAN_COVER_4X1',
+  /** Collection Cover 1x1 */
+  CollectionCover_1X1 = 'COLLECTION_COVER_1X1',
+  /** Collection Cover 4x1 */
+  CollectionCover_4X1 = 'COLLECTION_COVER_4X1',
+  /** Collection List 15x16 */
+  CollectionList_15X16 = 'COLLECTION_LIST_15X16',
+  /** Collection List 1x1 */
+  CollectionList_1X1 = 'COLLECTION_LIST_1X1'
 }
 
 /** A filter to be used against CollectionImageType fields. All fields are combined with a logical ‘and.’ */
@@ -6313,18 +6313,18 @@ export type EpisodeFilter = {
 };
 
 export enum EpisodeImageType {
-  /** Clean Cover 16x9 */
-  CleanCover_16X9 = 'CLEAN_COVER_16X9',
-  /** Clean Cover 1x1 */
-  CleanCover_1X1 = 'CLEAN_COVER_1X1',
-  /** Cover 16x9 */
-  Cover_16X9 = 'COVER_16X9',
-  /** Cover 1x1 */
-  Cover_1X1 = 'COVER_1X1',
-  /** List 1x1 */
-  List_1X1 = 'LIST_1X1',
-  /** List 9x13 */
-  List_9X13 = 'LIST_9X13'
+  /** Episode Clean Cover 16x9 */
+  EpisodeCleanCover_16X9 = 'EPISODE_CLEAN_COVER_16X9',
+  /** Episode Clean Cover 1x1 */
+  EpisodeCleanCover_1X1 = 'EPISODE_CLEAN_COVER_1X1',
+  /** Episode Cover 16x9 */
+  EpisodeCover_16X9 = 'EPISODE_COVER_16X9',
+  /** Episode Cover 1x1 */
+  EpisodeCover_1X1 = 'EPISODE_COVER_1X1',
+  /** Episode List 1x1 */
+  EpisodeList_1X1 = 'EPISODE_LIST_1X1',
+  /** Episode List 9x13 */
+  EpisodeList_9X13 = 'EPISODE_LIST_9X13'
 }
 
 /** A filter to be used against EpisodeImageType fields. All fields are combined with a logical ‘and.’ */
@@ -8592,6 +8592,7 @@ export type IngestItemStep = {
   /** Reads a single `IngestItem` that is related to this `IngestItemStep`. */
   ingestItem?: Maybe<IngestItem>;
   ingestItemId: Scalars['Int']['output'];
+  languageTag?: Maybe<Scalars['String']['output']>;
   responseMessage?: Maybe<Scalars['String']['output']>;
   status: IngestItemStepStatus;
   subType: Scalars['String']['output'];
@@ -8615,6 +8616,8 @@ export type IngestItemStepCondition = {
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `ingestItemId` field. */
   ingestItemId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `languageTag` field. */
+  languageTag?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `responseMessage` field. */
   responseMessage?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `status` field. */
@@ -8645,6 +8648,8 @@ export type IngestItemStepFilter = {
   ingestItem?: InputMaybe<IngestItemFilter>;
   /** Filter by the object’s `ingestItemId` field. */
   ingestItemId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `languageTag` field. */
+  languageTag?: InputMaybe<StringFilter>;
   /** Negates the expression. */
   not?: InputMaybe<IngestItemStepFilter>;
   /** Checks for any expressions in this list. */
@@ -8700,6 +8705,8 @@ export enum IngestItemStepsOrderBy {
   IdDesc = 'ID_DESC',
   IngestItemIdAsc = 'INGEST_ITEM_ID_ASC',
   IngestItemIdDesc = 'INGEST_ITEM_ID_DESC',
+  LanguageTagAsc = 'LANGUAGE_TAG_ASC',
+  LanguageTagDesc = 'LANGUAGE_TAG_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -8753,10 +8760,14 @@ export type IngestItemStepStatusFilter = {
 };
 
 export enum IngestItemStepType {
+  /** Cue Points */
+  CuePoints = 'CUE_POINTS',
   /** Entity */
   Entity = 'ENTITY',
   /** Image */
   Image = 'IMAGE',
+  /** Image Localizations */
+  ImageLocalizations = 'IMAGE_LOCALIZATIONS',
   /** Localizations */
   Localizations = 'LOCALIZATIONS',
   /** Video */
@@ -8800,6 +8811,8 @@ export type IngestItemToManyIngestItemStepFilter = {
 };
 
 export enum IngestItemType {
+  /** Collection */
+  Collection = 'COLLECTION',
   /** Episode */
   Episode = 'EPISODE',
   /** Movie */
@@ -10108,18 +10121,18 @@ export type MovieGenreToManyMoviesMovieGenreFilter = {
 };
 
 export enum MovieImageType {
-  /** Clean Cover 16x9 */
-  CleanCover_16X9 = 'CLEAN_COVER_16X9',
-  /** Clean Cover 1x1 */
-  CleanCover_1X1 = 'CLEAN_COVER_1X1',
-  /** Cover 16x9 */
-  Cover_16X9 = 'COVER_16X9',
-  /** Cover 1x1 */
-  Cover_1X1 = 'COVER_1X1',
-  /** List 1x1 */
-  List_1X1 = 'LIST_1X1',
-  /** List 9x13 */
-  List_9X13 = 'LIST_9X13'
+  /** Movie Clean Cover 16x9 */
+  MovieCleanCover_16X9 = 'MOVIE_CLEAN_COVER_16X9',
+  /** MovieClean Cover 1x1 */
+  MovieCleanCover_1X1 = 'MOVIE_CLEAN_COVER_1X1',
+  /** Movie Cover 16x9 */
+  MovieCover_16X9 = 'MOVIE_COVER_16X9',
+  /** Movie Cover 1x1 */
+  MovieCover_1X1 = 'MOVIE_COVER_1X1',
+  /** Movie List 1x1 */
+  MovieList_1X1 = 'MOVIE_LIST_1X1',
+  /** Movie List 9x13 */
+  MovieList_9X13 = 'MOVIE_LIST_9X13'
 }
 
 /** A filter to be used against MovieImageType fields. All fields are combined with a logical ‘and.’ */
@@ -14920,18 +14933,18 @@ export type SeasonFilter = {
 };
 
 export enum SeasonImageType {
-  /** Clean Cover 16x9 */
-  CleanCover_16X9 = 'CLEAN_COVER_16X9',
-  /** Clean Cover 1x1 */
-  CleanCover_1X1 = 'CLEAN_COVER_1X1',
-  /** Cover 16x9 */
-  Cover_16X9 = 'COVER_16X9',
-  /** Cover 1x1 */
-  Cover_1X1 = 'COVER_1X1',
-  /** List 1x1 */
-  List_1X1 = 'LIST_1X1',
-  /** List 9x13 */
-  List_9X13 = 'LIST_9X13'
+  /** Season Clean Cover 16x9 */
+  SeasonCleanCover_16X9 = 'SEASON_CLEAN_COVER_16X9',
+  /** Season Clean Cover 1x1 */
+  SeasonCleanCover_1X1 = 'SEASON_CLEAN_COVER_1X1',
+  /** Season Cover 16x9 */
+  SeasonCover_16X9 = 'SEASON_COVER_16X9',
+  /** Season Cover 1x1 */
+  SeasonCover_1X1 = 'SEASON_COVER_1X1',
+  /** Season List 1x1 */
+  SeasonList_1X1 = 'SEASON_LIST_1X1',
+  /** Season List 9x13 */
+  SeasonList_9X13 = 'SEASON_LIST_9X13'
 }
 
 /** A filter to be used against SeasonImageType fields. All fields are combined with a logical ‘and.’ */
@@ -17549,18 +17562,18 @@ export type TvshowGenreToManyTvshowsTvshowGenreFilter = {
 };
 
 export enum TvshowImageType {
-  /** Clean Cover 16x9 */
-  CleanCover_16X9 = 'CLEAN_COVER_16X9',
-  /** Clean Cover 1x1 */
-  CleanCover_1X1 = 'CLEAN_COVER_1X1',
-  /** Cover 16x9 */
-  Cover_16X9 = 'COVER_16X9',
-  /** Cover 1x1 */
-  Cover_1X1 = 'COVER_1X1',
-  /** List 1x1 */
-  List_1X1 = 'LIST_1X1',
-  /** List 9x13 */
-  List_9X13 = 'LIST_9X13'
+  /** TV Show Clean Cover 16x9 */
+  TvshowCleanCover_16X9 = 'TVSHOW_CLEAN_COVER_16X9',
+  /** TV Show Clean Cover 1x1 */
+  TvshowCleanCover_1X1 = 'TVSHOW_CLEAN_COVER_1X1',
+  /** TV Show Cover 16x9 */
+  TvshowCover_16X9 = 'TVSHOW_COVER_16X9',
+  /** TV Show Cover 1x1 */
+  TvshowCover_1X1 = 'TVSHOW_COVER_1X1',
+  /** TV Show List 1x1 */
+  TvshowList_1X1 = 'TVSHOW_LIST_1X1',
+  /** TV Show List 9x13 */
+  TvshowList_9X13 = 'TVSHOW_LIST_9X13'
 }
 
 /** A filter to be used against TvshowImageType fields. All fields are combined with a logical ‘and.’ */
@@ -21894,7 +21907,7 @@ export const EpisodeExplorerPropertiesFragmentDoc = gql`
       title
     }
   }
-  episodesImages(condition: {imageType: COVER_1X1}) {
+  episodesImages(condition: {imageType: EPISODE_COVER_1X1}) {
     nodes {
       imageId
     }
@@ -21980,7 +21993,7 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
       }
     }
   }
-  moviesImages(condition: {imageType: COVER_1X1}) {
+  moviesImages(condition: {imageType: MOVIE_COVER_1X1}) {
     nodes {
       imageId
     }
@@ -22077,7 +22090,7 @@ export const SeasonExplorerPropertiesFragmentDoc = gql`
     id
     title
   }
-  seasonsImages(condition: {imageType: COVER_1X1}) {
+  seasonsImages(condition: {imageType: SEASON_COVER_1X1}) {
     nodes {
       imageId
     }
@@ -22133,7 +22146,7 @@ export const TvShowExplorerPropertiesFragmentDoc = gql`
   assetSubtype
   businessType
   contentOwner
-  tvshowsImages(condition: {imageType: COVER_1X1}) {
+  tvshowsImages(condition: {imageType: TVSHOW_COVER_1X1}) {
     nodes {
       imageId
     }
@@ -23240,7 +23253,7 @@ export const EpisodeDocument = gql`
     season {
       id
       index
-      seasonsImages(condition: {imageType: COVER_1X1}, first: 1) {
+      seasonsImages(condition: {imageType: SEASON_COVER_1X1}, first: 1) {
         nodes {
           imageId
         }
@@ -26538,7 +26551,7 @@ export const SeasonDocument = gql`
     tvshow {
       id
       title
-      tvshowsImages(condition: {imageType: COVER_1X1}, first: 1) {
+      tvshowsImages(condition: {imageType: TVSHOW_COVER_1X1}, first: 1) {
         nodes {
           imageId
         }

@@ -1,7 +1,6 @@
 import { nullable, optional } from '@axinom/mosaic-db-common';
 import {
   EpisodeIngestData,
-  ImageMessageContext,
   IngestItem,
   StartIngestItemCommand,
   UpdateMetadataCommand,
@@ -89,6 +88,8 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
       ...this.orchestrateTrailers(episode, content.ingest_item_id),
       ...this.orchestrateImages(episode, content),
       ...this.orchestrateLocalizations(episode, content),
+      ...this.orchestrateImageLocalizations(episode, content),
+      ...this.orchestrateCuePoints(episode, content),
     ];
 
     return orchestrationData;
@@ -117,6 +118,10 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
         })),
         ...nullable(episode.studio, (val) => ({ studio: val?.trim() })),
         ...nullable(episode.released, (val) => ({ released: val })),
+        ...nullable(episode.age_rating, (val) => ({ age_rating: val })),
+        ...nullable(episode.rating, (val) => ({ rating: val })),
+        ...nullable(episode.content_owner, (val) => ({ content_owner: val })),
+        ...nullable(episode.custom, (val) => ({ extended_field: val })),
       },
       { id: content.entity_id },
     ).run(ctx);
@@ -143,6 +148,13 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
     );
 
     await this.updateRelations(
+      'episodes_directors',
+      episode.directors,
+      { episode_id: content.entity_id },
+      ctx,
+    );
+
+    await this.updateRelations(
       'episodes_production_countries',
       episode.production_countries,
       { episode_id: content.entity_id },
@@ -157,6 +169,8 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
           episode_id: content.entity_id,
           license_start: r.start,
           license_end: r.end,
+          is_downloadable: r.is_downloadable,
+          downloaded_asset_lifespan: r.downloaded_asset_lifespan,
         },
         countries: r.countries,
       })),
@@ -201,7 +215,13 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
   public async processImage(
     entityId: number,
     imageId: string,
-    imageType: ImageMessageContext['imageType'],
+    imageType:
+      | 'EPISODE_COVER_1x1'
+      | 'EPISODE_COVER_16x9'
+      | 'EPISODE_CLEAN_COVER_1x1'
+      | 'EPISODE_CLEAN_COVER_16x9'
+      | 'EPISODE_LIST_1x1'
+      | 'EPISODE_LIST_9x13',
     dbContext: Queryable,
   ): Promise<void> {
     await upsert(

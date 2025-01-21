@@ -323,23 +323,23 @@ const Panel: React.FC = () => {
 
     values.moviesImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
-        case MovieImageType.Cover_1X1:
+        case MovieImageType.MovieCover_1X1:
           cover1x1ImageCount++;
           cover1x1ImageId = imageId;
           break;
-        case MovieImageType.Cover_16X9:
+        case MovieImageType.MovieCover_16X9:
           cover16x9ImageCount++;
           break;
-        case MovieImageType.CleanCover_1X1:
+        case MovieImageType.MovieCleanCover_1X1:
           cleanCover1x1ImageCount++;
           break;
-        case MovieImageType.CleanCover_16X9:
+        case MovieImageType.MovieCleanCover_16X9:
           cleanCover16x9ImageCount++;
           break;
-        case MovieImageType.List_1X1:
+        case MovieImageType.MovieList_1X1:
           list1x1ImageCount++;
           break;
-        case MovieImageType.List_9X13:
+        case MovieImageType.MovieList_9X13:
           list16x9ImageCount++;
           break;
         default:
