@@ -5,6 +5,7 @@ query TvShow($id: Int!) {
     synopsis
     description
     externalId
+    publishingId
     ageRating
     businessType
     contentOwner

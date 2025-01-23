@@ -361,7 +361,6 @@ const Panel: React.FC = () => {
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
-          <Paragraph title="External ID">{values.externalId}</Paragraph>
           <Paragraph title="Subtype">
             {getEnumLabel(values.assetSubtype)}
           </Paragraph>
@@ -374,6 +373,7 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
+          <Paragraph title="Publishing ID">{values.publishingId}</Paragraph>
           {values.publishedDate ? (
             <Paragraph title="Last Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
@@ -464,7 +464,6 @@ const Panel: React.FC = () => {
     values.createdUser,
     values.episodesImages?.nodes,
     values.episodesTrailers?.totalCount,
-    values.externalId,
     values.id,
     values.mainVideoId,
     values.publishStatus,
@@ -481,6 +480,8 @@ const Form: React.FC<{
   ageRatingOptions?: selectOption[];
   contentOwnerOptions?: selectOption[];
 }> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
+  const { initialValues } = useFormikContext<EpisodeDetailsFormData>();
+  
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchEpisodeTagsQuery,
@@ -527,6 +528,12 @@ const Form: React.FC<{
         as={SingleLineTextField}
       />
       <Field name="description" label="Description" as={TextAreaField} />
+      <Field
+        name="externalId"
+        label="External ID"
+        as={SingleLineTextField}
+        disabled={!!initialValues.externalId}
+      />
       <Field
         type="number"
         name="index"

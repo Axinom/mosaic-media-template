@@ -5,6 +5,7 @@ query Season($id: Int!) {
     synopsis
     description
     externalId
+    publishingId
     rating
     ageRating
     contentOwner

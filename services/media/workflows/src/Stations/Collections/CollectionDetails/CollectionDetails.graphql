@@ -4,6 +4,7 @@ query Collection($id: Int!) {
     synopsis
     description
     externalId
+    publishingId
     languages
     extendedField
     assetSubtype

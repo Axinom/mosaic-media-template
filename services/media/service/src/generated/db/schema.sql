@@ -5206,6 +5206,7 @@ CREATE TABLE app_public.collections (
     asset_subtype app_public.asset_subtype_enum DEFAULT 'COLLECTION'::text NOT NULL,
     extended_field text,
     ingest_correlation_id integer,
+    publishing_id text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5379,6 +5380,7 @@ CREATE TABLE app_public.episodes (
     extended_field text,
     content_owner text,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'EPISODE'::text NOT NULL,
+    publishing_id text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5928,6 +5930,7 @@ CREATE TABLE app_public.movies (
     content_owner text,
     business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'MOVIE'::text NOT NULL,
+    publishing_id text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -6206,7 +6209,8 @@ CREATE TABLE app_public.seasons (
     extended_field text,
     content_owner text,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'SEASON'::text NOT NULL,
-    title text NOT NULL
+    title text NOT NULL,
+    publishing_id text
 );
 
 
@@ -6656,6 +6660,7 @@ CREATE TABLE app_public.tvshows (
     content_owner text,
     business_type app_public.business_type_enum DEFAULT 'premium'::text NOT NULL,
     asset_subtype app_public.asset_subtype_enum DEFAULT 'TV_SHOW'::text NOT NULL,
+    publishing_id text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -15607,6 +15612,13 @@ GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.collections TO media_ser
 
 
 --
+-- Name: COLUMN collections.publishing_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(publishing_id),UPDATE(publishing_id) ON TABLE app_public.collections TO media_service_gql_role;
+
+
+--
 -- Name: SEQUENCE collections_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -15793,6 +15805,13 @@ GRANT INSERT(content_owner),UPDATE(content_owner) ON TABLE app_public.episodes T
 --
 
 GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.episodes TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN episodes.publishing_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(publishing_id),UPDATE(publishing_id) ON TABLE app_public.episodes TO media_service_gql_role;
 
 
 --
@@ -16384,6 +16403,13 @@ GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.movies TO 
 
 
 --
+-- Name: COLUMN movies.publishing_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(publishing_id),UPDATE(publishing_id) ON TABLE app_public.movies TO media_service_gql_role;
+
+
+--
 -- Name: TABLE movies_casts; Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -16640,6 +16666,13 @@ GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.seasons TO
 --
 
 GRANT INSERT(title),UPDATE(title) ON TABLE app_public.seasons TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN seasons.publishing_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(publishing_id),UPDATE(publishing_id) ON TABLE app_public.seasons TO media_service_gql_role;
 
 
 --
@@ -17102,6 +17135,13 @@ GRANT INSERT(business_type),UPDATE(business_type) ON TABLE app_public.tvshows TO
 --
 
 GRANT INSERT(asset_subtype),UPDATE(asset_subtype) ON TABLE app_public.tvshows TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN tvshows.publishing_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(publishing_id),UPDATE(publishing_id) ON TABLE app_public.tvshows TO media_service_gql_role;
 
 
 --

@@ -5,6 +5,7 @@ query Movie($id: Int!) {
     synopsis
     description
     externalId
+    publishingId
     ageRating
     businessType
     contentOwner

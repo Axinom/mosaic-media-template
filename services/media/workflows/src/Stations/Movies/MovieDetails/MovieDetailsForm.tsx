@@ -353,7 +353,6 @@ const Panel: React.FC = () => {
           <ImageCover id={cover1x1ImageId} />
         </Section>
         <Section title="Additional Information">
-          <Paragraph title="External ID">{values.externalId}</Paragraph>
           <Paragraph title="Subtype">
             {getEnumLabel(values.assetSubtype)}
           </Paragraph>
@@ -366,11 +365,12 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
+          <Paragraph title="Publishing ID">{values.publishingId}</Paragraph>
           {values.publishedDate ? (
             <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
-          ) : null}
+          ) : null}          
         </Section>
         <Section title="Assigned Items">
           <Paragraph title="Videos">
@@ -431,7 +431,6 @@ const Panel: React.FC = () => {
     values.assetSubtype,
     values.createdDate,
     values.createdUser,
-    values.externalId,
     values.mainVideoId,
     values.moviesImages?.nodes,
     values.moviesTrailers?.totalCount,
@@ -440,6 +439,7 @@ const Panel: React.FC = () => {
     values.publishedUser,
     values.updatedDate,
     values.updatedUser,
+    values.publishingId,
   ]);
 };
 
@@ -449,6 +449,8 @@ const Form: React.FC<{
   contentOwnerOptions?: selectOption[];
   languageOptions?: string[];
 }> = ({ genreOptions, ageRatingOptions, contentOwnerOptions }) => {
+  const { initialValues } = useFormikContext<MovieDetailsFormData>();
+
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchMovieTagsQuery,
@@ -491,6 +493,12 @@ const Form: React.FC<{
       <Field name="title" label="Title" as={SingleLineTextField} />
       <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
+      <Field
+        name="externalId"
+        label="External ID"
+        as={SingleLineTextField}
+        disabled={!!initialValues.externalId}
+      />
       <Field
         name="businessType"
         label="Business Type"
@@ -558,7 +566,6 @@ const Form: React.FC<{
         options={contentOwnerOptions}
         as={SelectField}
       />
-
       <Field name="extendedField" label="Custom" as={TextAreaField} />
     </>
   );

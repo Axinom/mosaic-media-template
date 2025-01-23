@@ -6,6 +6,7 @@ query Episode($id: Int!) {
     synopsis
     description
     externalId
+    publishingId
     ageRating
     contentOwner
     rating

@@ -42,7 +42,6 @@ export const CollectionCreate: React.FC = () => {
             input: {
               collection: {
                 title: formData.title ?? '',
-                externalId: `${ContentProviderKey}-${AssetType}-movie-${new Date().getTime()}`,
               },
             },
           },

@@ -239,7 +239,6 @@ const Panel: React.FC = () => {
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
-          <Paragraph title="External ID">{values.externalId}</Paragraph>
           <Paragraph title="Subtype">
             {getEnumLabel(values.assetSubtype)}
           </Paragraph>
@@ -252,11 +251,12 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
+          <Paragraph title="Publishing ID">{values.publishingId}</Paragraph>
           {values.publishedDate ? (
             <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
-          ) : null}
+          ) : null}         
         </Section>
         <Section title="Assigned Items">
           <Paragraph title="Entities">
@@ -323,7 +323,6 @@ const Panel: React.FC = () => {
   }, [
     values.collectionsImages?.nodes,
     values.id,
-    values.externalId,
     values.assetSubtype,
     values.createdDate,
     values.createdUser,
@@ -343,6 +342,8 @@ const Panel: React.FC = () => {
 const Form: React.FC<{
   countryOptions?: (Maybe<string> | undefined)[];
 }> = ({ countryOptions }) => {
+  const { initialValues } = useFormikContext<CollectionDetailsFormData>();
+
   const tagsResolver = async (value: string): Promise<(string | null)[]> => {
     const { data } = await client.query<
       SearchCollectionTagsQuery,
@@ -359,6 +360,12 @@ const Form: React.FC<{
       <Field name="title" label="Title" as={SingleLineTextField} />
       <Field name="synopsis" label="Short Description" as={TextAreaField} />
       <Field name="description" label="Description" as={TextAreaField} />
+      <Field
+        name="externalId"
+        label="External ID"
+        as={SingleLineTextField}
+        disabled={!!initialValues.externalId}
+      />
       <Field
         name="tags"
         label="Tags"

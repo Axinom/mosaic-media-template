@@ -36,7 +36,6 @@ export const MovieCreate: React.FC = () => {
             input: {
               movie: {
                 title: formData.title,
-                externalId: `${ContentProviderKey}-${AssetType}-movie-${new Date().getTime()}`,
               },
             },
           },

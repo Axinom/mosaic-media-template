@@ -46,7 +46,6 @@ export const EpisodeCreate: React.FC = () => {
               episode: {
                 title: formData.title,
                 index: Number(formData.index),
-                externalId: `${ContentProviderKey}-${AssetType}-episode-${new Date().getTime()}`,
               },
             },
           },

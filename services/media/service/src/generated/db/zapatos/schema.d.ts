@@ -1162,6 +1162,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingest_correlation_id: number | null;
+      /**
+      * **collections.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -1262,6 +1268,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingest_correlation_id: number | null;
+      /**
+      * **collections.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id: string | null;
     }
     export interface Whereable {
       /**
@@ -1362,6 +1374,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingest_correlation_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collections.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1462,6 +1480,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **collections.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1562,6 +1586,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **collections.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'collections_external_id_key' | 'collections_pkey';
     export type Column = keyof Selectable;
@@ -2741,6 +2771,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'EPISODE'::text`
       */
       asset_subtype: c.AssetSubtypeEnum;
+      /**
+      * **episodes.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -2889,6 +2925,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'EPISODE'::text`
       */
       asset_subtype: c.AssetSubtypeEnum;
+      /**
+      * **episodes.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id: string | null;
     }
     export interface Whereable {
       /**
@@ -3037,6 +3079,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'EPISODE'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episodes.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -3185,6 +3233,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'EPISODE'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment;
+      /**
+      * **episodes.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -3333,6 +3387,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'EPISODE'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episodes.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'episodes_external_id_key' | 'episodes_pkey';
     export type Column = keyof Selectable;
@@ -7071,6 +7131,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'MOVIE'::text`
       */
       asset_subtype: c.AssetSubtypeEnum;
+      /**
+      * **movies.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -7213,6 +7279,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'MOVIE'::text`
       */
       asset_subtype: c.AssetSubtypeEnum;
+      /**
+      * **movies.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id: string | null;
     }
     export interface Whereable {
       /**
@@ -7355,6 +7427,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'MOVIE'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -7497,6 +7575,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'MOVIE'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -7639,6 +7723,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'MOVIE'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movies_external_id_key' | 'movies_pkey';
     export type Column = keyof Selectable;
@@ -9062,6 +9152,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       title: string;
+      /**
+      * **seasons.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -9198,6 +9294,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       title: string;
+      /**
+      * **seasons.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id: string | null;
     }
     export interface Whereable {
       /**
@@ -9334,6 +9436,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **seasons.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -9470,6 +9578,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       title: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **seasons.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -9606,6 +9720,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **seasons.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'seasons_external_id_key' | 'seasons_pkey';
     export type Column = keyof Selectable;
@@ -12253,6 +12373,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'TV_SHOW'::text`
       */
       asset_subtype: c.AssetSubtypeEnum;
+      /**
+      * **tvshows.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -12389,6 +12515,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'TV_SHOW'::text`
       */
       asset_subtype: c.AssetSubtypeEnum;
+      /**
+      * **tvshows.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id: string | null;
     }
     export interface Whereable {
       /**
@@ -12525,6 +12657,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'TV_SHOW'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshows.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -12661,6 +12799,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'TV_SHOW'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshows.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -12797,6 +12941,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'TV_SHOW'::text`
       */
       asset_subtype?: c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.AssetSubtypeEnum | db.Parameter<c.AssetSubtypeEnum> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshows.publishing_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      publishing_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tvshows_external_id_key' | 'tvshows_pkey';
     export type Column = keyof Selectable;
