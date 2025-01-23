@@ -1,5 +1,5 @@
 --! Previous: sha1:4242e4d447c4279479cfce85990fde64387fe514
---! Hash: sha1:f148ea5da10af569eccf3bc2ba67aca780387074
+--! Hash: sha1:e6ef20efc970aba45f27f24b79db4c037c66f4e2
 --! Message: redefine-image-types-with-type-prefix
 
 INSERT INTO app_public.movie_image_type (value, description)
@@ -141,10 +141,10 @@ DELETE FROM app_public.collection_image_type WHERE value = 'CLEAN_COVER_1x1';
 UPDATE app_public.collections_images SET image_type = 'COLLECTION_CLEAN_COVER_4x1' WHERE image_type = 'CLEAN_COVER_4x1';
 DELETE FROM app_public.collection_image_type WHERE value = 'CLEAN_COVER_4x1';
 
-UPDATE app_public.collections_images SET image_type = 'COLLECTION_LIST_1x1' WHERE image_type = 'COLLECTION_LIST_1x1';
+UPDATE app_public.collections_images SET image_type = 'COLLECTION_LIST_1x1' WHERE image_type = 'LIST_1x1';
 DELETE FROM app_public.collection_image_type WHERE value = 'LIST_1x1';
 
-UPDATE app_public.collections_images SET image_type = 'COLLECTION_LIST_15x16' WHERE image_type = 'COLLECTION_LIST_15x16';
+UPDATE app_public.collections_images SET image_type = 'COLLECTION_LIST_15x16' WHERE image_type = 'LIST_15x16';
 DELETE FROM app_public.collection_image_type WHERE value = 'LIST_15x16';
 
 
