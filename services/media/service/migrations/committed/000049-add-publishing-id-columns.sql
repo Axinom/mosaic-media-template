@@ -1,5 +1,5 @@
---! Previous: sha1:f148ea5da10af569eccf3bc2ba67aca780387074
---! Hash: sha1:2f9095c5577c51ca1511c9757bcd5128a5e24dbb
+--! Previous: sha1:e6ef20efc970aba45f27f24b79db4c037c66f4e2
+--! Hash: sha1:2202c018c5c99752da0e8d37322d66bc35867242
 --! Message: add-publishing-id-columns
 
 -- Add publishing_id columns to movies, tvshows, seasons, episodes, and collections tables
