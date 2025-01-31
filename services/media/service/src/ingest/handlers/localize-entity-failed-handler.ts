@@ -49,13 +49,27 @@ export class LocalizeEntityFailedHandler extends MediaTransactionalInboxMessageH
     ) {
       const messageContext = metadata.messageContext as IngestMessageContext;
 
-      await update(
+      const updatedIngestItemStep = await update(
         'ingest_item_steps',
         {
           status: 'ERROR',
           response_message: payload.message,
         },
         { id: messageContext.ingestItemStepId },
+      ).run(ownerClient);
+
+      // If the localization for entity fails, we fail image localizations as well, since the EntityLocalize command for images are only fired after the entity localization is successful.
+      await update(
+        'ingest_item_steps',
+        {
+          status: 'ERROR',
+          response_message:
+            'Localization of the entity failed. Cannot proceed with Image Localization.',
+        },
+        {
+          ingest_item_id: updatedIngestItemStep[0].ingest_item_id,
+          type: 'IMAGE_LOCALIZATIONS',
+        },
       ).run(ownerClient);
     } else {
       // When we localize images, we have multiple ingest item steps for each image type.
