@@ -522,9 +522,10 @@ const Form: React.FC<{
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
+      <Field name="originalTitle" label="Original Title" as={SingleLineTextField} />
       <Field
-        name="originalTitle"
-        label="Short Description"
+        name="synopsis"
+        label="Synopsis"
         as={SingleLineTextField}
       />
       <Field name="description" label="Description" as={TextAreaField} />

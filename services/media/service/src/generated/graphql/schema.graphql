@@ -8942,11 +8942,11 @@ enum MovieImageType {
   """Movie Clean Cover 16x9"""
   MOVIE_CLEAN_COVER_16X9
 
-  """Movie List 9x13"""
-  MOVIE_LIST_9X13
-
   """Movie List 1x1"""
   MOVIE_LIST_1X1
+
+  """Movie List 9x13"""
+  MOVIE_LIST_9X13
 }
 
 """
