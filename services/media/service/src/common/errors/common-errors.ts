@@ -60,4 +60,9 @@ export const CommonErrors = {
       'The retrieved localizations are missing key properties. Please contact the service support.',
     code: 'MISSING_KEY_LOCALIZATION_PROPERTIES',
   },
+  CircularCollectionRelationNotAllowed: {
+    message:
+      'Unable to add because of circular relationship between child collection and parent collection',
+    code: 'CIRCULAR_COLLECTION_RELATION_NOT_ALLOWED',
+  },
 } as const;
