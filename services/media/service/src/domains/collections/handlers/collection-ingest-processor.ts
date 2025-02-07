@@ -19,6 +19,7 @@ import {
 import { collection_countries, collection_relations } from 'zapatos/schema';
 import { MediaInitializeResult, OrchestrationData } from '../../../ingest';
 import { buildDisplayTitle, DefaultIngestEntityProcessor } from '../../common';
+import { assertCircularCollectionRelation } from '../common';
 
 export class IngestCollectionProcessor extends DefaultIngestEntityProcessor {
   public type: IngestItemTypeEnum = 'COLLECTION';
@@ -227,6 +228,11 @@ export class IngestCollectionProcessor extends DefaultIngestEntityProcessor {
             external_id: entity.external_id,
           }).run(ctx);
           if (collection !== undefined) {
+            await assertCircularCollectionRelation(
+              ctx,
+              String(collectionId),
+              String(collection.id),
+            );
             collectionRelationsInsertable.push({
               sort_order: entity.sort_order,
               collection_id: collectionId,

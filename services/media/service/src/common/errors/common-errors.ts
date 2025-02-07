@@ -60,4 +60,13 @@ export const CommonErrors = {
       'The retrieved localizations are missing key properties. Please contact the service support.',
     code: 'MISSING_KEY_LOCALIZATION_PROPERTIES',
   },
+  CircularCollectionRelationNotAllowed: {
+    message:
+      'Unable to add because of circular relationship between child collection and parent collection',
+    code: 'CIRCULAR_COLLECTION_RELATION_NOT_ALLOWED',
+  },
+  LicenseStartDateCannotBeAfterEndDate: {
+    message: 'License start date cannot be after license end date.',
+    code: 'LICENSE_START_DATE_CANNOT_BE_AFTER_END_DATE',
+  },
 } as const;

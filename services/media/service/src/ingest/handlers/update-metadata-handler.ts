@@ -4,7 +4,7 @@ import {
   MediaServiceMessagingSettings,
   UpdateMetadataCommand,
 } from 'media-messages';
-import { selectOne, update } from 'zapatos/db';
+import { conditions as c, selectOne, update } from 'zapatos/db';
 import { CommonErrors, Config } from '../../common';
 import { IngestEntityProcessor } from '../models';
 import { getIngestErrorMessage } from '../utils/ingest-validation';
@@ -96,7 +96,10 @@ export class UpdateMetadataHandler extends MediaGuardedTransactionalInboxMessage
         response_message:
           'Ingesting metadata failed. Cannot proceed with localization ingest.',
       },
-      { ingest_item_id: messageContext.ingestItemId, type: 'LOCALIZATIONS' },
+      {
+        ingest_item_id: messageContext.ingestItemId,
+        type: c.isIn(['LOCALIZATIONS', 'IMAGE_LOCALIZATIONS']),
+      },
     ).run(ownerClient);
   }
 }

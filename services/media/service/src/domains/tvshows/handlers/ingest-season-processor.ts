@@ -1,4 +1,5 @@
 import { nullable, optional } from '@axinom/mosaic-db-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
   IngestItem,
   SeasonIngestData,
@@ -8,6 +9,7 @@ import {
 } from 'media-messages';
 import { IngestItemTypeEnum } from 'zapatos/custom';
 import { conditions as c, Queryable, select, update, upsert } from 'zapatos/db';
+import { CommonErrors } from '../../../common';
 import { MediaInitializeResult, OrchestrationData } from '../../../ingest';
 import { buildDisplayTitle, DefaultIngestEntityProcessor } from '../../common';
 
@@ -140,16 +142,27 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
     await this.dropAddLicenseRelations(
       'seasons_licenses',
       'seasons_licenses_countries',
-      season.licenses?.map((r) => ({
-        insertable: {
-          season_id: content.entity_id,
-          license_start: r.start,
-          license_end: r.end,
-          is_downloadable: r.is_downloadable,
-          downloaded_asset_lifespan: r.downloaded_asset_lifespan,
-        },
-        countries: r.countries,
-      })),
+      season.licenses?.map((r) => {
+        if (
+          !isNullOrWhitespace(r.start) &&
+          !isNullOrWhitespace(r.end) &&
+          r.start > r.end
+        ) {
+          throw new MosaicError(
+            CommonErrors.LicenseStartDateCannotBeAfterEndDate,
+          );
+        }
+        return {
+          insertable: {
+            season_id: content.entity_id,
+            license_start: r.start,
+            license_end: r.end,
+            is_downloadable: r.is_downloadable,
+            downloaded_asset_lifespan: r.downloaded_asset_lifespan,
+          },
+          countries: r.countries,
+        };
+      }),
       { season_id: content.entity_id },
       (licenseId) => ({
         seasons_license_id: licenseId,

@@ -1,4 +1,5 @@
 import { nullable, optional } from '@axinom/mosaic-db-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
   EpisodeIngestData,
   IngestItem,
@@ -16,6 +17,7 @@ import {
   update,
   upsert,
 } from 'zapatos/db';
+import { CommonErrors } from '../../../common';
 import { MediaInitializeResult, OrchestrationData } from '../../../ingest';
 import { buildDisplayTitle, DefaultIngestEntityProcessor } from '../../common';
 
@@ -164,16 +166,27 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
     await this.dropAddLicenseRelations(
       'episodes_licenses',
       'episodes_licenses_countries',
-      episode.licenses?.map((r) => ({
-        insertable: {
-          episode_id: content.entity_id,
-          license_start: r.start,
-          license_end: r.end,
-          is_downloadable: r.is_downloadable,
-          downloaded_asset_lifespan: r.downloaded_asset_lifespan,
-        },
-        countries: r.countries,
-      })),
+      episode.licenses?.map((r) => {
+        if (
+          !isNullOrWhitespace(r.start) &&
+          !isNullOrWhitespace(r.end) &&
+          r.start > r.end
+        ) {
+          throw new MosaicError(
+            CommonErrors.LicenseStartDateCannotBeAfterEndDate,
+          );
+        }
+        return {
+          insertable: {
+            episode_id: content.entity_id,
+            license_start: r.start,
+            license_end: r.end,
+            is_downloadable: r.is_downloadable,
+            downloaded_asset_lifespan: r.downloaded_asset_lifespan,
+          },
+          countries: r.countries,
+        };
+      }),
       { episode_id: content.entity_id },
       (licenseId) => ({
         episodes_license_id: licenseId,

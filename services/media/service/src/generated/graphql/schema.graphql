@@ -17547,6 +17547,14 @@ enum ErrorCodesEnum {
   The retrieved localizations are missing key properties. Please contact the service support.
   """
   MISSING_KEY_LOCALIZATION_PROPERTIES
+
+  """
+  Unable to add because of circular relationship between child collection and parent collection
+  """
+  CIRCULAR_COLLECTION_RELATION_NOT_ALLOWED
+
+  """License start date cannot be after license end date."""
+  LICENSE_START_DATE_CANNOT_BE_AFTER_END_DATE
 }
 
 """
