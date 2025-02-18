@@ -12,14 +12,8 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     title: 'Title',
     description: 'The title of the collection.',
     sort_index: 1,
-    field_validation_rules: [
-      {
-        type: 'REQUIRED',
-        settings: { isRequired: true },
-        message: 'Title is required.',
-        severity: 'ERROR',
-      },
-    ],
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'synopsis',
@@ -29,6 +23,7 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The synopsis of the collection.',
     sort_index: 2,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'description',
@@ -38,6 +33,7 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The description of the collection.',
     sort_index: 3,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'collection_cover_1x1',
@@ -68,6 +64,7 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The cover 1x1 image of the collection.',
     sort_index: 4,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'collection_cover_4x1',
@@ -98,6 +95,7 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The cover 4x1 image of the collection.',
     sort_index: 5,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'collection_clean_cover_1x1',
@@ -128,6 +126,7 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The clean cover 1x1 image of the collection.',
     sort_index: 6,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'collection_clean_cover_4x1',
@@ -158,6 +157,7 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The clean cover 4x1 image of the collection.',
     sort_index: 7,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'collection_list_1x1',
@@ -188,6 +188,7 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The list 1x1 image of the collection.',
     sort_index: 8,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'collection_list_15x16',
@@ -218,6 +219,7 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The list 15x16 image of the collection.',
     sort_index: 9,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
 ];
 

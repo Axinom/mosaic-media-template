@@ -51,19 +51,19 @@
       "$ref": "./common.json#/definitions/trailers"
     },
     "audio_languages": {
-      "description": "Array of audio languages available in the movie.",
+      "description": "Array of audio languages available in the TV show.",
       "$ref": "./common.json#/definitions/audio_languages"
     },
     "subtitle_languages": {
-      "description": "Array of subtitle languages available in the movie.",
+      "description": "Array of subtitle languages available in the TV show.",
       "$ref": "./common.json#/definitions/subtitle_languages"
     },
     "caption_languages": {
-      "description": "Array of caption languages available in the movie.",
+      "description": "Array of caption languages available in the TV show.",
       "$ref": "./common.json#/definitions/caption_languages"
     },
     "directors": {
-      "description": "Directors or Creators of the movie.",
+      "description": "Directors or Creators of the TV show.",
       "$ref": "./common.json#/definitions/directors"
     },
     "business_type": {
@@ -98,7 +98,7 @@
         "type": "object",
         "additionalProperties": false,
         "title": "tvshow_localization",
-        "required": ["is_default_locale", "language_tag", "title"],
+        "required": ["is_default_locale", "language_tag"],
         "properties": {
           "is_default_locale": {
             "type": "boolean",
@@ -109,7 +109,7 @@
             "description": "The locale for which the values are localized."
           },
           "title": {
-            "type": "string",
+            "type": ["string", "null"],
             "description": "The localized title of this TV show."
           },
           "description": {
@@ -119,6 +119,30 @@
           "synopsis": {
             "type": ["string", "null"],
             "description": "The localized synopsis of this TV show."
+          },
+          "tvshow_cover_1x1": {
+            "type": ["string", "null"],
+            "description": "Localized 1x1 cover image ID."
+          },
+          "tvshow_cover_16x9": {
+            "type": ["string", "null"],
+            "description": "Localized 16x9 cover image ID."
+          },
+          "tvshow_clean_cover_1x1": {
+            "type": ["string", "null"],
+            "description": "Localized 1x1 clean cover image ID."
+          },
+          "tvshow_clean_cover_16x9": {
+            "type": ["string", "null"],
+            "description": "Localized 16x9 clean cover image ID."
+          },
+          "tvshow_list_1x1": {
+            "type": ["string", "null"],
+            "description": "Localized 1x1 list image ID."
+          },
+          "tvshow_list_9x13": {
+            "type": ["string", "null"],
+            "description": "Localized 9x13 list image ID."
           }
         }
       }

@@ -69,4 +69,23 @@ export const CommonErrors = {
     message: 'License start date cannot be after license end date.',
     code: 'LICENSE_START_DATE_CANNOT_BE_AFTER_END_DATE',
   },
+  EntityPublishingIdNotFound: {
+    message: 'The publishing ID for %s with ID %s was not found.',
+    code: 'ENTITY_PUBLISHING_ID_NOT_FOUND',
+  },
+  CannotUpdateExternalIdForPublishedMedia: {
+    message:
+      'The External ID cannot be updated for %s with ID %s. Please unpublish the media or the entity that is referencing this media such as a Season, Episode or Collection first.',
+    code: 'CANNOT_UPDATE_EXTERNAL_ID_FOR_PUBLISHED_MEDIA',
+  },
+  CannotUpdateExternalId: {
+    message:
+      'The External ID cannot be updated for %s with ID %s. Only media with no External ID can be updated.',
+    code: 'CANNOT_UPDATE_EXTERNAL_ID',
+  },
+  CannotUpdateTitleForPublishedMedia: {
+    message:
+      'The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media.',
+    code: 'CANNOT_UPDATE_TITLE_FOR_PUBLISHED_MEDIA',
+  },
 } as const;

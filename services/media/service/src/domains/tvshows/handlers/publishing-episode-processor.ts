@@ -1,13 +1,21 @@
+import { MosaicError } from '@axinom/mosaic-service-common';
 import {
   EpisodePublishedEvent,
   EpisodePublishedEventSchema,
   PublishServiceMessagingSettings,
 } from 'media-messages';
 import * as Yup from 'yup';
-import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
+import {
+  parent,
+  Queryable,
+  select,
+  selectExactlyOne,
+  selectOne,
+} from 'zapatos/db';
+import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   atLeastOneString,
+  buildBDPublishingId,
   buildPublishingId,
   EntityPublishingProcessor,
   licensesValidation,
@@ -18,7 +26,10 @@ import {
   videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
-import { getEpisodeLocalizationsMetadata } from '../localization';
+import {
+  getEpisodeLocalizationsMetadata,
+  getEpisodeLocalizedImagesMetadata,
+} from '../localization';
 
 const episodeDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -47,6 +58,7 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
             },
           },
         ),
+        directors: select('episodes_directors', { episode_id: parent('id') }),
         trailers: select('episodes_trailers', {
           episode_id: parent('id'),
         }),
@@ -55,6 +67,9 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
         }),
         productionCountries: select('episodes_production_countries', {
           episode_id: parent('id'),
+        }),
+        season: selectOne('seasons', {
+          id: parent('season_id'),
         }),
       },
     },
@@ -75,10 +90,51 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     getEpisodeLocalizationsMetadata(config, authToken, episode.id.toString()),
   ]);
 
+  const imageLocalizations = await getEpisodeLocalizedImagesMetadata(
+    episode.id,
+    localizations,
+    config.imageServiceBaseUrl,
+    authToken,
+  );
+
+  const episodeImages = images;
+  const episodeImageValidations = imagesValidation;
+  imageLocalizations.forEach((localization) => {
+    episodeImages.push(
+      ...localization.result.map((image) => {
+        return {
+          ...image,
+          language_tag: localization.language_tag,
+        };
+      }),
+    );
+    episodeImageValidations.push(
+      ...localization.validation.map((validation) => {
+        return {
+          ...validation,
+          language_tag: localization.language_tag,
+        };
+      }),
+    );
+  });
+
+  const mainVideo = videos.filter((video) => (video.type = 'MAIN'))?.[0];
+  if (episode.publishing_id === undefined || episode.publishing_id === null) {
+    throw new MosaicError({
+      ...CommonErrors.EntityPublishingIdNotFound,
+      messageParams: ['TVShow', entityId],
+    });
+  }
+
   const snapshotJson: EpisodePublishedEvent = {
-    content_id: buildPublishingId('episodes', episode.id),
+    content_id: episode.publishing_id,
     season_id: episode.season_id
-      ? buildPublishingId('seasons', episode.season_id)
+      ? episode.season?.publishing_id ||
+        buildBDPublishingId(
+          'EPISODE',
+          episode.season!.title,
+          episode.season!.external_id!, // TODO: Can we improve this logic?
+        )
       : undefined,
     index: episode.index,
     original_title: episode.original_title ?? undefined,
@@ -95,8 +151,45 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
       end_time: license.license_end ?? undefined,
       countries: license.countries.map((country) => country.country_code ?? ''),
     })),
-    images,
+    images: episodeImages,
     videos,
+    directors: episode.directors.map((d) => d.name),
+    credits_start_time:
+      mainVideo?.cue_points?.filter(
+        (cue_point) => cue_point.cue_point_type_key === 'CREDIT_START',
+      )[0]?.time_in_seconds !== undefined
+        ? String(
+            mainVideo?.cue_points?.filter(
+              (cue_point) => cue_point.cue_point_type_key === 'CREDIT_START',
+            )[0]?.time_in_seconds,
+          )
+        : undefined,
+    intro_start_time:
+      mainVideo?.cue_points?.filter(
+        (cue_point) => cue_point.cue_point_type_key === 'INTRO_START',
+      )[0]?.time_in_seconds !== undefined
+        ? String(
+            mainVideo?.cue_points?.filter(
+              (cue_point) => cue_point.cue_point_type_key === 'INTRO_START',
+            )[0]?.time_in_seconds,
+          )
+        : undefined,
+    intro_end_time:
+      mainVideo?.cue_points?.filter(
+        (cue_point) => cue_point.cue_point_type_key === 'INTRO_END',
+      )[0]?.time_in_seconds !== undefined
+        ? String(
+            mainVideo?.cue_points?.filter(
+              (cue_point) => cue_point.cue_point_type_key === 'INTRO_END',
+            )[0]?.time_in_seconds,
+          )
+        : undefined,
+    length_in_seconds: mainVideo?.length_in_seconds,
+    extended_field: episode.extended_field ?? undefined,
+    rating: episode.rating ?? undefined,
+    age_rating: episode.age_rating ?? undefined,
+    asset_type: 1,
+    asset_subtype: 'Episode',
     localizations: localizations ?? [
       {
         is_default_locale: true,
@@ -111,7 +204,7 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
   return {
     result: snapshotJson,
     validation: [
-      ...imagesValidation,
+      ...episodeImageValidations,
       ...videosValidation,
       ...localizationsValidation,
     ],
@@ -133,7 +226,7 @@ const customEpisodeValidation = async (
 export const publishingEpisodeProcessor: EntityPublishingProcessor = {
   type: 'episodes',
   aggregator: episodeDataAggregator,
-  validator: customEpisodeValidation,
+  //validator: customEpisodeValidation,
   validationSchema: EpisodePublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.EpisodePublished,
   unpublishMessagingSettings:

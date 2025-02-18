@@ -1,24 +1,21 @@
+import { MosaicError } from '@axinom/mosaic-service-common';
 import {
   PublishServiceMessagingSettings,
   TvshowPublishedEvent,
   TvshowPublishedEventSchema,
 } from 'media-messages';
-import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
+import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
-  atLeastOneString,
   buildPublishingId,
   EntityPublishingProcessor,
-  licensesValidation,
-  requiredCover,
   SnapshotDataAggregator,
-  SnapshotValidationResult,
-  validateYupPublishSchema,
-  videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
-import { getTvshowLocalizationsMetadata } from '../localization';
+import {
+  getTvshowLocalizationsMetadata,
+  getTvShowLocalizedImagesMetadata,
+} from '../localization';
 
 const tvshowDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -47,6 +44,7 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
             },
           },
         ),
+        directors: select('tvshows_directors', { tvshow_id: parent('id') }),
         trailers: select('tvshows_trailers', {
           tvshow_id: parent('id'),
         }),
@@ -75,8 +73,43 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
     getTvshowLocalizationsMetadata(config, authToken, tvshow.id.toString()),
   ]);
 
+  const imageLocalizations = await getTvShowLocalizedImagesMetadata(
+    tvshow.id,
+    localizations,
+    config.imageServiceBaseUrl,
+    authToken,
+  );
+
+  const tvshowImages = images;
+  const tvshowImageValidations = imagesValidation;
+  imageLocalizations.forEach((localization) => {
+    tvshowImages.push(
+      ...localization.result.map((image) => {
+        return {
+          ...image,
+          language_tag: localization.language_tag,
+        };
+      }),
+    );
+    tvshowImageValidations.push(
+      ...localization.validation.map((validation) => {
+        return {
+          ...validation,
+          language_tag: localization.language_tag,
+        };
+      }),
+    );
+  });
+
+  if (tvshow.publishing_id === undefined || tvshow.publishing_id === null) {
+    throw new MosaicError({
+      ...CommonErrors.EntityPublishingIdNotFound,
+      messageParams: ['TVShow', entityId],
+    });
+  }
+
   const snapshotJson: TvshowPublishedEvent = {
-    content_id: buildPublishingId('tvshows', tvshow.id),
+    content_id: tvshow.publishing_id,
     original_title: tvshow.original_title ?? undefined,
     released: tvshow.released ?? undefined,
     studio: tvshow.studio ?? undefined,
@@ -91,8 +124,15 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
       end_time: license.license_end ?? undefined,
       countries: license.countries.map((country) => country.country_code ?? ''),
     })),
-    images,
+    images: tvshowImages,
     videos,
+    directors: tvshow.directors.map((d) => d.name),
+    business_type: tvshow.business_type ?? undefined,
+    extended_field: tvshow.extended_field ?? undefined,
+    rating: tvshow.rating ?? undefined,
+    age_rating: tvshow.age_rating ?? undefined,
+    asset_type: 6,
+    asset_subtype: 'TVShow',
     localizations: localizations ?? [
       {
         is_default_locale: true,
@@ -107,29 +147,16 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
   return {
     result: snapshotJson,
     validation: [
-      ...imagesValidation,
+      ...tvshowImageValidations,
       ...videosValidation,
       ...localizationsValidation,
     ],
   };
 };
 
-const customTvshowValidation = async (
-  json: unknown,
-): Promise<SnapshotValidationResult[]> => {
-  const yupSchema = Yup.object({
-    genre_ids: atLeastOneString,
-    images: requiredCover,
-    videos: videosValidation('TRAILER'),
-    licenses: licensesValidation(false),
-  });
-  return validateYupPublishSchema(json, yupSchema);
-};
-
 export const publishingTvshowProcessor: EntityPublishingProcessor = {
   type: 'tvshows',
   aggregator: tvshowDataAggregator,
-  validator: customTvshowValidation,
   validationSchema: TvshowPublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.TvshowPublished,
   unpublishMessagingSettings: PublishServiceMessagingSettings.TvshowUnpublished,

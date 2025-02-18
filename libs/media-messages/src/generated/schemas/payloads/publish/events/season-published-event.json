@@ -6,13 +6,11 @@
   "properties": {
     "content_id": {
       "description": "Content ID of a TV show season. Must match the pattern `^(season)-([a-zA-Z0-9_-]+)$`.",
-      "type": "string",
-      "pattern": "^(season)-([a-zA-Z0-9_-]+)$"
+      "type": "string"
     },
     "tvshow_id": {
       "description": "Content ID of a TV show. Must match the pattern `^(tvshow)-([a-zA-Z0-9_-]+)$`.",
-      "type": "string",
-      "pattern": "^(tvshow)-([a-zA-Z0-9_-]+)$"
+      "type": "string"
     },
     "index": {
       "description": "Season number",
@@ -135,6 +133,13 @@
             "description": "Height of the image in pixels.",
             "type": [
               "integer",
+              "null"
+            ]
+          },
+          "language_tag": {
+            "description": "Language tag for the image if the image is localized.",
+            "type": [
+              "string",
               "null"
             ]
           }
@@ -520,8 +525,7 @@
         "title": "season_localization",
         "required": [
           "is_default_locale",
-          "language_tag",
-          "title"
+          "language_tag"
         ],
         "properties": {
           "is_default_locale": {
@@ -533,7 +537,10 @@
             "description": "The locale for which the values are localized."
           },
           "title": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "The localized title of this season."
           },
           "description": {
@@ -549,6 +556,48 @@
               "null"
             ],
             "description": "The localized synopsis of this season."
+          },
+          "season_cover_1x1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 1x1 cover image ID."
+          },
+          "season_cover_16x9": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 16x9 cover image ID."
+          },
+          "season_clean_cover_1x1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 1x1 clean cover image ID."
+          },
+          "season_clean_cover_16x9": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 16x9 clean cover image ID."
+          },
+          "season_list_1x1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 1x1 list image ID."
+          },
+          "season_list_9x13": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 9x13 list image ID."
           }
         }
       }

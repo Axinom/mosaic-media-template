@@ -2179,7 +2179,8 @@ CREATE TABLE app_public.collection_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    language_tag text
 );
 
 
@@ -2237,7 +2238,7 @@ CREATE TABLE app_public.collection_localizations (
     collection_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL COLLATE pg_catalog."und-x-icu",
+    title text COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
@@ -2367,7 +2368,8 @@ CREATE TABLE app_public.episode_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    language_tag text
 );
 
 
@@ -2426,7 +2428,7 @@ CREATE TABLE app_public.episode_localizations (
     episode_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL COLLATE pg_catalog."und-x-icu",
+    title text COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
@@ -2757,7 +2759,8 @@ CREATE TABLE app_public.movie_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    language_tag text
 );
 
 
@@ -2816,7 +2819,7 @@ CREATE TABLE app_public.movie_localizations (
     movie_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL COLLATE pg_catalog."und-x-icu",
+    title text COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );
@@ -3059,7 +3062,8 @@ CREATE TABLE app_public.season_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    language_tag text
 );
 
 
@@ -3120,7 +3124,7 @@ CREATE TABLE app_public.season_localizations (
     is_default_locale boolean NOT NULL,
     description text,
     synopsis text,
-    title text NOT NULL
+    title text
 );
 
 
@@ -3432,7 +3436,8 @@ CREATE TABLE app_public.tvshow_images (
     type text,
     path text,
     width integer,
-    height integer
+    height integer,
+    language_tag text
 );
 
 
@@ -3491,7 +3496,7 @@ CREATE TABLE app_public.tvshow_localizations (
     tvshow_id text,
     locale text NOT NULL,
     is_default_locale boolean NOT NULL,
-    title text NOT NULL COLLATE pg_catalog."und-x-icu",
+    title text COLLATE pg_catalog."und-x-icu",
     description text,
     synopsis text
 );

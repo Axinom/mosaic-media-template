@@ -1,24 +1,21 @@
+import { MosaicError } from '@axinom/mosaic-service-common';
 import {
   MoviePublishedEvent,
   MoviePublishedEventSchema,
   PublishServiceMessagingSettings,
 } from 'media-messages';
-import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
+import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
-  atLeastOneString,
   buildPublishingId,
   EntityPublishingProcessor,
-  licensesValidation,
-  requiredCover,
   SnapshotDataAggregator,
-  SnapshotValidationResult,
-  validateYupPublishSchema,
-  videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
-import { getMovieLocalizationsMetadata } from '../localization';
+import {
+  getLocalizedImagesMetadata,
+  getMovieLocalizationsMetadata,
+} from '../localization';
 
 const movieDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -47,6 +44,7 @@ const movieDataAggregator: SnapshotDataAggregator = async (
             },
           },
         ),
+        directors: select('movies_directors', { movie_id: parent('id') }),
         trailers: select('movies_trailers', {
           movie_id: parent('id'),
         }),
@@ -75,8 +73,44 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     getMovieLocalizationsMetadata(config, authToken, movie.id.toString()),
   ]);
 
+  const imageLocalizations = await getLocalizedImagesMetadata(
+    movie.id,
+    localizations,
+    config.imageServiceBaseUrl,
+    authToken,
+  );
+
+  const movieImages = images;
+  const movieImageValidations = imagesValidation;
+  imageLocalizations.forEach((localization) => {
+    movieImages.push(
+      ...localization.result.map((image) => {
+        return {
+          ...image,
+          language_tag: localization.language_tag,
+        };
+      }),
+    );
+    movieImageValidations.push(
+      ...localization.validation.map((validation) => {
+        return {
+          ...validation,
+          language_tag: localization.language_tag,
+        };
+      }),
+    );
+  });
+
+  const mainVideo = videos.filter((video) => (video.type = 'MAIN'))?.[0];
+  if (movie.publishing_id === undefined || movie.publishing_id === null) {
+    throw new MosaicError({
+      ...CommonErrors.EntityPublishingIdNotFound,
+      messageParams: ['Movie', entityId],
+    });
+  }
+
   const snapshotJson: MoviePublishedEvent = {
-    content_id: buildPublishingId('movies', movie.id),
+    content_id: movie.publishing_id,
     original_title: movie.original_title ?? undefined,
     released: movie.released ?? undefined,
     studio: movie.studio ?? undefined,
@@ -91,8 +125,29 @@ const movieDataAggregator: SnapshotDataAggregator = async (
       end_time: license.license_end ?? undefined,
       countries: license.countries.map((country) => country.country_code ?? ''),
     })),
-    images,
+    images: movieImages,
     videos,
+    audio_languages: mainVideo?.audio_languages,
+    subtitle_languages: mainVideo?.subtitle_languages,
+    caption_languages: mainVideo?.caption_languages,
+    directors: movie.directors.map((d) => d.name),
+    business_type: movie.business_type ?? undefined,
+    credits_start_time:
+      mainVideo?.cue_points?.filter(
+        (cue_point) => cue_point.cue_point_type_key === 'CREDIT_START',
+      )[0]?.time_in_seconds !== undefined
+        ? String(
+            mainVideo?.cue_points?.filter(
+              (cue_point) => cue_point.cue_point_type_key === 'CREDIT_START',
+            )[0]?.time_in_seconds,
+          )
+        : undefined,
+    length_in_seconds: mainVideo?.length_in_seconds,
+    extended_field: movie.extended_field ?? undefined,
+    rating: movie.rating ?? undefined,
+    age_rating: movie.age_rating ?? undefined,
+    asset_type: 0,
+    asset_subtype: 'Movie',
     localizations: localizations ?? [
       {
         is_default_locale: true,
@@ -107,29 +162,18 @@ const movieDataAggregator: SnapshotDataAggregator = async (
   return {
     result: snapshotJson,
     validation: [
-      ...imagesValidation,
+      ...movieImageValidations,
       ...videosValidation,
       ...localizationsValidation,
     ],
   };
 };
 
-const customMovieValidation = async (
-  json: unknown,
-): Promise<SnapshotValidationResult[]> => {
-  const yupSchema = Yup.object({
-    genre_ids: atLeastOneString,
-    images: requiredCover,
-    videos: videosValidation('MAIN', 'TRAILER'),
-    licenses: licensesValidation(true),
-  });
-  return validateYupPublishSchema(json, yupSchema);
-};
-
 export const publishingMovieProcessor: EntityPublishingProcessor = {
   type: 'movies',
   aggregator: movieDataAggregator,
-  validator: customMovieValidation,
+  // No custom validation is done when publishing a movie. This is BeyondDutch specific requirement.
+  //validator: customMovieValidation,
   validationSchema: MoviePublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.MoviePublished,
   unpublishMessagingSettings: PublishServiceMessagingSettings.MovieUnpublished,

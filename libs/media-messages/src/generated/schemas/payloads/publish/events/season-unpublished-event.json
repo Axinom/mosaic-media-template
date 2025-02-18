@@ -6,8 +6,7 @@
   "properties": {
     "content_id": {
       "description": "Content ID of a TV show season. Must match the pattern `^(season)-([a-zA-Z0-9_-]+)$`.",
-      "type": "string",
-      "pattern": "^(season)-([a-zA-Z0-9_-]+)$"
+      "type": "string"
     }
   },
   "required": [

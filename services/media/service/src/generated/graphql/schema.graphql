@@ -17555,6 +17555,24 @@ enum ErrorCodesEnum {
 
   """License start date cannot be after license end date."""
   LICENSE_START_DATE_CANNOT_BE_AFTER_END_DATE
+
+  """The publishing ID for %s with ID %s was not found."""
+  ENTITY_PUBLISHING_ID_NOT_FOUND
+
+  """
+  The External ID cannot be updated for %s with ID %s. Please unpublish the media or the entity that is referencing this media such as a Season, Episode or Collection first.
+  """
+  CANNOT_UPDATE_EXTERNAL_ID_FOR_PUBLISHED_MEDIA
+
+  """
+  The External ID cannot be updated for %s with ID %s. Only media with no External ID can be updated.
+  """
+  CANNOT_UPDATE_EXTERNAL_ID
+
+  """
+  The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media.
+  """
+  CANNOT_UPDATE_TITLE_FOR_PUBLISHED_MEDIA
 }
 
 """

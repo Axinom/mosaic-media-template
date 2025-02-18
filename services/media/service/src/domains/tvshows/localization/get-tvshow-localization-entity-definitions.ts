@@ -17,14 +17,8 @@ export const TvshowFieldDefinitions: EntityFieldDefinition[] = [
     title: 'Title',
     description: 'The title of the TV show.',
     sort_index: 1,
-    field_validation_rules: [
-      {
-        type: 'REQUIRED',
-        settings: { isRequired: true },
-        message: 'Title is required.',
-        severity: 'ERROR',
-      },
-    ],
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'synopsis',
@@ -34,6 +28,7 @@ export const TvshowFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The synopsis of the TV show.',
     sort_index: 2,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'description',
@@ -43,6 +38,7 @@ export const TvshowFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The description of the TV show.',
     sort_index: 3,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'tvshow_cover_1x1',
@@ -73,6 +69,7 @@ export const TvshowFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The cover 1x1 image of the TV show.',
     sort_index: 4,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'tvshow_cover_16x9',
@@ -103,6 +100,7 @@ export const TvshowFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The cover 16x9 image of the TV show.',
     sort_index: 5,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'tvshow_clean_cover_1x1',
@@ -133,6 +131,7 @@ export const TvshowFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The clean cover 1x1 image of the TV show.',
     sort_index: 6,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'tvshow_clean_cover_16x9',
@@ -163,6 +162,7 @@ export const TvshowFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The clean cover 16x9 image of the TV show.',
     sort_index: 7,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'tvshow_list_1x1',
@@ -193,6 +193,7 @@ export const TvshowFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The list 1x1 image of the TV show.',
     sort_index: 8,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'tvshow_list_9x13',
@@ -223,6 +224,7 @@ export const TvshowFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The list 9x13 image of the TV show.',
     sort_index: 9,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
 ];
 
@@ -234,14 +236,8 @@ export const SeasonFieldDefinitions: EntityFieldDefinition[] = [
     title: 'Title',
     description: 'The title of the Season.',
     sort_index: 1,
-    field_validation_rules: [
-      {
-        type: 'REQUIRED',
-        settings: { isRequired: true },
-        message: 'Title is required.',
-        severity: 'ERROR',
-      },
-    ],
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'synopsis',
@@ -251,6 +247,7 @@ export const SeasonFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The synopsis of the season.',
     sort_index: 2,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'description',
@@ -260,6 +257,7 @@ export const SeasonFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The description of the season.',
     sort_index: 3,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'season_cover_1x1',
@@ -290,6 +288,7 @@ export const SeasonFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The cover 1x1 image of the season.',
     sort_index: 4,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'season_cover_16x9',
@@ -320,6 +319,7 @@ export const SeasonFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The cover 16x9 image of the season.',
     sort_index: 5,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'season_clean_cover_1x1',
@@ -350,6 +350,7 @@ export const SeasonFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The clean cover 1x1 image of the season.',
     sort_index: 6,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'season_clean_cover_16x9',
@@ -380,6 +381,7 @@ export const SeasonFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The clean cover 16x9 image of the season.',
     sort_index: 7,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'season_list_1x1',
@@ -410,6 +412,7 @@ export const SeasonFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The list 1x1 image of the season.',
     sort_index: 8,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'season_list_9x13',
@@ -440,6 +443,7 @@ export const SeasonFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The list 9x13 image of the season.',
     sort_index: 9,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
 ];
 
@@ -451,14 +455,8 @@ export const EpisodeFieldDefinitions: EntityFieldDefinition[] = [
     title: 'Title',
     description: 'The title of the episode.',
     sort_index: 1,
-    field_validation_rules: [
-      {
-        type: 'REQUIRED',
-        settings: { isRequired: true },
-        message: 'Title is required.',
-        severity: 'ERROR',
-      },
-    ],
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'synopsis',
@@ -468,6 +466,7 @@ export const EpisodeFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The synopsis of the episode.',
     sort_index: 2,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'description',
@@ -477,6 +476,7 @@ export const EpisodeFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The description of the episode.',
     sort_index: 3,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'episode_cover_1x1',
@@ -507,6 +507,7 @@ export const EpisodeFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The cover 1x1 image of the episode.',
     sort_index: 4,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'episode_cover_16x9',
@@ -537,6 +538,7 @@ export const EpisodeFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The cover 16x9 image of the episode.',
     sort_index: 5,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'episode_clean_cover_1x1',
@@ -567,6 +569,7 @@ export const EpisodeFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The clean cover 1x1 image of the episode.',
     sort_index: 6,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'episode_clean_cover_16x9',
@@ -597,6 +600,7 @@ export const EpisodeFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The clean cover 16x9 image of the episode.',
     sort_index: 7,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'episode_list_1x1',
@@ -627,6 +631,7 @@ export const EpisodeFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The list 1x1 image of the episode.',
     sort_index: 8,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'episode_list_9x13',
@@ -657,6 +662,7 @@ export const EpisodeFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The list 9x13 image of the episode.',
     sort_index: 9,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
 ];
 
@@ -676,6 +682,7 @@ export const TvshowGenreFieldDefinitions: EntityFieldDefinition[] = [
         severity: 'ERROR',
       },
     ],
+    approval_behavior: 'NOT_REQUIRED',
   },
 ];
 

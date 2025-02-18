@@ -1,24 +1,28 @@
+import { MosaicError } from '@axinom/mosaic-service-common';
 import {
   PublishServiceMessagingSettings,
   SeasonPublishedEvent,
   SeasonPublishedEventSchema,
 } from 'media-messages';
-import * as Yup from 'yup';
-import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
-import { Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
-  atLeastOneString,
+  parent,
+  Queryable,
+  select,
+  selectExactlyOne,
+  selectOne,
+} from 'zapatos/db';
+import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
+import {
+  buildBDPublishingId,
   buildPublishingId,
   EntityPublishingProcessor,
-  licensesValidation,
-  requiredCover,
   SnapshotDataAggregator,
-  SnapshotValidationResult,
-  validateYupPublishSchema,
-  videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
-import { getSeasonLocalizationsMetadata } from '../localization';
+import {
+  getSeasonLocalizationsMetadata,
+  getSeasonLocalizedImagesMetadata,
+} from '../localization';
 
 const seasonDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
@@ -47,6 +51,7 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
             },
           },
         ),
+        directors: select('seasons_directors', { season_id: parent('id') }),
         trailers: select('seasons_trailers', {
           season_id: parent('id'),
         }),
@@ -55,6 +60,9 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
         }),
         productionCountries: select('seasons_production_countries', {
           season_id: parent('id'),
+        }),
+        tvshow: selectOne('tvshows', {
+          id: parent('tvshow_id'),
         }),
       },
     },
@@ -75,11 +83,52 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
     getSeasonLocalizationsMetadata(config, authToken, season.id.toString()),
   ]);
 
+  const imageLocalizations = await getSeasonLocalizedImagesMetadata(
+    season.id,
+    localizations,
+    config.imageServiceBaseUrl,
+    authToken,
+  );
+
+  const seasonImages = images;
+  const seasonImageValidations = imagesValidation;
+  imageLocalizations.forEach((localization) => {
+    seasonImages.push(
+      ...localization.result.map((image) => {
+        return {
+          ...image,
+          language_tag: localization.language_tag,
+        };
+      }),
+    );
+    seasonImageValidations.push(
+      ...localization.validation.map((validation) => {
+        return {
+          ...validation,
+          language_tag: localization.language_tag,
+        };
+      }),
+    );
+  });
+
+  if (season.publishing_id === undefined || season.publishing_id === null) {
+    throw new MosaicError({
+      ...CommonErrors.EntityPublishingIdNotFound,
+      messageParams: ['Season', entityId],
+    });
+  }
+
   const snapshotJson: SeasonPublishedEvent = {
-    content_id: buildPublishingId('seasons', season.id),
+    content_id: season.publishing_id,
     tvshow_id: season.tvshow_id
-      ? buildPublishingId('tvshows', season.tvshow_id)
+      ? season.tvshow?.publishing_id ||
+        buildBDPublishingId(
+          'TVSHOW',
+          season.tvshow!.title,
+          season.tvshow!.external_id!, // TODO: Can we improve this logic?
+        )
       : undefined,
+    original_title: season.title,
     index: season.index,
     released: season.released ?? undefined,
     studio: season.studio ?? undefined,
@@ -94,8 +143,14 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
       end_time: license.license_end ?? undefined,
       countries: license.countries.map((country) => country.country_code ?? ''),
     })),
-    images,
+    images: seasonImages,
     videos,
+    directors: season.directors.map((d) => d.name),
+    extended_field: season.extended_field ?? undefined,
+    rating: season.rating ?? undefined,
+    age_rating: season.age_rating ?? undefined,
+    asset_type: 2,
+    asset_subtype: 'Season',
     localizations: localizations ?? [
       {
         is_default_locale: true,
@@ -110,29 +165,16 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
   return {
     result: snapshotJson,
     validation: [
-      ...imagesValidation,
+      ...seasonImageValidations,
       ...videosValidation,
       ...localizationsValidation,
     ],
   };
 };
 
-const customSeasonValidation = async (
-  json: unknown,
-): Promise<SnapshotValidationResult[]> => {
-  const yupSchema = Yup.object({
-    genre_ids: atLeastOneString,
-    images: requiredCover,
-    videos: videosValidation('TRAILER'),
-    licenses: licensesValidation(false),
-  });
-  return validateYupPublishSchema(json, yupSchema);
-};
-
 export const publishingSeasonProcessor: EntityPublishingProcessor = {
   type: 'seasons',
   aggregator: seasonDataAggregator,
-  validator: customSeasonValidation,
   validationSchema: SeasonPublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.SeasonPublished,
   unpublishMessagingSettings: PublishServiceMessagingSettings.SeasonUnpublished,

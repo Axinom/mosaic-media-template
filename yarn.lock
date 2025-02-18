@@ -377,10 +377,10 @@
     rascal "^14.0.1"
     uuid "^8.3.2"
 
-"@axinom/mosaic-messages@0.52.0-rc.2":
-  version "0.52.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-messages/-/mosaic-messages-0.52.0-rc.2.tgz#27a1b76a96690683d22078018068f663be23241b"
-  integrity sha512-7vRPtU8Xa5I41zrNCKAYuLluBzl/Lgc+CY0CXJZ1ygxSftl7h4Z6wAShrzP5YWo5m9wdZpf2A2Nk8M83iQoxbA==
+"@axinom/mosaic-messages@0.52.2":
+  version "0.52.2"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-messages/-/mosaic-messages-0.52.2.tgz#7253c3c5c8bba6bbc41bdc15a8227b0d508d88cf"
+  integrity sha512-q4umvX8sj9MrPPGvv3WQwUCsgzELpuls8yjcoWEfFMzl/IRrUQgvwRuNx5jJnEgKtsiFWA0H2AEobUayFnGPxg==
 
 "@axinom/mosaic-portal@0.36.2":
   version "0.36.2"

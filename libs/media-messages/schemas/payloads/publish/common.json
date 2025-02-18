@@ -5,8 +5,7 @@
   "definitions": {
     "movie_id": {
       "description": "Content ID of a movie. Must match the pattern`^(movie)-([a-zA-Z0-9_-]+)$.`",
-      "type": "string",
-      "pattern": "^(movie)-([a-zA-Z0-9_-]+)$"
+      "type": "string"
     },
     "movie_genre_id": {
       "description": "Content ID of a movie genre. Must match the pattern `^(movie_genre)-([a-zA-Z0-9_-]+)$`.",
@@ -15,8 +14,7 @@
     },
     "tvshow_id": {
       "description": "Content ID of a TV show. Must match the pattern `^(tvshow)-([a-zA-Z0-9_-]+)$`.",
-      "type": "string",
-      "pattern": "^(tvshow)-([a-zA-Z0-9_-]+)$"
+      "type": "string"
     },
     "tvshow_genre_id": {
       "description": "Content ID of a TV show genre. Must match the pattern `^(tvshow_genre)-([a-zA-Z0-9_-]+)$`.",
@@ -25,18 +23,15 @@
     },
     "season_id": {
       "description": "Content ID of a TV show season. Must match the pattern `^(season)-([a-zA-Z0-9_-]+)$`.",
-      "type": "string",
-      "pattern": "^(season)-([a-zA-Z0-9_-]+)$"
+      "type": "string"
     },
     "episode_id": {
       "description": "Content ID of a TV show episode. Must match the pattern `^(episode)-([a-zA-Z0-9_-]+)$`.",
-      "type": "string",
-      "pattern": "^(episode)-([a-zA-Z0-9_-]+)$"
+      "type": "string"
     },
     "collection_id": {
       "description": "Content ID of a collection. Must match the pattern `^(collection)-([a-zA-Z0-9_-]+)$`.",
-      "type": "string",
-      "pattern": "^(collection)-([a-zA-Z0-9_-]+)$"
+      "type": "string"
     },
     "tags": {
       "description": "Array of tags associated with the content.",
@@ -162,6 +157,10 @@
         "height": {
           "description": "Height of the image in pixels.",
           "type": ["integer", "null"]
+        },
+        "language_tag": {
+          "description": "Language tag for the image if the image is localized.",
+          "type": ["string", "null"]
         }
       },
       "required": ["type", "path"],

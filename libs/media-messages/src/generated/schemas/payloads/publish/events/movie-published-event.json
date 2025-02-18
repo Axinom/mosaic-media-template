@@ -6,8 +6,7 @@
   "properties": {
     "content_id": {
       "description": "Content ID of a movie. Must match the pattern`^(movie)-([a-zA-Z0-9_-]+)$.`",
-      "type": "string",
-      "pattern": "^(movie)-([a-zA-Z0-9_-]+)$"
+      "type": "string"
     },
     "original_title": {
       "description": "Original title of the movie.",
@@ -109,6 +108,13 @@
             "description": "Height of the image in pixels.",
             "type": [
               "integer",
+              "null"
+            ]
+          },
+          "language_tag": {
+            "description": "Language tag for the image if the image is localized.",
+            "type": [
+              "string",
               "null"
             ]
           }
@@ -546,8 +552,7 @@
         "title": "movie_localization",
         "required": [
           "is_default_locale",
-          "language_tag",
-          "title"
+          "language_tag"
         ],
         "properties": {
           "is_default_locale": {
@@ -559,7 +564,10 @@
             "description": "The locale for which the values are localized."
           },
           "title": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "The localized title of this movie."
           },
           "description": {
@@ -575,6 +583,48 @@
               "null"
             ],
             "description": "The localized synopsis of this movie."
+          },
+          "movie_cover_1x1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 1x1 cover image ID."
+          },
+          "movie_cover_16x9": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 16x9 cover image ID."
+          },
+          "movie_clean_cover_1x1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 1x1 clean cover image ID."
+          },
+          "movie_clean_cover_16x9": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 16x9 clean cover image ID."
+          },
+          "movie_list_1x1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 1x1 list image ID."
+          },
+          "movie_list_9x13": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Localized 9x13 list image ID."
           }
         }
       }

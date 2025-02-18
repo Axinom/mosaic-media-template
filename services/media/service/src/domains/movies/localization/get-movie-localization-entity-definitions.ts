@@ -15,14 +15,8 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     title: 'Title',
     description: 'The title of the movie.',
     sort_index: 1,
-    field_validation_rules: [
-      {
-        type: 'REQUIRED',
-        settings: { isRequired: true },
-        message: 'Title is required.',
-        severity: 'ERROR',
-      },
-    ],
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'synopsis',
@@ -32,6 +26,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The synopsis of the movie.',
     sort_index: 2,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'description',
@@ -41,6 +36,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The description of the movie.',
     sort_index: 3,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'movie_cover_1x1',
@@ -71,6 +67,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The cover 1x1 image of the movie.',
     sort_index: 4,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'movie_cover_16x9',
@@ -101,6 +98,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The cover 16x9 image of the movie.',
     sort_index: 5,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'movie_clean_cover_1x1',
@@ -131,6 +129,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The clean cover 1x1 image of the movie.',
     sort_index: 6,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'movie_clean_cover_16x9',
@@ -161,6 +160,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The clean cover 16x9 image of the movie.',
     sort_index: 7,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'movie_list_1x1',
@@ -191,6 +191,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The list 1x1 image of the movie.',
     sort_index: 8,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
   {
     field_name: 'movie_list_9x13',
@@ -221,6 +222,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     description: 'The list 9x13 image of the movie.',
     sort_index: 9,
     field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
 ];
 
@@ -232,14 +234,8 @@ export const MovieGenreFieldDefinitions: EntityFieldDefinition[] = [
     title: 'Title',
     description: 'The title of the movie genre.',
     sort_index: 1,
-    field_validation_rules: [
-      {
-        type: 'REQUIRED',
-        settings: { isRequired: true },
-        message: 'Title is required.',
-        severity: 'ERROR',
-      },
-    ],
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
   },
 ];
 
