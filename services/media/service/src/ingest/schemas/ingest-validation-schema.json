@@ -171,7 +171,7 @@
             "description": "Sort Order of the entity in the collection."
           },
           "type": {
-            "enum": ["MOVIE", "TVSHOW", "SEASON", "COLLECTION"],
+            "enum": ["MOVIE", "TVSHOW", "EPISODE", "COLLECTION"],
             "description": "Type of the entity"
           },
           "external_id": {

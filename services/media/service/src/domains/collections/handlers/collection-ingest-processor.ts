@@ -223,6 +223,18 @@ export class IngestCollectionProcessor extends DefaultIngestEntityProcessor {
             });
           }
           break;
+        case 'EPISODE':
+          const episode = await selectOne('episodes', {
+            external_id: entity.external_id,
+          }).run(ctx);
+          if (episode !== undefined) {
+            collectionRelationsInsertable.push({
+              sort_order: entity.sort_order,
+              collection_id: collectionId,
+              episode_id: episode.id,
+            });
+          }
+          break;
         case 'COLLECTION':
           const collection = await selectOne('collections', {
             external_id: entity.external_id,
