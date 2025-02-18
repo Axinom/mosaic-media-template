@@ -104,6 +104,10 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
   ): Promise<void> {
     const episode = content.item.data as EpisodeIngestData;
 
+    const parentSeason = await selectOne('seasons', {
+      external_id: episode.parent_external_id,
+    }).run(ctx);
+
     await update(
       'episodes',
       {
@@ -111,6 +115,7 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
         external_id: content.item.external_id,
         title: episode.title?.trim(),
         index: episode.index,
+        season_id: parentSeason?.id,
         ...nullable(episode.original_title, (val) => ({
           original_title: val?.trim(),
         })),

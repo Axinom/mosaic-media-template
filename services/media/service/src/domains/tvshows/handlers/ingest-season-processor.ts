@@ -8,7 +8,14 @@ import {
   VideoMessageContext,
 } from 'media-messages';
 import { IngestItemTypeEnum } from 'zapatos/custom';
-import { conditions as c, Queryable, select, update, upsert } from 'zapatos/db';
+import {
+  conditions as c,
+  Queryable,
+  select,
+  selectOne,
+  update,
+  upsert,
+} from 'zapatos/db';
 import { CommonErrors } from '../../../common';
 import { MediaInitializeResult, OrchestrationData } from '../../../ingest';
 import { buildDisplayTitle, DefaultIngestEntityProcessor } from '../../common';
@@ -83,12 +90,18 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
     ingestItemId?: number,
   ): Promise<void> {
     const season = content.item.data as SeasonIngestData;
+
+    const parentTvShow = await selectOne('tvshows', {
+      external_id: season.parent_external_id,
+    }).run(ctx);
+
     await update(
       'seasons',
       {
         ...optional(ingestItemId, (val) => ({ ingest_correlation_id: val })),
         external_id: content.item.external_id,
         index: season.index,
+        tvshow_id: parentTvShow?.id,
         ...nullable(season.synopsis, (val) => ({ synopsis: val?.trim() })),
         ...nullable(season.description, (val) => ({
           description: val?.trim(),
