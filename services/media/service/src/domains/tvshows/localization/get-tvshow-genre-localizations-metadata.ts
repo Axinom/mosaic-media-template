@@ -43,13 +43,21 @@ export const getTvshowGenreLocalizationsMetadata = async (
         LOCALIZATION_TVSHOW_GENRE_TYPE,
       );
     return {
-      result: validateLocalizations<GqlTvshowGenreLocalization>(
-        localizations,
-      )?.map((l) => ({
-        is_default_locale: l[LOCALIZATION_IS_DEFAULT_LOCALE],
-        language_tag: l[LOCALIZATION_LANGUAGE_TAG],
-        title: l.title,
-      })),
+      result: validateLocalizations<GqlTvshowGenreLocalization>(localizations)
+        ?.map((l) => ({
+          is_default_locale: l[LOCALIZATION_IS_DEFAULT_LOCALE],
+          language_tag: l[LOCALIZATION_LANGUAGE_TAG],
+          title: l.title,
+        })) // If there are locales with no values set for any of its fields, we filter them out
+        ?.filter(
+          (loc) =>
+            loc.is_default_locale ||
+            Object.entries(loc)
+              .filter(
+                ([key]) => !['is_default_locale', 'language_tag'].includes(key),
+              )
+              .some(([_, value]) => value !== null && value !== undefined),
+        ),
       validation: mapLocalizationValidationMessages(
         validation,
         ({ locale, fieldName, message }: GqlLocalizationValidationMessage) =>

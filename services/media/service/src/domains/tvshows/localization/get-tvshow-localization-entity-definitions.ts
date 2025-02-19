@@ -674,14 +674,7 @@ export const TvshowGenreFieldDefinitions: EntityFieldDefinition[] = [
     title: 'Title',
     description: 'The title of the TV show genre.',
     sort_index: 1,
-    field_validation_rules: [
-      {
-        type: 'REQUIRED',
-        settings: { isRequired: true },
-        message: 'Title is required.',
-        severity: 'ERROR',
-      },
-    ],
+    field_validation_rules: [],
     approval_behavior: 'NOT_REQUIRED',
   },
 ];
