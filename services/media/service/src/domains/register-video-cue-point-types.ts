@@ -7,6 +7,7 @@ import { ClientBase } from 'pg';
 import { Config, requestServiceAccountToken } from '../common';
 
 export const videoCuePointTypes = [
+  { key: 'INTRO_START', title: 'Intro Start' },
   { key: 'INTRO_FINISH', title: 'Intro Finish' },
   { key: 'CREDIT_START', title: 'Credit Start' },
   { key: 'CREDIT_FINISH', title: 'Credit Finish' },
