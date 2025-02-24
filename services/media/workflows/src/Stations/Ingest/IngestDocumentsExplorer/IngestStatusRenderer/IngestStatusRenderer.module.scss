@@ -1,10 +1,13 @@
 .statusContainer { 
   display: grid;
-  grid-template-columns: auto auto;
+  gap: 5px;
+  grid: 1fr/25px 1fr;
   align-items: center;
+
   .icon {
     width: 25px;
   }
+  
   .label {
     white-space: nowrap;
     text-overflow: ellipsis;
