@@ -14,7 +14,6 @@ import { FormikErrors } from 'formik';
 import moment, { utc } from 'moment';
 import React, { useContext, useEffect, useMemo } from 'react';
 import { DragDropContext, Draggable } from 'react-beautiful-dnd';
-import { useParams } from 'react-router';
 import { ProgramBreakType } from '../../../../generated/graphql';
 import { PortalContext } from '../../../../store/portal-contex';
 import { routes } from '../../routes';
@@ -25,6 +24,7 @@ import {
   ProgramCuePointProps,
   ProgramProps,
 } from '../ProgramManagement.types';
+import { ProgramManagementContext } from '../ProgramManagementProvider/ProgramManagementProvider';
 import classes from './Program.module.scss';
 
 export const Program: React.FC<ProgramProps> = ({
@@ -46,10 +46,8 @@ export const Program: React.FC<ProgramProps> = ({
   onChange,
   onToggle,
 }) => {
-  const { playlistId, channelId } = useParams<{
-    channelId: string;
-    playlistId: string;
-  }>();
+  const { playlistId, channelId } = useContext(ProgramManagementContext);
+
   const { programCuePoints: cpErrors, ...rest } = errors;
   const errMsg = (Object.values(rest) as string[]).join(', ');
   const programLocalizationPath = getLocalizationEntryPoint('program');
@@ -113,7 +111,7 @@ export const Program: React.FC<ProgramProps> = ({
   let cumulativeCuePointDurations = 0;
 
   // Calculate start times for cuepoints
-  for (let i = 0; i < programCuePoints?.nodes?.length ?? []; i++) {
+  for (let i = 0; i < programCuePoints?.nodes?.length; i++) {
     let totalCuePointDuration = 0;
     const node = programCuePoints?.nodes[i];
     if (node?.cuePointSchedules?.nodes?.length) {

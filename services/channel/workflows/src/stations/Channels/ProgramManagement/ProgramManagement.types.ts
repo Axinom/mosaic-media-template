@@ -190,10 +190,18 @@ export interface ProgramManagementContextMetadata {
 }
 
 export interface ProgramManagementContextProps {
+  channelId: string;
+  playlistId: string;
   allProviders: FastProviderData[];
   providerTypeMap: ProgramMap;
   metadata: ProgramManagementContextMetadata;
   updateMetadata: (value: ProgramManagementContextMetadata) => void;
+}
+
+export interface ProgramManagementProviderProps
+  extends ProgramManagementContextMetadata {
+  channelId: string;
+  playlistId: string;
 }
 
 export type ProgramEntity = Pick<

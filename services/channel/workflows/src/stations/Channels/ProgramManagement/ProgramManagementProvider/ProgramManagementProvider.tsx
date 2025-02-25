@@ -4,6 +4,7 @@ import {
   FastProviderData,
   ProgramManagementContextMetadata,
   ProgramManagementContextProps,
+  ProgramManagementProviderProps,
   ProgramMap,
 } from '../ProgramManagement.types';
 
@@ -16,6 +17,8 @@ const defaultMetadata: ProgramManagementContextMetadata = {
 
 export const ProgramManagementContext =
   React.createContext<ProgramManagementContextProps>({
+    channelId: '',
+    playlistId: '',
     metadata: defaultMetadata,
     updateMetadata: () => defaultMetadata,
     allProviders: [],
@@ -24,8 +27,10 @@ export const ProgramManagementContext =
 
 // Responsible for passing metadata to the info panel and all provider info to form
 export const ProgramManagementProvider = ({
+  channelId,
+  playlistId,
   children,
-}: PropsWithChildren<ProgramManagementContextMetadata>): JSX.Element => {
+}: PropsWithChildren<ProgramManagementProviderProps>): JSX.Element => {
   const allProviders = useRef<FastProviderData[]>(
     getProviders('fast-provider') ?? [],
   );
@@ -47,6 +52,8 @@ export const ProgramManagementProvider = ({
   return (
     <ProgramManagementContext.Provider
       value={{
+        channelId,
+        playlistId,
         metadata,
         updateMetadata,
         allProviders: allProviders.current,

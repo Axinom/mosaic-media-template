@@ -298,7 +298,7 @@ export const ProgramManagementForm: React.FC<ProgramManagementFormProps> = ({
   );
 
   return (
-    <ProgramManagementProvider>
+    <ProgramManagementProvider channelId={channelId} playlistId={playlistId}>
       <Details<FormData>
         defaultTitle="Programs"
         initialData={{
