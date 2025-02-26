@@ -17,6 +17,37 @@ import {
   getMovieLocalizationsMetadata,
 } from '../localization';
 
+const applyImageFallbacks = (images: any[]) => {
+  const primaryToSecondaryMap = {
+    MOVIE_COVER: ['MOVIE_COVER_1x1', 'MOVIE_COVER_16x9'],
+    MOVIE_CLEAN_COVER: ['MOVIE_CLEAN_COVER_1x1', 'MOVIE_CLEAN_COVER_16x9'],
+    MOVIE_LIST: ['MOVIE_LIST_1x1', 'MOVIE_LIST_9x13'],
+  };
+
+  const result = [...images];
+
+  Object.entries(primaryToSecondaryMap).forEach(([primary, secondaries]) => {
+    const primaryImage = images.find((img) => img.type === primary);
+    if (primaryImage) {
+      secondaries.forEach((secondary) => {
+        const hasSecondary = images.some((img) => img.type === secondary);
+        if (!hasSecondary) {
+          result.push({
+            ...primaryImage,
+            type: secondary,
+          });
+        }
+      });
+    }
+  });
+
+  // Filter out primary image types
+  return result.filter(
+    (img) =>
+      !['MOVIE_COVER', 'MOVIE_CLEAN_COVER', 'MOVIE_LIST'].includes(img.type),
+  );
+};
+
 const movieDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
   authToken: string,
@@ -80,11 +111,13 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     authToken,
   );
 
-  const movieImages = images;
+  const movieImages = applyImageFallbacks(images);
+
   const movieImageValidations = imagesValidation;
   imageLocalizations.forEach((localization) => {
+    const localizedImages = applyImageFallbacks(localization.result);
     movieImages.push(
-      ...localization.result.map((image) => {
+      ...localizedImages.map((image) => {
         return {
           ...image,
           language_tag: localization.language_tag,
@@ -95,7 +128,6 @@ const movieDataAggregator: SnapshotDataAggregator = async (
       ...localization.validation.map((validation) => {
         return {
           ...validation,
-          language_tag: localization.language_tag,
         };
       }),
     );

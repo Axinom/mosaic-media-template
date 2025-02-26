@@ -35,17 +35,26 @@ export class LocalizableCollectionImageCreatedDbMessageHandler extends Localizab
   > {
     let fields = {};
     switch (image_type) {
+      case 'COLLECTION_COVER':
+        fields = { collection_cover: image_id };
+        break;
       case 'COLLECTION_COVER_1x1':
         fields = { collection_cover_1x1: image_id };
         break;
       case 'COLLECTION_COVER_4x1':
         fields = { collection_cover_4x1: image_id };
         break;
+      case 'COLLECTION_CLEAN_COVER':
+        fields = { collection_clean_cover: image_id };
+        break;
       case 'COLLECTION_CLEAN_COVER_1x1':
         fields = { collection_clean_cover_1x1: image_id };
         break;
       case 'COLLECTION_CLEAN_COVER_4x1':
         fields = { collectionclean_cover_4x1: image_id };
+        break;
+      case 'COLLECTION_LIST':
+        fields = { collection_list: image_id };
         break;
       case 'COLLECTION_LIST_1x1':
         fields = { collection_list_1x1: image_id };
@@ -85,17 +94,26 @@ export class LocalizableCollectionImageUpdatedDbMessageHandler extends Localizab
   > {
     let fields = {};
     switch (image_type) {
+      case 'COLLECTION_COVER':
+        fields = { collection_cover: image_id };
+        break;
       case 'COLLECTION_COVER_1x1':
         fields = { collection_cover_1x1: image_id };
         break;
       case 'COLLECTION_COVER_4x1':
         fields = { collection_cover_4x1: image_id };
         break;
+      case 'COLLECTION_CLEAN_COVER':
+        fields = { collection_clean_cover: image_id };
+        break;
       case 'COLLECTION_CLEAN_COVER_1x1':
         fields = { collection_clean_cover_1x1: image_id };
         break;
       case 'COLLECTION_CLEAN_COVER_4x1':
         fields = { collection_clean_cover_4x1: image_id };
+        break;
+      case 'COLLECTION_LIST':
+        fields = { collection_list: image_id };
         break;
       case 'COLLECTION_LIST_1x1':
         fields = { collection_list_1x1: image_id };
@@ -140,17 +158,26 @@ export class LocalizableCollectionImageDeletedDbMessageHandler extends Localizab
     } else {
       let fields = {};
       switch (image_type) {
+        case 'COLLECTION_COVER':
+          fields = { collection_cover: '' };
+          break;
         case 'COLLECTION_COVER_1x1':
           fields = { collection_cover_1x1: '' };
           break;
         case 'COLLECTION_COVER_4x1':
           fields = { collection_cover_4x1: '' };
           break;
+        case 'COLLECTION_CLEAN_COVER':
+          fields = { collection_clean_cover: '' };
+          break;
         case 'COLLECTION_CLEAN_COVER_1x1':
           fields = { collection_clean_cover_1x1: '' };
           break;
         case 'COLLECTION_CLEAN_COVER_4x1':
           fields = { collection_clean_cover_4x1: '' };
+          break;
+        case 'COLLECTION_LIST':
+          fields = { collection_list: '' };
           break;
         case 'COLLECTION_LIST_1x1':
           fields = { collection_list_1x1: '' };

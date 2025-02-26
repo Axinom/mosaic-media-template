@@ -602,7 +602,7 @@ CREATE FUNCTION app_hidden.localizable_collection_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,collection_cover_1x1,collection_cover_4x1,collection_clean_cover_1x1,collection_clean_cover_4x1,collection_list_1x1,collection_list_15x16', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,collection_cover,collection_cover_1x1,collection_cover_4x1,collection_clean_cover,collection_clean_cover_1x1,collection_clean_cover_4x1,collection_list,collection_list_1x1,collection_list_15x16', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -630,7 +630,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,collection_cover_1x1,collection_cover_4x1,collection_clean_cover_1x1,collection_clean_cover_4x1,collection_list_1x1,collection_list_15x16', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,collection_cover,collection_cover_1x1,collection_cover_4x1,collection_clean_cover,collection_clean_cover_1x1,collection_clean_cover_4x1,collection_list,collection_list_1x1,collection_list_15x16', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -772,7 +772,7 @@ CREATE FUNCTION app_hidden.localizable_episode_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,episode_cover_1x1,episode_cover_16x9,episode_clean_cover_1x1,episode_clean_cover_16x9,episode_list_1x1,episode_list_9x13,season_id', ',') || string_to_array('id,index,season_id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,episode_cover,episode_cover_1x1,episode_cover_16x9,episode_clean_cover,episode_clean_cover_1x1,episode_clean_cover_16x9,episode_list,episode_list_1x1,episode_list_9x13,season_id', ',') || string_to_array('id,index,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -800,7 +800,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id,index,season_id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,episode_cover_1x1,episode_cover_16x9,episode_clean_cover_1x1,episode_clean_cover_16x9,episode_list_1x1,episode_list_9x13,season_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,episode_cover,episode_cover_1x1,episode_cover_16x9,episode_clean_cover,episode_clean_cover_1x1,episode_clean_cover_16x9,episode_list,episode_list_1x1,episode_list_9x13,season_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1027,7 +1027,7 @@ CREATE FUNCTION app_hidden.localizable_movie_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,movie_cover_1x1,movie_cover_16x9,movie_clean_cover_1x1,movie_clean_cover_16x9,movie_list_1x1,movie_list_9x13', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,movie_cover,movie_cover_1x1,movie_cover_16x9,movie_clean_cover,movie_clean_cover_1x1,movie_clean_cover_16x9,movie_list,movie_list_1x1,movie_list_9x13', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1055,7 +1055,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,movie_cover_1x1,movie_cover_16x9,movie_clean_cover_1x1,movie_clean_cover_16x9,movie_list_1x1,movie_list_9x13', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,movie_cover,movie_cover_1x1,movie_cover_16x9,movie_clean_cover,movie_clean_cover_1x1,movie_clean_cover_16x9,movie_list,movie_list_1x1,movie_list_9x13', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1197,7 +1197,7 @@ CREATE FUNCTION app_hidden.localizable_season_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,season_cover_1x1,season_cover_16x9,season_clean_cover_1x1,season_clean_cover_16x9,season_list_1x1,season_list_9x13,tvshow_id', ',') || string_to_array('id,index,title,tvshow_id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,season_cover,season_cover_1x1,season_cover_16x9,season_clean_cover,season_clean_cover_1x1,season_clean_cover_16x9,season_list,season_list_1x1,season_list_9x13,tvshow_id', ',') || string_to_array('id,index,title,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1225,7 +1225,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id,index,title,tvshow_id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,season_cover_1x1,season_cover_16x9,season_clean_cover_1x1,season_clean_cover_16x9,season_list_1x1,season_list_9x13,tvshow_id', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,season_cover,season_cover_1x1,season_cover_16x9,season_clean_cover,season_clean_cover_1x1,season_clean_cover_16x9,season_list,season_list_1x1,season_list_9x13,tvshow_id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -1452,7 +1452,7 @@ CREATE FUNCTION app_hidden.localizable_tvshow_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description,tvshow_cover_1x1,tvshow_cover_16x9,tvshow_clean_cover_1x1,tvshow_clean_cover_16x9,tvshow_list_1x1,tvshow_list_9x13', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,synopsis,description,tvshow_cover,tvshow_cover_1x1,tvshow_cover_16x9,tvshow_clean_cover,tvshow_clean_cover_1x1,tvshow_clean_cover_16x9,tvshow_list,tvshow_list_1x1,tvshow_list_9x13', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1480,7 +1480,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description,tvshow_cover_1x1,tvshow_cover_16x9,tvshow_clean_cover_1x1,tvshow_clean_cover_16x9,tvshow_list_1x1,tvshow_list_9x13', ',');
+	_localizable_fields text[] := string_to_array('title,synopsis,description,tvshow_cover,tvshow_cover_1x1,tvshow_cover_16x9,tvshow_clean_cover,tvshow_clean_cover_1x1,tvshow_clean_cover_16x9,tvshow_list,tvshow_list_1x1,tvshow_list_9x13', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;

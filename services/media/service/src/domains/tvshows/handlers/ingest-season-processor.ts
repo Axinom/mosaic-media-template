@@ -216,10 +216,13 @@ export class IngestSeasonProcessor extends DefaultIngestEntityProcessor {
     entityId: number,
     imageId: string,
     imageType:
+      | 'SEASON_COVER'
       | 'SEASON_COVER_1x1'
       | 'SEASON_COVER_16x9'
+      | 'SEASON_CLEAN_COVER'
       | 'SEASON_CLEAN_COVER_1x1'
       | 'SEASON_CLEAN_COVER_16x9'
+      | 'SEASON_LIST'
       | 'SEASON_LIST_1x1'
       | 'SEASON_LIST_9x13',
     dbContext: Queryable,

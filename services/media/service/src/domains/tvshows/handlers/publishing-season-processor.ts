@@ -24,6 +24,37 @@ import {
   getSeasonLocalizedImagesMetadata,
 } from '../localization';
 
+const applyImageFallbacks = (images: any[]) => {
+  const primaryToSecondaryMap = {
+    SEASON_COVER: ['SEASON_COVER_1x1', 'SEASON_COVER_16x9'],
+    SEASON_CLEAN_COVER: ['SEASON_CLEAN_COVER_1x1', 'SEASON_CLEAN_COVER_16x9'],
+    SEASON_LIST: ['SEASON_LIST_1x1', 'SEASON_LIST_9x13'],
+  };
+
+  const result = [...images];
+
+  Object.entries(primaryToSecondaryMap).forEach(([primary, secondaries]) => {
+    const primaryImage = images.find((img) => img.type === primary);
+    if (primaryImage) {
+      secondaries.forEach((secondary) => {
+        const hasSecondary = images.some((img) => img.type === secondary);
+        if (!hasSecondary) {
+          result.push({
+            ...primaryImage,
+            type: secondary,
+          });
+        }
+      });
+    }
+  });
+
+  // Filter out primary image types
+  return result.filter(
+    (img) =>
+      !['SEASON_COVER', 'SEASON_CLEAN_COVER', 'SEASON_LIST'].includes(img.type),
+  );
+};
+
 const seasonDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
   authToken: string,
@@ -90,11 +121,13 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
     authToken,
   );
 
-  const seasonImages = images;
+  const seasonImages = applyImageFallbacks(images);
+
   const seasonImageValidations = imagesValidation;
   imageLocalizations.forEach((localization) => {
+    const localizedImages = applyImageFallbacks(localization.result);
     seasonImages.push(
-      ...localization.result.map((image) => {
+      ...localizedImages.map((image) => {
         return {
           ...image,
           language_tag: localization.language_tag,
@@ -105,7 +138,6 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
       ...localization.validation.map((validation) => {
         return {
           ...validation,
-          language_tag: localization.language_tag,
         };
       }),
     );

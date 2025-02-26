@@ -20,6 +20,10 @@ export interface MovieLocalization {
    */
   synopsis?: string | null;
   /**
+   * Localized cover image ID.
+   */
+  movie_cover?: string | null;
+  /**
    * Localized 1x1 cover image ID.
    */
   movie_cover_1x1?: string | null;
@@ -28,6 +32,10 @@ export interface MovieLocalization {
    */
   movie_cover_16x9?: string | null;
   /**
+   * Localized clean cover image ID.
+   */
+  movie_clean_cover?: string | null;
+  /**
    * Localized 1x1 clean cover image ID.
    */
   movie_clean_cover_1x1?: string | null;
@@ -35,6 +43,10 @@ export interface MovieLocalization {
    * Localized 16x9 clean cover image ID.
    */
   movie_clean_cover_16x9?: string | null;
+  /**
+   * Localized list image ID.
+   */
+  movie_list?: string | null;
   /**
    * Localized 1x1 list image ID.
    */

@@ -35,17 +35,26 @@ export class LocalizableEpisodeImageCreatedDbMessageHandler extends LocalizableM
   > {
     let fields = {};
     switch (image_type) {
+      case 'EPISODE_COVER':
+        fields = { episode_cover: image_id };
+        break;
       case 'EPISODE_COVER_1x1':
         fields = { episode_cover_1x1: image_id };
         break;
       case 'EPISODE_COVER_16x9':
         fields = { episode_cover_16x9: image_id };
         break;
+      case 'EPISODE_CLEAN_COVER':
+        fields = { episode_clean_cover: image_id };
+        break;
       case 'EPISODE_CLEAN_COVER_1x1':
         fields = { episode_clean_cover_1x1: image_id };
         break;
       case 'EPISODE_CLEAN_COVER_16x9':
         fields = { episode_clean_cover_16x9: image_id };
+        break;
+      case 'EPISODE_LIST':
+        fields = { episode_list: image_id };
         break;
       case 'EPISODE_LIST_1x1':
         fields = { episode_list_1x1: image_id };
@@ -85,17 +94,26 @@ export class LocalizableEpisodeImageUpdatedDbMessageHandler extends LocalizableM
   > {
     let fields = {};
     switch (image_type) {
+      case 'EPISODE_COVER':
+        fields = { episode_cover: image_id };
+        break;
       case 'EPISODE_COVER_1x1':
         fields = { episode_cover_1x1: image_id };
         break;
       case 'EPISODE_COVER_16x9':
         fields = { episode_cover_16x9: image_id };
         break;
+      case 'EPISODE_CLEAN_COVER':
+        fields = { episode_clean_cover: image_id };
+        break;
       case 'EPISODE_CLEAN_COVER_1x1':
         fields = { episode_clean_cover_1x1: image_id };
         break;
       case 'EPISODE_CLEAN_COVER_16x9':
         fields = { episode_clean_cover_16x9: image_id };
+        break;
+      case 'EPISODE_LIST':
+        fields = { episode_list: image_id };
         break;
       case 'EPISODE_LIST_1x1':
         fields = { episode_list_1x1: image_id };
@@ -141,17 +159,26 @@ export class LocalizableEpisodeImageDeletedDbMessageHandler extends LocalizableM
     } else {
       let fields = {};
       switch (image_type) {
+        case 'EPISODE_COVER':
+          fields = { episode_cover: '' };
+          break;
         case 'EPISODE_COVER_1x1':
           fields = { episode_cover_1x1: '' };
           break;
         case 'EPISODE_COVER_16x9':
           fields = { episode_cover_16x9: '' };
           break;
+        case 'EPISODE_CLEAN_COVER':
+          fields = { episode_clean_cover: '' };
+          break;
         case 'EPISODE_CLEAN_COVER_1x1':
           fields = { episode_clean_cover_1x1: '' };
           break;
         case 'EPISODE_CLEAN_COVER_16x9':
           fields = { episode_clean_cover_16x9: '' };
+          break;
+        case 'EPISODE_LIST':
+          fields = { episode_list: '' };
           break;
         case 'EPISODE_LIST_1x1':
           fields = { episode_list_1x1: '' };

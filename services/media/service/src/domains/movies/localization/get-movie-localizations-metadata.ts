@@ -22,10 +22,13 @@ export interface GqlMovieLocalization extends GqlLocalization {
   title: string;
   description?: string | null;
   synopsis?: string | null;
+  movie_cover?: string | null;
   movie_cover_1x1?: string | null;
   movie_cover_16x9?: string | null;
+  movie_clean_cover?: string | null;
   movie_clean_cover_1x1?: string | null;
   movie_clean_cover_16x9?: string | null;
+  movie_list?: string | null;
   movie_list_1x1?: string | null;
   movie_list_9x13?: string | null;
 }
@@ -60,10 +63,13 @@ export const getMovieLocalizationsMetadata = async (
         title: l.title,
         description: l.description,
         synopsis: l.synopsis,
+        movie_cover: l.movie_cover,
         movie_cover_1x1: l.movie_cover_1x1,
         movie_cover_16x9: l.movie_cover_16x9,
+        movie_clean_cover: l.movie_clean_cover,
         movie_clean_cover_1x1: l.movie_clean_cover_1x1,
         movie_clean_cover_16x9: l.movie_clean_cover_16x9,
+        movie_list: l.movie_list,
         movie_list_1x1: l.movie_list_1x1,
         movie_list_9x13: l.movie_list_9x13,
       }))
@@ -107,6 +113,13 @@ export const getLocalizedImagesMetadata = async (
     localizationsGroupedByLocale,
   )) {
     const images: ImageJSONSelectable[] = [];
+    if (localization[0]?.movie_cover) {
+      images.push({
+        movie_id: movieId,
+        image_type: 'MOVIE_COVER',
+        image_id: localization[0].movie_cover,
+      });
+    }
     if (localization[0]?.movie_cover_1x1) {
       images.push({
         movie_id: movieId,
@@ -121,6 +134,13 @@ export const getLocalizedImagesMetadata = async (
         image_id: localization[0].movie_cover_16x9,
       });
     }
+    if (localization[0]?.movie_clean_cover) {
+      images.push({
+        movie_id: movieId,
+        image_type: 'MOVIE_CLEAN_COVER',
+        image_id: localization[0].movie_clean_cover,
+      });
+    }
     if (localization[0]?.movie_clean_cover_1x1) {
       images.push({
         movie_id: movieId,
@@ -133,6 +153,13 @@ export const getLocalizedImagesMetadata = async (
         movie_id: movieId,
         image_type: 'MOVIE_CLEAN_COVER_16x9',
         image_id: localization[0].movie_clean_cover_16x9,
+      });
+    }
+    if (localization[0]?.movie_list) {
+      images.push({
+        movie_id: movieId,
+        image_type: 'MOVIE_LIST',
+        image_id: localization[0].movie_list,
       });
     }
     if (localization[0]?.movie_list_1x1) {

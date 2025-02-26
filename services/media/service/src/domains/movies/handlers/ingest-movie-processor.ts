@@ -187,10 +187,13 @@ export class IngestMovieProcessor extends DefaultIngestEntityProcessor {
     entityId: number,
     imageId: string,
     imageType:
+      | 'MOVIE_COVER'
       | 'MOVIE_COVER_1x1'
       | 'MOVIE_COVER_16x9'
+      | 'MOVIE_CLEAN_COVER'
       | 'MOVIE_CLEAN_COVER_1x1'
       | 'MOVIE_CLEAN_COVER_16x9'
+      | 'MOVIE_LIST'
       | 'MOVIE_LIST_1x1'
       | 'MOVIE_LIST_9x13',
     dbContext: Queryable,

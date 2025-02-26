@@ -6625,6 +6625,15 @@ enum SeasonImageType {
 
   """Season List 1x1"""
   SEASON_LIST_1X1
+
+  """Season Cover"""
+  SEASON_COVER
+
+  """Season Cover"""
+  SEASON_CLEAN_COVER
+
+  """Season List"""
+  SEASON_LIST
 }
 
 """
@@ -7251,6 +7260,15 @@ enum EpisodeImageType {
 
   """Episode List 9x13"""
   EPISODE_LIST_9X13
+
+  """Episode Cover"""
+  EPISODE_COVER
+
+  """Episode Cover"""
+  EPISODE_CLEAN_COVER
+
+  """Episode List"""
+  EPISODE_LIST
 }
 
 """
@@ -8272,6 +8290,15 @@ enum TvshowImageType {
 
   """TV Show List 9x13"""
   TVSHOW_LIST_9X13
+
+  """TV Show Cover"""
+  TVSHOW_COVER
+
+  """TV Show Cover"""
+  TVSHOW_CLEAN_COVER
+
+  """TV Show List"""
+  TVSHOW_LIST
 }
 
 """
@@ -8569,6 +8596,15 @@ enum CollectionImageType {
 
   """Collection List 15x16"""
   COLLECTION_LIST_15X16
+
+  """Collection Cover"""
+  COLLECTION_COVER
+
+  """Collection Cover"""
+  COLLECTION_CLEAN_COVER
+
+  """Collection List"""
+  COLLECTION_LIST
 }
 
 """
@@ -8947,6 +8983,15 @@ enum MovieImageType {
 
   """Movie List 9x13"""
   MOVIE_LIST_9X13
+
+  """Movie Cover"""
+  MOVIE_COVER
+
+  """MovieClean Cover"""
+  MOVIE_CLEAN_COVER
+
+  """Movie List"""
+  MOVIE_LIST
 }
 
 """

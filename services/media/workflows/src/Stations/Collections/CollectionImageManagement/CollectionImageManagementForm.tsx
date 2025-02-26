@@ -36,10 +36,13 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
     CollectionImageType,
   ).sort((a, b) => {
     const order = [
+      'COLLECTION_COVER',
       'COLLECTION_COVER_1X1',
       'COLLECTION_COVER_4X1',
+      'COLLECTION_CLEAN_COVER',
       'COLLECTION_CLEAN_COVER_1X1',
       'COLLECTION_CLEAN_COVER_4X1',
+      'COLLECTION_LIST',
       'COLLECTION_LIST_1X1',
       'COLLECTION_LIST_15X16',
     ];

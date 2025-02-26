@@ -22,10 +22,13 @@ export interface GqlSeasonLocalization extends GqlLocalization {
   title: string;
   description?: string | null;
   synopsis?: string | null;
+  season_cover: string | null;
   season_cover_1x1?: string | null;
   season_cover_16x9?: string | null;
+  season_clean_cover?: string | null;
   season_clean_cover_1x1?: string | null;
   season_clean_cover_16x9?: string | null;
+  season_list?: string | null;
   season_list_1x1?: string | null;
   season_list_9x13?: string | null;
 }
@@ -60,10 +63,13 @@ export const getSeasonLocalizationsMetadata = async (
           title: l.title,
           description: l.description,
           synopsis: l.synopsis,
+          season_cover: l.season_cover,
           season_cover_1x1: l.season_cover_1x1,
           season_cover_16x9: l.season_cover_16x9,
+          season_clean_cover: l.season_clean_cover,
           season_clean_cover_1x1: l.season_clean_cover_1x1,
           season_clean_cover_16x9: l.season_clean_cover_16x9,
+          season_list: l.season_list,
           season_list_1x1: l.season_list_1x1,
           season_list_9x13: l.season_list_9x13,
         })) // If there are locales with no values set for any of its fields, we filter them out
@@ -102,6 +108,13 @@ export const getSeasonLocalizedImagesMetadata = async (
     localizationsGroupedByLocale,
   )) {
     const images: ImageJSONSelectable[] = [];
+    if (localization[0]?.season_cover) {
+      images.push({
+        season_id: seasonId,
+        image_type: 'SEASON_COVER',
+        image_id: localization[0].season_cover,
+      });
+    }
     if (localization[0]?.season_cover_1x1) {
       images.push({
         season_id: seasonId,
@@ -116,6 +129,13 @@ export const getSeasonLocalizedImagesMetadata = async (
         image_id: localization[0].season_cover_16x9,
       });
     }
+    if (localization[0]?.season_clean_cover) {
+      images.push({
+        season_id: seasonId,
+        image_type: 'SEASON_CLEAN_COVER',
+        image_id: localization[0].season_clean_cover,
+      });
+    }
     if (localization[0]?.season_clean_cover_1x1) {
       images.push({
         season_id: seasonId,
@@ -128,6 +148,13 @@ export const getSeasonLocalizedImagesMetadata = async (
         season_id: seasonId,
         image_type: 'SEASON_CLEAN_COVER_16x9',
         image_id: localization[0].season_clean_cover_16x9,
+      });
+    }
+    if (localization[0]?.season_list) {
+      images.push({
+        season_id: seasonId,
+        image_type: 'SEASON_LIST',
+        image_id: localization[0].season_list,
       });
     }
     if (localization[0]?.season_list_1x1) {

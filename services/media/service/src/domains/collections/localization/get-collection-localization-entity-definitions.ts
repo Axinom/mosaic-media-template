@@ -36,6 +36,37 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     approval_behavior: 'NOT_REQUIRED',
   },
   {
+    field_name: 'collection_cover',
+    field_type: 'STRING',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Collection Cover Image',
+          imageType: 'collection_cover',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
+    title: 'Cover',
+    description: 'The cover image of the collection.',
+    sort_index: 4,
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
+  },
+  {
     field_name: 'collection_cover_1x1',
     field_type: 'STRING',
     ui_field_type: 'CUSTOM',
@@ -98,6 +129,37 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     approval_behavior: 'NOT_REQUIRED',
   },
   {
+    field_name: 'collection_clean_cover',
+    field_type: 'STRING',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Collection Clean Cover Image',
+          imageType: 'collection_clean_cover',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
+    title: 'Clean Cover',
+    description: 'The clean cover image of the collection.',
+    sort_index: 6,
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
+  },
+  {
     field_name: 'collection_clean_cover_1x1',
     field_type: 'STRING',
     ui_field_type: 'CUSTOM',
@@ -156,6 +218,37 @@ export const CollectionFieldDefinitions: EntityFieldDefinition[] = [
     title: 'Clean Cover 4x1',
     description: 'The clean cover 4x1 image of the collection.',
     sort_index: 7,
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
+  },
+  {
+    field_name: 'collection_list',
+    field_type: 'STRING',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Collection List Image',
+          imageType: 'collection_list',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
+    title: 'List',
+    description: 'The list image of the collection.',
+    sort_index: 8,
     field_validation_rules: [],
     approval_behavior: 'NOT_REQUIRED',
   },

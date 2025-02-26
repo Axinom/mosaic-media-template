@@ -20,6 +20,10 @@ export interface CollectionLocalization {
    */
   synopsis?: string | null;
   /**
+   * Localized cover image ID.
+   */
+  collection_cover?: string | null;
+  /**
    * Localized 1x1 cover image ID.
    */
   collection_cover_1x1?: string | null;
@@ -28,6 +32,10 @@ export interface CollectionLocalization {
    */
   collection_cover_4x1?: string | null;
   /**
+   * Localized clean cover image ID.
+   */
+  collection_clean_cover?: string | null;
+  /**
    * Localized 1x1 clean cover image ID.
    */
   collection_clean_cover_1x1?: string | null;
@@ -35,6 +43,10 @@ export interface CollectionLocalization {
    * Localized 4x1 clean cover image ID.
    */
   collection_clean_cover_4x1?: string | null;
+  /**
+   * Localized list image ID.
+   */
+  collection_list?: string | null;
   /**
    * Localized 1x1 list image ID.
    */

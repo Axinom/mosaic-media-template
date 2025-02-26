@@ -34,10 +34,13 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
   const customSortedMovieImageTypes = Object.values(MovieImageType).sort(
     (a, b) => {
       const order = [
+        'MOVIE_COVER',
         'MOVIE_COVER_1X1',
         'MOVIE_COVER_16X9',
+        'MOVIE_CLEAN_COVER',
         'MOVIE_CLEAN_COVER_1X1',
         'MOVIE_CLEAN_COVER_16X9',
+        'MOVIE_LIST',
         'MOVIE_LIST_1X1',
         'MOVIE_LIST_9X13',
       ];
