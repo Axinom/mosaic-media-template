@@ -39,6 +39,37 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     approval_behavior: 'NOT_REQUIRED',
   },
   {
+    field_name: 'movie_cover',
+    field_type: 'STRING',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Movie Cover Image',
+          imageType: 'movie_cover',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
+    title: 'Cover',
+    description: 'The cover image of the movie.',
+    sort_index: 4,
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
+  },
+  {
     field_name: 'movie_cover_1x1',
     field_type: 'STRING',
     ui_field_type: 'CUSTOM',
@@ -97,6 +128,37 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     title: 'Cover 16x9',
     description: 'The cover 16x9 image of the movie.',
     sort_index: 5,
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
+  },
+  {
+    field_name: 'movie_clean_cover',
+    field_type: 'STRING',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Movie Clean Cover Image',
+          imageType: 'movie_clean_cover',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
+    title: 'Clean Cover',
+    description: 'The clean cover image of the movie.',
+    sort_index: 6,
     field_validation_rules: [],
     approval_behavior: 'NOT_REQUIRED',
   },
@@ -163,6 +225,37 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     approval_behavior: 'NOT_REQUIRED',
   },
   {
+    field_name: 'movie_list',
+    field_type: 'STRING',
+    ui_field_type: 'CUSTOM',
+    ui_field_custom_definition: {
+      view: {
+        component: 'single-image-select-field',
+        props: {
+          disabled: true,
+          inlineMode: true,
+        },
+      },
+      edit: {
+        component: 'single-image-select-field',
+        props: {
+          title: 'Select Localized Movie List Image',
+          imageType: 'movie_list',
+          inlineMode: true,
+        },
+        property_map: {
+          locale: 'defaultFilterTag',
+        },
+      },
+      fallback_type: 'TEXTBOX',
+    },
+    title: 'List',
+    description: 'The list image of the movie.',
+    sort_index: 8,
+    field_validation_rules: [],
+    approval_behavior: 'NOT_REQUIRED',
+  },
+  {
     field_name: 'movie_list_1x1',
     field_type: 'STRING',
     ui_field_type: 'CUSTOM',
@@ -177,7 +270,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
       edit: {
         component: 'single-image-select-field',
         props: {
-          title: 'Select Localized Movie Cover Image',
+          title: 'Select Localized Movie List 1x1 Image',
           imageType: 'movie_list_1x1',
           inlineMode: true,
         },
@@ -208,7 +301,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
       edit: {
         component: 'single-image-select-field',
         props: {
-          title: 'Select Localized Movie Cover Image',
+          title: 'Select Localized Movie List 9x13 Image',
           imageType: 'movie_list_9x13',
           inlineMode: true,
         },

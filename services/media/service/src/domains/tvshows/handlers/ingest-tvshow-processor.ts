@@ -190,10 +190,13 @@ export class IngestTvshowProcessor extends DefaultIngestEntityProcessor {
     entityId: number,
     imageId: string,
     imageType:
+      | 'TVSHOW_COVER'
       | 'TVSHOW_COVER_1x1'
       | 'TVSHOW_COVER_16x9'
+      | 'TVSHOW_CLEAN_COVER'
       | 'TVSHOW_CLEAN_COVER_1x1'
       | 'TVSHOW_CLEAN_COVER_16x9'
+      | 'TVSHOW_LIST'
       | 'TVSHOW_LIST_1x1'
       | 'TVSHOW_LIST_9x13',
     dbContext: Queryable,

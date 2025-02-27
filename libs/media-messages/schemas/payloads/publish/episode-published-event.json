@@ -130,6 +130,10 @@
             "type": ["string", "null"],
             "description": "The localized synopsis of this episode."
           },
+          "episode_cover": {
+            "type": ["string", "null"],
+            "description": "Localized cover image ID."
+          },
           "episode_cover_1x1": {
             "type": ["string", "null"],
             "description": "Localized 1x1 cover image ID."
@@ -138,6 +142,10 @@
             "type": ["string", "null"],
             "description": "Localized 16x9 cover image ID."
           },
+          "episode_clean_cover": {
+            "type": ["string", "null"],
+            "description": "Localized clean cover image ID."
+          },
           "episode_clean_cover_1x1": {
             "type": ["string", "null"],
             "description": "Localized 1x1 clean cover image ID."
@@ -145,6 +153,10 @@
           "episode_clean_cover_16x9": {
             "type": ["string", "null"],
             "description": "Localized 16x9 clean cover image ID."
+          },
+          "episode_list": {
+            "type": ["string", "null"],
+            "description": "Localized list image ID."
           },
           "episode_list_1x1": {
             "type": ["string", "null"],

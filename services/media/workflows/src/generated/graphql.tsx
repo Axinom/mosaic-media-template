@@ -678,14 +678,20 @@ export type CollectionFilter = {
 };
 
 export enum CollectionImageType {
+  /** Collection Cover */
+  CollectionCleanCover = 'COLLECTION_CLEAN_COVER',
   /** Collection Clean Cover 1x1 */
   CollectionCleanCover_1X1 = 'COLLECTION_CLEAN_COVER_1X1',
   /** Collection Clean Cover 4x1 */
   CollectionCleanCover_4X1 = 'COLLECTION_CLEAN_COVER_4X1',
+  /** Collection Cover */
+  CollectionCover = 'COLLECTION_COVER',
   /** Collection Cover 1x1 */
   CollectionCover_1X1 = 'COLLECTION_COVER_1X1',
   /** Collection Cover 4x1 */
   CollectionCover_4X1 = 'COLLECTION_COVER_4X1',
+  /** Collection List */
+  CollectionList = 'COLLECTION_LIST',
   /** Collection List 15x16 */
   CollectionList_15X16 = 'COLLECTION_LIST_15X16',
   /** Collection List 1x1 */
@@ -6322,14 +6328,20 @@ export type EpisodeFilter = {
 };
 
 export enum EpisodeImageType {
+  /** Episode Cover */
+  EpisodeCleanCover = 'EPISODE_CLEAN_COVER',
   /** Episode Clean Cover 16x9 */
   EpisodeCleanCover_16X9 = 'EPISODE_CLEAN_COVER_16X9',
   /** Episode Clean Cover 1x1 */
   EpisodeCleanCover_1X1 = 'EPISODE_CLEAN_COVER_1X1',
+  /** Episode Cover */
+  EpisodeCover = 'EPISODE_COVER',
   /** Episode Cover 16x9 */
   EpisodeCover_16X9 = 'EPISODE_COVER_16X9',
   /** Episode Cover 1x1 */
   EpisodeCover_1X1 = 'EPISODE_COVER_1X1',
+  /** Episode List */
+  EpisodeList = 'EPISODE_LIST',
   /** Episode List 1x1 */
   EpisodeList_1X1 = 'EPISODE_LIST_1X1',
   /** Episode List 9x13 */
@@ -7611,6 +7623,14 @@ export enum ErrorCodesEnum {
   AuthenticatedManagementSubjectNotFound = 'AUTHENTICATED_MANAGEMENT_SUBJECT_NOT_FOUND',
   /** A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue. */
   AuthorizationOptionsMisconfigured = 'AUTHORIZATION_OPTIONS_MISCONFIGURED',
+  /** The External ID cannot be updated for %s with ID %s. Only media with no External ID can be updated. */
+  CannotUpdateExternalId = 'CANNOT_UPDATE_EXTERNAL_ID',
+  /** The External ID cannot be updated for %s with ID %s. Please unpublish the media or the entity that is referencing this media such as a Season, Episode or Collection first. */
+  CannotUpdateExternalIdForPublishedMedia = 'CANNOT_UPDATE_EXTERNAL_ID_FOR_PUBLISHED_MEDIA',
+  /** The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media. */
+  CannotUpdateTitleForPublishedMedia = 'CANNOT_UPDATE_TITLE_FOR_PUBLISHED_MEDIA',
+  /** Unable to add because of circular relationship between child collection and parent collection */
+  CircularCollectionRelationNotAllowed = 'CIRCULAR_COLLECTION_RELATION_NOT_ALLOWED',
   /** Attempt to create a media snapshot has failed. */
   CreateSnapshotError = 'CREATE_SNAPSHOT_ERROR',
   /** A database operation has failed because of a lock timeout. */
@@ -7619,6 +7639,8 @@ export enum ErrorCodesEnum {
   DatabasePermissionsCheckFailed = 'DATABASE_PERMISSIONS_CHECK_FAILED',
   /** An expected and handled database constraint error has occurred. The actual message will have more information. */
   DatabaseValidationFailed = 'DATABASE_VALIDATION_FAILED',
+  /** The publishing ID for %s with ID %s was not found. */
+  EntityPublishingIdNotFound = 'ENTITY_PUBLISHING_ID_NOT_FOUND',
   /** This is a wrapper error for the original unhandled error of unsupported type. */
   ErrorWrapper = 'ERROR_WRAPPER',
   /** A GraphQL validation error has occurred. Please make sure that the GraphQL request is made with correct syntax or parameters. */
@@ -7635,6 +7657,8 @@ export enum ErrorCodesEnum {
   JwksError = 'JWKS_ERROR',
   /** Passed JWT is not a Mosaic End-User Token. Cannot be verified. */
   JwtIsNotMosaicToken = 'JWT_IS_NOT_MOSAIC_TOKEN',
+  /** License start date cannot be after license end date. */
+  LicenseStartDateCannotBeAfterEndDate = 'LICENSE_START_DATE_CANNOT_BE_AFTER_END_DATE',
   /** Malformed access token received */
   MalformedToken = 'MALFORMED_TOKEN',
   /** %s with ID '%s' was not found. */
@@ -10135,14 +10159,20 @@ export type MovieGenreToManyMoviesMovieGenreFilter = {
 };
 
 export enum MovieImageType {
+  /** MovieClean Cover */
+  MovieCleanCover = 'MOVIE_CLEAN_COVER',
   /** Movie Clean Cover 16x9 */
   MovieCleanCover_16X9 = 'MOVIE_CLEAN_COVER_16X9',
   /** MovieClean Cover 1x1 */
   MovieCleanCover_1X1 = 'MOVIE_CLEAN_COVER_1X1',
+  /** Movie Cover */
+  MovieCover = 'MOVIE_COVER',
   /** Movie Cover 16x9 */
   MovieCover_16X9 = 'MOVIE_COVER_16X9',
   /** Movie Cover 1x1 */
   MovieCover_1X1 = 'MOVIE_COVER_1X1',
+  /** Movie List */
+  MovieList = 'MOVIE_LIST',
   /** Movie List 1x1 */
   MovieList_1X1 = 'MOVIE_LIST_1X1',
   /** Movie List 9x13 */
@@ -14951,14 +14981,20 @@ export type SeasonFilter = {
 };
 
 export enum SeasonImageType {
+  /** Season Cover */
+  SeasonCleanCover = 'SEASON_CLEAN_COVER',
   /** Season Clean Cover 16x9 */
   SeasonCleanCover_16X9 = 'SEASON_CLEAN_COVER_16X9',
   /** Season Clean Cover 1x1 */
   SeasonCleanCover_1X1 = 'SEASON_CLEAN_COVER_1X1',
+  /** Season Cover */
+  SeasonCover = 'SEASON_COVER',
   /** Season Cover 16x9 */
   SeasonCover_16X9 = 'SEASON_COVER_16X9',
   /** Season Cover 1x1 */
   SeasonCover_1X1 = 'SEASON_COVER_1X1',
+  /** Season List */
+  SeasonList = 'SEASON_LIST',
   /** Season List 1x1 */
   SeasonList_1X1 = 'SEASON_LIST_1X1',
   /** Season List 9x13 */
@@ -17585,14 +17621,20 @@ export type TvshowGenreToManyTvshowsTvshowGenreFilter = {
 };
 
 export enum TvshowImageType {
+  /** TV Show Cover */
+  TvshowCleanCover = 'TVSHOW_CLEAN_COVER',
   /** TV Show Clean Cover 16x9 */
   TvshowCleanCover_16X9 = 'TVSHOW_CLEAN_COVER_16X9',
   /** TV Show Clean Cover 1x1 */
   TvshowCleanCover_1X1 = 'TVSHOW_CLEAN_COVER_1X1',
+  /** TV Show Cover */
+  TvshowCover = 'TVSHOW_COVER',
   /** TV Show Cover 16x9 */
   TvshowCover_16X9 = 'TVSHOW_COVER_16X9',
   /** TV Show Cover 1x1 */
   TvshowCover_1X1 = 'TVSHOW_COVER_1X1',
+  /** TV Show List */
+  TvshowList = 'TVSHOW_LIST',
   /** TV Show List 1x1 */
   TvshowList_1X1 = 'TVSHOW_LIST_1X1',
   /** TV Show List 9x13 */

@@ -20,6 +20,10 @@ export interface SeasonLocalization {
    */
   synopsis?: string | null;
   /**
+   * Localized cover image ID.
+   */
+  season_cover?: string | null;
+  /**
    * Localized 1x1 cover image ID.
    */
   season_cover_1x1?: string | null;
@@ -28,6 +32,10 @@ export interface SeasonLocalization {
    */
   season_cover_16x9?: string | null;
   /**
+   * Localized clean cover image ID.
+   */
+  season_clean_cover?: string | null;
+  /**
    * Localized 1x1 clean cover image ID.
    */
   season_clean_cover_1x1?: string | null;
@@ -35,6 +43,10 @@ export interface SeasonLocalization {
    * Localized 16x9 clean cover image ID.
    */
   season_clean_cover_16x9?: string | null;
+  /**
+   * Localized list image ID.
+   */
+  season_list?: string | null;
   /**
    * Localized 1x1 list image ID.
    */

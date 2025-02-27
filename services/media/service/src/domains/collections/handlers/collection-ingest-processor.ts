@@ -130,10 +130,13 @@ export class IngestCollectionProcessor extends DefaultIngestEntityProcessor {
     entityId: number,
     imageId: string,
     imageType:
+      | 'COLLECTION_COVER'
       | 'COLLECTION_COVER_1x1'
       | 'COLLECTION_COVER_4x1'
+      | 'COLLECTION_CLEAN_COVER'
       | 'COLLECTION_CLEAN_COVER_1x1'
       | 'COLLECTION_CLEAN_COVER_4x1'
+      | 'COLLECTION_LIST'
       | 'COLLECTION_LIST_15x16'
       | 'COLLECTION_LIST_1x1',
     dbContext: Queryable,

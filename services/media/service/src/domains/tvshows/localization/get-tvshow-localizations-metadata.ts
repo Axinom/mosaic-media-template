@@ -22,10 +22,13 @@ export interface GqlTvshowLocalization extends GqlLocalization {
   title: string;
   description?: string | null;
   synopsis?: string | null;
+  tvshow_cover?: string | null;
   tvshow_cover_1x1?: string | null;
   tvshow_cover_16x9?: string | null;
+  tvshow_clean_cover?: string | null;
   tvshow_clean_cover_1x1?: string | null;
   tvshow_clean_cover_16x9?: string | null;
+  tvshow_list?: string | null;
   tvshow_list_1x1?: string | null;
   tvshow_list_9x13?: string | null;
 }
@@ -60,10 +63,13 @@ export const getTvshowLocalizationsMetadata = async (
           title: l.title,
           description: l.description,
           synopsis: l.synopsis,
+          tvshow_cover: l.tvshow_cover,
           tvshow_cover_1x1: l.tvshow_cover_1x1,
           tvshow_cover_16x9: l.tvshow_cover_16x9,
+          tvshow_clean_cover: l.tvshow_clean_cover,
           tvshow_clean_cover_1x1: l.tvshow_clean_cover_1x1,
           tvshow_clean_cover_16x9: l.tvshow_clean_cover_16x9,
+          tvshow_list: l.tvshow_list,
           tvshow_list_1x1: l.tvshow_list_1x1,
           tvshow_list_9x13: l.tvshow_list_9x13,
         })) // If there are locales with no values set for any of its fields, we filter them out
@@ -102,6 +108,13 @@ export const getTvShowLocalizedImagesMetadata = async (
     localizationsGroupedByLocale,
   )) {
     const images: ImageJSONSelectable[] = [];
+    if (localization[0]?.tvshow_cover) {
+      images.push({
+        tvshow_id: tvshowId,
+        image_type: 'TVSHOW_COVER',
+        image_id: localization[0].tvshow_cover,
+      });
+    }
     if (localization[0]?.tvshow_cover_1x1) {
       images.push({
         tvshow_id: tvshowId,
@@ -116,6 +129,13 @@ export const getTvShowLocalizedImagesMetadata = async (
         image_id: localization[0].tvshow_cover_16x9,
       });
     }
+    if (localization[0]?.tvshow_clean_cover) {
+      images.push({
+        tvshow_id: tvshowId,
+        image_type: 'TVSHOW_CLEAN_COVER',
+        image_id: localization[0].tvshow_clean_cover,
+      });
+    }
     if (localization[0]?.tvshow_clean_cover_1x1) {
       images.push({
         tvshow_id: tvshowId,
@@ -128,6 +148,13 @@ export const getTvShowLocalizedImagesMetadata = async (
         tvshow_id: tvshowId,
         image_type: 'TVSHOW_CLEAN_COVER_16x9',
         image_id: localization[0].tvshow_clean_cover_16x9,
+      });
+    }
+    if (localization[0]?.tvshow_list) {
+      images.push({
+        tvshow_id: tvshowId,
+        image_type: 'TVSHOW_LIST',
+        image_id: localization[0].tvshow_list,
       });
     }
     if (localization[0]?.tvshow_list_1x1) {

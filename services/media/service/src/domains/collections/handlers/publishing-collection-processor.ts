@@ -20,6 +20,44 @@ import {
   getLocalizedCollectionImagesMetadata,
 } from '../localization';
 
+const applyImageFallbacks = (images: any[]) => {
+  const primaryToSecondaryMap = {
+    COLLECTION_COVER: ['COLLECTION_COVER_1x1', 'COLLECTION_COVER_4x1'],
+    COLLECTION_CLEAN_COVER: [
+      'COLLECTION_CLEAN_COVER_1x1',
+      'COLLECTION_CLEAN_COVER_4x1',
+    ],
+    COLLECTION_LIST: ['COLLECTION_LIST_1x1', 'COLLECTION_LIST_15x16'],
+  };
+
+  const result = [...images];
+
+  Object.entries(primaryToSecondaryMap).forEach(([primary, secondaries]) => {
+    const primaryImage = images.find((img) => img.type === primary);
+    if (primaryImage) {
+      secondaries.forEach((secondary) => {
+        const hasSecondary = images.some((img) => img.type === secondary);
+        if (!hasSecondary) {
+          result.push({
+            ...primaryImage,
+            type: secondary,
+          });
+        }
+      });
+    }
+  });
+
+  // Filter out primary image types
+  return result.filter(
+    (img) =>
+      ![
+        'COLLECTION_COVER',
+        'COLLECTION_CLEAN_COVER',
+        'COLLECTION_LIST',
+      ].includes(img.type),
+  );
+};
+
 const collectionDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
   authToken: string,
@@ -61,11 +99,13 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
     authToken,
   );
 
-  const collectionImages = images;
+  const collectionImages = applyImageFallbacks(images);
+
   const collectionImageValidations = imagesValidation;
   imageLocalizations.forEach((localization) => {
+    const localizedImages = applyImageFallbacks(localization.result);
     collectionImages.push(
-      ...localization.result.map((image) => {
+      ...localizedImages.map((image) => {
         return {
           ...image,
           language_tag: localization.language_tag,
@@ -76,7 +116,6 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
       ...localization.validation.map((validation) => {
         return {
           ...validation,
-          language_tag: localization.language_tag,
         };
       }),
     );

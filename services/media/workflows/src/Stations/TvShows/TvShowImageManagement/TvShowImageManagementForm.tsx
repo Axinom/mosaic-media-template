@@ -34,10 +34,13 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
   const customSortedTvshowImageTypes = Object.values(TvshowImageType).sort(
     (a, b) => {
       const order = [
+        'TVSHOW_COVER',
         'TVSHOW_COVER_1X1',
         'TVSHOW_COVER_16X9',
+        'TVSHOW_CLEAN_COVER',
         'TVSHOW_CLEAN_COVER_1X1',
         'TVSHOW_CLEAN_COVER_16X9',
+        'TVSHOW_LIST',
         'TVSHOW_LIST_1X1',
         'TVSHOW_LIST_9X13',
       ];

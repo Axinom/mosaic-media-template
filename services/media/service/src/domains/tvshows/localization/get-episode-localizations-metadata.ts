@@ -22,10 +22,13 @@ export interface GqlEpisodeLocalization extends GqlLocalization {
   title: string;
   description?: string | null;
   synopsis?: string | null;
+  episode_cover?: string | null;
   episode_cover_1x1?: string | null;
   episode_cover_16x9?: string | null;
+  episode_clean_cover?: string | null;
   episode_clean_cover_1x1?: string | null;
   episode_clean_cover_16x9?: string | null;
+  episode_list?: string | null;
   episode_list_1x1?: string | null;
   episode_list_9x13?: string | null;
 }
@@ -60,10 +63,13 @@ export const getEpisodeLocalizationsMetadata = async (
           title: l.title,
           description: l.description,
           synopsis: l.synopsis,
+          episode_cover: l.episode_cover,
           episode_cover_1x1: l.episode_cover_1x1,
           episode_cover_16x9: l.episode_cover_16x9,
+          episode_clean_cover: l.episode_clean_cover,
           episode_clean_cover_1x1: l.episode_clean_cover_1x1,
           episode_clean_cover_16x9: l.episode_clean_cover_16x9,
+          episode_list: l.episode_list,
           episode_list_1x1: l.episode_list_1x1,
           episode_list_9x13: l.episode_list_9x13,
         })) // If there are locales with no values set for any of its fields, we filter them out
@@ -102,6 +108,13 @@ export const getEpisodeLocalizedImagesMetadata = async (
     localizationsGroupedByLocale,
   )) {
     const images: ImageJSONSelectable[] = [];
+    if (localization[0]?.episode_cover) {
+      images.push({
+        episode_id: episode,
+        image_type: 'EPISODE_COVER',
+        image_id: localization[0].episode_cover,
+      });
+    }
     if (localization[0]?.episode_cover_1x1) {
       images.push({
         episode_id: episode,
@@ -123,11 +136,25 @@ export const getEpisodeLocalizedImagesMetadata = async (
         image_id: localization[0].episode_clean_cover_1x1,
       });
     }
+    if (localization[0]?.episode_clean_cover_1x1) {
+      images.push({
+        episode_id: episode,
+        image_type: 'EPISODE_CLEAN_COVER_1x1',
+        image_id: localization[0].episode_clean_cover_1x1,
+      });
+    }
     if (localization[0]?.episode_clean_cover_16x9) {
       images.push({
         episode_id: episode,
         image_type: 'EPISODE_CLEAN_COVER_16x9',
         image_id: localization[0].episode_clean_cover_16x9,
+      });
+    }
+    if (localization[0]?.episode_list) {
+      images.push({
+        episode_id: episode,
+        image_type: 'EPISODE_LIST',
+        image_id: localization[0].episode_list,
       });
     }
     if (localization[0]?.episode_list_1x1) {

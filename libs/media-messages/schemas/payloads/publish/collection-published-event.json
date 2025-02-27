@@ -123,6 +123,10 @@
             "type": ["string", "null"],
             "description": "The localized synopsis of this collection."
           },
+          "collection_cover": {
+            "type": ["string", "null"],
+            "description": "Localized cover image ID."
+          },
           "collection_cover_1x1": {
             "type": ["string", "null"],
             "description": "Localized 1x1 cover image ID."
@@ -131,6 +135,10 @@
             "type": ["string", "null"],
             "description": "Localized 4x1 cover image ID."
           },
+          "collection_clean_cover": {
+            "type": ["string", "null"],
+            "description": "Localized clean cover image ID."
+          },
           "collection_clean_cover_1x1": {
             "type": ["string", "null"],
             "description": "Localized 1x1 clean cover image ID."
@@ -138,6 +146,10 @@
           "collection_clean_cover_4x1": {
             "type": ["string", "null"],
             "description": "Localized 4x1 clean cover image ID."
+          },
+          "collection_list": {
+            "type": ["string", "null"],
+            "description": "Localized list image ID."
           },
           "collection_list_1x1": {
             "type": ["string", "null"],

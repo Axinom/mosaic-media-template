@@ -234,10 +234,13 @@ export class IngestEpisodeProcessor extends DefaultIngestEntityProcessor {
     entityId: number,
     imageId: string,
     imageType:
+      | 'EPISODE_COVER'
       | 'EPISODE_COVER_1x1'
       | 'EPISODE_COVER_16x9'
+      | 'EPISODE_CLEAN_COVER'
       | 'EPISODE_CLEAN_COVER_1x1'
       | 'EPISODE_CLEAN_COVER_16x9'
+      | 'EPISODE_LIST'
       | 'EPISODE_LIST_1x1'
       | 'EPISODE_LIST_9x13',
     dbContext: Queryable,

@@ -17,6 +17,37 @@ import {
   getTvShowLocalizedImagesMetadata,
 } from '../localization';
 
+const applyImageFallbacks = (images: any[]) => {
+  const primaryToSecondaryMap = {
+    TVSHOW_COVER: ['TVSHOW_COVER_1x1', 'TVSHOW_COVER_16x9'],
+    TVSHOW_CLEAN_COVER: ['TVSHOW_CLEAN_COVER_1x1', 'TVSHOW_CLEAN_COVER_16x9'],
+    TVSHOW_LIST: ['TVSHOW_LIST_1x1', 'TVSHOW_LIST_9x13'],
+  };
+
+  const result = [...images];
+
+  Object.entries(primaryToSecondaryMap).forEach(([primary, secondaries]) => {
+    const primaryImage = images.find((img) => img.type === primary);
+    if (primaryImage) {
+      secondaries.forEach((secondary) => {
+        const hasSecondary = images.some((img) => img.type === secondary);
+        if (!hasSecondary) {
+          result.push({
+            ...primaryImage,
+            type: secondary,
+          });
+        }
+      });
+    }
+  });
+
+  // Filter out primary image types
+  return result.filter(
+    (img) =>
+      !['TVSHOW_COVER', 'TVSHOW_CLEAN_COVER', 'TVSHOW_LIST'].includes(img.type),
+  );
+};
+
 const tvshowDataAggregator: SnapshotDataAggregator = async (
   entityId: number,
   authToken: string,
@@ -80,11 +111,13 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
     authToken,
   );
 
-  const tvshowImages = images;
+  const tvshowImages = applyImageFallbacks(images);
+
   const tvshowImageValidations = imagesValidation;
   imageLocalizations.forEach((localization) => {
+    const localizedImage = applyImageFallbacks(localization.result);
     tvshowImages.push(
-      ...localization.result.map((image) => {
+      ...localizedImage.map((image) => {
         return {
           ...image,
           language_tag: localization.language_tag,
@@ -95,7 +128,6 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
       ...localization.validation.map((validation) => {
         return {
           ...validation,
-          language_tag: localization.language_tag,
         };
       }),
     );

@@ -34,10 +34,13 @@ const Form: React.FC<{ imageSelectField: unknown }> = ({
   const customSortedEpisodeImageTypes = Object.values(EpisodeImageType).sort(
     (a, b) => {
       const order = [
+        'EPISODE_COVER',
         'EPISODE_COVER_1X1',
         'EPISODE_COVER_16X9',
+        'EPISODE_CLEAN_COVER',
         'EPISODE_CLEAN_COVER_1X1',
         'EPISODE_CLEAN_COVER_16X9',
+        'EPISODE_LIST',
         'EPISODE_LIST_1X1',
         'EPISODE_LIST_9X13',
       ];

@@ -54,7 +54,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
-      movie_images: {
+      movie_images_view: {
         description: 'Asset image metadata.',
         attribute: {
           type: {
@@ -348,7 +348,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
-      tvshow_images: {
+      tvshow_images_view: {
         description: 'Asset image metadata.',
         attribute: {
           type: {
@@ -644,7 +644,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
             '(tvshow_id) references app_public.tvshow_view (id)|@fieldName tvshow|@foreignFieldName seasons',
         },
       },
-      season_images: {
+      season_images_view: {
         description: 'Asset image metadata.',
         attribute: {
           type: {
@@ -929,7 +929,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
             '(season_id) references app_public.season_view (id)|@fieldName season|@foreignFieldName episodes',
         },
       },
-      episode_images: {
+      episode_images_view: {
         description: 'Asset image metadata.',
         attribute: {
           type: {
@@ -1188,7 +1188,7 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           omit: 'create,update,delete',
         },
       },
-      collection_images: {
+      collection_images_view: {
         description: 'Asset image metadata.',
         attribute: {
           type: {
