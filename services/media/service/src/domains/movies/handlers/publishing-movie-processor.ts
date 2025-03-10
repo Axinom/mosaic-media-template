@@ -1,5 +1,6 @@
-import { MosaicError } from '@axinom/mosaic-service-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
+  License,
   MoviePublishedEvent,
   MoviePublishedEventSchema,
   PublishServiceMessagingSettings,
@@ -46,6 +47,48 @@ const applyImageFallbacks = (images: any[]) => {
     (img) =>
       !['MOVIE_COVER', 'MOVIE_CLEAN_COVER', 'MOVIE_LIST'].includes(img.type),
   );
+};
+
+/**
+ * Builds movie license objects from license data
+ */
+const buildMovieLicenses = async (
+  licenses: any[],
+  contentOwner: string | null,
+  businessType: string | null,
+  queryable: Queryable,
+): Promise<License[]> => {
+  const movieLicenses: License[] = [];
+  for (const license of licenses) {
+    const movieLicense: License = {
+      start_time: license.license_start ?? undefined,
+      end_time: license.license_end ?? undefined,
+      is_downloadable: license.is_downloadable,
+      downloaded_asset_lifespan: license.downloaded_asset_lifespan ?? undefined,
+      content_owner: contentOwner ?? undefined,
+      business_type: businessType ?? undefined,
+      countries: [],
+    };
+    for (const country of license.countries) {
+      if (!isNullOrWhitespace(country.country_group_id)) {
+        const countryGroupCountries = await select('country_groups_countries', {
+          group_id: country.country_group_id,
+        }).run(queryable);
+        movieLicense.countries?.push(
+          ...countryGroupCountries
+            .filter((c) => !movieLicense.countries?.includes(c.country_id))
+            .map((c) => c.country_id),
+        );
+      } else if (
+        !isNullOrWhitespace(country.country_code) &&
+        !movieLicense.countries?.includes(country.country_code)
+      ) {
+        movieLicense.countries?.push(country.country_code);
+      }
+    }
+    movieLicenses.push(movieLicense);
+  }
+  return movieLicenses;
 };
 
 const movieDataAggregator: SnapshotDataAggregator = async (
@@ -141,6 +184,13 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     });
   }
 
+  const movieLicenses = await buildMovieLicenses(
+    movie.licenses,
+    movie.content_owner,
+    movie.business_type,
+    queryable,
+  );
+
   const snapshotJson: MoviePublishedEvent = {
     content_id: movie.publishing_id,
     original_title: movie.original_title ?? undefined,
@@ -152,11 +202,7 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     ),
     cast: movie.cast.map((c) => c.name),
     tags: movie.tags.map((c) => c.name),
-    licenses: movie.licenses.map((license) => ({
-      start_time: license.license_start ?? undefined,
-      end_time: license.license_end ?? undefined,
-      countries: license.countries.map((country) => country.country_code ?? ''),
-    })),
+    licenses: movieLicenses,
     images: movieImages,
     videos,
     audio_languages: mainVideo?.audio_languages,

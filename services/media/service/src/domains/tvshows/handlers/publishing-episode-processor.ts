@@ -1,7 +1,8 @@
-import { MosaicError } from '@axinom/mosaic-service-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
   EpisodePublishedEvent,
   EpisodePublishedEventSchema,
+  License,
   PublishServiceMessagingSettings,
 } from 'media-messages';
 import * as Yup from 'yup';
@@ -65,6 +66,46 @@ const applyImageFallbacks = (images: any[]) => {
         img.type,
       ),
   );
+};
+
+/**
+ * Builds episode license objects from license data
+ */
+const buildEpisodeLicenses = async (
+  licenses: any[],
+  contentOwner: string | null,
+  queryable: Queryable,
+): Promise<License[]> => {
+  const episodeLicenses: License[] = [];
+  for (const license of licenses) {
+    const episodeLicense: License = {
+      start_time: license.license_start ?? undefined,
+      end_time: license.license_end ?? undefined,
+      is_downloadable: license.is_downloadable,
+      downloaded_asset_lifespan: license.downloaded_asset_lifespan ?? undefined,
+      content_owner: contentOwner ?? undefined,
+      countries: [],
+    };
+    for (const country of license.countries) {
+      if (!isNullOrWhitespace(country.country_group_id)) {
+        const countryGroupCountries = await select('country_groups_countries', {
+          group_id: country.country_group_id,
+        }).run(queryable);
+        episodeLicense.countries?.push(
+          ...countryGroupCountries
+            .filter((c) => !episodeLicense.countries?.includes(c.country_id))
+            .map((c) => c.country_id),
+        );
+      } else if (
+        !isNullOrWhitespace(country.country_code) &&
+        !episodeLicense.countries?.includes(country.country_code)
+      ) {
+        episodeLicense.countries?.push(country.country_code);
+      }
+    }
+    episodeLicenses.push(episodeLicense);
+  }
+  return episodeLicenses;
 };
 
 const episodeDataAggregator: SnapshotDataAggregator = async (
@@ -163,6 +204,12 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     });
   }
 
+  const episodeLicenses = await buildEpisodeLicenses(
+    episode.licenses,
+    episode.content_owner,
+    queryable,
+  );
+
   const snapshotJson: EpisodePublishedEvent = {
     content_id: episode.publishing_id,
     season_id: episode.season_id
@@ -183,11 +230,7 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     ),
     cast: episode.cast.map((c) => c.name),
     tags: episode.tags.map((c) => c.name),
-    licenses: episode.licenses.map((license) => ({
-      start_time: license.license_start ?? undefined,
-      end_time: license.license_end ?? undefined,
-      countries: license.countries.map((country) => country.country_code ?? ''),
-    })),
+    licenses: episodeLicenses,
     images: episodeImages,
     videos,
     directors: episode.directors.map((d) => d.name),
