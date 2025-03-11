@@ -176,7 +176,7 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     );
   });
 
-  const mainVideo = videos.filter((video) => (video.type = 'MAIN'))?.[0];
+  const mainVideo = videos.filter((video) => video.type === 'MAIN')?.[0];
   if (movie.publishing_id === undefined || movie.publishing_id === null) {
     throw new MosaicError({
       ...CommonErrors.EntityPublishingIdNotFound,
