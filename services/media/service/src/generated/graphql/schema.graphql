@@ -17618,6 +17618,9 @@ enum ErrorCodesEnum {
   The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media.
   """
   CANNOT_UPDATE_TITLE_FOR_PUBLISHED_MEDIA
+
+  """Unknown collection relation type: %s"""
+  UNKNOWN_COLLECTION_RELATION_TYPE
 }
 
 """

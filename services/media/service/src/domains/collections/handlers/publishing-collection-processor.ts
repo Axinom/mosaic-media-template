@@ -189,12 +189,17 @@ const getRelationTableAndId = (
       id: relation.episode_id,
       relationType: 'EPISODE',
     };
-  } else {
+  } else if (relation.child_collection_id) {
     return {
       table: 'collections',
-      id: relation.collection_id,
+      id: relation.child_collection_id,
       relationType: 'COLLECTION',
     };
+  } else {
+    throw new MosaicError({
+      ...CommonErrors.UnknownCollectionRelationType,
+      messageParams: [relation],
+    });
   }
 };
 
