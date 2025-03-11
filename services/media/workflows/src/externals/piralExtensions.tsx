@@ -16,6 +16,7 @@ export const ExtensionsContext = React.createContext<Extensions>({
   ImagePreview: extensionDefaultValue,
   ImageSelectExplorer: extensionDefaultValue,
   ImageSelectField: extensionDefaultValue,
+  SingleImageSelectField: extensionDefaultValue,
   VideoSelectField: extensionDefaultValue,
   VideoSelectExplorer: extensionDefaultValue,
 });
