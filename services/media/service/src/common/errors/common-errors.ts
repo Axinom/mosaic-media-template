@@ -88,4 +88,8 @@ export const CommonErrors = {
       'The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media.',
     code: 'CANNOT_UPDATE_TITLE_FOR_PUBLISHED_MEDIA',
   },
+  UnknownCollectionRelationType: {
+    message: 'Unknown collection relation type: %s',
+    code: 'UNKNOWN_COLLECTION_RELATION_TYPE',
+  },
 } as const;

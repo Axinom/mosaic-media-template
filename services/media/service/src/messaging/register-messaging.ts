@@ -380,6 +380,8 @@ const registerTransactionalInboxHandlers = (
         switch (message.messageType) {
           case MediaServiceMessagingSettings.StartIngest.messageType:
             return 600_000;
+          case MediaServiceMessagingSettings.PublishEntity.messageType:
+            return 60_000;
           default:
             return 15_000;
         }

@@ -1,5 +1,6 @@
-import { MosaicError } from '@axinom/mosaic-service-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
+  License,
   PublishServiceMessagingSettings,
   TvshowPublishedEvent,
   TvshowPublishedEventSchema,
@@ -46,6 +47,48 @@ const applyImageFallbacks = (images: any[]) => {
     (img) =>
       !['TVSHOW_COVER', 'TVSHOW_CLEAN_COVER', 'TVSHOW_LIST'].includes(img.type),
   );
+};
+
+/**
+ * Builds TV Show license objects from license data
+ */
+const buildTvShowLicenses = async (
+  licenses: any[],
+  contentOwner: string | null,
+  businessType: string | null,
+  queryable: Queryable,
+): Promise<License[]> => {
+  const tvShowLicenses: License[] = [];
+  for (const license of licenses) {
+    const tvShowLicense: License = {
+      start_time: license.license_start ?? undefined,
+      end_time: license.license_end ?? undefined,
+      is_downloadable: license.is_downloadable,
+      downloaded_asset_lifespan: license.downloaded_asset_lifespan ?? undefined,
+      content_owner: contentOwner ?? undefined,
+      business_type: businessType ?? undefined,
+      countries: [],
+    };
+    for (const country of license.countries) {
+      if (!isNullOrWhitespace(country.country_group_id)) {
+        const countryGroupCountries = await select('country_groups_countries', {
+          group_id: country.country_group_id,
+        }).run(queryable);
+        tvShowLicense.countries?.push(
+          ...countryGroupCountries
+            .filter((c) => !tvShowLicense.countries?.includes(c.country_id))
+            .map((c) => c.country_id),
+        );
+      } else if (
+        !isNullOrWhitespace(country.country_code) &&
+        !tvShowLicense.countries?.includes(country.country_code)
+      ) {
+        tvShowLicense.countries?.push(country.country_code);
+      }
+    }
+    tvShowLicenses.push(tvShowLicense);
+  }
+  return tvShowLicenses;
 };
 
 const tvshowDataAggregator: SnapshotDataAggregator = async (
@@ -140,6 +183,13 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
     });
   }
 
+  const tvshowLicenses = await buildTvShowLicenses(
+    tvshow.licenses,
+    tvshow.content_owner,
+    tvshow.business_type,
+    queryable,
+  );
+
   const snapshotJson: TvshowPublishedEvent = {
     content_id: tvshow.publishing_id,
     original_title: tvshow.original_title ?? undefined,
@@ -151,11 +201,7 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
     ),
     cast: tvshow.cast.map((c) => c.name),
     tags: tvshow.tags.map((c) => c.name),
-    licenses: tvshow.licenses.map((license) => ({
-      start_time: license.license_start ?? undefined,
-      end_time: license.license_end ?? undefined,
-      countries: license.countries.map((country) => country.country_code ?? ''),
-    })),
+    licenses: tvshowLicenses,
     images: tvshowImages,
     videos,
     directors: tvshow.directors.map((d) => d.name),
