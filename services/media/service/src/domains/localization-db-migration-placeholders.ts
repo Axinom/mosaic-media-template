@@ -1,6 +1,7 @@
 import { Dict } from '@axinom/mosaic-db-common';
 import { localizableCollectionDbMigrationPlaceholders } from './collections/localization/localizable-collection-db-migration-placeholders';
 import { localizableMovieDbMigrationPlaceholders } from './movies/localization/localizable-movie-db-migration-placeholders';
+import { localizableReviewDbMigrationPlaceholders } from './reviews/localization/localizable-review-db-migration-placeholders';
 import { localizableEpisodeDbMigrationPlaceholders } from './tvshows/localization/localizable-episode-db-migration-placeholders';
 import { localizableSeasonDbMigrationPlaceholders } from './tvshows/localization/localizable-season-db-migration-placeholders';
 import { localizableTvshowDbMigrationPlaceholders } from './tvshows/localization/localizable-tvshow-db-migration-placeholders';
@@ -17,4 +18,5 @@ export const localizationDbMigrationPlaceholders: Dict<string> = {
   ...localizableSeasonDbMigrationPlaceholders,
   ...localizableEpisodeDbMigrationPlaceholders,
   ...localizableCollectionDbMigrationPlaceholders,
+  ...localizableReviewDbMigrationPlaceholders,
 };

@@ -71,6 +71,11 @@ import {
   publishingProcessors,
 } from '../domains/publishing-definition';
 import {
+  LocalizableReviewCreatedDbMessageHandler,
+  LocalizableReviewDeletedDbMessageHandler,
+  LocalizableReviewUpdatedDbMessageHandler,
+} from '../domains/reviews/localization/localizable-review-db-message-handlers';
+import {
   LocalizableEpisodeCreatedDbMessageHandler,
   LocalizableEpisodeDeletedDbMessageHandler,
   LocalizableEpisodeImageCreatedDbMessageHandler,
@@ -191,6 +196,9 @@ const registerTransactionalInboxHandlers = (
 ): void => {
   const ingestProcessors = getIngestProcessors(config);
   const dbMessageHandlers: TransactionalMessageHandler[] = [
+    new LocalizableReviewCreatedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableReviewUpdatedDbMessageHandler(storeOutboxMessage, config),
+    new LocalizableReviewDeletedDbMessageHandler(storeOutboxMessage, config),
     new LocalizableCollectionCreatedDbMessageHandler(
       storeOutboxMessage,
       config,

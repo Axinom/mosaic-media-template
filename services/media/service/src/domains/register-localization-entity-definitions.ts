@@ -7,6 +7,7 @@ import { ClientBase } from 'pg';
 import { Config, requestServiceAccountToken } from '../common';
 import { getCollectionLocalizationEntityDefinitions } from './collections';
 import { getMovieLocalizationEntityDefinitions } from './movies';
+import { getReviewLocalizationEntityDefinitions } from './reviews/localization/get-review-localization-entity-definitions';
 import { getTvshowLocalizationEntityDefinitions } from './tvshows';
 
 export const registerLocalizationEntityDefinitions = async (
@@ -26,10 +27,14 @@ export const registerLocalizationEntityDefinitions = async (
   const collectionDefinitions = getCollectionLocalizationEntityDefinitions(
     config.serviceId,
   );
+  const reviewDefinitions = getReviewLocalizationEntityDefinitions(
+    config.serviceId,
+  );
   const definitions = [
     ...movieDefinitions,
     ...tvshowDefinitions,
     ...collectionDefinitions,
+    ...reviewDefinitions,
   ];
   for (const definition of definitions) {
     await storeOutboxMessage<DeclareEntityDefinitionCommand>(

@@ -1069,6 +1069,91 @@ $$;
 
 
 --
+-- Name: localizable_review_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_review_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_fields text[] := string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+BEGIN
+	SELECT jsonb_object_agg(f.field, _jsonb_old -> f.field)
+	FROM (SELECT unnest(_fields) AS field) as f INTO _payload;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('REVIEW'), OLD.id, 'Localizable' || app_hidden.to_pascal_case('REVIEW') || 'Deleted', 'parallel', _payload, NOW());
+	RETURN OLD;
+END;
+$$;
+
+
+--
+-- Name: localizable_review_insert(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_review_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_fields text[] := string_to_array('title,description', ',') || string_to_array('id', ',');
+	_payload jsonb := '{}'::jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _fields
+	LOOP
+		IF coalesce(_jsonb_new ->> _field, '') != '' THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, created_at)
+	VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('REVIEW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('REVIEW') || 'Created', 'parallel', _payload, NOW());
+	RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: localizable_review_update(); Type: FUNCTION; Schema: app_hidden; Owner: -
+--
+
+CREATE FUNCTION app_hidden.localizable_review_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	_jsonb_old jsonb := row_to_json(OLD.*);
+	_jsonb_new jsonb := row_to_json(NEW.*);
+	_required_fields text[] := string_to_array('id', ',');
+	_localizable_fields text[] := string_to_array('title,description', ',');
+	_payload jsonb := '{}'::jsonb;
+	_metadata jsonb;
+	_field text;
+BEGIN
+	FOREACH _field IN ARRAY _localizable_fields
+	LOOP
+		IF coalesce(_jsonb_old ->> _field, '') != coalesce(_jsonb_new ->> _field, '') THEN
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END IF;
+	END LOOP;
+	IF _jsonb_new ->> 'ingest_correlation_id' IS NOT NULL THEN
+			_metadata := jsonb_build_object('messageContext', jsonb_build_object('ingestItemId', _jsonb_new -> 'ingest_correlation_id'));
+	END IF;
+	IF _payload != '{}'::jsonb OR _metadata IS NOT NULL THEN
+		FOREACH _field IN ARRAY _required_fields
+		LOOP
+			_payload := _payload || jsonb_build_object(_field, _jsonb_new -> _field);
+		END LOOP;
+		INSERT INTO app_hidden.inbox (id, aggregate_type, aggregate_id, message_type, concurrency, payload, metadata, created_at)
+		VALUES (uuid_generate_v4(), app_hidden.to_kebab_case('REVIEW'), NEW.id, 'Localizable' || app_hidden.to_pascal_case('REVIEW') || 'Updated', 'parallel', _payload, _metadata, NOW());
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: localizable_season_delete(); Type: FUNCTION; Schema: app_hidden; Owner: -
 --
 
@@ -10636,6 +10721,27 @@ CREATE TRIGGER _900_localizable_movie_update AFTER UPDATE ON app_public.movies F
 
 
 --
+-- Name: reviews _900_localizable_review_delete; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_review_delete AFTER DELETE ON app_public.reviews FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_review_delete();
+
+
+--
+-- Name: reviews _900_localizable_review_insert; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_review_insert AFTER INSERT ON app_public.reviews FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_review_insert();
+
+
+--
+-- Name: reviews _900_localizable_review_update; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _900_localizable_review_update AFTER UPDATE ON app_public.reviews FOR EACH ROW WHEN ((app_hidden.is_localization_enabled() IS TRUE)) EXECUTE FUNCTION app_hidden.localizable_review_update();
+
+
+--
 -- Name: seasons _900_localizable_season_delete; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -13114,6 +13220,30 @@ GRANT ALL ON FUNCTION app_hidden.localizable_movie_insert() TO media_service_gql
 
 REVOKE ALL ON FUNCTION app_hidden.localizable_movie_update() FROM PUBLIC;
 GRANT ALL ON FUNCTION app_hidden.localizable_movie_update() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_review_delete(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_review_delete() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_review_delete() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_review_insert(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_review_insert() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_review_insert() TO media_service_gql_role;
+
+
+--
+-- Name: FUNCTION localizable_review_update(); Type: ACL; Schema: app_hidden; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_hidden.localizable_review_update() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_hidden.localizable_review_update() TO media_service_gql_role;
 
 
 --

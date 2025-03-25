@@ -1,12 +1,35 @@
+import { registerLocalizationEntryPoints } from '@axinom/mosaic-managed-workflow-integration';
 import { PiletApi } from '@axinom/mosaic-portal';
 import React from 'react';
 import { Extensions } from '../../externals';
+import { piletConfig } from '../../piletConfig';
 import { ReviewCreate } from './ReviewCreate/ReviewCreate';
 import { ReviewDetails } from './ReviewDetails/ReviewDetails';
 import { ReviewDetailsCrumb } from './ReviewDetails/ReviewDetailsCrumb';
 import { ReviewsExplorer } from './ReviewsExplorer/ReviewsExplorer';
 
 export function register(app: PiletApi, extensions: Extensions): void {
+  app.setRouteResolver(
+    'review-details',
+    (dynamicRouteSegments?: Record<string, string> | string) => {
+      const reviewId =
+        typeof dynamicRouteSegments === 'string'
+          ? dynamicRouteSegments
+          : dynamicRouteSegments?.reviewId;
+
+      return reviewId ? `/reviews/${reviewId}` : undefined;
+    },
+  );
+
+  if (piletConfig.isLocalizationEnabled) {
+    registerLocalizationEntryPoints([
+      {
+        root: '/reviews/:reviewId', // the generated stations will be registered below this root
+        entityIdParam: 'reviewId',
+        entityType: 'review',
+      },
+    ]);
+  }
   app.registerTile({
     kind: 'home',
     name: 'reviews',

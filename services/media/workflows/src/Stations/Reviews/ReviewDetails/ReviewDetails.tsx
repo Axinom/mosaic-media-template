@@ -1,3 +1,4 @@
+import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integration';
 import {
   Details,
   DetailsProps,
@@ -73,6 +74,7 @@ export const ReviewDetails: React.FC = () => {
     history.push('/reviews');
   };
 
+  const localizationPath = getLocalizationEntryPoint('review');
   return (
     <Details<FormData>
       defaultTitle="Review"
@@ -86,6 +88,17 @@ export const ReviewDetails: React.FC = () => {
       }}
       saveData={onSubmit}
       actions={[
+        ...(localizationPath
+          ? [
+              {
+                label: 'Localizations',
+                path: localizationPath.replace(
+                  ':reviewId',
+                  reviewId.toString(),
+                ),
+              },
+            ]
+          : []),
         {
           label: 'Delete',
           icon: IconName.Delete,
