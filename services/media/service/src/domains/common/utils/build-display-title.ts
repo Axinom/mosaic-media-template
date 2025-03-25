@@ -24,7 +24,7 @@ export function buildDisplayTitle(
  * Function that builds a display title for media entity without parent entities, e.g. movie or tvshow
  */
 export function buildDisplayTitle(
-  type: 'MOVIE' | 'TVSHOW',
+  type: 'MOVIE' | 'TVSHOW' | 'REVIEW',
   media: { title?: string },
 ): string;
 
@@ -32,6 +32,7 @@ export function buildDisplayTitle(
 export function buildDisplayTitle(...args: any[]): string {
   switch (args[0]) {
     case 'MOVIE':
+    case 'REVIEW':
     case 'TVSHOW': {
       return args[1]?.title?.trim() ?? '';
     }

@@ -5942,12 +5942,14 @@ COMMENT ON TABLE app_public.publish_status IS '@enum';
 CREATE TABLE app_public.reviews (
     id integer NOT NULL,
     title text NOT NULL,
-    description text NOT NULL,
+    description text,
     rating integer,
     created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
+    ingest_correlation_id integer,
+    external_id text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -5958,6 +5960,13 @@ CREATE TABLE app_public.reviews (
 --
 
 COMMENT ON TABLE app_public.reviews IS '@subscription_events_reviews REVIEW_CREATED,REVIEW_CHANGED,REVIEW_DELETED';
+
+
+--
+-- Name: COLUMN reviews.ingest_correlation_id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.reviews.ingest_correlation_id IS '@omit';
 
 
 --
@@ -7053,6 +7062,14 @@ ALTER TABLE ONLY app_public.movies_trailers
 
 ALTER TABLE ONLY app_public.publish_status
     ADD CONSTRAINT publish_status_pkey PRIMARY KEY (value);
+
+
+--
+-- Name: reviews reviews_external_id_key; Type: CONSTRAINT; Schema: app_public; Owner: -
+--
+
+ALTER TABLE ONLY app_public.reviews
+    ADD CONSTRAINT reviews_external_id_key UNIQUE (external_id);
 
 
 --
@@ -8212,6 +8229,20 @@ CREATE INDEX idx_movies_updated_date_asc_with_id ON app_public.movies USING btre
 --
 
 CREATE INDEX idx_movies_updated_date_desc_with_id ON app_public.movies USING btree (updated_date DESC, id);
+
+
+--
+-- Name: idx_reviews_external_id_asc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_reviews_external_id_asc_with_id ON app_public.reviews USING btree (external_id, id);
+
+
+--
+-- Name: idx_reviews_external_id_desc_with_id; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_reviews_external_id_desc_with_id ON app_public.reviews USING btree (external_id DESC, id);
 
 
 --
@@ -15442,6 +15473,20 @@ GRANT INSERT(description),UPDATE(description) ON TABLE app_public.reviews TO med
 --
 
 GRANT UPDATE(rating) ON TABLE app_public.reviews TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN reviews.ingest_correlation_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.reviews TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN reviews.external_id; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(external_id),UPDATE(external_id) ON TABLE app_public.reviews TO media_service_gql_role;
 
 
 --

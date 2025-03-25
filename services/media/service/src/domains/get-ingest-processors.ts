@@ -1,6 +1,7 @@
 import { Config } from '../common';
 import { IngestEntityProcessor } from '../ingest';
 import { IngestMovieProcessor } from './movies';
+import { IngestReviewProcessor } from './reviews/handlers';
 import {
   IngestEpisodeProcessor,
   IngestSeasonProcessor,
@@ -15,4 +16,5 @@ export const getIngestProcessors = (
   new IngestSeasonProcessor(config),
   new IngestEpisodeProcessor(config),
   new IngestMovieProcessor(config),
+  new IngestReviewProcessor(config),
 ];

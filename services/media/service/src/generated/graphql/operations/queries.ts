@@ -70,6 +70,7 @@ export enum Queries {
   moviesTrailer = 'moviesTrailer',
   moviesTrailers = 'moviesTrailers',
   review = 'review',
+  reviewByExternalId = 'reviewByExternalId',
   reviews = 'reviews',
   season = 'season',
   seasonByExternalId = 'seasonByExternalId',

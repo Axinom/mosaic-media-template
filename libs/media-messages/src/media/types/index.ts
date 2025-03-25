@@ -10,6 +10,7 @@ export * from './localizations-ingest-element';
 export * from './main-video-ingest-element';
 export * from './media-entity-type';
 export * from './movie-ingest-data';
+export * from './review-ingest-data';
 export * from './season-ingest-data';
 export * from './trailers-ingest-element';
 export * from './tvshow-ingest-data';

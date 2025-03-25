@@ -20,6 +20,7 @@ import {
   useReviewQuery,
   useUpdateReviewMutation,
 } from '../../../generated/graphql';
+import classes from './ReviewDetails.module.scss';
 
 type FormData = Nullable<MutationUpdateReviewArgs['input']['patch']>;
 
@@ -117,6 +118,12 @@ const Form: React.FC = () => {
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
       <Field name="description" label="Description" as={TextAreaField} />
+      <Field
+        name="externalId"
+        label="External ID"
+        className={classes.externalId}
+        as={SingleLineTextField}
+      />
       <Field
         name="rating"
         type="number"

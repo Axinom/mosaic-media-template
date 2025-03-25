@@ -18,6 +18,7 @@ import {
   movies_production_countries,
   movies_tags,
   movies_trailers,
+  reviews,
   seasons,
   seasons_casts,
   seasons_images,
@@ -40,12 +41,14 @@ import {
 
 export type IngestibleTable =
   | movies.Table
+  | reviews.Table
   | tvshows.Table
   | seasons.Table
   | episodes.Table;
 
 export type IngestInsertable =
   | movies.Insertable
+  | reviews.Insertable
   | tvshows.Insertable
   | seasons.Insertable
   | episodes.Insertable;

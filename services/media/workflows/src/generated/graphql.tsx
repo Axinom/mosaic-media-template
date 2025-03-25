@@ -6854,6 +6854,8 @@ export enum IngestItemType {
   Episode = 'EPISODE',
   /** Movie */
   Movie = 'MOVIE',
+  /** Review */
+  Review = 'REVIEW',
   /** Season */
   Season = 'SEASON',
   /** Tvshow */
@@ -11547,7 +11549,8 @@ export type Review = {
   __typename?: 'Review';
   createdDate: Scalars['Datetime'];
   createdUser: Scalars['String'];
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  externalId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   rating?: Maybe<Scalars['Int']>;
   title: Scalars['String'];
@@ -11563,6 +11566,8 @@ export type ReviewCondition = {
   createdUser?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `externalId` field. */
+  externalId?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `rating` field. */
@@ -11589,6 +11594,8 @@ export type ReviewFilter = {
   createdUser?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `externalId` field. */
+  externalId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Negates the expression. */
@@ -11607,7 +11614,8 @@ export type ReviewFilter = {
 
 /** An input for mutations affecting `Review` */
 export type ReviewInput = {
-  description: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  externalId?: InputMaybe<Scalars['String']>;
   /**
    * @maxLength(100)
    * @notEmpty()
@@ -11618,6 +11626,7 @@ export type ReviewInput = {
 /** Represents an update to a `Review`. Fields that are set will be updated. */
 export type ReviewPatch = {
   description?: InputMaybe<Scalars['String']>;
+  externalId?: InputMaybe<Scalars['String']>;
   rating?: InputMaybe<Scalars['Int']>;
   /**
    * @maxLength(100)
@@ -11659,6 +11668,8 @@ export enum ReviewsOrderBy {
   CreatedUserDesc = 'CREATED_USER_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  ExternalIdAsc = 'EXTERNAL_ID_ASC',
+  ExternalIdDesc = 'EXTERNAL_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   Natural = 'NATURAL',
@@ -17596,7 +17607,7 @@ export type ReviewQueryVariables = Exact<{
 }>;
 
 
-export type ReviewQuery = { __typename?: 'Query', review?: { __typename?: 'Review', title: string, rating?: number | null, description: string, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string } | null };
+export type ReviewQuery = { __typename?: 'Query', review?: { __typename?: 'Review', title: string, rating?: number | null, externalId?: string | null, description?: string | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string } | null };
 
 export type UpdateReviewMutationVariables = Exact<{
   input: UpdateReviewInput;
@@ -17626,7 +17637,7 @@ export type ReviewsQueryVariables = Exact<{
 }>;
 
 
-export type ReviewsQuery = { __typename?: 'Query', filtered?: { __typename?: 'ReviewsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Review', id: number, title: string, rating?: number | null, createdDate: any, updatedDate: any }> } | null, nonFiltered?: { __typename?: 'ReviewsConnection', totalCount: number } | null };
+export type ReviewsQuery = { __typename?: 'Query', filtered?: { __typename?: 'ReviewsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Review', id: number, title: string, rating?: number | null, externalId?: string | null, createdDate: any, updatedDate: any }> } | null, nonFiltered?: { __typename?: 'ReviewsConnection', totalCount: number } | null };
 
 export type CreateSeasonMutationVariables = Exact<{
   input: CreateSeasonInput;
@@ -21659,6 +21670,7 @@ export const ReviewDocument = gql`
   review(id: $id) {
     title
     rating
+    externalId
     description
     id
     createdDate
@@ -21812,6 +21824,7 @@ export const ReviewsDocument = gql`
       id
       title
       rating
+      externalId
       createdDate
       updatedDate
     }

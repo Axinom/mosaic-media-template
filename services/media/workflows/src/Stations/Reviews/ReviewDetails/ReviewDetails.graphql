@@ -2,6 +2,7 @@ query Review($id: Int!) {
   review(id: $id) {
     title
     rating
+    externalId
     description
     id
     createdDate

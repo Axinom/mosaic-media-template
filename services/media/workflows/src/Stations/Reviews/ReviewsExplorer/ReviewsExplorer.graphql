@@ -18,6 +18,7 @@ query Reviews(
       id
       title
       rating
+      externalId
       createdDate
       updatedDate
     }

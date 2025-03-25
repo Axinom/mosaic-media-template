@@ -6425,9 +6425,9 @@ declare module 'zapatos/schema' {
       /**
       * **reviews.description**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      description: string;
+      description: string | null;
       /**
       * **reviews.rating**
       * - `int4` in database
@@ -6458,6 +6458,20 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'Unknown'::text`
       */
       updated_user: string;
+      /**
+      * **reviews.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
+      /**
+      * **reviews.external_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      external_id: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -6475,9 +6489,9 @@ declare module 'zapatos/schema' {
       /**
       * **reviews.description**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      description: string;
+      description: string | null;
       /**
       * **reviews.rating**
       * - `int4` in database
@@ -6508,6 +6522,20 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'Unknown'::text`
       */
       updated_user: string;
+      /**
+      * **reviews.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id: number | null;
+      /**
+      * **reviews.external_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      external_id: string | null;
     }
     export interface Whereable {
       /**
@@ -6525,7 +6553,7 @@ declare module 'zapatos/schema' {
       /**
       * **reviews.description**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
       description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -6558,6 +6586,20 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'Unknown'::text`
       */
       updated_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **reviews.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **reviews.external_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      external_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -6575,9 +6617,9 @@ declare module 'zapatos/schema' {
       /**
       * **reviews.description**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      description: string | db.Parameter<string> | db.SQLFragment;
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **reviews.rating**
       * - `int4` in database
@@ -6608,6 +6650,20 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'Unknown'::text`
       */
       updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **reviews.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **reviews.external_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      external_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -6625,9 +6681,9 @@ declare module 'zapatos/schema' {
       /**
       * **reviews.description**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      description?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **reviews.rating**
       * - `int4` in database
@@ -6658,8 +6714,22 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'Unknown'::text`
       */
       updated_user?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **reviews.ingest_correlation_id**
+      *
+      * @omit
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **reviews.external_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      external_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'reviews_pkey';
+    export type UniqueIndex = 'reviews_external_id_key' | 'reviews_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;

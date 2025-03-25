@@ -23,6 +23,7 @@ export const ReviewsExplorer: React.FC = () => {
   const explorerColumns: Column<ReviewData>[] = [
     { label: 'Title', propertyName: 'title' },
     { label: 'Rating', propertyName: 'rating' },
+    { label: 'External ID', propertyName: 'externalId' },
     { label: 'Created At', propertyName: 'createdDate', render: DateRenderer },
     { label: 'Updated At', propertyName: 'updatedDate', render: DateRenderer },
   ];

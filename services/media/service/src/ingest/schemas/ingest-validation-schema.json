@@ -15,6 +15,11 @@
       "minimum": 1,
       "description": "Season or episode number."
     },
+    "rating": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Rating of a review"
+    },
     "parent_external_id": {
       "$ref": "#/definitions/non-empty-string",
       "description": "A unique identifier of a parent TV show or season."
@@ -223,7 +228,7 @@
         "required": ["type", "external_id", "data"],
         "properties": {
           "type": {
-            "enum": ["MOVIE", "TVSHOW", "SEASON", "EPISODE"],
+            "enum": ["MOVIE", "TVSHOW", "SEASON", "EPISODE", "REVIEW"],
             "description": "Must be one of supported type values that represents an entity type in media service.",
             "examples": ["MOVIE"]
           },
@@ -356,6 +361,55 @@
                             "title": "Avatar",
                             "description": "Avatar on 2009. aasta Ameerika eepiline ulmefilm...",
                             "synopsis": "Aastal 2154 on inimesed ammendanud Maa loodusvarad..."
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": { "const": "REVIEW" }
+              }
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "description": "Object containing metadata of a specific media item.",
+                  "required": ["title", "rating"],
+                  "properties": {
+                    "title": {
+                      "$ref": "#/definitions/title",
+                      "examples": ["Avatar"]
+                    },
+                    "description": {
+                      "$ref": "#/definitions/description",
+                      "examples": [
+                        "Avatar is a 2009 American epic science fiction film..."
+                      ]
+                    },
+                    "rating": {
+                      "$ref": "#/definitions/rating",
+                      "examples": [10]
+                    },
+                    "localizations": {
+                      "$ref": "#/definitions/localizations",
+                      "examples": [
+                        [
+                          {
+                            "language_tag": "de-DE",
+                            "title": "Avatar – Aufbruch nach Pandora",
+                            "description": "Avatar ist ein US-amerikanischer Science-Fiction-Epos aus dem Jahr 2009..."
+                          },
+                          {
+                            "language_tag": "et-EE",
+                            "title": "Avatar",
+                            "description": "Avatar on 2009. aasta Ameerika eepiline ulmefilm..."
                           }
                         ]
                       ]

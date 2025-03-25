@@ -13,7 +13,7 @@
         "type": {
           "type": "string",
           "title": "ingest_item_type",
-          "enum": ["MOVIE", "TVSHOW", "SEASON", "EPISODE"],
+          "enum": ["MOVIE", "TVSHOW", "SEASON", "EPISODE", "REVIEW"],
           "description": "Type that specifies type of media item to be created or updated using this ingest item data."
         },
         "external_id": {
