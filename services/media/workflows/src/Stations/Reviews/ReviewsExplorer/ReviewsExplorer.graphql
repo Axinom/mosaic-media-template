@@ -1,0 +1,28 @@
+query Reviews(
+  $filter: ReviewFilter
+  $orderBy: [ReviewsOrderBy!]
+  $after: Cursor
+) {
+  filtered: reviews(
+    filter: $filter
+    orderBy: $orderBy
+    first: 30
+    after: $after
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      title
+      rating
+      createdDate
+      updatedDate
+    }
+  }
+  nonFiltered: reviews {
+    totalCount
+  }
+}

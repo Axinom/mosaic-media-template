@@ -344,7 +344,12 @@
         "updateIngestDocument",
         "populateMovies",
         "populateTvshows",
-        "populateCollections"
+        "populateCollections",
+        "review",
+        "reviews",
+        "createReview",
+        "deleteReview",
+        "updateReview"
       ]
     },
     {
@@ -862,6 +867,25 @@
         "ingestDocumentMutated",
         "startIngest",
         "updateIngestDocument"
+      ]
+    },
+    {
+      "key": "REVIEWS_VIEW",
+      "title": "Reviews: View",
+      "gqlOperations": [
+        "review",
+        "reviews"
+      ]
+    },
+    {
+      "key": "REVIEWS_EDIT",
+      "title": "Reviews: Edit",
+      "gqlOperations": [
+        "review",
+        "reviews",
+        "createReview",
+        "deleteReview",
+        "updateReview"
       ]
     }
   ]

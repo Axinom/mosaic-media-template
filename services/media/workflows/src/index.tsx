@@ -13,6 +13,7 @@ import { register as registerEpisodes } from './Stations/Episodes/registrations'
 import { register as registerIngest } from './Stations/Ingest/registrations';
 import { register as registerMovies } from './Stations/Movies/registrations';
 import { register as registerSnapshotRegistry } from './Stations/Publishing/registrations';
+import { register as registerReviews } from './Stations/Reviews/registrations';
 import { register as registerSeasons } from './Stations/Seasons/registrations';
 import { register as registerTvShows } from './Stations/TvShows/registrations';
 import {
@@ -61,4 +62,5 @@ export function setup(app: PiletApi): void {
   registerSnapshotRegistry(app, extensions);
   registerCollections(app, extensions);
   registerFASTProviders(app);
+  registerReviews(app, extensions);
 }
