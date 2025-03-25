@@ -610,6 +610,7 @@ describe('Movies GraphQL endpoints', () => {
       expect(movies).toEqual<movies.JSONSelectable[]>([
         {
           title: 'Avatar',
+          subtitle: 'Avatar Sub',
           description: 'Avatar is a 2009 American epic science fiction film...',
           synopsis:
             "In 2154, humans have depleted Earth's natural resources...",

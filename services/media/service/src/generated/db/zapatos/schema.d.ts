@@ -5005,6 +5005,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingest_correlation_id: number | null;
+      /**
+      * **movies.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -5111,6 +5117,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingest_correlation_id: number | null;
+      /**
+      * **movies.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle: string | null;
     }
     export interface Whereable {
       /**
@@ -5217,6 +5229,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingest_correlation_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movies.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -5323,6 +5341,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movies.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -5429,6 +5453,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingest_correlation_id?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movies.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movies_external_id_key' | 'movies_pkey';
     export type Column = keyof Selectable;

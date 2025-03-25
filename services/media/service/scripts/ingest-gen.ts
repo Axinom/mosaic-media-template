@@ -75,7 +75,7 @@ interface ParsedCliArgs {
  * Returns a readable timestamp in current locale time, e.g. `[2021-05-13 13:02:12.685]`
  */
 const getTimestamp = (): string => {
-  const offset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+  const offset = new Date().getTimezoneOffset() * 60000; // offset in milliseconds
   const localISOTime = new Date(Date.now() - offset)
     .toISOString()
     .slice(0, -1)
@@ -108,6 +108,7 @@ const getNonCommonProperties = (params: {
   parentInfo?: { externalId: string; childCount: number }[];
 }): Dict<unknown> => {
   const title = faker.random.words().trim();
+  const subtitle = faker.random.words().trim();
   const original_title = faker.random.words().trim();
   const main_video = params.mainVideo
     ? {
@@ -120,6 +121,7 @@ const getNonCommonProperties = (params: {
     case 'MOVIE':
       return {
         title,
+        subtitle,
         original_title,
         main_video,
       };
@@ -209,6 +211,9 @@ const generateIngestItem = (
               language_tag: languageTag,
               ...optional(nonCommonProperties?.title, (title) => ({
                 title: `${languageTag} ${title}`,
+              })),
+              ...optional(nonCommonProperties?.subtitle, (subtitle) => ({
+                subtitle: `${languageTag} ${subtitle}`,
               })),
               description: `${languageTag} ${description}`,
               synopsis: `${languageTag} ${synopsis}`,

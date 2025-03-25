@@ -375,6 +375,7 @@ const Form: React.FC<{ genreOptions?: string[] }> = ({ genreOptions }) => {
   return (
     <>
       <Field name="title" label="Title" as={SingleLineTextField} />
+      <Field name="subtitle" label="Subtitle" as={SingleLineTextField} />
       <Field
         name="originalTitle"
         label="Original Title"

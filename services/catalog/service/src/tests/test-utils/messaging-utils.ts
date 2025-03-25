@@ -30,6 +30,7 @@ export function createMoviePublishedMessage(
 ): TypedTransactionalMessage<MoviePublishedEvent> {
   return createMessage({
     content_id: contentId,
+    subtitle: 'Test Sub',
     original_title: 'Movie title',
     tags: ['tag1', 'tag2'],
     cast: ['Actor One', 'Actor Two'],
@@ -40,7 +41,7 @@ export function createMoviePublishedMessage(
     licenses: [createLicense()],
     images: [createImage()],
     videos: [createVideo()],
-    localizations: createGenericLocalizations(),
+    localizations: createMovieLocalizations(),
   });
 }
 
@@ -399,6 +400,35 @@ function createGenericLocalizations():
     },
     {
       title: 'localized title 2',
+      synopsis: null,
+      description: null,
+      language_tag: 'et-EE',
+      is_default_locale: false,
+    },
+  ];
+}
+
+function createMovieLocalizations(): MovieLocalization[] {
+  return [
+    {
+      title: 'source title',
+      subtitle: 'source subtitle',
+      synopsis: 'source synopsis',
+      description: 'source description',
+      language_tag: 'en-US',
+      is_default_locale: true,
+    },
+    {
+      title: 'localized title 1',
+      subtitle: 'localized subtitle 1',
+      synopsis: 'localized synopsis',
+      description: 'localized description',
+      language_tag: 'de-DE',
+      is_default_locale: false,
+    },
+    {
+      title: 'localized title 2',
+      subtitle: null,
       synopsis: null,
       description: null,
       language_tag: 'et-EE',

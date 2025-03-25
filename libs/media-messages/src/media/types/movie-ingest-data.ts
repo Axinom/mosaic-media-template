@@ -10,6 +10,7 @@ export interface MovieIngestData
     ImagesIngestElement,
     LocalizationsIngestElement {
   title?: string;
+  subtitle?: string;
   description?: string;
   original_title?: string;
   released?: string;

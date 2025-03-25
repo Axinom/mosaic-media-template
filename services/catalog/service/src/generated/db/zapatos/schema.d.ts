@@ -5697,6 +5697,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **movie_localizations.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -5741,6 +5747,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **movie_localizations.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle: string | null;
     }
     export interface Whereable {
       /**
@@ -5785,6 +5797,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_localizations.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -5829,6 +5847,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_localizations.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -5873,6 +5897,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_localizations.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'movie_localizations_pkey' | 'unique_by_movie_id_and_locale';
     export type Column = keyof Selectable;
@@ -7081,6 +7111,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **movie_view.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -7143,6 +7179,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **movie_view.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle: string | null;
     }
     export interface Whereable {
       /**
@@ -7205,6 +7247,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_view.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -7267,6 +7315,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_view.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -7329,6 +7383,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_view.subtitle**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      subtitle?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;

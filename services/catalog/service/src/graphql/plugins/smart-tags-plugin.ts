@@ -15,6 +15,10 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           title: {
             description: 'Title of the movie.',
           },
+          subtitle: {
+            description: 'Subtitle of the movie.',
+            ...disableFilterAndOrder,
+          },
           original_title: {
             description: 'Original title of the movie.',
             ...disableFilterAndOrder,

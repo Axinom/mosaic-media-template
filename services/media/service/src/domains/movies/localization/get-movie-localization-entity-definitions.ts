@@ -25,12 +25,21 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     ],
   },
   {
+    field_name: 'subtitle',
+    field_type: 'STRING',
+    ui_field_type: 'TEXTBOX',
+    title: 'Subtitle',
+    description: 'The subtitle of the movie.',
+    sort_index: 2,
+    field_validation_rules: [],
+  },
+  {
     field_name: 'synopsis',
     field_type: 'STRING',
     ui_field_type: 'TEXTAREA',
     title: 'Synopsis',
     description: 'The synopsis of the movie.',
-    sort_index: 2,
+    sort_index: 3,
     field_validation_rules: [],
   },
   {
@@ -39,7 +48,7 @@ export const MovieFieldDefinitions: EntityFieldDefinition[] = [
     ui_field_type: 'TEXTAREA',
     title: 'Description',
     description: 'The description of the movie.',
-    sort_index: 3,
+    sort_index: 4,
     field_validation_rules: [],
   },
 ];

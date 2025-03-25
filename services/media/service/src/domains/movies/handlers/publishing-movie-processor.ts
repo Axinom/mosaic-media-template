@@ -98,6 +98,7 @@ const movieDataAggregator: SnapshotDataAggregator = async (
         is_default_locale: true,
         language_tag: DEFAULT_LOCALE_TAG,
         title: movie.title,
+        subtitle: movie.subtitle ?? undefined,
         synopsis: movie.synopsis ?? undefined,
         description: movie.description ?? undefined,
       },

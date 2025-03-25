@@ -70,6 +70,7 @@ export class IngestMovieProcessor extends DefaultIngestEntityProcessor {
         ...optional(ingestItemId, (val) => ({ ingest_correlation_id: val })),
         external_id: content.item.external_id,
         title: movie.title?.trim(),
+        ...nullable(movie.subtitle, (val) => ({ subtitle: val?.trim() })),
         ...nullable(movie.original_title, (val) => ({
           original_title: val?.trim(),
         })),

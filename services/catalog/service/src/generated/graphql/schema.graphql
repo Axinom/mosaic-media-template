@@ -936,6 +936,9 @@ type Movie {
   """Short description of the main plot elements."""
   synopsis: String
 
+  """Subtitle of the movie."""
+  subtitle: String
+
   """Reads and enables pagination through a set of `MovieGenresRelation`."""
   genres(
     """Only read the first `n` values of the set."""

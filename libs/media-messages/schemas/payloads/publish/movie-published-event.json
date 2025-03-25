@@ -72,6 +72,10 @@
             "type": "string",
             "description": "The localized title of this movie."
           },
+          "subtitle": {
+            "type": ["string", "null"],
+            "description": "The localized subtitle of this movie."
+          },
           "description": {
             "type": ["string", "null"],
             "description": "The localized description of this movie."

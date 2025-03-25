@@ -16,6 +16,7 @@ import { LOCALIZATION_MOVIE_TYPE } from './constants';
 
 export interface GqlMovieLocalization extends GqlLocalization {
   title: string;
+  subtitle?: string | null;
   description?: string | null;
   synopsis?: string | null;
 }
@@ -48,6 +49,7 @@ export const getMovieLocalizationsMetadata = async (
           is_default_locale: l[LOCALIZATION_IS_DEFAULT_LOCALE],
           language_tag: l[LOCALIZATION_LANGUAGE_TAG],
           title: l.title,
+          subtitle: l.subtitle,
           description: l.description,
           synopsis: l.synopsis,
         }),

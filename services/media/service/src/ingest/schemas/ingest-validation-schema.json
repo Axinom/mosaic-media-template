@@ -34,6 +34,10 @@
       "type": ["string", "null"],
       "description": "Brief summary of a media item, usually shorter than description."
     },
+    "subtitle": {
+      "type": ["string", "null"],
+      "description": "Subtitle of a media item."
+    },
     "original_title": {
       "type": ["string", "null"],
       "description": "Original title of a media item."
@@ -245,6 +249,10 @@
                   "properties": {
                     "title": {
                       "$ref": "#/definitions/title",
+                      "examples": ["Avatar"]
+                    },
+                    "subtitle": {
+                      "$ref": "#/definitions/subtitle",
                       "examples": ["Avatar"]
                     },
                     "original_title": {

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.2
--- Dumped by pg_dump version 16.2
+-- Dumped from database version 16.5
+-- Dumped by pg_dump version 16.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -2818,7 +2818,8 @@ CREATE TABLE app_public.movie_localizations (
     is_default_locale boolean NOT NULL,
     title text NOT NULL,
     description text,
-    synopsis text
+    synopsis text,
+    subtitle text
 );
 
 
@@ -2959,7 +2960,8 @@ CREATE VIEW app_public.movie_view AS
     p.tags,
     l.title,
     l.description,
-    l.synopsis
+    l.synopsis,
+    l.subtitle
    FROM (app_public.movie_localizations l
      JOIN app_public.movie p ON ((l.movie_id = p.id)))
   WHERE (l.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting));

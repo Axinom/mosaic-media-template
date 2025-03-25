@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.2
--- Dumped by pg_dump version 16.2
+-- Dumped from database version 16.5
+-- Dumped by pg_dump version 16.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1013,7 +1013,7 @@ CREATE FUNCTION app_hidden.localizable_movie_insert() RETURNS trigger
     AS $$
 DECLARE
 	_jsonb_new jsonb := row_to_json(NEW.*);
-	_fields text[] := string_to_array('title,synopsis,description', ',') || string_to_array('id', ',');
+	_fields text[] := string_to_array('title,subtitle,synopsis,description', ',') || string_to_array('id', ',');
 	_payload jsonb := '{}'::jsonb;
 	_field text;
 BEGIN
@@ -1041,7 +1041,7 @@ DECLARE
 	_jsonb_old jsonb := row_to_json(OLD.*);
 	_jsonb_new jsonb := row_to_json(NEW.*);
 	_required_fields text[] := string_to_array('id', ',');
-	_localizable_fields text[] := string_to_array('title,synopsis,description', ',');
+	_localizable_fields text[] := string_to_array('title,subtitle,synopsis,description', ',');
 	_payload jsonb := '{}'::jsonb;
 	_metadata jsonb;
 	_field text;
@@ -5631,6 +5631,7 @@ CREATE TABLE app_public.movies (
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
     publish_status app_public.publish_status_enum DEFAULT 'NOT_PUBLISHED'::text NOT NULL,
     ingest_correlation_id integer,
+    subtitle text,
     CONSTRAINT title_max_length CHECK (ax_utils.constraint_max_length(title, 100, 'The title can only be %2$s characters long.'::text)),
     CONSTRAINT title_not_empty CHECK (ax_utils.constraint_not_empty(title, 'The title cannot be empty.'::text))
 );
@@ -14985,6 +14986,13 @@ GRANT INSERT(main_video_id),UPDATE(main_video_id) ON TABLE app_public.movies TO 
 --
 
 GRANT UPDATE(ingest_correlation_id) ON TABLE app_public.movies TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN movies.subtitle; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(subtitle),UPDATE(subtitle) ON TABLE app_public.movies TO media_service_gql_role;
 
 
 --

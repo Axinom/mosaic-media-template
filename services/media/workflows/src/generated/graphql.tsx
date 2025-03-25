@@ -7228,6 +7228,7 @@ export type Movie = {
   publishStatus: PublishStatus;
   released?: Maybe<Scalars['Date']>;
   studio?: Maybe<Scalars['String']>;
+  subtitle?: Maybe<Scalars['String']>;
   synopsis?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   updatedDate: Scalars['Datetime'];
@@ -7377,6 +7378,8 @@ export type MovieCondition = {
   released?: InputMaybe<Scalars['Date']>;
   /** Checks for equality with the object’s `studio` field. */
   studio?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `subtitle` field. */
+  subtitle?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `synopsis` field. */
   synopsis?: InputMaybe<Scalars['String']>;
   /**
@@ -7459,6 +7462,8 @@ export type MovieFilter = {
   released?: InputMaybe<DateFilter>;
   /** Filter by the object’s `studio` field. */
   studio?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `subtitle` field. */
+  subtitle?: InputMaybe<StringFilter>;
   /** Filter by the object’s `synopsis` field. */
   synopsis?: InputMaybe<StringFilter>;
   /** Filter by the object’s `title` field. */
@@ -7684,6 +7689,7 @@ export type MovieInput = {
   originalTitle?: InputMaybe<Scalars['String']>;
   released?: InputMaybe<Scalars['Date']>;
   studio?: InputMaybe<Scalars['String']>;
+  subtitle?: InputMaybe<Scalars['String']>;
   synopsis?: InputMaybe<Scalars['String']>;
   /**
    * @maxLength(100)
@@ -7700,6 +7706,7 @@ export type MoviePatch = {
   originalTitle?: InputMaybe<Scalars['String']>;
   released?: InputMaybe<Scalars['Date']>;
   studio?: InputMaybe<Scalars['String']>;
+  subtitle?: InputMaybe<Scalars['String']>;
   synopsis?: InputMaybe<Scalars['String']>;
   /**
    * @maxLength(100)
@@ -8251,6 +8258,8 @@ export enum MoviesOrderBy {
   ReleasedDesc = 'RELEASED_DESC',
   StudioAsc = 'STUDIO_ASC',
   StudioDesc = 'STUDIO_DESC',
+  SubtitleAsc = 'SUBTITLE_ASC',
+  SubtitleDesc = 'SUBTITLE_DESC',
   SynopsisAsc = 'SYNOPSIS_ASC',
   SynopsisDesc = 'SYNOPSIS_DESC',
   TitleAsc = 'TITLE_ASC',
@@ -17015,7 +17024,7 @@ export type MovieQueryVariables = Exact<{
 }>;
 
 
-export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null };
+export type MovieQuery = { __typename?: 'Query', movie?: { __typename?: 'Movie', title: string, subtitle?: string | null, originalTitle?: string | null, synopsis?: string | null, description?: string | null, externalId?: string | null, released?: any | null, studio?: string | null, mainVideoId?: any | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, moviesTrailers: { __typename?: 'MoviesTrailersConnection', totalCount: number }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageType: MovieImageType, imageId: any }> } } | null, movieGenres?: { __typename?: 'MovieGenresConnection', nodes: Array<{ __typename?: 'MovieGenre', title: string, id: number }> } | null };
 
 export type DeleteMovieMutationVariables = Exact<{
   input: DeleteMovieInput;
@@ -19791,6 +19800,7 @@ export const MovieDocument = gql`
     query Movie($id: Int!) {
   movie(id: $id) {
     title
+    subtitle
     originalTitle
     synopsis
     description

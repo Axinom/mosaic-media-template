@@ -108,7 +108,7 @@ async function main(): Promise<void> {
     let payloads: UpsertLocalizationSourceEntityCommand[] = [];
     switch (typeMapping[typeIndex]?.type) {
       case 'MOVIE': {
-        const { batch, lastEntityId } = await generateGenericPayloads(
+        const { batch, lastEntityId } = await generateMoviePayloads(
           'movies',
           'movies_images',
           LOCALIZATION_MOVIE_TYPE,
@@ -280,6 +280,64 @@ const generateGenericPayloads = async (
       image_id: entity.cover?.image_id,
       fields: {
         title: entity.title,
+        description: entity.description,
+        synopsis: entity.synopsis,
+      },
+    }),
+  );
+
+  return {
+    batch: payloads,
+    lastEntityId: batch.length > 0 ? batch[batch.length - 1].id : undefined,
+  };
+};
+
+const generateMoviePayloads = async (
+  tableName: movies.Table,
+  imagesTableName:
+    | movies_images.Table
+    | tvshows_images.Table
+    | episodes_images.Table
+    | collections_images.Table,
+  entityType: string,
+  entityId: number | undefined,
+  serviceId: string,
+  ownerPool: OwnerPgPool,
+) => {
+  const batch = await select(
+    tableName,
+    {
+      ...optional(entityId ? conditions.gt(entityId) : undefined, (val) => ({
+        id: val,
+      })),
+    },
+    {
+      limit: 1000,
+      columns: ['id', 'title', 'description', 'synopsis', 'subtitle'],
+      order: { by: 'id', direction: 'ASC' },
+      lateral: {
+        cover: selectOne(
+          imagesTableName,
+          {
+            [`${singularize(tableName)}_id`]: parent('id'),
+            image_type: 'COVER',
+          },
+          { columns: ['image_id'] },
+        ),
+      },
+    },
+  ).run(ownerPool);
+
+  const payloads = batch.map<UpsertLocalizationSourceEntityCommand>(
+    (entity) => ({
+      service_id: serviceId,
+      entity_type: entityType,
+      entity_id: entity.id.toString(),
+      entity_title: entity.title,
+      image_id: entity.cover?.image_id,
+      fields: {
+        title: entity.title,
+        subtitle: entity.subtitle,
         description: entity.description,
         synopsis: entity.synopsis,
       },

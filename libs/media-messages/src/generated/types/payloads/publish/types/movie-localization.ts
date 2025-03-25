@@ -12,6 +12,10 @@ export interface MovieLocalization {
    */
   title: string;
   /**
+   * The localized subtitle of this movie.
+   */
+  subtitle?: string | null;
+  /**
    * The localized description of this movie.
    */
   description?: string | null;

@@ -128,6 +128,7 @@ export class MoviePublishedEventHandler extends TransactionalInboxMessageHandler
             is_default_locale: l.is_default_locale,
             locale: l.language_tag,
             title: l.title,
+            subtitle: l.subtitle,
             synopsis: l.synopsis,
             description: l.description,
           }),
