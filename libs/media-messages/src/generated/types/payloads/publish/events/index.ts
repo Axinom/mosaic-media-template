@@ -6,6 +6,8 @@ export * from './movie-genres-published-event';
 export * from './movie-genres-unpublished-event';
 export * from './movie-published-event';
 export * from './movie-unpublished-event';
+export * from './review-published-event';
+export * from './review-unpublished-event';
 export * from './season-published-event';
 export * from './season-unpublished-event';
 export * from './tvshow-genres-published-event';
@@ -22,6 +24,8 @@ export enum PublishEventsSchemas {
   MovieGenresUnpublishedEvent = 'payloads/publish/events/movie-genres-unpublished-event.json',
   MoviePublishedEvent = 'payloads/publish/events/movie-published-event.json',
   MovieUnpublishedEvent = 'payloads/publish/events/movie-unpublished-event.json',
+  ReviewPublishedEvent = 'payloads/publish/events/review-published-event.json',
+  ReviewUnpublishedEvent = 'payloads/publish/events/review-unpublished-event.json',
   SeasonPublishedEvent = 'payloads/publish/events/season-published-event.json',
   SeasonUnpublishedEvent = 'payloads/publish/events/season-unpublished-event.json',
   TvshowGenresPublishedEvent = 'payloads/publish/events/tvshow-genres-published-event.json',
@@ -39,6 +43,8 @@ export enum PublishEventsTypes {
   MovieGenresUnpublishedEvent = 'MovieGenresUnpublishedEvent',
   MoviePublishedEvent = 'MoviePublishedEvent',
   MovieUnpublishedEvent = 'MovieUnpublishedEvent',
+  ReviewPublishedEvent = 'ReviewPublishedEvent',
+  ReviewUnpublishedEvent = 'ReviewUnpublishedEvent',
   SeasonPublishedEvent = 'SeasonPublishedEvent',
   SeasonUnpublishedEvent = 'SeasonUnpublishedEvent',
   TvshowGenresPublishedEvent = 'TvshowGenresPublishedEvent',

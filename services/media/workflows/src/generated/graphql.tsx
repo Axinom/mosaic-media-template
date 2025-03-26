@@ -3861,6 +3861,7 @@ export type DeleteSeasonsTvshowGenrePayloadSeasonsTvshowGenreEdgeArgs = {
  * All input for the `deleteSnapshot` mutation.
  * @permissions: COLLECTIONS_EDIT,ADMIN
  * @permissions: MOVIES_EDIT,ADMIN
+ * @permissions: REVIEWS_EDIT,ADMIN
  * @permissions: SETTINGS_EDIT,ADMIN
  * @permissions: TVSHOWS_EDIT,ADMIN
  */
@@ -4306,6 +4307,8 @@ export enum EntityType {
   Movie = 'MOVIE',
   /** Movie Genre */
   MovieGenre = 'MOVIE_GENRE',
+  /** Review */
+  Review = 'REVIEW',
   /** Season */
   Season = 'SEASON',
   /** Tvshow */
@@ -8862,6 +8865,9 @@ export type Mutation = {
   createMoviesTrailer?: Maybe<CreateMoviesTrailerPayload>;
   /** Creates a single `Review`. */
   createReview?: Maybe<CreateReviewPayload>;
+  /** Creates a new Review snapshot. */
+  createReviewSnapshot?: Maybe<Snapshot>;
+  createReviewSnapshots?: Maybe<BulkPublishingPayload>;
   /** Creates a single `Season`. */
   createSeason?: Maybe<CreateSeasonPayload>;
   /** Creates a single `SeasonsCast`. */
@@ -9033,6 +9039,9 @@ export type Mutation = {
   /** Creates a Movie genres snapshot and immediately publishes it if it's valid. */
   publishMovieGenres?: Maybe<Snapshot>;
   publishMovies?: Maybe<BulkPublishingPayload>;
+  /** Creates a Review snapshot and immediately publishes it if it's valid. */
+  publishReview?: Maybe<Snapshot>;
+  publishReviews?: Maybe<BulkPublishingPayload>;
   /** Creates a Season snapshot and immediately publishes it if it's valid. */
   publishSeason?: Maybe<Snapshot>;
   publishSeasons?: Maybe<BulkPublishingPayload>;
@@ -9056,6 +9065,9 @@ export type Mutation = {
   /** Unpublishes the currently published Movie genres snapshot. */
   unpublishMovieGenres?: Maybe<Snapshot>;
   unpublishMovies?: Maybe<BulkMutationPayload>;
+  /** Unpublishes the currently published Review snapshot. */
+  unpublishReview?: Maybe<Snapshot>;
+  unpublishReviews?: Maybe<BulkMutationPayload>;
   /** Unpublishes the currently published Season snapshot. */
   unpublishSeason?: Maybe<Snapshot>;
   unpublishSeasons?: Maybe<BulkMutationPayload>;
@@ -9328,6 +9340,18 @@ export type MutationCreateMoviesTrailerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateReviewArgs = {
   input: CreateReviewInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateReviewSnapshotArgs = {
+  reviewId: Scalars['Int'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateReviewSnapshotsArgs = {
+  filter?: InputMaybe<ReviewFilter>;
 };
 
 
@@ -9896,6 +9920,18 @@ export type MutationPublishMoviesArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationPublishReviewArgs = {
+  reviewId: Scalars['Int'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationPublishReviewsArgs = {
+  filter?: InputMaybe<ReviewFilter>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationPublishSeasonArgs = {
   seasonId: Scalars['Int'];
 };
@@ -9976,6 +10012,18 @@ export type MutationUnpublishMovieArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUnpublishMoviesArgs = {
   filter?: InputMaybe<MovieFilter>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUnpublishReviewArgs = {
+  reviewId: Scalars['Int'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUnpublishReviewsArgs = {
+  filter?: InputMaybe<ReviewFilter>;
 };
 
 
@@ -11552,10 +11600,28 @@ export type Review = {
   description?: Maybe<Scalars['String']>;
   externalId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
+  publishedDate?: Maybe<Scalars['Datetime']>;
+  publishedUser?: Maybe<Scalars['String']>;
+  publishStatus: PublishStatus;
   rating?: Maybe<Scalars['Int']>;
+  /** Reads and enables pagination through a set of `ReviewsSnapshot`. */
+  reviewsSnapshots: ReviewsSnapshotsConnection;
   title: Scalars['String'];
   updatedDate: Scalars['Datetime'];
   updatedUser: Scalars['String'];
+};
+
+
+/** @permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN */
+export type ReviewReviewsSnapshotsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ReviewsSnapshotCondition>;
+  filter?: InputMaybe<ReviewsSnapshotFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ReviewsSnapshotsOrderBy>>;
 };
 
 /** A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -11570,6 +11636,12 @@ export type ReviewCondition = {
   externalId?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `publishedDate` field. */
+  publishedDate?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `publishedUser` field. */
+  publishedUser?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatus>;
   /** Checks for equality with the object’s `rating` field. */
   rating?: InputMaybe<Scalars['Int']>;
   /**
@@ -11602,8 +11674,18 @@ export type ReviewFilter = {
   not?: InputMaybe<ReviewFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<ReviewFilter>>;
+  /** Filter by the object’s `publishedDate` field. */
+  publishedDate?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `publishedUser` field. */
+  publishedUser?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `publishStatus` field. */
+  publishStatus?: InputMaybe<PublishStatusFilter>;
   /** Filter by the object’s `rating` field. */
   rating?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `reviewsSnapshots` relation. */
+  reviewsSnapshots?: InputMaybe<ReviewToManyReviewsSnapshotFilter>;
+  /** Some related `reviewsSnapshots` exist. */
+  reviewsSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
   /** Filter by the object’s `title` field. */
   title?: InputMaybe<StringFilter>;
   /** Filter by the object’s `updatedDate` field. */
@@ -11627,6 +11709,7 @@ export type ReviewInput = {
 export type ReviewPatch = {
   description?: InputMaybe<Scalars['String']>;
   externalId?: InputMaybe<Scalars['String']>;
+  publishStatus?: InputMaybe<PublishStatus>;
   rating?: InputMaybe<Scalars['Int']>;
   /**
    * @maxLength(100)
@@ -11675,6 +11758,12 @@ export enum ReviewsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PublishStatusAsc = 'PUBLISH_STATUS_ASC',
+  PublishStatusDesc = 'PUBLISH_STATUS_DESC',
+  PublishedDateAsc = 'PUBLISHED_DATE_ASC',
+  PublishedDateDesc = 'PUBLISHED_DATE_DESC',
+  PublishedUserAsc = 'PUBLISHED_USER_ASC',
+  PublishedUserDesc = 'PUBLISHED_USER_DESC',
   RatingAsc = 'RATING_ASC',
   RatingDesc = 'RATING_DESC',
   TitleAsc = 'TITLE_ASC',
@@ -11684,6 +11773,92 @@ export enum ReviewsOrderBy {
   UpdatedUserAsc = 'UPDATED_USER_ASC',
   UpdatedUserDesc = 'UPDATED_USER_DESC'
 }
+
+/** @permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN */
+export type ReviewsSnapshot = {
+  __typename?: 'ReviewsSnapshot';
+  /** Reads a single `Review` that is related to this `ReviewsSnapshot`. */
+  review?: Maybe<Review>;
+  reviewId: Scalars['Int'];
+  /** Reads a single `Snapshot` that is related to this `ReviewsSnapshot`. */
+  snapshot?: Maybe<Snapshot>;
+  snapshotId: Scalars['Int'];
+};
+
+/**
+ * A condition to be used against `ReviewsSnapshot` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type ReviewsSnapshotCondition = {
+  /** Checks for equality with the object’s `reviewId` field. */
+  reviewId?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `snapshotId` field. */
+  snapshotId?: InputMaybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `ReviewsSnapshot` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewsSnapshotFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ReviewsSnapshotFilter>>;
+  /** Negates the expression. */
+  not?: InputMaybe<ReviewsSnapshotFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ReviewsSnapshotFilter>>;
+  /** Filter by the object’s `review` relation. */
+  review?: InputMaybe<ReviewFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `snapshot` relation. */
+  snapshot?: InputMaybe<SnapshotFilter>;
+  /** Filter by the object’s `snapshotId` field. */
+  snapshotId?: InputMaybe<IntFilter>;
+};
+
+/**
+ * A connection to a list of `ReviewsSnapshot` values.
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN
+ */
+export type ReviewsSnapshotsConnection = {
+  __typename?: 'ReviewsSnapshotsConnection';
+  /** A list of edges which contains the `ReviewsSnapshot` and cursor to aid in pagination. */
+  edges: Array<ReviewsSnapshotsEdge>;
+  /** A list of `ReviewsSnapshot` objects. */
+  nodes: Array<ReviewsSnapshot>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReviewsSnapshot` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ReviewsSnapshot` edge in the connection. */
+export type ReviewsSnapshotsEdge = {
+  __typename?: 'ReviewsSnapshotsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewsSnapshot` at the end of the edge. */
+  node: ReviewsSnapshot;
+};
+
+/** Methods to use when ordering `ReviewsSnapshot`. */
+export enum ReviewsSnapshotsOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ReviewIdAsc = 'REVIEW_ID_ASC',
+  ReviewIdDesc = 'REVIEW_ID_DESC',
+  SnapshotIdAsc = 'SNAPSHOT_ID_ASC',
+  SnapshotIdDesc = 'SNAPSHOT_ID_DESC'
+}
+
+/** A filter to be used against many `ReviewsSnapshot` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewToManyReviewsSnapshotFilter = {
+  /** Every related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<ReviewsSnapshotFilter>;
+  /** No related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<ReviewsSnapshotFilter>;
+  /** Some related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<ReviewsSnapshotFilter>;
+};
 
 /** @permissions: TVSHOWS_VIEW,TVSHOWS_EDIT,ADMIN */
 export type Season = {
@@ -13049,7 +13224,7 @@ export type SeasonToManySeasonsTvshowGenreFilter = {
 
 /**
  * Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type Snapshot = {
   __typename?: 'Snapshot';
@@ -13069,6 +13244,8 @@ export type Snapshot = {
   moviesSnapshots: MoviesSnapshotsConnection;
   publishedDate?: Maybe<Scalars['Datetime']>;
   publishId: Scalars['String'];
+  /** Reads and enables pagination through a set of `ReviewsSnapshot`. */
+  reviewsSnapshots: ReviewsSnapshotsConnection;
   scheduledDate?: Maybe<Scalars['Datetime']>;
   /** Reads and enables pagination through a set of `SeasonsSnapshot`. */
   seasonsSnapshots: SeasonsSnapshotsConnection;
@@ -13088,7 +13265,7 @@ export type Snapshot = {
 
 /**
  * Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotCollectionsSnapshotsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
@@ -13104,7 +13281,7 @@ export type SnapshotCollectionsSnapshotsArgs = {
 
 /**
  * Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotEpisodesSnapshotsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
@@ -13120,7 +13297,7 @@ export type SnapshotEpisodesSnapshotsArgs = {
 
 /**
  * Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotMoviesSnapshotsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
@@ -13136,7 +13313,23 @@ export type SnapshotMoviesSnapshotsArgs = {
 
 /**
  * Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ */
+export type SnapshotReviewsSnapshotsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ReviewsSnapshotCondition>;
+  filter?: InputMaybe<ReviewsSnapshotFilter>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ReviewsSnapshotsOrderBy>>;
+};
+
+
+/**
+ * Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotSeasonsSnapshotsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
@@ -13152,7 +13345,7 @@ export type SnapshotSeasonsSnapshotsArgs = {
 
 /**
  * Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotSnapshotValidationResultsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
@@ -13168,7 +13361,7 @@ export type SnapshotSnapshotValidationResultsArgs = {
 
 /**
  * Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotTvshowsSnapshotsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
@@ -13264,6 +13457,10 @@ export type SnapshotFilter = {
   publishedDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `publishId` field. */
   publishId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `reviewsSnapshots` relation. */
+  reviewsSnapshots?: InputMaybe<SnapshotToManyReviewsSnapshotFilter>;
+  /** Some related `reviewsSnapshots` exist. */
+  reviewsSnapshotsExist?: InputMaybe<Scalars['Boolean']>;
   /** Filter by the object’s `scheduledDate` field. */
   scheduledDate?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `seasonsSnapshots` relation. */
@@ -13294,7 +13491,7 @@ export type SnapshotFilter = {
 
 /**
  * A connection to a list of `Snapshot` values.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotsConnection = {
   __typename?: 'SnapshotsConnection';
@@ -13455,6 +13652,16 @@ export type SnapshotToManyMoviesSnapshotFilter = {
   some?: InputMaybe<MoviesSnapshotFilter>;
 };
 
+/** A filter to be used against many `ReviewsSnapshot` object types. All fields are combined with a logical ‘and.’ */
+export type SnapshotToManyReviewsSnapshotFilter = {
+  /** Every related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<ReviewsSnapshotFilter>;
+  /** No related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<ReviewsSnapshotFilter>;
+  /** Some related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<ReviewsSnapshotFilter>;
+};
+
 /** A filter to be used against many `SeasonsSnapshot` object types. All fields are combined with a logical ‘and.’ */
 export type SnapshotToManySeasonsSnapshotFilter = {
   /** Every related `SeasonsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -13557,7 +13764,7 @@ export type SnapshotValidationIssueSeverityFilter = {
   notIn?: InputMaybe<Array<SnapshotValidationIssueSeverity>>;
 };
 
-/** @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
+/** @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN */
 export type SnapshotValidationResult = {
   __typename?: 'SnapshotValidationResult';
   context: SnapshotValidationIssueContext;
@@ -13615,7 +13822,7 @@ export type SnapshotValidationResultFilter = {
 
 /**
  * A connection to a list of `SnapshotValidationResult` values.
- * @permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+ * @permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
  */
 export type SnapshotValidationResultsConnection = {
   __typename?: 'SnapshotValidationResultsConnection';
@@ -17607,7 +17814,7 @@ export type ReviewQueryVariables = Exact<{
 }>;
 
 
-export type ReviewQuery = { __typename?: 'Query', review?: { __typename?: 'Review', title: string, rating?: number | null, externalId?: string | null, description?: string | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string } | null };
+export type ReviewQuery = { __typename?: 'Query', review?: { __typename?: 'Review', title: string, rating?: number | null, externalId?: string | null, description?: string | null, id: number, createdDate: any, createdUser: string, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, publishedDate?: any | null, publishedUser?: string | null } | null };
 
 export type UpdateReviewMutationVariables = Exact<{
   input: UpdateReviewInput;
@@ -17623,12 +17830,33 @@ export type DeleteReviewMutationVariables = Exact<{
 
 export type DeleteReviewMutation = { __typename?: 'Mutation', deleteReview?: { __typename?: 'DeleteReviewPayload', clientMutationId?: string | null } | null };
 
+export type PublishReviewMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type PublishReviewMutation = { __typename?: 'Mutation', publishReview?: { __typename?: 'Snapshot', id: number } | null };
+
+export type UnpublishReviewMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type UnpublishReviewMutation = { __typename?: 'Mutation', unpublishReview?: { __typename?: 'Snapshot', id: number } | null };
+
 export type ReviewTitleQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
 export type ReviewTitleQuery = { __typename?: 'Query', review?: { __typename?: 'Review', title: string } | null };
+
+export type CreateReviewSnapshotMutationVariables = Exact<{
+  reviewId: Scalars['Int'];
+}>;
+
+
+export type CreateReviewSnapshotMutation = { __typename?: 'Mutation', createReviewSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
 export type ReviewsQueryVariables = Exact<{
   filter?: InputMaybe<ReviewFilter>;
@@ -21677,6 +21905,9 @@ export const ReviewDocument = gql`
     createdUser
     updatedDate
     updatedUser
+    publishStatus
+    publishedDate
+    publishedUser
   }
 }
     `;
@@ -21777,6 +22008,72 @@ export function useDeleteReviewMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteReviewMutationHookResult = ReturnType<typeof useDeleteReviewMutation>;
 export type DeleteReviewMutationResult = Apollo.MutationResult<DeleteReviewMutation>;
 export type DeleteReviewMutationOptions = Apollo.BaseMutationOptions<DeleteReviewMutation, DeleteReviewMutationVariables>;
+export const PublishReviewDocument = gql`
+    mutation PublishReview($id: Int!) {
+  publishReview(reviewId: $id) {
+    id
+  }
+}
+    `;
+export type PublishReviewMutationFn = Apollo.MutationFunction<PublishReviewMutation, PublishReviewMutationVariables>;
+
+/**
+ * __usePublishReviewMutation__
+ *
+ * To run a mutation, you first call `usePublishReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePublishReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [publishReviewMutation, { data, loading, error }] = usePublishReviewMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePublishReviewMutation(baseOptions?: Apollo.MutationHookOptions<PublishReviewMutation, PublishReviewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PublishReviewMutation, PublishReviewMutationVariables>(PublishReviewDocument, options);
+      }
+export type PublishReviewMutationHookResult = ReturnType<typeof usePublishReviewMutation>;
+export type PublishReviewMutationResult = Apollo.MutationResult<PublishReviewMutation>;
+export type PublishReviewMutationOptions = Apollo.BaseMutationOptions<PublishReviewMutation, PublishReviewMutationVariables>;
+export const UnpublishReviewDocument = gql`
+    mutation UnpublishReview($id: Int!) {
+  unpublishReview(reviewId: $id) {
+    id
+  }
+}
+    `;
+export type UnpublishReviewMutationFn = Apollo.MutationFunction<UnpublishReviewMutation, UnpublishReviewMutationVariables>;
+
+/**
+ * __useUnpublishReviewMutation__
+ *
+ * To run a mutation, you first call `useUnpublishReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnpublishReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unpublishReviewMutation, { data, loading, error }] = useUnpublishReviewMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUnpublishReviewMutation(baseOptions?: Apollo.MutationHookOptions<UnpublishReviewMutation, UnpublishReviewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnpublishReviewMutation, UnpublishReviewMutationVariables>(UnpublishReviewDocument, options);
+      }
+export type UnpublishReviewMutationHookResult = ReturnType<typeof useUnpublishReviewMutation>;
+export type UnpublishReviewMutationResult = Apollo.MutationResult<UnpublishReviewMutation>;
+export type UnpublishReviewMutationOptions = Apollo.BaseMutationOptions<UnpublishReviewMutation, UnpublishReviewMutationVariables>;
 export const ReviewTitleDocument = gql`
     query ReviewTitle($id: Int!) {
   review(id: $id) {
@@ -21812,6 +22109,39 @@ export function useReviewTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type ReviewTitleQueryHookResult = ReturnType<typeof useReviewTitleQuery>;
 export type ReviewTitleLazyQueryHookResult = ReturnType<typeof useReviewTitleLazyQuery>;
 export type ReviewTitleQueryResult = Apollo.QueryResult<ReviewTitleQuery, ReviewTitleQueryVariables>;
+export const CreateReviewSnapshotDocument = gql`
+    mutation CreateReviewSnapshot($reviewId: Int!) {
+  createReviewSnapshot(reviewId: $reviewId) {
+    id
+  }
+}
+    `;
+export type CreateReviewSnapshotMutationFn = Apollo.MutationFunction<CreateReviewSnapshotMutation, CreateReviewSnapshotMutationVariables>;
+
+/**
+ * __useCreateReviewSnapshotMutation__
+ *
+ * To run a mutation, you first call `useCreateReviewSnapshotMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateReviewSnapshotMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createReviewSnapshotMutation, { data, loading, error }] = useCreateReviewSnapshotMutation({
+ *   variables: {
+ *      reviewId: // value for 'reviewId'
+ *   },
+ * });
+ */
+export function useCreateReviewSnapshotMutation(baseOptions?: Apollo.MutationHookOptions<CreateReviewSnapshotMutation, CreateReviewSnapshotMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateReviewSnapshotMutation, CreateReviewSnapshotMutationVariables>(CreateReviewSnapshotDocument, options);
+      }
+export type CreateReviewSnapshotMutationHookResult = ReturnType<typeof useCreateReviewSnapshotMutation>;
+export type CreateReviewSnapshotMutationResult = Apollo.MutationResult<CreateReviewSnapshotMutation>;
+export type CreateReviewSnapshotMutationOptions = Apollo.BaseMutationOptions<CreateReviewSnapshotMutation, CreateReviewSnapshotMutationVariables>;
 export const ReviewsDocument = gql`
     query Reviews($filter: ReviewFilter, $orderBy: [ReviewsOrderBy!], $after: Cursor) {
   filtered: reviews(filter: $filter, orderBy: $orderBy, first: 30, after: $after) {

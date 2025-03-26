@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "description": "Definition of the review publish format.",
+  "title": "review_published_event",
+  "properties": {
+    "content_id": {
+      "description": "Content ID of a review. Must match the pattern`^(review)-([a-zA-Z0-9_-]+)$.`",
+      "type": "string",
+      "pattern": "^(review)-([a-zA-Z0-9_-]+)$"
+    },
+    "rating": {
+      "description": "Review rating",
+      "type": "integer",
+      "minimum": 0
+    },
+    "localizations": {
+      "description": "Localizations for every defined locale.",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "title": "review_localization",
+        "required": [
+          "is_default_locale",
+          "language_tag",
+          "title"
+        ],
+        "properties": {
+          "is_default_locale": {
+            "type": "boolean",
+            "description": "Boolean flag to indicate if locale is default or not."
+          },
+          "language_tag": {
+            "type": "string",
+            "description": "The locale for which the values are localized."
+          },
+          "title": {
+            "type": "string",
+            "description": "The localized title of this review."
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The localized description of this review."
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "content_id",
+    "rating",
+    "localizations"
+  ],
+  "additionalProperties": false
+}

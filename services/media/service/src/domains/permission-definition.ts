@@ -196,6 +196,7 @@ export const ingestPermissionMappings: {
   { type: 'TVSHOW', permissions: ['TVSHOWS_EDIT', 'ADMIN'] },
   { type: 'SEASON', permissions: ['TVSHOWS_EDIT', 'ADMIN'] },
   { type: 'EPISODE', permissions: ['TVSHOWS_EDIT', 'ADMIN'] },
+  { type: 'REVIEW', permissions: ['REVIEWS_EDIT', 'ADMIN'] },
 ];
 
 /**

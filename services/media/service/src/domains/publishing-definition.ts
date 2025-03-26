@@ -5,6 +5,7 @@ import {
   publishingMovieProcessor,
 } from './movies';
 import { PermissionKey } from './permission-definition';
+import { publishingReviewProcessor } from './reviews/handlers/publishing-review-processor';
 import {
   publishingEpisodeProcessor,
   publishingSeasonProcessor,
@@ -27,6 +28,8 @@ export const entityPublishEventSettings = [
   PublishServiceMessagingSettings.EpisodeUnpublished,
   PublishServiceMessagingSettings.CollectionPublished,
   PublishServiceMessagingSettings.CollectionUnpublished,
+  PublishServiceMessagingSettings.ReviewPublished,
+  PublishServiceMessagingSettings.ReviewUnpublished,
 ];
 
 export const publishingProcessors = [
@@ -37,6 +40,7 @@ export const publishingProcessors = [
   publishingSeasonProcessor,
   publishingEpisodeProcessor,
   publishingCollectionProcessor,
+  publishingReviewProcessor,
 ];
 
 export const publishHandlerPermissions: PermissionKey[] = [
@@ -45,4 +49,5 @@ export const publishHandlerPermissions: PermissionKey[] = [
   'MOVIES_EDIT',
   'SETTINGS_EDIT',
   'TVSHOWS_EDIT',
+  'REVIEWS_EDIT',
 ];

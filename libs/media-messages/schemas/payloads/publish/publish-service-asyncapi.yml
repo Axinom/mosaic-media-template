@@ -25,6 +25,22 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/movie-unpublished-event'
+  'review.published':
+    bindings:
+      amqp:
+        queue:
+          name: inbox
+    subscribe:
+      message:
+        $ref: '#/components/messages/review-published-event'
+  'review.unpublished':
+    bindings:
+      amqp:
+        queue:
+          name: inbox
+    subscribe:
+      message:
+        $ref: '#/components/messages/review-unpublished-event'
   'season.published':
     bindings:
       amqp:
@@ -180,6 +196,20 @@ components:
       contentType: application/json
       payload:
         $ref: 'movie-unpublished-event.json'
+    review-published-event:
+      tags:
+        - name: aggregate-type:review
+        - name: aggregate-id-field:review ID
+      contentType: application/json
+      payload:
+        $ref: 'review-published-event.json'
+    review-unpublished-event:
+      tags:
+        - name: aggregate-type:review
+        - name: aggregate-id-field:review ID
+      contentType: application/json
+      payload:
+        $ref: 'review-unpublished-event.json'
     season-published-event:
       tags:
         - name: aggregate-type:season

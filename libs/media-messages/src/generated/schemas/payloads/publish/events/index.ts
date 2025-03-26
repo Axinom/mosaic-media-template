@@ -6,6 +6,8 @@ import * as MovieGenresPublishedEvent from './movie-genres-published-event.json'
 import * as MovieGenresUnpublishedEvent from './movie-genres-unpublished-event.json';
 import * as MoviePublishedEvent from './movie-published-event.json';
 import * as MovieUnpublishedEvent from './movie-unpublished-event.json';
+import * as ReviewPublishedEvent from './review-published-event.json';
+import * as ReviewUnpublishedEvent from './review-unpublished-event.json';
 import * as SeasonPublishedEvent from './season-published-event.json';
 import * as SeasonUnpublishedEvent from './season-unpublished-event.json';
 import * as TvshowGenresPublishedEvent from './tvshow-genres-published-event.json';
@@ -21,6 +23,8 @@ export const MovieGenresPublishedEventSchema = MovieGenresPublishedEvent;
 export const MovieGenresUnpublishedEventSchema = MovieGenresUnpublishedEvent;
 export const MoviePublishedEventSchema = MoviePublishedEvent;
 export const MovieUnpublishedEventSchema = MovieUnpublishedEvent;
+export const ReviewPublishedEventSchema = ReviewPublishedEvent;
+export const ReviewUnpublishedEventSchema = ReviewUnpublishedEvent;
 export const SeasonPublishedEventSchema = SeasonPublishedEvent;
 export const SeasonUnpublishedEventSchema = SeasonUnpublishedEvent;
 export const TvshowGenresPublishedEventSchema = TvshowGenresPublishedEvent;

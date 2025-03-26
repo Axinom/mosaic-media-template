@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "review_unpublished_event",
+  "description": "Review unpublished event.",
+  "properties": {
+    "content_id": {
+      "description": "Content ID of a review. Must match the pattern`^(review)-([a-zA-Z0-9_-]+)$.`",
+      "type": "string",
+      "pattern": "^(review)-([a-zA-Z0-9_-]+)$"
+    }
+  },
+  "required": [
+    "content_id"
+  ],
+  "additionalProperties": false
+}

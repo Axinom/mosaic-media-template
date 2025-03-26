@@ -27,6 +27,30 @@ export class PublishServiceMessagingSettings implements MessagingSettings {
     );
   /**
    * Defines the messaging settings for the event with message type 
+   * "ReviewPublished" and aggregate type "review".
+   * The aggregate ID field contains the value of the "review ID" field.
+   */
+  public static ReviewPublished = new PublishServiceMessagingSettings(
+    'ReviewPublished', 
+    'inbox', 
+    'review.published',
+    'event',
+    'review'
+    );
+  /**
+   * Defines the messaging settings for the event with message type 
+   * "ReviewUnpublished" and aggregate type "review".
+   * The aggregate ID field contains the value of the "review ID" field.
+   */
+  public static ReviewUnpublished = new PublishServiceMessagingSettings(
+    'ReviewUnpublished', 
+    'inbox', 
+    'review.unpublished',
+    'event',
+    'review'
+    );
+  /**
+   * Defines the messaging settings for the event with message type 
    * "SeasonPublished" and aggregate type "season".
    * The aggregate ID field contains the value of the "season ID" field.
    */

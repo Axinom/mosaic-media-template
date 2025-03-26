@@ -8,6 +8,11 @@
       "type": "string",
       "pattern": "^(movie)-([a-zA-Z0-9_-]+)$"
     },
+    "review_id": {
+      "description": "Content ID of a review. Must match the pattern`^(review)-([a-zA-Z0-9_-]+)$.`",
+      "type": "string",
+      "pattern": "^(review)-([a-zA-Z0-9_-]+)$"
+    },
     "movie_genre_id": {
       "description": "Content ID of a movie genre. Must match the pattern `^(movie_genre)-([a-zA-Z0-9_-]+)$`.",
       "type": "string",

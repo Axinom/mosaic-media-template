@@ -294,6 +294,14 @@
           "exchange": "event",
           "routingKey": "media-service.collection.unpublished"
         },
+        "ReviewPublished": {
+          "exchange": "event",
+          "routingKey": "media-service.review.published"
+        },
+        "ReviewUnpublished": {
+          "exchange": "event",
+          "routingKey": "media-service.review.unpublished"
+        },
         "DeclareImageTypes": {
           "exchange": "command",
           "routingKey": "ax-image-service.*.*.image_types.declare"

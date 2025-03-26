@@ -2,12 +2,14 @@ import { SubscriptionsPluginFactory } from '@axinom/mosaic-graphql-common';
 import { makePluginByCombiningPlugins } from 'graphile-utils';
 import { AllCollectionDevPlugins, AllCollectionPlugins } from './collections';
 import { AllMovieDevPlugins, AllMoviePlugins } from './movies';
+import { AllReviewPlugins } from './reviews/plugins';
 import { AllTvshowDevPlugins, AllTvshowPlugins } from './tvshows';
 
 export const AllModulesPlugins = makePluginByCombiningPlugins(
   AllCollectionPlugins,
   AllMoviePlugins,
   AllTvshowPlugins,
+  AllReviewPlugins,
 );
 
 export const AllModulesDevPlugins = makePluginByCombiningPlugins(

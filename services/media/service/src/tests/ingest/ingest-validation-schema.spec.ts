@@ -596,7 +596,7 @@ describe('ingest-validation-schema.json', () => {
           },
           {
             message:
-              'JSON path "document/items/0/type" should be equal to one of the allowed values: MOVIE, TVSHOW, SEASON, EPISODE (line: 5, column: 15)',
+              'JSON path "document/items/0/type" should be equal to one of the allowed values: MOVIE, TVSHOW, SEASON, EPISODE, REVIEW (line: 5, column: 15)',
             schemaPath: '#/properties/items/items/properties/type/enum',
             type: 'JsonSchemaValidation',
           },

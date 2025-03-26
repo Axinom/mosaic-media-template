@@ -2982,6 +2982,12 @@ input SnapshotFilter {
   """Some related `collectionsSnapshots` exist."""
   collectionsSnapshotsExist: Boolean
 
+  """Filter by the object’s `reviewsSnapshots` relation."""
+  reviewsSnapshots: SnapshotToManyReviewsSnapshotFilter
+
+  """Some related `reviewsSnapshots` exist."""
+  reviewsSnapshotsExist: Boolean
+
   """Checks for all expressions in this list."""
   and: [SnapshotFilter!]
 
@@ -3055,6 +3061,9 @@ enum EntityType {
 
   """Collection"""
   COLLECTION
+
+  """Review"""
+  REVIEW
 }
 
 """
@@ -6470,6 +6479,128 @@ input SnapshotToManyCollectionsSnapshotFilter {
 }
 
 """
+A filter to be used against many `ReviewsSnapshot` object types. All fields are combined with a logical ‘and.’
+"""
+input SnapshotToManyReviewsSnapshotFilter {
+  """
+  Every related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ReviewsSnapshotFilter
+
+  """
+  Some related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ReviewsSnapshotFilter
+
+  """
+  No related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ReviewsSnapshotFilter
+}
+
+"""
+A filter to be used against `ReviewsSnapshot` object types. All fields are combined with a logical ‘and.’
+"""
+input ReviewsSnapshotFilter {
+  """Filter by the object’s `reviewId` field."""
+  reviewId: IntFilter
+
+  """Filter by the object’s `snapshotId` field."""
+  snapshotId: IntFilter
+
+  """Filter by the object’s `review` relation."""
+  review: ReviewFilter
+
+  """Filter by the object’s `snapshot` relation."""
+  snapshot: SnapshotFilter
+
+  """Checks for all expressions in this list."""
+  and: [ReviewsSnapshotFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ReviewsSnapshotFilter!]
+
+  """Negates the expression."""
+  not: ReviewsSnapshotFilter
+}
+
+"""
+A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’
+"""
+input ReviewFilter {
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Filter by the object’s `description` field."""
+  description: StringFilter
+
+  """Filter by the object’s `rating` field."""
+  rating: IntFilter
+
+  """Filter by the object’s `createdDate` field."""
+  createdDate: DatetimeFilter
+
+  """Filter by the object’s `updatedDate` field."""
+  updatedDate: DatetimeFilter
+
+  """Filter by the object’s `createdUser` field."""
+  createdUser: StringFilter
+
+  """Filter by the object’s `updatedUser` field."""
+  updatedUser: StringFilter
+
+  """Filter by the object’s `externalId` field."""
+  externalId: StringFilter
+
+  """Filter by the object’s `publishedDate` field."""
+  publishedDate: DatetimeFilter
+
+  """Filter by the object’s `publishedUser` field."""
+  publishedUser: StringFilter
+
+  """Filter by the object’s `publishStatus` field."""
+  publishStatus: PublishStatusFilter
+
+  """Filter by the object’s `reviewsSnapshots` relation."""
+  reviewsSnapshots: ReviewToManyReviewsSnapshotFilter
+
+  """Some related `reviewsSnapshots` exist."""
+  reviewsSnapshotsExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [ReviewFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ReviewFilter!]
+
+  """Negates the expression."""
+  not: ReviewFilter
+}
+
+"""
+A filter to be used against many `ReviewsSnapshot` object types. All fields are combined with a logical ‘and.’
+"""
+input ReviewToManyReviewsSnapshotFilter {
+  """
+  Every related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ReviewsSnapshotFilter
+
+  """
+  Some related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ReviewsSnapshotFilter
+
+  """
+  No related `ReviewsSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ReviewsSnapshotFilter
+}
+
+"""
 A connection to a list of `CollectionsTag` values.
 @permissions: COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
 """
@@ -6659,7 +6790,7 @@ type CollectionsSnapshot {
 
 """
 Snapshots have custom RLS filtering, showing only snapshots of appropriate types based on user permissions.
-@permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+@permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
 """
 type Snapshot {
   id: Int!
@@ -6886,6 +7017,40 @@ type Snapshot {
     """
     filter: CollectionsSnapshotFilter
   ): CollectionsSnapshotsConnection!
+
+  """Reads and enables pagination through a set of `ReviewsSnapshot`."""
+  reviewsSnapshots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ReviewsSnapshot`."""
+    orderBy: [ReviewsSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReviewsSnapshotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReviewsSnapshotFilter
+  ): ReviewsSnapshotsConnection!
 }
 
 """
@@ -6895,7 +7060,7 @@ scalar JSON
 
 """
 A connection to a list of `SnapshotValidationResult` values.
-@permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+@permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
 """
 type SnapshotValidationResultsConnection {
   """A list of `SnapshotValidationResult` objects."""
@@ -6916,7 +7081,7 @@ type SnapshotValidationResultsConnection {
 }
 
 """
-@permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+@permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
 """
 type SnapshotValidationResult {
   id: Int!
@@ -11381,6 +11546,122 @@ input CollectionsSnapshotCondition {
   snapshotId: Int
 }
 
+"""
+A connection to a list of `ReviewsSnapshot` values.
+@permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN
+"""
+type ReviewsSnapshotsConnection {
+  """A list of `ReviewsSnapshot` objects."""
+  nodes: [ReviewsSnapshot!]!
+
+  """
+  A list of edges which contains the `ReviewsSnapshot` and cursor to aid in pagination.
+  """
+  edges: [ReviewsSnapshotsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `ReviewsSnapshot` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""@permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN"""
+type ReviewsSnapshot {
+  reviewId: Int!
+  snapshotId: Int!
+
+  """Reads a single `Review` that is related to this `ReviewsSnapshot`."""
+  review: Review
+
+  """Reads a single `Snapshot` that is related to this `ReviewsSnapshot`."""
+  snapshot: Snapshot
+}
+
+"""@permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN"""
+type Review {
+  id: Int!
+  title: String!
+  description: String
+  rating: Int
+  createdDate: Datetime!
+  updatedDate: Datetime!
+  createdUser: String!
+  updatedUser: String!
+  externalId: String
+  publishedDate: Datetime
+  publishedUser: String
+  publishStatus: PublishStatus!
+
+  """Reads and enables pagination through a set of `ReviewsSnapshot`."""
+  reviewsSnapshots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `ReviewsSnapshot`."""
+    orderBy: [ReviewsSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReviewsSnapshotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReviewsSnapshotFilter
+  ): ReviewsSnapshotsConnection!
+}
+
+"""Methods to use when ordering `ReviewsSnapshot`."""
+enum ReviewsSnapshotsOrderBy {
+  NATURAL
+  REVIEW_ID_ASC
+  REVIEW_ID_DESC
+  SNAPSHOT_ID_ASC
+  SNAPSHOT_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `ReviewsSnapshot` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ReviewsSnapshotCondition {
+  """Checks for equality with the object’s `reviewId` field."""
+  reviewId: Int
+
+  """Checks for equality with the object’s `snapshotId` field."""
+  snapshotId: Int
+}
+
+"""A `ReviewsSnapshot` edge in the connection."""
+type ReviewsSnapshotsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ReviewsSnapshot` at the end of the edge."""
+  node: ReviewsSnapshot!
+}
+
 """A `CollectionsSnapshot` edge in the connection."""
 type CollectionsSnapshotsEdge {
   """A cursor for use in pagination."""
@@ -13005,19 +13286,6 @@ type ReviewsConnection {
   totalCount: Int!
 }
 
-"""@permissions: REVIEWS_VIEW,REVIEWS_EDIT,ADMIN"""
-type Review {
-  id: Int!
-  title: String!
-  description: String
-  rating: Int
-  createdDate: Datetime!
-  updatedDate: Datetime!
-  createdUser: String!
-  updatedUser: String!
-  externalId: String
-}
-
 """A `Review` edge in the connection."""
 type ReviewsEdge {
   """A cursor for use in pagination."""
@@ -13048,6 +13316,12 @@ enum ReviewsOrderBy {
   UPDATED_USER_DESC
   EXTERNAL_ID_ASC
   EXTERNAL_ID_DESC
+  PUBLISHED_DATE_ASC
+  PUBLISHED_DATE_DESC
+  PUBLISHED_USER_ASC
+  PUBLISHED_USER_DESC
+  PUBLISH_STATUS_ASC
+  PUBLISH_STATUS_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -13086,52 +13360,20 @@ input ReviewCondition {
 
   """Checks for equality with the object’s `externalId` field."""
   externalId: String
-}
 
-"""
-A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’
-"""
-input ReviewFilter {
-  """Filter by the object’s `id` field."""
-  id: IntFilter
+  """Checks for equality with the object’s `publishedDate` field."""
+  publishedDate: Datetime
 
-  """Filter by the object’s `title` field."""
-  title: StringFilter
+  """Checks for equality with the object’s `publishedUser` field."""
+  publishedUser: String
 
-  """Filter by the object’s `description` field."""
-  description: StringFilter
-
-  """Filter by the object’s `rating` field."""
-  rating: IntFilter
-
-  """Filter by the object’s `createdDate` field."""
-  createdDate: DatetimeFilter
-
-  """Filter by the object’s `updatedDate` field."""
-  updatedDate: DatetimeFilter
-
-  """Filter by the object’s `createdUser` field."""
-  createdUser: StringFilter
-
-  """Filter by the object’s `updatedUser` field."""
-  updatedUser: StringFilter
-
-  """Filter by the object’s `externalId` field."""
-  externalId: StringFilter
-
-  """Checks for all expressions in this list."""
-  and: [ReviewFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [ReviewFilter!]
-
-  """Negates the expression."""
-  not: ReviewFilter
+  """Checks for equality with the object’s `publishStatus` field."""
+  publishStatus: PublishStatus
 }
 
 """
 A connection to a list of `Snapshot` values.
-@permissions: MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
+@permissions: REVIEWS_VIEW,REVIEWS_EDIT,MOVIES_VIEW,MOVIES_EDIT,TVSHOWS_VIEW,TVSHOWS_EDIT,SETTINGS_VIEW,SETTINGS_EDIT,COLLECTIONS_VIEW,COLLECTIONS_EDIT,ADMIN
 """
 type SnapshotsConnection {
   """A list of `Snapshot` objects."""
@@ -15250,6 +15492,36 @@ type Mutation {
 
   """Creates a new Tvshow genres snapshot."""
   createTvshowGenresSnapshot: Snapshot
+  createReviewSnapshots(
+    """Filter for bulk selecting items."""
+    filter: ReviewFilter
+  ): BulkPublishingPayload
+  publishReviews(
+    """Filter for bulk selecting items."""
+    filter: ReviewFilter
+  ): BulkPublishingPayload
+  unpublishReviews(
+    """Filter for bulk selecting items."""
+    filter: ReviewFilter
+  ): BulkMutationPayload
+
+  """Creates a Review snapshot and immediately publishes it if it's valid."""
+  publishReview(
+    """ID of the review to publish."""
+    reviewId: Int!
+  ): Snapshot
+
+  """Unpublishes the currently published Review snapshot."""
+  unpublishReview(
+    """ID of the review to unpublish."""
+    reviewId: Int!
+  ): Snapshot
+
+  """Creates a new Review snapshot."""
+  createReviewSnapshot(
+    """ID of the review to create a snapshot from."""
+    reviewId: Int!
+  ): Snapshot
   populateCollections(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -18656,6 +18928,7 @@ input ReviewPatch {
   description: String
   rating: Int
   externalId: String
+  publishStatus: PublishStatus
 }
 
 """The output of our update `Season` mutation."""
@@ -20995,6 +21268,7 @@ type DeleteSnapshotPayload {
 All input for the `deleteSnapshot` mutation.
 @permissions: COLLECTIONS_EDIT,ADMIN
 @permissions: MOVIES_EDIT,ADMIN
+@permissions: REVIEWS_EDIT,ADMIN
 @permissions: SETTINGS_EDIT,ADMIN
 @permissions: TVSHOWS_EDIT,ADMIN
 """

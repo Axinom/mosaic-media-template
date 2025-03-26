@@ -1,0 +1,5 @@
+mutation CreateReviewSnapshot($reviewId: Int!) {
+  createReviewSnapshot(reviewId: $reviewId) {
+    id
+  }
+}

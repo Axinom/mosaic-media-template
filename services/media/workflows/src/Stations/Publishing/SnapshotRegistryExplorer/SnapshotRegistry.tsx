@@ -224,6 +224,8 @@ function calculateNavigateUrl(item: SnapshotData): string {
   switch (item.entityType) {
     case EntityType.Movie:
       return `/movies/${item.entityId}/snapshots/${item.id}`;
+    case EntityType.Review:
+      return `/reviews/${item.entityId}/snapshots/${item.id}`;
     case EntityType.Episode:
       return `/episodes/${item.entityId}/snapshots/${item.id}`;
     case EntityType.Season:

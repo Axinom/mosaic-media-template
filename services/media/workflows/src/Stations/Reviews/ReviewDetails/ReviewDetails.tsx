@@ -2,24 +2,32 @@ import { getLocalizationEntryPoint } from '@axinom/mosaic-managed-workflow-integ
 import {
   Details,
   DetailsProps,
+  formatDateTime,
   getFormDiff,
   IconName,
+  InfoPanel,
   Nullable,
+  Paragraph,
+  Section,
   SingleLineTextField,
   TextAreaField,
 } from '@axinom/mosaic-ui';
-import { Field } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { number, object, string } from 'yup';
 import { client } from '../../../apolloClient';
 import {
   MutationUpdateReviewArgs,
+  Review,
   useDeleteReviewMutation,
+  usePublishReviewMutation,
   useReviewQuery,
+  useUnpublishReviewMutation,
   useUpdateReviewMutation,
 } from '../../../generated/graphql';
+import { getEnumLabel } from '../../../Util/StringEnumMapper/StringEnumMapper';
 import classes from './ReviewDetails.module.scss';
 
 type FormData = Nullable<MutationUpdateReviewArgs['input']['patch']>;
@@ -29,6 +37,43 @@ const reviewDetailSchema = object<ObjectSchemaDefinition<FormData>>({
   description: string().required('Description is a required field').max(5000),
   rating: number().max(100).min(0),
 });
+
+const Panel: React.FC = () => {
+  const { values } = useFormikContext<Review>();
+
+  return useMemo(() => {
+    return (
+      <InfoPanel>
+        <Section title="Additional Information">
+          <Paragraph title="ID">{values.id}</Paragraph>
+          <Paragraph title="Created">
+            {formatDateTime(values.createdDate)} by {values.createdUser}
+          </Paragraph>
+          <Paragraph title="Last Modified">
+            {formatDateTime(values.updatedDate)} by {values.updatedUser}
+          </Paragraph>
+          <Paragraph title="Publishing Status">
+            {getEnumLabel(values.publishStatus)}
+          </Paragraph>
+          {values.publishedDate ? (
+            <Paragraph title="Last Published">
+              {formatDateTime(values.publishedDate)} by {values.publishedUser}
+            </Paragraph>
+          ) : null}
+        </Section>
+      </InfoPanel>
+    );
+  }, [
+    values.createdDate,
+    values.createdUser,
+    values.id,
+    values.publishStatus,
+    values.publishedDate,
+    values.publishedUser,
+    values.updatedDate,
+    values.updatedUser,
+  ]);
+};
 
 export const ReviewDetails: React.FC = () => {
   const reviewId = Number(
@@ -74,6 +119,15 @@ export const ReviewDetails: React.FC = () => {
     await deleteReviewMutation({ variables: { input: { id: reviewId } } });
     history.push('/reviews');
   };
+  const [publishReviewMutation] = usePublishReviewMutation({
+    client,
+    fetchPolicy: 'no-cache',
+  });
+
+  const [unpublishReviewMutation] = useUnpublishReviewMutation({
+    client,
+    fetchPolicy: 'no-cache',
+  });
 
   const localizationPath = getLocalizationEntryPoint('review');
   return (
@@ -88,6 +142,7 @@ export const ReviewDetails: React.FC = () => {
         error: error?.message,
       }}
       saveData={onSubmit}
+      infoPanel={<Panel />}
       actions={[
         ...(localizationPath
           ? [
@@ -100,6 +155,24 @@ export const ReviewDetails: React.FC = () => {
               },
             ]
           : []),
+        {
+          label: 'Publish Now',
+          confirmationMode: 'Simple',
+          onActionSelected: async () => {
+            await publishReviewMutation({ variables: { id: reviewId } });
+          },
+        },
+        {
+          label: 'Publishing Snapshots',
+          path: `/reviews/${reviewId}/snapshots`,
+        },
+        {
+          label: 'Unpublish',
+          confirmationMode: 'Simple',
+          onActionSelected: async () => {
+            await unpublishReviewMutation({ variables: { id: reviewId } });
+          },
+        },
         {
           label: 'Delete',
           icon: IconName.Delete,

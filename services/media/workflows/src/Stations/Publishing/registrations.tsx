@@ -30,7 +30,12 @@ export function register(app: PiletApi, _extensions: Extensions): void {
   app.registerPage('/snapshots', SnapshotRegistry, {
     breadcrumb: () => 'Snapshot Registry',
     permissions: {
-      'media-service': ['MOVIES_VIEW', 'TVSHOWS_VIEW', 'COLLECTIONS_VIEW'],
+      'media-service': [
+        'MOVIES_VIEW',
+        'TVSHOWS_VIEW',
+        'COLLECTIONS_VIEW',
+        'REVIEWS_VIEW',
+      ],
     },
   });
 }

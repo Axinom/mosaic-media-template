@@ -10,6 +10,7 @@ export * from './movie-genre-localization';
 export * from './movie-localization';
 export * from './related-item';
 export * from './relation-type';
+export * from './review-localization';
 export * from './season-localization';
 export * from './tvshow-genre';
 export * from './tvshow-genre-localization';

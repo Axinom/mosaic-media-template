@@ -7,6 +7,9 @@ import { ReviewCreate } from './ReviewCreate/ReviewCreate';
 import { ReviewDetails } from './ReviewDetails/ReviewDetails';
 import { ReviewDetailsCrumb } from './ReviewDetails/ReviewDetailsCrumb';
 import { ReviewsExplorer } from './ReviewsExplorer/ReviewsExplorer';
+import { ReviewSnapshotDetails } from './ReviewSnapshotDetails/ReviewSnapshotDetails';
+import { ReviewSnapshotDetailsCrumb } from './ReviewSnapshotDetails/ReviewSnapshotDetailsCrumb';
+import { ReviewSnapshots } from './ReviewSnapshots/ReviewSnapshots';
 
 export function register(app: PiletApi, extensions: Extensions): void {
   app.setRouteResolver(
@@ -57,4 +60,20 @@ export function register(app: PiletApi, extensions: Extensions): void {
   app.registerPage('/reviews/:reviewId', ReviewDetails, {
     breadcrumb: ReviewDetailsCrumb,
   });
+
+  app.registerPage('/reviews/:reviewId/snapshots', ReviewSnapshots, {
+    breadcrumb: () => 'Publishing Snapshots',
+    permissions: { 'media-service': ['ADMIN', 'REVIEWS_EDIT', 'REVIEWS_VIEW'] },
+  });
+
+  app.registerPage(
+    '/reviews/:reviewId/snapshots/:snapshotId',
+    ReviewSnapshotDetails,
+    {
+      breadcrumb: ReviewSnapshotDetailsCrumb,
+      permissions: {
+        'media-service': ['ADMIN', 'REVIEWS_EDIT', 'REVIEWS_VIEW'],
+      },
+    },
+  );
 }

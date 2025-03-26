@@ -9,6 +9,9 @@ query Review($id: Int!) {
     createdUser
     updatedDate
     updatedUser
+    publishStatus
+    publishedDate
+    publishedUser
   }
 }
 
@@ -24,6 +27,17 @@ mutation UpdateReview($input: UpdateReviewInput!) {
 mutation DeleteReview($input: DeleteReviewInput!) {
   deleteReview(input: $input) {
     clientMutationId
+  }
+}
+mutation PublishReview($id: Int!) {
+  publishReview(reviewId: $id) {
+    id
+  }
+}
+
+mutation UnpublishReview($id: Int!) {
+  unpublishReview(reviewId: $id) {
+    id
   }
 }
 

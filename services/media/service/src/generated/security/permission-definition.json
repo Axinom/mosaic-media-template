@@ -347,9 +347,17 @@
         "populateCollections",
         "review",
         "reviews",
+        "reviewsSnapshots",
+        "snapshotValidationResults",
         "createReview",
         "deleteReview",
-        "updateReview"
+        "updateReview",
+        "publishReview",
+        "publishReviews",
+        "unpublishReview",
+        "unpublishReviews",
+        "createReviewSnapshot",
+        "createReviewSnapshots"
       ]
     },
     {
@@ -874,7 +882,9 @@
       "title": "Reviews: View",
       "gqlOperations": [
         "review",
-        "reviews"
+        "reviews",
+        "reviewsSnapshots",
+        "snapshotValidationResults"
       ]
     },
     {
@@ -883,9 +893,17 @@
       "gqlOperations": [
         "review",
         "reviews",
+        "reviewsSnapshots",
+        "snapshotValidationResults",
         "createReview",
         "deleteReview",
-        "updateReview"
+        "updateReview",
+        "publishReview",
+        "publishReviews",
+        "unpublishReview",
+        "unpublishReviews",
+        "createReviewSnapshot",
+        "createReviewSnapshots"
       ]
     }
   ]

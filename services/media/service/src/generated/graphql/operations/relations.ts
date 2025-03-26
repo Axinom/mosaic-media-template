@@ -34,6 +34,8 @@ export enum Relations {
   moviesSnapshots = 'moviesSnapshots',
   moviesTags = 'moviesTags',
   moviesTrailers = 'moviesTrailers',
+  review = 'review',
+  reviewsSnapshots = 'reviewsSnapshots',
   season = 'season',
   seasons = 'seasons',
   seasonsCasts = 'seasonsCasts',
