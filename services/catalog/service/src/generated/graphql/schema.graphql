@@ -244,6 +244,40 @@ type Query {
     filter: PlaylistFilter
   ): PlaylistsConnection
 
+  """Reads and enables pagination through a set of `Review`."""
+  reviews(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Review`."""
+    orderBy: [ReviewsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReviewCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReviewFilter
+  ): ReviewsConnection
+
   """Reads and enables pagination through a set of `Season`."""
   seasons(
     """Only read the first `n` values of the set."""
@@ -352,6 +386,7 @@ type Query {
   movieGenre(id: String!): MovieGenre
   movie(id: String!, countryCode: String): Movie
   playlist(id: String!): Playlist
+  review(id: String!): Review
   season(id: String!): Season
   tvshowGenre(id: String!): TvshowGenre
   tvshow(id: String!): Tvshow
@@ -5613,6 +5648,88 @@ input MovieFilter {
 
   """Negates the expression."""
   not: MovieFilter
+}
+
+"""A connection to a list of `Review` values."""
+type ReviewsConnection {
+  """A list of `Review` objects."""
+  nodes: [Review!]!
+
+  """
+  A list of edges which contains the `Review` and cursor to aid in pagination.
+  """
+  edges: [ReviewsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Review` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""Definition of the review entity."""
+type Review {
+  id: String!
+
+  """Rating of the review."""
+  rating: Int
+
+  """Title of the review."""
+  title: String
+
+  """Extended synopsis."""
+  description: String
+}
+
+"""A `Review` edge in the connection."""
+type ReviewsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Review` at the end of the edge."""
+  node: Review!
+}
+
+"""Methods to use when ordering `Review`."""
+enum ReviewsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ReviewCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: String
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+}
+
+"""
+A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’
+"""
+input ReviewFilter {
+  """Filter by the object’s `id` field."""
+  id: StringFilter
+
+  """Filter by the object’s `title` field."""
+  title: StringFilter
+
+  """Checks for all expressions in this list."""
+  and: [ReviewFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ReviewFilter!]
+
+  """Negates the expression."""
+  not: ReviewFilter
 }
 
 """A connection to a list of `TvshowGenre` values."""

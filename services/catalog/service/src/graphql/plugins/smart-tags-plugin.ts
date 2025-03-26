@@ -1393,6 +1393,25 @@ export const SmartTagsPlugin = makeJSONPgSmartTagsPlugin({
           ],
         },
       },
+      review_view: {
+        description: 'Definition of the review entity.',
+        attribute: {
+          title: {
+            description: 'Title of the review.',
+          },
+          description: {
+            description: 'Extended synopsis.',
+            ...disableFilterAndOrder,
+          },
+          rating: {
+            description: 'Rating of the review.',
+            ...disableFilterAndOrder,
+          },
+        },
+        tags: {
+          omit: 'create,update,delete',
+        },
+      },
     },
   },
 });

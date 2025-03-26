@@ -180,6 +180,16 @@
           "source": "event",
           "bindingKey": "vod-to-live-service.channel.protection_key_created",
           "destination": "catalog-service:inbox"
+        },
+        "media-service.review.published": {
+          "source": "event",
+          "bindingKey": "media-service.review.published",
+          "destination": "catalog-service:inbox"
+        },
+        "media-service.review.unpublished": {
+          "source": "event",
+          "bindingKey": "media-service.review.unpublished",
+          "destination": "catalog-service:inbox"
         }
       },
       "publications": {

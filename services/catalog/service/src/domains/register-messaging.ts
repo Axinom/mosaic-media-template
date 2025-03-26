@@ -33,6 +33,10 @@ import {
   initializePollingMessageListener,
   PollingListenerConfig,
 } from 'pg-transactional-outbox';
+import {
+  registerReviewsHandlers,
+  registerReviewsMessaging,
+} from './review/register-reviews-messaging';
 
 export const registerMessaging = async (
   app: Express,
@@ -72,6 +76,7 @@ export const registerMessaging = async (
       ...registerTvshowsMessaging(inboxWriter, config),
       ...registerCollectionsMessaging(inboxWriter, config),
       ...registerChannelsMessaging(inboxWriter, config),
+      ...registerReviewsMessaging(inboxWriter, config),
     ],
     logger: inboxLogger,
     shutdownActions,
@@ -87,6 +92,7 @@ export const registerMessaging = async (
       ...registerTvshowsHandlers(config),
       ...registerCollectionsHandlers(config),
       ...registerChannelsHandlers(config),
+      ...registerReviewsHandlers(config),
     ],
     logMapper,
   );

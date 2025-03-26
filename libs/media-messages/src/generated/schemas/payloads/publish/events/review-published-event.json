@@ -12,7 +12,7 @@
     "rating": {
       "description": "Review rating",
       "type": "integer",
-      "minimum": 0
+      "minimum": 1
     },
     "localizations": {
       "description": "Localizations for every defined locale.",
