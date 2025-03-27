@@ -47,18 +47,30 @@ const validateExternalIdUpdate = (
         });
       }
 
+      // If the media is not published, but a connected collection is published, we should not allow updating the external ID.
       const referencePublishStatus = await getReferencePublishStatus(
         mediaType,
         mediaId,
         pgClient,
       );
       if (
-        (media.publish_status !== 'NOT_PUBLISHED' &&
-          !isNullOrWhitespace(args.input.patch.externalId)) ||
+        !isNullOrWhitespace(args.input.patch.externalId) &&
         referencePublishStatus
       ) {
         throw new MosaicError({
           ...CommonErrors.CannotUpdateExternalIdForPublishedMedia,
+          messageParams: [mediaType, mediaId],
+        });
+      }
+
+      // In cases where the external ID is empty, we should not allow updating the title as well since the title is used to build the publishing ID.
+      if (
+        isNullOrWhitespace(media.external_id) &&
+        !isNullOrWhitespace(args.input.patch.title) &&
+        referencePublishStatus
+      ) {
+        throw new MosaicError({
+          ...CommonErrors.CannotUpdateTitleForPublishedMedia,
           messageParams: [mediaType, mediaId],
         });
       }

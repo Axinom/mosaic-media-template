@@ -85,7 +85,7 @@ export const CommonErrors = {
   },
   CannotUpdateTitleForPublishedMedia: {
     message:
-      'The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media.',
+      'The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media or the entity that is referencing this media such as a Season, Episode or Collection first.',
     code: 'CANNOT_UPDATE_TITLE_FOR_PUBLISHED_MEDIA',
   },
   UnknownCollectionRelationType: {
