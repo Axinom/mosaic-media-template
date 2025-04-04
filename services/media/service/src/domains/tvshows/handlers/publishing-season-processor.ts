@@ -5,6 +5,7 @@ import {
   SeasonPublishedEvent,
   SeasonPublishedEventSchema,
 } from 'media-messages';
+import * as Yup from 'yup';
 import {
   parent,
   Queryable,
@@ -17,7 +18,12 @@ import {
   buildBDPublishingId,
   buildPublishingId,
   EntityPublishingProcessor,
+  licensesValidation,
+  requiredSeasonCover,
   SnapshotDataAggregator,
+  SnapshotValidationResult,
+  validateYupPublishSchema,
+  videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
 import {
@@ -247,9 +253,52 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
   };
 };
 
+const customSeasonValidation = async (
+  json: unknown,
+): Promise<SnapshotValidationResult[]> => {
+  const yupSchema = Yup.object({
+    images: requiredSeasonCover,
+    videos: videosValidation(false),
+    licenses: licensesValidation(false),
+  });
+  const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const customValidationResults: SnapshotValidationResult[] = [];
+  const seasonJson = json as SeasonPublishedEvent;
+
+  // Check if title and description are present for default locale
+  if (seasonJson.localizations) {
+    const defaultLocale = seasonJson.localizations.find(
+      (locale) => locale.is_default_locale === true,
+    );
+
+    if (defaultLocale) {
+      if (!defaultLocale.title || defaultLocale.title.trim() === '') {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Title is required.',
+        });
+      }
+
+      if (
+        !defaultLocale.description ||
+        defaultLocale.description.trim() === ''
+      ) {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Description is required.',
+        });
+      }
+    }
+  }
+  return [...yupValidationResults, ...customValidationResults];
+};
+
 export const publishingSeasonProcessor: EntityPublishingProcessor = {
   type: 'seasons',
   aggregator: seasonDataAggregator,
+  validator: customSeasonValidation,
   validationSchema: SeasonPublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.SeasonPublished,
   unpublishMessagingSettings: PublishServiceMessagingSettings.SeasonUnpublished,
