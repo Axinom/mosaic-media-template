@@ -1,4 +1,4 @@
-import { Logger } from '@axinom/mosaic-service-common';
+import { isNullOrWhitespace, Logger } from '@axinom/mosaic-service-common';
 import {
   TransactionalInboxMessageHandler,
   TypedTransactionalMessage,
@@ -145,6 +145,48 @@ export class EpisodePublishedEventHandler extends TransactionalInboxMessageHandl
             description: l.description,
           }),
         ),
+      ).run(txnClient);
+
+      await insert(
+        'episode_images',
+        payload.localizations
+          .filter((l) => !isNullOrWhitespace(l.cover) && !l.is_default_locale)
+          .map(
+            (l): episode_images.Insertable => ({
+              episode_id: payload.content_id,
+              language_tag: l.language_tag,
+              path: l.cover,
+              type: 'COVER',
+            }),
+          ),
+      ).run(txnClient);
+      await insert(
+        'episode_images',
+        payload.localizations
+          .filter(
+            (l) => !isNullOrWhitespace(l.clean_cover) && !l.is_default_locale,
+          )
+          .map(
+            (l): episode_images.Insertable => ({
+              episode_id: payload.content_id,
+              language_tag: l.language_tag,
+              path: l.clean_cover,
+              type: 'CLEAN_COVER',
+            }),
+          ),
+      ).run(txnClient);
+      await insert(
+        'episode_images',
+        payload.localizations
+          .filter((l) => !isNullOrWhitespace(l.list) && !l.is_default_locale)
+          .map(
+            (l): episode_images.Insertable => ({
+              episode_id: payload.content_id,
+              language_tag: l.language_tag,
+              path: l.list,
+              type: 'TEASER',
+            }),
+          ),
       ).run(txnClient);
     }
   }

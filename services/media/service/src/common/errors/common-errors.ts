@@ -38,7 +38,8 @@ export const CommonErrors = {
     code: 'UNSUPPORTED_INGEST_MEDIA_TYPE',
   },
   SnapshotNotFound: {
-    message: "The snapshot with ID '%s' was not found.",
+    message:
+      "The snapshot with ID '%s' was not found or it is not re-publishable due to Title/External ID change.",
     code: 'SNAPSHOT_NOT_FOUND',
   },
   MediaNotFound: {
@@ -80,12 +81,16 @@ export const CommonErrors = {
   },
   CannotUpdateExternalId: {
     message:
-      'The External ID cannot be updated for %s with ID %s. Only media with no External ID can be updated.',
+      'The External ID cannot be updated for %s with ID %s when the media is published. Please unpublish the media first.',
     code: 'CANNOT_UPDATE_EXTERNAL_ID',
   },
   CannotUpdateTitleForPublishedMedia: {
     message:
-      'The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media.',
+      'The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media or the entity that is referencing this media such as a Season, Episode or Collection first.',
     code: 'CANNOT_UPDATE_TITLE_FOR_PUBLISHED_MEDIA',
+  },
+  UnknownCollectionRelationType: {
+    message: 'Unknown collection relation type: %s',
+    code: 'UNKNOWN_COLLECTION_RELATION_TYPE',
   },
 } as const;

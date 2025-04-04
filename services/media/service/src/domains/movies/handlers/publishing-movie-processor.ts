@@ -1,15 +1,23 @@
-import { MosaicError } from '@axinom/mosaic-service-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
+  License,
   MoviePublishedEvent,
   MoviePublishedEventSchema,
   PublishServiceMessagingSettings,
 } from 'media-messages';
+import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
 import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
+  atLeastOneString,
   buildPublishingId,
   EntityPublishingProcessor,
+  licensesValidation,
+  requiredMovieCover,
   SnapshotDataAggregator,
+  SnapshotValidationResult,
+  validateYupPublishSchema,
+  videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
 import {
@@ -46,6 +54,48 @@ const applyImageFallbacks = (images: any[]) => {
     (img) =>
       !['MOVIE_COVER', 'MOVIE_CLEAN_COVER', 'MOVIE_LIST'].includes(img.type),
   );
+};
+
+/**
+ * Builds movie license objects from license data
+ */
+const buildMovieLicenses = async (
+  licenses: any[],
+  contentOwner: string | null,
+  businessType: string | null,
+  queryable: Queryable,
+): Promise<License[]> => {
+  const movieLicenses: License[] = [];
+  for (const license of licenses) {
+    const movieLicense: License = {
+      start_time: license.license_start ?? undefined,
+      end_time: license.license_end ?? undefined,
+      is_downloadable: license.is_downloadable,
+      downloaded_asset_lifespan: license.downloaded_asset_lifespan ?? undefined,
+      content_owner: contentOwner ?? undefined,
+      business_type: businessType ?? undefined,
+      countries: [],
+    };
+    for (const country of license.countries) {
+      if (!isNullOrWhitespace(country.country_group_id)) {
+        const countryGroupCountries = await select('country_groups_countries', {
+          group_id: country.country_group_id,
+        }).run(queryable);
+        movieLicense.countries?.push(
+          ...countryGroupCountries
+            .filter((c) => !movieLicense.countries?.includes(c.country_id))
+            .map((c) => c.country_id),
+        );
+      } else if (
+        !isNullOrWhitespace(country.country_code) &&
+        !movieLicense.countries?.includes(country.country_code)
+      ) {
+        movieLicense.countries?.push(country.country_code);
+      }
+    }
+    movieLicenses.push(movieLicense);
+  }
+  return movieLicenses;
 };
 
 const movieDataAggregator: SnapshotDataAggregator = async (
@@ -133,13 +183,20 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     );
   });
 
-  const mainVideo = videos.filter((video) => (video.type = 'MAIN'))?.[0];
+  const mainVideo = videos.filter((video) => video.type === 'MAIN')?.[0];
   if (movie.publishing_id === undefined || movie.publishing_id === null) {
     throw new MosaicError({
       ...CommonErrors.EntityPublishingIdNotFound,
       messageParams: ['Movie', entityId],
     });
   }
+
+  const movieLicenses = await buildMovieLicenses(
+    movie.licenses,
+    movie.content_owner,
+    movie.business_type,
+    queryable,
+  );
 
   const snapshotJson: MoviePublishedEvent = {
     content_id: movie.publishing_id,
@@ -152,11 +209,7 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     ),
     cast: movie.cast.map((c) => c.name),
     tags: movie.tags.map((c) => c.name),
-    licenses: movie.licenses.map((license) => ({
-      start_time: license.license_start ?? undefined,
-      end_time: license.license_end ?? undefined,
-      countries: license.countries.map((country) => country.country_code ?? ''),
-    })),
+    licenses: movieLicenses,
     images: movieImages,
     videos,
     audio_languages: mainVideo?.audio_languages,
@@ -201,11 +254,71 @@ const movieDataAggregator: SnapshotDataAggregator = async (
   };
 };
 
+const customMovieValidation = async (
+  json: unknown,
+): Promise<SnapshotValidationResult[]> => {
+  const movieJson = json as MoviePublishedEvent;
+  const hasMainVideo =
+    movieJson.videos.find((video) => video.type === 'MAIN') !== undefined;
+
+  const yupSchema = Yup.object({
+    genre_ids: atLeastOneString,
+    images: requiredMovieCover,
+    videos: videosValidation(true),
+    licenses: licensesValidation(hasMainVideo), // We only enforce requirement for at least 1 license if there is a main video
+  });
+
+  const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const customValidationResults: SnapshotValidationResult[] = [];
+
+  // Check credit_start_time vs length_in_seconds
+  if (movieJson.credits_start_time && movieJson.length_in_seconds) {
+    const creditsStartTime = parseFloat(movieJson.credits_start_time);
+    if (creditsStartTime >= movieJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message:
+          'Credits start time cue point must be less than the video length.',
+      });
+    }
+  }
+
+  // Check if title and description are present for default locale
+  if (movieJson.localizations) {
+    const defaultLocale = movieJson.localizations.find(
+      (locale) => locale.is_default_locale === true,
+    );
+
+    if (defaultLocale) {
+      if (!defaultLocale.title || defaultLocale.title.trim() === '') {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Title is required.',
+        });
+      }
+
+      if (
+        !defaultLocale.description ||
+        defaultLocale.description.trim() === ''
+      ) {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Description is required.',
+        });
+      }
+    }
+  }
+
+  return [...yupValidationResults, ...customValidationResults];
+};
+
 export const publishingMovieProcessor: EntityPublishingProcessor = {
   type: 'movies',
   aggregator: movieDataAggregator,
-  // No custom validation is done when publishing a movie. This is BeyondDutch specific requirement.
-  //validator: customMovieValidation,
+  validator: customMovieValidation,
   validationSchema: MoviePublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.MoviePublished,
   unpublishMessagingSettings: PublishServiceMessagingSettings.MovieUnpublished,

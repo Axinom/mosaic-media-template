@@ -90,7 +90,7 @@ export const atLeastOneString = Yup.array(Yup.string()).min(1, oneItemError);
 /**
  * yup validation rule to check that array of objects has at least one object with type `COVER`
  */
-export const requiredCover = Yup.array(
+export const requiredMovieCover = Yup.array(
   Yup.object({
     width: Yup.number().positive(isPositiveNumber).required(isRequired),
     height: Yup.number().positive(isPositiveNumber).required(isRequired),
@@ -99,7 +99,99 @@ export const requiredCover = Yup.array(
 ).test({
   name: 'required_cover',
   message: 'Cover image is not assigned.',
-  test: (images) => !!images && images.some((image) => image.type === 'COVER'),
+  test: (images) => {
+    return (
+      !!images &&
+      images.some(
+        (image) =>
+          image.type === 'MOVIE_COVER_1x1' || image.type === 'MOVIE_COVER_16x9',
+      )
+    );
+  },
+});
+
+export const requiredTvShowCover = Yup.array(
+  Yup.object({
+    width: Yup.number().positive(isPositiveNumber).required(isRequired),
+    height: Yup.number().positive(isPositiveNumber).required(isRequired),
+    type: Yup.string(),
+  }),
+).test({
+  name: 'required_cover',
+  message: 'Cover image is not assigned.',
+  test: (images) => {
+    return (
+      !!images &&
+      images.some(
+        (image) =>
+          image.type === 'TVSHOW_COVER_1x1' ||
+          image.type === 'TVSHOW_COVER_16x9',
+      )
+    );
+  },
+});
+
+export const requiredSeasonCover = Yup.array(
+  Yup.object({
+    width: Yup.number().positive(isPositiveNumber).required(isRequired),
+    height: Yup.number().positive(isPositiveNumber).required(isRequired),
+    type: Yup.string(),
+  }),
+).test({
+  name: 'required_cover',
+  message: 'Cover image is not assigned.',
+  test: (images) => {
+    return (
+      !!images &&
+      images.some(
+        (image) =>
+          image.type === 'SEASON_COVER_1x1' ||
+          image.type === 'SEASON_COVER_16x9',
+      )
+    );
+  },
+});
+
+export const requiredEpisodeCover = Yup.array(
+  Yup.object({
+    width: Yup.number().positive(isPositiveNumber).required(isRequired),
+    height: Yup.number().positive(isPositiveNumber).required(isRequired),
+    type: Yup.string(),
+  }),
+).test({
+  name: 'required_cover',
+  message: 'Cover image is not assigned.',
+  test: (images) => {
+    return (
+      !!images &&
+      images.some(
+        (image) =>
+          image.type === 'EPISODE_COVER_1x1' ||
+          image.type === 'EPISODE_COVER_16x9',
+      )
+    );
+  },
+});
+
+export const requiredCollectionCover = Yup.array(
+  Yup.object({
+    width: Yup.number().positive(isPositiveNumber).required(isRequired),
+    height: Yup.number().positive(isPositiveNumber).required(isRequired),
+    type: Yup.string(),
+  }),
+).test({
+  name: 'required_cover',
+  message: 'Cover image is not assigned.',
+  test: (images) => {
+    return (
+      !!images &&
+      images.some(
+        (image) =>
+          image.type === 'COLLECTION_COVER_1x1' ||
+          image.type === 'COLLECTION_COVER_16x9',
+      )
+    );
+  },
 });
 
 /**
@@ -107,7 +199,7 @@ export const requiredCover = Yup.array(
  * @param supportedTypes - spread array of string types. If `MAIN` is included - videos array musth have a video with `MAIN` type assigned.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const videosValidation = (...supportedTypes: string[]): any => {
+export const videosValidation = (atLeastOneVideoRequired: boolean): any => {
   const commonVideosValidation = Yup.array(
     Yup.object({
       length_in_seconds: Yup.number()
@@ -131,15 +223,23 @@ export const videosValidation = (...supportedTypes: string[]): any => {
     }),
   );
 
-  if (supportedTypes.some((t) => t === 'MAIN')) {
-    return commonVideosValidation.test({
-      name: 'required_main_video',
-      message: 'Main video is not assigned.',
-      test: (videos) =>
-        !!videos && videos.some((video) => video.type === 'MAIN'),
-    });
-  }
-  return commonVideosValidation;
+  return commonVideosValidation.test({
+    name: 'validate_main_video',
+    message: 'At least one video must be assigned.',
+    test: (videos) => {
+      if (!atLeastOneVideoRequired) {
+        return true;
+      }
+      if (!videos || videos.length === 0) {
+        return false;
+      }
+      const hasMainVideo = videos.some((video) => video.type === 'MAIN');
+      if (!hasMainVideo) {
+        return true;
+      }
+      return commonVideosValidation.isValidSync(videos);
+    },
+  });
 };
 
 /**
@@ -152,14 +252,16 @@ export const licensesValidation = (atLeastOneLicenseRequired: boolean): any => {
   return Yup.array(
     Yup.object({
       start_time: Yup.date(),
-      end_time: Yup.date().when('start_time', {
-        is: (start: unknown) => !!start,
-        then: (end) =>
-          end.min(Yup.ref('start_time'), (params) => {
-            const identifier = getReadablePath(params.path);
-            return `${identifier} must be greater than start_time.`;
-          }),
-      }),
+      end_time: Yup.date()
+        .when('start_time', {
+          is: (start: unknown) => !!start,
+          then: (end) =>
+            end.min(Yup.ref('start_time'), (params) => {
+              const identifier = getReadablePath(params.path);
+              return `${identifier} must be greater than start_time.`;
+            }),
+        })
+        .min(new Date(), 'end_time must be greater than the current date.'),
       countries: Yup.array(Yup.string()), // Values validation is done using DB FK Constraints
     }).test({
       name: 'license_props',

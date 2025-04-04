@@ -51,7 +51,7 @@ export class LocalizableCollectionImageCreatedDbMessageHandler extends Localizab
         fields = { collection_clean_cover_1x1: image_id };
         break;
       case 'COLLECTION_CLEAN_COVER_4x1':
-        fields = { collectionclean_cover_4x1: image_id };
+        fields = { collection_clean_cover_4x1: image_id };
         break;
       case 'COLLECTION_LIST':
         fields = { collection_list: image_id };

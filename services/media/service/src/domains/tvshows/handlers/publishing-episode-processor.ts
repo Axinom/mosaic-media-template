@@ -1,7 +1,8 @@
-import { MosaicError } from '@axinom/mosaic-service-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
   EpisodePublishedEvent,
   EpisodePublishedEventSchema,
+  License,
   PublishServiceMessagingSettings,
 } from 'media-messages';
 import * as Yup from 'yup';
@@ -19,7 +20,7 @@ import {
   buildPublishingId,
   EntityPublishingProcessor,
   licensesValidation,
-  requiredCover,
+  requiredEpisodeCover,
   SnapshotDataAggregator,
   SnapshotValidationResult,
   validateYupPublishSchema,
@@ -65,6 +66,46 @@ const applyImageFallbacks = (images: any[]) => {
         img.type,
       ),
   );
+};
+
+/**
+ * Builds episode license objects from license data
+ */
+const buildEpisodeLicenses = async (
+  licenses: any[],
+  contentOwner: string | null,
+  queryable: Queryable,
+): Promise<License[]> => {
+  const episodeLicenses: License[] = [];
+  for (const license of licenses) {
+    const episodeLicense: License = {
+      start_time: license.license_start ?? undefined,
+      end_time: license.license_end ?? undefined,
+      is_downloadable: license.is_downloadable,
+      downloaded_asset_lifespan: license.downloaded_asset_lifespan ?? undefined,
+      content_owner: contentOwner ?? undefined,
+      countries: [],
+    };
+    for (const country of license.countries) {
+      if (!isNullOrWhitespace(country.country_group_id)) {
+        const countryGroupCountries = await select('country_groups_countries', {
+          group_id: country.country_group_id,
+        }).run(queryable);
+        episodeLicense.countries?.push(
+          ...countryGroupCountries
+            .filter((c) => !episodeLicense.countries?.includes(c.country_id))
+            .map((c) => c.country_id),
+        );
+      } else if (
+        !isNullOrWhitespace(country.country_code) &&
+        !episodeLicense.countries?.includes(country.country_code)
+      ) {
+        episodeLicense.countries?.push(country.country_code);
+      }
+    }
+    episodeLicenses.push(episodeLicense);
+  }
+  return episodeLicenses;
 };
 
 const episodeDataAggregator: SnapshotDataAggregator = async (
@@ -155,13 +196,19 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     );
   });
 
-  const mainVideo = videos.filter((video) => (video.type = 'MAIN'))?.[0];
+  const mainVideo = videos.filter((video) => video.type === 'MAIN')?.[0];
   if (episode.publishing_id === undefined || episode.publishing_id === null) {
     throw new MosaicError({
       ...CommonErrors.EntityPublishingIdNotFound,
       messageParams: ['TVShow', entityId],
     });
   }
+
+  const episodeLicenses = await buildEpisodeLicenses(
+    episode.licenses,
+    episode.content_owner,
+    queryable,
+  );
 
   const snapshotJson: EpisodePublishedEvent = {
     content_id: episode.publishing_id,
@@ -183,11 +230,7 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     ),
     cast: episode.cast.map((c) => c.name),
     tags: episode.tags.map((c) => c.name),
-    licenses: episode.licenses.map((license) => ({
-      start_time: license.license_start ?? undefined,
-      end_time: license.license_end ?? undefined,
-      countries: license.countries.map((country) => country.country_code ?? ''),
-    })),
+    licenses: episodeLicenses,
     images: episodeImages,
     videos,
     directors: episode.directors.map((d) => d.name),
@@ -251,19 +294,89 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
 const customEpisodeValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
+  const episodeJson = json as EpisodePublishedEvent;
+  const hasMainVideo =
+    episodeJson.videos.find((video) => video.type === 'MAIN') !== undefined;
+
   const yupSchema = Yup.object({
     genre_ids: atLeastOneString,
-    images: requiredCover,
-    videos: videosValidation('MAIN', 'TRAILER'),
-    licenses: licensesValidation(false),
+    images: requiredEpisodeCover,
+    videos: videosValidation(true),
+    licenses: licensesValidation(hasMainVideo),
   });
-  return validateYupPublishSchema(json, yupSchema);
+
+  const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const customValidationResults: SnapshotValidationResult[] = [];
+
+  // Check credit_start_time vs length_in_seconds
+  if (episodeJson.credits_start_time && episodeJson.length_in_seconds) {
+    const creditsStartTime = parseFloat(episodeJson.credits_start_time);
+    if (creditsStartTime >= episodeJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message:
+          'Credits start time cue point must be less than the video length.',
+      });
+    }
+  }
+  if (episodeJson.intro_start_time && episodeJson.length_in_seconds) {
+    const introStartTime = parseFloat(episodeJson.intro_start_time);
+    if (introStartTime >= episodeJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message:
+          'Intro start time cue point must be less than the video length.',
+      });
+    }
+  }
+  if (episodeJson.intro_end_time && episodeJson.length_in_seconds) {
+    const introEndTime = parseFloat(episodeJson.intro_end_time);
+    if (introEndTime >= episodeJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message: 'Intro end time cue point must be less than the video length.',
+      });
+    }
+  }
+
+  // Check if title and description are present for default locale
+  if (episodeJson.localizations) {
+    const defaultLocale = episodeJson.localizations.find(
+      (locale) => locale.is_default_locale === true,
+    );
+
+    if (defaultLocale) {
+      if (!defaultLocale.title || defaultLocale.title.trim() === '') {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Title is required.',
+        });
+      }
+
+      if (
+        !defaultLocale.description ||
+        defaultLocale.description.trim() === ''
+      ) {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Description is required.',
+        });
+      }
+    }
+  }
+
+  return [...yupValidationResults, ...customValidationResults];
 };
 
 export const publishingEpisodeProcessor: EntityPublishingProcessor = {
   type: 'episodes',
   aggregator: episodeDataAggregator,
-  //validator: customEpisodeValidation,
+  validator: customEpisodeValidation,
   validationSchema: EpisodePublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.EpisodePublished,
   unpublishMessagingSettings:

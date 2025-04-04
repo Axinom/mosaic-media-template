@@ -2218,28 +2218,22 @@ CREATE VIEW app_public.collection_images_view AS
             collection_images.path,
             collection_images.width,
             collection_images.height,
-            collection_images.language_tag
+            row_number() OVER (PARTITION BY collection_images.collection_id, collection_images.type ORDER BY
+                CASE
+                    WHEN (collection_images.language_tag = current_setting('mosaic.locale'::text, true)) THEN 1
+                    WHEN (COALESCE(collection_images.language_tag, 'default'::text) = 'default'::text) THEN 2
+                    ELSE 3
+                END) AS lang_rank
            FROM app_public.collection_images
-          WHERE (collection_images.language_tag = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting))
-        ), default_images AS (
-         SELECT collection_images.id,
-            collection_images.collection_id,
-            collection_images.type,
-            collection_images.path,
-            collection_images.width,
-            collection_images.height,
-            collection_images.language_tag
-           FROM app_public.collection_images
-          WHERE (COALESCE(collection_images.language_tag, 'default'::text) = 'default'::text)
         )
- SELECT COALESCE(p.id, d.id) AS id,
-    COALESCE(p.collection_id, d.collection_id) AS collection_id,
-    COALESCE(p.type, d.type) AS type,
-    COALESCE(p.path, d.path) AS path,
-    COALESCE(p.width, d.width) AS width,
-    COALESCE(p.height, d.height) AS height
-   FROM (default_images d
-     LEFT JOIN preferred_images p ON (((d.collection_id = p.collection_id) AND (d.type = p.type))));
+ SELECT id,
+    collection_id,
+    type,
+    path,
+    width,
+    height
+   FROM preferred_images
+  WHERE (lang_rank = 1);
 
 
 --
@@ -2459,28 +2453,22 @@ CREATE VIEW app_public.episode_images_view AS
             episode_images.path,
             episode_images.width,
             episode_images.height,
-            episode_images.language_tag
+            row_number() OVER (PARTITION BY episode_images.episode_id, episode_images.type ORDER BY
+                CASE
+                    WHEN (episode_images.language_tag = current_setting('mosaic.locale'::text, true)) THEN 1
+                    WHEN (COALESCE(episode_images.language_tag, 'default'::text) = 'default'::text) THEN 2
+                    ELSE 3
+                END) AS lang_rank
            FROM app_public.episode_images
-          WHERE (episode_images.language_tag = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting))
-        ), default_images AS (
-         SELECT episode_images.id,
-            episode_images.episode_id,
-            episode_images.type,
-            episode_images.path,
-            episode_images.width,
-            episode_images.height,
-            episode_images.language_tag
-           FROM app_public.episode_images
-          WHERE (COALESCE(episode_images.language_tag, 'default'::text) = 'default'::text)
         )
- SELECT COALESCE(p.id, d.id) AS id,
-    COALESCE(p.episode_id, d.episode_id) AS episode_id,
-    COALESCE(p.type, d.type) AS type,
-    COALESCE(p.path, d.path) AS path,
-    COALESCE(p.width, d.width) AS width,
-    COALESCE(p.height, d.height) AS height
-   FROM (default_images d
-     LEFT JOIN preferred_images p ON (((d.episode_id = p.episode_id) AND (d.type = p.type))));
+ SELECT id,
+    episode_id,
+    type,
+    path,
+    width,
+    height
+   FROM preferred_images
+  WHERE (lang_rank = 1);
 
 
 --
@@ -2902,28 +2890,22 @@ CREATE VIEW app_public.movie_images_view AS
             movie_images.path,
             movie_images.width,
             movie_images.height,
-            movie_images.language_tag
+            row_number() OVER (PARTITION BY movie_images.movie_id, movie_images.type ORDER BY
+                CASE
+                    WHEN (movie_images.language_tag = current_setting('mosaic.locale'::text, true)) THEN 1
+                    WHEN (COALESCE(movie_images.language_tag, 'default'::text) = 'default'::text) THEN 2
+                    ELSE 3
+                END) AS lang_rank
            FROM app_public.movie_images
-          WHERE (movie_images.language_tag = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting))
-        ), default_images AS (
-         SELECT movie_images.id,
-            movie_images.movie_id,
-            movie_images.type,
-            movie_images.path,
-            movie_images.width,
-            movie_images.height,
-            movie_images.language_tag
-           FROM app_public.movie_images
-          WHERE (COALESCE(movie_images.language_tag, 'default'::text) = 'default'::text)
         )
- SELECT COALESCE(p.id, d.id) AS id,
-    COALESCE(p.movie_id, d.movie_id) AS movie_id,
-    COALESCE(p.type, d.type) AS type,
-    COALESCE(p.path, d.path) AS path,
-    COALESCE(p.width, d.width) AS width,
-    COALESCE(p.height, d.height) AS height
-   FROM (default_images d
-     LEFT JOIN preferred_images p ON (((d.movie_id = p.movie_id) AND (d.type = p.type))));
+ SELECT id,
+    movie_id,
+    type,
+    path,
+    width,
+    height
+   FROM preferred_images
+  WHERE (lang_rank = 1);
 
 
 --
@@ -3257,28 +3239,22 @@ CREATE VIEW app_public.season_images_view AS
             season_images.path,
             season_images.width,
             season_images.height,
-            season_images.language_tag
+            row_number() OVER (PARTITION BY season_images.season_id, season_images.type ORDER BY
+                CASE
+                    WHEN (season_images.language_tag = current_setting('mosaic.locale'::text, true)) THEN 1
+                    WHEN (COALESCE(season_images.language_tag, 'default'::text) = 'default'::text) THEN 2
+                    ELSE 3
+                END) AS lang_rank
            FROM app_public.season_images
-          WHERE (season_images.language_tag = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting))
-        ), default_images AS (
-         SELECT season_images.id,
-            season_images.season_id,
-            season_images.type,
-            season_images.path,
-            season_images.width,
-            season_images.height,
-            season_images.language_tag
-           FROM app_public.season_images
-          WHERE (COALESCE(season_images.language_tag, 'default'::text) = 'default'::text)
         )
- SELECT COALESCE(p.id, d.id) AS id,
-    COALESCE(p.season_id, d.season_id) AS season_id,
-    COALESCE(p.type, d.type) AS type,
-    COALESCE(p.path, d.path) AS path,
-    COALESCE(p.width, d.width) AS width,
-    COALESCE(p.height, d.height) AS height
-   FROM (default_images d
-     LEFT JOIN preferred_images p ON (((d.season_id = p.season_id) AND (d.type = p.type))));
+ SELECT id,
+    season_id,
+    type,
+    path,
+    width,
+    height
+   FROM preferred_images
+  WHERE (lang_rank = 1);
 
 
 --
@@ -3683,28 +3659,22 @@ CREATE VIEW app_public.tvshow_images_view AS
             tvshow_images.path,
             tvshow_images.width,
             tvshow_images.height,
-            tvshow_images.language_tag
+            row_number() OVER (PARTITION BY tvshow_images.tvshow_id, tvshow_images.type ORDER BY
+                CASE
+                    WHEN (tvshow_images.language_tag = current_setting('mosaic.locale'::text, true)) THEN 1
+                    WHEN (COALESCE(tvshow_images.language_tag, 'default'::text) = 'default'::text) THEN 2
+                    ELSE 3
+                END) AS lang_rank
            FROM app_public.tvshow_images
-          WHERE (tvshow_images.language_tag = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting))
-        ), default_images AS (
-         SELECT tvshow_images.id,
-            tvshow_images.tvshow_id,
-            tvshow_images.type,
-            tvshow_images.path,
-            tvshow_images.width,
-            tvshow_images.height,
-            tvshow_images.language_tag
-           FROM app_public.tvshow_images
-          WHERE (COALESCE(tvshow_images.language_tag, 'default'::text) = 'default'::text)
         )
- SELECT COALESCE(p.id, d.id) AS id,
-    COALESCE(p.tvshow_id, d.tvshow_id) AS tvshow_id,
-    COALESCE(p.type, d.type) AS type,
-    COALESCE(p.path, d.path) AS path,
-    COALESCE(p.width, d.width) AS width,
-    COALESCE(p.height, d.height) AS height
-   FROM (default_images d
-     LEFT JOIN preferred_images p ON (((d.tvshow_id = p.tvshow_id) AND (d.type = p.type))));
+ SELECT id,
+    tvshow_id,
+    type,
+    path,
+    width,
+    height
+   FROM preferred_images
+  WHERE (lang_rank = 1);
 
 
 --
@@ -4412,6 +4382,20 @@ CREATE INDEX channel_images_channel_id_idx ON app_public.channel_images USING bt
 
 
 --
+-- Name: idx_collection_images_coalesced_lang; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_collection_images_coalesced_lang ON app_public.collection_images USING btree (COALESCE(language_tag, 'default'::text));
+
+
+--
+-- Name: idx_collection_images_coll_type_lang; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_collection_images_coll_type_lang ON app_public.collection_images USING btree (collection_id, type, language_tag);
+
+
+--
 -- Name: idx_collection_images_collection_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -4517,10 +4501,24 @@ CREATE INDEX idx_episode_genres_relation_tvshow_genre_id ON app_public.episode_g
 
 
 --
+-- Name: idx_episode_images_coalesced_lang; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_episode_images_coalesced_lang ON app_public.episode_images USING btree (COALESCE(language_tag, 'default'::text));
+
+
+--
 -- Name: idx_episode_images_episode_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
 CREATE INDEX idx_episode_images_episode_id ON app_public.episode_images USING btree (episode_id);
+
+
+--
+-- Name: idx_episode_images_episode_type_lang; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_episode_images_episode_type_lang ON app_public.episode_images USING btree (episode_id, type, language_tag);
 
 
 --
@@ -4692,6 +4690,20 @@ CREATE INDEX idx_movie_genres_relation_order_no ON app_public.movie_genres_relat
 
 
 --
+-- Name: idx_movie_images_coalesced_lang; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_images_coalesced_lang ON app_public.movie_images USING btree (COALESCE(language_tag, 'default'::text));
+
+
+--
+-- Name: idx_movie_images_movie_type_lang; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_movie_images_movie_type_lang ON app_public.movie_images USING btree (movie_id, type, language_tag);
+
+
+--
 -- Name: idx_movie_licenses_countries; Type: INDEX; Schema: app_public; Owner: -
 --
 
@@ -4818,10 +4830,24 @@ CREATE INDEX idx_season_genres_relation_tvshow_genre_id ON app_public.season_gen
 
 
 --
+-- Name: idx_season_images_coalesced_lang; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_season_images_coalesced_lang ON app_public.season_images USING btree (COALESCE(language_tag, 'default'::text));
+
+
+--
 -- Name: idx_season_images_season_id; Type: INDEX; Schema: app_public; Owner: -
 --
 
 CREATE INDEX idx_season_images_season_id ON app_public.season_images USING btree (season_id);
+
+
+--
+-- Name: idx_season_images_season_type_lang; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_season_images_season_type_lang ON app_public.season_images USING btree (season_id, type, language_tag);
 
 
 --
@@ -5018,6 +5044,20 @@ CREATE INDEX idx_tvshow_genres_relation_tvshow_genre_id ON app_public.tvshow_gen
 --
 
 CREATE INDEX idx_tvshow_genres_relation_tvshow_id ON app_public.tvshow_genres_relation USING btree (tvshow_id);
+
+
+--
+-- Name: idx_tvshow_images_coalesced_lang; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_images_coalesced_lang ON app_public.tvshow_images USING btree (COALESCE(language_tag, 'default'::text));
+
+
+--
+-- Name: idx_tvshow_images_show_type_lang; Type: INDEX; Schema: app_public; Owner: -
+--
+
+CREATE INDEX idx_tvshow_images_show_type_lang ON app_public.tvshow_images USING btree (tvshow_id, type, language_tag);
 
 
 --

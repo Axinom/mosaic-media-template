@@ -1,9 +1,11 @@
-import { MosaicError } from '@axinom/mosaic-service-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
+  License,
   PublishServiceMessagingSettings,
   SeasonPublishedEvent,
   SeasonPublishedEventSchema,
 } from 'media-messages';
+import * as Yup from 'yup';
 import {
   parent,
   Queryable,
@@ -16,7 +18,12 @@ import {
   buildBDPublishingId,
   buildPublishingId,
   EntityPublishingProcessor,
+  licensesValidation,
+  requiredSeasonCover,
   SnapshotDataAggregator,
+  SnapshotValidationResult,
+  validateYupPublishSchema,
+  videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
 import {
@@ -53,6 +60,46 @@ const applyImageFallbacks = (images: any[]) => {
     (img) =>
       !['SEASON_COVER', 'SEASON_CLEAN_COVER', 'SEASON_LIST'].includes(img.type),
   );
+};
+
+/**
+ * Builds season license objects from license data
+ */
+const buildSeasonLicenses = async (
+  licenses: any[],
+  contentOwner: string | null,
+  queryable: Queryable,
+): Promise<License[]> => {
+  const seasonLicenses: License[] = [];
+  for (const license of licenses) {
+    const seasonLicense: License = {
+      start_time: license.license_start ?? undefined,
+      end_time: license.license_end ?? undefined,
+      is_downloadable: license.is_downloadable,
+      downloaded_asset_lifespan: license.downloaded_asset_lifespan ?? undefined,
+      content_owner: contentOwner ?? undefined,
+      countries: [],
+    };
+    for (const country of license.countries) {
+      if (!isNullOrWhitespace(country.country_group_id)) {
+        const countryGroupCountries = await select('country_groups_countries', {
+          group_id: country.country_group_id,
+        }).run(queryable);
+        seasonLicense.countries?.push(
+          ...countryGroupCountries
+            .filter((c) => !seasonLicense.countries?.includes(c.country_id))
+            .map((c) => c.country_id),
+        );
+      } else if (
+        !isNullOrWhitespace(country.country_code) &&
+        !seasonLicense.countries?.includes(country.country_code)
+      ) {
+        seasonLicense.countries?.push(country.country_code);
+      }
+    }
+    seasonLicenses.push(seasonLicense);
+  }
+  return seasonLicenses;
 };
 
 const seasonDataAggregator: SnapshotDataAggregator = async (
@@ -150,6 +197,12 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
     });
   }
 
+  const seasonLicenses = await buildSeasonLicenses(
+    season.licenses,
+    season.content_owner,
+    queryable,
+  );
+
   const snapshotJson: SeasonPublishedEvent = {
     content_id: season.publishing_id,
     tvshow_id: season.tvshow_id
@@ -170,11 +223,7 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
     ),
     cast: season.cast.map((c) => c.name),
     tags: season.tags.map((c) => c.name),
-    licenses: season.licenses.map((license) => ({
-      start_time: license.license_start ?? undefined,
-      end_time: license.license_end ?? undefined,
-      countries: license.countries.map((country) => country.country_code ?? ''),
-    })),
+    licenses: seasonLicenses,
     images: seasonImages,
     videos,
     directors: season.directors.map((d) => d.name),
@@ -204,9 +253,52 @@ const seasonDataAggregator: SnapshotDataAggregator = async (
   };
 };
 
+const customSeasonValidation = async (
+  json: unknown,
+): Promise<SnapshotValidationResult[]> => {
+  const yupSchema = Yup.object({
+    images: requiredSeasonCover,
+    videos: videosValidation(false),
+    licenses: licensesValidation(false),
+  });
+  const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const customValidationResults: SnapshotValidationResult[] = [];
+  const seasonJson = json as SeasonPublishedEvent;
+
+  // Check if title and description are present for default locale
+  if (seasonJson.localizations) {
+    const defaultLocale = seasonJson.localizations.find(
+      (locale) => locale.is_default_locale === true,
+    );
+
+    if (defaultLocale) {
+      if (!defaultLocale.title || defaultLocale.title.trim() === '') {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Title is required.',
+        });
+      }
+
+      if (
+        !defaultLocale.description ||
+        defaultLocale.description.trim() === ''
+      ) {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Description is required.',
+        });
+      }
+    }
+  }
+  return [...yupValidationResults, ...customValidationResults];
+};
+
 export const publishingSeasonProcessor: EntityPublishingProcessor = {
   type: 'seasons',
   aggregator: seasonDataAggregator,
+  validator: customSeasonValidation,
   validationSchema: SeasonPublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.SeasonPublished,
   unpublishMessagingSettings: PublishServiceMessagingSettings.SeasonUnpublished,
