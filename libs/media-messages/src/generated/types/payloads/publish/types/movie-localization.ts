@@ -55,4 +55,16 @@ export interface MovieLocalization {
    * Localized 9x13 list image ID.
    */
   movie_list_9x13?: string | null;
+  /**
+   * The localized cover image of this movie.
+   */
+  cover?: string | null;
+  /**
+   * The localized clean_cover image cover of this movie.
+   */
+  clean_cover?: string | null;
+  /**
+   * The localized list image of this movie.
+   */
+  list?: string | null;
 }
