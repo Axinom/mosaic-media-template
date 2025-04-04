@@ -11480,6 +11480,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `false`
       */
       is_list_snapshot: boolean;
+      /**
+      * **snapshots.is_republish_allowed**
+      * - `bool` in database
+      * - Nullable, default: `true`
+      */
+      is_republish_allowed: boolean | null;
     }
     export interface JSONSelectable {
       /**
@@ -11590,6 +11596,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `false`
       */
       is_list_snapshot: boolean;
+      /**
+      * **snapshots.is_republish_allowed**
+      * - `bool` in database
+      * - Nullable, default: `true`
+      */
+      is_republish_allowed: boolean | null;
     }
     export interface Whereable {
       /**
@@ -11700,6 +11712,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `false`
       */
       is_list_snapshot?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **snapshots.is_republish_allowed**
+      * - `bool` in database
+      * - Nullable, default: `true`
+      */
+      is_republish_allowed?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -11810,6 +11828,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `false`
       */
       is_list_snapshot?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
+      /**
+      * **snapshots.is_republish_allowed**
+      * - `bool` in database
+      * - Nullable, default: `true`
+      */
+      is_republish_allowed?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -11920,6 +11944,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `false`
       */
       is_list_snapshot?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **snapshots.is_republish_allowed**
+      * - `bool` in database
+      * - Nullable, default: `true`
+      */
+      is_republish_allowed?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'snapshots_pkey';
     export type Column = keyof Selectable;

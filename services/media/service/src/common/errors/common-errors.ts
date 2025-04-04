@@ -38,7 +38,8 @@ export const CommonErrors = {
     code: 'UNSUPPORTED_INGEST_MEDIA_TYPE',
   },
   SnapshotNotFound: {
-    message: "The snapshot with ID '%s' was not found.",
+    message:
+      "The snapshot with ID '%s' was not found or it is not re-publishable due to Title/External ID change.",
     code: 'SNAPSHOT_NOT_FOUND',
   },
   MediaNotFound: {
@@ -80,7 +81,7 @@ export const CommonErrors = {
   },
   CannotUpdateExternalId: {
     message:
-      'The External ID cannot be updated for %s with ID %s. Only media with no External ID can be updated.',
+      'The External ID cannot be updated for %s with ID %s when the media is published. Please unpublish the media first.',
     code: 'CANNOT_UPDATE_EXTERNAL_ID',
   },
   CannotUpdateTitleForPublishedMedia: {

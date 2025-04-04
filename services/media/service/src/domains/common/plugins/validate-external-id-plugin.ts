@@ -1,11 +1,19 @@
 import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import { Client } from 'pg';
 import { makeWrapResolversPlugin } from 'postgraphile';
-import { conditions as c, param, select, selectOne, sql } from 'zapatos/db';
+import {
+  conditions as c,
+  param,
+  select,
+  selectOne,
+  sql,
+  update,
+} from 'zapatos/db';
 import { collections, collection_relations, Table } from 'zapatos/schema';
 import { CommonErrors } from '../../../common';
 import { Mutations } from '../../../generated/graphql/operations';
 import { ExtendedGraphQLContext } from '../../../graphql';
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const validateExternalIdUpdate = (
   mediaType: 'Movie' | 'Tv Show' | 'Season' | 'Episode' | 'Collection',
@@ -37,9 +45,11 @@ const validateExternalIdUpdate = (
         });
       }
 
+      // We do not allow updating the external ID if the media is published and has no external ID.
       if (
         !isNullOrWhitespace(args.input.patch.externalId) &&
-        !isNullOrWhitespace(media.external_id)
+        isNullOrWhitespace(media.external_id) &&
+        media.publish_status !== 'NOT_PUBLISHED'
       ) {
         throw new MosaicError({
           ...CommonErrors.CannotUpdateExternalId,
@@ -88,9 +98,52 @@ const validateExternalIdUpdate = (
         });
       }
 
+      // We update the republish status of all snapshots that are referencing this media if the external ID or the title is update while the external ID is empty.
+      // This is to ensure that the snapshots are republished with the correct publishing ID.
+      if (
+        (isNullOrWhitespace(media.external_id) &&
+          !isNullOrWhitespace(args.input.patch.title)) ||
+        !isNullOrWhitespace(args.input.patch.externalId)
+      ) {
+        await updateExistingSnapshotRepublishStatus(
+          mediaType,
+          mediaId,
+          pgClient,
+        );
+      }
+
       return resolve();
     },
   };
+};
+
+const updateExistingSnapshotRepublishStatus = async (
+  mediaType: 'Movie' | 'Tv Show' | 'Season' | 'Episode' | 'Collection',
+  id: number,
+  pgClient: Client,
+): Promise<void> => {
+  const table = getTable(mediaType);
+  const media = await selectOne(table, {
+    id,
+  }).run(pgClient);
+
+  if (media === undefined) {
+    throw new MosaicError({
+      ...CommonErrors.MediaNotFound,
+      messageParams: [mediaType, id],
+    });
+  }
+
+  await update(
+    'snapshots',
+    {
+      is_republish_allowed: false,
+    },
+    {
+      entity_id: id,
+      entity_type: getEntityTable(mediaType),
+    },
+  ).run(pgClient);
 };
 
 const getTable = (
@@ -110,6 +163,27 @@ const getTable = (
       return 'episodes';
     case 'Collection':
       return 'collections';
+    default:
+      throw new MosaicError({
+        message: `Unknown media type: ${mediaType}`,
+      });
+  }
+};
+
+const getEntityTable = (
+  mediaType: 'Movie' | 'Tv Show' | 'Season' | 'Episode' | 'Collection',
+): 'MOVIE' | 'TVSHOW' | 'SEASON' | 'EPISODE' | 'COLLECTION' => {
+  switch (mediaType) {
+    case 'Movie':
+      return 'MOVIE';
+    case 'Tv Show':
+      return 'TVSHOW';
+    case 'Season':
+      return 'SEASON';
+    case 'Episode':
+      return 'EPISODE';
+    case 'Collection':
+      return 'COLLECTION';
     default:
       throw new MosaicError({
         message: `Unknown media type: ${mediaType}`,
