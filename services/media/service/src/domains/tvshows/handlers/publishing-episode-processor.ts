@@ -20,7 +20,7 @@ import {
   buildPublishingId,
   EntityPublishingProcessor,
   licensesValidation,
-  requiredCover,
+  requiredEpisodeCover,
   SnapshotDataAggregator,
   SnapshotValidationResult,
   validateYupPublishSchema,
@@ -294,19 +294,89 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
 const customEpisodeValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
+  const episodeJson = json as EpisodePublishedEvent;
+  const hasMainVideo =
+    episodeJson.videos.find((video) => video.type === 'MAIN') !== undefined;
+
   const yupSchema = Yup.object({
     genre_ids: atLeastOneString,
-    images: requiredCover,
-    videos: videosValidation('MAIN', 'TRAILER'),
-    licenses: licensesValidation(false),
+    images: requiredEpisodeCover,
+    videos: videosValidation(true),
+    licenses: licensesValidation(hasMainVideo),
   });
-  return validateYupPublishSchema(json, yupSchema);
+
+  const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const customValidationResults: SnapshotValidationResult[] = [];
+
+  // Check credit_start_time vs length_in_seconds
+  if (episodeJson.credits_start_time && episodeJson.length_in_seconds) {
+    const creditsStartTime = parseFloat(episodeJson.credits_start_time);
+    if (creditsStartTime >= episodeJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message:
+          'Credits start time cue point must be less than the video length.',
+      });
+    }
+  }
+  if (episodeJson.intro_start_time && episodeJson.length_in_seconds) {
+    const introStartTime = parseFloat(episodeJson.intro_start_time);
+    if (introStartTime >= episodeJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message:
+          'Intro start time cue point must be less than the video length.',
+      });
+    }
+  }
+  if (episodeJson.intro_end_time && episodeJson.length_in_seconds) {
+    const introEndTime = parseFloat(episodeJson.intro_end_time);
+    if (introEndTime >= episodeJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message: 'Intro end time cue point must be less than the video length.',
+      });
+    }
+  }
+
+  // Check if title and description are present for default locale
+  if (episodeJson.localizations) {
+    const defaultLocale = episodeJson.localizations.find(
+      (locale) => locale.is_default_locale === true,
+    );
+
+    if (defaultLocale) {
+      if (!defaultLocale.title || defaultLocale.title.trim() === '') {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Title is required.',
+        });
+      }
+
+      if (
+        !defaultLocale.description ||
+        defaultLocale.description.trim() === ''
+      ) {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Description is required.',
+        });
+      }
+    }
+  }
+
+  return [...yupValidationResults, ...customValidationResults];
 };
 
 export const publishingEpisodeProcessor: EntityPublishingProcessor = {
   type: 'episodes',
   aggregator: episodeDataAggregator,
-  //validator: customEpisodeValidation,
+  validator: customEpisodeValidation,
   validationSchema: EpisodePublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.EpisodePublished,
   unpublishMessagingSettings:

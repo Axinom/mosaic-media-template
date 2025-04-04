@@ -42,7 +42,7 @@ export class LocalizableSeasonImageCreatedDbMessageHandler extends LocalizableMe
         fields = { season_cover_1x1: image_id };
         break;
       case 'SEASON_COVER_16x9':
-        fields = { seasoncover_16x9: image_id };
+        fields = { season_cover_16x9: image_id };
         break;
       case 'SEASON_CLEAN_COVER':
         fields = { season_clean_cover: image_id };

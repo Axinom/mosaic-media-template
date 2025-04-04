@@ -5,12 +5,19 @@ import {
   TvshowPublishedEvent,
   TvshowPublishedEventSchema,
 } from 'media-messages';
+import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
 import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
+  atLeastOneString,
   buildPublishingId,
   EntityPublishingProcessor,
+  licensesValidation,
+  requiredTvShowCover,
   SnapshotDataAggregator,
+  SnapshotValidationResult,
+  validateYupPublishSchema,
+  videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
 import {
@@ -232,9 +239,54 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
   };
 };
 
+const customTvshowValidation = async (
+  json: unknown,
+): Promise<SnapshotValidationResult[]> => {
+  const yupSchema = Yup.object({
+    genre_ids: atLeastOneString,
+    images: requiredTvShowCover,
+    videos: videosValidation(false),
+    licenses: licensesValidation(false),
+  });
+
+  const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const customValidationResults: SnapshotValidationResult[] = [];
+  const tvshowJson = json as TvshowPublishedEvent;
+
+  // Check if title and description are present for default locale
+  if (tvshowJson.localizations) {
+    const defaultLocale = tvshowJson.localizations.find(
+      (locale) => locale.is_default_locale === true,
+    );
+
+    if (defaultLocale) {
+      if (!defaultLocale.title || defaultLocale.title.trim() === '') {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Title is required.',
+        });
+      }
+
+      if (
+        !defaultLocale.description ||
+        defaultLocale.description.trim() === ''
+      ) {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Description is required.',
+        });
+      }
+    }
+  }
+  return [...yupValidationResults, ...customValidationResults];
+};
+
 export const publishingTvshowProcessor: EntityPublishingProcessor = {
   type: 'tvshows',
   aggregator: tvshowDataAggregator,
+  validator: customTvshowValidation,
   validationSchema: TvshowPublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.TvshowPublished,
   unpublishMessagingSettings: PublishServiceMessagingSettings.TvshowUnpublished,

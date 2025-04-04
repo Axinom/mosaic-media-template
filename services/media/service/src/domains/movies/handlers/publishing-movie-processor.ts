@@ -5,12 +5,19 @@ import {
   MoviePublishedEventSchema,
   PublishServiceMessagingSettings,
 } from 'media-messages';
+import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
 import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
+  atLeastOneString,
   buildPublishingId,
   EntityPublishingProcessor,
+  licensesValidation,
+  requiredMovieCover,
   SnapshotDataAggregator,
+  SnapshotValidationResult,
+  validateYupPublishSchema,
+  videosValidation,
 } from '../../../publishing';
 import { getImagesMetadata, getVideosMetadata } from '../../common';
 import {
@@ -247,11 +254,71 @@ const movieDataAggregator: SnapshotDataAggregator = async (
   };
 };
 
+const customMovieValidation = async (
+  json: unknown,
+): Promise<SnapshotValidationResult[]> => {
+  const movieJson = json as MoviePublishedEvent;
+  const hasMainVideo =
+    movieJson.videos.find((video) => video.type === 'MAIN') !== undefined;
+
+  const yupSchema = Yup.object({
+    genre_ids: atLeastOneString,
+    images: requiredMovieCover,
+    videos: videosValidation(true),
+    licenses: licensesValidation(hasMainVideo), // We only enforce requirement for at least 1 license if there is a main video
+  });
+
+  const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const customValidationResults: SnapshotValidationResult[] = [];
+
+  // Check credit_start_time vs length_in_seconds
+  if (movieJson.credits_start_time && movieJson.length_in_seconds) {
+    const creditsStartTime = parseFloat(movieJson.credits_start_time);
+    if (creditsStartTime >= movieJson.length_in_seconds) {
+      customValidationResults.push({
+        context: 'VIDEO',
+        severity: 'ERROR',
+        message:
+          'Credits start time cue point must be less than the video length.',
+      });
+    }
+  }
+
+  // Check if title and description are present for default locale
+  if (movieJson.localizations) {
+    const defaultLocale = movieJson.localizations.find(
+      (locale) => locale.is_default_locale === true,
+    );
+
+    if (defaultLocale) {
+      if (!defaultLocale.title || defaultLocale.title.trim() === '') {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Title is required.',
+        });
+      }
+
+      if (
+        !defaultLocale.description ||
+        defaultLocale.description.trim() === ''
+      ) {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Description is required.',
+        });
+      }
+    }
+  }
+
+  return [...yupValidationResults, ...customValidationResults];
+};
+
 export const publishingMovieProcessor: EntityPublishingProcessor = {
   type: 'movies',
   aggregator: movieDataAggregator,
-  // No custom validation is done when publishing a movie. This is BeyondDutch specific requirement.
-  //validator: customMovieValidation,
+  validator: customMovieValidation,
   validationSchema: MoviePublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.MoviePublished,
   unpublishMessagingSettings: PublishServiceMessagingSettings.MovieUnpublished,

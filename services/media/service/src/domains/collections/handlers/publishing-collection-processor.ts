@@ -6,13 +6,18 @@ import {
   RelatedItem,
   RelationType,
 } from 'media-messages';
+import * as Yup from 'yup';
 import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
 import { collection_relations } from 'zapatos/schema';
 import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   buildBDPublishingId,
   EntityPublishingProcessor,
+  getReadablePath,
+  requiredCollectionCover,
   SnapshotDataAggregator,
+  SnapshotValidationResult,
+  validateYupPublishSchema,
 } from '../../../publishing';
 import { getImagesMetadata } from '../../common';
 import {
@@ -220,9 +225,66 @@ const getRelationPublishingId = async (
   return publishingId;
 };
 
+const customCollectionValidation = async (
+  json: unknown,
+): Promise<SnapshotValidationResult[]> => {
+  const yupSchema = Yup.object({
+    images: requiredCollectionCover,
+    related_items: Yup.array(
+      Yup.object().test({
+        name: 'one_relation_id',
+        message: (params) => {
+          const identifier = getReadablePath(params.path);
+          return `${identifier} must have a relation id defined.`;
+        },
+        test: (value) =>
+          !!value.movie_id ||
+          !!value.tvshow_id ||
+          !!value.season_id ||
+          !!value.episode_id ||
+          !!value.collection_id,
+      }),
+    ).min(1, `At least one related item must be assigned.`),
+  });
+
+  const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const customValidationResults: SnapshotValidationResult[] = [];
+  const collectionJson = json as CollectionPublishedEvent;
+
+  // Check if title and description are present for default locale
+  if (collectionJson.localizations) {
+    const defaultLocale = collectionJson.localizations.find(
+      (locale) => locale.is_default_locale === true,
+    );
+
+    if (defaultLocale) {
+      if (!defaultLocale.title || defaultLocale.title.trim() === '') {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Title is required.',
+        });
+      }
+
+      if (
+        !defaultLocale.description ||
+        defaultLocale.description.trim() === ''
+      ) {
+        customValidationResults.push({
+          context: 'LOCALIZATION',
+          severity: 'ERROR',
+          message: 'Description is required.',
+        });
+      }
+    }
+  }
+  return [...yupValidationResults, ...customValidationResults];
+};
+
 export const publishingCollectionProcessor: EntityPublishingProcessor = {
   type: 'collections',
   aggregator: collectionDataAggregator,
+  validator: customCollectionValidation,
   validationSchema: CollectionPublishedEventSchema,
   publishMessagingSettings: PublishServiceMessagingSettings.CollectionPublished,
   unpublishMessagingSettings:

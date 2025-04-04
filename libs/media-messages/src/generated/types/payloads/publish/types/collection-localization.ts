@@ -55,4 +55,16 @@ export interface CollectionLocalization {
    * Localized 15x16 list image ID.
    */
   collection_list_15x16?: string | null;
+  /**
+   * The localized cover image of this movie.
+   */
+  cover?: string | null;
+  /**
+   * The localized clean_cover image cover of this movie.
+   */
+  clean_cover?: string | null;
+  /**
+   * The localized list image of this movie.
+   */
+  list?: string | null;
 }

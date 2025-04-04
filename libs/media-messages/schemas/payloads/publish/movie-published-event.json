@@ -162,6 +162,18 @@
           "movie_list_9x13": {
             "type": ["string", "null"],
             "description": "Localized 9x13 list image ID."
+          },
+          "cover": {
+            "type": ["string", "null"],
+            "description": "The localized cover image of this movie."
+          },
+          "clean_cover": {
+            "type": ["string", "null"],
+            "description": "The localized clean_cover image cover of this movie."
+          },
+          "list": {
+            "type": ["string", "null"],
+            "description": "The localized list image of this movie."
           }
         }
       }

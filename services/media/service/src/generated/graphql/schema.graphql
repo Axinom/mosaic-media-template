@@ -7435,6 +7435,9 @@ input SnapshotFilter {
   """Filter by the object’s `isListSnapshot` field."""
   isListSnapshot: BooleanFilter
 
+  """Filter by the object’s `isRepublishAllowed` field."""
+  isRepublishAllowed: BooleanFilter
+
   """Filter by the object’s `snapshotValidationResults` relation."""
   snapshotValidationResults: SnapshotToManySnapshotValidationResultFilter
 
@@ -12765,6 +12768,7 @@ type Snapshot {
   createdUser: String!
   updatedUser: String!
   isListSnapshot: Boolean!
+  isRepublishAllowed: Boolean
 
   """
   Reads and enables pagination through a set of `SnapshotValidationResult`.
@@ -16704,6 +16708,8 @@ enum SnapshotsOrderBy {
   UPDATED_USER_DESC
   IS_LIST_SNAPSHOT_ASC
   IS_LIST_SNAPSHOT_DESC
+  IS_REPUBLISH_ALLOWED_ASC
+  IS_REPUBLISH_ALLOWED_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -16766,6 +16772,9 @@ input SnapshotCondition {
 
   """Checks for equality with the object’s `isListSnapshot` field."""
   isListSnapshot: Boolean
+
+  """Checks for equality with the object’s `isRepublishAllowed` field."""
+  isRepublishAllowed: Boolean
 }
 
 """
@@ -17574,7 +17583,9 @@ enum ErrorCodesEnum {
   """
   UNSUPPORTED_INGEST_MEDIA_TYPE
 
-  """The snapshot with ID '%s' was not found."""
+  """
+  The snapshot with ID '%s' was not found or it is not re-publishable due to Title/External ID change.
+  """
   SNAPSHOT_NOT_FOUND
 
   """%s with ID '%s' was not found."""
@@ -17610,12 +17621,12 @@ enum ErrorCodesEnum {
   CANNOT_UPDATE_EXTERNAL_ID_FOR_PUBLISHED_MEDIA
 
   """
-  The External ID cannot be updated for %s with ID %s. Only media with no External ID can be updated.
+  The External ID cannot be updated for %s with ID %s when the media is published. Please unpublish the media first.
   """
   CANNOT_UPDATE_EXTERNAL_ID
 
   """
-  The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media.
+  The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media or the entity that is referencing this media such as a Season, Episode or Collection first.
   """
   CANNOT_UPDATE_TITLE_FOR_PUBLISHED_MEDIA
 

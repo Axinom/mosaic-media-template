@@ -6552,7 +6552,8 @@ CREATE TABLE app_public.snapshots (
     updated_date timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     created_user text DEFAULT 'Unknown'::text NOT NULL,
     updated_user text DEFAULT 'Unknown'::text NOT NULL,
-    is_list_snapshot boolean DEFAULT false NOT NULL
+    is_list_snapshot boolean DEFAULT false NOT NULL,
+    is_republish_allowed boolean DEFAULT true
 );
 
 
@@ -16988,6 +16989,13 @@ GRANT UPDATE(unpublished_date) ON TABLE app_public.snapshots TO media_service_gq
 --
 
 GRANT INSERT(is_list_snapshot),UPDATE(is_list_snapshot) ON TABLE app_public.snapshots TO media_service_gql_role;
+
+
+--
+-- Name: COLUMN snapshots.is_republish_allowed; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT INSERT(is_republish_allowed),UPDATE(is_republish_allowed) ON TABLE app_public.snapshots TO media_service_gql_role;
 
 
 --

@@ -36,6 +36,57 @@ export function createMoviePublishedMessage(
     images: [createImage()],
     videos: [createVideo()],
     localizations: createGenericLocalizations(),
+    /*localizations: [
+      {
+        cover: '10tulsa_cover_756333203.jpg',
+        language_tag: 'default',
+        description:
+          'Tommy Colston is een marine-veteraan met zijn eigen gevechten. Wanneer Tommy zich realiseert dat hij een 9-jarige dochter heeft, Tulsa, laat Tommy haar tegen zijn zin in zijn huis, waar haar sterke geloof in Christus hun beide levens begint te veranderen. Maar wanneer een ongeluk het leven van Tommy en Tulsa op zijn kop zet, moet Tommy leren zijn gevechten met verslaving en verlies te overwinnen om de vader te worden die zijn dochter altijd had wilde hebben.',
+        synopsis:
+          'Wanneer een ongeluk het leven van Tommy en Tulsa op zijn kop zet, moet Tommy leren zijn gevechten met verslaving en verlies te overwinnen om de beste vader te worden voor zijn dochter.',
+        is_default_locale: true,
+        list: '10tulsa_list_2051675077.jpg',
+        title: 'Tulsa',
+        clean_cover: '10tulsa_cleanco_1643328565.jpg',
+      },
+      {
+        language_tag: 'SV',
+        description:
+          'Tulsa är en 9-årig flicka som har flyttat från fosterhem till fosterhem. Det enda hon riktigt har kvar är sin tro på Gud. När hon än en gång måste flytta hamnar hon hos sin far, Tommy. Hon börjar direkt att förändra hans liv och livet för andra omkring henne.',
+        synopsis:
+          'Tulsa är en 9-årig flicka som har flyttat från fosterhem till fosterhem. Det enda hon riktigt har kvar är sin tro på Gud.',
+        is_default_locale: false,
+        title: 'Tulsa',
+      },
+      {
+        cover: '10runningforever_list_nl.jpg',
+        language_tag: 'NL',
+        description:
+          'Tommy Colston is een marine-veteraan met zijn eigen gevechten. Wanneer Tommy zich realiseert dat hij een 9-jarige dochter heeft, Tulsa, laat Tommy haar tegen zijn zin in zijn huis, waar haar sterke geloof in Christus hun beide levens begint te veranderen. Maar wanneer een ongeluk het leven van Tommy en Tulsa op zijn kop zet, moet Tommy leren zijn gevechten met verslaving en verlies te overwinnen om de vader te worden die zijn dochter altijd had wilde hebben.',
+        synopsis:
+          'Wanneer een ongeluk het leven van Tommy en Tulsa op zijn kop zet, moet Tommy leren zijn gevechten met verslaving en verlies te overwinnen om de beste vader te worden voor zijn dochter.',
+        is_default_locale: false,
+        title: 'Tulsa',
+      },
+      {
+        language_tag: 'EN',
+        description:
+          "Tommy Colston is a Marine veteran with his own battles to face. Upon realizing he has a 9-year-old daughter, Tulsa, Tommy unwillingly allows her into his home, where her devout faith in Christ begins to change both of their lives. But when an accident turns Tommy and Tulsa's life upside down, Tommy must learn to overcome his battles with addiction and loss to become the father his daughter always wanted.",
+        synopsis:
+          "When an accident turns Tommy and Tulsa's life upside down, Tommy must learn to overcome his battles with addiction and loss to become the father his daughter always wanted.",
+        is_default_locale: false,
+        title: 'Tulsa',
+      },
+      {
+        language_tag: 'NB',
+        description:
+          'Tulsa er en 9 år gammel jente som har flyttet fra fosterhjem til fosterhjem. Det eneste hun virkelig har beholdt er nestekjærligheten og troen på Gud. \nDa hun igjen må flytte, havner hun i fanget på sin fortapte far. Fra første stund begynner hun å forandre livene til de rundt seg, og snur opp ned på livet til sin far Tommy, som selv har litt av hvert å stri med.',
+        synopsis:
+          'Tulsa er en 9 år gammel jente som har flyttet fra fosterhjem til fosterhjem. Det eneste hun virkelig har beholdt er nestekjærligheten og troen på Gud.',
+        title: 'Tulsa',
+        is_default_locale: false,
+      },
+    ],*/
   });
 }
 
@@ -307,18 +358,21 @@ function createGenericLocalizations():
 function createSeasonLocalizations(): SeasonLocalization[] {
   return [
     {
+      title: 'source title',
       synopsis: 'source synopsis',
       description: 'source description',
       language_tag: 'en-US',
       is_default_locale: true,
     },
     {
+      title: 'localized title DE',
       synopsis: 'localized synopsis',
       description: 'localized description',
       language_tag: 'de-DE',
       is_default_locale: false,
     },
     {
+      title: 'localized title EE',
       synopsis: null,
       description: null,
       language_tag: 'et-EE',
