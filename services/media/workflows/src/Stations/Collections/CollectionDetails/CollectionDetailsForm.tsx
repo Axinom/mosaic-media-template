@@ -35,6 +35,7 @@ import {
   MutationCreateCollectionsTagArgs,
   MutationDeleteCollectionCountryArgs,
   MutationDeleteCollectionsTagArgs,
+  PublishStatus,
   SearchCollectionTagsDocument,
   SearchCollectionTagsQuery,
   SearchCollectionTagsQueryVariables,
@@ -267,7 +268,7 @@ const Panel: React.FC = () => {
           <Paragraph title="Publishing Status">
             {getEnumLabel(values.publishStatus)}
           </Paragraph>
-          <Paragraph title="Publishing ID">{values.publishingId}</Paragraph>
+          {values.publishStatus !== PublishStatus.NotPublished ? (<Paragraph title="Publishing ID">{values.publishingId}</Paragraph>) : null}
           {values.publishedDate ? (
             <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
