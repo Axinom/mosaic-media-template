@@ -7623,11 +7623,11 @@ export enum ErrorCodesEnum {
   AuthenticatedManagementSubjectNotFound = 'AUTHENTICATED_MANAGEMENT_SUBJECT_NOT_FOUND',
   /** A Permission Definition or an EndUserAuthorizationConfig was not found to be passed into Postgraphile build options. This is a development time issue. */
   AuthorizationOptionsMisconfigured = 'AUTHORIZATION_OPTIONS_MISCONFIGURED',
-  /** The External ID cannot be updated for %s with ID %s. Only media with no External ID can be updated. */
+  /** The External ID cannot be updated for %s with ID %s when the media is published. Please unpublish the media first. */
   CannotUpdateExternalId = 'CANNOT_UPDATE_EXTERNAL_ID',
   /** The External ID cannot be updated for %s with ID %s. Please unpublish the media or the entity that is referencing this media such as a Season, Episode or Collection first. */
   CannotUpdateExternalIdForPublishedMedia = 'CANNOT_UPDATE_EXTERNAL_ID_FOR_PUBLISHED_MEDIA',
-  /** The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media. */
+  /** The Title cannot be updated for %s with ID %s. The title is used to build the Publishing ID when the External ID is empty. Any changes to the title must be done only after unpublishing the media or the entity that is referencing this media such as a Season, Episode or Collection first. */
   CannotUpdateTitleForPublishedMedia = 'CANNOT_UPDATE_TITLE_FOR_PUBLISHED_MEDIA',
   /** Unable to add because of circular relationship between child collection and parent collection */
   CircularCollectionRelationNotAllowed = 'CIRCULAR_COLLECTION_RELATION_NOT_ALLOWED',
@@ -7695,7 +7695,7 @@ export enum ErrorCodesEnum {
   ServiceNotAccessible = 'SERVICE_NOT_ACCESSIBLE',
   /** Could not find a matching signing key to verify the access token. The signing key used to create the token may have been revoked or the Tenant/Environment/Application configuration is erroneous. */
   SigningKeyNotFound = 'SIGNING_KEY_NOT_FOUND',
-  /** The snapshot with ID '%s' was not found. */
+  /** The snapshot with ID '%s' was not found or it is not re-publishable due to Title/External ID change. */
   SnapshotNotFound = 'SNAPSHOT_NOT_FOUND',
   /** An application startup error has occurred. The actual message will have more information. */
   StartupError = 'STARTUP_ERROR',
@@ -7711,6 +7711,8 @@ export enum ErrorCodesEnum {
   UnhandledError = 'UNHANDLED_ERROR',
   /** Attempt to create or update an element failed, as it would have resulted in a duplicate element. */
   UniqueConstraintError = 'UNIQUE_CONSTRAINT_ERROR',
+  /** Unknown collection relation type: %s */
+  UnknownCollectionRelationType = 'UNKNOWN_COLLECTION_RELATION_TYPE',
   /** Attempt to unpublish media has failed. */
   UnpublishError = 'UNPUBLISH_ERROR',
   /** Unable to generate display title for ingest item. Ingest media type '%s' is not supported. */
@@ -16267,6 +16269,7 @@ export type Snapshot = {
   episodesSnapshots: EpisodesSnapshotsConnection;
   id: Scalars['Int']['output'];
   isListSnapshot: Scalars['Boolean']['output'];
+  isRepublishAllowed?: Maybe<Scalars['Boolean']['output']>;
   jobId: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `MoviesSnapshot`. */
   moviesSnapshots: MoviesSnapshotsConnection;
@@ -16403,6 +16406,8 @@ export type SnapshotCondition = {
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `isListSnapshot` field. */
   isListSnapshot?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isRepublishAllowed` field. */
+  isRepublishAllowed?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `jobId` field. */
   jobId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `publishedDate` field. */
@@ -16453,6 +16458,8 @@ export type SnapshotFilter = {
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `isListSnapshot` field. */
   isListSnapshot?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isRepublishAllowed` field. */
+  isRepublishAllowed?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `jobId` field. */
   jobId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `moviesSnapshots` relation. */
@@ -16536,6 +16543,8 @@ export enum SnapshotsOrderBy {
   IdDesc = 'ID_DESC',
   IsListSnapshotAsc = 'IS_LIST_SNAPSHOT_ASC',
   IsListSnapshotDesc = 'IS_LIST_SNAPSHOT_DESC',
+  IsRepublishAllowedAsc = 'IS_REPUBLISH_ALLOWED_ASC',
+  IsRepublishAllowedDesc = 'IS_REPUBLISH_ALLOWED_DESC',
   JobIdAsc = 'JOB_ID_ASC',
   JobIdDesc = 'JOB_ID_DESC',
   Natural = 'NATURAL',
@@ -20852,7 +20861,7 @@ export type CreateCollectionSnapshotMutationVariables = Exact<{
 
 export type CreateCollectionSnapshotMutation = { __typename?: 'Mutation', createCollectionSnapshot?: { __typename?: 'Snapshot', id: number } | null };
 
-export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
+export type CollectionExplorerPropertiesFragment = { __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any, imageType: CollectionImageType }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } };
 
 export type CollectionsQueryVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -20861,12 +20870,12 @@ export type CollectionsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
+export type CollectionsQuery = { __typename?: 'Query', filtered?: { __typename?: 'CollectionsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any, imageType: CollectionImageType }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } }> } | null, nonFiltered?: { __typename?: 'CollectionsConnection', totalCount: number } | null };
 
 export type CollectionsMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
+export type CollectionsMutatedSubscription = { __typename?: 'Subscription', collectionMutated?: { __typename?: 'CollectionSubscriptionPayload', id: number, eventKey?: CollectionSubscriptionEventKey | null, collection?: { __typename?: 'Collection', id: number, title: string, description?: string | null, externalId?: string | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, assetSubtype: AssetSubtype, collectionsTags: { __typename?: 'CollectionsTagsConnection', nodes: Array<{ __typename?: 'CollectionsTag', name: string }> }, collectionCountries: { __typename?: 'CollectionCountriesConnection', nodes: Array<{ __typename?: 'CollectionCountry', collectionId: number, countryGroupId?: any | null, countryId?: IsoAlphaTwoCountryCodes | null }> }, collectionsImages: { __typename?: 'CollectionsImagesConnection', nodes: Array<{ __typename?: 'CollectionsImage', imageId: any, imageType: CollectionImageType }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', sortOrder: number }> } } | null } | null };
 
 export type BulkDeleteCollectionsMutationVariables = Exact<{
   filter?: InputMaybe<CollectionFilter>;
@@ -21299,7 +21308,7 @@ export type SearchMovieDirectorQueryVariables = Exact<{
 
 export type SearchMovieDirectorQuery = { __typename?: 'Query', getMoviesDirectorsValues?: { __typename?: 'GetMoviesDirectorsValuesConnection', nodes: Array<string | null> } | null };
 
-export type MovieExplorerPropertiesFragment = { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
+export type MovieExplorerPropertiesFragment = { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any, imageType: MovieImageType }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } };
 
 export type MoviesQueryVariables = Exact<{
   filter?: InputMaybe<MovieFilter>;
@@ -21308,12 +21317,12 @@ export type MoviesQueryVariables = Exact<{
 }>;
 
 
-export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
+export type MoviesQuery = { __typename?: 'Query', filtered?: { __typename?: 'MoviesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: any | null }, nodes: Array<{ __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any, imageType: MovieImageType }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } }> } | null, nonFiltered?: { __typename?: 'MoviesConnection', totalCount: number } | null };
 
 export type MoviesMutatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
+export type MoviesMutatedSubscription = { __typename?: 'Subscription', movieMutated?: { __typename?: 'MovieSubscriptionPayload', id: number, eventKey?: MovieSubscriptionEventKey | null, movie?: { __typename?: 'Movie', id: number, title: string, originalTitle?: string | null, externalId?: string | null, mainVideoId?: any | null, ageRating?: string | null, contentOwner?: string | null, businessType: BusinessType, assetSubtype: AssetSubtype, released?: any | null, publishedDate?: any | null, createdDate: any, updatedDate: any, updatedUser: string, publishStatus: PublishStatus, moviesLicenses: { __typename?: 'MoviesLicensesConnection', nodes: Array<{ __typename?: 'MoviesLicense', licenseEnd?: any | null, licenseStart?: any | null, moviesLicensesCountries: { __typename?: 'MoviesLicensesCountriesConnection', nodes: Array<{ __typename?: 'MoviesLicensesCountry', countryCode?: IsoAlphaTwoCountryCodes | null, countryGroupId?: any | null }> } }> }, moviesImages: { __typename?: 'MoviesImagesConnection', nodes: Array<{ __typename?: 'MoviesImage', imageId: any, imageType: MovieImageType }> }, moviesTags: { __typename?: 'MoviesTagsConnection', nodes: Array<{ __typename?: 'MoviesTag', name: string }> }, moviesMovieGenres: { __typename?: 'MoviesMovieGenresConnection', nodes: Array<{ __typename?: 'MoviesMovieGenre', movieGenres?: { __typename?: 'MovieGenre', title: string } | null }> }, moviesCasts: { __typename?: 'MoviesCastsConnection', nodes: Array<{ __typename?: 'MoviesCast', name: string }> }, moviesProductionCountries: { __typename?: 'MoviesProductionCountriesConnection', nodes: Array<{ __typename?: 'MoviesProductionCountry', name: string }> }, collectionRelations: { __typename?: 'CollectionRelationsConnection', nodes: Array<{ __typename?: 'CollectionRelation', collection?: { __typename?: 'Collection', title: string } | null }> } } | null } | null };
 
 export type GetMoviesFilterOptionsDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -21934,9 +21943,13 @@ export const CollectionExplorerPropertiesFragmentDoc = gql`
       countryId
     }
   }
-  collectionsImages {
+  collectionsImages(
+    filter: {imageType: {in: [COLLECTION_COVER_1X1, COLLECTION_COVER_4X1, COLLECTION_COVER]}}
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
+      imageType
     }
   }
   collectionRelations(orderBy: SORT_ORDER_DESC) {
@@ -21976,7 +21989,10 @@ export const EpisodeExplorerPropertiesFragmentDoc = gql`
       title
     }
   }
-  episodesImages(condition: {imageType: EPISODE_COVER_1X1}) {
+  episodesImages(
+    filter: {imageType: {in: [EPISODE_COVER_1X1, EPISODE_COVER_16X9, EPISODE_COVER]}}
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
     }
@@ -22062,9 +22078,13 @@ export const MovieExplorerPropertiesFragmentDoc = gql`
       }
     }
   }
-  moviesImages(condition: {imageType: MOVIE_COVER_1X1}) {
+  moviesImages(
+    filter: {imageType: {in: [MOVIE_COVER_1X1, MOVIE_COVER_16X9, MOVIE_COVER]}}
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
+      imageType
     }
   }
   moviesTags {
@@ -22159,7 +22179,10 @@ export const SeasonExplorerPropertiesFragmentDoc = gql`
     id
     title
   }
-  seasonsImages(condition: {imageType: SEASON_COVER_1X1}) {
+  seasonsImages(
+    filter: {imageType: {in: [SEASON_COVER_1X1, SEASON_COVER_16X9, SEASON_COVER]}}
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
     }
@@ -22215,7 +22238,10 @@ export const TvShowExplorerPropertiesFragmentDoc = gql`
   assetSubtype
   businessType
   contentOwner
-  tvshowsImages(condition: {imageType: TVSHOW_COVER_1X1}) {
+  tvshowsImages(
+    filter: {imageType: {in: [TVSHOW_COVER_1X1, TVSHOW_COVER_16X9, TVSHOW_COVER]}}
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
     }

@@ -10,7 +10,12 @@ fragment SeasonExplorerProperties on Season {
     id
     title
   }
-  seasonsImages(condition: { imageType: SEASON_COVER_1X1 }) {
+  seasonsImages(
+    filter: {
+      imageType: { in: [SEASON_COVER_1X1, SEASON_COVER_16X9, SEASON_COVER] }
+    }
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
     }

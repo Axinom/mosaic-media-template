@@ -11,7 +11,12 @@ fragment EpisodeExplorerProperties on Episode {
       title
     }
   }
-  episodesImages(condition: { imageType: EPISODE_COVER_1X1 }) {
+  episodesImages(
+    filter: {
+      imageType: { in: [EPISODE_COVER_1X1, EPISODE_COVER_16X9, EPISODE_COVER] }
+    }
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
     }

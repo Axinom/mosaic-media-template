@@ -21,9 +21,17 @@ fragment CollectionExplorerProperties on Collection {
       countryId
     }
   }
-  collectionsImages {
+  collectionsImages(
+    filter: {
+      imageType: {
+        in: [COLLECTION_COVER_1X1, COLLECTION_COVER_4X1, COLLECTION_COVER]
+      }
+    }
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
+      imageType
     }
   }
   collectionRelations(orderBy: SORT_ORDER_DESC) {

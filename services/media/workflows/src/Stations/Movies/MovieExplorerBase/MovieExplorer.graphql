@@ -20,9 +20,15 @@ fragment MovieExplorerProperties on Movie {
       }
     }
   }
-  moviesImages(condition: { imageType: MOVIE_COVER_1X1 }) {
+  moviesImages(
+    filter: {
+      imageType: { in: [MOVIE_COVER_1X1, MOVIE_COVER_16X9, MOVIE_COVER] }
+    }
+    orderBy: IMAGE_TYPE_DESC
+  ) {
     nodes {
       imageId
+      imageType
     }
   }
   moviesTags {

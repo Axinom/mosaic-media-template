@@ -313,29 +313,45 @@ const Panel: React.FC = () => {
   const { values } = useFormikContext<Tvshow>();
 
   return useMemo(() => {
-    let cover1x1ImageId: ID;
+    let coverImageId: ID;
+    let cover1x1ImageId: ID;    
+    let cover16x9ImageId: ID;
+    let coverImageCount = 0;
     let cover1x1ImageCount = 0;
     let cover16x9ImageCount = 0;
+    let cleanCoverImageCount = 0;
     let cleanCover1x1ImageCount = 0;
     let cleanCover16x9ImageCount = 0;
+    let listImageCount = 0;
     let list1x1ImageCount = 0;
     let list16x9ImageCount = 0;
 
     values.tvshowsImages?.nodes.forEach(({ imageId, imageType }) => {
       switch (imageType) {
+        case TvshowImageType.TvshowCover:
+          coverImageCount++;
+          coverImageId = imageId;
+          break;
         case TvshowImageType.TvshowCover_1X1:
           cover1x1ImageCount++;
           cover1x1ImageId = imageId;
           break;
         case TvshowImageType.TvshowCover_16X9:
           cover16x9ImageCount++;
+          cover16x9ImageId = imageId;
           break;
+          case TvshowImageType.TvshowCleanCover:
+            cleanCoverImageCount++;
+            break;
         case TvshowImageType.TvshowCleanCover_1X1:
           cleanCover1x1ImageCount++;
           break;
         case TvshowImageType.TvshowCleanCover_16X9:
           cleanCover16x9ImageCount++;
           break;
+          case TvshowImageType.TvshowList:
+            listImageCount++;
+            break;
         case TvshowImageType.TvshowList_1X1:
           list1x1ImageCount++;
           break;
@@ -350,7 +366,7 @@ const Panel: React.FC = () => {
     return (
       <InfoPanel>
         <Section>
-          <ImageCover id={cover1x1ImageId} />
+          <ImageCover id={cover1x1ImageId ?? cover16x9ImageId ?? coverImageId} />
         </Section>
         <Section title="Additional Information">
           <Paragraph title="ID">{values.id}</Paragraph>
@@ -389,6 +405,12 @@ const Panel: React.FC = () => {
             </Paragraph>
             <Paragraph title="Images">
               <div className={classes.datalist}>
+                <div>Cover</div>
+                <div className={classes.rightAlignment}>
+                  {coverImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
                 <div>Cover 1x1</div>
                 <div className={classes.rightAlignment}>
                   {cover1x1ImageCount} / 1
@@ -401,6 +423,12 @@ const Panel: React.FC = () => {
                 </div>
               </div>
               <div className={classes.datalist}>
+                <div>Clean Cover</div>
+                <div className={classes.rightAlignment}>
+                  {cleanCoverImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
                 <div>Clean Cover 1x1</div>
                 <div className={classes.rightAlignment}>
                   {cleanCover1x1ImageCount} / 1
@@ -410,6 +438,12 @@ const Panel: React.FC = () => {
                 <div>Clean Cover 16x9</div>
                 <div className={classes.rightAlignment}>
                   {cleanCover16x9ImageCount} / 1
+                </div>
+              </div>
+              <div className={classes.datalist}>
+                <div>List</div>
+                <div className={classes.rightAlignment}>
+                  {listImageCount} / 1
                 </div>
               </div>
               <div className={classes.datalist}>

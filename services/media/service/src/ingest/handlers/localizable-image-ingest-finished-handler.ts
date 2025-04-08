@@ -73,7 +73,11 @@ export class LocalizableImageIngestFinishedHandler extends MediaTransactionalInb
       ingestItem.item.data.images as ImageIngestData[]
     )?.filter((img) => img.language_tag !== undefined);
 
-    if (localizableImages !== undefined && localizableImages.length > 0) {
+    if (
+      localizableImages !== undefined &&
+      localizableImages.length > 0 &&
+      imageLocalizationSteps.length > 0
+    ) {
       const groupedLocalizableImages = groupBy(
         localizableImages,
         'language_tag',
