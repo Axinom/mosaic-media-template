@@ -62,6 +62,7 @@ fragment MovieExplorerProperties on Movie {
     }
   }
   publishedDate
+  publishingId
   createdDate
   updatedDate
   updatedUser

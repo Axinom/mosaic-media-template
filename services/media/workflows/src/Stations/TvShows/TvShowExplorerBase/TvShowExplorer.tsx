@@ -67,7 +67,10 @@ export const TvShowExplorer: React.FC<TvShowExplorerProps> = (props) => {
       size: '1fr',
       render: SubTypeRenderer,
     },
-    { label: 'Published', propertyName: 'publishedDate' },
+    { label: 'Published',
+      propertyName: 'publishedDate',
+      render: DateRenderer 
+    },
     {
       label: 'Last Modified',
       propertyName: 'updatedDate',

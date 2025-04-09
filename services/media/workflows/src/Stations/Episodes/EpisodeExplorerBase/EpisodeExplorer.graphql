@@ -62,6 +62,7 @@ fragment EpisodeExplorerProperties on Episode {
   }
   publishedDate
   id
+  publishingId
   ageRating
   contentOwner
 }

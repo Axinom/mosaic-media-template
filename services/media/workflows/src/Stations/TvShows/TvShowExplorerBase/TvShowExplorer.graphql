@@ -57,6 +57,7 @@ fragment TVShowExplorerProperties on Tvshow {
     }
   }
   publishedDate
+  publishingId
   seasons {
     nodes {
       episodes {

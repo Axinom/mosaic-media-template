@@ -249,9 +249,9 @@ export function useTvShowsFilters(): {
       onValidate: createToDateFilterValidator('createdDate'),
     },
     {
-      label: 'ID',
-      property: 'id',
-      type: FilterTypes.Numeric,
+      label: 'Publishing ID',
+      property: 'publishingId',
+      type: FilterTypes.FreeText,
     },
   ];
 
@@ -262,6 +262,7 @@ export function useTvShowsFilters(): {
     return filterToPostGraphileFilter<TvshowFilter>(filters, {
       title: 'includesInsensitive',
       externalId: 'includesInsensitive',
+      publishingId: 'includesInsensitive',
       tvshowsTags: ['some', 'name', 'includesInsensitive'],
       tvshowsTvshowGenres: [
         'some',
@@ -319,20 +320,6 @@ export function useTvShowsFilters(): {
         }
       },
       businessType: 'in',
-      id: (value) => {
-        if (typeof value === 'number') {
-          // User filter
-          return {
-            equalTo: value,
-            notIn: excludeItems,
-          };
-        } else {
-          // Exclude items
-          return {
-            notIn: excludeItems,
-          };
-        }
-      },
       released: transformRange,
       createdDate: transformRange,
       publishedDate: transformRange,

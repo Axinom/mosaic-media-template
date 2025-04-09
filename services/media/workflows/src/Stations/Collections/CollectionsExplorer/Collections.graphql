@@ -8,6 +8,7 @@ fragment CollectionExplorerProperties on Collection {
       name
     }
   }
+  publishingId
   publishedDate
   createdDate
   updatedDate

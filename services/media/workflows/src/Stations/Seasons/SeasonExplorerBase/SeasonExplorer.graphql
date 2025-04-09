@@ -59,6 +59,7 @@ fragment SeasonExplorerProperties on Season {
     }
   }
   publishedDate
+  publishingId
 }
 
 query Seasons(

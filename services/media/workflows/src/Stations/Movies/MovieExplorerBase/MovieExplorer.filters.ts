@@ -276,9 +276,9 @@ export function useMoviesFilters(): {
       onValidate: createToDateFilterValidator('createdDate'),
     },
     {
-      label: 'ID',
-      property: 'id',
-      type: FilterTypes.Numeric,
+      label: 'Publishing ID',
+      property: 'publishingId',
+      type: FilterTypes.FreeText,
     },
   ];
 
@@ -305,6 +305,7 @@ export function useMoviesFilters(): {
       publishStatus: 'in',
       moviesCasts: ['some', 'name', 'includesInsensitive'],
       externalId: 'includesInsensitive',
+      publishingId: 'includesInsensitive',
       contentOwner: 'includesInsensitive',
       moviesProductionCountries: ['some', 'name', 'includesInsensitive'],
       moviesLicenses: (value: unknown) => {
@@ -352,20 +353,6 @@ export function useMoviesFilters(): {
         }
       },
       businessType: 'in',
-      id: (value) => {
-        if (typeof value === 'number') {
-          // User filter
-          return {
-            equalTo: value,
-            notIn: excludeItems,
-          };
-        } else {
-          // Exclude items
-          return {
-            notIn: excludeItems,
-          };
-        }
-      },
       released: transformRange,
       createdDate: transformRange,
       publishedDate: transformRange,
