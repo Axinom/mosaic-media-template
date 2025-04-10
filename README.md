@@ -37,8 +37,8 @@ for more details.
 Before using the customizable solution make sure that you have the following
 software installed:
 
-- [node.js](https://nodejs.org/en/) of version 18.\* needs to be installed.
-  - [Version 18.15.0](https://nodejs.org/download/release/v18.15.0/) is
+- [node.js](https://nodejs.org/en/) install the latest LTS version.
+  - [Version 22.13.1](https://nodejs.org/download/release/latest-v22.x/) is
     confirmed to work, where other versions may work as well, but would need to
     be tested
   - To install node.js via a package manager, see
