@@ -45,7 +45,7 @@ stages:
                 - checkout: self
                 - task: NodeTool@0
                   inputs:
-                    versionSpec: '18.x'
+                    versionSpec: '22.x'
                   displayName: 'Install Node.js'
 
                 - script: |
@@ -54,7 +54,7 @@ stages:
                     echo "Node version $(node --version)"
                     docker --version
                     docker-compose --version
-                    
+
                     [ -d /home/vsts/ ] || sudo mkdir /home/vsts
                     sudo chown AzDevOps:AzDevOps -R /home/vsts
                   displayName: 'Setup Prerequisites'
