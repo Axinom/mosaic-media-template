@@ -268,9 +268,9 @@ export function useEpisodesFilters(): {
       onValidate: createToDateFilterValidator('createdDate'),
     },
     {
-      label: 'ID',
-      property: 'id',
-      type: FilterTypes.Numeric,
+      label: 'Publishing ID',
+      property: 'publishingId',
+      type: FilterTypes.FreeText,
     },
     {
       label: 'Main Video',
@@ -298,6 +298,7 @@ export function useEpisodesFilters(): {
       index: 'equalTo',
       originalTitle: 'includesInsensitive',
       externalId: 'includesInsensitive',
+      publishingId: 'includesInsensitive',
       episodesTags: ['some', 'name', 'includesInsensitive'],
       episodesTvshowGenres: [
         'some',
@@ -351,20 +352,6 @@ export function useEpisodesFilters(): {
                 },
               },
             },
-          };
-        }
-      },
-      id: (value) => {
-        if (typeof value === 'number') {
-          // User filter
-          return {
-            equalTo: value,
-            notIn: excludeItems,
-          };
-        } else {
-          // Exclude items
-          return {
-            notIn: excludeItems,
           };
         }
       },

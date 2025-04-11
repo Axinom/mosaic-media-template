@@ -61,7 +61,10 @@ export const MovieExplorer: React.FC<MovieExplorerProps> = (props) => {
     },
     { label: 'Title', propertyName: 'title', size: '2fr' },
     { label: 'Subtype', propertyName: '__typename', size: '1fr' },
-    { label: 'Published', propertyName: 'publishedDate' },
+    { label: 'Published',
+      propertyName: 'publishedDate',
+      render: DateRenderer 
+    },
     {
       label: 'Last Modified',
       propertyName: 'updatedDate',

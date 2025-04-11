@@ -263,9 +263,9 @@ export function useSeasonsFilters(): {
       onValidate: createToDateFilterValidator('createdDate'),
     },
     {
-      label: 'ID',
-      property: 'id',
-      type: FilterTypes.Numeric,
+      label: 'Publishing ID',
+      property: 'publishingId',
+      type: FilterTypes.FreeText,
     },
   ];
 
@@ -277,6 +277,7 @@ export function useSeasonsFilters(): {
       title: 'includesInsensitive',
       index: 'equalTo',
       externalId: 'includesInsensitive',
+      publishingId: 'includesInsensitive',
       seasonsTags: ['some', 'name', 'includesInsensitive'],
       seasonsTvshowGenres: [
         'some',
@@ -330,20 +331,6 @@ export function useSeasonsFilters(): {
                 },
               },
             },
-          };
-        }
-      },
-      id: (value) => {
-        if (typeof value === 'number') {
-          // User filter
-          return {
-            equalTo: value,
-            notIn: excludeItems,
-          };
-        } else {
-          // Exclude items
-          return {
-            notIn: excludeItems,
           };
         }
       },

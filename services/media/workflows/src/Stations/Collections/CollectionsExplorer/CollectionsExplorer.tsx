@@ -1,4 +1,4 @@
-import { createThumbnailAndStateRenderer } from '@axinom/mosaic-managed-workflow-integration';
+import { createThumbnailAndStateRenderer, ThumbnailResolver } from '@axinom/mosaic-managed-workflow-integration';
 import {
   ActionData,
   Column,
@@ -57,14 +57,32 @@ export const CollectionsExplorer: React.FC<CollectionExplorerProps> = (
     fetchPolicy: 'no-cache',
   });
 
+  const thumbnailResolver: ThumbnailResolver<CollectionData> = (data) => {
+    if (data.collectionsImages?.nodes.length) {
+      let coverImageId: string | undefined, cover1x1ImageId: string | undefined, cover4x1ImageId: string | undefined;
+      data.collectionsImages.nodes.forEach((image) => {
+        if (image.imageType === 'COLLECTION_COVER') {
+          coverImageId = image.imageId;
+        } else if (image.imageType === 'COLLECTION_COVER_1X1') {
+          cover1x1ImageId = image.imageId;
+        } else if (image.imageType === 'COLLECTION_COVER_4X1') {
+          cover4x1ImageId = image.imageId;
+        }
+      });
+      return cover1x1ImageId ?? cover4x1ImageId ?? coverImageId ?? undefined;
+    }
+    return undefined;
+  };
+
   // Columns
   const explorerColumns: Column<CollectionData>[] = [
     {
       propertyName: 'publishStatus',
       label: 'State',
       render: createThumbnailAndStateRenderer(
-        'collectionsImages',
+        thumbnailResolver,
         PublishStatusStateMap,
+        'uuid'
       ),
       size: '80px',
     },
