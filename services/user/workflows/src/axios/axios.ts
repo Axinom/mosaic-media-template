@@ -15,9 +15,6 @@ export function initializeAxios(app: PiletApi): void {
     const token = await app.getToken();
     config.headers = config.headers || {};
     config.headers['Authorization'] = `Bearer ${token?.token.accessToken}`;
-    // config.headers[
-    //   'Authorization'
-    // ] = `cms thaXbeEgk9gSSfgMERKenEMX6KYg9tu547WDdBwRJfPLPVUVPEHsSG6VLW5cCzf4`;
     return config;
   });
 
