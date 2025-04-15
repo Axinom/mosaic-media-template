@@ -13,6 +13,7 @@ import {
 } from '@axinom/mosaic-ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { Gravatar } from '../../../../Components/Gravatar/Gravatar';
 import { axiosInstance } from '../../../axios/axios';
 import { Constants } from '../../../constants';
 import { CountryNames } from '../../../Util/CountryNames/CountryNames';
@@ -24,6 +25,7 @@ interface CustomerData {
   mobile?: string;
   first_name?: string;
   last_name: string;
+  last_login: string;
   gender: string;
   create_date: string;
   activation_date: string;
@@ -107,10 +109,20 @@ export const CustomersExplorer: React.FC<CustomerExplorerProps> = (props) => {
   // Columns
   const explorerColumns: Column<CustomerData>[] = [
     //{ label: 'System', propertyName: 'system' },
+    {
+      label: '',
+      propertyName: 'id',
+      size: '40px',
+      sortable: false,
+      render: (_value, data) => (
+        <Gravatar email={data.email as string} size={40} />
+      ),
+    },
     { label: Constants.CustomersExplorer.Labels.Email, propertyName: 'email' },
     {
       label: Constants.CustomersExplorer.Labels.Mobile,
       propertyName: 'mobile',
+      sortable: false,
     },
     {
       label: Constants.CustomersExplorer.Labels.FirstName,
@@ -123,15 +135,23 @@ export const CustomersExplorer: React.FC<CustomerExplorerProps> = (props) => {
     {
       label: Constants.CustomersExplorer.Labels.RegistrationCountry,
       propertyName: 'registration_country',
+      sortable: false,
     },
     {
       label: Constants.CustomersExplorer.Labels.DateCreated,
       propertyName: 'create_date',
       render: DateRenderer,
+      sortable: false,
     },
     {
       label: Constants.CustomersExplorer.Labels.DateActivated,
       propertyName: 'activation_date',
+      render: DateRenderer,
+      sortable: false,
+    },
+    {
+      label: Constants.CustomersExplorer.Labels.LastLogin,
+      propertyName: 'last_login',
       render: DateRenderer,
     },
   ];
@@ -147,7 +167,7 @@ export const CustomersExplorer: React.FC<CustomerExplorerProps> = (props) => {
       }
 
       if (sorting) {
-        params.append('sort_by_field', sorting.column);
+        params.append('sort_by_field', sorting.column.replace(/_/g, ''));
         params.append('sort_order', sorting.direction);
       }
 

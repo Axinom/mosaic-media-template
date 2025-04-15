@@ -58,6 +58,7 @@ export const Constants = {
       Mobile: 'Mobile',
       Country: 'Country',
       RegistrationCountry: 'Registration Country',
+      LastLogin: 'Last Login',
       DateCreated: 'Date Created',
       DateActivated: 'Date Activated',
     },

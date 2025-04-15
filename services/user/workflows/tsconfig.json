@@ -19,6 +19,6 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
-  "include": ["./src"],
+  "include": ["./src", "Components/Gravatar"],
   "exclude": ["node_modules"]
 }

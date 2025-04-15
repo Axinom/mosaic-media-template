@@ -13,6 +13,7 @@ import { Field, useFormikContext } from 'formik';
 import { ObjectSchemaDefinition } from 'ObjectSchemaDefinition';
 import React, { useCallback, useEffect, useState } from 'react';
 import * as Yup from 'yup';
+import { Gravatar } from '../../../../Components/Gravatar/Gravatar';
 import { axiosInstance } from '../../../axios/axios';
 import { Constants } from '../../../constants';
 import { CountryNames } from '../../../Util/CountryNames/CountryNames';
@@ -118,6 +119,9 @@ const Panel: React.FC = () => {
 
   return (
     <InfoPanel>
+      <Section>
+        {values.email && <Gravatar email={values.email} size={240} />}
+      </Section>
       <Section title={Constants.CustomerDetails.PanelLabels.Title}>
         <Paragraph title={Constants.CustomerDetails.PanelLabels.ID}>
           {getEnumLabel(values.id)}
