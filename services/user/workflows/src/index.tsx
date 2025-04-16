@@ -13,9 +13,9 @@ import { Customers } from './Stations/Customers/CustomersExplorer/Customers';
 export const settingsGroupName = 'Customer Management';
 export const parentName = 'customer-management';
 
-const permissions = undefined; // {
-//   'customer-service': ['ADMIN'],
-// };
+const permissions = {
+  'user-service': ['ADMIN', 'CUSTOMERS_EDIT', 'CUSTOMERS_VIEW'],
+};
 
 export function setup(app: PiletApi): void {
   initializeConfig(app.meta.custom);
