@@ -1,4 +1,5 @@
 import {
+  isNullOrWhitespace,
   MosaicError,
   mosaicErrorMappingFactory,
 } from '@axinom/mosaic-service-common';
@@ -89,6 +90,20 @@ const processVideo = (
       value: cp.value,
     };
   });
+
+  for (const cuePoint of cuePoints) {
+    if (
+      (gqlVideo.lengthInSeconds &&
+        cuePoint.time_in_seconds > gqlVideo.lengthInSeconds) ||
+      isNullOrWhitespace(gqlVideo.lengthInSeconds)
+    ) {
+      validation.push({
+        context: 'VIDEO',
+        message: `${typeText} video has a cue point ${cuePoint.cue_point_type_key} (${cuePoint.value}) defined at ${cuePoint.time_in_seconds} seconds that is longer than the video itself.`,
+        severity: 'ERROR',
+      });
+    }
+  }
 
   if (
     tags.length > 0 &&
