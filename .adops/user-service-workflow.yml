@@ -82,7 +82,9 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/user-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+                yarn run pilet publish --no-fresh --url "https://frontends.service.eu.axinom.net/v1/pilets/{tenantId}/{environmentId}" --api-key "{serviceAccountCredentials}" --fields.MANAGEMENT_HOST "{managementHost}" --fields.MANAGEMENT_HTTP_PROTOCOL "https" $(Build.ArtifactStagingDirectory)/user-workflows-$(pkgVer).tgz
+            
+              # yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/user-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnAcc)
