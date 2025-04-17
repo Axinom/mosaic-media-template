@@ -89,6 +89,17 @@ stages:
 
           - task: Bash@3
             displayName:
+              'Upload pilet to NFN migration environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdNfnMigration)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretNfnMigration)
+
+          - task: Bash@3
+            displayName:
               'Upload pilet to NFN production environment'
             inputs:
               targetType: 'inline'
@@ -108,6 +119,17 @@ stages:
             env:
               MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovAcc)
               MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovAcc)
+            
+          - task: Bash@3
+            displayName:
+              'Upload pilet to LOV migration environment'
+            inputs:
+              targetType: 'inline'
+              script: |
+                yarn mosaic hosting pilet register -i "$(serviceId)" -p "$(Build.ArtifactStagingDirectory)/media-workflows-$(pkgVer).tgz" -m "https://frontends.service.eu.axinom.net"
+            env:
+              MOSAIC_HOSTING_CLIENT_ID: $(mosaicHostingClientIdLovMigration)
+              MOSAIC_HOSTING_CLIENT_SECRET: $(mosaicHostingClientSecretLovMigration)
 
           - task: Bash@3
             displayName:
