@@ -382,10 +382,10 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-messages/-/mosaic-messages-0.52.2.tgz#7253c3c5c8bba6bbc41bdc15a8227b0d508d88cf"
   integrity sha512-q4umvX8sj9MrPPGvv3WQwUCsgzELpuls8yjcoWEfFMzl/IRrUQgvwRuNx5jJnEgKtsiFWA0H2AEobUayFnGPxg==
 
-"@axinom/mosaic-portal@0.36.2":
-  version "0.36.2"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.36.2.tgz#406a2a41408056f43cb7c38c267a58c1aee282cf"
-  integrity sha512-Rt+q5S4pbmW5dw/lfdMRm2jIp4z968vrv6aUdEUtcMxpOeSmqI+LPOzK20KuHRaBa9IZ1JHnoyH1NndKDGjIHg==
+"@axinom/mosaic-portal@0.41.1":
+  version "0.41.1"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.41.1.tgz#53c4b367700b112559f09e25609356333f8608cf"
+  integrity sha512-hA1yoTu164jjlSQpYbvf+2oMylzP1ioK4a7TeI2uwYd4gUGE0KhHjnuJF9300fUDhqUxNci2k9KeQn8CMeYOtw==
 
 "@axinom/mosaic-service-common@0.55.0", "@axinom/mosaic-service-common@^0.55.0":
   version "0.55.0"
@@ -5692,6 +5692,15 @@ axios@^0.24.0:
   dependencies:
     follow-redirects "^1.14.4"
 
+axios@^1.8.4:
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.8.4.tgz#78990bb4bc63d2cae072952d374835950a82f447"
+  integrity sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==
+  dependencies:
+    follow-redirects "^1.15.6"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
 babel-jest@^29.5.0:
   version "29.5.0"
   resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-29.5.0.tgz#3fe3ddb109198e78b1c88f9ebdecd5e4fc2f50a5"
@@ -6142,15 +6151,10 @@ caniuse-api@^3.0.0:
     lodash.memoize "^4.1.2"
     lodash.uniq "^4.5.0"
 
-caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001400:
-  version "1.0.30001449"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001449.tgz"
-  integrity sha512-CPB+UL9XMT/Av+pJxCKGhdx+yg1hzplvFJQlJ2n68PyQGMz9L/E2zCyLdOL8uasbouTUgnPl+y0tccI/se+BEw==
-
-caniuse-lite@^1.0.30001663:
-  version "1.0.30001664"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001664.tgz#d588d75c9682d3301956b05a3749652a80677df4"
-  integrity sha512-AmE7k4dXiNKQipgn7a2xg558IRqPN3jMQY/rOsbxDhrd0tyChwbITBfiwtnqz8bi2M5mIWbxAYBvk7W7QBUS2g==
+caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001400, caniuse-lite@^1.0.30001663:
+  version "1.0.30001713"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001713.tgz"
+  integrity sha512-wCIWIg+A4Xr7NfhTuHdX+/FKh3+Op3LBbSp2N5Pfx6T/LhdQy3GTyoTg48BReaW/MyMNZAkTadsBtai3ldWK0Q==
 
 capital-case@^1.0.4:
   version "1.0.4"

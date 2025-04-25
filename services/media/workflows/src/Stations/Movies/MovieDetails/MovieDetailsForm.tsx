@@ -388,7 +388,7 @@ const Panel: React.FC = () => {
             <Paragraph title="Published">
               {formatDateTime(values.publishedDate)} by {values.publishedUser}
             </Paragraph>
-          ) : null}          
+          ) : null}
         </Section>
         <Section title="Assigned Items">
           <Paragraph title="Videos">
