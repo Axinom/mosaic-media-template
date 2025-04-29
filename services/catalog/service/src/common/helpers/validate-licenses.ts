@@ -1,4 +1,4 @@
-import { isNullOrWhitespace, MosaicErrorInfo } from '@axinom/mosaic-service-common';
+import { MosaicErrorInfo } from '@axinom/mosaic-service-common';
 import { JSONOnlyColsForTable } from 'zapatos/db';
 import { CommonErrors } from '../errors';
 
@@ -10,6 +10,22 @@ type License = JSONOnlyColsForTable<
 
 const minDate = new Date(-8640000000000000);
 const maxDate = new Date(8640000000000000);
+
+const hasValidLicense = (
+  licenses: License[],
+  date: Date,
+  countryCode: string,
+): boolean => {
+  return licenses.some(
+    (license: License) =>
+      (license.countries || license.start_time || license.end_time) && // Must have at least one property defined
+      (!license.countries || // Must have empty countries (valid for all countries), or must include user countryCode
+        license.countries.length === 0 ||
+        license.countries.includes(countryCode)) &&
+      date >= (license.start_time ? new Date(license.start_time) : minDate) && //Current date must be after license start date
+      date < (license.end_time ? new Date(license.end_time) : maxDate), // Current date must be before license end date
+  );
+};
 
 /**
  * Makes sure that entity has at least one valid license for current country and current date.
@@ -28,20 +44,22 @@ export const isLicenseValid = (
       messageParams: [identifier],
     };
   }
-  
+
   const date = new Date();
-  const validLicenseExists = licenses.some(
+  const validLicenseExists = hasValidLicense(licenses, date, countryCode);
+
+  // If there is a future license, we skip the license validation error and return true
+  // We still do a country check for future licenses as well.
+  const hasFutureLicense = licenses.some(
     (license: License) =>
-      (license.countries || license.start_time || license.end_time) && // Must have at least one property defined
+      license.start_time &&
+      new Date(license.start_time) > date &&
       (!license.countries || // Must have empty countries (valid for all countries), or must include user countryCode
         license.countries.length === 0 ||
-        isNullOrWhitespace(countryCode) ||
-        license.countries.includes(countryCode)) &&
-      date >= (license.start_time ? new Date(license.start_time) : minDate) && //Current date must be after license start date
-      date < (license.end_time ? new Date(license.end_time) : maxDate), // Current date must be before license end date
+        license.countries.includes(countryCode)),
   );
 
-  if (validLicenseExists) {
+  if (validLicenseExists || hasFutureLicense) {
     return true;
   }
 
@@ -49,4 +67,19 @@ export const isLicenseValid = (
     ...CommonErrors.LicenseIsNotValid,
     messageParams: [identifier, countryCode],
   };
+};
+
+/**
+ * Returns true if the given licenses are valid for the given date and country code.
+ *
+ * @param licenses - an array of licenses associated with an entity
+ * @param countryCode - ISO-3166 alpha-2 country code
+ * @returns true if the licenses are valid, false otherwise
+ */
+export const hasCurrentValidLicense = (
+  licenses: License[],
+  countryCode: string,
+): boolean => {
+  const date = new Date();
+  return hasValidLicense(licenses, date, countryCode);
 };
