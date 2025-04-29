@@ -259,6 +259,7 @@ const customMovieValidation = async (
 ): Promise<SnapshotValidationResult[]> => {
   const movieJson = json as MoviePublishedEvent;
   const hasMainVideo =
+    movieJson.videos &&
     movieJson.videos.find((video) => video.type === 'MAIN') !== undefined;
 
   const yupSchema = Yup.object({

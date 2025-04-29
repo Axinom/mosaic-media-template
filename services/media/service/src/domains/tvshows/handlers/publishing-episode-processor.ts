@@ -200,7 +200,7 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
   if (episode.publishing_id === undefined || episode.publishing_id === null) {
     throw new MosaicError({
       ...CommonErrors.EntityPublishingIdNotFound,
-      messageParams: ['TVShow', entityId],
+      messageParams: ['Episode', entityId],
     });
   }
 
@@ -296,6 +296,7 @@ const customEpisodeValidation = async (
 ): Promise<SnapshotValidationResult[]> => {
   const episodeJson = json as EpisodePublishedEvent;
   const hasMainVideo =
+    episodeJson.videos &&
     episodeJson.videos.find((video) => video.type === 'MAIN') !== undefined;
 
   const yupSchema = Yup.object({
