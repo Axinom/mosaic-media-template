@@ -1,4 +1,7 @@
-import { MosaicErrorInfo } from '@axinom/mosaic-service-common';
+import {
+  isNullOrWhitespace,
+  MosaicErrorInfo,
+} from '@axinom/mosaic-service-common';
 import { JSONOnlyColsForTable } from 'zapatos/db';
 import { CommonErrors } from '../errors';
 
@@ -14,13 +17,14 @@ const maxDate = new Date(8640000000000000);
 const hasValidLicense = (
   licenses: License[],
   date: Date,
-  countryCode: string,
+  countryCode: string | undefined,
 ): boolean => {
   return licenses.some(
     (license: License) =>
       (license.countries || license.start_time || license.end_time) && // Must have at least one property defined
       (!license.countries || // Must have empty countries (valid for all countries), or must include user countryCode
         license.countries.length === 0 ||
+        isNullOrWhitespace(countryCode) ||
         license.countries.includes(countryCode)) &&
       date >= (license.start_time ? new Date(license.start_time) : minDate) && //Current date must be after license start date
       date < (license.end_time ? new Date(license.end_time) : maxDate), // Current date must be before license end date
@@ -34,7 +38,7 @@ const hasValidLicense = (
  * @param licenses - an array of licenses associated with an entity
  */
 export const isLicenseValid = (
-  countryCode: string,
+  countryCode: string | undefined,
   identifier: 'movie' | 'episode' | 'season' | 'TV show',
   licenses?: License[],
 ): MosaicErrorInfo | true => {
@@ -56,6 +60,7 @@ export const isLicenseValid = (
       new Date(license.start_time) > date &&
       (!license.countries || // Must have empty countries (valid for all countries), or must include user countryCode
         license.countries.length === 0 ||
+        isNullOrWhitespace(countryCode) ||
         license.countries.includes(countryCode)),
   );
 
