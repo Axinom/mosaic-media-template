@@ -37,25 +37,27 @@ export function buildBDPublishingId(
   title: string,
   externalId?: string | null,
 ): string {
-  let prefix = '';
+  let contentTypePrefix = '';
+  let contentProviderPrefix = '1';
   switch (entityType) {
     case 'MOVIE':
-      prefix = '0';
+      contentTypePrefix = '0';
       break;
     case 'TVSHOW':
-      prefix = '6';
+      contentTypePrefix = '6';
       break;
     case 'SEASON':
-      prefix = '2';
+      contentTypePrefix = '2';
       break;
     case 'EPISODE':
-      prefix = '1';
+      contentTypePrefix = '1';
       break;
     case 'COLLECTION':
-      prefix = '8';
+      contentTypePrefix = '8';
+      contentProviderPrefix = '0';
       break;
   }
-  return `0-${prefix}-${
+  return `${contentProviderPrefix}-${contentTypePrefix}-${
     !isNullOrWhitespace(externalId) ? externalId : toKebabCase(title)
   }`;
 }

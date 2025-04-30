@@ -258,21 +258,32 @@ export const licensesValidation = (atLeastOneLicenseRequired: boolean): any => {
           then: (end) =>
             end.min(Yup.ref('start_time'), (params) => {
               const identifier = getReadablePath(params.path);
-              return `${identifier} must be greater than start_time.`;
+              return `${identifier} must be greater than From time.`;
             }),
         })
-        .min(new Date(), 'end_time must be greater than the current date.'),
+        .min(new Date(), 'Until time must be greater than the current date.'),
       countries: Yup.array(Yup.string()), // Values validation is done using DB FK Constraints
+      is_downloadable: Yup.bool(),
+      downloaded_asset_lifespan: Yup.number().when('is_downloadable', {
+        is: true,
+        then: (downloaded_asset_lifespan) =>
+          downloaded_asset_lifespan.min(
+            1,
+            'Downloaded Asset Lifespan must be greater than or equal to 0 when the asset is downloadable.',
+          ),
+      }),
     }).test({
       name: 'license_props',
       message: (params) => {
         const identifier = getReadablePath(params.path);
-        return `${identifier} must have either start_time, end_time, or at least one country defined.`;
+        return `${identifier} must have Until time and at least one Country defined.`;
       },
-      test: (value) =>
-        !!value.start_time ||
-        !!value.end_time ||
-        (!!value.countries && value.countries.length > 0),
+      test: (value) => {
+        const basicLicenseValidity =
+          !!value.end_time && !!value.countries && value.countries.length > 0;
+
+        return basicLicenseValidity;
+      },
     }),
   ).min(1, atLeastOneLicenseRequired ? oneItemError : oneItemWarning);
 };

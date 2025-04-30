@@ -295,15 +295,12 @@ const customEpisodeValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
   const episodeJson = json as EpisodePublishedEvent;
-  const hasMainVideo =
-    episodeJson.videos &&
-    episodeJson.videos.find((video) => video.type === 'MAIN') !== undefined;
 
   const yupSchema = Yup.object({
     genre_ids: atLeastOneString,
     images: requiredEpisodeCover,
     videos: videosValidation(true),
-    licenses: licensesValidation(hasMainVideo),
+    licenses: licensesValidation(true), // All episodes must have a license and all licenses must be valid
   });
 
   const yupValidationResults = await validateYupPublishSchema(json, yupSchema);

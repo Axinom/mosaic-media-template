@@ -12,7 +12,6 @@ import {
   atLeastOneString,
   buildPublishingId,
   EntityPublishingProcessor,
-  licensesValidation,
   requiredTvShowCover,
   SnapshotDataAggregator,
   SnapshotValidationResult,
@@ -246,7 +245,7 @@ const customTvshowValidation = async (
     genre_ids: atLeastOneString,
     images: requiredTvShowCover,
     videos: videosValidation(false),
-    licenses: licensesValidation(false),
+    //licenses: licensesValidation(false), For BeyondDutch, licenses for TV Show level is not maintained and we do not validate them.
   });
 
   const yupValidationResults = await validateYupPublishSchema(json, yupSchema);

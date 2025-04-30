@@ -258,15 +258,12 @@ const customMovieValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
   const movieJson = json as MoviePublishedEvent;
-  const hasMainVideo =
-    movieJson.videos &&
-    movieJson.videos.find((video) => video.type === 'MAIN') !== undefined;
 
   const yupSchema = Yup.object({
     genre_ids: atLeastOneString,
     images: requiredMovieCover,
     videos: videosValidation(true),
-    licenses: licensesValidation(hasMainVideo), // We only enforce requirement for at least 1 license if there is a main video
+    licenses: licensesValidation(true), // We always enforce the requirement for at least 1 license
   });
 
   const yupValidationResults = await validateYupPublishSchema(json, yupSchema);

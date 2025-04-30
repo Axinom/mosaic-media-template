@@ -29,14 +29,14 @@ describe('publishingSeasonProcessor', () => {
     tvshow = await insert('tvshows', {
       title: 'Parent TV Show',
       external_id: 'existing1',
-      publishing_id: buildBDPublishingId('TVSHOW', 'Entity1' , 'existing1')
+      publishing_id: buildBDPublishingId('TVSHOW', 'Entity1', 'existing1'),
     }).run(ctx.ownerPool);
     season1 = await insert('seasons', {
       title: 'Entity1',
       index: 1,
       external_id: 'existing1',
-      publishing_id: buildBDPublishingId('SEASON', 'Entity1' , 'existing1'),
-      tvshow_id: tvshow.id
+      publishing_id: buildBDPublishingId('SEASON', 'Entity1', 'existing1'),
+      tvshow_id: tvshow.id,
     }).run(ctx.ownerPool);
   });
 
@@ -85,14 +85,14 @@ describe('publishingSeasonProcessor', () => {
       expect(result).toEqual({
         result: {
           age_rating: undefined,
-          asset_subtype: "Season",
+          asset_subtype: 'Season',
           asset_type: 2,
           directors: [],
           extended_field: undefined,
           cast: [],
           tags: [],
-          content_id: `0-2-${season1.external_id}`,
-          tvshow_id: `0-6-${tvshow.external_id}`,
+          content_id: `1-2-${season1.external_id}`,
+          tvshow_id: `1-6-${tvshow.external_id}`,
           genre_ids: [],
           images: [],
           licenses: [],
@@ -124,7 +124,7 @@ describe('publishingSeasonProcessor', () => {
         released: '2021-05-26',
         studio: 'Random Studio',
         synopsis: 'test syn',
-        tvshow_id: tvshow.id
+        tvshow_id: tvshow.id,
       };
       await update('seasons', updateValues, { id: season1.id }).run(
         ctx.ownerPool,
@@ -284,13 +284,19 @@ describe('publishingSeasonProcessor', () => {
         }));
 
       // Act
-      const expectedImages = [image, ...localizations.filter(l=> !l.is_default_locale).map(l =>
-        {
-         var locImage = Object.assign({}, image);
-         locImage.language_tag = l.language_tag;
-         return locImage;
-       })];
-      const expectedImageValidations = Array(expectedImages.length).fill([imageError, imageWarning]).flat() 
+      const expectedImages = [
+        image,
+        ...localizations
+          .filter((l) => !l.is_default_locale)
+          .map((l) => {
+            var locImage = Object.assign({}, image);
+            locImage.language_tag = l.language_tag;
+            return locImage;
+          }),
+      ];
+      const expectedImageValidations = Array(expectedImages.length)
+        .fill([imageError, imageWarning])
+        .flat();
 
       const result = await publishingSeasonProcessor.aggregator(
         season1.id,
@@ -303,13 +309,13 @@ describe('publishingSeasonProcessor', () => {
       expect(result).toEqual({
         result: {
           age_rating: undefined,
-          asset_subtype: "Season",
+          asset_subtype: 'Season',
           asset_type: 2,
           index: 1,
-          tvshow_id: `0-6-${tvshow.external_id}`,
+          tvshow_id: `1-6-${tvshow.external_id}`,
           cast: ['Actress 1', 'Actor 2'],
           tags: ['Tag 1', 'Tag 3'],
-          content_id: `0-2-${season1.external_id}`,
+          content_id: `1-2-${season1.external_id}`,
           directors: [],
           extended_field: undefined,
           genre_ids: [`tvshow_genre-${genre1.id}`, `tvshow_genre-${genre2.id}`],
@@ -320,16 +326,16 @@ describe('publishingSeasonProcessor', () => {
               countries: ['KW'],
               end_time: '2021-09-01T15:05:25+00:00',
               start_time: '2021-02-01T15:05:25+00:00',
-              downloaded_asset_lifespan : 0,
-              is_downloadable : false,
+              downloaded_asset_lifespan: 0,
+              is_downloadable: false,
             },
             {
               content_owner: undefined,
               countries: ['BY', 'DE'],
               end_time: undefined,
               start_time: undefined,
-              downloaded_asset_lifespan : 0,
-              is_downloadable : false,
+              downloaded_asset_lifespan: 0,
+              is_downloadable: false,
             },
           ],
           original_title: season1.title,
@@ -467,11 +473,6 @@ describe('publishingSeasonProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `No licenses are assigned.`,
-          severity: 'WARNING',
-        },
-        {
-          context: 'METADATA',
           message: `Property 'index' should be greater than 1.`,
           severity: 'ERROR',
         },
@@ -515,12 +516,14 @@ describe('publishingSeasonProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: '0-2-season-1',
-            tvshow_id: '0-6-tvshow-1',
+            content_id: '1-2-season-1',
+            tvshow_id: '1-6-tvshow-1',
             index: 1,
             licenses: [{}],
             genre_ids: ['test'],
-            images: [{ type: 'SEASON_COVER_1x1', width: 0, height: 0, path: '' }],
+            images: [
+              { type: 'SEASON_COVER_1x1', width: 0, height: 0, path: '' },
+            ],
             videos: [
               {
                 type: 'TRAILER',
@@ -532,7 +535,7 @@ describe('publishingSeasonProcessor', () => {
                 subtitle_languages: [],
                 caption_languages: [],
                 dash_manifest: 'a',
-                hls_manifest: 'b'
+                hls_manifest: 'b',
               },
             ],
             localizations: [{ is_default_locale: 'no', language_tag: null }],
@@ -579,11 +582,6 @@ describe('publishingSeasonProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: `The first license must have either start_time, end_time, or at least one country defined.`,
-          severity: 'ERROR',
-        },
-        {
-          context: 'METADATA',
           message: `Property 'path' of the first image should match the pattern "/[^/]+(.*)".`,
           severity: 'ERROR',
         },
@@ -622,8 +620,8 @@ describe('publishingSeasonProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: '0-2-season-1',
-            tvshow_id: '0-6-tvshow1',
+            content_id: '1-2-season-1',
+            tvshow_id: '1-6-tvshow1',
             index: 1,
             production_countries: [],
             genre_ids: [],
@@ -635,7 +633,7 @@ describe('publishingSeasonProcessor', () => {
             localizations: [
               {
                 is_default_locale: true,
-                language_tag: DEFAULT_LOCALE_TAG
+                language_tag: DEFAULT_LOCALE_TAG,
               },
             ],
           },
@@ -653,20 +651,15 @@ describe('publishingSeasonProcessor', () => {
           severity: 'ERROR',
         },
         {
-          context: 'METADATA',
-          message: 'No licenses are assigned.',
-          severity: 'WARNING',
+          context: 'LOCALIZATION',
+          message: 'Title is required.',
+          severity: 'ERROR',
         },
         {
-          context: "LOCALIZATION",
-          message: "Title is required.",
-          severity: "ERROR",
+          context: 'LOCALIZATION',
+          message: 'Description is required.',
+          severity: 'ERROR',
         },
-        {
-          context: "LOCALIZATION",
-          message: "Description is required.",
-          severity: "ERROR",
-        }
       ]);
     });
 
@@ -675,8 +668,8 @@ describe('publishingSeasonProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: '0-2-season-1',
-            tvshow_id: '0-6-tvshow-1',
+            content_id: '1-2-season-1',
+            tvshow_id: '1-6-tvshow-1',
             index: 1,
             licenses: [{ countries: ['ZW'] }],
             genre_ids: ['tvshow_genre-1'],
@@ -748,8 +741,8 @@ describe('publishingSeasonProcessor', () => {
       const result = await commonPublishValidator(
         {
           result: {
-            content_id: '0-2-season-6',
-            tvshow_id: '0-6-tvshow-1',
+            content_id: '1-2-season-6',
+            tvshow_id: '1-6-tvshow-1',
             index: 1,
             released: '2009-12-10',
             studio: '20th Century Fox',

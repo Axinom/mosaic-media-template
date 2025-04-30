@@ -18,7 +18,6 @@ import {
   buildBDPublishingId,
   buildPublishingId,
   EntityPublishingProcessor,
-  licensesValidation,
   requiredSeasonCover,
   SnapshotDataAggregator,
   SnapshotValidationResult,
@@ -259,7 +258,7 @@ const customSeasonValidation = async (
   const yupSchema = Yup.object({
     images: requiredSeasonCover,
     videos: videosValidation(false),
-    licenses: licensesValidation(false),
+    // licenses: licensesValidation(false), For BeyondDutch, licenses for Season level is not maintained and we do not validate them.
   });
   const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
   const customValidationResults: SnapshotValidationResult[] = [];

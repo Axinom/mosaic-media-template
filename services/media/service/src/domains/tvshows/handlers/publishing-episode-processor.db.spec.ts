@@ -30,13 +30,13 @@ describe('publishingEpisodeProcessor', () => {
       title: 'Parent TV Show',
       external_id: 'existing1',
       index: 1,
-      publishing_id: buildBDPublishingId('SEASON', 'Entity1' , 'existing1')
+      publishing_id: buildBDPublishingId('SEASON', 'Entity1', 'existing1'),
     }).run(ctx.ownerPool);
     episode1 = await insert('episodes', {
       title: 'Entity1',
       index: 1,
       external_id: 'existing1',
-      publishing_id: buildBDPublishingId('EPISODE', 'Entity1' , 'existing1'),
+      publishing_id: buildBDPublishingId('EPISODE', 'Entity1', 'existing1'),
     }).run(ctx.ownerPool);
   });
 
@@ -85,7 +85,7 @@ describe('publishingEpisodeProcessor', () => {
       expect(result).toEqual({
         result: {
           age_rating: undefined,
-          asset_subtype: "Episode",
+          asset_subtype: 'Episode',
           asset_type: 1,
           index: 1,
           intro_end_time: undefined,
@@ -292,13 +292,19 @@ describe('publishingEpisodeProcessor', () => {
         }));
 
       // Act
-      const expectedImages = [image, ...localizations.filter(l=> !l.is_default_locale).map(l =>
-        {
-         var locImage = Object.assign({}, image);
-         locImage.language_tag = l.language_tag;
-         return locImage;
-       })];
-      const expectedImageValidations = Array(expectedImages.length).fill([imageError, imageWarning]).flat() 
+      const expectedImages = [
+        image,
+        ...localizations
+          .filter((l) => !l.is_default_locale)
+          .map((l) => {
+            var locImage = Object.assign({}, image);
+            locImage.language_tag = l.language_tag;
+            return locImage;
+          }),
+      ];
+      const expectedImageValidations = Array(expectedImages.length)
+        .fill([imageError, imageWarning])
+        .flat();
 
       const result = await publishingEpisodeProcessor.aggregator(
         episode1.id,
@@ -311,7 +317,7 @@ describe('publishingEpisodeProcessor', () => {
       expect(result).toEqual({
         result: {
           age_rating: undefined,
-          asset_subtype: "Episode",
+          asset_subtype: 'Episode',
           asset_type: 1,
           index: 1,
           season_id: `0-2-${season.external_id}`,
@@ -332,16 +338,16 @@ describe('publishingEpisodeProcessor', () => {
               countries: ['KW'],
               end_time: '2021-09-01T15:05:25+00:00',
               start_time: '2021-02-01T15:05:25+00:00',
-              downloaded_asset_lifespan : 0,
-              is_downloadable : false,
+              downloaded_asset_lifespan: 0,
+              is_downloadable: false,
             },
             {
               content_owner: undefined,
               countries: ['BY', 'DE'],
               end_time: undefined,
               start_time: undefined,
-              downloaded_asset_lifespan : 0,
-              is_downloadable : false,
+              downloaded_asset_lifespan: 0,
+              is_downloadable: false,
             },
           ],
           original_title: updateValues.original_title,
@@ -490,7 +496,7 @@ describe('publishingEpisodeProcessor', () => {
         {
           context: 'METADATA',
           message: 'At least one video must be assigned.',
-          severity: 'ERROR'
+          severity: 'ERROR',
         },
         {
           context: 'METADATA',
@@ -547,7 +553,9 @@ describe('publishingEpisodeProcessor', () => {
             season_id: `0-2-season-1`,
             licenses: [{}],
             genre_ids: ['test'],
-            images: [{ type: 'EPISODE_COVER_1x1', width: 0, height: 0, path: '' }],
+            images: [
+              { type: 'EPISODE_COVER_1x1', width: 0, height: 0, path: '' },
+            ],
             videos: [
               {
                 type: 'MAIN',
@@ -559,7 +567,7 @@ describe('publishingEpisodeProcessor', () => {
                 subtitle_languages: [],
                 caption_languages: [],
                 dash_manifest: 'a',
-                hls_manifest: 'b'
+                hls_manifest: 'b',
               },
             ],
             localizations: [
@@ -607,13 +615,13 @@ describe('publishingEpisodeProcessor', () => {
           severity: 'ERROR',
         },
         {
-           context: "METADATA",
-           message: "At least one video must be assigned.",
-           severity: "ERROR",
+          context: 'METADATA',
+          message: 'At least one video must be assigned.',
+          severity: 'ERROR',
         },
         {
           context: 'METADATA',
-          message: `The first license must have either start_time, end_time, or at least one country defined.`,
+          message: `The first license must have Until time and at least one Country defined.`,
           severity: 'ERROR',
         },
         {
@@ -675,13 +683,13 @@ describe('publishingEpisodeProcessor', () => {
             localizations: [
               {
                 is_default_locale: true,
-                language_tag: DEFAULT_LOCALE_TAG
+                language_tag: DEFAULT_LOCALE_TAG,
               },
             ],
             credits_start_time: '12.5',
             intro_start_time: '12.5',
             intro_end_time: '12.5',
-            length_in_seconds: 12.0
+            length_in_seconds: 12.0,
           },
           validation: [],
         } as any,
@@ -708,34 +716,37 @@ describe('publishingEpisodeProcessor', () => {
         },
         {
           context: 'METADATA',
-          message: 'No licenses are assigned.',
-          severity: 'WARNING',
+          message: 'At least one license must be assigned.',
+          severity: 'ERROR',
         },
         {
-          context: "VIDEO",
-          message: "Credits start time cue point must be less than the video length.",
-          severity: "ERROR",
+          context: 'VIDEO',
+          message:
+            'Credits start time cue point must be less than the video length.',
+          severity: 'ERROR',
         },
         {
-          context: "VIDEO",
-          message: "Intro start time cue point must be less than the video length.",
-          severity: "ERROR",
+          context: 'VIDEO',
+          message:
+            'Intro start time cue point must be less than the video length.',
+          severity: 'ERROR',
         },
         {
-          context: "VIDEO",
-          message: "Intro end time cue point must be less than the video length.",
-          severity: "ERROR",
+          context: 'VIDEO',
+          message:
+            'Intro end time cue point must be less than the video length.',
+          severity: 'ERROR',
         },
         {
-          context: "LOCALIZATION",
-          message: "Title is required.",
-          severity: "ERROR",
+          context: 'LOCALIZATION',
+          message: 'Title is required.',
+          severity: 'ERROR',
         },
         {
-          context: "LOCALIZATION",
-          message: "Description is required.",
-          severity: "ERROR",
-        }
+          context: 'LOCALIZATION',
+          message: 'Description is required.',
+          severity: 'ERROR',
+        },
       ]);
     });
 
@@ -776,7 +787,7 @@ describe('publishingEpisodeProcessor', () => {
                 title: 'test',
                 is_default_locale: true,
                 language_tag: DEFAULT_LOCALE_TAG,
-                description: 'some description'
+                description: 'some description',
               },
             ],
           },
@@ -809,6 +820,12 @@ describe('publishingEpisodeProcessor', () => {
           message: 'additional warning',
           severity: 'WARNING',
         },
+        {
+          context: 'METADATA',
+          message:
+            'The first license must have Until time and at least one Country defined.',
+          severity: 'ERROR',
+        },
       ]);
     });
 
@@ -836,17 +853,18 @@ describe('publishingEpisodeProcessor', () => {
             licenses: [
               {
                 start_time: '2020-08-01T00:00:00+00:00',
-                end_time: '2020-08-30T23:59:59.999+00:00',
+                end_time: '2030-08-30T23:59:59.999+00:00',
                 countries: ['AW', 'AT', 'FI'],
               },
               {
                 countries: ['AW', 'AT', 'FI'],
+                end_time: '2030-08-30T23:59:59.999+00:00',
               },
               {
-                start_time: '2020-08-01T00:00:00+00:00',
-              },
-              {
-                end_time: '2040-08-30T23:59:59.999+00:00',
+                countries: ['AW', 'AT', 'FI'],
+                end_time: '2030-08-30T23:59:59.999+00:00',
+                is_downloadable: true,
+                downloaded_asset_lifespan: 30,
               },
             ],
             images: [
