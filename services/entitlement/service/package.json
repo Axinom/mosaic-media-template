@@ -55,7 +55,7 @@
     "@axinom/mosaic-service-common": "0.59.4-rc.4",
     "@axinom/mosaic-transactional-inbox-outbox": "0.19.4-rc.4",
     "ajv": "^7.2.4",
-    "ajv-formats": "^2.1.1",
+    "ajv-formats": "^1.6.1",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "dotenv": "^8.6.0",
     "env-cmd": "^10.1.0",
