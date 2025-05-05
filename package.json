@@ -56,7 +56,7 @@
     "yarn:de-dupe": "npx yarn-deduplicate yarn.lock"
   },
   "devDependencies": {
-    "@axinom/mosaic-cli": "0.44.0",
+    "@axinom/mosaic-cli": "0.45.0-rc.4",
     "@jest/globals": "^29.5.0",
     "@types/jest": "^29.4.1",
     "@types/node": "^18.11.19",
@@ -98,7 +98,7 @@
     "rimraf": "^3.0.2",
     "semver": "^7.5.4",
     "ts-node": "^10.9.1",
-    "tslib": "^1.14.1",
+    "tslib": "2.4.0",
     "typescript": "^4.9.4",
     "url-join": "^4.0.1",
     "wsrun": "^5.2.4",
@@ -106,7 +106,6 @@
   },
   "dependencies": {},
   "resolutions": {
-    "@stoplight/spectral-core": "1.18.3",
     "@types/jest": "^29",
     "css-loader": "^6.7.3",
     "jest": "^29",

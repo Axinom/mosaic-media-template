@@ -186,16 +186,20 @@
     ajv-formats "^2.1.1"
 
 "@asyncapi/parser@^2.0.2", "@asyncapi/parser@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@asyncapi/parser/-/parser-2.0.3.tgz#2a31ab500c8c7cfca23c9c4d6d7d07799600bb2e"
-  integrity sha512-2gtIQOaCz8sR70JFREpg6UwgUBboC/26JcAGySkXY/f1ayjcfDoNLi4LsDvmu6G21qLrGN2lI83i8iLG1AzTAw==
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@asyncapi/parser/-/parser-2.1.2.tgz#2f7ba3bbd1cd7271e14e8968a46d0034f61212d0"
+  integrity sha512-2pHKnr2P8EujcrvZo4x4zNwsEIAg5vb1ZEhl2+OH0YBg8EYH/Xx73XZ+bbwLaYIg1gvFjm29jNB9UL3CMeDU5w==
   dependencies:
     "@asyncapi/specs" "^5.1.0"
     "@openapi-contrib/openapi-schema-to-json-schema" "~3.2.0"
+    "@stoplight/json" "^3.20.2"
+    "@stoplight/json-ref-readers" "^1.2.2"
     "@stoplight/json-ref-resolver" "^3.1.5"
     "@stoplight/spectral-core" "^1.16.1"
     "@stoplight/spectral-functions" "^1.7.2"
     "@stoplight/spectral-parsers" "^1.0.2"
+    "@stoplight/spectral-ref-resolver" "^1.0.3"
+    "@stoplight/types" "^13.12.0"
     "@types/json-schema" "^7.0.11"
     "@types/urijs" "^1.19.19"
     ajv "^8.11.0"
@@ -205,8 +209,6 @@
     js-yaml "^4.1.0"
     jsonpath-plus "^7.2.0"
     node-fetch "2.6.7"
-    ramldt2jsonschema "^1.2.3"
-    webapi-parser "^0.5.0"
 
 "@asyncapi/raml-dt-schema-parser@^4.0.2":
   version "4.0.3"
@@ -232,16 +234,16 @@
   dependencies:
     "@types/json-schema" "^7.0.11"
 
-"@axinom/mosaic-cli@0.44.0":
-  version "0.44.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-cli/-/mosaic-cli-0.44.0.tgz#9346e7b139a9476949f8285d14ad5d0338000059"
-  integrity sha512-fTSNBb9igQMKT+5el7yoxejGzzAk5IBW7IIdB1sCCppGyd+Ea/lKBxOUWB5j2rrXrf61u6VGyfxmkk4+tSYGBQ==
+"@axinom/mosaic-cli@0.45.0-rc.4":
+  version "0.45.0-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-cli/-/mosaic-cli-0.45.0-rc.4.tgz#ced566fb7203cb1b160936feb2038562f9e73bd2"
+  integrity sha512-7Lnl3bPAR7nCrnxKUarylUAc+8B9FPN2SglzROu1BClj5q6iTFeq7fJziSSfDrNfq/jYLhMSA5VcgOApWtUP5w==
   dependencies:
     "@asyncapi/diff" "^0.4.1"
     "@asyncapi/modelina" "^1.8.4"
     "@asyncapi/parser" "^2.0.2"
-    "@axinom/mosaic-id-link-be" "^0.31.3"
-    "@axinom/mosaic-service-common" "^0.59.3"
+    "@axinom/mosaic-id-link-be" "^0.31.4-rc.4"
+    "@axinom/mosaic-service-common" "^0.59.4-rc.4"
     "@graphql-inspector/core" "^3.1.2"
     "@inquirer/prompts" "^4.3.0"
     "@stoplight/spectral-core" "^1.18.3"
@@ -270,12 +272,26 @@
     sql-formatter "^4.0.2"
     tar "^6.1.13"
 
-"@axinom/mosaic-core@^0.4.30":
+"@axinom/mosaic-core@^0.4.30", "@axinom/mosaic-core@^0.4.30-rc.9":
   version "0.4.30"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-core/-/mosaic-core-0.4.30.tgz#8a9637702ef9aa86d927e9a6b00bb5e0cf018fa9"
   integrity sha512-dTFzzxtH52NHPKUt+39JGMYERxfH36Itwzdaft/OzkVRcysrrKj/D3hyTbqxJCItHjRDDPfHkBYUR2Zlr6tYhA==
 
-"@axinom/mosaic-db-common@0.47.0", "@axinom/mosaic-db-common@^0.47.0":
+"@axinom/mosaic-db-common@0.47.0-rc.9":
+  version "0.47.0-rc.9"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-db-common/-/mosaic-db-common-0.47.0-rc.9.tgz#f389f4943afbf4a9b323d5d25ce335b2d8815d3f"
+  integrity sha512-1aXAcyBkXXWccBIngWdpOYCGlJJBcObzLSPinC39reMemx1j3qmvseNckznh77ILChRK4DhV4cqfW+LNAaSu5w==
+  dependencies:
+    express "^4.17.1"
+    graphile-migrate "^1.4.0"
+    pg "^8.11.3"
+    pg-logical-replication "^2.0.3"
+    prom-client "^15.1.0"
+    readdirp "^3.4.0"
+    yargs "^16.2.0"
+    zapatos "3.6.0"
+
+"@axinom/mosaic-db-common@^0.47.0":
   version "0.47.0"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-db-common/-/mosaic-db-common-0.47.0.tgz#e7fc1ea48d1fa2f5f13ccd314e4c8925f6501fc2"
   integrity sha512-kIVbKzmpdFvowrbOJ7rItjDuzubE0LUj2dtdtLgyOLKZ56Z32sq7LXVG0HUhGMsub0mKA765mFfv/9dKCVyY/Q==
@@ -289,17 +305,17 @@
     yargs "^16.2.0"
     zapatos "3.6.0"
 
-"@axinom/mosaic-graphql-common@0.23.3":
-  version "0.23.3"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-graphql-common/-/mosaic-graphql-common-0.23.3.tgz#1aaea1afa6fecce4aec613b6eaf40d105446a4eb"
-  integrity sha512-7yo1iQUDy0I1V6s4FsKFQepYcaPoQgNKARvcxBeDfFoLrBzmyUyd5ebwWicy66JSHz+7D1Ex6UPD2j0wl0nVPA==
+"@axinom/mosaic-graphql-common@0.23.4-rc.4":
+  version "0.23.4-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-graphql-common/-/mosaic-graphql-common-0.23.4-rc.4.tgz#b311eb7e7b7ac9dbf24bf2cf79086056dc6a1f0d"
+  integrity sha512-J9ncyDzLyEA23RJcHNchXNQK4yf+wB4HDYgyLNwdw6Goiic0rt+WGpPXURTW1AJ8GVczwYjXZC7/PFNnEauzUg==
   dependencies:
     "@axinom/mosaic-db-common" "^0.47.0"
-    "@axinom/mosaic-message-bus" "^0.38.0"
+    "@axinom/mosaic-message-bus" "^0.39.0-rc.4"
     "@axinom/mosaic-message-bus-abstractions" "^0.24.0"
-    "@axinom/mosaic-messages" "^0.55.0"
-    "@axinom/mosaic-service-common" "^0.59.3"
-    "@axinom/mosaic-transactional-inbox-outbox" "^0.19.3"
+    "@axinom/mosaic-messages" "^0.56.0-rc.4"
+    "@axinom/mosaic-service-common" "^0.59.4-rc.4"
+    "@axinom/mosaic-transactional-inbox-outbox" "^0.19.4-rc.4"
     "@graphile/pg-pubsub" "^4.12.3"
     endent "^2.1.0"
     express "^4.17.1"
@@ -314,15 +330,15 @@
     pg-transactional-outbox "^0.5.7"
     postgraphile "^4.13.0"
 
-"@axinom/mosaic-id-guard@0.42.3":
-  version "0.42.3"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-guard/-/mosaic-id-guard-0.42.3.tgz#332c001b60fb400ca1a394f6c8868a83e454e569"
-  integrity sha512-ETLRX9SOoozOdBjKKIhIYescEft+XYCtpVC48A7temJcW3tA/jaiZCFBljK6joNgFPLDUSHmGIscgMnaelwtcw==
+"@axinom/mosaic-id-guard@0.42.4-rc.4":
+  version "0.42.4-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-guard/-/mosaic-id-guard-0.42.4-rc.4.tgz#dd5d15af7b69dee50a1328e0940e320a881ff550"
+  integrity sha512-haEh/9N8AUtCrpl9FvSUU3TjHyFXkIdtcD0EEE0tiyaGo44tnPWbn9CnKUPGK5iWxZvGRroqGsFoYV22wyrPKA==
   dependencies:
     "@axinom/mosaic-id-utils" "^0.23.0"
-    "@axinom/mosaic-message-bus" "^0.38.0"
-    "@axinom/mosaic-service-common" "^0.59.3"
-    "@axinom/mosaic-transactional-inbox-outbox" "^0.19.3"
+    "@axinom/mosaic-message-bus" "^0.39.0-rc.4"
+    "@axinom/mosaic-service-common" "^0.59.4-rc.4"
+    "@axinom/mosaic-transactional-inbox-outbox" "^0.19.4-rc.4"
     amqplib "^0.10.3"
     express "^4.17.1"
     express-bearer-token "^2.4.0"
@@ -340,44 +356,56 @@
     rascal "^14.0.1"
     subscriptions-transport-ws "^0.9.19"
 
-"@axinom/mosaic-id-link-be@0.31.3", "@axinom/mosaic-id-link-be@^0.31.3":
-  version "0.31.3"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-link-be/-/mosaic-id-link-be-0.31.3.tgz#09899801c11073ee8ee4e57f352b0245dc628b9b"
-  integrity sha512-Fg6+Jv0p55H0OO8BqAQ1J2LgO/c2fdBR7vfi6qIxeCy1Oply8l3A4cskKjjvXiCy1gdapruSBb+svjY+6qyJVg==
+"@axinom/mosaic-id-link-be@0.31.4-rc.4", "@axinom/mosaic-id-link-be@^0.31.4-rc.4":
+  version "0.31.4-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-link-be/-/mosaic-id-link-be-0.31.4-rc.4.tgz#1841ca1ee1c5c341fbb3e20f9c34d17ba8ebcdde"
+  integrity sha512-nUJ1XGbSnpV+tbmbme10fsX1HXhq2/DEKprHeHvYhZwIC1+yTPXGXms1jSJQj9v/Whx9VS2t182wUHE1ama4qg==
   dependencies:
     "@apollo/client" "^3.7.9"
     "@axinom/mosaic-core" "^0.4.30"
     "@axinom/mosaic-id-utils" "^0.23.0"
-    "@axinom/mosaic-service-common" "^0.59.3"
+    "@axinom/mosaic-service-common" "^0.59.4-rc.4"
     axios "^1.8.3"
     cross-fetch "^3.0.4"
     graphql "^15.4.0"
     graphql-tag "^2.11.0"
 
-"@axinom/mosaic-id-utils@0.23.0", "@axinom/mosaic-id-utils@^0.23.0":
+"@axinom/mosaic-id-utils@0.23.0-rc.9":
+  version "0.23.0-rc.9"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-utils/-/mosaic-id-utils-0.23.0-rc.9.tgz#0611e9cc69ab8cf2957bf6fb82cc82897a8fa64d"
+  integrity sha512-cRVDxa0tnpHKgRcyaojfrKPbcJ+xysoL1POBeYMwf16D5A9I+6W69jDE5+UxFcSu2Q1vGn0TdVUKbYMIDjK9EA==
+  dependencies:
+    "@axinom/mosaic-core" "^0.4.30-rc.9"
+
+"@axinom/mosaic-id-utils@^0.23.0":
   version "0.23.0"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-id-utils/-/mosaic-id-utils-0.23.0.tgz#533105dd480fa5d19f33eb78c854e75fe6c64f2d"
   integrity sha512-7ULXtMpktfFUVmmFkAkHesojg+itoCr4Af9J9Jrk0xDvKyLYkhfo9VtJLIwBI+mku8Q+1B2JFV2cducRVa1v9g==
   dependencies:
     "@axinom/mosaic-core" "^0.4.30"
 
-"@axinom/mosaic-managed-workflow-integration@0.25.2":
-  version "0.25.2"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.25.2.tgz#4ffd2e4165a12f40381b11f2aa0dd928c08027a8"
-  integrity sha512-fyNH/Wwh57TAEz7TVI8XlLIA9GD5gO/u9BvfKrvm0Lawcsw4NeQFs9x4/h07DoMQoLfl/DZxiDZiXc1eL5pCPA==
+"@axinom/mosaic-managed-workflow-integration@0.25.3-rc.4":
+  version "0.25.3-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-managed-workflow-integration/-/mosaic-managed-workflow-integration-0.25.3-rc.4.tgz#ffa0502af43a97678fa88b4ff733deab7001f2ec"
+  integrity sha512-yRR/NQwV/+DdEokxOUfSPt+tb7BE3BG5u5GnwBAy2TgNY09m8JFfx/2p5XqdIMlWUQmWsx2JaBsq0kLt2b5yug==
 
-"@axinom/mosaic-message-bus-abstractions@0.24.0", "@axinom/mosaic-message-bus-abstractions@^0.24.0":
+"@axinom/mosaic-message-bus-abstractions@0.24.0-rc.9":
+  version "0.24.0-rc.9"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus-abstractions/-/mosaic-message-bus-abstractions-0.24.0-rc.9.tgz#1c53f8d76e34510e34c09890c874936432607a4f"
+  integrity sha512-xQ8Bfhe1iEVvFSXnRumy7ATlFOJyqkxoc5UQSj6U/inhPZMOqT5tx9D/ywxwVArvdj0emQ8zjgZ5ZgUOHAod9w==
+
+"@axinom/mosaic-message-bus-abstractions@^0.24.0":
   version "0.24.0"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus-abstractions/-/mosaic-message-bus-abstractions-0.24.0.tgz#4cf65470fad86ce55ec73168577652b1d424f7c6"
   integrity sha512-zBz0cC1hDHz5kiMwMc/dwe9JbhJ1OuIik66a7Mq+MSCvFesklZAC5P3odtoPQKr6dTs/r0ueZ8bfy6p0pfzQlQ==
 
-"@axinom/mosaic-message-bus@0.38.0", "@axinom/mosaic-message-bus@^0.38.0":
-  version "0.38.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus/-/mosaic-message-bus-0.38.0.tgz#615dda368ff362580d2721d25934b5d99e0a3fc3"
-  integrity sha512-Rk7xzIx/uBP2VZhutcqzcJXTvPphFcy98GW2S1D8LRF/2E3EGS8NcBhVC3ZaxrOpJEpYjABAuwDR4aBXsi7O8Q==
+"@axinom/mosaic-message-bus@0.39.0-rc.4", "@axinom/mosaic-message-bus@^0.39.0-rc.4":
+  version "0.39.0-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus/-/mosaic-message-bus-0.39.0-rc.4.tgz#5dc26fff28f522a56b7e597f964a8300f4878b30"
+  integrity sha512-o+k+1B2SpqEBmkoaRTEnSDf3U24bxL/zDtRr6R7bfhx7x8ugyg6OUZY1Jwe2ngLnaPO5J0TAIP8v7WGHNsZZSg==
   dependencies:
     "@axinom/mosaic-message-bus-abstractions" "^0.24.0"
-    "@axinom/mosaic-service-common" "^0.59.3"
+    "@axinom/mosaic-service-common" "^0.59.4-rc.4"
     amqplib "^0.10.3"
     dotenv "^8.2.0"
     graphql "^15.4.0"
@@ -389,20 +417,20 @@
     rascal "^14.0.1"
     uuid "^8.3.2"
 
-"@axinom/mosaic-messages@0.55.0", "@axinom/mosaic-messages@^0.55.0":
-  version "0.55.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-messages/-/mosaic-messages-0.55.0.tgz#3cfc9b5fb75345e51ef36dbbaf654d0466655199"
-  integrity sha512-a2LC3Rdw6eqVEQwQk2Zmnu+abmKFZBA3pBY0L93WpcFYYe7t2acFZLvExBb6nPucR205E5jeK1iOPU7VPn8Qxw==
+"@axinom/mosaic-messages@0.56.0-rc.4", "@axinom/mosaic-messages@^0.56.0-rc.4":
+  version "0.56.0-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-messages/-/mosaic-messages-0.56.0-rc.4.tgz#64fcde51f5a6fd20bf71c98a21766658745be360"
+  integrity sha512-tbMTU6jM9nzrKGynjw/TTkyMT9Eb0NsMfBibKEx8EMv2j5vMacAwWgTokknoqqGqNHhvTXAt7wTLElg+OmfeVg==
 
-"@axinom/mosaic-portal@0.41.2":
-  version "0.41.2"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.41.2.tgz#fd2d074c732635d36cfcfd4ada650743063d1b58"
-  integrity sha512-KzG/T86h+QsJUPztHaPsxlBgtrQyHVtLS0m9ngyWnyKi2rhTtnFt62IpwzyHtI5kOuqkb+m8B4xoOzyRiogY4A==
+"@axinom/mosaic-portal@0.41.3-rc.4":
+  version "0.41.3-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-portal/-/mosaic-portal-0.41.3-rc.4.tgz#7f4c05e5a90f1b317fdb72bb6aacde8aeab95503"
+  integrity sha512-RlEw5mHhEFLe+XnA2P6IBT6QcCVXafiPvsa9nNgwvr5YiO/4xOGZoMpX6xQBaGDu0MIHW4/IJS935+02b7HRJQ==
 
-"@axinom/mosaic-service-common@0.59.3", "@axinom/mosaic-service-common@^0.59.3":
-  version "0.59.3"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.59.3.tgz#b0524376b4c4f0046228ffb3ae3630a9b1f89c20"
-  integrity sha512-Y6RbtdsfP3lNOPOzoxqXTAkB1bzwX8gQlI5sfX1IF4t00DXuHWuqkYN4aYiqSIWBCbmUBhhSU0MlQvR0Glw3Tg==
+"@axinom/mosaic-service-common@0.59.4-rc.4", "@axinom/mosaic-service-common@^0.59.4-rc.4":
+  version "0.59.4-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.59.4-rc.4.tgz#12977964ef46d777457b41e017c8651b58fac8df"
+  integrity sha512-5sFTP02YySQyeKQ8pQqFISI1SwPUnKHf71fR+aSqBw+qTAZiNA8IlW6NNIErfLxHM/DhOgTBz3edkxH5UsO3YA==
   dependencies:
     ajv "^7.0.3"
     ajv-formats "^2.1.1"
@@ -425,12 +453,12 @@
     uuid-encoder "^1.2.0"
     verror "^1.10.1"
 
-"@axinom/mosaic-transactional-inbox-outbox@0.19.3", "@axinom/mosaic-transactional-inbox-outbox@^0.19.3":
-  version "0.19.3"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-transactional-inbox-outbox/-/mosaic-transactional-inbox-outbox-0.19.3.tgz#235bacd5b91ae061ee981f0f0cbbed44319bb6fc"
-  integrity sha512-bKg8KJxpWEn7dEM2EgM/NyJwo5rhFRBxNw6mypFMtE+HcrpseLIQ3bmQBVMOrRRyNRLUX5hVpt3ftssfoi4SHw==
+"@axinom/mosaic-transactional-inbox-outbox@0.19.4-rc.4", "@axinom/mosaic-transactional-inbox-outbox@^0.19.4-rc.4":
+  version "0.19.4-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-transactional-inbox-outbox/-/mosaic-transactional-inbox-outbox-0.19.4-rc.4.tgz#2e0263b57aed79c0f60530cd932650167558859a"
+  integrity sha512-DFP433u2BItf68qJcpDnW5vLxeKfEThCiT3IfNCzTc/GG3Dm37C2dDTx0jkQjx8iEv1R2iPIzcuExvdjpzIFRw==
   dependencies:
-    "@axinom/mosaic-message-bus" "^0.38.0"
+    "@axinom/mosaic-message-bus" "^0.39.0-rc.4"
     "@axinom/mosaic-message-bus-abstractions" "^0.24.0"
     async-mutex "^0.4.0"
     env-var "^6.3.0"
@@ -438,10 +466,10 @@
     pg-transactional-outbox "^0.5.7"
     prom-client "^15.1.0"
 
-"@axinom/mosaic-ui@0.59.0":
-  version "0.59.0"
-  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.59.0.tgz#cf691d8f51a91025c7c0abfecfe0d52ba7e71ef7"
-  integrity sha512-xGWLvLrsf1W2+IlMkamBHkYC6hjAEnLdZc1QuEB/SP3Jj+SuamZh7qNiH7FQuDpdCz+ZUCmkjHZal/K8BM9qBA==
+"@axinom/mosaic-ui@0.60.0-rc.4":
+  version "0.60.0-rc.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-ui/-/mosaic-ui-0.60.0-rc.4.tgz#562ef530269a737cae04f36cbd7998b38b5e200f"
+  integrity sha512-gkPj1+bzLM3nsmx8zDBRA4zSArV77kDPNkUIemz7MEapDRVPSRnG5cs7FS8agrI5cXDCtvjbXbGO6XH91kKQxQ==
   dependencies:
     "@axinom/mosaic-core" "^0.4.30"
     "@faker-js/faker" "^7.4.0"
@@ -3760,7 +3788,7 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@stoplight/json-ref-readers@1.2.2":
+"@stoplight/json-ref-readers@1.2.2", "@stoplight/json-ref-readers@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@stoplight/json-ref-readers/-/json-ref-readers-1.2.2.tgz#e5992bae597f228f988f362a4c0304c03a92008b"
   integrity sha1-5Zkrrll/Io+YjzYqTAMEwDqSAIs=
@@ -3768,7 +3796,7 @@
     node-fetch "^2.6.0"
     tslib "^1.14.1"
 
-"@stoplight/json-ref-resolver@^3.1.5", "@stoplight/json-ref-resolver@~3.1.5":
+"@stoplight/json-ref-resolver@^3.1.5":
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/@stoplight/json-ref-resolver/-/json-ref-resolver-3.1.5.tgz#e4454a69027559ef3f7272941e99310a19dc8fdf"
   integrity sha512-uaKLITor7UF+JBtI84zs3aOWM0L79zp7w9TrBTwPtx5SLbaQQ4HadDKgX5yhFOLMApLdhwhiftF4c0GFanOxGg==
@@ -3800,10 +3828,22 @@
     tslib "^2.6.0"
     urijs "^1.19.11"
 
-"@stoplight/json@^3.17.0", "@stoplight/json@^3.17.1", "@stoplight/json@^3.21.0", "@stoplight/json@~3.21.0":
+"@stoplight/json@^3.17.0", "@stoplight/json@^3.17.1", "@stoplight/json@^3.21.0":
   version "3.21.0"
   resolved "https://registry.yarnpkg.com/@stoplight/json/-/json-3.21.0.tgz#c0dff9c478f3365d7946cb6e34c17cc2fa84250b"
   integrity sha512-5O0apqJ/t4sIevXCO3SBN9AHCEKKR/Zb4gaj7wYe5863jme9g02Q0n/GhM7ZCALkL+vGPTe4ZzTETP8TFtsw3g==
+  dependencies:
+    "@stoplight/ordered-object-literal" "^1.0.3"
+    "@stoplight/path" "^1.3.2"
+    "@stoplight/types" "^13.6.0"
+    jsonc-parser "~2.2.1"
+    lodash "^4.17.21"
+    safe-stable-stringify "^1.1"
+
+"@stoplight/json@^3.20.2", "@stoplight/json@~3.21.0":
+  version "3.21.7"
+  resolved "https://registry.yarnpkg.com/@stoplight/json/-/json-3.21.7.tgz#102f5fd11921984c96672ce4307850daa1cbfc7b"
+  integrity sha512-xcJXgKFqv/uCEgtGlPxy3tPA+4I+ZI4vAuMJ885+ThkTHFVkC+0Fm58lA9NlsyjnkpxFh4YiQWpH+KefHdbA0A==
   dependencies:
     "@stoplight/ordered-object-literal" "^1.0.3"
     "@stoplight/path" "^1.3.2"
@@ -3824,7 +3864,12 @@
     lodash "^4.17.21"
     safe-stable-stringify "^1.1"
 
-"@stoplight/ordered-object-literal@^1.0.1", "@stoplight/ordered-object-literal@^1.0.3":
+"@stoplight/ordered-object-literal@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@stoplight/ordered-object-literal/-/ordered-object-literal-1.0.1.tgz#01ece81ba5dda199ca3dc5ec7464691efa5d5b76"
+  integrity sha512-kDcBIKwzAXZTkgzaiPXH2I0JXavBkOb3jFzYNFS5cBuvZS3s/K+knpk2wLVt0n8XrnRQsSffzN6XG9HqUhfq6Q==
+
+"@stoplight/ordered-object-literal@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@stoplight/ordered-object-literal/-/ordered-object-literal-1.0.4.tgz#c8bb2698ab229f31e31a16dd1852c867c1f2f2ed"
   integrity sha512-OF8uib1jjDs5/cCU+iOVy+GJjU3X7vk/qJIkIJFqwmlJKrrtijFmqwbu8XToXrwTYLQTP+Hebws5gtZEmk9jag==
@@ -3839,32 +3884,32 @@
   resolved "https://registry.yarnpkg.com/@stoplight/path/-/path-1.3.2.tgz#96e591496b72fde0f0cdae01a61d64f065bd9ede"
   integrity sha1-luWRSWty/eDwza4Bph1k8GW9nt4=
 
-"@stoplight/spectral-core@1.18.3", "@stoplight/spectral-core@>=1", "@stoplight/spectral-core@^1.16.1", "@stoplight/spectral-core@^1.18.3", "@stoplight/spectral-core@^1.7.0", "@stoplight/spectral-core@^1.8.0", "@stoplight/spectral-core@^1.8.1":
-  version "1.18.3"
-  resolved "https://registry.yarnpkg.com/@stoplight/spectral-core/-/spectral-core-1.18.3.tgz#d6859182aa09681fe1e5af5a5f4c39082e554542"
-  integrity sha512-YY8x7X2SWJIhGTLPol+eFiQpWPz0D0mJdkK2i4A0QJG68KkNhypP6+JBC7/Kz3XWjqr0L/RqAd+N5cQLPOKZGQ==
+"@stoplight/spectral-core@>=1", "@stoplight/spectral-core@^1.16.1", "@stoplight/spectral-core@^1.18.3", "@stoplight/spectral-core@^1.7.0", "@stoplight/spectral-core@^1.8.0", "@stoplight/spectral-core@^1.8.1":
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/spectral-core/-/spectral-core-1.20.0.tgz#26572b66c2307c3562ed5c9c1c5891cf6f72778e"
+  integrity sha512-5hBP81nCC1zn1hJXL/uxPNRKNcB+/pEIHgCjPRpl/w/qy9yC9ver04tw1W0l/PMiv0UeB5dYgozXVQ4j5a6QQQ==
   dependencies:
     "@stoplight/better-ajv-errors" "1.0.3"
     "@stoplight/json" "~3.21.0"
     "@stoplight/path" "1.3.2"
     "@stoplight/spectral-parsers" "^1.0.0"
-    "@stoplight/spectral-ref-resolver" "^1.0.0"
-    "@stoplight/spectral-runtime" "^1.0.0"
+    "@stoplight/spectral-ref-resolver" "^1.0.4"
+    "@stoplight/spectral-runtime" "^1.1.2"
     "@stoplight/types" "~13.6.0"
     "@types/es-aggregate-error" "^1.0.2"
     "@types/json-schema" "^7.0.11"
-    ajv "^8.6.0"
+    ajv "^8.17.1"
     ajv-errors "~3.0.0"
-    ajv-formats "~2.1.0"
+    ajv-formats "~2.1.1"
     es-aggregate-error "^1.0.7"
-    jsonpath-plus "7.1.0"
+    jsonpath-plus "^10.3.0"
     lodash "~4.17.21"
     lodash.topath "^4.5.2"
     minimatch "3.1.2"
-    nimma "0.2.2"
-    pony-cause "^1.0.0"
-    simple-eval "1.0.0"
-    tslib "^2.3.0"
+    nimma "0.2.3"
+    pony-cause "^1.1.1"
+    simple-eval "1.0.1"
+    tslib "^2.8.1"
 
 "@stoplight/spectral-formats@>=1", "@stoplight/spectral-formats@^1.5.0":
   version "1.6.0"
@@ -3934,16 +3979,16 @@
     dependency-graph "0.11.0"
     tslib "^2.3.1"
 
-"@stoplight/spectral-ref-resolver@^1.0.0":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@stoplight/spectral-ref-resolver/-/spectral-ref-resolver-1.0.3.tgz#6754f212c27723af7a438129d47f941184a21edd"
-  integrity sha512-pj+bH4SH8hcWlnV787WD7P0/En7LA3EfZMvG1JUGMW/7bFd9AaZZXNkh5j0ve8qnPlwP8F4SH/2Cnr1tXOXCVw==
+"@stoplight/spectral-ref-resolver@^1.0.3", "@stoplight/spectral-ref-resolver@^1.0.4":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@stoplight/spectral-ref-resolver/-/spectral-ref-resolver-1.0.5.tgz#2462ae79bbb90b7fcc76b014118a0beeee5e64d5"
+  integrity sha512-gj3TieX5a9zMW29z3mBlAtDOCgN3GEc1VgZnCVlr5irmR4Qi5LuECuFItAq4pTn5Zu+sW5bqutsCH7D4PkpyAA==
   dependencies:
     "@stoplight/json-ref-readers" "1.2.2"
-    "@stoplight/json-ref-resolver" "~3.1.5"
+    "@stoplight/json-ref-resolver" "~3.1.6"
     "@stoplight/spectral-runtime" "^1.1.2"
     dependency-graph "0.11.0"
-    tslib "^2.3.1"
+    tslib "^2.8.1"
 
 "@stoplight/spectral-ruleset-bundler@^1.5.2":
   version "1.5.2"
@@ -4007,7 +4052,7 @@
     lodash "~4.17.21"
     tslib "^2.3.0"
 
-"@stoplight/spectral-runtime@^1.0.0", "@stoplight/spectral-runtime@^1.1.0", "@stoplight/spectral-runtime@^1.1.1", "@stoplight/spectral-runtime@^1.1.2":
+"@stoplight/spectral-runtime@^1.1.0", "@stoplight/spectral-runtime@^1.1.1", "@stoplight/spectral-runtime@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@stoplight/spectral-runtime/-/spectral-runtime-1.1.2.tgz#7315767a09a4a7e5226e997e245bd3eb39561a02"
   integrity sha512-fr5zRceXI+hrl82yAVoME+4GvJie8v3wmOe9tU+ZLRRNonizthy8qDi0Z/z4olE+vGreSDcuDOZ7JjRxFW5kTw==
@@ -4032,6 +4077,14 @@
   version "13.15.0"
   resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-13.15.0.tgz#d2db6820d92e5085193d03c3057d15c40a70e34f"
   integrity sha512-pBLjVRrWGVd+KzTbL3qrmufSKIEp0UfziDBdt/nrTHPKrlrtVwaHdrrQMcpM23yJDU1Wcg4cHvhIuGtKCT5OmA==
+  dependencies:
+    "@types/json-schema" "^7.0.4"
+    utility-types "^3.10.0"
+
+"@stoplight/types@^13.12.0":
+  version "13.20.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-13.20.0.tgz#d42682f1e3a14a3c60bdf0df08bff4023518763d"
+  integrity sha512-2FNTv05If7ib79VPDA/r9eUet76jewXFH2y2K5vuge6SXbRHtWBhcaRmu+6QpF4/WRNoJj5XYRSwLGXDxysBGA==
   dependencies:
     "@types/json-schema" "^7.0.4"
     utility-types "^3.10.0"
@@ -5241,14 +5294,7 @@ ajv-errors@^3.0.0, ajv-errors@~3.0.0:
   resolved "https://registry.yarnpkg.com/ajv-errors/-/ajv-errors-3.0.0.tgz#e54f299f3a3d30fe144161e5f0d8d51196c527bc"
   integrity sha512-V3wD15YHfHz6y0KdhYFjyy9vWtEVALT9UrxfN3zqlI6dMioHnJrqOYfyPKol3oqrnCM9uwkcdCwkJ0WUcbLMTQ==
 
-ajv-formats@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/ajv-formats/-/ajv-formats-1.6.1.tgz#35c7cdcd2a12d509171c37bac32f2e8eb010a536"
-  integrity sha512-4CjkH20If1lhR5CGtqkrVg3bbOtFEG80X9v6jDOIUhbzzbB+UzPBGy8GQhUNVZ0yvMHdMpawCOcy5ydGMsagGQ==
-  dependencies:
-    ajv "^7.0.0"
-
-ajv-formats@^2.1.1, ajv-formats@~2.1.0:
+ajv-formats@^2.1.1, ajv-formats@~2.1.0, ajv-formats@~2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-formats/-/ajv-formats-2.1.1.tgz#6e669400659eb74973bbf2e33327180a0996b520"
   integrity sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==
@@ -5297,7 +5343,7 @@ ajv@^6.10.0, ajv@^6.12.2, ajv@^6.12.4, ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^7.0.0, ajv@^7.0.3, ajv@^7.2.4:
+ajv@^7.0.3, ajv@^7.2.4:
   version "7.2.4"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-7.2.4.tgz#8e239d4d56cf884bccca8cca362f508446dc160f"
   integrity sha512-nBeQgg/ZZA3u3SYxyaDvpvDtgZ/EZPF547ARgZBrG9Bhu1vKDwAIjtIf+sDtJUKa2zOcEbmRLBRSyMraS/Oy1A==
@@ -5307,15 +5353,15 @@ ajv@^7.0.0, ajv@^7.0.3, ajv@^7.2.4:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-ajv@^8.0.0, ajv@^8.0.1, ajv@^8.11.0, ajv@^8.6.0, ajv@^8.6.3, ajv@^8.8.0, ajv@^8.8.2, ajv@^8.9.0:
-  version "8.12.0"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.12.0.tgz#d1a0527323e22f53562c567c00991577dfbe19d1"
-  integrity sha512-sRu1kpcO9yLtYxBKvqfTeh9KzZEwO3STyX1HT+4CaDzC6HpTGYhIhPIzj9XuKU7KYDwnaeh5hcOwjy1QuJzBPA==
+ajv@^8.0.0, ajv@^8.0.1, ajv@^8.11.0, ajv@^8.6.0, ajv@^8.6.3, ajv@^8.8.0, ajv@^8.8.2, ajv@^8.9.0, ajv@^8.17.1:
+  version "8.17.1"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.17.1.tgz#37d9a5c776af6bc92d7f4f9510eba4c0a60d11a6"
+  integrity sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==
   dependencies:
-    fast-deep-equal "^3.1.1"
+    fast-deep-equal "^3.1.3"
+    fast-uri "^3.0.1"
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
-    uri-js "^4.2.2"
 
 altair-express-middleware@^7.0.1:
   version "7.0.1"
@@ -7936,6 +7982,11 @@ fast-stable-stringify@^1.0.0:
   resolved "https://registry.yarnpkg.com/fast-stable-stringify/-/fast-stable-stringify-1.0.0.tgz#5c5543462b22aeeefd36d05b34e51c78cb86d313"
   integrity sha512-wpYMUmFu5f00Sm0cj2pfivpmawLZ0NKdviQ4w9zJeR8JVtOpOxHmLaJuj0vxvGqMJQWyP/COUkF75/57OKyRag==
 
+fast-uri@^3.0.1:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.0.6.tgz#88f130b77cfaea2378d56bf970dea21257a68748"
+  integrity sha512-Atfo14OibSv5wAp4VWNsFYE1AchQRTv9cBGWET4pZWHzYshFSS9NQI6I57rdKn9croWVMbYFbLhJ+yJvmZIIHw==
+
 fast-url-parser@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/fast-url-parser/-/fast-url-parser-1.1.3.tgz#f4af3ea9f34d8a271cf58ad2b3759f431f0b318d"
@@ -10163,12 +10214,12 @@ jsbn@1.1.0:
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-1.1.0.tgz#b01307cb29b618a1ed26ec79e911f803c4da0040"
   integrity sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==
 
-jsep@^1.1.2, jsep@^1.2.0:
+jsep@^1.2.0:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/jsep/-/jsep-1.3.8.tgz#facb6eb908d085d71d950bd2b24b757c7b8a46d7"
   integrity sha512-qofGylTGgYj9gZFsHuyWAN4jr35eJ66qJCK4eKDnldohuUoQFbU3iZn2zjvEbd9wOAhP9Wx5DsAAduTyE1PSWQ==
 
-jsep@^1.4.0:
+jsep@^1.3.6, jsep@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/jsep/-/jsep-1.4.0.tgz#19feccbfa51d8a79f72480b4b8e40ce2e17152f0"
   integrity sha512-B7qPcEVE3NVkmSJbaYxvv4cHkVW7DQsZz13pUMrfS8z8Q/BuShN+gcTXrUlPiGqM2/t/EEaI030bpxMqY8gMlw==
@@ -10312,7 +10363,7 @@ jsonify@~0.0.0:
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
   integrity sha512-trvBk1ki43VZptdBI5rIlG4YOzyeH/WefQt5rj1grasPn4iiZWKet8nkgc4GlsAylaztn0qZfUYOiTsASJFdNA==
 
-jsonpath-plus@7.1.0, jsonpath-plus@^10.2.0, jsonpath-plus@^6.0.1, jsonpath-plus@^7.2.0:
+jsonpath-plus@^10.2.0, jsonpath-plus@^10.3.0, "jsonpath-plus@^6.0.1 || ^10.1.0", jsonpath-plus@^7.2.0:
   version "10.3.0"
   resolved "https://registry.yarnpkg.com/jsonpath-plus/-/jsonpath-plus-10.3.0.tgz#59e22e4fa2298c68dfcd70659bb47f0cad525238"
   integrity sha512-8TNmfeTCk2Le33A3vRRwtuworG/L5RrgMvdjhKZxvyShO+mBu2fP50OWUjRLNtvw344DdDarFh9buFAZs5ujeA==
@@ -11063,17 +11114,17 @@ nice-try@^1.0.4:
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha1-ozeKdpbOfSI+iPybdkvX7xCJ42Y=
 
-nimma@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/nimma/-/nimma-0.2.2.tgz#48d00f837d17b4baa23beec22ac1380f152f15ef"
-  integrity sha512-V52MLl7BU+tH2Np9tDrIXK8bql3MVUadnMIl/0/oZSGC9keuro0O9UUv9QKp0aMvtN8HRew4G7byY7H4eWsxaQ==
+nimma@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/nimma/-/nimma-0.2.3.tgz#33cd6244ede857d9c8ac45b9d1aad07091559e45"
+  integrity sha512-1ZOI8J+1PKKGceo/5CT5GfQOG6H8I2BencSK06YarZ2wXwH37BSSUWldqJmMJYA5JfqDqffxDXynt6f11AyKcA==
   dependencies:
     "@jsep-plugin/regex" "^1.0.1"
     "@jsep-plugin/ternary" "^1.0.2"
     astring "^1.8.1"
     jsep "^1.2.0"
   optionalDependencies:
-    jsonpath-plus "^6.0.1"
+    jsonpath-plus "^6.0.1 || ^10.1.0"
     lodash.topath "^4.5.2"
 
 nise@^4.0.4:
@@ -11908,7 +11959,7 @@ pluralize@^7.0.0:
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
   integrity sha512-ARhBOdzS3e41FbkW/XWrTEtukqqLoK5+Z/4UeDaLuSW+39JPeFgs4gCGqsrJHVZX0fUrx//4OF0K1CUGwlIFow==
 
-pony-cause@1.1.1, pony-cause@^1.0.0:
+pony-cause@1.1.1, pony-cause@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/pony-cause/-/pony-cause-1.1.1.tgz#f795524f83bebbf1878bd3587b45f69143cbf3f9"
   integrity sha512-PxkIc/2ZpLiEzQXu5YRDOUgBlfGYBY8156HY5ZcRAwwonMk5W/MrJP2LLkG/hF7GEQzaHo2aS7ho6ZLCOvf+6g==
@@ -13463,12 +13514,12 @@ simple-concat@^1.0.0:
   resolved "https://registry.yarnpkg.com/simple-concat/-/simple-concat-1.0.1.tgz#f46976082ba35c2263f1c8ab5edfe26c41c9552f"
   integrity sha512-cSFtAPtRhljv69IK0hTVZQ+OfE9nePi/rtJmw5UjHeVyVroEqJXP1sFztKUy1qU+xvz3u/sfYJLa947b7nAN2Q==
 
-simple-eval@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/simple-eval/-/simple-eval-1.0.0.tgz#7ba8e6049840690b2d4e356ed01f13209e03aad1"
-  integrity sha512-kpKJR+bqTscgC0xuAl2xHN6bB12lHjC2DCUfqjAx19bQyO3R2EVLOurm3H9AUltv/uFVcSCVNc6faegR+8NYLw==
+simple-eval@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/simple-eval/-/simple-eval-1.0.1.tgz#f91fc2b1583b7f5b972cdc088b769880087120a5"
+  integrity sha512-LH7FpTAkeD+y5xQC4fzS+tFtaNlvt3Ib1zKzvhjv/Y+cioV4zIuw4IZr2yhRLu67CWL7FR9/6KXKnjRoZTvGGQ==
   dependencies:
-    jsep "^1.1.2"
+    jsep "^1.3.6"
 
 simple-get@^4.0.0, simple-get@^4.0.1:
   version "4.0.1"
@@ -14343,20 +14394,30 @@ tsconfig-paths@^4.1.2:
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
+tslib@2.4.0, tslib@~2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
+  integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
+
 tslib@^1.10.0, tslib@^1.13.0, tslib@^1.14.1, tslib@^1.8.1, tslib@^1.9.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha1-zy04vcNKE0vK8QkcQfZhni9nLQA=
 
-tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.2.0, tslib@^2.3.0, tslib@^2.3.1, tslib@^2.4.0, tslib@^2.5.0, tslib@^2.6.0, tslib@~2.6.0:
+tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.4.0, tslib@^2.5.0, tslib@^2.6.0, tslib@~2.6.0:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
-tslib@~2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
-  integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
+tslib@^2.2.0, tslib@^2.3.0, tslib@^2.3.1:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.5.0.tgz#42bfed86f5787aeb41d031866c8f402429e0fddf"
+  integrity sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==
+
+tslib@^2.8.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
+  integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
 tslint@^6.1.3:
   version "6.1.3"
