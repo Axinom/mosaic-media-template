@@ -287,6 +287,11 @@ export function useEpisodesFilters(): {
         },
       ],
     },
+    {
+      label: 'ID',
+      property: 'id',
+      type: FilterTypes.Numeric,
+    },
   ];
 
   const transformFilters = (
@@ -362,6 +367,20 @@ export function useEpisodesFilters(): {
         isNull: !value,
       }),
       seasonExists: (value) => value as boolean,
+      id: (value) => {
+        if (typeof value === 'number') {
+          // User filter
+          return {
+            equalTo: value,
+            notIn: excludeItems,
+          };
+        } else {
+          // Exclude items
+          return {
+            notIn: excludeItems,
+          };
+        }
+      },
     });
   };
 
