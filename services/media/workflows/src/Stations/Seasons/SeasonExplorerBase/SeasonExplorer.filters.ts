@@ -267,6 +267,11 @@ export function useSeasonsFilters(): {
       property: 'publishingId',
       type: FilterTypes.FreeText,
     },
+    {
+      label: 'ID',
+      property: 'id',
+      type: FilterTypes.Numeric,
+    },
   ];
 
   const transformFilters = (
@@ -338,6 +343,20 @@ export function useSeasonsFilters(): {
       createdDate: transformRange,
       publishedDate: transformRange,
       tvshowExists: (value) => value as boolean,
+      id: (value) => {
+        if (typeof value === 'number') {
+          // User filter
+          return {
+            equalTo: value,
+            notIn: excludeItems,
+          };
+        } else {
+          // Exclude items
+          return {
+            notIn: excludeItems,
+          };
+        }
+      },
     });
   };
 
