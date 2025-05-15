@@ -7733,4 +7733,10 @@ enum ErrorCodesEnum {
 
   """The %s does not have a valid license in your current country (%s)"""
   LICENSE_IS_NOT_VALID
+
+  """Failed to refresh GeoIP database:"""
+  GEOIP_DB_REFRESH_FAILED
+
+  """Failed to download GeoIP database:"""
+  GEOIP_DB_DOWNLOAD_FAILED
 }

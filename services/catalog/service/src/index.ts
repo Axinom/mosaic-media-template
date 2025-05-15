@@ -29,6 +29,7 @@ import {
 } from './common';
 import { registerMessaging } from './domains/register-messaging';
 import { buildPostgraphileOptions } from './graphql/postgraphile-options';
+import { initGeoIpService } from './utils/maxmind-utils';
 
 const logger = new Logger({ context: 'bootstrap' });
 // Entry point for the service. For annotated version please see /services/media/service/src/index.ts.
@@ -65,6 +66,11 @@ async function bootstrap(): Promise<void> {
   await startLocalesInsertedListener(config, logger);
   await loadInMemoryLocales(ownerPool, logger);
 
+  // Required to correctly determine client ip through req.ip.
+  app.set('trust proxy', true);
+
+  const geoIpReader = await initGeoIpService(config);
+
   const broker = await registerMessaging(
     app,
     ownerPool,
@@ -84,7 +90,11 @@ async function bootstrap(): Promise<void> {
   });
 
   app.use(
-    postgraphile(loginPool, 'app_public', buildPostgraphileOptions(config)),
+    postgraphile(
+      loginPool,
+      'app_public',
+      buildPostgraphileOptions(config, geoIpReader),
+    ),
   );
 
   const server = app.listen(config.port, () => {

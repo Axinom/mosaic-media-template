@@ -64,11 +64,15 @@ regularVariables:
   # Managed Service URLs
   ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
 
+  # GeoIP2 Variables
+  GEOIP2_DATABASE_FILE: 'GeoIP2-City.mmdb'
+  GEOIP2_UPDATE_SCHEDULE: '0 0 * * *'
+
 secureVariables:
-  # Use this section to store any custom environment variables which contain sensitive data.
-  # i.e.
-  # YOUR_KEY: 'SENSITIVE_DATA'
-  {}
+  # GeoIP2 Secure Variables
+  GEOIP2_BLOB_SAS_TOKEN: '#{GEOIP2-BLOB-SAS-TOKEN}#'
+  GEOIP2_BLOB_STORAGE_ACCOUNT: 'fc92815cac35ea297008806d'
+  GEOIP2_BLOB_CONTAINER: 'maxmindgeodb'
 
 serviceAccounts:
   # Defines the service accounts that will be provisioned for this service.

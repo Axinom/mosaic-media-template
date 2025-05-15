@@ -4,7 +4,11 @@ import {
   makeWrapResolversPlugin,
 } from 'graphile-utils';
 import { param, select, sql } from 'zapatos/db';
-import { CommonErrors, isLicenseValid } from '../../../common';
+import {
+  CommonErrors,
+  isLicenseValid,
+  MOSAIC_COUNTRY_CODE_PG_KEY,
+} from '../../../common';
 import { CountryCodeQueryArgPluginFactory } from '../../../graphql/plugins';
 
 const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
@@ -13,13 +17,12 @@ const CheckOptionalCountryCodePlugin = makeWrapResolversPlugin({
       const { pgClient } = context;
       // We set the country code for the current request as a PG Setting for the current transaction
       // It is used to determine the license validity in the `movie_videos_view`.
-      const countryCode = isNullOrWhitespace(args.countryCode)
-        ? '*'
-        : args.countryCode;
-
-      await sql`SELECT set_config('mosaic.country_code',  ${param(
-        countryCode,
-      )}, true)`.run(pgClient);
+      // This is only used if we need to override default behaviour of extracting the country code through the ip.
+      if (!isNullOrWhitespace(args.countryCode)) {
+        await sql`SELECT set_config(${param(
+          MOSAIC_COUNTRY_CODE_PG_KEY,
+        )},  ${param(args.countryCode)}, true)`.run(pgClient);
+      }
 
       const result = await resolve(source, args, context, resolveInfo);
       if (!result) {
