@@ -14,11 +14,13 @@ import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import { Request, Response } from 'express';
 import { PostGraphileOptions } from 'postgraphile';
 import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
+import { GeoIpReaderContainer } from 'src/utils/maxmind-utils';
 import {
   catalogLogMapper,
   CommonErrors,
   Config,
   getMosaicLocaleSetting,
+  MOSAIC_COUNTRY_CODE_PG_KEY,
   MOSAIC_LOCALE_HEADER_KEY,
 } from '../common';
 import { AllCollectionPlugins } from '../domains/collections/plugins/all-collection-plugins';
@@ -32,6 +34,7 @@ import {
 
 export function buildPostgraphileOptions(
   config: Config,
+  geoIpReaderContainer: GeoIpReaderContainer,
 ): PostGraphileOptions<Request, Response> {
   let options = new PostgraphileOptionsBuilder()
     .setDefaultSettings(config.isDev, config.graphqlGuiEnabled)
@@ -43,10 +46,14 @@ export function buildPostgraphileOptions(
         logGraphQlError(catalogLogMapper),
       );
     })
-    .setPgSettings(async (req) => ({
-      role: config.dbGqlRole,
-      ...getMosaicLocaleSetting(req),
-    }))
+    .setPgSettings(async (req) => {
+      const geoData = geoIpReaderContainer.reader.get(req.ip);
+      return {
+        role: config.dbGqlRole,
+        ...getMosaicLocaleSetting(req),
+        [MOSAIC_COUNTRY_CODE_PG_KEY]: geoData?.country?.iso_code ?? '*',
+      };
+    })
     .addPlugins(
       PgSimplifyInflectorPlugin,
       PgSmallNumericToFloatPlugin,

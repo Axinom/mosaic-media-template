@@ -11,10 +11,12 @@ import {
   getValidatedConfig,
   pick,
 } from '@axinom/mosaic-service-common';
+import { from } from 'env-var';
 
 export const getConfigDefinitions = (
   variables: NodeJS.ProcessEnv = process.env,
 ) => {
+  const env = from(variables);
   const { tenantId, environmentId, idServiceAuthBaseUrl } = pick(
     getBasicCustomizableConfigDefinitions(variables),
     'tenantId',
@@ -30,6 +32,20 @@ export const getConfigDefinitions = (
     tenantId,
     environmentId,
     idServiceAuthBaseUrl,
+    geoIP2SASToken: () =>
+      env.get('GEOIP2_BLOB_SAS_TOKEN').required().asString() ||
+      'MISSING_GEOIP2_BLOB_SAS_TOKEN',
+    geoIP2StorageAccount: () =>
+      env.get('GEOIP2_BLOB_STORAGE_ACCOUNT').required().asString() ||
+      'MISSING_GEOIP2_BLOB_STORAGE_ACCOUNT',
+    geoIP2BlobContainer: () =>
+      env.get('GEOIP2_BLOB_CONTAINER').required().asString() ||
+      'MISSING_GEOIP2_BLOB_CONTAINER',
+    geoIP2DatabaseFile: () =>
+      env.get('GEOIP2_DATABASE_FILE').required().asString() ||
+      'MISSING_GEOIP2_DATABASE_FILE',
+    geoIP2UpdateSchedule: () =>
+      env.get('GEOIP2_UPDATE_SCHEDULE').required().asString() || '0 0 * * *',
   };
 };
 
