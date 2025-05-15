@@ -12,3 +12,4 @@ export const MOSAIC_LOCALE_PG_KEY = 'mosaic.locale';
  * A PG notification to keep in-memory array up-to-date in multi-instance scenarios.
  */
 export const MOSAIC_LOCALE_NOTIFY = 'notify_locale_inserted';
+export const MOSAIC_COUNTRY_CODE_PG_KEY = 'mosaic.country_code';
