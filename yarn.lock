@@ -371,7 +371,25 @@
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus-abstractions/-/mosaic-message-bus-abstractions-0.24.0.tgz#4cf65470fad86ce55ec73168577652b1d424f7c6"
   integrity sha512-zBz0cC1hDHz5kiMwMc/dwe9JbhJ1OuIik66a7Mq+MSCvFesklZAC5P3odtoPQKr6dTs/r0ueZ8bfy6p0pfzQlQ==
 
-"@axinom/mosaic-message-bus@0.38.0", "@axinom/mosaic-message-bus@^0.38.0":
+"@axinom/mosaic-message-bus@0.39.1":
+  version "0.39.1"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus/-/mosaic-message-bus-0.39.1.tgz#2a83ef780ebd82c51730acbf93c47badb9f33de4"
+  integrity sha512-I3tJLvlne+3wwUuWxclqlORqTwTs340ERVCiow10bI8j8xeHoxj6pxQXZbyAxMsZoSZaTLgEbdeRycw2uApEng==
+  dependencies:
+    "@axinom/mosaic-message-bus-abstractions" "^0.24.0"
+    "@axinom/mosaic-service-common" "^0.59.4"
+    amqplib "^0.10.3"
+    dotenv "^8.2.0"
+    graphql "^15.4.0"
+    graphql-request "^3.7.0"
+    graphql-tag "^2.11.0"
+    node-cache "^5.1.2"
+    prom-client "^15.1.0"
+    ramda "^0.27.0"
+    rascal "^14.0.1"
+    uuid "^8.3.2"
+
+"@axinom/mosaic-message-bus@^0.38.0":
   version "0.38.0"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-message-bus/-/mosaic-message-bus-0.38.0.tgz#615dda368ff362580d2721d25934b5d99e0a3fc3"
   integrity sha512-Rk7xzIx/uBP2VZhutcqzcJXTvPphFcy98GW2S1D8LRF/2E3EGS8NcBhVC3ZaxrOpJEpYjABAuwDR4aBXsi7O8Q==
@@ -403,6 +421,32 @@
   version "0.59.3"
   resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.59.3.tgz#b0524376b4c4f0046228ffb3ae3630a9b1f89c20"
   integrity sha512-Y6RbtdsfP3lNOPOzoxqXTAkB1bzwX8gQlI5sfX1IF4t00DXuHWuqkYN4aYiqSIWBCbmUBhhSU0MlQvR0Glw3Tg==
+  dependencies:
+    ajv "^7.0.3"
+    ajv-formats "^2.1.1"
+    axios "^1.8.3"
+    cockatiel "^3.1.1"
+    endent "^2.1.0"
+    env-var "^6.3.0"
+    express "^4.17.1"
+    express-basic-auth "^1.2.1"
+    fast-stable-stringify "^1.0.0"
+    inflection "^1.12.0"
+    jest "^29"
+    jest-expect-message "^1.1.3"
+    moment "^2.29.4"
+    prom-client "^15.1.0"
+    serialize-error "^7.0.1"
+    serve-favicon "^2.5.0"
+    short-hash "^1.0.0"
+    uuid "^8.3.2"
+    uuid-encoder "^1.2.0"
+    verror "^1.10.1"
+
+"@axinom/mosaic-service-common@^0.59.4":
+  version "0.59.4"
+  resolved "https://registry.yarnpkg.com/@axinom/mosaic-service-common/-/mosaic-service-common-0.59.4.tgz#a2ec4c84d0c9383b0b21a0facec348f40b4c53ce"
+  integrity sha512-yi096bnNPga5k7TwI+yRkwU3STHiitEbS3cFrX1/IXzmXy/eLFtZaqqhoUKVBTRv8Es124NF0nA9gabKhTY49A==
   dependencies:
     ajv "^7.0.3"
     ajv-formats "^2.1.1"

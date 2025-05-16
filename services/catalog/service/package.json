@@ -45,7 +45,7 @@
     "@axinom/mosaic-graphql-common": "0.23.3",
     "@axinom/mosaic-id-guard": "0.42.3",
     "@axinom/mosaic-messages": "0.55.0",
-    "@axinom/mosaic-message-bus": "0.38.0",
+    "@axinom/mosaic-message-bus": "0.39.1",
     "@axinom/mosaic-message-bus-abstractions": "0.24.0",
     "@axinom/mosaic-service-common": "0.59.3",
     "@axinom/mosaic-transactional-inbox-outbox": "0.19.3",
