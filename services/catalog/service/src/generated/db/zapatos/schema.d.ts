@@ -1820,6 +1820,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **collection_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface JSONSelectable {
       /**
@@ -1888,6 +1894,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **collection_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface Whereable {
       /**
@@ -1956,6 +1968,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **collection_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -2024,6 +2042,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **collection_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -2092,6 +2116,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **collection_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;
@@ -5743,6 +5773,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **episode_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface JSONSelectable {
       /**
@@ -5895,6 +5931,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **episode_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface Whereable {
       /**
@@ -6047,6 +6089,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **episode_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -6199,6 +6247,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **episode_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -6351,6 +6405,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **episode_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;
@@ -7356,6 +7416,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title: string | null;
+      /**
+      * **movie_genre_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface JSONSelectable {
       /**
@@ -7376,6 +7442,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title: string | null;
+      /**
+      * **movie_genre_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface Whereable {
       /**
@@ -7396,6 +7468,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_genre_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -7416,6 +7494,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_genre_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -7436,6 +7520,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_genre_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;
@@ -10402,6 +10492,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **movie_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface JSONSelectable {
       /**
@@ -10548,6 +10644,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **movie_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface Whereable {
       /**
@@ -10694,6 +10796,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **movie_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -10840,6 +10948,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **movie_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -10986,6 +11100,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **movie_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;
@@ -13988,6 +14108,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title: string | null;
+      /**
+      * **season_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface JSONSelectable {
       /**
@@ -14110,6 +14236,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title: string | null;
+      /**
+      * **season_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface Whereable {
       /**
@@ -14232,6 +14364,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **season_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -14354,6 +14492,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **season_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -14476,6 +14620,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **season_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;
@@ -15342,6 +15492,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title: string | null;
+      /**
+      * **tvshow_genre_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface JSONSelectable {
       /**
@@ -15362,6 +15518,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title: string | null;
+      /**
+      * **tvshow_genre_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface Whereable {
       /**
@@ -15382,6 +15544,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_genre_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -15402,6 +15570,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_genre_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -15422,6 +15596,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_genre_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;
@@ -17907,6 +18087,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **tvshow_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface JSONSelectable {
       /**
@@ -18041,6 +18227,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis: string | null;
+      /**
+      * **tvshow_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale: boolean | null;
     }
     export interface Whereable {
       /**
@@ -18175,6 +18367,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tvshow_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -18309,6 +18507,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **tvshow_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -18443,6 +18647,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       synopsis?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tvshow_view.is_using_default_locale**
+      * - `bool` in database
+      * - Nullable, no default
+      */
+      is_using_default_locale?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;

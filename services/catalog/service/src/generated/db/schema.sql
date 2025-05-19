@@ -291,10 +291,15 @@ BEGIN
 		FROM information_schema.columns
 		WHERE table_schema = 'app_public' AND table_name = localizationsTableName AND column_name != 'locale' AND column_name != 'id' AND column_name != 'is_default_locale' AND column_name != fkColumn
 	);
-        
+
   EXECUTE 'DROP VIEW IF EXISTS app_public.' || tableName || '_view CASCADE;';
   EXECUTE 'CREATE VIEW app_public.' || tableName || '_view AS ' ||
-          'SELECT p.*, ' || localizableFieldsSelect || ' FROM app_public.' || tableName || ' as p ' ||
+          'SELECT p.*, ' || localizableFieldsSelect || ', '||
+          ' CASE
+           	WHEN pl.locale IS NULL THEN TRUE
+           	ELSE FALSE
+          END is_using_default_locale' ||
+          ' FROM app_public.' || tableName || ' as p ' ||
           'LEFT JOIN app_public.' || localizationsTableName || ' AS pl ON pl.' || fkColumn || ' = p.id AND pl.locale = (SELECT pg_catalog.current_setting(''mosaic.locale'', true)) ' ||
 		  'LEFT JOIN app_public.' || localizationsTableName || ' AS dl ON dl.' || fkColumn || ' = p.id AND dl.locale = '||' ''default'''||''; -- in case a locale is not found, default locale is used
 
@@ -2326,7 +2331,11 @@ CREATE VIEW app_public.collection_view AS
     p.original_title,
     COALESCE(pl.title, dl.title) AS title,
     COALESCE(pl.description, dl.description) AS description,
-    COALESCE(pl.synopsis, dl.synopsis) AS synopsis
+    COALESCE(pl.synopsis, dl.synopsis) AS synopsis,
+        CASE
+            WHEN (pl.locale IS NULL) THEN true
+            ELSE false
+        END AS is_using_default_locale
    FROM ((app_public.collection p
      LEFT JOIN app_public.collection_localizations pl ON (((pl.collection_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
      LEFT JOIN app_public.collection_localizations dl ON (((dl.collection_id = p.id) AND (dl.locale = 'default'::text))));
@@ -2761,7 +2770,11 @@ CREATE VIEW app_public.episode_view AS
     p.intro_end_time,
     COALESCE(pl.title, dl.title) AS title,
     COALESCE(pl.description, dl.description) AS description,
-    COALESCE(pl.synopsis, dl.synopsis) AS synopsis
+    COALESCE(pl.synopsis, dl.synopsis) AS synopsis,
+        CASE
+            WHEN (pl.locale IS NULL) THEN true
+            ELSE false
+        END AS is_using_default_locale
    FROM ((app_public.episode p
      LEFT JOIN app_public.episode_localizations pl ON (((pl.episode_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
      LEFT JOIN app_public.episode_localizations dl ON (((dl.episode_id = p.id) AND (dl.locale = 'default'::text))));
@@ -2881,7 +2894,11 @@ ALTER TABLE app_public.movie_genre_localizations ALTER COLUMN id ADD GENERATED B
 CREATE VIEW app_public.movie_genre_view AS
  SELECT p.id,
     p.order_no,
-    COALESCE(pl.title, dl.title) AS title
+    COALESCE(pl.title, dl.title) AS title,
+        CASE
+            WHEN (pl.locale IS NULL) THEN true
+            ELSE false
+        END AS is_using_default_locale
    FROM ((app_public.movie_genre p
      LEFT JOIN app_public.movie_genre_localizations pl ON (((pl.movie_genre_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
      LEFT JOIN app_public.movie_genre_localizations dl ON (((dl.movie_genre_id = p.id) AND (dl.locale = 'default'::text))));
@@ -3277,7 +3294,11 @@ CREATE VIEW app_public.movie_view AS
     p.asset_subtype,
     COALESCE(pl.title, dl.title) AS title,
     COALESCE(pl.description, dl.description) AS description,
-    COALESCE(pl.synopsis, dl.synopsis) AS synopsis
+    COALESCE(pl.synopsis, dl.synopsis) AS synopsis,
+        CASE
+            WHEN (pl.locale IS NULL) THEN true
+            ELSE false
+        END AS is_using_default_locale
    FROM ((app_public.movie p
      LEFT JOIN app_public.movie_localizations pl ON (((pl.movie_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
      LEFT JOIN app_public.movie_localizations dl ON (((dl.movie_id = p.id) AND (dl.locale = 'default'::text))));
@@ -3622,7 +3643,11 @@ CREATE VIEW app_public.season_view AS
     p.original_title,
     COALESCE(pl.description, dl.description) AS description,
     COALESCE(pl.synopsis, dl.synopsis) AS synopsis,
-    COALESCE(pl.title, dl.title) AS title
+    COALESCE(pl.title, dl.title) AS title,
+        CASE
+            WHEN (pl.locale IS NULL) THEN true
+            ELSE false
+        END AS is_using_default_locale
    FROM ((app_public.season p
      LEFT JOIN app_public.season_localizations pl ON (((pl.season_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
      LEFT JOIN app_public.season_localizations dl ON (((dl.season_id = p.id) AND (dl.locale = 'default'::text))));
@@ -3730,7 +3755,11 @@ ALTER TABLE app_public.tvshow_genre_localizations ALTER COLUMN id ADD GENERATED 
 CREATE VIEW app_public.tvshow_genre_view AS
  SELECT p.id,
     p.order_no,
-    COALESCE(pl.title, dl.title) AS title
+    COALESCE(pl.title, dl.title) AS title,
+        CASE
+            WHEN (pl.locale IS NULL) THEN true
+            ELSE false
+        END AS is_using_default_locale
    FROM ((app_public.tvshow_genre p
      LEFT JOIN app_public.tvshow_genre_localizations pl ON (((pl.tvshow_genre_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
      LEFT JOIN app_public.tvshow_genre_localizations dl ON (((dl.tvshow_genre_id = p.id) AND (dl.locale = 'default'::text))));
@@ -4044,7 +4073,11 @@ CREATE VIEW app_public.tvshow_view AS
     p.asset_subtype,
     COALESCE(pl.title, dl.title) AS title,
     COALESCE(pl.description, dl.description) AS description,
-    COALESCE(pl.synopsis, dl.synopsis) AS synopsis
+    COALESCE(pl.synopsis, dl.synopsis) AS synopsis,
+        CASE
+            WHEN (pl.locale IS NULL) THEN true
+            ELSE false
+        END AS is_using_default_locale
    FROM ((app_public.tvshow p
      LEFT JOIN app_public.tvshow_localizations pl ON (((pl.tvshow_id = p.id) AND (pl.locale = ( SELECT current_setting('mosaic.locale'::text, true) AS current_setting)))))
      LEFT JOIN app_public.tvshow_localizations dl ON (((dl.tvshow_id = p.id) AND (dl.locale = 'default'::text))));
