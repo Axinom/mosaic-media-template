@@ -95,6 +95,7 @@ export abstract class VideoSucceededHandler<
           video_id: payload.video_id,
           skip_validation: true,
           cue_points: [],
+          remove_missing: true,
         };
 
         for (const cuePoint of cuePoints.cue_points) {
