@@ -198,6 +198,21 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     queryable,
   );
 
+  const extendedField = {
+    custom: {},
+  };
+  const metadataValidation: SnapshotValidationResult[] = [];
+  try {
+    extendedField.custom =
+      movie.extended_field !== null ? JSON.parse(movie.extended_field) : {};
+  } catch (error) {
+    metadataValidation.push({
+      context: 'METADATA',
+      severity: 'ERROR',
+      message: 'Invalid JSON format in extended_field.',
+    });
+  }
+
   const snapshotJson: MoviePublishedEvent = {
     content_id: movie.publishing_id,
     original_title: movie.original_title ?? undefined,
@@ -228,7 +243,7 @@ const movieDataAggregator: SnapshotDataAggregator = async (
           )
         : undefined,
     length_in_seconds: mainVideo?.length_in_seconds,
-    extended_field: movie.extended_field ?? undefined,
+    extended_field: JSON.stringify(extendedField),
     rating: movie.rating ?? undefined,
     age_rating: movie.age_rating ?? undefined,
     asset_type: 0,
@@ -247,6 +262,7 @@ const movieDataAggregator: SnapshotDataAggregator = async (
   return {
     result: snapshotJson,
     validation: [
+      ...metadataValidation,
       ...movieImageValidations,
       ...videosValidation,
       ...localizationsValidation,

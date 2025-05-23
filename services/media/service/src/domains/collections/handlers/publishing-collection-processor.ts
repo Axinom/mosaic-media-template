@@ -153,11 +153,29 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
     });
   }
 
+  const extendedField = {
+    custom: {},
+  };
+  const metadataValidation: SnapshotValidationResult[] = [];
+  try {
+    extendedField.custom =
+      collection.extended_field !== null
+        ? JSON.parse(collection.extended_field)
+        : {};
+  } catch (error) {
+    metadataValidation.push({
+      context: 'METADATA',
+      severity: 'ERROR',
+      message: 'Invalid JSON format in extended_field.',
+    });
+  }
+
   const snapshotJson: CollectionPublishedEvent = {
     content_id: collection.publishing_id,
     tags: collection.tags.map((c) => c.name),
     images: collectionImages,
     related_items: relatedItems,
+    extended_field: JSON.stringify(extendedField),
     localizations: localizations ?? [
       {
         is_default_locale: true,
@@ -171,7 +189,11 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
 
   return {
     result: snapshotJson,
-    validation: [...collectionImageValidations, ...localizationsValidation],
+    validation: [
+      ...metadataValidation,
+      ...collectionImageValidations,
+      ...localizationsValidation,
+    ],
   };
 };
 

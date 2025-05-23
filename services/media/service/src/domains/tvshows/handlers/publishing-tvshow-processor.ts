@@ -196,6 +196,21 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
     queryable,
   );
 
+  const extendedField = {
+    custom: {},
+  };
+  const metadataValidation: SnapshotValidationResult[] = [];
+  try {
+    extendedField.custom =
+      tvshow.extended_field !== null ? JSON.parse(tvshow.extended_field) : {};
+  } catch (error) {
+    metadataValidation.push({
+      context: 'METADATA',
+      severity: 'ERROR',
+      message: 'Invalid JSON format in extended_field.',
+    });
+  }
+
   const snapshotJson: TvshowPublishedEvent = {
     content_id: tvshow.publishing_id,
     original_title: tvshow.original_title ?? undefined,
@@ -212,7 +227,7 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
     videos,
     directors: tvshow.directors.map((d) => d.name),
     business_type: tvshow.business_type ?? undefined,
-    extended_field: tvshow.extended_field ?? undefined,
+    extended_field: JSON.stringify(extendedField),
     rating: tvshow.rating ?? undefined,
     age_rating: tvshow.age_rating ?? undefined,
     asset_type: 6,
@@ -231,6 +246,7 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
   return {
     result: snapshotJson,
     validation: [
+      ...metadataValidation,
       ...tvshowImageValidations,
       ...videosValidation,
       ...localizationsValidation,
