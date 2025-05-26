@@ -225,6 +225,23 @@ const episodeDataAggregator: SnapshotDataAggregator = async (
     });
   }
 
+  if (mainVideo?.cue_points && mainVideo.cue_points.length > 0) {
+    const cuePointTypeKeys = new Set<string>();
+    for (const cuePoint of mainVideo.cue_points) {
+      if (cuePoint.cue_point_type_key) {
+        if (cuePointTypeKeys.has(cuePoint.cue_point_type_key)) {
+          videosValidation.push({
+            context: 'VIDEO',
+            severity: 'ERROR',
+            message: `Duplicate cue point type key found: ${cuePoint.cue_point_type_key}.`,
+          });
+        } else {
+          cuePointTypeKeys.add(cuePoint.cue_point_type_key);
+        }
+      }
+    }
+  }
+
   const snapshotJson: EpisodePublishedEvent = {
     content_id: episode.publishing_id,
     season_id: episode.season_id
