@@ -19,7 +19,7 @@ import {
   buildBDPublishingId,
   buildPublishingId,
   EntityPublishingProcessor,
-  licensesValidation,
+  licenseValidationSchema,
   requiredEpisodeCover,
   SnapshotDataAggregator,
   SnapshotValidationResult,
@@ -333,10 +333,52 @@ const customEpisodeValidation = async (
     genre_ids: atLeastOneString,
     images: requiredEpisodeCover,
     videos: videosValidation(true),
-    licenses: licensesValidation(true), // All episodes must have a license and all licenses must be valid
   });
 
   const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const licenseValidationResults: SnapshotValidationResult[] = [];
+  let hasValidLicense = false;
+
+  if (episodeJson.licenses.length > 0) {
+    episodeJson.licenses.forEach((license, index) => {
+      try {
+        licenseValidationSchema.validateSync(license, { abortEarly: false });
+        hasValidLicense = true;
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = err.inner
+            ? err.inner.map((e) => e.message)
+            : [err.message];
+          licenseValidationResults.push({
+            context: 'LICENSING',
+            severity: 'ERROR',
+            message: `License ${index + 1}: ${errors.toString()}`,
+          });
+        } else {
+          licenseValidationResults.push({
+            context: 'LICENSING',
+            severity: 'ERROR',
+            message: `Unknown validation error for License ${index + 1}: ${
+              (err as Error).message
+            }`,
+          });
+        }
+      }
+    });
+
+    // If there is at least one valid license, we make the other errors WARNINGS and let the publishing process continue
+    if (hasValidLicense && licenseValidationResults.length > 0) {
+      licenseValidationResults.forEach((result) => {
+        result.severity = 'WARNING';
+      });
+    }
+  } else {
+    licenseValidationResults.push({
+      context: 'LICENSING',
+      severity: 'ERROR',
+      message: 'At least one license is required.',
+    });
+  }
   const customValidationResults: SnapshotValidationResult[] = [];
 
   // Check credit_start_time vs length_in_seconds
@@ -401,7 +443,11 @@ const customEpisodeValidation = async (
     }
   }
 
-  return [...yupValidationResults, ...customValidationResults];
+  return [
+    ...yupValidationResults,
+    ...licenseValidationResults,
+    ...customValidationResults,
+  ];
 };
 
 export const publishingEpisodeProcessor: EntityPublishingProcessor = {

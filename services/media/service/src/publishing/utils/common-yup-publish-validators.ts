@@ -243,50 +243,36 @@ export const videosValidation = (atLeastOneVideoRequired: boolean): any => {
 };
 
 /**
- * yup validation rule to check that all licenses to be published are valid.
- * @param atLeastOneLicenseRequired - If true - yup will produce an error for empty array. If false - yup will produce a warning for empty array.
- * @returns
+ * Validation schema to validate a license.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const licensesValidation = (atLeastOneLicenseRequired: boolean): any => {
-  return Yup.array(
-    Yup.object({
-      start_time: Yup.date(),
-      end_time: Yup.date()
-        .when('start_time', {
-          is: (start: unknown) => !!start,
-          then: (end) =>
-            end.min(Yup.ref('start_time'), (params) => {
-              const identifier = getReadablePath(params.path);
-              return `${identifier} must be greater than From time.`;
-            }),
+export const licenseValidationSchema = Yup.object({
+  start_time: Yup.date(),
+  end_time: Yup.date().when('start_time', {
+    is: (start: unknown) => !!start,
+    then: (end) =>
+      end
+        .min(Yup.ref('start_time'), (params) => {
+          const identifier = getReadablePath(params.path);
+          return `${identifier} must be greater than From time.`;
         })
         .min(new Date(), 'Until time must be greater than the current date.'),
-      countries: Yup.array(Yup.string()), // Values validation is done using DB FK Constraints
-      is_downloadable: Yup.bool(),
-      downloaded_asset_lifespan: Yup.number().when('is_downloadable', {
-        is: true,
-        then: (downloaded_asset_lifespan) =>
-          downloaded_asset_lifespan.min(
-            1,
-            'Downloaded Asset Lifespan must be greater than or equal to 0 when the asset is downloadable.',
-          ),
-      }),
-    }).test({
-      name: 'license_props',
-      message: (params) => {
-        const identifier = getReadablePath(params.path);
-        return `${identifier} must have Until time and at least one Country defined.`;
-      },
-      test: (value) => {
-        const basicLicenseValidity =
-          !!value.end_time && !!value.countries && value.countries.length > 0;
-
-        return basicLicenseValidity;
-      },
-    }),
-  ).min(1, atLeastOneLicenseRequired ? oneItemError : oneItemWarning);
-};
+    otherwise: (end) =>
+      end.min(new Date(), 'Until time must be greater than the current date.'),
+  }),
+  countries: Yup.array(Yup.string().min(1, 'Country cannot be empty.')).min(
+    1,
+    'At least one country must be present.',
+  ),
+  is_downloadable: Yup.bool(),
+  downloaded_asset_lifespan: Yup.number().when('is_downloadable', {
+    is: true,
+    then: (downloaded_asset_lifespan) =>
+      downloaded_asset_lifespan.min(
+        1,
+        'Downloaded Asset Lifespan must be greater than or equal to 0 when the asset is downloadable.',
+      ),
+  }),
+});
 
 /**
  * Validates passed json object against passed yup validation schema, producing a validation results object with errors and warnings arrays.
