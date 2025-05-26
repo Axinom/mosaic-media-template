@@ -12,7 +12,7 @@ import {
   atLeastOneString,
   buildPublishingId,
   EntityPublishingProcessor,
-  licensesValidation,
+  licenseValidationSchema,
   requiredMovieCover,
   SnapshotDataAggregator,
   SnapshotValidationResult,
@@ -296,10 +296,53 @@ const customMovieValidation = async (
     genre_ids: atLeastOneString,
     images: requiredMovieCover,
     videos: videosValidation(true),
-    licenses: licensesValidation(true), // We always enforce the requirement for at least 1 license
   });
 
   const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  const licenseValidationResults: SnapshotValidationResult[] = [];
+  let hasValidLicense = false;
+
+  if (movieJson.licenses.length > 0) {
+    movieJson.licenses.forEach((license, index) => {
+      try {
+        licenseValidationSchema.validateSync(license, { abortEarly: false });
+        hasValidLicense = true;
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = err.inner
+            ? err.inner.map((e) => e.message)
+            : [err.message];
+          licenseValidationResults.push({
+            context: 'LICENSING',
+            severity: 'ERROR',
+            message: `License ${index + 1}: ${errors.toString()}`,
+          });
+        } else {
+          licenseValidationResults.push({
+            context: 'LICENSING',
+            severity: 'ERROR',
+            message: `Unknown validation error for License ${index + 1}: ${
+              (err as Error).message
+            }`,
+          });
+        }
+      }
+    });
+
+    // If there is at least one valid license, we make the other errors WARNINGS and let the publishing process continue
+    if (hasValidLicense && licenseValidationResults.length > 0) {
+      licenseValidationResults.forEach((result) => {
+        result.severity = 'WARNING';
+      });
+    }
+  } else {
+    licenseValidationResults.push({
+      context: 'LICENSING',
+      severity: 'ERROR',
+      message: 'At least one license is required.',
+    });
+  }
+
   const customValidationResults: SnapshotValidationResult[] = [];
 
   // Check credit_start_time vs length_in_seconds
@@ -343,7 +386,11 @@ const customMovieValidation = async (
     }
   }
 
-  return [...yupValidationResults, ...customValidationResults];
+  return [
+    ...yupValidationResults,
+    ...licenseValidationResults,
+    ...customValidationResults,
+  ];
 };
 
 export const publishingMovieProcessor: EntityPublishingProcessor = {
