@@ -1,12 +1,12 @@
-import {
-  CuePointTypesDeclaredEvent,
-  VideoServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
 import { Logger } from '@axinom/mosaic-service-common';
 import {
   TransactionalInboxMessageHandler,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
+import {
+  CuePointTypesDeclaredEvent,
+  VideoServiceMultiTenantMessagingSettings,
+} from '@axinom/mosaic-video-messages';
 import { Config } from '../../../common';
 
 export class CuePointTypesDeclaredHandler extends TransactionalInboxMessageHandler<

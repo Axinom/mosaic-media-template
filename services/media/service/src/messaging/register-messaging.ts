@@ -12,7 +12,6 @@ import { getMessagingMiddleware } from './middleware';
 import {
   ImageServiceMultiTenantMessagingSettings,
   LocalizationServiceMultiTenantMessagingSettings,
-  VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import { ShutdownActionsMiddleware } from '@axinom/mosaic-service-common';
 import {
@@ -25,6 +24,7 @@ import {
   StoreOutboxMessage,
   TransactionalLogMapper,
 } from '@axinom/mosaic-transactional-inbox-outbox';
+import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-video-messages';
 import { MediaServiceMessagingSettings } from 'media-messages';
 import {
   getInboxPollingListenerSettings,

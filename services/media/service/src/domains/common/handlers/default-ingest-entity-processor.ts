@@ -1,9 +1,7 @@
 import { UNKNOWN_AGGREGATE_ID } from '@axinom/mosaic-message-bus';
 import {
   EnsureImageExistsCommand,
-  EnsureVideoExistsCommand,
   ImageServiceMultiTenantMessagingSettings,
-  VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import {
   difference,
@@ -11,6 +9,10 @@ import {
   MosaicError,
   normalizeRelativePath,
 } from '@axinom/mosaic-service-common';
+import {
+  EnsureVideoExistsCommand,
+  VideoServiceMultiTenantMessagingSettings,
+} from '@axinom/mosaic-video-messages';
 import {
   ImageMessageContext,
   ImagesIngestElement,

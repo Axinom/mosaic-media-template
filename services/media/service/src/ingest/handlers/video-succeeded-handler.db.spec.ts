@@ -1,7 +1,7 @@
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
-import { EnsureVideoExistsCreationStartedEvent } from '@axinom/mosaic-messages';
 import { MosaicError } from '@axinom/mosaic-service-common';
 import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+import { EnsureVideoExistsCreationStartedEvent } from '@axinom/mosaic-video-messages';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { v4 as uuid } from 'uuid';

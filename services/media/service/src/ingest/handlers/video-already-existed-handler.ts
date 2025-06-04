@@ -1,7 +1,7 @@
 import {
   EnsureVideoExistsAlreadyExistedEvent,
   VideoServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
+} from '@axinom/mosaic-video-messages';
 import { Config } from '../../common';
 import { IngestEntityProcessor } from '../models';
 import { VideoSucceededHandler } from './video-succeeded-handler';

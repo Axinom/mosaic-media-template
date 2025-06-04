@@ -1,10 +1,10 @@
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
+import { Logger, MosaicError } from '@axinom/mosaic-service-common';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   EnsureVideoExistsAlreadyExistedEvent,
   EnsureVideoExistsCreationStartedEvent,
-} from '@axinom/mosaic-messages';
-import { Logger, MosaicError } from '@axinom/mosaic-service-common';
-import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+} from '@axinom/mosaic-video-messages';
 import { VideoMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { selectExactlyOne, update } from 'zapatos/db';

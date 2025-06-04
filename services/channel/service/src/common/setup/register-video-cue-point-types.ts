@@ -1,8 +1,8 @@
+import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   DeclareCuePointTypesCommand,
   VideoServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
-import { StoreOutboxMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+} from '@axinom/mosaic-video-messages';
 import { ClientBase } from 'pg';
 import { Config } from '../config/config-definitions';
 import { requestServiceAccountToken } from '../utils';

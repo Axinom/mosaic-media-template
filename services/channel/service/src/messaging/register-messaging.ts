@@ -12,7 +12,6 @@ import {
 import {
   ImageServiceMultiTenantMessagingSettings,
   LocalizationServiceMultiTenantMessagingSettings,
-  VideoServiceMultiTenantMessagingSettings,
 } from '@axinom/mosaic-messages';
 import {
   Logger,
@@ -29,6 +28,7 @@ import {
   StoreOutboxMessage,
   TransactionalLogMapper,
 } from '@axinom/mosaic-transactional-inbox-outbox';
+import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-video-messages';
 import { Express } from 'express';
 import {
   ChannelServiceMessagingSettings,

@@ -1,8 +1,6 @@
 import { UNKNOWN_AGGREGATE_ID } from '@axinom/mosaic-message-bus';
-import {
-  ImageServiceMultiTenantMessagingSettings,
-  VideoServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
+import { ImageServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
+import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-video-messages';
 import 'jest-extended';
 import {
   MediaServiceMessagingSettings,
