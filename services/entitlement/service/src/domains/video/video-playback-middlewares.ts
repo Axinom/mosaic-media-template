@@ -1,10 +1,4 @@
 import {
-  EntitlementWebhookResponsePayload,
-  ManifestWebhookResponsePayload,
-  PlaybackVideoWebhookRequestPayload,
-  PlaybackVideoWebhookRequestPayloadSchema,
-} from '@axinom/mosaic-messages';
-import {
   Dict,
   generateWebhookResponse,
   handleWebhookErrorMiddleware,
@@ -15,6 +9,12 @@ import {
   WebhookErrors,
   WebhookRequestMessage,
 } from '@axinom/mosaic-service-common';
+import {
+  EntitlementWebhookResponsePayload,
+  ManifestWebhookResponsePayload,
+  PlaybackVideoWebhookRequestPayload,
+  PlaybackVideoWebhookRequestPayloadSchema,
+} from '@axinom/mosaic-video-messages';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { Express, json, NextFunction, Request, Response } from 'express';

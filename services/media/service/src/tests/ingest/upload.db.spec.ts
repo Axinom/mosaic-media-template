@@ -1,9 +1,7 @@
 import { DEFAULT_SYSTEM_USERNAME } from '@axinom/mosaic-db-common';
-import {
-  ImageServiceMultiTenantMessagingSettings,
-  VideoServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
+import { ImageServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import { assertNotFalsy } from '@axinom/mosaic-service-common';
+import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-video-messages';
 import { createReadStream, readFileSync } from 'fs';
 import Upload from 'graphql-upload/Upload.js';
 import { stub } from 'jest-auto-stub';

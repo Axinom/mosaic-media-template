@@ -1,9 +1,9 @@
+import { Logger } from '@axinom/mosaic-service-common';
+import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
 import {
   EnsureVideoExistsFailedEvent,
   VideoServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
-import { Logger } from '@axinom/mosaic-service-common';
-import { TypedTransactionalMessage } from '@axinom/mosaic-transactional-inbox-outbox';
+} from '@axinom/mosaic-video-messages';
 import { ImageMessageContext, VideoMessageContext } from 'media-messages';
 import { ClientBase } from 'pg';
 import { update } from 'zapatos/db';

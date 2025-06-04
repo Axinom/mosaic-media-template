@@ -1,7 +1,6 @@
 import { DEFAULT_SYSTEM_USERNAME } from '@axinom/mosaic-db-common';
 import { AuthenticatedManagementSubject } from '@axinom/mosaic-id-guard';
 import { MessagingSettings } from '@axinom/mosaic-message-bus-abstractions';
-import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-messages';
 import {
   createOffsetDate,
   dateToBeInRange,
@@ -12,6 +11,7 @@ import {
   StoreOutboxMessage,
   TypedTransactionalMessage,
 } from '@axinom/mosaic-transactional-inbox-outbox';
+import { VideoServiceMultiTenantMessagingSettings } from '@axinom/mosaic-video-messages';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import {
