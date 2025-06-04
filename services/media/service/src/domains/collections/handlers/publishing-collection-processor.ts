@@ -14,7 +14,6 @@ import {
   buildBDPublishingId,
   EntityPublishingProcessor,
   getReadablePath,
-  requiredCollectionCover,
   SnapshotDataAggregator,
   SnapshotValidationResult,
   validateYupPublishSchema,
@@ -251,7 +250,6 @@ const customCollectionValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
   const yupSchema = Yup.object({
-    images: requiredCollectionCover,
     related_items: Yup.array(
       Yup.object().test({
         name: 'one_relation_id',
@@ -285,17 +283,6 @@ const customCollectionValidation = async (
           context: 'LOCALIZATION',
           severity: 'ERROR',
           message: 'Title is required.',
-        });
-      }
-
-      if (
-        !defaultLocale.description ||
-        defaultLocale.description.trim() === ''
-      ) {
-        customValidationResults.push({
-          context: 'LOCALIZATION',
-          severity: 'ERROR',
-          message: 'Description is required.',
         });
       }
     }
