@@ -7,7 +7,13 @@ import {
   RelationType,
 } from 'media-messages';
 import * as Yup from 'yup';
-import { parent, Queryable, select, selectExactlyOne } from 'zapatos/db';
+import {
+  conditions as c,
+  parent,
+  Queryable,
+  select,
+  selectExactlyOne,
+} from 'zapatos/db';
 import { collection_relations } from 'zapatos/schema';
 import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
@@ -78,6 +84,9 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
         }),
         tags: select('collections_tags', { collection_id: parent('id') }),
         relations: select('collection_relations', {
+          collection_id: parent('id'),
+        }),
+        countries: select('collection_countries', {
           collection_id: parent('id'),
         }),
       },
@@ -169,12 +178,30 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
     });
   }
 
+  const countries = collection.countries
+    .map((c) => c.country_id)
+    .filter((c) => c !== null && c !== undefined);
+
+  const countryGroups = collection.countries
+    .map((c) => c.country_group_id)
+    .filter((c) => c !== null && c !== undefined);
+
+  const countryGroupCountries = await select('country_groups_countries', {
+    group_id: c.isIn(countryGroups as string[]), // Typescript compiler somehow fails to understand the above filter and infers the type as (string | null)[]. Hence the explicit cast.
+  }).run(queryable);
+
+  const countriesFromGroups = countryGroupCountries.map((c) => c.country_id);
+  const allCountries = Array.from(
+    new Set([...countries, ...countriesFromGroups]),
+  );
+
   const snapshotJson: CollectionPublishedEvent = {
     content_id: collection.publishing_id,
     tags: collection.tags.map((c) => c.name),
     images: collectionImages,
     related_items: relatedItems,
     extended_field: JSON.stringify(extendedField),
+    countries: allCountries as string[], // Typescript compiler somehow fails to understand the above filter and infers the type as (string | null)[]. Hence the explicit cast.
     localizations: localizations ?? [
       {
         is_default_locale: true,
