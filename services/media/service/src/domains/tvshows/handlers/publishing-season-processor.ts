@@ -18,7 +18,6 @@ import {
   buildBDPublishingId,
   buildPublishingId,
   EntityPublishingProcessor,
-  requiredSeasonCover,
   SnapshotDataAggregator,
   SnapshotValidationResult,
   validateYupPublishSchema,
@@ -272,7 +271,6 @@ const customSeasonValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
   const yupSchema = Yup.object({
-    images: requiredSeasonCover,
     videos: videosValidation(false),
     // licenses: licensesValidation(false), For BeyondDutch, licenses for Season level is not maintained and we do not validate them.
   });
@@ -292,17 +290,6 @@ const customSeasonValidation = async (
           context: 'LOCALIZATION',
           severity: 'ERROR',
           message: 'Title is required.',
-        });
-      }
-
-      if (
-        !defaultLocale.description ||
-        defaultLocale.description.trim() === ''
-      ) {
-        customValidationResults.push({
-          context: 'LOCALIZATION',
-          severity: 'ERROR',
-          message: 'Description is required.',
         });
       }
     }
