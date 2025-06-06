@@ -295,7 +295,7 @@ const customMovieValidation = async (
   const yupSchema = Yup.object({
     genre_ids: atLeastOneString,
     images: requiredMovieCover,
-    videos: videosValidation(true),
+    videos: videosValidation(),
   });
 
   const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
@@ -344,6 +344,14 @@ const customMovieValidation = async (
   }
 
   const customValidationResults: SnapshotValidationResult[] = [];
+
+  if (!movieJson.videos || movieJson.videos.length === 0) {
+    customValidationResults.push({
+      context: 'VIDEO',
+      severity: 'ERROR',
+      message: 'At least one video is required.',
+    });
+  }
 
   // Check credit_start_time vs length_in_seconds
   if (movieJson.credits_start_time && movieJson.length_in_seconds) {

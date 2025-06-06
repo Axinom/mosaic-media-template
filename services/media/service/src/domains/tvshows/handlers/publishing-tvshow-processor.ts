@@ -260,7 +260,7 @@ const customTvshowValidation = async (
   const yupSchema = Yup.object({
     genre_ids: atLeastOneString,
     images: requiredTvShowCover,
-    videos: videosValidation(false),
+    videos: videosValidation(),
     //licenses: licensesValidation(false), For BeyondDutch, licenses for TV Show level is not maintained and we do not validate them.
   });
 
