@@ -199,7 +199,7 @@ export const requiredCollectionCover = Yup.array(
  * @param supportedTypes - spread array of string types. If `MAIN` is included - videos array musth have a video with `MAIN` type assigned.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const videosValidation = (atLeastOneVideoRequired: boolean): any => {
+export const videosValidation = (): any => {
   const commonVideosValidation = Yup.array(
     Yup.object({
       length_in_seconds: Yup.number()
@@ -223,23 +223,7 @@ export const videosValidation = (atLeastOneVideoRequired: boolean): any => {
     }),
   );
 
-  return commonVideosValidation.test({
-    name: 'validate_main_video',
-    message: 'At least one video must be assigned.',
-    test: (videos) => {
-      if (!atLeastOneVideoRequired) {
-        return true;
-      }
-      if (!videos || videos.length === 0) {
-        return false;
-      }
-      const hasMainVideo = videos.some((video) => video.type === 'MAIN');
-      if (!hasMainVideo) {
-        return true;
-      }
-      return commonVideosValidation.isValidSync(videos);
-    },
-  });
+  commonVideosValidation;
 };
 
 /**

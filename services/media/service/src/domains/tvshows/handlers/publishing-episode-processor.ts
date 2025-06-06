@@ -332,7 +332,7 @@ const customEpisodeValidation = async (
   const yupSchema = Yup.object({
     genre_ids: atLeastOneString,
     images: requiredEpisodeCover,
-    videos: videosValidation(true),
+    videos: videosValidation(),
   });
 
   const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
@@ -379,8 +379,16 @@ const customEpisodeValidation = async (
       message: 'At least one license is required.',
     });
   }
+
   const customValidationResults: SnapshotValidationResult[] = [];
 
+  if (!episodeJson.videos || episodeJson.videos.length === 0) {
+    customValidationResults.push({
+      context: 'VIDEO',
+      severity: 'ERROR',
+      message: 'At least one video is required.',
+    });
+  }
   // Check credit_start_time vs length_in_seconds
   if (episodeJson.credits_start_time && episodeJson.length_in_seconds) {
     const creditsStartTime = parseFloat(episodeJson.credits_start_time);

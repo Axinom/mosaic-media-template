@@ -271,7 +271,7 @@ const customSeasonValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
   const yupSchema = Yup.object({
-    videos: videosValidation(false),
+    videos: videosValidation(),
     // licenses: licensesValidation(false), For BeyondDutch, licenses for Season level is not maintained and we do not validate them.
   });
   const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
