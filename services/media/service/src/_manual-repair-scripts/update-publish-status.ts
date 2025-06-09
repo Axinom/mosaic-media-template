@@ -10,6 +10,7 @@ const logger = new Logger({
 });
 
 type PublishStatus = 'PUBLISHED' | 'CHANGED';
+type AssetType = 'MOVIE' | 'TVSHOW' | 'SEASON' | 'EPISODE' | 'COLLECTION';
 
 /**
  * This is a script to update the publish status of movies, tv shows, seasons, episodes and collections.
@@ -20,16 +21,20 @@ type PublishStatus = 'PUBLISHED' | 'CHANGED';
  * 4. publishing_id to the value of external_id
  *
  * Local script call:
- * yarn util:load-vars node dist/_manual-repair-scripts/update-publish-status.js --status=PUBLISHED
- * yarn util:load-vars node dist/_manual-repair-scripts/update-publish-status.js --status=CHANGED
+ * yarn util:load-vars node dist/_manual-repair-scripts/update-publish-status.js --status=PUBLISHED --asset-type=MOVIE
+ * yarn util:load-vars node dist/_manual-repair-scripts/update-publish-status.js --status=CHANGED --asset-type=TVSHOW
+ * yarn util:load-vars node dist/_manual-repair-scripts/update-publish-status.js --asset-type=EPISODE
  *
- * If no status argument is provided, defaults to 'PUBLISHED'
+ * Arguments:
+ * --status: 'PUBLISHED' or 'CHANGED' (defaults to 'PUBLISHED')
+ * --asset-type: 'MOVIE', 'TVSHOW', 'SEASON', 'EPISODE', or 'COLLECTION' (if not provided, updates all asset types)
  */
 
 // Parse command line arguments
-function parseArgs(): { status: PublishStatus } {
+function parseArgs(): { status: PublishStatus; assetType?: AssetType } {
   const args = process.argv.slice(2);
   let status: PublishStatus = 'PUBLISHED'; // Default value
+  let assetType: AssetType | undefined = undefined; // Default to update all types
 
   for (const arg of args) {
     if (arg.startsWith('--status=')) {
@@ -41,10 +46,23 @@ function parseArgs(): { status: PublishStatus } {
           `Invalid status: ${providedStatus}. Using default: PUBLISHED`,
         );
       }
+    } else if (arg.startsWith('--asset-type=')) {
+      const providedAssetType = arg.split('=')[1].toUpperCase();
+      if (
+        ['MOVIE', 'TVSHOW', 'SEASON', 'EPISODE', 'COLLECTION'].includes(
+          providedAssetType,
+        )
+      ) {
+        assetType = providedAssetType as AssetType;
+      } else {
+        logger.warn(
+          `Invalid asset type: ${providedAssetType}. Valid options are: MOVIE, TVSHOW, SEASON, EPISODE, COLLECTION`,
+        );
+      }
     }
   }
 
-  return { status };
+  return { status, assetType };
 }
 async function main(): Promise<void> {
   logger.log('Starting the publish status update script...');
@@ -52,8 +70,14 @@ async function main(): Promise<void> {
   const shutdownActions: ShutdownAction[] = [];
 
   // Parse command-line arguments
-  const { status } = parseArgs();
+  const { status, assetType } = parseArgs();
   logger.log(`Using publish status: ${status}`);
+
+  if (assetType) {
+    logger.log(`Updating only asset type: ${assetType}`);
+  } else {
+    logger.log('Updating all asset types');
+  }
 
   logger.log('Creating DB connection...');
   const ownerPool = createOwnerPgPool(
@@ -62,15 +86,39 @@ async function main(): Promise<void> {
     shutdownActions,
   );
 
-  await updateMoviePublishStatus(ownerPool, status);
-  console.log('\n');
-  await updateTvShowPublishStatus(ownerPool, status);
-  console.log('\n');
-  await updateSeasonPublishStatus(ownerPool, status);
-  console.log('\n');
-  await updateEpisodePublishStatus(ownerPool, status);
-  console.log('\n');
-  await updateCollectionPublishStatus(ownerPool, status);
+  // Run updates based on asset type filter
+  if (!assetType) {
+    // Update all asset types
+    await updateMoviePublishStatus(ownerPool, status);
+    await updateTvShowPublishStatus(ownerPool, status);
+    await updateSeasonPublishStatus(ownerPool, status);
+    await updateEpisodePublishStatus(ownerPool, status);
+    await updateCollectionPublishStatus(ownerPool, status);
+  } else {
+    // Update specific asset type
+    switch (assetType) {
+      case 'MOVIE':
+        await updateMoviePublishStatus(ownerPool, status);
+        console.log('\n');
+        break;
+      case 'TVSHOW':
+        await updateTvShowPublishStatus(ownerPool, status);
+        console.log('\n');
+        break;
+      case 'SEASON':
+        await updateSeasonPublishStatus(ownerPool, status);
+        console.log('\n');
+        break;
+      case 'EPISODE':
+        await updateEpisodePublishStatus(ownerPool, status);
+        console.log('\n');
+        break;
+      case 'COLLECTION':
+        await updateCollectionPublishStatus(ownerPool, status);
+        console.log('\n');
+        break;
+    }
+  }
   console.log('\n');
 
   for await (const shutdown of shutdownActions) {
