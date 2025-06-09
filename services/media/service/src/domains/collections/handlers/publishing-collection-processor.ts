@@ -6,7 +6,6 @@ import {
   RelatedItem,
   RelationType,
 } from 'media-messages';
-import * as Yup from 'yup';
 import {
   conditions as c,
   parent,
@@ -19,10 +18,8 @@ import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
   buildBDPublishingId,
   EntityPublishingProcessor,
-  getReadablePath,
   SnapshotDataAggregator,
   SnapshotValidationResult,
-  validateYupPublishSchema,
 } from '../../../publishing';
 import { getImagesMetadata } from '../../common';
 import {
@@ -276,7 +273,8 @@ const getRelationPublishingId = async (
 const customCollectionValidation = async (
   json: unknown,
 ): Promise<SnapshotValidationResult[]> => {
-  const yupSchema = Yup.object({
+  // BeyondDutch needs support for empty collections.
+  /*const yupSchema = Yup.object({
     related_items: Yup.array(
       Yup.object().test({
         name: 'one_relation_id',
@@ -292,9 +290,9 @@ const customCollectionValidation = async (
           !!value.collection_id,
       }),
     ).min(1, `At least one related item must be assigned.`),
-  });
+    });*/
 
-  const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
+  //const yupValidationResults = await validateYupPublishSchema(json, yupSchema);
   const customValidationResults: SnapshotValidationResult[] = [];
   const collectionJson = json as CollectionPublishedEvent;
 
@@ -314,7 +312,7 @@ const customCollectionValidation = async (
       }
     }
   }
-  return [...yupValidationResults, ...customValidationResults];
+  return [/*...yupValidationResults,*/ ...customValidationResults];
 };
 
 export const publishingCollectionProcessor: EntityPublishingProcessor = {
