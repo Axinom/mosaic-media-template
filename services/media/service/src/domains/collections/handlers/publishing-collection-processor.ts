@@ -1,4 +1,4 @@
-import { MosaicError } from '@axinom/mosaic-service-common';
+import { isNullOrWhitespace, MosaicError } from '@axinom/mosaic-service-common';
 import {
   CollectionPublishedEvent,
   CollectionPublishedEventSchema,
@@ -158,21 +158,20 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
     });
   }
 
-  const extendedField = {
-    custom: {},
-  };
+  let extendedField = null;
   const metadataValidation: SnapshotValidationResult[] = [];
-  try {
-    extendedField.custom =
-      collection.extended_field !== null
-        ? JSON.parse(collection.extended_field)
-        : {};
-  } catch (error) {
-    metadataValidation.push({
-      context: 'METADATA',
-      severity: 'ERROR',
-      message: 'Invalid JSON format in extended_field.',
-    });
+  if (!isNullOrWhitespace(collection.extended_field)) {
+    try {
+      extendedField = {
+        custom: JSON.parse(collection.extended_field),
+      };
+    } catch (error) {
+      metadataValidation.push({
+        context: 'METADATA',
+        severity: 'ERROR',
+        message: 'Invalid JSON format in extended_field.',
+      });
+    }
   }
 
   const countries = collection.countries
@@ -197,7 +196,7 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
     tags: collection.tags.map((c) => c.name),
     images: collectionImages,
     related_items: relatedItems,
-    extended_field: JSON.stringify(extendedField),
+    extended_field: extendedField ? JSON.stringify(extendedField) : undefined,
     countries: allCountries as string[], // Typescript compiler somehow fails to understand the above filter and infers the type as (string | null)[]. Hence the explicit cast.
     localizations: localizations ?? [
       {
@@ -205,7 +204,9 @@ const collectionDataAggregator: SnapshotDataAggregator = async (
         language_tag: DEFAULT_LOCALE_TAG,
         title: collection.title ?? undefined,
         synopsis: collection.synopsis ?? undefined,
-        description: collection.description ?? undefined,
+        description: isNullOrWhitespace(collection.description)
+          ? null
+          : collection.description,
       },
     ],
   };

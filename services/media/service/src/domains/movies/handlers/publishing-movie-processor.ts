@@ -198,19 +198,20 @@ const movieDataAggregator: SnapshotDataAggregator = async (
     queryable,
   );
 
-  const extendedField = {
-    custom: {},
-  };
+  let extendedField = null;
   const metadataValidation: SnapshotValidationResult[] = [];
-  try {
-    extendedField.custom =
-      movie.extended_field !== null ? JSON.parse(movie.extended_field) : {};
-  } catch (error) {
-    metadataValidation.push({
-      context: 'METADATA',
-      severity: 'ERROR',
-      message: 'Invalid JSON format in extended_field.',
-    });
+  if (!isNullOrWhitespace(movie.extended_field)) {
+    try {
+      extendedField = {
+        custom: JSON.parse(movie.extended_field),
+      };
+    } catch (error) {
+      metadataValidation.push({
+        context: 'METADATA',
+        severity: 'ERROR',
+        message: 'Invalid JSON format in extended_field.',
+      });
+    }
   }
 
   if (mainVideo?.cue_points && mainVideo.cue_points.length > 0) {
@@ -260,7 +261,7 @@ const movieDataAggregator: SnapshotDataAggregator = async (
           )
         : undefined,
     length_in_seconds: mainVideo?.length_in_seconds,
-    extended_field: JSON.stringify(extendedField),
+    extended_field: extendedField ? JSON.stringify(extendedField) : undefined,
     rating: movie.rating ?? undefined,
     age_rating: movie.age_rating ?? undefined,
     asset_type: 0,
