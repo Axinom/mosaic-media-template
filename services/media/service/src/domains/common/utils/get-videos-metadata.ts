@@ -62,7 +62,11 @@ const processVideo = (
   }
 
   const tags = gqlVideo.videosTags.nodes.map((tag) => tag.name);
+  let drmKeyId: string | undefined;
   const videoStreams: VideoStream[] = gqlVideo.videoStreams.nodes.map((s) => {
+    if (s.keyId !== undefined && s.keyId !== null && drmKeyId === undefined) {
+      drmKeyId = s.keyId;
+    }
     return {
       key_id: s.keyId,
       iv: s.iv,
@@ -142,14 +146,45 @@ const processVideo = (
     });
   }
 
+  // For BeyondDutch, we're dropping the host and only taking the path, without the leading slash.
+  // What we get from Video Service: https://outputstorage.blob.core.windows.net/media/1-1-heartland-s01-e01/video/hls/manifest.m3u8
+  // What we publish: media/1-1-heartland-s01-e01/video/hls/manifest.m3u8
+  let hlsManifestPath: string | null = null;
+  let dashManifestPath: string | null = null;
+  try {
+    hlsManifestPath = !isNullOrWhitespace(gqlVideo.hlsManifestPath)
+      ? new URL(gqlVideo.hlsManifestPath).pathname.substring(1)
+      : null;
+  } catch (error) {
+    validation.push({
+      context: 'VIDEO',
+      message: `Invalid hlsManifestPath. Expecting a valid URL. Got ${gqlVideo.hlsManifestPath}.`,
+      severity: 'ERROR',
+    });
+  }
+
+  try {
+    dashManifestPath = !isNullOrWhitespace(gqlVideo.dashManifestPath)
+      ? new URL(gqlVideo.dashManifestPath).pathname.substring(1)
+      : null;
+  } catch (error) {
+    validation.push({
+      context: 'VIDEO',
+      message: `Invalid dashManifestPath. Expecting a valid URL. Got ${gqlVideo.hlsManifestPath}.`,
+      severity: 'ERROR',
+    });
+  }
+
   result.push({
     type: assignmentType,
     title: gqlVideo.title,
     is_protected: gqlVideo.isProtected,
     output_format: gqlVideo.outputFormat,
     length_in_seconds: gqlVideo.lengthInSeconds,
-    hls_manifest: gqlVideo.hlsManifestPath,
-    dash_manifest: gqlVideo.dashManifestPath,
+    drm_key_id: drmKeyId,
+    hls_manifest: hlsManifestPath,
+    dash_manifest: dashManifestPath,
+    main_url: dashManifestPath ?? undefined,
     audio_languages: gqlVideo.audioLanguages.filter(Boolean) as string[],
     subtitle_languages: gqlVideo.subtitleLanguages.filter(Boolean) as string[],
     caption_languages: gqlVideo.captionLanguages.filter(Boolean) as string[],
