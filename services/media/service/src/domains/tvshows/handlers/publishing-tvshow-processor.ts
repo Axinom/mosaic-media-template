@@ -196,19 +196,20 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
     queryable,
   );
 
-  const extendedField = {
-    custom: {},
-  };
+  let extendedField = null;
   const metadataValidation: SnapshotValidationResult[] = [];
-  try {
-    extendedField.custom =
-      tvshow.extended_field !== null ? JSON.parse(tvshow.extended_field) : {};
-  } catch (error) {
-    metadataValidation.push({
-      context: 'METADATA',
-      severity: 'ERROR',
-      message: 'Invalid JSON format in extended_field.',
-    });
+  if (!isNullOrWhitespace(tvshow.extended_field)) {
+    try {
+      extendedField = {
+        custom: JSON.parse(tvshow.extended_field),
+      };
+    } catch (error) {
+      metadataValidation.push({
+        context: 'METADATA',
+        severity: 'ERROR',
+        message: 'Invalid JSON format in extended_field.',
+      });
+    }
   }
 
   const snapshotJson: TvshowPublishedEvent = {
@@ -227,7 +228,7 @@ const tvshowDataAggregator: SnapshotDataAggregator = async (
     videos,
     directors: tvshow.directors.map((d) => d.name),
     business_type: tvshow.business_type ?? undefined,
-    extended_field: JSON.stringify(extendedField),
+    extended_field: extendedField ? JSON.stringify(extendedField) : undefined,
     rating: tvshow.rating ?? undefined,
     age_rating: tvshow.age_rating ?? undefined,
     asset_type: 6,

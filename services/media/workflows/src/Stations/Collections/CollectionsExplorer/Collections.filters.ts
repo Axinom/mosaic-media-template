@@ -117,6 +117,11 @@ export function useCollectionsFilters(): {
       property: 'publishingId',
       type: FilterTypes.FreeText,
     },
+    {
+      label: 'ID',
+      property: 'id',
+      type: FilterTypes.Numeric,
+    },
   ];
 
   const transformFilters = (
@@ -150,6 +155,20 @@ export function useCollectionsFilters(): {
         }
       },
       publishStatus: 'in',
+      id: (value) => {
+        if (typeof value === 'number') {
+          // User filter
+          return {
+            equalTo: value,
+            notIn: excludeItems,
+          };
+        } else {
+          // Exclude items
+          return {
+            notIn: excludeItems,
+          };
+        }
+      },
       createdDate: transformRange,
       publishedDate: transformRange,
     });
