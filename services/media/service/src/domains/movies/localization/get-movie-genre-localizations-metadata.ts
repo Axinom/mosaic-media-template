@@ -1,3 +1,4 @@
+import { isNullOrWhitespace } from '@axinom/mosaic-service-common';
 import { MovieGenreLocalization } from 'media-messages';
 import {
   Config,
@@ -47,7 +48,7 @@ export const getMovieGenreLocalizationsMetadata = async (
         ?.map((l) => ({
           is_default_locale: l[LOCALIZATION_IS_DEFAULT_LOCALE],
           language_tag: l[LOCALIZATION_LANGUAGE_TAG],
-          title: l.title,
+          title: isNullOrWhitespace(l.title) ? genreTitle : l.title,
         }))
         // If there are locales with no values set for any of its fields, we filter them out
         ?.filter(
