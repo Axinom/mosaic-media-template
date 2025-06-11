@@ -1,4 +1,4 @@
-import { groupBy } from '@axinom/mosaic-service-common';
+import { groupBy, isNullOrWhitespace } from '@axinom/mosaic-service-common';
 import { CollectionLocalization } from 'media-messages';
 import {
   Config,
@@ -60,9 +60,9 @@ export const getCollectionLocalizationsMetadata = async (
         ?.map((l) => ({
           is_default_locale: l[LOCALIZATION_IS_DEFAULT_LOCALE],
           language_tag: l[LOCALIZATION_LANGUAGE_TAG],
-          title: l.title,
-          description: l.description,
-          synopsis: l.synopsis,
+          title: isNullOrWhitespace(l.title) ? null : l.title,
+          description: isNullOrWhitespace(l.description) ? null : l.description,
+          synopsis: isNullOrWhitespace(l.synopsis) ? null : l.synopsis,
           collection_cover: l.collection_cover,
           collection_cover_1x1: l.collection_cover_1x1,
           collection_cover_4x1: l.collection_cover_4x1,
