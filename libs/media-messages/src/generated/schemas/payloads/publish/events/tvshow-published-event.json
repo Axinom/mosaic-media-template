@@ -458,6 +458,18 @@
               "CMAF",
               "DASH_ON_DEMAND"
             ]
+          },
+          "main_url": {
+            "description": "The main URL for the video.",
+            "type": "string"
+          },
+          "drm_key_id": {
+            "description": "The DRM Key ID by which the DRM license server can find the content protection key.",
+            "type": "string"
+          },
+          "file_size_in_bytes": {
+            "description": "File size in bytes.",
+            "type": "number"
           }
         },
         "required": [
