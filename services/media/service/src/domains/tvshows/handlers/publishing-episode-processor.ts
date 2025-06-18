@@ -15,12 +15,10 @@ import {
 } from 'zapatos/db';
 import { CommonErrors, Config, DEFAULT_LOCALE_TAG } from '../../../common';
 import {
-  atLeastOneString,
   buildBDPublishingId,
   buildPublishingId,
   EntityPublishingProcessor,
   licenseValidationSchema,
-  requiredEpisodeCover,
   SnapshotDataAggregator,
   SnapshotValidationResult,
   validateYupPublishSchema,
@@ -331,8 +329,8 @@ const customEpisodeValidation = async (
   const episodeJson = json as EpisodePublishedEvent;
 
   const yupSchema = Yup.object({
-    genre_ids: atLeastOneString,
-    images: requiredEpisodeCover,
+    //genre_ids: atLeastOneString, // generes are not required for episodes
+    //images: requiredEpisodeCover, // cover images are not required for episodes
     videos: videosValidation(),
   });
 
