@@ -1828,38 +1828,6 @@ $$;
 
 
 --
--- Name: claim_sets; Type: TABLE; Schema: app_hidden; Owner: -
---
-
-CREATE TABLE app_hidden.claim_sets (
-    key text NOT NULL,
-    title text NOT NULL,
-    description text,
-    claims text[] DEFAULT '{}'::text[] NOT NULL,
-    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
-    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
-    created_user text DEFAULT 'Unknown'::text NOT NULL,
-    updated_user text DEFAULT 'Unknown'::text NOT NULL
-);
-
-
---
--- Name: subscription_plans; Type: TABLE; Schema: app_hidden; Owner: -
---
-
-CREATE TABLE app_hidden.subscription_plans (
-    id uuid NOT NULL,
-    title text NOT NULL,
-    description text,
-    claim_set_keys text[] DEFAULT '{}'::text[] NOT NULL,
-    created_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
-    updated_date timestamp with time zone DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
-    created_user text DEFAULT 'Unknown'::text NOT NULL,
-    updated_user text DEFAULT 'Unknown'::text NOT NULL
-);
-
-
---
 -- Name: messaging_counter; Type: TABLE; Schema: app_private; Owner: -
 --
 
@@ -1868,14 +1836,6 @@ CREATE TABLE app_private.messaging_counter (
     counter integer DEFAULT 1,
     expiration_date timestamp with time zone DEFAULT ((now() + '1 day'::interval) AT TIME ZONE 'utc'::text) NOT NULL
 );
-
-
---
--- Name: claim_sets claim_sets_pkey; Type: CONSTRAINT; Schema: app_hidden; Owner: -
---
-
-ALTER TABLE ONLY app_hidden.claim_sets
-    ADD CONSTRAINT claim_sets_pkey PRIMARY KEY (key);
 
 
 --
@@ -1892,14 +1852,6 @@ ALTER TABLE ONLY app_hidden.inbox
 
 ALTER TABLE ONLY app_hidden.outbox
     ADD CONSTRAINT outbox_pkey PRIMARY KEY (id);
-
-
---
--- Name: subscription_plans subscription_plans_pkey; Type: CONSTRAINT; Schema: app_hidden; Owner: -
---
-
-ALTER TABLE ONLY app_hidden.subscription_plans
-    ADD CONSTRAINT subscription_plans_pkey PRIMARY KEY (id);
 
 
 --
@@ -1978,41 +1930,6 @@ CREATE INDEX idx_outbox_processed_at ON app_hidden.outbox USING btree (processed
 --
 
 CREATE INDEX idx_outbox_segment ON app_hidden.outbox USING btree (segment);
-
-
---
--- Name: idx_subscription_plans_claim_set_keys; Type: INDEX; Schema: app_hidden; Owner: -
---
-
-CREATE INDEX idx_subscription_plans_claim_set_keys ON app_hidden.subscription_plans USING btree (claim_set_keys);
-
-
---
--- Name: claim_sets _100_timestamps; Type: TRIGGER; Schema: app_hidden; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_hidden.claim_sets FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__timestamps();
-
-
---
--- Name: subscription_plans _100_timestamps; Type: TRIGGER; Schema: app_hidden; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON app_hidden.subscription_plans FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__timestamps();
-
-
---
--- Name: claim_sets _200_username; Type: TRIGGER; Schema: app_hidden; Owner: -
---
-
-CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_hidden.claim_sets FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
-
-
---
--- Name: subscription_plans _200_username; Type: TRIGGER; Schema: app_hidden; Owner: -
---
-
-CREATE TRIGGER _200_username BEFORE INSERT OR UPDATE ON app_hidden.subscription_plans FOR EACH ROW EXECUTE FUNCTION ax_utils.tg__username();
 
 
 --

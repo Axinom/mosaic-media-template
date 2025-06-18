@@ -44,24 +44,6 @@
               "x-queue-type": "quorum"
             }
           }
-        },
-        "ax-monetization-grants-service:claim_definitions:synchronize": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "ax-monetization-grants-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
-        },
-        "entitlement-service:inbox": {
-          "options": {
-            "arguments": {
-              "x-dead-letter-exchange": "dead_letter",
-              "x-dead-letter-routing-key": "entitlement-service.dead_letter",
-              "x-queue-type": "quorum"
-            }
-          }
         }
       },
       "bindings": {
@@ -79,36 +61,6 @@
           "source": "delay",
           "bindingKey": "delay.30s",
           "destination": "delay:30s"
-        },
-        "retry:ax-monetization-grants-service:claim_definitions:synchronize": {
-          "source": "retry",
-          "bindingKey": "ax-monetization-grants-service:claim_definitions:synchronize.#",
-          "destination": "ax-monetization-grants-service:claim_definitions:synchronize"
-        },
-        "retry:entitlement-service:inbox": {
-          "source": "retry",
-          "bindingKey": "entitlement-service:inbox.#",
-          "destination": "entitlement-service:inbox"
-        },
-        "ax-monetization-grants-service.*.*.claim_definitions.synchronize_finished": {
-          "source": "event",
-          "bindingKey": "ax-monetization-grants-service.*.*.claim_definitions.synchronize_finished",
-          "destination": "entitlement-service:inbox"
-        },
-        "ax-monetization-grants-service.*.*.claim_definitions.synchronize_failed": {
-          "source": "event",
-          "bindingKey": "ax-monetization-grants-service.*.*.claim_definitions.synchronize_failed",
-          "destination": "entitlement-service:inbox"
-        },
-        "ax-monetization-grants-service.*.*.claim_set.published": {
-          "source": "event",
-          "bindingKey": "ax-monetization-grants-service.*.*.claim_set.published",
-          "destination": "entitlement-service:inbox"
-        },
-        "ax-subscription-monetization-service.*.*.subscription_plan.published": {
-          "source": "event",
-          "bindingKey": "ax-subscription-monetization-service.*.*.subscription_plan.published",
-          "destination": "entitlement-service:inbox"
         }
       },
       "publications": {
@@ -127,24 +79,9 @@
               "delay.30s"
             ]
           }
-        },
-        "SynchronizeClaimDefinitions": {
-          "exchange": "command",
-          "routingKey": "ax-monetization-grants-service.*.*.claim_definitions.synchronize"
         }
       },
-      "subscriptions": {
-        "Inbox": {
-          "queue": "entitlement-service:inbox",
-          "prefetch": 10,
-          "recovery": "deferred_retry",
-          "redeliveries": {
-            "limit": 5,
-            "counter": "mosaic",
-            "timeout": 10000
-          }
-        }
-      }
+      "subscriptions": {}
     }
   },
   "recovery": {

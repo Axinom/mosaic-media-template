@@ -6,12 +6,11 @@ import {
 import { lookup } from 'geoip-country';
 import { gql, makeExtendSchemaPlugin } from 'graphile-utils';
 import { CommonErrors } from '../../common';
+import { ENABLE_VIDEOS_DOWNLOAD, validClaims } from '../../domains';
 import {
   generateEntitlementMessageJwt,
   getEntityType,
-  getSubscriptionPlanId,
   getVideoKeyIds,
-  validateUserClaims,
 } from './entitlement-endpoint';
 import { getValidatedExtendedContext } from './extended-graphql-context';
 
@@ -65,17 +64,24 @@ export const EntitlementEndpointPlugin = makeExtendSchemaPlugin(() => {
               config.catalogServiceBaseUrl,
               countryCode,
             );
-            const subscriptionPlanId = await getSubscriptionPlanId(
-              config.billingServiceBaseUrl,
-              jwtToken,
+
+            /*
+              Implement your custom logic to retrieve the correct set of `claims` for the user.
+              For example, this can be based on an active subscription plan for the user or
+              the payload of the user auth token, etc.
+             
+              The actual implementation of how to retrieve the claims is subjective to your business logic.
+              For demonstration purposes, we will assume that the user will always have the claims hardcoded as below.
+            */
+
+            const claims = validClaims.filter(
+              (claim) =>
+                claim !== ENABLE_VIDEOS_DOWNLOAD ||
+                (claim === ENABLE_VIDEOS_DOWNLOAD &&
+                  type !== 'channel' &&
+                  args.input.allowPersistence), // Allow download only for entity types other than 'channel' and if explicitly requested
             );
-            const claims = await validateUserClaims(
-              subscriptionPlanId,
-              type,
-              countryCode,
-              args.input.allowPersistence,
-              ownerPool,
-            );
+
             const entitlementMessageJwt = generateEntitlementMessageJwt(
               keyIds,
               claims,

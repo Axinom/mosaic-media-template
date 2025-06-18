@@ -33,7 +33,6 @@ import { applyMigrations, getFullConfig } from './common';
 import {
   setupEntitlementWebhookEndpoint,
   setupManifestWebhookEndpoint,
-  syncClaimDefinitions,
 } from './domains';
 import { setupPostGraphile } from './graphql/postgraphile-middleware';
 import { registerMessaging } from './messaging/register-messaging';
@@ -101,7 +100,7 @@ async function bootstrap(): Promise<void> {
     ],
   });
 
-  await syncClaimDefinitions(storeOutboxMessage, ownerPgPool, config);
+  // await syncClaimDefinitions(storeOutboxMessage, ownerPgPool, config);
 
   const authConfig: AuthenticationConfig = {
     tenantId: config.tenantId,

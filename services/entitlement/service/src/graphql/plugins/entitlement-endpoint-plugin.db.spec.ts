@@ -11,17 +11,7 @@ import gql from 'graphql-tag';
 import { stub } from 'jest-auto-stub';
 import 'jest-extended';
 import { v4 as uuid } from 'uuid';
-import { insert } from 'zapatos/db';
 import { CommonErrors } from '../../common';
-import {
-  ENTITY_TYPE_CHANNELS,
-  ENTITY_TYPE_EPISODES,
-  ENTITY_TYPE_MOVIES,
-} from '../../domains';
-import {
-  getSdk as getBillingSdk,
-  Sdk as BillingSdk,
-} from '../../generated/graphql/billing';
 import {
   getSdk as getCatalogSdk,
   Sdk as CatalogSdk,
@@ -44,15 +34,6 @@ const catalogStub = stub<CatalogSdk>({
 });
 const catalogMock = getCatalogSdk as jest.MockedFunction<typeof getCatalogSdk>;
 catalogMock.mockReturnValue(catalogStub);
-
-// mock the sdk to return values to be tested, emulating billing response
-let billingCall: any = () => undefined;
-jest.mock('../../generated/graphql/billing');
-const billingStub = stub<BillingSdk>({
-  GetActiveSubscription: () => billingCall(),
-});
-const billingMock = getBillingSdk as jest.MockedFunction<typeof getBillingSdk>;
-billingMock.mockReturnValue(billingStub);
 
 let countryCode: string | undefined = 'LK';
 // Mock geoip-country.lookup which is used in entitlement-endpoint.
@@ -80,7 +61,6 @@ describe('EntitlementEndpointPlugin', () => {
   const jwtRegex =
     /([A-Za-z0-9]{36,})\.([A-Za-z0-9]{100,})\.([A-Za-z0-9-_]{40,})/gi;
   let defaultRequestContext: TestRequestContext;
-  const subscriptionPlanId = 'fadf7cc2-f84c-42ac-8de1-7884b08873b2';
   const keyId1 = '68945fc1-2337-4685-8dac-31cb808dc747';
   const keyId2 = '856358bf-f44b-4f26-a18e-d427ef50acc2';
   const videoStreams = {
@@ -175,12 +155,6 @@ describe('EntitlementEndpointPlugin', () => {
         ],
       },
     });
-
-    await insert('subscription_plans', {
-      id: subscriptionPlanId,
-      title: 'Test Plan',
-      claim_set_keys: ['TEST'],
-    }).run(ctx.ownerPool);
   });
 
   beforeEach(async () => {
@@ -194,23 +168,13 @@ describe('EntitlementEndpointPlugin', () => {
       .spyOn(console, 'debug')
       .mockImplementation((obj) => JSON.parse(obj));
     catalogCall = () => undefined;
-    billingCall = () => ({
-      data: { subscriptions: { nodes: [{ subscriptionPlanId }] } },
-    });
-    await insert('claim_sets', {
-      key: 'TEST',
-      title: 'test',
-      claims: [ENTITY_TYPE_MOVIES, ENTITY_TYPE_CHANNELS, ENTITY_TYPE_EPISODES],
-    }).run(ctx.ownerPool);
   });
 
   afterEach(async () => {
-    await ctx.truncate('claim_sets');
     jest.clearAllMocks();
   });
 
   afterAll(async () => {
-    await ctx.truncate('subscription_plans');
     await ctx.dispose();
     await ipTestCtx.dispose();
   });
@@ -328,68 +292,6 @@ describe('EntitlementEndpointPlugin', () => {
           loglevel: 'ERROR',
           error: {
             logInfo: { errors: [{ message: 'Some catalog error occurred.' }] },
-          },
-        });
-      },
-    );
-
-    it.each([
-      {
-        errors: [{ message: 'Some billing error occurred.' }],
-        status: 200,
-      },
-      {
-        data: { movie: null },
-        errors: [{ message: 'Some billing error occurred.' }],
-        status: 200,
-      },
-    ])(
-      'Response with billing errors -> error thrown and logged as ERROR',
-      async (response) => {
-        // Arrange
-        catalogCall = () => ({
-          data: {
-            movie: {
-              videos: {
-                nodes: [{ isProtected: true, videoStreams }],
-              },
-            },
-          },
-        });
-        billingCall = () => {
-          throw new ClientError(response, {
-            query: '',
-          });
-        };
-
-        // Act
-        const resp = await ctx.runGqlQuery(
-          ENTITLEMENT_REQUEST,
-          { input: { entityId: 'movie-1' } },
-          defaultRequestContext,
-        );
-
-        // Assert
-        expect(resp.data?.entitlement).toBeFalsy();
-        expect(resp.errors).toMatchObject([
-          {
-            message:
-              'Error(s) occurred while trying to retrieve active subscription from the billing service. Please contact the service support.',
-            code: CommonErrors.BillingErrors.code,
-            path: ['entitlement'],
-            details: undefined,
-          },
-        ]);
-
-        const loggedObject = getFirstMockResult<any>(errorOverride);
-        expect(loggedObject).toMatchObject({
-          message:
-            'Error(s) occurred while trying to retrieve active subscription from the billing service. Please contact the service support.',
-          loglevel: 'ERROR',
-          error: {
-            logInfo: {
-              errors: [{ message: 'Some billing error occurred.' }],
-            },
           },
         });
       },
@@ -565,46 +467,6 @@ describe('EntitlementEndpointPlugin', () => {
       },
     );
 
-    it('Response with no billing subscriptions -> error thrown and logged as ERROR', async () => {
-      // Arrange
-      catalogCall = () => ({
-        data: {
-          movie: {
-            videos: {
-              nodes: [{ isProtected: true, videoStreams }],
-            },
-          },
-        },
-      });
-      billingCall = () => ({
-        data: { subscriptions: { nodes: [] } },
-      });
-
-      // Act
-      const resp = await ctx.runGqlQuery(
-        ENTITLEMENT_REQUEST,
-        { input: { entityId: 'movie-1' } },
-        defaultRequestContext,
-      );
-
-      // Assert
-      expect(resp.data?.entitlement).toBeFalsy();
-      expect(resp.errors).toMatchObject([
-        {
-          message: 'User does not have an active subscription.',
-          code: CommonErrors.SubscriptionValidationError.code,
-          path: ['entitlement'],
-          details: undefined,
-        },
-      ]);
-
-      const loggedObject = getFirstMockResult<any>(warnOverride);
-      expect(loggedObject).toMatchObject({
-        message: 'User does not have an active subscription.',
-        loglevel: 'WARN',
-      });
-    });
-
     it('Response with movie with multiple videos -> error thrown and logged as ERROR', async () => {
       // Arrange
       catalogCall = () => ({
@@ -757,59 +619,6 @@ describe('EntitlementEndpointPlugin', () => {
         expect(loggedObject).toMatchObject({
           message:
             'We were unable to connect to the catalog service. Please contact the service support or try again later.',
-          loglevel: 'ERROR',
-          error: {
-            innerError: {
-              code,
-              message: 'Custom request error',
-            },
-          },
-        });
-      },
-    );
-
-    it.each(['ECONNREFUSED', 'ENOTFOUND'])(
-      'Request to billing service which is down or incorrectly configured -> error thrown and logged as WARN',
-      async (code) => {
-        // Arrange
-        catalogCall = () => ({
-          data: {
-            movie: {
-              videos: {
-                nodes: [{ isProtected: true, videoStreams }],
-              },
-            },
-          },
-        });
-        billingCall = () => {
-          const error = new Error('Custom request error');
-          (error as any).code = code;
-          throw error;
-        };
-
-        // Act
-        const resp = await ctx.runGqlQuery(
-          ENTITLEMENT_REQUEST,
-          { input: { entityId: 'movie-1' } },
-          defaultRequestContext,
-        );
-
-        // Assert
-        expect(resp.data?.entitlement).toBeFalsy();
-        expect(resp.errors).toMatchObject([
-          {
-            message:
-              'We were unable to connect to the billing service. Please contact the service support or try again later.',
-            code: CommonErrors.BillingConnectionFailed.code,
-            path: ['entitlement'],
-            details: undefined,
-          },
-        ]);
-
-        const loggedObject = getFirstMockResult<any>(errorOverride);
-        expect(loggedObject).toMatchObject({
-          message:
-            'We were unable to connect to the billing service. Please contact the service support or try again later.',
           loglevel: 'ERROR',
           error: {
             innerError: {
