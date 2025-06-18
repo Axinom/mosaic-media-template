@@ -1,1 +1,1 @@
-You can find our Vulnerability Disclosure Policy [here](https://docs.axinom.com/general/vdp).
+For details, please refer to our [Vulnerability Disclosure Policy](https://docs.axinom.com/general/vdp).
