@@ -39,9 +39,6 @@ export const getConfigDefinitions = (
     catalogServiceBaseUrl: () =>
       env.get('CATALOG_SERVICE_BASE_URL').required().asUrlString(),
 
-    billingServiceBaseUrl: () =>
-      env.get('BILLING_SERVICE_BASE_URL').required().asUrlString(),
-
     drmLicenseCommunicationKeyId: () =>
       env.get('DRM_LICENSE_COMMUNICATION_KEY_ID').required().asString(),
 

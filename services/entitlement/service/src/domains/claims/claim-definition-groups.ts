@@ -1,5 +1,3 @@
-import { ClaimDefinitionGroup } from '@axinom/mosaic-messages';
-
 /**
  * A claim that is responsible for enabling download option for video.
  */
@@ -40,7 +38,7 @@ export const QUALITY_SD = 'QUALITY_SD';
 /**
  * An array of all Claim Definition Groups that is synced to monetization service.
  */
-export const claimDefinitionGroups: ClaimDefinitionGroup[] = [
+export const claimDefinitionGroups = [
   {
     title: 'Downloadability',
     selection_mode: 'SINGLE',

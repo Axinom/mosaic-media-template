@@ -9,14 +9,9 @@ import { Express } from 'express';
 import { Config } from '../common';
 import { getMessagingMiddleware } from './middleware';
 
-import {
-  MonetizationGrantsServiceMultiTenantMessagingSettings,
-  SubscriptionMonetizationServiceMultiTenantMessagingSettings,
-} from '@axinom/mosaic-messages';
 import { ShutdownActionsMiddleware } from '@axinom/mosaic-service-common';
 import {
   RabbitMqInboxWriter,
-  RascalTransactionalConfigBuilder,
   setupInboxStorage,
   setupOutboxStorage,
   setupPollingOutboxListener,
@@ -30,12 +25,6 @@ import {
   PollingListenerConfig,
   TransactionalMessageHandler,
 } from 'pg-transactional-outbox';
-import {
-  ClaimSetPublishedHandler,
-  SubscriptionPlanPublishedHandler,
-  SyncClaimDefinitionsFailedHandler,
-  SyncClaimDefinitionsFinishedHandler,
-} from './handlers';
 
 export const registerMessaging = async (
   app: Express,
@@ -68,13 +57,20 @@ export const registerMessaging = async (
     settings: getInboxPollingListenerSettings(),
   };
 
+  /*
+  // Uncomment when there is a need to handle messages arriving in the inbox.
+  // calling `registerTransactionalInboxHandlers` without any `messageHandlers` is not allowed.
+
   const logMapper = new TransactionalLogMapper(inboxLogger, config.logLevel);
+
   registerTransactionalInboxHandlers(
     config,
     inboxConfig,
     logMapper,
     shutdownActions,
   );
+  */
+
   const broker = await registerRabbitMqMessaging(
     app,
     ownerPool,
@@ -101,12 +97,7 @@ const registerTransactionalInboxHandlers = (
   logMapper: TransactionalLogMapper,
   shutdownActions: ShutdownActionsMiddleware,
 ): void => {
-  const messageHandlers: TransactionalMessageHandler[] = [
-    new SyncClaimDefinitionsFinishedHandler(config),
-    new SyncClaimDefinitionsFailedHandler(config),
-    new ClaimSetPublishedHandler(config),
-    new SubscriptionPlanPublishedHandler(config),
-  ];
+  const messageHandlers: TransactionalMessageHandler[] = [];
 
   const [shutdownInSrv] = initializePollingMessageListener(
     inboxConfig,
@@ -126,57 +117,22 @@ const registerRabbitMqMessaging = async (
 ): Promise<Broker> => {
   const storeInboxMessage = setupInboxStorage(inboxConfig, inboxLogger, config);
 
-  const grantsSettings = MonetizationGrantsServiceMultiTenantMessagingSettings;
-  const planSettings =
-    SubscriptionMonetizationServiceMultiTenantMessagingSettings;
   const inboxWriter = new RabbitMqInboxWriter(
     storeInboxMessage,
     ownerPool,
     inboxLogger,
     {
-      // temporary backward compatibility until all your services are updated and all current messages are processed
-      acceptedMessageSettings: [
-        grantsSettings.SynchronizeClaimDefinitionsFinished,
-        grantsSettings.SynchronizeClaimDefinitionsFailed,
-        grantsSettings.ClaimSetPublished,
-        planSettings.SubscriptionPlanPublished,
-      ],
       customMessagePreProcessor: (message) => {
         switch (message.messagingSettings.messageType) {
-          case grantsSettings.SynchronizeClaimDefinitionsFinished.messageType:
-          case grantsSettings.SynchronizeClaimDefinitionsFailed.messageType:
-            message.concurrency = 'parallel';
-            break;
           default:
-            message.concurrency = 'sequential';
+            message.concurrency = 'parallel';
             break;
         }
       },
     },
   );
 
-  const rascalBuilders: RascalConfigBuilder[] = [
-    new RascalTransactionalConfigBuilder(
-      MonetizationGrantsServiceMultiTenantMessagingSettings.SynchronizeClaimDefinitions,
-      config,
-    ).sendCommand(),
-    new RascalTransactionalConfigBuilder(
-      MonetizationGrantsServiceMultiTenantMessagingSettings.SynchronizeClaimDefinitionsFinished,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      MonetizationGrantsServiceMultiTenantMessagingSettings.SynchronizeClaimDefinitionsFailed,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      MonetizationGrantsServiceMultiTenantMessagingSettings.ClaimSetPublished,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-    new RascalTransactionalConfigBuilder(
-      SubscriptionMonetizationServiceMultiTenantMessagingSettings.SubscriptionPlanPublished,
-      config,
-    ).subscribeForEvent(() => inboxWriter),
-  ];
+  const rascalBuilders: RascalConfigBuilder[] = [];
 
   const counter = initMessagingCounter(ownerPool);
   return setupMessagingBroker({
