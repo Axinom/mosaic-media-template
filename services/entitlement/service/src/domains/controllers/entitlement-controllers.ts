@@ -45,7 +45,17 @@ export const EntitlementRequestHandling = async (
 
   const countryCode = await extractCountryCodeFromRemoteIP(req);
 
-  const entitlement = await EntitlementHandler(entitlementRequest, countryCode);
+  const RequestClientIPHeaders = {
+    'X-Client-IP': req.headers['x-client-ip'],
+    'X-Real-IP': req.headers['x-real-ip'],
+    'X-Forwarded-For': req.headers['x-forwarded-for'],
+  };
+
+  const entitlement = await EntitlementHandler(
+    entitlementRequest,
+    countryCode,
+    RequestClientIPHeaders,
+  );
 
   if (!entitlement.isValid) {
     if (entitlement.error) {

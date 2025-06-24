@@ -19,6 +19,11 @@ const config = getFullConfig();
 export const EntitlementHandler = async (
   entitlementRequest: EntitlementRequestModel,
   countryCode: string,
+  RequestClientIPHeaders: {
+    'X-Client-IP': string | string[] | undefined;
+    'X-Real-IP': string | string[] | undefined;
+    'X-Forwarded-For': string | string[] | undefined;
+  },
 ): Promise<EntitlementValidationResponse> => {
   // THis handler must take care every thing related to entitlement and country code and all the other stuff
   const logger = new Logger({
@@ -26,7 +31,10 @@ export const EntitlementHandler = async (
     context: EntitlementHandler.name,
   });
 
-  const assertResponse = await AssetHandler(entitlementRequest);
+  const assertResponse = await AssetHandler(
+    entitlementRequest,
+    RequestClientIPHeaders,
+  );
 
   if (!assertResponse.isValid || assertResponse.data === null) {
     logger.debug({
