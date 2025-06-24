@@ -6,6 +6,9 @@
 # The following environment variables need to be replaced with your own values.
 #
 # GEOLITE2_LICENSE_KEY
+# GEOLITE2_DOWNLOAD_URL
+# GEOLITE2_DATA_FILE_PATH
+# MAXMIND_ACCOUNT_ID
 # DRM_LICENSE_COMMUNICATION_KEY
 # DRM_LICENSE_COMMUNICATION_KEY_ID
 
@@ -75,6 +78,7 @@ regularVariables:
 
   # Managed Service URLs
   ID_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-id-service.auth_base_url}'
+  BILLING_SERVICE_BASE_URL: '${__ax_hosted__.svc.ax-billing-service.end_user_base_url}'
   USER_SERVICE_AUTH_BASE_URL: '${__ax_hosted__.svc.ax-user-service.auth_base_url}'
 
   # Custom Service URLs
@@ -89,6 +93,9 @@ secureVariables:
 
   # GeoLite License Key
   GEOLITE2_LICENSE_KEY: 'REPLACE_WITH_VALID_GEOLITE2_LICENSE_KEY'
+  GEOLITE2_DOWNLOAD_URL: 'REPLACE_WITH_VALID_GEOLITE2_DOWNLOAD_URL'
+  GEOLITE2_DATA_FILE_PATH: 'REPLACE_WITH_VALID_GEOLITE2_DATA_FILE_PATH'
+  MAXMIND_ACCOUNT_ID: 'REPLACE_WITH_VALID_MAXMIND_ACCOUNT_ID'
 
   # DRM License Communication Key and ID
   DRM_LICENSE_COMMUNICATION_KEY: 'REPLACE_WITH_VALID_DRM_LICENSE_COMMUNICATION_KEY'
