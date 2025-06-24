@@ -39,8 +39,13 @@ export const logValidationErrors = (
 
 const getAssetFromCatalogService = async (
   assetRequest: AssetHandlerInput,
+  RequestClientIPHeaders: {
+    'X-Client-IP': string | string[] | undefined;
+    'X-Real-IP': string | string[] | undefined;
+    'X-Forwarded-For': string | string[] | undefined;
+  },
 ): Promise<AssetModel> => {
-  const client = await getApolloClient(config);
+  const client = await getApolloClient(config, RequestClientIPHeaders);
   const assetType: number = AssetTypeProvider.getAssetType(
     assetRequest.asset_id,
   );
@@ -56,6 +61,11 @@ const getAssetFromCatalogService = async (
 
 export const AssetHandler = async (
   assetRequest: AssetHandlerInput,
+  RequestClientIPHeaders: {
+    'X-Client-IP': string | string[] | undefined;
+    'X-Real-IP': string | string[] | undefined;
+    'X-Forwarded-For': string | string[] | undefined;
+  },
 ): Promise<AssetHandlerResponse> => {
   const logger = new Logger({
     config,
@@ -64,6 +74,7 @@ export const AssetHandler = async (
   try {
     const catalogResponse: AssetModel = await getAssetFromCatalogService(
       assetRequest,
+      RequestClientIPHeaders,
     );
 
     if (!catalogResponse) {
